@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
     /// <summary>
     /// This is a test class for $format and is intended to contain all $format scenario tests.
     /// </summary>
@@ -29,7 +30,7 @@ namespace AstoriaUnitTests.Tests
         private const string applicationJsonLight = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
 
         [Ignore]
-        [TestCategory("Partition2"), TestMethod]
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatSmokeTest()
         {
             const string expectedJsonLight = @"{""@odata.context"":""BASE_URI$metadata#Customers(1)/Address"",""StreetAddress"":""Line1"",""City"":""Redmond"",""State"":""WA"",""PostalCode"":""98052""}";
@@ -51,7 +52,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod]
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatQueryTest()
         {
             var testCases = new List<DollarFormatTestCase>()
@@ -178,7 +179,7 @@ namespace AstoriaUnitTests.Tests
             this.RunQueryTest(testCases);
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod]
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatQueryErrorTest()
         {
             var testCases = new List<DollarFormatTestCase>()
@@ -278,7 +279,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod]
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatMIMETypeTest()
         {
             var testCases = new List<DollarFormatTestCase>()
@@ -363,7 +364,7 @@ namespace AstoriaUnitTests.Tests
             this.RunQueryTest(testCases);
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod]
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatInvalidFormatTest()
         {
             // Get 415 responses for invalid requests with $format

@@ -34,7 +34,8 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// The NumberFormatInfo used in OData Json format.
         /// </summary>
-        internal static readonly NumberFormatInfo ODataNumberFormatInfo;
+        internal static readonly NumberFormatInfo ODataNumberFormatInfo = InitializeODataNumberFormatInfo();
+
 
         /// <summary>
         /// Const tick value for calculating tick values.
@@ -50,16 +51,6 @@ namespace Microsoft.OData.Json
         /// Map of special characters to strings.
         /// </summary>
         private static readonly string[] SpecialCharToEscapedStringMap = CreateSpecialCharToEscapedStringMap();
-
-        /// <summary>
-        /// Initialize static properties
-        /// </summary>
-        static JsonValueUtils()
-        {
-            ODataNumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
-            ODataNumberFormatInfo.PositiveInfinitySymbol = ODataJsonPositiveInfinitySymbol;
-            ODataNumberFormatInfo.NegativeInfinitySymbol = ODataJsonNegativeInfinitySymbol;
-        }
 
         /// <summary>
         /// Write a boolean value.
@@ -394,6 +385,18 @@ namespace Microsoft.OData.Json
             // Ticks in .NET are in 100-nanoseconds and start at 1.1.0001.
             // Ticks in the JSON date time format are in milliseconds and start at 1.1.1970.
             return (ticks * 10000) + JsonDateTimeMinTimeTicks;
+        }
+
+        /// <summary>
+        /// Initialize static property ODataNumberFormatInfo.
+        /// </summary>
+        /// <returns>The <see cref=" NumberFormatInfo"/> object.</returns>
+        private static NumberFormatInfo InitializeODataNumberFormatInfo()
+        {
+            NumberFormatInfo odataNumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+            odataNumberFormatInfo.PositiveInfinitySymbol = ODataJsonPositiveInfinitySymbol;
+            odataNumberFormatInfo.NegativeInfinitySymbol = ODataJsonNegativeInfinitySymbol;
+            return odataNumberFormatInfo;
         }
 
         /// <summary>

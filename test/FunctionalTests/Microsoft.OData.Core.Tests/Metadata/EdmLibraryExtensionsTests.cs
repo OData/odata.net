@@ -6,12 +6,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using FluentAssertions;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight;
+using Microsoft.OData.Tests.UriParser;
 using Xunit;
+using Microsoft.Spatial;
+using Xunit.Sdk;
 
 namespace Microsoft.OData.Tests.Metadata
 {
@@ -251,6 +257,20 @@ namespace Microsoft.OData.Tests.Metadata
             returnedOperations[0].Should().BeSameAs(function);
         }
         #endregion
+
+        [Fact]
+        public void OperationImportGroupFullNameForOperationImportListShouldReturnExpect()
+        {
+            var operationImports = new[]
+            {
+                operationImportWithOverloadAnd0Param,
+                operationImportWithOverloadAnd1Param,
+                operationImportWithOverloadAnd2Params,
+                operationImportWithOverloadAnd5Params
+            };
+            string result = operationImports.OperationImportGroupFullName();
+            result.Should().Be("Default.FunctionImportWithOverload");
+        }
 
         [Fact]
         public void NameWithParametersShouldReturnCorrectValue()
@@ -544,6 +564,176 @@ namespace Microsoft.OData.Tests.Metadata
                 var stringOfObservedShortQulifiedName = edmCollectionType.ODataShortQualifiedName();
                 stringOfObservedShortQulifiedName.Should().Be(stringOfExpectedShortQulifiedName);
             }
+        }
+
+        [Fact]
+        public void AsCollectionOrNullForNonCollectionShouldBeNull()
+        {
+            IEdmCollectionTypeReference collectionTypeReference = EdmLibraryExtensions.AsCollectionOrNull((IEdmTypeReference)productTypeReference);
+            collectionTypeReference.Should().BeNull();
+        }
+
+        [Fact]
+        public void AsCollectionOrNullForNonCollectionOfEntityShouldBeNull()
+        {
+            IEdmTypeReference typeReference = new EdmCollectionTypeReference(new EdmCollectionType(productTypeReference));
+            IEdmCollectionTypeReference collectionTypeReference = typeReference.AsCollectionOrNull();
+            collectionTypeReference.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData(EdmPrimitiveTypeKind.Binary)]
+        [InlineData(EdmPrimitiveTypeKind.Decimal)]
+        [InlineData(EdmPrimitiveTypeKind.Int32)]
+        [InlineData(EdmPrimitiveTypeKind.TimeOfDay)]
+        [InlineData(EdmPrimitiveTypeKind.Geography)]
+        [InlineData(EdmPrimitiveTypeKind.Geometry)]
+        public void BaseTypeForBuiltInPrimitiveTypesShouldBeNull(EdmPrimitiveTypeKind kind)
+        {
+            EdmCoreModel.Instance.GetPrimitiveType(kind).BaseType().Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData(EdmPrimitiveTypeKind.GeographyPoint, EdmPrimitiveTypeKind.Geography)]
+        [InlineData(EdmPrimitiveTypeKind.GeographyLineString, EdmPrimitiveTypeKind.Geography)]
+        [InlineData(EdmPrimitiveTypeKind.GeographyPolygon, EdmPrimitiveTypeKind.Geography)]
+        [InlineData(EdmPrimitiveTypeKind.GeographyCollection, EdmPrimitiveTypeKind.Geography)]
+        [InlineData(EdmPrimitiveTypeKind.GeographyMultiPolygon, EdmPrimitiveTypeKind.GeographyCollection)]
+        [InlineData(EdmPrimitiveTypeKind.GeographyMultiLineString, EdmPrimitiveTypeKind.GeographyCollection)]
+        [InlineData(EdmPrimitiveTypeKind.GeographyMultiPoint, EdmPrimitiveTypeKind.GeographyCollection)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryPoint, EdmPrimitiveTypeKind.Geometry)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryLineString, EdmPrimitiveTypeKind.Geometry)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryPolygon, EdmPrimitiveTypeKind.Geometry)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryCollection, EdmPrimitiveTypeKind.Geometry)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryMultiPolygon, EdmPrimitiveTypeKind.GeometryCollection)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryMultiLineString, EdmPrimitiveTypeKind.GeometryCollection)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryMultiPoint, EdmPrimitiveTypeKind.GeometryCollection)]
+        public void BaseTypeForSpatialTypesShouldBeSameAsExpect(EdmPrimitiveTypeKind kind, EdmPrimitiveTypeKind expect)
+        {
+            var baseType = EdmCoreModel.Instance.GetPrimitiveType(expect);
+            EdmCoreModel.Instance.GetPrimitiveType(kind).BaseType().Should().BeSameAs(baseType);
+        }
+
+        [Theory]
+        [InlineData(EdmPrimitiveTypeKind.Int32, EdmPrimitiveTypeKind.Int32, EdmPrimitiveTypeKind.Int32)]
+        [InlineData(EdmPrimitiveTypeKind.Int32, EdmPrimitiveTypeKind.Int64, EdmPrimitiveTypeKind.None)]
+        [InlineData(EdmPrimitiveTypeKind.Int64, EdmPrimitiveTypeKind.Int32, EdmPrimitiveTypeKind.None)]
+        [InlineData(EdmPrimitiveTypeKind.GeographyPoint, EdmPrimitiveTypeKind.Geography, EdmPrimitiveTypeKind.Geography)]
+        [InlineData(EdmPrimitiveTypeKind.Geography, EdmPrimitiveTypeKind.GeographyPoint, EdmPrimitiveTypeKind.Geography)]
+        [InlineData(EdmPrimitiveTypeKind.GeometryPoint, EdmPrimitiveTypeKind.Geometry, EdmPrimitiveTypeKind.Geometry)]
+        [InlineData(EdmPrimitiveTypeKind.Geometry, EdmPrimitiveTypeKind.GeometryPoint, EdmPrimitiveTypeKind.Geometry)]
+        public void GetCommonBaseTypeForBuiltInTypesShouldBeExpect(EdmPrimitiveTypeKind first, EdmPrimitiveTypeKind second, EdmPrimitiveTypeKind commonBase)
+        {
+            var firstType = EdmCoreModel.Instance.GetPrimitiveType(first);
+            var secondType = EdmCoreModel.Instance.GetPrimitiveType(second);
+            var commonBaseType = EdmCoreModel.Instance.GetPrimitiveType(commonBase);
+            var actual = firstType.GetCommonBaseType(secondType);
+            actual.Should().BeSameAs(commonBaseType);
+        }
+
+        [Fact]
+        public void CloneForNullShouldBeNull()
+        {
+            EdmLibraryExtensions.Clone(null, false).Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CloneForEntityShouldBeExpect(bool nullable)
+        {
+            IEdmTypeReference typeReference = productTypeReference.Clone(nullable);
+            typeReference.Should().BeOfType<EdmEntityTypeReference>();
+            typeReference.IsNullable.Should().Be(nullable);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CloneForCollectionShouldBeExpect(bool nullable)
+        {
+            EdmComplexType complexType = new EdmComplexType("TestModel", "MyComplexType");
+            EdmComplexTypeReference complexTypeReference = new EdmComplexTypeReference(complexType, isNullable: nullable);
+            IEdmTypeReference typeReference = new EdmCollectionTypeReference(new EdmCollectionType(complexTypeReference));
+
+            IEdmTypeReference clonedType = typeReference.Clone(nullable);
+            clonedType.Should().BeOfType<EdmCollectionTypeReference>();
+            clonedType.IsNullable.Should().Be(nullable);
+
+            clonedType.AsCollection().ElementType().IsNullable.Should().Be(nullable);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CloneForEnumTypeShouldBeExpect(bool nullable)
+        {
+            EdmEnumType enumType = new EdmEnumType("NS", "MyEnum");
+            EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, isNullable: nullable);
+
+            IEdmTypeReference clonedType = enumTypeReference.Clone(nullable);
+            clonedType.Should().BeOfType<EdmEnumTypeReference>();
+            clonedType.IsNullable.Should().Be(nullable);
+        }
+
+        [Fact]
+        public void IsUserModelForUserModelShouldBeTrue()
+        {
+            bool result = model.IsUserModel();
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsUserModelForCoreModelShouldBeFalse()
+        {
+            bool result = EdmCoreModel.Instance.IsUserModel();
+            result.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(typeof(UInt16))]
+        [InlineData(typeof(UInt32))]
+        [InlineData(typeof(UInt64))]
+        [InlineData(typeof(byte))]
+        [InlineData(typeof(bool))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(Geography))]
+        [InlineData(typeof(Geometry))]
+        public void IsPrimitiveTypeForSupportedTypesShouldBeTrue(Type type)
+        {
+            bool result = EdmLibraryExtensions.IsPrimitiveType(type);
+            result.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(typeof(object))]
+        [InlineData(typeof(EdmLibraryExtensionsTests))]
+        public void IsPrimitiveTypeForUnsupportedTypesShouldBeFalse(Type type)
+        {
+            bool result = EdmLibraryExtensions.IsPrimitiveType(type);
+            result.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(EdmPrimitiveTypeKind.Boolean, true, typeof(bool?))]
+        [InlineData(EdmPrimitiveTypeKind.Boolean, false, typeof(bool))]
+        [InlineData(EdmPrimitiveTypeKind.Int32, true, typeof(int?))]
+        [InlineData(EdmPrimitiveTypeKind.Int32, false, typeof(int))]
+        [InlineData(EdmPrimitiveTypeKind.Stream, true, typeof(Stream))]
+        [InlineData(EdmPrimitiveTypeKind.Stream, false, typeof(Stream))]
+        [InlineData(EdmPrimitiveTypeKind.Geography, true, typeof(Geography))]
+        [InlineData(EdmPrimitiveTypeKind.Geography, false, typeof(Geography))]
+        [InlineData(EdmPrimitiveTypeKind.GeographyCollection, true, typeof(GeographyCollection))]
+        [InlineData(EdmPrimitiveTypeKind.GeographyCollection, false, typeof(GeographyCollection))]
+        [InlineData(EdmPrimitiveTypeKind.Geometry, true, typeof(Geometry))]
+        [InlineData(EdmPrimitiveTypeKind.Geometry, false, typeof(Geometry))]
+        [InlineData(EdmPrimitiveTypeKind.GeometryCollection, true, typeof(GeometryCollection))]
+        [InlineData(EdmPrimitiveTypeKind.GeometryCollection, false, typeof(GeometryCollection))]
+        public void GetPrimitiveClrTypeForBuiltInTypesShouldBeExpect(EdmPrimitiveTypeKind kind, bool nullable, Type expect)
+        {
+            IEdmPrimitiveType primitiveType = EdmCoreModel.Instance.GetPrimitiveType(kind);
+            Type actual = EdmLibraryExtensions.GetPrimitiveClrType(primitiveType, nullable);
+            actual.Should().Be(expect);
         }
 
         private static void ValidateAssignableToType(bool isAssignableExpectedResult, EdmPrimitiveTypeKind isAssignableToTypeKind, params EdmPrimitiveTypeKind[] subTypeKinds)

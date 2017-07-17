@@ -951,10 +951,18 @@ namespace Microsoft.OData.Edm
             if (!model.TryFindContainerQualifiedEntitySet(qualifiedName, out foundEntitySet))
             {
                 // try searching by entity set name in container and extended containers:
-                IEdmEntityContainer container = model.EntityContainer;
-                if (container != null)
+                try
                 {
-                    return container.FindEntitySetExtended(qualifiedName);
+                    IEdmEntityContainer container = model.EntityContainer;
+                    if (container != null)
+                    {
+                        return container.FindEntitySetExtended(qualifiedName);
+                    }
+                }
+                catch (NotImplementedException)
+                {
+                    // model.EntityContainer can throw NotImplementedException
+                    return null;
                 }
             }
 
@@ -973,10 +981,18 @@ namespace Microsoft.OData.Edm
             if (!model.TryFindContainerQualifiedSingleton(qualifiedName, out foundSingleton))
             {
                 // try searching by singleton name in container and extended containers:
-                IEdmEntityContainer container = model.EntityContainer;
-                if (container != null)
+                try
                 {
-                    return container.FindSingletonExtended(qualifiedName);
+                    IEdmEntityContainer container = model.EntityContainer;
+                    if (container != null)
+                    {
+                        return container.FindSingletonExtended(qualifiedName);
+                    }
+                }
+                catch (NotImplementedException)
+                {
+                    // model.EntityContainer can throw NotImplementedException
+                    return null;
                 }
             }
 
@@ -1622,6 +1638,33 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.StructuredDefinition().IsOpen;
+        }
+
+        /// <summary>
+        /// Returns true if the definition of this reference is open.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>If the definition of this reference is open.</returns>
+        public static bool IsOpen(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmStructuredType structuredType = type as IEdmStructuredType;
+            if (structuredType != null)
+            {
+                return structuredType.IsOpen;
+            }
+
+            // If its a collection, return whether its element type is open.
+            // This is because when processing a navigation property, the target type
+            // may be a collection type even though a key expression has been applied.
+            var collectionType = type as IEdmCollectionType;
+            if (collectionType == null)
+            {
+                return false;
+            }
+
+            return collectionType.ElementType.Definition.IsOpen();
         }
 
         /// <summary>
@@ -2388,6 +2431,18 @@ namespace Microsoft.OData.Edm
             }
 
             return EdmNavigationSourceKind.None;
+        }
+
+        /// <summary>
+        /// Returns the fully qualified name of a navigation source.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source to get the full name for.</param>
+        /// <returns>The full qualified name of the navigation source.</returns>
+        public static string FullNavigationSourceName(this IEdmNavigationSource navigationSource)
+        {
+            EdmUtil.CheckArgumentNull(navigationSource, "navigationSource");
+
+            return string.Join(".", navigationSource.Path.PathSegments.ToArray());
         }
 
         /// <summary>

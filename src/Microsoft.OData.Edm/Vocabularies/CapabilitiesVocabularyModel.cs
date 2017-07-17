@@ -34,7 +34,6 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// Parse Capabilities Vocabulary Model from CapabilitiesVocabularies.xml
         /// </summary>
-        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         static CapabilitiesVocabularyModel()
         {
             Assembly assembly = typeof(CapabilitiesVocabularyModel).GetAssembly();

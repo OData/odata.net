@@ -193,6 +193,14 @@ namespace Microsoft.OData
                 return;
             }
 
+            ODataEnumValue enumValue = value as ODataEnumValue;
+            if (enumValue != null)
+            {
+                this.WriteInstanceAnnotationName(propertyName, name);
+                this.valueSerializer.WriteEnumValue(enumValue, expectedType);
+                return;
+            }
+
             ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
             Debug.Assert(primitiveValue != null, "Did we add a new subclass of ODataValue?");
 

@@ -27,7 +27,6 @@ namespace Microsoft.OData
         /// <param name="selectExpandClause">the current level select expand clause</param>
         /// <param name="firstFlag">whether is inner SelectExpandClause</param>
         /// <returns>the select and expand segment for context url in this level.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are model elements like property names or keywords.")]
         public string TranslateSelectExpandClause(SelectExpandClause selectExpandClause, bool firstFlag)
         {
             ExceptionUtils.CheckArgumentNotNull(selectExpandClause, "selectExpandClause");

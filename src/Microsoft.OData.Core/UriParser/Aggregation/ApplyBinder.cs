@@ -110,6 +110,8 @@ namespace Microsoft.OData.UriParser.Aggregation
                             return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);
                         case EdmPrimitiveTypeKind.Decimal:
                             return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Decimal, expressionType.IsNullable);
+                        case EdmPrimitiveTypeKind.None:
+                            return expressionType;
                         default:
                             throw new ODataException(
                                 ODataErrorStrings.ApplyBinder_AggregateExpressionIncompatibleTypeForMethod(expression,
@@ -134,7 +136,16 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private IEdmTypeReference GetTypeReferenceByPropertyName(string name)
         {
-            return aggregateExpressionsCache.First(statement => statement.Alias.Equals(name)).TypeReference;
+            if (aggregateExpressionsCache != null)
+            {
+                var expression = aggregateExpressionsCache.FirstOrDefault(statement => statement.Alias.Equals(name));
+                if (expression != null)
+                {
+                    return expression.TypeReference;
+                }
+            }
+
+            return null;
         }
 
         private GroupByTransformationNode BindGroupByToken(GroupByToken token)

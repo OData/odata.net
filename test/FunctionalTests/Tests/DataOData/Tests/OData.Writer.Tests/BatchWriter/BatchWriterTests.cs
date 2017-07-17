@@ -32,6 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for writing batch requests/responses with the ODataBatchWriter.
     /// </summary>
@@ -54,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         public BatchResponseToDummyRequestGenerator RequestGenerator { get; set; }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests writing requests with the batch writer (with dummy payloads).")]
+        // [TestMethod, Variation(Description = "Tests writing requests with the batch writer (with dummy payloads).")]
         public void ODataBatchWriterRequestTests()
         {
             Uri baseUri = new Uri("http://services.odata.org/OData/OData.svc");
@@ -156,7 +157,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests writing responses with the batch writer (with dummy payloads).")]
+        // [TestMethod, Variation(Description = "Tests writing responses with the batch writer (with dummy payloads).")]
         public void ODataBatchWriterResponseTests()
         {
             Uri baseUri = new Uri("http://services.odata.org/OData/OData.svc");
@@ -175,7 +176,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests correct handling of absolute and relative URIs in batches.")]
+        // [TestMethod, Variation(Description = "Tests correct handling of absolute and relative URIs in batches.")]
         public void ODataBatchWriterBaseUriTests()
         {
             Func<Uri, Uri, ExpectedException, BatchWriterTestDescriptor> createInvokation = (uri, baseUri, expectedException) =>
@@ -240,7 +241,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests different combinations of Http methods for query operations and changeset requests.")]
+        // [TestMethod, Variation(Description = "Tests different combinations of Http methods for query operations and changeset requests.")]
         public void ODataBatchWriterHttpMethodTests()
         {
             Func<string, string, BatchWriterTestDescriptor> createQueryOperation = (method, expectedError) =>
@@ -327,7 +328,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation headers.")]
+        // [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation headers.")]
         public void ODataBatchWriterCrossReferencingLinksInHeaderTest()
         {
             Uri baseUri = new Uri("http://odata.org/base");
@@ -496,8 +497,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [Ignore]
-        [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation payloads.")]
+        // [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation payloads.")]
         public void ODataBatchWriterCrossReferencingLinksInPayloadTest()
         {
             Uri baseUri = new Uri("http://odata.org/base");
@@ -759,7 +759,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
+        // [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
         public void ODataBatchWriterUserExceptionInRequestTests()
         {
             var testCases = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[][]
@@ -848,7 +848,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
+        // [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
         public void ODataBatchWriterUserExceptionInResponseTests()
         {
             var testCases = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[][]
@@ -936,8 +936,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [Ignore]
-        [TestMethod, Variation(Description = "Tests writing of sample OData payloads.")]
+        // [TestMethod, Variation(Description = "Tests writing of sample OData payloads.")]
         public void ODataBatchWriterODataPayloadSmokeTests()
         {
             // Create OData payloads
@@ -1145,7 +1144,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests different max sizes for change sets and the expected error behavior.")]
+        // [TestMethod, Variation(Description = "Tests different max sizes for change sets and the expected error behavior.")]
         public void ODataBatchWriterChangeSetSizeTests()
         {
             Func<int, int[], int?, ExpectedException, BatchWriterTestDescriptor> createChangeSetBatch =
@@ -1240,7 +1239,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests different max sizes for batches and the expected error behavior.")]
+        // [TestMethod, Variation(Description = "Tests different max sizes for batches and the expected error behavior.")]
         public void ODataBatchWriterBatchSizeTests()
         {
             Func<int, int?, ExpectedException, BatchWriterTestDescriptor> createQueryBatch =
@@ -1343,8 +1342,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [Ignore]
-        [TestMethod, Variation(Description = "Tests a variety of batch payload shapes.")]
+        // [TestMethod, Variation(Description = "Tests a variety of batch payload shapes.")]
         // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
         public void ODataBatchWithPayloadTests()
         {

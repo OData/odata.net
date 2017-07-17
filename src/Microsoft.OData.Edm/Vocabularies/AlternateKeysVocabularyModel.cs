@@ -24,31 +24,28 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         /// <summary>
         /// The EDM model with Alternate Keys vocabularies.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmModel is immutable")]
         public static readonly IEdmModel Instance;
 
         /// <summary>
         /// The Alternate Keys term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
         public static readonly IEdmTerm AlternateKeysTerm;
 
         /// <summary>
         /// The AlternateKey ComplexType.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         internal static readonly IEdmComplexType AlternateKeyType;
 
         /// <summary>
         /// The PropertyRef ComplexType.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         internal static readonly IEdmComplexType PropertyRefType;
 
         /// <summary>
         /// Parse Alternate Keys Vocabulary Model from AlternateKeysVocabularies.xml
         /// </summary>
-        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         static AlternateKeysVocabularyModel()
         {
             Assembly assembly = typeof(AlternateKeysVocabularyModel).GetAssembly();

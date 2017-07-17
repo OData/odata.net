@@ -232,12 +232,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         }
 
         // V4 Protocol Spec Chapters 10.2
-        // TODO: Complete after Containment Feature Finished
-        [Fact(Skip = "Not implemented")]
-        public void ContainedCollectionOfEntities()
-        {
+        //[Fact(Skip = "#622: Complete after Containment Feature Finished")]
+        //public void ContainedCollectionOfEntities()
+        //{
 
-        }
+        //}
 
         // V4 Protocol Spec Chapters 10.3: Not Contained Entity
         // Sample Rquest: http://host/service.svc/People(1)
@@ -278,18 +277,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         // V4 Protocol Spec Chapters 10.3: Entity
         //
-        [Fact(Skip = "TODO: Complete after Containment Feature Finished")]
-        public void ContainedEntity()
-        {
+        //[Fact(Skip = "#622: Complete after Containment Feature Finished")]
+        //public void ContainedEntity()
+        //{
 
-        }
+        //}
 
         // V4 Protocol Spec Chapters 10.3: Singleton
-        [Fact(Skip = "TODO: Complete after Singleton Freature")]
-        public void Singlton()
-        {
+        //[Fact(Skip = "#622: Complete after Singleton Feature")]
+        //public void Singleton()
+        //{
 
-        }
+        //}
 
         // V4 Protocol Spec Chapters 10.5: Entity Collection Derived Entities
         // Sample Request: http://host/service/People/Model.Employee

@@ -40,8 +40,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             public Func<WriterTestConfiguration, bool> SkipForConfiguration { get; set; }
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Validates correct checking of states in ODataCollectionWriter implementations.")]
+        // [TestMethod, Variation(Description = "Validates correct checking of states in ODataCollectionWriter implementations.")]
         public void CollectionWriterStatesTest()
         {
             var testCases = new CollectionWriterStatesTestDescriptor[]

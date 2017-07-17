@@ -38,6 +38,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         /// <summary>This is a test class for querying functionality.</summary>
         [TestClass, TestCase]
         public class QueryTest : AstoriaTestCase
@@ -96,7 +97,7 @@ namespace AstoriaUnitTests.Tests
 
             /// <summary>Checks that arguments can take whitespace before and after with no problems.</summary>
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void QueryTestBasicArguments()
             {
                 // DEVNOTE(pqian):
@@ -178,7 +179,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestDeepExpand()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForLocal())
@@ -249,7 +250,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestBasicExpand()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -308,7 +309,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // TODO : Need to Fix Astoria Service
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestExpandOpenResource()
             {
                 string[] requestStrings = new string[]
@@ -335,7 +336,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // TODO : Need to Fix Astoria Service
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestOpenResourceProperty()
             {
                 string[] requestStrings = new string[]
@@ -362,7 +363,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // TODO : Need to Fix Astoria Service
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestFilterOpenResourceProperty()
             {
                 string[] requestStrings = new string[]
@@ -387,7 +388,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestExpandCustom()
             {
                 foreach (SerializationFormatData d in SerializationFormatData.StructuredValues)
@@ -424,7 +425,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // TODO : Need to Fix Astoria Service
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestFilterWithCastAndTypeIsForIDSP()
             {
                 string[] requestStrings = new string[]
@@ -531,7 +532,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestExpandReflection()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -884,7 +885,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestFilterComplexType()
             {
                 // Repro for Protocol: Internal Server Error using filter with a Complex Type.
@@ -937,7 +938,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestFilterWithBoolGuid()
             {
                 var testData = new[] { new { Input = "/Data?$filter=NonNullBool gt false", Count = 1, Index = 1 },
@@ -1059,7 +1060,7 @@ namespace AstoriaUnitTests.Tests
 
             /// <summary>Checks that filtering can be invoked correctly.</summary>
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestBasicFilter()
             {
                 // Very simple test at this level: simply check that we can get an entity by its ID.
@@ -1280,7 +1281,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryLinksUri()
             {
                 var urisToVerify = new KeyValuePair<string, string[]>[] {
@@ -1478,7 +1479,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestRowCountProviders()
             {
                 TestUtil.ClearMetadataCache();
@@ -1556,7 +1557,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestRowCountLinkEnd()
             {
                 TestUtil.ClearMetadataCache();
@@ -1653,7 +1654,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestRowCountFiltered()
             {
                 TestUtil.ClearMetadataCache();
@@ -1769,7 +1770,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void QueryTestOnStartProcessingRequest()
             {
                 TestUtil.ClearMetadataCache();
@@ -1829,7 +1830,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void QueryTestRowCountBatching()
             {
                 TestUtil.ClearMetadataCache();
@@ -1872,7 +1873,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void QueryTestRowCountServiceOp()
             {
                 TestUtil.ClearMetadataCache();
@@ -2032,7 +2033,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void BasicCustomAndOpenTypes()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2102,7 +2103,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void ExpandEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2184,7 +2185,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void ExpandCustomAndOpenTypes()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2277,7 +2278,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void LinksEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2350,7 +2351,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void LinksCustomAndOpenTypes()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2410,7 +2411,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void QueryRowCountWithSDP()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2460,7 +2461,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void IgnoreMaxIntPageSize()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2510,7 +2511,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void BasicEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2578,7 +2579,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void FullTraversalEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2669,7 +2670,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void TestQueryResultOrdering()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2734,7 +2735,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void TestPagingQueryResultCount()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2815,7 +2816,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void Linq2SqlBooleanOrdering()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2899,7 +2900,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void VersioningUsingEF()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2949,7 +2950,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void VerifyServiceDocumentEndPoint()
             {
                 string[] entitySetNames = new string[] { "Customers", "EmptySet", "Orders", "Regions", "Products", "OrderDetails" };
@@ -3022,7 +3023,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void ServiceOperationsCustom()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -3058,7 +3059,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void VersioningWithPost()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -3157,7 +3158,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void InvalidExpandQuery()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -3187,7 +3188,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void SkipTokenAppliedToSetsWithoutPageSize()
             {
                 // regression test: Server ignores $skiptoken in query string if preceded by $orderby option and the set doesnt have page size limits.
@@ -3221,7 +3222,7 @@ OData-Version: 4.0
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void CustomPagingWithExpand()
             {
                 CustomRowBasedContext.ClearData();
@@ -3316,7 +3317,7 @@ OData-Version: 4.0
             /// Server driven paging doesn't work when the skip token value should contain NULL
             /// </summary>
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void PagingWithNullSkipTokens()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -3416,7 +3417,7 @@ OData-Version: 4.0
             /// Regression test: Custom IDataServicePagingProvider does not update the $top value in the next link uri correctly
             /// </summary>
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void CustomPagingWithTopQueryParameter()
             {
                 CustomRowBasedContext.ClearData();
@@ -3615,7 +3616,7 @@ OData-Version: 4.0
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void CustomPagingWithDifferentIdType()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(

@@ -7,7 +7,7 @@
     <version>$VersionNuGetSemantic$</version>
     <authors>Microsoft Corporation</authors>
     <owners>Microsoft Corporation</owners>
-    <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -16,9 +16,9 @@
 OData .NET library is open source at http://github.com/OData/odata.net</description>
   </metadata>
   <files>
-    <file src="Net35\Microsoft.Spatial.NetFX35.dll" target="lib\net35" />
-    <file src="Net35\Microsoft.Spatial.NetFX35.pdb" target="lib\net35" />
-    <file src="Net35\Microsoft.Spatial.NetFX35.xml" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.Spatial.NetFX35.dll" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.Spatial.NetFX35.pdb" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.Spatial.NetFX35.xml" target="lib\net35" />
     <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />

@@ -40,7 +40,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="uri">The relative <see cref="System.Uri"/> to escape.</param>
         /// <returns>A relative URI instance with guaranteed escaped original string.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of OriginalString is safe in this context")]
         internal static Uri EnsureEscapedRelativeUri(Uri uri)
         {
             Debug.Assert(uri != null && !uri.IsAbsoluteUri, "uri != null && !uri.IsAbsoluteUri");
@@ -59,7 +58,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="fragmentString">The metadata reference property name in question.</param>
         /// <returns>The Uri escaped metadata reference property name.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are to appear in Uri fragments.")]
         internal static string EnsureEscapedFragment(string fragmentString)
         {
             Debug.Assert(fragmentString[0] == ODataConstants.ContextUriFragmentIndicator, "fragmentString[0] == " + ODataConstants.ContextUriFragmentIndicator);
@@ -71,7 +69,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="uri">The Uri to convert to a string.</param>
         /// <returns>For absolute Uris the string representation of the absolute Uri; otherwise the Uri's original string.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of OriginalString is safe in this context")]
         internal static string UriToString(Uri uri)
         {
             Debug.Assert(uri != null, "uri != null");

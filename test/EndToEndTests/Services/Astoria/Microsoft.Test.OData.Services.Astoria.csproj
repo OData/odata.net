@@ -40,7 +40,7 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" />
+    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">

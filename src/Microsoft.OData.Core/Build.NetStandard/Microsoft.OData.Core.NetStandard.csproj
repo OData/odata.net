@@ -1001,6 +1001,9 @@
     <Compile Include="..\UriParser\Binders\BindingState.cs">
       <Link>UriParser\Binders\BindingState.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\Binders\ComputeBinder.cs">
+      <Link>UriParser\Binders\ComputeBinder.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\Binders\DottedIdentifierBinder.cs">
       <Link>UriParser\Binders\DottedIdentifierBinder.cs</Link>
     </Compile>
@@ -1187,9 +1190,6 @@
     <Compile Include="..\UriParser\Parsers\ODataPathParser.cs">
       <Link>UriParser\Parsers\ODataPathParser.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\OpenTypeMethods.cs">
-      <Link>UriParser\Parsers\OpenTypeMethods.cs</Link>
-    </Compile>
     <Compile Include="..\UriParser\Parsers\PathParserModelUtils.cs">
       <Link>UriParser\Parsers\PathParserModelUtils.cs</Link>
     </Compile>
@@ -1297,6 +1297,12 @@
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceNode.cs">
       <Link>UriParser\SemanticAst\CollectionResourceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeClause.cs">
+      <Link>UriParser\SemanticAst\ComputeClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeExpression.cs">
+      <Link>UriParser\SemanticAst\ComputeExpression.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\ConstantNode.cs">
       <Link>UriParser\SemanticAst\ConstantNode.cs</Link>
@@ -1451,6 +1457,9 @@
     <Compile Include="..\UriParser\SemanticAst\SingleNavigationNode.cs">
       <Link>UriParser\SemanticAst\SingleNavigationNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueCastNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueCastNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\SingleResourceCastNode.cs">
       <Link>UriParser\SemanticAst\SingleResourceCastNode.cs</Link>
     </Compile>
@@ -1498,6 +1507,12 @@
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\BinaryOperatorToken.cs">
       <Link>UriParser\SyntacticAst\BinaryOperatorToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeExpressionToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
       <Link>UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>

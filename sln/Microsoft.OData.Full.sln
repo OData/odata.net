@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Service.TDDUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj", "{E7A080F5-2054-447F-B09C-4E7B9B1B1B6A}"
 EndProject
@@ -52,8 +52,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commander.Common", "..\test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoKoMo", "..\tools\KoKoMo\KoKoMo.csproj", "{EB4C9641-0452-4E7F-AA38-3EBD871914A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCategoryAttributeCheck.UnitTest", "..\test\FunctionalTests\Tests\DataServices\UnitTests\TestCategoryAttributeCheck\TestCategoryAttributeCheck.UnitTest.csproj", "{10F2E291-BCCC-488B-8788-6EF6451DAC98}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.MetadataObjectModel.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj", "{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.Web.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj", "{BB7D22CB-7003-4AF6-9035-B369B00EA95E}"
@@ -99,6 +97,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.PluggableFormat.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj", "{1D872F31-6100-4C76-999E-ED948E2CD249}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.DependencyInjection", "..\test\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj", "{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.TestCommon", "..\test\FunctionalTests\Microsoft.OData.TestCommon\Build.NetFramework\Microsoft.OData.TestCommon.csproj", "{9037FF4A-4636-41AA-BFA2-0930EF1563EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Build.NetFramework\Microsoft.OData.Core.Tests.csproj", "{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -563,24 +565,6 @@ Global
 		{EB4C9641-0452-4E7F-AA38-3EBD871914A3}.Release|x64.Build.0 = Release|x64
 		{EB4C9641-0452-4E7F-AA38-3EBD871914A3}.Release|x86.ActiveCfg = Release|x86
 		{EB4C9641-0452-4E7F-AA38-3EBD871914A3}.Release|x86.Build.0 = Release|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x64.ActiveCfg = Cover|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x64.Build.0 = Cover|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x86.ActiveCfg = Cover|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x86.Build.0 = Cover|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x64.ActiveCfg = Debug|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x64.Build.0 = Debug|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x86.ActiveCfg = Debug|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x86.Build.0 = Debug|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x64.ActiveCfg = Release|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x64.Build.0 = Release|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x86.ActiveCfg = Release|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x86.Build.0 = Release|x86
 		{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
 		{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}.Cover|Any CPU.Build.0 = Cover|Any CPU
 		{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}.Cover|x64.ActiveCfg = Cover|x64
@@ -992,6 +976,42 @@ Global
 		{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}.Release|x64.Build.0 = Release|x64
 		{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}.Release|x86.ActiveCfg = Release|x86
 		{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}.Release|x86.Build.0 = Release|x86
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Cover|Any CPU.ActiveCfg = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Cover|Any CPU.Build.0 = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Cover|x64.ActiveCfg = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Cover|x64.Build.0 = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Cover|x86.ActiveCfg = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Cover|x86.Build.0 = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Debug|x64.Build.0 = Debug|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Debug|x86.Build.0 = Debug|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Release|x64.ActiveCfg = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Release|x64.Build.0 = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Release|x86.ActiveCfg = Release|Any CPU
+		{9037FF4A-4636-41AA-BFA2-0930EF1563EE}.Release|x86.Build.0 = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|Any CPU.ActiveCfg = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|Any CPU.Build.0 = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x64.ActiveCfg = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x64.Build.0 = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x86.ActiveCfg = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x86.Build.0 = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x64.Build.0 = Debug|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x86.Build.0 = Debug|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x64.Build.0 = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x86.ActiveCfg = Release|Any CPU
+		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

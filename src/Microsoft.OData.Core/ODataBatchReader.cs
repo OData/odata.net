@@ -125,7 +125,6 @@ namespace Microsoft.OData
 #if PORTABLELIB
         /// <summary>Asynchronously reads the next part from the batch message payload.</summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         public Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
@@ -263,7 +262,6 @@ namespace Microsoft.OData
         /// Asynchronously reads the next part from the batch message payload.
         /// </summary>
         /// <returns>A task that when completed indicates whether more information was read.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         private Task<bool> ReadAsynchronously()
         {
             // We are reading from the fully buffered read stream here; thus it is ok
@@ -797,7 +795,6 @@ namespace Microsoft.OData
         /// <typeparam name="T">The type of the result returned from the <paramref name="action"/>.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of the <paramref name="action"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private T InterceptException<T>(Func<T> action)
         {
             try

@@ -29,11 +29,6 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Client.Strings.#ODataMetadataBuilder_MissingSegmentForEntitySetUriSuffix(System.Object,System.Object)")]
 [module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Client.Strings.#ODataMetadataBuilder_MissingEntityInstanceUri(System.Object)")]
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.DataServiceCollection`1.#Microsoft.OData.Client.ICollectionSerializationAppendix.GetAppendix()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.DataServiceSerializationScope.#.cctor()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.KnownTypeTable.#.ctor()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.DataServiceSerializationAppendice.#.ctor(Microsoft.OData.Client.DataServiceContext,System.Collections.Generic.IEnumerable`1<System.Object>)")]
-
 // Since DataServiceClientRequestMessage is already a public API, suppress this issue until we decide to make breaking changes.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1012:AbstractTypesShouldNotHaveConstructors", Scope = "type", Target = "Microsoft.OData.Client.DataServiceClientRequestMessage")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Scope = "type", Target = "Microsoft.OData.Client.DataServiceQuery`1+DataServiceOrderedQuery")]
@@ -67,10 +62,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Scope = "member", Target = "Microsoft.OData.Client.DataServiceActionQuerySingle`1.#.ctor(Microsoft.OData.Client.DataServiceContext,System.String,Microsoft.OData.Client.BodyOperationParameter[])")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Scope = "member", Target = "Microsoft.OData.Client.DataServiceQuery`1.#GetKeyPath(System.String)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Client.ClientEdmModel.#FindOperationImportsByNameNonBindingParameterType(System.String,System.Collections.Generic.IEnumerable`1<System.String>)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Client.Annotation.AnnotationHelper.#TryGetMetadataAnnotation`1(Microsoft.OData.Client.DataServiceContext,System.Object,System.String,System.String,!!0&)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Client.HttpWebRequestMessage.#.cctor()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "httpRequestStream", Scope = "member", Target = "Microsoft.OData.Client.BaseAsyncResult.#AsyncEndWrite(System.Threading.Tasks.Task,System.Object)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Client.RequestInfo.#IsUserSuppliedResolver")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Client.RequestInfo.#IsUserSuppliedResolver", Justification = "Non-static is required for for non-PORTABLELIB")]
 
 // APTCA
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.MSInternal", "CA900")]

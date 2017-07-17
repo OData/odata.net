@@ -82,7 +82,6 @@ namespace Microsoft.OData.JsonLight
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
         /// Post-Condition: The reader is positioned on the first node of the first item or the EndArray node of an empty item array
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtStartImplementationAsync()
         {
             Debug.Assert(this.State == ODataCollectionReaderState.Start, "this.State == ODataCollectionReaderState.Start");
@@ -133,7 +132,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.PrimitiveValue: for a primitive value as first item
         /// Post-Condition: The reader is positioned on the first node of the second item or an EndArray node if there are no items in the collection
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtCollectionStartImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtCollectionStartImplementationSynchronously);
@@ -170,7 +168,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.PrimitiveValue: for a primitive item
         /// Post-Condition: The reader is positioned on the first node of the next item or an EndArray node if there are no items in the collection
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtValueImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtValueImplementationSynchronously);
@@ -199,7 +196,6 @@ namespace Microsoft.OData.JsonLight
         /// Pre-Condition: JsonNodeType.EndArray        the end of the item array of the collection
         /// Post-Condition: JsonNodeType.EndOfInput     nothing else to read when not reading a nested payload
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtCollectionEndImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtCollectionEndImplementationSynchronously);

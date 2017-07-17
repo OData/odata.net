@@ -159,8 +159,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.TestSetRequestContentTypeHeaderForAction(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
+        // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SetRequestContentTypeHeaderShouldNotSetContentTypeHeaderIfAlreadySetWhenUsingJson()
         {
             const string initialHeaderValue = "InitialHeaderValue";

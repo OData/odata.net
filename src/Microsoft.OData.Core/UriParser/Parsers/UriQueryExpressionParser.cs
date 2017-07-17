@@ -205,6 +205,38 @@ namespace Microsoft.OData.UriParser
             }
         }
 
+        // parses $compute query option.
+        internal ComputeToken ParseCompute(string compute)
+        {
+            Debug.Assert(compute != null, "compute != null");
+
+            List<ComputeExpressionToken> transformationTokens = new List<ComputeExpressionToken>();
+
+            if (string.IsNullOrEmpty(compute))
+            {
+                return new ComputeToken(transformationTokens);
+            }
+
+            this.recursionDepth = 0;
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(compute);
+
+            while (true)
+            {
+                ComputeExpressionToken computed = this.ParseComputeExpression();
+                transformationTokens.Add(computed);
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            this.lexer.ValidateToken(ExpressionTokenKind.End);
+
+            return new ComputeToken(transformationTokens);
+        }
+
         internal IEnumerable<QueryToken> ParseApply(string apply)
         {
             Debug.Assert(apply != null, "apply != null");
@@ -402,6 +434,21 @@ namespace Microsoft.OData.UriParser
 
             // '(' expression ')'
             return this.ParseParenExpression();
+        }
+
+        /// <summary>
+        /// Parse compute expression text into a token.
+        /// </summary>
+        /// <returns>The lexical token representing the compute expression text.</returns>
+        internal ComputeExpressionToken ParseComputeExpression()
+        {
+            // expression
+            QueryToken expression = this.ParseExpression();
+
+            // "as" alias
+            StringLiteralToken alias = this.ParseAggregateAs();
+
+            return new ComputeExpressionToken(expression, alias.Text);
         }
 
         /// <summary>

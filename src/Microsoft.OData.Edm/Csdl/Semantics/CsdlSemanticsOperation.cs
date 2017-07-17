@@ -112,7 +112,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             foreach (var parameter in this.operation.Parameters)
             {
-                parameters.Add(new CsdlSemanticsOperationParameter(this, parameter));
+                if (parameter.IsOptional)
+                {
+                    parameters.Add(new CsdlSemanticsOptionalParameter(this, parameter, parameter.DefaultValue));
+                }
+                else
+                {
+                    parameters.Add(new CsdlSemanticsOperationParameter(this, parameter));
+                }
             }
 
             return parameters;

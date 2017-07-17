@@ -42,7 +42,6 @@ namespace Microsoft.OData
         /// <param name="format">The format for this input context.</param>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         public ODataRawInputContext(
             ODataFormat format,
             ODataMessageInfo messageInfo,

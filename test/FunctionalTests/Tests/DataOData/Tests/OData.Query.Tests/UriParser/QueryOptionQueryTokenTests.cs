@@ -20,7 +20,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
     /// <summary>
     /// Tests for the lexical parsing of query options.
     /// </summary>
-    [Ignore]
     [TestClass, TestCase]
     public class QueryOptionQueryTokenTests : ODataTestCase
     {
@@ -143,7 +142,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
 
                             SyntacticTree expected = new SyntacticTree(
                                 null,
-                                new[] { "Feed" }, 
+                                new[] { "Root" },
                                 actual.Filter,
                                 actual.OrderByTokens,
                                 null,

@@ -32,6 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for writing properties with the OData writer.
     /// </summary>
@@ -73,7 +74,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // This test only runs on async which is not supported on Phone and Silverlight
 #if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test single property JSON payloads from payload Generator.")]
+        // [TestMethod, Variation(Description = "Test single property JSON payloads from payload Generator.")]
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void TaupoSinglePropertyTests_Json()
         {
@@ -83,7 +84,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test complex property payloads with metadata")]
+        // [TestMethod, Variation(Description = "Test complex property payloads with metadata")]
         public void TaupoComplexPropertyMetadataErrorTests()
         {
             var metadata = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildDefaultAstoriaTestModel();
@@ -599,7 +600,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test in-stream error cases when writing a property.")]
+        // [TestMethod, Variation(Description = "Test in-stream error cases when writing a property.")]
         public void PropertyInStreamErrorTests()
         {
             EdmModel model = new EdmModel();
@@ -636,7 +637,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test error case when writing a property with an invalid Xml character in its value.")]
+        // [TestMethod, Variation(Description = "Test error case when writing a property with an invalid Xml character in its value.")]
         public void InvalidXmlCharactersTests()
         {
             ODataProperty property = ObjectModelUtils.CreateDefaultPrimitiveProperties().First(p => p.Name == "String");
@@ -696,7 +697,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Makes sure xml:space=\"preserve\" is written for string values with leading and/or trailing spaces.")]
+        // [TestMethod, Variation(Description = "Makes sure xml:space=\"preserve\" is written for string values with leading and/or trailing spaces.")]
         public void PreserveSpaceTests()
         {
             ODataProperty property = ObjectModelUtils.CreateDefaultPrimitiveProperties().First(p => p.Name == "String");
@@ -758,7 +759,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies correct failures if invalid property names are specified.")]
+        // [TestMethod, Variation(Description = "Verifies correct failures if invalid property names are specified.")]
         public void InvalidPropertyNameTest()
         {
             EdmModel model = new EdmModel();
@@ -797,7 +798,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies correct failures if invalid property values are specified.")]
+        // [TestMethod, Variation(Description = "Verifies correct failures if invalid property values are specified.")]
         public void InvalidPropertyValueTest()
         {
             EdmModel model = new EdmModel();
@@ -878,7 +879,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new NonNullableEdmPrimitiveTypeWithValue(EdmPrimitiveTypeKind.Duration, TimeSpan.FromMinutes(12.34), "PT12M20.4S", "\"PT12M20.4S\""),
             };
 
-
         // NOTE that we're only testing null property on a complex top-level property or on an entry, but the same behavior should apply to
         // all of these cases:
         //   primitive on a complex value
@@ -890,9 +890,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         //   both ATOM and JSON
         //   primitive on complex or entry value in EPM
         // We're not testing these here, since all of it goes through the same code-path, the only difference is passing around the settings.
-
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
+        // [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
         public void NullPropertyOnEntryTest()
         {
             var complexType = new EdmComplexType("TestModel", "NullValueComplexType");
@@ -938,7 +937,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
+        // [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
         public void NullPropertyOnComplexValueTest()
         {
             var complexType = new EdmComplexType("TestModel", "NullValueComplexType");
@@ -981,7 +980,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on complex values are correctly validated against metadata and correctly serialized.")]
+        // [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on complex values are correctly validated against metadata and correctly serialized.")]
         public void NonNullablePropertyOnComplexValueTest()
         {
             // Primitive properties
@@ -1018,7 +1017,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on entries are correctly validated against metadata and correctly serialized.")]
+        // [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on entries are correctly validated against metadata and correctly serialized.")]
         public void NonNullablePropertyOnEntryTest()
         {
             // Primitive properties
@@ -1060,7 +1059,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on complex values.")]
+        // [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on complex values.")]
         public void PropertyWithInvalidNameOnComplexValueTest()
         {
             var nonNullablePrimitiveTypeWithValue = NonNullableEdmPrimitiveTypesWithValues.First();
@@ -1089,7 +1088,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on entries.")]
+        // [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on entries.")]
         public void PropertyWithInvalidNameOnEntryTest()
         {
             var nonNullablePrimitiveTypeWithValue = NonNullableEdmPrimitiveTypesWithValues.First();
@@ -1124,7 +1123,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a complex value.")]
+        // [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a complex value.")]
         public void ComplexValueODataTypeAnnotationTest()
         {
             // TODO: Move this string to resources and localize it
@@ -1286,7 +1285,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a collection.")]
+        // [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a collection.")]
         public void CollectionValueODataTypeAnnotationTest()
         {
             #region test cases
@@ -1471,7 +1470,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verify that ODataTypeAnnotation behave as expected on a collection.")]
+        // [TestMethod, Variation(Description = "Verify that ODataTypeAnnotation behave as expected on a collection.")]
         public void PrimitiveValueODataTypeAnnotationTest()
         {
             #region test case

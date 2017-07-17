@@ -101,12 +101,33 @@ namespace Microsoft.OData.Tests
             this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(TotalId)");
         }
 
+        [Theory]
+        [InlineData("sum")]
+        [InlineData("average")]
+        [InlineData("max")]
+        [InlineData("min")]
+        [InlineData("countdistinct")]
+        public void FeedContextUriWithApplyAggreagateOnDynamicProperty(string method)
+        {
+            string applyClause = "aggregate(DynamicProperty with " + method + " as DynamicPropertyTotal)";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)");
+        }
+
         [Fact]
         public void FeedContextUriWithApplyGroupBy()
         {
             string applyClause = "groupby((Name, Address/Street))";
 
             this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,Address(Street))");
+        }
+
+        [Fact]
+        public void FeedContextUriWithApplyGroupByDynamicProperty()
+        {
+            string applyClause = "groupby((Name, DynamicProperty, Address/Street))";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,DynamicProperty,Address(Street))");
         }
 
         [Fact]
@@ -615,7 +636,7 @@ namespace Microsoft.OData.Tests
             addressType.AddStructuralProperty("Street", EdmCoreModel.Instance.GetString(/*isNullable*/false));
             addressType.AddStructuralProperty("Zip", EdmCoreModel.Instance.GetString(/*isNullable*/false));
 
-            this.cityType = new EdmEntityType("TestModel", "City");
+            this.cityType = new EdmEntityType("TestModel", "City", baseType: null, isAbstract: false, isOpen: true);
             EdmStructuralProperty cityIdProperty = cityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
             cityType.AddKeys(cityIdProperty);
             cityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));

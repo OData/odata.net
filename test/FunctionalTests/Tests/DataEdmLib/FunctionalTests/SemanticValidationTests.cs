@@ -1920,52 +1920,6 @@ namespace EdmLibTests.FunctionalTests
             this.CompareErrors(edmErrors, expectedErrors);
         }
 
-        [Ignore] // Ignore until we implement edmx:Reference to give alias to Referenced model.
-        [TestMethod]
-        public void ValidatingModelWithDuplicateReferences()
-        {
-            const string modelCsdl =
-@"<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <Using Alias=""alias1"" Namespace=""foo"" />
-    <Using Alias=""alias2"" Namespace=""bar"" />
-    <Using Alias=""alias3"" Namespace=""foobaz"" />
-    <ComplexType Name=""Person"">
-        <Property Name=""Name"" Type=""alias1.Name"" />
-        <Property Name=""Number"" Type=""alias2.Number"" />
-        <Property Name=""Address"" Type=""alias3.Address"" />
-    </ComplexType>
-</Schema>";
-
-            const string fooCsdl =
-@"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <ComplexType Name=""Name"" />
-</Schema>";
-
-            const string barCsdl =
-@"<Schema Namespace=""bar"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <ComplexType Name=""Number"" />
-</Schema>";
-
-            const string foobarCsdl =
-@"<Schema Namespace=""foobaz"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <ComplexType Name=""Address"" />
-</Schema>";
-
-            var fooModel = this.GetParserResult(new string[] { fooCsdl });
-            var barModel = this.GetParserResult(new string[] { barCsdl });
-            var foobarModel = this.GetParserResult(new string[] { foobarCsdl });
-
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.BadAmbiguousElementBinding },
-            };
-            var edmModel = this.GetParserResult(new string[] { modelCsdl }, fooModel, fooModel, barModel, foobarModel);
-            IEnumerable<EdmError> edmErrors;
-            edmModel.Validate(out edmErrors);
-            this.CompareErrors(edmErrors, expectedErrors);
-
-        }
-
         [TestMethod]
         public void ValidateCollectionTypeTypeRefSimpleTypeCanHaveFacets()
         {

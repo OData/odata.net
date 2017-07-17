@@ -180,15 +180,17 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid("UpdateStuff"));
         }
 
-        [Fact(Skip = "Skipped in Microsoft.Test.Edm.TDD.Tests")]
+        [Fact]
         public void OperationImportEntitySetReferenceEntitySetTargetPathShouldNotError()
         {
+            var model = new EdmModel();
             var defaultContainer = new EdmEntityContainer("f", "d");
+            model.AddElement(defaultContainer);
             var entitySet = defaultContainer.AddEntitySet("EntitySet", DefaultValidEntityType.EntityDefinition());
             var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true));
 
-            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmPathExpression("Schema.EntityContainer/EntitySet"), true);
-            ValidateNoError(ValidationRules.OperationImportEntitySetExpressionIsInvalid, new EdmModel(), edmFunctionImport);
+            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmPathExpression("EntitySet"), true);
+            ValidateNoError(ValidationRules.OperationImportEntitySetExpressionIsInvalid, model, edmFunctionImport);
         }
 
         [Fact]
@@ -749,6 +751,57 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 function,
                 EdmErrorCode.AlreadyDefined,
                 Strings.EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate("param1"));
+        }
+
+        [Fact]
+        public void OperationWithOptionalParametersBeforeRequiredShouldError()
+        {
+            var function = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), false /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
+            function.AddOptionalParameter("param1", EdmCoreModel.Instance.GetString(true));
+            function.AddParameter("param2", EdmCoreModel.Instance.GetInt16(true));
+
+            EdmModel model = new EdmModel();
+            model.AddElement(function);
+
+            ValidateError(
+                ValidationRules.OptionalParametersMustComeAfterRequiredParameters,
+                model,
+                function,
+                EdmErrorCode.RequiredParametersMustPrecedeOptional,
+                Strings.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional("param2"));
+        }
+
+        [Fact]
+        public void BoundOperationWithoutParameterShouldError()
+        {
+            var function = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), true /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
+
+            EdmModel model = new EdmModel();
+            model.AddElement(function);
+
+            ValidateError(
+                ValidationRules.BoundOperationMustHaveParameters,
+                model,
+                function,
+                EdmErrorCode.BoundOperationMustHaveParameters,
+                Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(function.Name));
+        }
+
+        [Fact]
+        public void BoundOperationWithOnlyOptionalParametersShouldError()
+        {
+            var function = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), true /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
+            function.AddOptionalParameter("param1", EdmCoreModel.Instance.GetString(true));
+
+            EdmModel model = new EdmModel();
+            model.AddElement(function);
+
+            ValidateError(
+                ValidationRules.BoundOperationMustHaveParameters,
+                model,
+                function,
+                EdmErrorCode.BoundOperationMustHaveParameters,
+                Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(function.Name));
         }
 
         [Fact]

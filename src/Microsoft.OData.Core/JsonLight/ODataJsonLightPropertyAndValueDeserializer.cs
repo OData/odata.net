@@ -272,71 +272,6 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Reads a non-open entity or complex type's undeclared property, may return OdataUntypedValue.
-        /// </summary>
-        /// <param name="propertyAndAnnotationCollector">propertyAndAnnotationCollector.</param>
-        /// <param name="propertyName">Now this name can't be found in model.</param>
-        /// <param name="isTopLevelPropertyValue">bool</param>
-        /// <returns>The read result.</returns>
-        protected object InnerReadNonOpenUndeclaredPropertyInComplex(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string propertyName, bool isTopLevelPropertyValue)
-        {
-            bool insideComplexValue = false;
-            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(propertyAndAnnotationCollector, propertyName);
-            string payloadTypeName = this.TryReadOrPeekPayloadType(propertyAndAnnotationCollector, propertyName, insideComplexValue);
-            EdmTypeKind payloadTypeKind;
-            IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
-                this.Model,
-                null, // expectedTypeReference
-                payloadTypeName,
-                EdmTypeKind.Complex,
-                this.MessageReaderSettings.ClientCustomTypeResolver,
-                out payloadTypeKind);
-            IEdmTypeReference payloadTypeReference = null;
-            if (!string.IsNullOrEmpty(payloadTypeName) && payloadType != null)
-            {
-                // only try resolving for known type (the below will throw on unknown type name) :
-                ODataTypeAnnotation typeAnnotation;
-                EdmTypeKind targetTypeKind;
-                payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
-                    EdmTypeKind.None,
-                    /*expectStructuredType*/ null,
-                    /*defaultPrimitivePayloadType*/ null,
-                    null, // expectedTypeReference
-                    payloadTypeName,
-                    this.Model,
-                    this.GetNonEntityValueKind,
-                    out targetTypeKind,
-                    out typeAnnotation);
-            }
-
-            object propertyValue = null;
-            bool isKnownValueType = IsKnownValueTypeForEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);
-            if (isKnownValueType)
-            {
-                this.JsonReader.AssertNotBuffering();
-                propertyValue = this.ReadNonEntityValueImplementation(
-                    outterPayloadTypeName,
-                    payloadTypeReference,
-                    /*propertyAndAnnotationCollector*/ null,
-                    /*collectionValidator*/ null,
-                    false, // validateNullValue
-                    isTopLevelPropertyValue,
-                    insideComplexValue,
-                    propertyName);
-            }
-            else
-            {
-                propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
-            }
-
-            this.JsonReader.AssertNotBuffering();
-            Debug.Assert(
-                this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
-                "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
-            return propertyValue;
-        }
-
-        /// <summary>
         /// Reads a non-open entity or complex type's undeclared property.
         /// </summary>
         /// <param name="resourceState">The IODataJsonLightReaderResourceState.</param>
@@ -858,8 +793,8 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
-                "No annotation name should have been added into the InstanceAnnotations collection twice.");
+            // Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
+            //    "No annotation name should have been added into the InstanceAnnotations collection twice.");
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResource resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
@@ -1704,7 +1639,7 @@ namespace Microsoft.OData.JsonLight
         /// Asserts that the current recursion depth of values is zero. This should be true on all calls into this class from outside of this class.
         /// </summary>
         [Conditional("DEBUG")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "The this is needed in DEBUG build.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This is needed in DEBUG build.")]
         private void AssertRecursionDepthIsZero()
         {
             Debug.Assert(this.recursionDepth == 0, "The current recursion depth must be 0.");

@@ -15,10 +15,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for producing and dealing with writer exceptions.
     /// </summary>
-    [TestClass, TestCase]
+    // [TestClass, TestCase]
     public class WriterExceptionTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org");
@@ -27,7 +28,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // use private reflection not available on Silverlight and Phone. Private reflection is used in ODataWriterCoreInspector IsInState() method.
 #if !SILVERLIGHT && !WINDOWS_PHONE
 
-        [Ignore]
         [TestMethod, Variation(Description = "Test that a writer behaves as expected in the presence of (non-fatal) OData exceptions.")]
         public void DisposeAfterExceptionTest()
         {
@@ -151,7 +151,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [Ignore]
         [TestMethod, Variation(Description = "Test that a writer throws when writing non-error content after an exception has been thrown.")]
         public void WriteAfterExceptionTest()
         {

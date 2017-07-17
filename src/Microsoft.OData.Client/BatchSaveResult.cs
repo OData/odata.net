@@ -102,7 +102,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>initial the async batch save changeset</summary>
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void BatchBeginRequest()
         {
             PerRequest pereq = null;
@@ -784,7 +783,6 @@ namespace Microsoft.OData.Client
         /// <param name="batchReader">The batch reader to get the operation response from.</param>
         /// <param name="isChangesetOperation">True if the current operation is inside a changeset (implying CUD, not query)</param>
         /// <returns>An exception if the operation response is an error response, null for success response.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We don't dispose the memory stream we create, but that's not necessary since it's just a memory stream and we need to keep it for the operation response to be processed.")]
         private Exception ProcessCurrentOperationResponse(ODataBatchReader batchReader, bool isChangesetOperation)
         {
             Debug.Assert(batchReader != null, "batchReader != null");

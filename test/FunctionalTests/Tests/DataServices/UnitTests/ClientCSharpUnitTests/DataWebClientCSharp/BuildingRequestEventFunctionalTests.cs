@@ -25,8 +25,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     /// Functional tests for the BuildingRequest event. These tests add query parameters and headers in BuildingRequest and then
     /// verify that they were added in SendingRequest2 and in the service itself.
     /// </summary>
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [Ignore] // Remove Atom
-    [TestClass]
+    // [TestClass]
     public class BuildingRequestEventFunctionalTests
     {
         #region Parameters and Constants

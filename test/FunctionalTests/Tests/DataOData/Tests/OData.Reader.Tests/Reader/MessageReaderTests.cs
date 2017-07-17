@@ -68,43 +68,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [Ignore] // remove undeclared/untyped property case
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of constructor of ODataMessageReader in regard to argument validation.")]
-        public void MessageReaderConstructorArgumentValidationTest()
-        {
-            TestRequestMessage requestMessage = new TestRequestMessage(new MemoryStream());
-            TestResponseMessage responseMessage = new TestResponseMessage(new MemoryStream());
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                settingsActionTestCases,
-                (settingsAction) =>
-                {
-                    TestMessage message = settingsAction.Response 
-                        ? (TestMessage)responseMessage 
-                        : (TestMessage)requestMessage;
-
-                    // Verify that relative BaseUri will fail
-                    this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { BaseUri = new Uri("foo", UriKind.Relative) }),
-                        ODataExpectedExceptions.ODataException("ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute", "foo/"),
-                        this.ExceptionVerifier);
-
-                    var settings = new ODataMessageReaderSettings();
-
-                    settings.Validations |= ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
-                    this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, settings),
-                        null,
-                        this.ExceptionVerifier);
-
-                    settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
-                    this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, settings),
-                        settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
-                        this.ExceptionVerifier);
-                });
-        }
-
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of constructor of ODataMessageReader in regard to verion validation.")]
         public void MessageReaderConstructorVersionsTest()
         {

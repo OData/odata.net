@@ -186,7 +186,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             return containerElement;
                         }
 
-                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(targetSegments[1], container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+                        IEdmOperationImport operationImport = FindParameterizedOperationImport(targetSegments[1], container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
                         if (operationImport != null)
                         {
                             return operationImport;
@@ -232,7 +232,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     container = this.Model.FindEntityContainer(containerName);
                     if (container != null)
                     {
-                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(operationName, container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+                        IEdmOperationImport operationImport = FindParameterizedOperationImport(operationName, container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
                         if (operationImport != null)
                         {
                             IEdmOperationParameter parameter = operationImport.Operation.FindParameter(parameterName);
@@ -254,7 +254,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        private IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
+        private static IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
         {
             IEnumerable<IEdmOperationImport> matchingFunctions = findFunctions(parameterizedName);
             if (matchingFunctions.Count() == 0)

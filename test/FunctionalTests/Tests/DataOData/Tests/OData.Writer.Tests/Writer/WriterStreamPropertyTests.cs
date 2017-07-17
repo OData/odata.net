@@ -24,6 +24,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for writing entries with named stream properties with the OData writer.
     /// </summary>
@@ -36,7 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Validates the payloads for various stream properties.")]
+        // [TestMethod, Variation(Description = "Validates the payloads for various stream properties.")]
         public void WriterStreamPropertiesTests()
         {
             Uri baseUri = new Uri("http://www.odata.org/", UriKind.Absolute);
@@ -237,7 +238,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Negative test cases for named streams.")]
+        // [TestMethod, Variation(Description = "Negative test cases for named streams.")]
         public void StreamPropertiesNegativeTests()
         {
             EdmModel model = new EdmModel();

@@ -40,6 +40,11 @@ namespace Microsoft.OData
         private TextWriter textWriter;
 
         /// <summary>
+        /// JsonWriter instance for writing values.
+        /// </summary>
+        private JsonWriter jsonWriter;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RawValueWriter"/> class.
         /// Initializes the TextWriter.
         /// </summary>
@@ -59,10 +64,15 @@ namespace Microsoft.OData
         /// </summary>
         internal TextWriter TextWriter
         {
-            get
-            {
-                return this.textWriter;
-            }
+            get { return this.textWriter; }
+        }
+
+        /// <summary>
+        /// Gets the json writer.
+        /// </summary>
+        internal JsonWriter JsonWriter
+        {
+            get { return this.jsonWriter; }
         }
 
         /// <summary>
@@ -117,7 +127,7 @@ namespace Microsoft.OData
             }
             else if (value is Geometry || value is Geography)
             {
-                PrimitiveConverter.Instance.TryWriteAtom(value, textWriter);
+                PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter);
             }
             else if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
             {
@@ -149,7 +159,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <remarks>This can only be called if the text writer was not yet initialized or it has been closed.
         /// It can be called several times with CloseWriter calls in between though.</remarks>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We create a NonDisposingStream which doesn't need to be disposed, even though it's IDisposable.")]
         private void InitializeTextWriter()
         {
             // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose
@@ -166,6 +175,7 @@ namespace Microsoft.OData
             }
 
             this.textWriter = new StreamWriter(nonDisposingStream, this.encoding);
+            this.jsonWriter = new JsonWriter(this.textWriter, isIeee754Compatible: false);
         }
     }
 }

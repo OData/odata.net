@@ -248,8 +248,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// CancelRequest for Batch Requests
         /// </summary>
-        [Ignore]
-        [TestMethod, Asynchronous]
+        // github issuse: #896
+        // [TestMethod, Asynchronous]
         public void CancelBatchRequestTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;

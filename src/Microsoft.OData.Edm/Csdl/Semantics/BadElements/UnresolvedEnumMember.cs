@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         // Value cache.
         private readonly Cache<UnresolvedEnumMember, IEdmEnumMemberValue> value = new Cache<UnresolvedEnumMember, IEdmEnumMemberValue>();
-        private static readonly Func<UnresolvedEnumMember, IEdmEnumMemberValue> ComputeValueFunc = (me) => me.ComputeValue();
+        private static readonly Func<UnresolvedEnumMember, IEdmEnumMemberValue> ComputeValueFunc = (me) => ComputeValue();
 
         public UnresolvedEnumMember(string name, IEdmEnumType declaringType, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEnumMember, Edm.Strings.Bad_UnresolvedEnumMember(name)) })
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.declaringType; }
         }
 
-        private IEdmEnumMemberValue ComputeValue()
+        private static IEdmEnumMemberValue ComputeValue()
         {
             return new EdmEnumMemberValue(0);
         }

@@ -37,7 +37,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="modelWhenNoTypeReference">the current model when no enum typeReference.</param>
         /// <param name="boundEnum">an enum node .</param>
         /// <returns>true if we bound an enum for this token.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
         internal static bool TryBindIdentifier(string identifier, IEdmEnumTypeReference typeReference, IEdmModel modelWhenNoTypeReference, out QueryNode boundEnum)
         {
             boundEnum = null;

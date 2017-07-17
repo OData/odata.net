@@ -149,8 +149,9 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
+            // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void AuthorizationForMethodsTest()
             {
                 List<AuthCase> cases = new List<AuthCase>()
@@ -1236,8 +1237,9 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
+            // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void AuthorizationCallbackForReadingTest()
             {
                 const string BehaviorFilter = "BehaviorFilter";

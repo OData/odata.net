@@ -912,12 +912,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             });
         }
 
-        //[TODO]:layliu Need to support instance annotations on feed or nestedResourceInfo.
-        [Ignore]
-        [TestMethod]
+        // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
+        // [TestMethod]
         public void TestGetAnnotationOnCollectionOfComplexTypePropertyInAnEntity()
         {
-
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
             {
                 var person = dsc.PeoplePlus.ByKey("russellwhyte").GetValue();
@@ -1082,7 +1080,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
         }
 
         [TestMethod]
-        public void TesDuplicateAnnotationsOnPropertyThrows()
+        public void TestDuplicateAnnotationsOnPropertyThrows()
         {
             string response = @"{
 	""@odata.context"":""http://odataService/$metadata#People('Adrian')/Location"",
@@ -1295,8 +1293,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             });
         }
 
-        [Ignore]
-        [TestMethod]
+        // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
+        // [TestMethod]
         public void TestGetDerivedInstanceWhileTheTermIsInBaseTypeAnnotationOnODataEntry()
         {
             string response = @"{

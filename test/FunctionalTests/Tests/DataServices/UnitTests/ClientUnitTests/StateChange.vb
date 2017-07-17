@@ -18,7 +18,7 @@ Imports AstoriaUnitTests.Stubs
 Imports Microsoft.Test.ModuleCore
 
 Partial Public Class ClientModule
-
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     <TestClass()> Public Class StateChange
 
         Private Shared web As TestWebRequest = Nothing
@@ -59,7 +59,8 @@ Partial Public Class ClientModule
         End Sub
 #End Region
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub EntityStates()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub EntityStates()
             Dim customer = NorthwindSimpleModel.Customers.CreateCustomers("ZZZZ", "Microsoft")
 
             Assert.IsFalse(ctx.Detach(customer), "detach false")
@@ -317,7 +318,8 @@ Partial Public Class ClientModule
             ValidateRequestMethods("DELETE")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CollectionLinkStates_AddDelete()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub CollectionLinkStates_AddDelete()
             Dim customer = NorthwindSimpleModel.Customers.CreateCustomers("ZZZY", "Microsoft")
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9999)
 
@@ -342,7 +344,8 @@ Partial Public Class ClientModule
             ValidateRequestMethods("POST", "DELETE")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CollectionLinkStates_AddSetDelete()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub CollectionLinkStates_AddSetDelete()
             Dim customer = NorthwindSimpleModel.Customers.CreateCustomers("ZZZX", "Microsoft")
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9999)
 
@@ -368,7 +371,8 @@ Partial Public Class ClientModule
             ValidateRequestMethods("POST", "DELETE")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CollectionLinkStates_AddSetDelete_Batch()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub CollectionLinkStates_AddSetDelete_Batch()
             Dim customer = NorthwindSimpleModel.Customers.CreateCustomers("ZZZU", "Microsoft")
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9999)
 
@@ -393,7 +397,8 @@ Partial Public Class ClientModule
             ValidateRequestMethods("POST")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CollectionLinkStates_AddAdd_Delete()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub CollectionLinkStates_AddAdd_Delete()
             Dim customer = NorthwindSimpleModel.Customers.CreateCustomers("ZZZW", "Microsoft")
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9999)
 
@@ -445,7 +450,8 @@ Partial Public Class ClientModule
             ValidateRequestMethods("DELETE")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CollectionLinkStates_Add_Add_Delete()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub CollectionLinkStates_Add_Add_Delete()
             Dim customer = NorthwindSimpleModel.Customers.CreateCustomers("ZZZV", "Microsoft")
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9998)
 
@@ -486,7 +492,8 @@ Partial Public Class ClientModule
             ValidateRequestMethods("DELETE")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub ReferenceLinkStates()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub ReferenceLinkStates()
             Dim child = NorthwindSimpleModel.Territories.CreateTerritories("888886", "Astoria")
             Dim parent = NorthwindSimpleModel.Region.CreateRegion(999996, "Software")
             child.Region = parent
@@ -525,7 +532,8 @@ Partial Public Class ClientModule
             ValidateRequestMethods("POST")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DeleteEntityAsync()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DeleteEntityAsync()
             Dim uriBefore As Uri = Nothing
             Dim uriAfter As Uri = Nothing
             Dim entityTemp As NorthwindSimpleModel.Customers = Nothing
@@ -612,7 +620,8 @@ Partial Public Class ClientModule
             ctx.SaveChanges()
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub AddSucceedDeleteSucceed()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub AddSucceedDeleteSucceed()
             Dim uriBefore As Uri = Nothing
             Dim uriAfter As Uri = Nothing
 
@@ -643,7 +652,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(uriBefore, uriAfter, "link2 changed")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub SameKeyDeleteAdd()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub SameKeyDeleteAdd()
             ' batching not in this list because the server will error
             For Each saveChangeOption In New SaveChangesOptions() {SaveChangesOptions.None, SaveChangesOptions.ReplaceOnUpdate, SaveChangesOptions.ContinueOnError}
                 Dim customer1 = NorthwindSimpleModel.Customers.CreateCustomers("ZZZP", "Microsoft")
@@ -661,7 +671,8 @@ Partial Public Class ClientModule
             Next
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub SameKeyDeleteAdd_Verify()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub SameKeyDeleteAdd_Verify()
             Dim uriBefore As Uri = Nothing
             Dim uriAfter As Uri = Nothing
             Dim uriTemp As Uri = Nothing

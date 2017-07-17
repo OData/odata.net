@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
     using efpoco = AstoriaUnitTests.EFFK;
     using ocs = AstoriaUnitTests.ObjectContextStubs;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     /// <summary>This class contains inner classes that can run as LTM tests.</summary>
     [TestModule]
     public partial class UnitTestModule1
@@ -66,7 +67,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutPrimitiveProperty()
             {
                 var testCases = new[]
@@ -256,7 +257,7 @@ namespace AstoriaUnitTests.Tests
                     });
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutNonStringPrimitiveProperty()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder() { IsComplex = true }.AddProperty("DollarAmount", 9.95);
@@ -279,7 +280,7 @@ namespace AstoriaUnitTests.Tests
                 UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), "/Orders(100)/DollarAmount", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PATCH", false);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutComplexProperty()
             {
                 var testCases = new[]
@@ -422,7 +423,7 @@ namespace AstoriaUnitTests.Tests
                     });
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutOpenCollectionProperty()
             {
                 var testCases = new[]
@@ -468,7 +469,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateComplexPropertyCallOrderTest()
             {
                 var testCases = new[]
@@ -614,7 +615,7 @@ namespace AstoriaUnitTests.Tests
                     });
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateMergeComplexProperty()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder() { IsComplex = true }
@@ -635,7 +636,7 @@ namespace AstoriaUnitTests.Tests
                 UpdateTests.DoUpdatesForVariousProviders("PATCH", "/Customers(1)/Address", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPaths, true);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateReplaceComplexProperty()
             {
                 string uri = "/Customers(1)/Address";
@@ -675,7 +676,7 @@ namespace AstoriaUnitTests.Tests
                 UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), uri, UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PUT", true);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutComplexPropertyToNull()
             {
                 string jsonPayload1 = "{ \"@odata.type\":\"#AstoriaUnitTests.Stubs.CustomerWithBirthday\", \"Address\": null }";
@@ -709,7 +710,7 @@ namespace AstoriaUnitTests.Tests
 
             [Ignore]
             // TODO: Change the payload of null top-level properties #645
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateMergePrimitivePropertyToNull()
             {
                 var payloadBuilder = new PayloadBuilder() { IsComplex = false }
@@ -856,7 +857,7 @@ namespace AstoriaUnitTests.Tests
                     });
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutPrimitivePropertyDataTypes()
             {
                 var testCases = new[]

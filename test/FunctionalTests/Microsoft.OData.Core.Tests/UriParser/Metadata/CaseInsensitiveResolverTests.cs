@@ -141,20 +141,20 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                Strings.CastBinder_ChildTypeIsNotEntity("TestNS.AddrESS"));
         }
 
-        [Fact(Skip = "TODO: Do not support built-in type name case insensitive. EnumValue's type name case insensitve also not supported.")]
-        public void CaseInsensitiveTypeCastInQueryOptionOrderBy2()
-        {
-            var uriParser = new ODataUriParser(
-                Model,
-                ServiceRoot,
-                new Uri("http://host/People?$orderby=cast(null, Edm.StRing)"))
-            {
-                Resolver = new ODataUriResolver() { EnableCaseInsensitive = true }
-            };
-
-            var clause = uriParser.ParseOrderBy();
-            clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("cast", EdmCoreModel.Instance.GetString(false));
-        }
+        //[Fact(Skip = "#582: Do not support built-in type name case insensitive. EnumValue's type name case insensitve also not supported.")]
+        //public void CaseInsensitiveTypeCastInQueryOptionOrderBy2()
+        //{
+        //    var uriParser = new ODataUriParser(
+        //        Model,
+        //        ServiceRoot,
+        //        new Uri("http://host/People?$orderby=cast(null, Edm.StRing)"))
+        //    {
+        //        Resolver = new ODataUriResolver() { EnableCaseInsensitive = true }
+        //    };
+        //
+        //    var clause = uriParser.ParseOrderBy();
+        //    clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("cast", EdmCoreModel.Instance.GetString(false));
+        //}
 
         [Fact]
         public void CaseInsensitiveTypeCastTypeNameConflictsInOrderby()

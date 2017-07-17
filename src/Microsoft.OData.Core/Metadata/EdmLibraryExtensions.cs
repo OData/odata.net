@@ -136,18 +136,6 @@ namespace Microsoft.OData.Metadata
 #if !ODATA_SERVICE && !ODATA_CLIENT
 
         /// <summary>
-        /// Returns the fully qualified name of a navigation source.
-        /// </summary>
-        /// <param name="navigationSource">The navigation source to get the full name for.</param>
-        /// <returns>The full qualified name of the navigation source.</returns>
-        internal static string FullNavigationSourceName(this IEdmNavigationSource navigationSource)
-        {
-            Debug.Assert(navigationSource != null, "navigationSource != null");
-
-            return string.Join(".", navigationSource.Path.PathSegments.ToArray());
-        }
-
-        /// <summary>
         /// Filters functions by the parameter names.
         /// </summary>
         /// <param name="functionImports">The operation imports.</param>
@@ -161,26 +149,9 @@ namespace Microsoft.OData.Metadata
 
             IList<string> parameterNameList = parameterNames.ToList();
 
-            // TODO: update code that is duplicate between operation and operation import, add more tests.
             foreach (IEdmFunctionImport functionImport in functionImports)
             {
-                IEnumerable<IEdmOperationParameter> parametersToMatch = functionImport.Operation.Parameters;
-
-                // bindable functions don't require the first parameter be specified, since its already implied in the path.
-                if (functionImport.Function.IsBound)
-                {
-                    parametersToMatch = parametersToMatch.Skip(1);
-                }
-
-                // if any parameter count is different, don't consider it a match.
-                List<IEdmOperationParameter> operationImportParameters = parametersToMatch.ToList();
-                if (operationImportParameters.Count != parameterNameList.Count)
-                {
-                    continue;
-                }
-
-                // if any parameter was missing, don't consider it a match.
-                if (operationImportParameters.Any(p => parameterNameList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+                if (!ParametersSatisfyFunction(functionImport.Operation, parameterNameList, caseInsensitive))
                 {
                     continue;
                 }
@@ -190,13 +161,25 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
+        /// Filters the operations by parameter names.
+        /// </summary>
+        /// <param name="functions">The operations.</param>
+        /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <returns>The best matching operations based on parameters.</returns>
+        internal static IEnumerable<IEdmOperationImport> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperationImport> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
+        {
+            // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
+            IEnumerable<IEdmOperationImport> exactMatches = functions.Where(f => f.Operation.Parameters.Count() == parameters.Count());
+            return exactMatches.Count() > 0 ? exactMatches : functions;
+        }
+
+        /// <summary>
         /// Filters the type of the bound operations in by the bindingtype inheritance hierarchy to type closest to bindingtype.
         /// </summary>
         /// <param name="operations">The operations.</param>
         /// <param name="bindingType">Type of the binding.</param>
         /// <returns>The closest Bound Operations to the specified binding type.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "Parameter type is needed to get binding type.")]
         internal static IEnumerable<IEdmOperation> FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(this IEnumerable<IEdmOperation> operations, IEdmType bindingType)
         {
             Debug.Assert(operations != null, "operations");
@@ -263,6 +246,20 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
+        /// Filters the operations by parameter names.
+        /// </summary>
+        /// <param name="functions">The operations.</param>
+        /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <returns>The best matching operations based on parameters.</returns>
+        internal static IEnumerable<IEdmOperation> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperation> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
+        {
+            // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
+            IEnumerable<IEdmOperation> exactMatches = functions.Where(f => f.Parameters.Count() == parameters.Count() + (f.IsBound ? 1 : 0));
+            return exactMatches.Count() > 0 ? exactMatches : functions;
+        }
+
+        /// <summary>
         /// Given a list of possible operations and a list of parameter names, filter operations that exactly matches
         /// the parameter names. If more than one function matches, throw.
         /// </summary>
@@ -290,28 +287,12 @@ namespace Microsoft.OData.Metadata
             Debug.Assert(operations != null, "operations");
             Debug.Assert(parameters != null, "parameters");
 
-            IList<string> parametersList = parameters.ToList();
+            IList<string> parameterNameList = parameters.ToList();
 
             // TODO: update code that is duplicate between operation and operation import, add more tests.
             foreach (IEdmOperation operation in operations)
             {
-                IEnumerable<IEdmOperationParameter> parametersToMatch = operation.Parameters;
-
-                // bindable functions don't require the first parameter be specified, since its already implied in the path.
-                if (operation.IsBound)
-                {
-                    parametersToMatch = parametersToMatch.Skip(1);
-                }
-
-                // if any parameter count is different, don't consider it a match.
-                List<IEdmOperationParameter> functionImportParameters = parametersToMatch.ToList();
-                if (functionImportParameters.Count != parametersList.Count)
-                {
-                    continue;
-                }
-
-                // if any parameter was missing, don't consider it a match.
-                if (functionImportParameters.Any(p => parametersList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+                if (!ParametersSatisfyFunction(operation, parameterNameList, caseInsensitive))
                 {
                     continue;
                 }
@@ -399,104 +380,6 @@ namespace Microsoft.OData.Metadata
             }
 
             return ValidateOperationGroupReturnsOnlyOnKind(operations, operationNameWithoutParameterTypes);
-        }
-
-        /// <summary>
-        /// Checks whether all operation imports have the same return type
-        /// </summary>
-        /// <param name="operationImports">the list to check</param>
-        /// <returns>true if the list of operation imports all have the same return type</returns>
-        internal static bool AllHaveEqualReturnTypeAndAttributes(this IList<IEdmOperationImport> operationImports)
-        {
-            // TODO: Resolve duplication of operationImport and operation
-            Debug.Assert(operationImports != null, "operationImports != null");
-
-            if (!operationImports.Any())
-            {
-                return true;
-            }
-
-            IEdmType firstReturnType = operationImports[0].Operation.ReturnType == null ? null : operationImports[0].Operation.ReturnType.Definition;
-            bool firstIsFunction = operationImports[0].IsFunctionImport();
-            bool firstIsAction = operationImports[0].IsActionImport();
-            foreach (IEdmOperationImport f in operationImports)
-            {
-                if (f.IsFunctionImport() != firstIsFunction)
-                {
-                    return false;
-                }
-
-                if (f.IsActionImport() != firstIsAction)
-                {
-                    return false;
-                }
-
-                if (firstReturnType != null)
-                {
-                    if (f.Operation.ReturnType.Definition.FullTypeName() != firstReturnType.FullTypeName())
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (f.Operation.ReturnType != null)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Checks whether all operations have the same return type
-        /// </summary>
-        /// <param name="operations">the list to check</param>
-        /// <returns>true if the list of operation imports all have the same return type</returns>
-        internal static bool AllHaveEqualReturnTypeAndAttributes(this IList<IEdmOperation> operations)
-        {
-            // TODO: Resolve duplication of operationImport and operation
-            Debug.Assert(operations != null, "operations != null");
-
-            if (!operations.Any())
-            {
-                return true;
-            }
-
-            IEdmType firstReturnType = operations[0].ReturnType == null ? null : operations[0].ReturnType.Definition;
-            bool firstIsFunction = operations[0].IsFunction();
-            bool firstIsAction = operations[0].IsAction();
-            foreach (IEdmOperation f in operations)
-            {
-                if (f.IsFunction() != firstIsFunction)
-                {
-                    return false;
-                }
-
-                if (f.IsAction() != firstIsAction)
-                {
-                    return false;
-                }
-
-                if (firstReturnType != null)
-                {
-                    if (f.ReturnType.Definition.FullTypeName() != firstReturnType.FullTypeName())
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (f.ReturnType != null)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -896,21 +779,6 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Casts an <see cref="IEdmTypeReference"/> to a <see cref="IEdmComplexTypeReference"/> or returns null if this is not supported.
-        /// </summary>
-        /// <param name="typeReference">The type reference to convert.</param>
-        /// <returns>An <see cref="IEdmComplexTypeReference"/> instance or null if the <paramref name="typeReference"/> cannot be converted.</returns>
-        internal static IEdmComplexTypeReference AsComplexOrNull(this IEdmTypeReference typeReference)
-        {
-            if (typeReference == null)
-            {
-                return null;
-            }
-
-            return typeReference.TypeKind() == EdmTypeKind.Complex ? typeReference.AsComplex() : null;
-        }
-
-        /// <summary>
         /// Casts an <see cref="IEdmTypeReference"/> to a <see cref="IEdmCollectionTypeReference"/> or returns null if this is not supported.
         /// </summary>
         /// <param name="typeReference">The type reference to convert.</param>
@@ -991,28 +859,6 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Convert the value to underlying type according to model if the value is uint;
-        /// otherwise return the original value directly.
-        /// </summary>
-        /// <param name="model">The given model.</param>
-        /// <param name="value">The value to convert.</param>
-        /// <param name="expectedTypeReference">The expected type reference of the value (null by default).</param>
-        /// <returns>The converted value.</returns>
-        internal static ODataPrimitiveValue ConvertToUnderlyingTypeIfUIntValue(this IEdmModel model, ODataPrimitiveValue value, IEdmTypeReference expectedTypeReference = null)
-        {
-            object newValue = model.ConvertToUnderlyingTypeIfUIntValue(value.Value, expectedTypeReference);
-
-            if (newValue == value.Value)
-            {
-                // Still the original object. Return it directly.
-                return value;
-            }
-
-            // Return the converted value.
-            return new ODataPrimitiveValue(newValue);
-        }
-
-        /// <summary>
         /// Try to resolve the type definition from the model if value is unsigned int.
         /// </summary>
         /// <param name="model">The given model.</param>
@@ -1087,64 +933,6 @@ namespace Microsoft.OData.Metadata
             Debug.Assert(itemTypeReference != null, "itemTypeReference != null");
 
             return new EdmCollectionType(itemTypeReference);
-        }
-
-        /// <summary>
-        /// Checks whether a type reference is a Geography type.
-        /// </summary>
-        /// <param name="typeReference">The <see cref="IEdmTypeReference"/> to check.</param>
-        /// <returns>true if the <paramref name="typeReference"/> is a Geography type; otherwise false.</returns>
-        internal static bool IsGeographyType(this IEdmTypeReference typeReference)
-        {
-            IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
-            if (primitiveTypeReference == null)
-            {
-                return false;
-            }
-
-            switch (primitiveTypeReference.PrimitiveKind())
-            {
-                case EdmPrimitiveTypeKind.Geography:
-                case EdmPrimitiveTypeKind.GeographyPoint:
-                case EdmPrimitiveTypeKind.GeographyLineString:
-                case EdmPrimitiveTypeKind.GeographyPolygon:
-                case EdmPrimitiveTypeKind.GeographyCollection:
-                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
-        /// Checks whether a type reference is a Geometry type.
-        /// </summary>
-        /// <param name="typeReference">The <see cref="IEdmTypeReference"/> to check.</param>
-        /// <returns>true if the <paramref name="typeReference"/> is a Geometry type; otherwise false.</returns>
-        internal static bool IsGeometryType(this IEdmTypeReference typeReference)
-        {
-            IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
-            if (primitiveTypeReference == null)
-            {
-                return false;
-            }
-
-            switch (primitiveTypeReference.PrimitiveKind())
-            {
-                case EdmPrimitiveTypeKind.Geometry:
-                case EdmPrimitiveTypeKind.GeometryPoint:
-                case EdmPrimitiveTypeKind.GeometryLineString:
-                case EdmPrimitiveTypeKind.GeometryPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                case EdmPrimitiveTypeKind.GeometryCollection:
-                    return true;
-                default:
-                    return false;
-            }
         }
 
         /// <summary>
@@ -1350,20 +1138,6 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Gets the name of a operation import group.
-        /// </summary>
-        /// <param name="functionImportGroup">The operation import group in question.</param>
-        /// <returns>The name of the operation import group.</returns>
-        internal static string FunctionImportGroupName(this IEnumerable<IEdmOperationImport> functionImportGroup)
-        {
-            Debug.Assert(functionImportGroup != null && functionImportGroup.Any(), "functionImportGroup != null && functionImportGroup.Any()");
-
-            string name = functionImportGroup.First().Name;
-            Debug.Assert(functionImportGroup.All(f => f.Name == name), "functionImportGroup.All(f => f.Name == name)");
-            return name;
-        }
-
-        /// <summary>
         /// Gets the full name of a operation group.
         /// </summary>
         /// <param name="operationGroup">The operation group in question.</param>
@@ -1436,58 +1210,6 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Checks if the primitive type is a geography or geometry type.
-        /// </summary>
-        /// <param name="primitiveType">The type to check.</param>
-        /// <returns>true, if the <paramref name="primitiveType"/> is a geography or geometry type.</returns>
-        internal static bool IsSpatialType(this IEdmPrimitiveType primitiveType)
-        {
-            Debug.Assert(primitiveType != null, "primitiveType != null");
-
-            switch (primitiveType.PrimitiveKind)
-            {
-                case EdmPrimitiveTypeKind.Geography:
-                case EdmPrimitiveTypeKind.GeographyPoint:
-                case EdmPrimitiveTypeKind.GeographyLineString:
-                case EdmPrimitiveTypeKind.GeographyPolygon:
-                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                case EdmPrimitiveTypeKind.GeographyCollection:
-                case EdmPrimitiveTypeKind.Geometry:
-                case EdmPrimitiveTypeKind.GeometryPoint:
-                case EdmPrimitiveTypeKind.GeometryLineString:
-                case EdmPrimitiveTypeKind.GeometryPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                case EdmPrimitiveTypeKind.GeometryCollection:
-                    return true;
-
-                case EdmPrimitiveTypeKind.None:
-                case EdmPrimitiveTypeKind.Binary:
-                case EdmPrimitiveTypeKind.Boolean:
-                case EdmPrimitiveTypeKind.Byte:
-                case EdmPrimitiveTypeKind.Date:
-                case EdmPrimitiveTypeKind.DateTimeOffset:
-                case EdmPrimitiveTypeKind.Decimal:
-                case EdmPrimitiveTypeKind.Double:
-                case EdmPrimitiveTypeKind.Guid:
-                case EdmPrimitiveTypeKind.Int16:
-                case EdmPrimitiveTypeKind.Int32:
-                case EdmPrimitiveTypeKind.Int64:
-                case EdmPrimitiveTypeKind.SByte:
-                case EdmPrimitiveTypeKind.Single:
-                case EdmPrimitiveTypeKind.String:
-                case EdmPrimitiveTypeKind.Stream:
-                case EdmPrimitiveTypeKind.Duration:
-                case EdmPrimitiveTypeKind.TimeOfDay:
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
         /// Checks if the <paramref name="baseType"/> primitive type is assignable to <paramref name="subtype"/> primitive type.
         /// In other words, if <paramref name="subtype"/> is a subtype of <paramref name="baseType"/> or not.
         /// </summary>
@@ -1506,7 +1228,7 @@ namespace Microsoft.OData.Metadata
             }
 
             // Only spatial types are assignable
-            if (!baseType.IsSpatialType() || !subtype.IsSpatialType())
+            if (!baseType.IsSpatial() || !subtype.IsSpatial())
             {
                 return false;
             }
@@ -1612,54 +1334,6 @@ namespace Microsoft.OData.Metadata
             return ToTypeReference(type, false /*nullable*/);
         }
 
-        /// <summary>
-        /// Determines whether the provided <paramref name="type"/> is an open type.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>true if the <paramref name="type"/> is an open type; otherwise false.</returns>
-        internal static bool IsOpenType(this IEdmType type)
-        {
-            Debug.Assert(type != null, "type != null");
-
-            IEdmStructuredType structuredType = type as IEdmStructuredType;
-            if (structuredType != null)
-            {
-                return structuredType.IsOpen;
-            }
-
-            // If its a collection, return whether its element type is open.
-            // This is because when processing a navigation property, the target type
-            // may be a collection type even though a key expression has been applied.
-            // This will be cleaned up in a subsequent change.
-            // TODO: when SingleResult is removed from the semantic path parser, change this to return false.
-            var collectionType = type as IEdmCollectionType;
-            if (collectionType == null)
-            {
-                return false;
-            }
-
-            return collectionType.ElementType.Definition.IsOpenType();
-        }
-
-        /// <summary>
-        /// Determines whether the provided <paramref name="type"/> is a stream.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>true if the <paramref name="type"/> represents a stream; otherwise false.</returns>
-        internal static bool IsStream(this IEdmType type)
-        {
-            Debug.Assert(type != null, "type != null");
-
-            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
-            if (primitiveType == null)
-            {
-                Debug.Assert(type.TypeKind != EdmTypeKind.Primitive, "Invalid type kind.");
-                return false;
-            }
-
-            Debug.Assert(primitiveType.TypeKind == EdmTypeKind.Primitive, "Expected primitive type kind.");
-            return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream;
-        }
 #endif
         #endregion
 
@@ -1669,9 +1343,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="containerElement">The container element to get the full name for.</param>
         /// <returns>The full name of the owning entity container, slash, name of the container element.</returns>
-#if ODATA_CLIENT
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will be used in a later change")]
-#endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
             Debug.Assert(containerElement != null, "containerElement != null");
@@ -2019,8 +1690,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operation">Operation in question.</param>
         /// <returns>Comma separated operation parameter types enclosed in parantheses.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used for matching the name of the operation to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperation operation)
         {
             // TODO: Resolve duplication of operationImport and operation
@@ -2089,8 +1758,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operationImport">Function import in question.</param>
         /// <returns>Comma separated operation import parameter types enclosed in parantheses.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used for matching the name of the operation import to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperationImport operationImport)
         {
             // TODO: Resolve duplication of operationImport and operation
@@ -2129,6 +1796,38 @@ namespace Microsoft.OData.Metadata
                     }
                 }
             }
+        }
+
+        private static bool ParametersSatisfyFunction(IEdmOperation operation, IList<string> parameterNameList, bool caseInsensitive)
+        {
+            IEnumerable<IEdmOperationParameter> parametersToMatch = operation.Parameters;
+
+            // bindable functions don't require the first parameter be specified, since its already implied in the path.
+            if (operation.IsBound)
+            {
+                parametersToMatch = parametersToMatch.Skip(1);
+            }
+
+            List<IEdmOperationParameter> functionParameters = parametersToMatch.ToList();
+
+            // if any required parameters are missing, don't consider it a match.
+            if (functionParameters.Where(
+                p => !(p is IEdmOptionalParameter)).Any(
+                    p => parameterNameList.All(
+                        k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+            {
+                return false;
+            }
+
+            // if any specified parameters don't match, don't consider it a match.
+            if (parameterNameList.Any(
+                k => functionParameters.All(
+                    p => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

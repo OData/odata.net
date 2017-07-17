@@ -103,14 +103,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="entityType">the current entity type to use as the binding type when looking for operations.</param>
         /// <param name="segment">Bound segment if the token was bound to an operation successfully, or null.</param>
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static bool TryBindAsOperation(PathSegmentToken pathToken, IEdmModel model, IEdmStructuredType entityType, out ODataPathSegment segment)
         {
             Debug.Assert(pathToken != null, "pathToken != null");
             Debug.Assert(entityType != null, "bindingType != null");
 
             List<IEdmOperation> possibleFunctions = new List<IEdmOperation>();
+            IList<string> parameterNames = new List<string>();
 
             // Catch all catchable exceptions as FindDeclaredBoundOperations is implemented by anyone.
             // If an exception occurs it will be supressed and the possible functions will be empty and return false.
@@ -125,7 +124,6 @@ namespace Microsoft.OData.UriParser
                 else
                 {
                     NonSystemToken nonSystemToken = pathToken as NonSystemToken;
-                    IList<string> parameterNames = new List<string>();
                     if (nonSystemToken != null && nonSystemToken.NamedValues != null)
                     {
                         parameterNames = nonSystemToken.NamedValues.Select(s => s.Name).ToList();
@@ -158,6 +156,12 @@ namespace Microsoft.OData.UriParser
                 possibleFunctions = possibleFunctions.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(entityType).ToList();
             }
 
+            // If more than one overload matches, try to select based on optional parameters
+            if (possibleFunctions.Count > 1 && parameterNames.Count > 0)
+            {
+                possibleFunctions = possibleFunctions.FindBestOverloadBasedOnParameters(parameterNames).ToList();
+            }
+
             if (possibleFunctions.Count <= 0)
             {
                 segment = null;
@@ -176,7 +180,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <param name="segment">Bound segment if the token was bound to a declared property successfully, or null.</param>
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         private static bool TryBindAsDeclaredProperty(PathSegmentToken tokenIn, IEdmStructuredType edmType, ODataUriResolver resolver, out ODataPathSegment segment)
         {
             IEdmProperty prop = resolver.ResolveProperty(edmType, tokenIn.Identifier);

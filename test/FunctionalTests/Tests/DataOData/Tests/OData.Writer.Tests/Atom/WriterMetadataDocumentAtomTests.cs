@@ -23,8 +23,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Atom
         [InjectDependency]
         public MetadataWriterTestDescriptor.Settings Settings { get; set; }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test the writing of ATOM metadata document payloads.")]
+        // [TestMethod, Variation(Description = "Test the writing of ATOM metadata document payloads.")]
         public void MetadataDocumentWriterAtomTest()
         {
             MetadataWriterTestDescriptor testDescriptor =

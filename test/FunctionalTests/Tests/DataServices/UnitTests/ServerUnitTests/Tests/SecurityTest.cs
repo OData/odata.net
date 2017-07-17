@@ -27,6 +27,7 @@ namespace AstoriaUnitTests.Tests
     [Microsoft.Test.ModuleCore.TestModule]
     public partial class UnitTestModule : System.Data.Test.Astoria.AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         /// <summary>This is a test class for security features.</summary>
         [TestClass, Microsoft.Test.ModuleCore.TestCase]
         public class SecurityTest : System.Data.Test.Astoria.AstoriaTestCase
@@ -35,7 +36,7 @@ namespace AstoriaUnitTests.Tests
             /// Verifies that query callbacks are made on $filter and $orderby properties.
             /// </summary>
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void SecurityCallbacksFilterTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -89,7 +90,7 @@ namespace AstoriaUnitTests.Tests
             /// Verifies that query callbacks are made on $filter and $orderby properties.
             /// </summary>
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void SecurityCallbacksFilterEdmTest()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -163,7 +164,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void SecurityMaxResultsTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -286,7 +287,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void FriendlyFeedsInMediumTrust()
             {
                 string savedPath = LocalWebServerHelper.FileTargetPath;
@@ -431,7 +432,7 @@ namespace AstoriaUnitTests.Tests
 
             /// <summary>Verifies that all stack-consuming features are properly guarded.</summary>
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void SecurityStackOverflowTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(

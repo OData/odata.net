@@ -19,6 +19,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [TestClass]
     public class DataServiceContextTests
     {
@@ -74,7 +75,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void BeginLoadPropertyTest()
         {
             // Remove the sleeps to count reliably on callback being called
@@ -151,7 +152,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadPropertyRemoveElementUnChangedSource()
         {
             MergeOption original = this.context.MergeOption;
@@ -250,7 +251,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadPropertyRemoveElementDeletedSource()
         {
             MergeOption original = this.context.MergeOption;
@@ -316,7 +317,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ExerciseApplyItemsToCollectionViaMergeLists()
         {
             MergeOption original = this.context.MergeOption;
@@ -366,7 +367,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void WritingEntityWithControlChars()
         {
             this.context.ResolveName = t => typeof(Customer).FullName;

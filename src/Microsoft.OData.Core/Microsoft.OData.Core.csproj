@@ -66,11 +66,17 @@
     <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="BindingPathHelper.cs" />
+    <Compile Include="UriParser\Binders\ComputeBinder.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
+    <Compile Include="UriParser\SemanticAst\ComputeClause.cs" />
+    <Compile Include="UriParser\SemanticAst\ComputeExpression.cs" />
     <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
+    <Compile Include="UriParser\SyntacticAst\ComputeToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\ComputeExpressionToken.cs" />
     <Compile Include="UriParser\TypeFacetsPromotionRules.cs" />
     <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />
@@ -424,7 +430,6 @@
     <Compile Include="UriParser\Parsers\NodeFactory.cs" />
     <Compile Include="UriParser\Parsers\ODataPathFactory.cs" />
     <Compile Include="UriParser\Parsers\ODataPathParser.cs" />
-    <Compile Include="UriParser\Parsers\OpenTypeMethods.cs" />
     <Compile Include="UriParser\Parsers\PathReverser.cs" />
     <Compile Include="UriParser\Parsers\SearchParser.cs" />
     <Compile Include="UriParser\Parsers\SegmentArgumentParser.cs" />

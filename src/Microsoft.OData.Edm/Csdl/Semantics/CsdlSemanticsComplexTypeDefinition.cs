@@ -57,6 +57,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.complex; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "baseType2",
+            Justification = "Value assignment is required by compiler.")]
         private IEdmComplexType ComputeBaseType()
         {
             if (this.complex.BaseTypeName != null)
@@ -64,7 +66,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 IEdmComplexType baseType = this.Context.FindType(this.complex.BaseTypeName) as IEdmComplexType;
                 if (baseType != null)
                 {
-                    IEdmStructuredType baseType2 = baseType.BaseType; // Evaluate the inductive step to detect cycles.
+                    // Evaluate the inductive step to detect cycles.
+                    // Overriding BaseType getter from concrete type implementing IEdmComplexType will be invoked to
+                    // detect cycles. The object assignment is required by compiler only.
+                    IEdmStructuredType baseType2 = baseType.BaseType;
                 }
 
                 return baseType ?? new UnresolvedComplexType(this.Context.UnresolvedName(this.complex.BaseTypeName), this.Location);

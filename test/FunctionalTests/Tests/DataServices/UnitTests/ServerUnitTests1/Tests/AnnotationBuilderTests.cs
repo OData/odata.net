@@ -100,7 +100,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod]
+        // github: https://github.com/OData/odata.net/issues/868, same for other comment out test cases in this file.
+        // [TestCategory("Partition2"), TestMethod]
         public void AnnotationBuilderShouldNotBeCalledOutsideMetadataUri()
         {
             NumAnnotationBuilderCalls = 0;

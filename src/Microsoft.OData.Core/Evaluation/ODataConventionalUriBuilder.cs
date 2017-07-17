@@ -227,7 +227,6 @@ namespace Microsoft.OData.Evaluation
         /// <param name="segment">The segment to append.</param>
         /// <param name="escapeSegment">True if the new segment should be escaped, otherwise False.</param>
         /// <returns>New URI with the appended segment and no trailing slash added.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are model elements like property names or keywords.")]
         private static Uri AppendSegment(Uri baseUri, string segment, bool escapeSegment)
         {
             string baseUriString = UriUtils.UriToString(baseUri);

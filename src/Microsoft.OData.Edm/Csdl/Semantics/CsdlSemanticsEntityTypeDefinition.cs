@@ -74,6 +74,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.entity; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "baseType2",
+            Justification = "Value assignment is required by compiler.")]
         private IEdmEntityType ComputeBaseType()
         {
             if (this.entity.BaseTypeName != null)
@@ -81,7 +83,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 IEdmEntityType baseType = this.Context.FindType(this.entity.BaseTypeName) as IEdmEntityType;
                 if (baseType != null)
                 {
-                    IEdmStructuredType baseType2 = baseType.BaseType; // Evaluate the inductive step to detect cycles.
+                    // Evaluate the inductive step to detect cycles.
+                    // Overriding BaseType getter from concrete type implementing IEdmComplexType will be invoked to
+                    // detect cycles. The object assignment is required by compiler only.
+                    IEdmStructuredType baseType2 = baseType.BaseType;
                 }
 
                 return baseType ?? new UnresolvedEntityType(this.Context.UnresolvedName(this.entity.BaseTypeName), this.Location);

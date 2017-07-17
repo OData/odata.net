@@ -192,7 +192,6 @@ namespace Microsoft.OData
         /// Asynchronously reads the next item from the message payload.
         /// </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         public override sealed Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
@@ -426,7 +425,6 @@ this.State == ODataParameterReaderState.Collection,
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected virtual Task<bool> ReadAsynchronously()
         {
             // We are reading from the fully buffered read stream here; thus it is ok
@@ -473,7 +471,6 @@ this.State == ODataParameterReaderState.Collection,
         /// <typeparam name="T">The type returned from the <paramref name="action"/> to execute.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of executing the <paramref name="action"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private T InterceptException<T>(Func<T> action)
         {
             try

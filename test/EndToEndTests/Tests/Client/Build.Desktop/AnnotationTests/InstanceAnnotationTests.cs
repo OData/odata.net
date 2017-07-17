@@ -178,8 +178,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
             }
         }
 
-        [Ignore]
-        [TestMethod]
+        // [TestMethod] // github issuse: #896
         public void TopLevelPropertyOfComplexTypeInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };

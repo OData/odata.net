@@ -123,49 +123,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
         }
 
-        [Ignore] // Ignoring since most of the test is commented out. But retaining this since it is eazy to repro and debug locally. 
-        [TestMethod, TestCategory("Reader.MetadataDocument"), Variation(Description = "Test for easily reproducing bugs and trying out scenarios.")]
-        public void MetadataDocumentReaderTestsForRepro()
-        {
-            List<MetadataReaderTestDescriptor> testCases = new List<MetadataReaderTestDescriptor>();
-            EdmModel model = new EdmModel();
-
-            var addressType = new EdmComplexType("TestModel", "Address");
-            addressType.AddStructuralProperty("Zip", EdmPrimitiveTypeKind.Int32, isNullable: false);
-            addressType.AddStructuralProperty("Image", EdmPrimitiveTypeKind.Stream, isNullable: false);
-            model.AddElement(addressType);
-
-            var personType = new EdmEntityType("TestModel", "Person");
-            personType.AddKeys(personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
-            personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: true);
-            personType.AddStructuralProperty("Photo", EdmPrimitiveTypeKind.Stream, isNullable: false);
-            personType.AddStructuralProperty("Address", addressType.ToTypeReference());
-            personType.AddStructuralProperty("Photos", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetStream(isNullable: false)));
-            model.AddElement(personType);
-
-            var container = new EdmEntityContainer("TestModel", "DefaultContainer");
-            container.AddEntitySet("Person", personType);
-            model.AddElement(container);
-            //personType.EntityPropertyMapping("Name", SyndicationItemProperty.AuthorName);
-
-            // TODO: Both the mappings below fail differently. Once it is fixed add these tests to error tests in MetadataDocumentReaderErrorTests.cs file.
-            // This fails since annotations don't match which is very likely due to the product silently dropping the annotation mapped to stream. 
-            // Where as the mapping on property on ComplexType fails with the right error message.
-
-            // personType.EntityPropertyMapping("Photo", SyndicationItemProperty.Summary);
-            // personType.EntityPropertyMapping("Address/Image", SyndicationItemProperty.Title);
-
-            // The below fails with yet another error message saying basically that mapping is different.
-            // personType.EntityPropertyMapping("Photos", SyndicationItemProperty.AuthorEmail);
-
-            testCases.Add(this.CreateMetadataDescriptor(model));
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                testCases,
-                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations.Where(tc => tc.Synchronous && !tc.IsRequest),
-                (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
-        }
-
         [TestMethod, TestCategory("Reader.MetadataDocument"), Variation(Description = "Test for reading metadata documents with element types appearing in different orders.")]
         public void MetadataDocumentElementTypeOrderTest()
         {

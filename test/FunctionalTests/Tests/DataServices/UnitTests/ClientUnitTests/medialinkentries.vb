@@ -22,9 +22,10 @@ Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports System.Web
 
 Partial Public Class ClientModule
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     'Remove Atom
-    <Ignore> <DeploymentItem("Workspaces", "Workspaces")>
-    <TestClass()>
+    ' <TestClass()>
+    <DeploymentItem("Workspaces", "Workspaces")>
     Public Class MediaLinkEntryTest
         Inherits AstoriaTestCase
 
@@ -405,7 +406,8 @@ Partial Public Class ClientModule
             Assert.IsTrue(sawMlePost, "Test failure: we never got a chance to inspect the MLE post for the default content type")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub PostMediaLinkEntry()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub PostMediaLinkEntry()
             Dim engine = CombinatorialEngine.FromDimensions(New Dimension("ExecutionMethod", Util.ExecutionMethods))
             TestUtil.RunCombinatorialEngineFail(engine, AddressOf PostMediaLinkEntry_Inner)
         End Sub

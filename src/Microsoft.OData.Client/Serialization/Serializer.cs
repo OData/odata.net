@@ -737,7 +737,6 @@ namespace Microsoft.OData.Client
         /// <param name="value">The value of the <see cref="UriOperationParameter"/>.</param>
         /// <param name="useEntityReference">If true, use entity reference, instead of entity to serialize the parameter.</param>
         /// <returns>A string representation of <paramref name="value"/> for use in a Url.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values being escaped are known not to contain single quotes.")]
         private string ConvertToEscapedUriValue(string paramName, object value, bool useEntityReference = false)
         {
             Debug.Assert(!string.IsNullOrEmpty(paramName), "!string.IsNullOrEmpty(paramName)");

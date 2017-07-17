@@ -26,6 +26,7 @@ Imports <xmlns:dns="http://docs.oasis-open.org/odata/ns/data">
 
 Partial Public Class ClientModule
 
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     <TestClass()> Public Class ClientUpdateTests
         Inherits AstoriaTestCase
 
@@ -101,17 +102,16 @@ Partial Public Class ClientModule
 
         Private baseRegionID As Integer
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdateSimpleInsert()
             ClientUpdateSimpleInsert1(False)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdateSimpleInsertTunneling()
             ClientUpdateSimpleInsert1(True)
         End Sub
-        'Remove Atom
-        <Ignore> Private Sub ClientUpdateSimpleInsert1(ByVal tunneling As Boolean)
+        Private Sub ClientUpdateSimpleInsert1(ByVal tunneling As Boolean)
             Dim resourceUri As Uri = Nothing
 
             Dim originalMergeOption As MergeOption = MergeOption.AppendOnly
@@ -308,7 +308,7 @@ Partial Public Class ClientModule
             Assert.IsNull(resourceUri)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdate_0()
             ' create the customer to database
             Dim ctx1 = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
@@ -345,7 +345,8 @@ Partial Public Class ClientModule
             Assert.AreNotSame(customer2, customer3)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub ClientUpdate_1()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub ClientUpdate_1()
             ctx.MergeOption = MergeOption.NoTracking
             Dim category = ctx.Categories.First()
             ctx.AddToCategories(category)
@@ -375,7 +376,7 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdate_ServerSendingPayloadInUpdateOperations()
             TestUtil.ClearMetadataCache()
             Try
@@ -409,7 +410,7 @@ Partial Public Class ClientModule
             End Try
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdate_2()
             Dim c As NorthwindSimpleModel.Customers = NorthwindSimpleModel.Customers.CreateCustomers("ab", "b")
 
@@ -431,7 +432,7 @@ Partial Public Class ClientModule
             GC.KeepAlive(c)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdate_3()
             ctx.MergeOption = MergeOption.PreserveChanges
 
@@ -453,7 +454,7 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdate_4()
             Dim c As NorthwindSimpleModel.Customers = NorthwindSimpleModel.Customers.CreateCustomers("ALFKI", "foo")
             ctx.AttachTo("Customers", c)
@@ -493,7 +494,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(c1.Orders.Count, (From a In c1.Orders From b In c2.Orders Where a.OrderID = b.OrderID Select b).Count)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub ClientUpdate_5()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub ClientUpdate_5()
             Dim a = NorthwindSimpleModel.Products.CreateProducts(999, "regression test", True)
             ctx.AddToProducts(a)
             a.Categories = ctx.Categories.First()
@@ -518,7 +520,8 @@ Partial Public Class ClientModule
             Assert.IsTrue(entities.All(Function(x) x.State = EntityStates.Unchanged), "not unchanged entity")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub ClientUpdate_6()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub ClientUpdate_6()
             Dim p = NorthwindSimpleModel.Products.CreateProducts(999, "regression test", True)
             ctx.AddToProducts(p)
             Util.SaveChanges(ctx, SaveChangesOptions.None)
@@ -536,7 +539,8 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx, SaveChangesOptions.BatchWithSingleChangeset)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub ClientUpdate_7()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub ClientUpdate_7()
             Dim e1 = NorthwindSimpleModel.Employees.CreateEmployees(1, "Foo", "Bar")
             Dim e2 = NorthwindSimpleModel.Employees.CreateEmployees(2, "Foo1", "Bar1")
 
@@ -553,7 +557,8 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx, SaveChangesOptions.BatchWithSingleChangeset)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub ClientUpdate_8()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub ClientUpdate_8()
             Dim r = NorthwindSimpleModel.Region.CreateRegion(777, "Antartica")
             ctx.AddToRegion(r)
 
@@ -570,7 +575,8 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx, SaveChangesOptions.BatchWithSingleChangeset)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub ClientUpdate_9()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub ClientUpdate_9()
             Dim p = NorthwindSimpleModel.Products.CreateProducts(999, "regression test", True)
             ctx.AddToProducts(p)
             Util.SaveChanges(ctx, SaveChangesOptions.None)
@@ -598,7 +604,8 @@ Partial Public Class ClientModule
 #Region "ComboSaveChanges"
         Private Shared failureMessages As HashSet(Of String) = New HashSet(Of String)()
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Overloads Sub ComboSaveChanges()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Overloads Sub ComboSaveChanges()
             Dim states As EntityStates() = New EntityStates() {EntityStates.Detached, EntityStates.Added, EntityStates.Unchanged, EntityStates.Modified, EntityStates.Deleted}
             Dim options As SaveChangesOptions() = New SaveChangesOptions() {SaveChangesOptions.None, SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.ContinueOnError}
             Dim bools As Boolean() = New Boolean() {True, False}
@@ -871,7 +878,7 @@ Partial Public Class ClientModule
         ' update Orders Set CustomerID='ANATR' where CustomerID is null or  CustomerID='ASTOR'
         ' delete Customers where CustomerID='ASTOR'
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdateNorthwindCustomer1()
             ctx.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges
 
@@ -949,7 +956,7 @@ Partial Public Class ClientModule
             End Try
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ClientUpdate_10()
             Dim detail As NorthwindSimpleModel.Order_Details = ctx.Order_Details.First()
             Dim queriedUri As Uri = Nothing
@@ -993,12 +1000,12 @@ Partial Public Class ClientModule
             End Try
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub UpdateCustomer_EmptyName()
             UpdateCustomer(False)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub ReplaceCustomer_EmptyName()
             UpdateCustomer(True)
         End Sub
@@ -1043,7 +1050,8 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx, options)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub EntityInsertFailed_LinkInsertAbort()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub EntityInsertFailed_LinkInsertAbort()
             Dim entity As EntityDescriptor
             Dim link As LinkDescriptor
 
@@ -1109,7 +1117,8 @@ Partial Public Class ClientModule
             Next
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub DeleteComplexProperty()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub DeleteComplexProperty()
             Using CustomDataContext.CreateChangeScope()
                 Using web = TestWebRequest.CreateForInProcessWcf
                     web.DataServiceType = ServiceModelData.CustomData.ServiceModelType
@@ -1132,7 +1141,8 @@ Partial Public Class ClientModule
             End Using
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub UnsafeCharaceterInQueryParametersInUri()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub UnsafeCharaceterInQueryParametersInUri()
             For Each name As String In New String() {"M+S", "M&S", "M#S", "M?S"}
                 Dim key As String = name
                 If key.Contains("#") Or key.Contains("?") Then
@@ -1167,7 +1177,8 @@ Partial Public Class ClientModule
             Next
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub CollectionFoldingInV1_NonBatch()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub CollectionFoldingInV1_NonBatch()
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9999)
             ctx.AddToOrders(order)
             Util.VerifyObject(ctx, order, EntityStates.Added)
@@ -1190,7 +1201,8 @@ Partial Public Class ClientModule
             ctx.SaveChanges()
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub CollectionFoldingInV1_Batch()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub CollectionFoldingInV1_Batch()
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9999)
             ctx.AddToOrders(order)
             Util.VerifyObject(ctx, order, EntityStates.Added)
@@ -1452,7 +1464,7 @@ Partial Public Class ClientModule
             Private _CustomerDemographics As Global.System.Collections.ObjectModel.Collection(Of NorthwindSimpleModel.CustomerDemographics) = New Global.System.Collections.ObjectModel.Collection(Of NorthwindSimpleModel.CustomerDemographics)
         End Class
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         <ExpectedException(GetType(InvalidOperationException))>
         Public Sub CustomerDoesNotAutoCreateOrderCollectionAndNoSetter()
             Dim query As IEnumerable(Of CustomerThatDoesNotAutoCreateOrderCollectionAndNoSetter) = ctx.Execute(Of CustomerThatDoesNotAutoCreateOrderCollectionAndNoSetter)("Customers?$top=5&$expand=Orders")
@@ -1466,7 +1478,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(totalOrders, Enumerable.Count(From a In ctx.Entities Where GetType(NorthwindSimpleModel.Orders).IsInstanceOfType(a.Entity) Select a))
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()>
+        ' <TestCategory("Partition1")> <TestMethod()>
         Public Sub CustomerDoesNotAutoCreateOrderCollection()
             Dim query As IEnumerable(Of CustomerThatDoesNotAutoCreateOrderCollection) = ctx.Execute(Of CustomerThatDoesNotAutoCreateOrderCollection)("Customers?$top=5&$expand=Orders")
 
@@ -1479,9 +1491,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(totalOrders, Enumerable.Count(From a In ctx.Entities Where GetType(NorthwindSimpleModel.Orders).IsInstanceOfType(a.Entity) Select a))
         End Sub
 
-        'Remove Atom 
+        'Remove Atom
         '<TestMethod()>
-        <Ignore>
         Public Sub ClientUpdate_11()
             Dim discontinuedProducts = From prod In ctx.Products
                                        Where True = prod.Discontinued
@@ -1509,7 +1520,8 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub ClientUpdate_12()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub ClientUpdate_12()
             Dim customer = NorthwindSimpleModel.Customers.CreateCustomers("ABCDE", "Microsoft")
             Dim order = NorthwindSimpleModel.Orders.CreateOrders(9999)
             order.Customers = customer
@@ -1718,7 +1730,8 @@ Partial Public Class ClientModule
 
         ' Verifies that Prefer headers and PATCH are not used for non-entity operations and for non-update operations
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub PreferHeader_Patch_NonEntityOrNonUpdateOperations()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub PreferHeader_Patch_NonEntityOrNonUpdateOperations()
             Dim service = New OpenWebDataServiceDefinition
             service.DataServiceType = GetType(CustomDataContext)
             service.ProcessingPipeline.ProcessingRequest =
@@ -1890,7 +1903,8 @@ Partial Public Class ClientModule
             Public Property WritingEntityCallcount As Integer
         End Class
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub IdentityChangeOnUpdate()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub IdentityChangeOnUpdate()
             Dim service = New PlaybackServiceDefinition
             Using request = service.CreateForInProcessWcf
                 request.StartService()
@@ -1986,7 +2000,8 @@ Partial Public Class ClientModule
         ' If the value is not present in the payload, then header value wins
         ' If no
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub Payload_Header_Identity_POST()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub Payload_Header_Identity_POST()
             Dim service = New PlaybackServiceDefinition
             Using request = service.CreateForInProcessWcf
                 request.StartService()
@@ -2095,7 +2110,8 @@ Partial Public Class ClientModule
         ' If the value is not present in the payload, then header value wins
         ' If no
         'Remove Atom
-        <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub Payload_Header_Identity_Update()
+        ' <TestCategory("Partition1")> <TestMethod()>
+        Public Sub Payload_Header_Identity_Update()
             Dim service = New PlaybackServiceDefinition
             Using request = service.CreateForInProcessWcf
                 request.StartService()

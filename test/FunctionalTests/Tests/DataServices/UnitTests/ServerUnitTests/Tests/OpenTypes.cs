@@ -852,8 +852,10 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
+
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void OpenTypeGetOpenPropertyValuesWithNull()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())

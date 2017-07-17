@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="selectToken">the syntactically parsed select token</param>
         /// <param name="configuration">The configuration to use for parsing.</param>
         /// <returns>A select expand clause bound to metadata.</returns>
-        public SelectExpandClause Bind(
+        public static SelectExpandClause Bind(
             ODataPathInfo odataPathInfo,
             ExpandToken expandToken,
             SelectToken selectToken,

@@ -33,7 +33,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal ODataMetadataOutputContext(
             ODataMessageInfo messageInfo,
             ODataMessageWriterSettings messageWriterSettings)

@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal abstract IEnumerable<KeyValuePair<Version, string>> SupportedVersions { get; }
 
-        internal XmlAttributeInfo GetOptionalAttribute(XmlElementInfo element, string attributeName)
+        internal static XmlAttributeInfo GetOptionalAttribute(XmlElementInfo element, string attributeName)
         {
             return element.Attributes[attributeName];
         }
@@ -44,7 +44,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return attr;
         }
 
-        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         protected override XmlReader InitializeReader(XmlReader reader)
         {
             XmlReaderSettings readerSettings = new XmlReaderSettings
@@ -112,7 +111,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalInteger(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? value;
@@ -129,7 +128,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected long? OptionalLong(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 long? value;
@@ -146,7 +145,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalSrid(string attributeName, int defaultSrid)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? srid;
@@ -170,7 +169,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalScale(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? scale;
@@ -194,7 +193,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalMaxLength(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? value;
@@ -253,7 +252,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected bool? OptionalBoolean(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 bool? value;
@@ -270,7 +269,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string Optional(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             return !attr.IsMissing ? attr.Value : null;
         }
 
@@ -282,7 +281,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string OptionalAlias(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 return this.ValidateAlias(attr.Value);
@@ -332,7 +331,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string OptionalType(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 return this.ValidateTypeName(attr.Value);
@@ -354,7 +353,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string OptionalQualifiedName(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 return this.ValidateQualifiedName(attr.Value);

@@ -121,13 +121,6 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             #endregion
         }
 
-        [Ignore]
-        [TestMethod]
-        public void UpdateTypeInReferencedModel()
-        {
-
-        }
-
         #endregion
 
         private ODataResourceWrapper CreateVehicleGPS(bool postDeleteTypeInReferencingModel)

@@ -132,43 +132,6 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Reads from the XML reader skipping insignificant nodes.
-        /// </summary>
-        /// <param name="reader">The XML reader to read from.</param>
-        /// <remarks>Do not use MoveToContent since for backward compatibility reasons we skip over nodes reported as Text which have
-        /// whitespace only content (even though the XmlReader should report those as Whitespace).</remarks>
-        internal static void SkipInsignificantNodes(this XmlReader reader)
-        {
-            Debug.Assert(reader != null, "reader != null");
-
-            do
-            {
-                switch (reader.NodeType)
-                {
-                    case XmlNodeType.Element:
-                        return;
-                    case XmlNodeType.Comment:
-                    case XmlNodeType.None:
-                    case XmlNodeType.ProcessingInstruction:
-                    case XmlNodeType.XmlDeclaration:
-                    case XmlNodeType.Whitespace:
-                        break;
-                    case XmlNodeType.Text:
-                        if (IsNullOrWhitespace(reader.Value))
-                        {
-                            break;
-                        }
-
-                        return;
-
-                    default:
-                        return;
-                }
-            }
-            while (reader.Read());
-        }
-
-        /// <summary>
         /// Determines if the current node's namespace equals to the specified <paramref name="namespaceUri"/>
         /// </summary>
         /// <param name="reader">The XML reader to get the current node from.</param>
@@ -220,31 +183,6 @@ namespace Microsoft.OData.Metadata
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Checks whether the specifies string is null or blank.
-        /// </summary>
-        /// <param name="text">Text to check.</param>
-        /// <returns>true if text is null, empty, or all whitespace characters.</returns>
-        private static bool IsNullOrWhitespace(string text)
-        {
-            if (text == null)
-            {
-                return true;
-            }
-            else
-            {
-                foreach (char c in text)
-                {
-                    if (!char.IsWhiteSpace(c))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
         }
     }
 }

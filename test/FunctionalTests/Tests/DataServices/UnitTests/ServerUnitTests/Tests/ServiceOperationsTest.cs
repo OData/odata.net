@@ -29,6 +29,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
     /// <summary>This is a test class for service operations.</summary>
     [TestClass()]
     public class ServiceOperationsTest
@@ -281,7 +282,7 @@ namespace AstoriaUnitTests.Tests
 
         /// <summary>Checks that metadata can be generated for service operations.</summary>
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationsMetadataBasic()
         {
             // Test Matrix
@@ -580,7 +581,7 @@ namespace AstoriaUnitTests.Tests
 
         /// <summary>Checks that parameters support extra whitespace.</summary>
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationsSyntax()
         {
             TestUtil.TraceScopeForException("ServiceOperationsSyntax", delegate ()
@@ -601,7 +602,7 @@ namespace AstoriaUnitTests.Tests
 
         /// <summary>Checks that service operation supports derived type identifier segments in the URI.</summary>
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperations_WithTypeIdentifier()
         {
             TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier", delegate ()
@@ -617,7 +618,7 @@ namespace AstoriaUnitTests.Tests
 
         /// <summary>Checks that service operation with a derived type identifier segment in the URI returns only instances of the type..</summary>
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperations_WithTypeIdentifier_ReturnsAllResults_1()
         {
             TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier_ReturnsAllResults", delegate ()
@@ -642,7 +643,7 @@ namespace AstoriaUnitTests.Tests
 
         /// <summary>Checks that service operation with a derived type identifier segment in the URI allows one to project derived type properites</summary>
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperations_WithTypeIdentifier_ReturnsAllResults_2()
         {
             TestUtil.TraceScopeForException("ServiceOperations_WithTypeIdentifier_ReturnsAllResults", delegate ()
@@ -672,7 +673,7 @@ namespace AstoriaUnitTests.Tests
 
         /// <summary>Checks that service operations work with enumerations that are not IQueryable.</summary>
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationsPlainEnumerableTest()
         {
             TestUtil.TraceScopeForException("ServiceOperationsPlainEnumerableTest", delegate ()
@@ -687,7 +688,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void InStreamPagingErrorForIEnumerableServiceOperation()
         {
             using (TestUtil.MetadataCacheCleaner())
@@ -817,7 +818,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestMethod, Description("Assert were getting fired when If-Match or If-None-Match header was specified for singleton service operations")]
+        // [TestMethod, Description("Assert were getting fired when If-Match or If-None-Match header was specified for singleton service operations")]
         public void ServiceOperationsETagNotAllowed()
         {
             string[] uriList = new string[]
@@ -843,7 +844,7 @@ namespace AstoriaUnitTests.Tests
                     }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationReturningNullShouldThrow404()
         {
             // Invalid uri should return 404
@@ -856,7 +857,7 @@ namespace AstoriaUnitTests.Tests
             UnitTestsUtil.VerifyInvalidRequest(null, "/GetSingleQueryableCustomer?id=11", typeof(ServiceOperationsSyntaxService), UnitTestsUtil.AtomFormat, "GET", 404, DataServicesResourceUtil.GetString("RequestUriProcessor_ResourceNotFound", "GetSingleQueryableCustomer"));
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationSerializationWithSingleEntity()
         {
             var atomXPaths = new string[]
@@ -875,7 +876,7 @@ namespace AstoriaUnitTests.Tests
             TestServiceOperationSerialization("/GetSingleCustomer", atomXPaths, jsonLiteXPaths);
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationSerializationWithCollectionOfEntities()
         {
             var atomXPaths = new string[]
@@ -895,7 +896,7 @@ namespace AstoriaUnitTests.Tests
             TestServiceOperationSerialization("/TheEnumerableCustomerMulti", atomXPaths, jsonLiteXPaths);
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationSerializationWithSingleComplexType()
         {
             string serviceOpName = "GetSingleComplexType";
@@ -914,7 +915,7 @@ namespace AstoriaUnitTests.Tests
             TestServiceOperationSerialization(string.Format("/{0}", serviceOpName), atomXPaths, jsonLiteXPaths);
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationSerializationWithCollectionOfComplexTypes()
         {
             string serviceOpName = "GetComplexTypeCollection";
@@ -935,7 +936,7 @@ namespace AstoriaUnitTests.Tests
             TestServiceOperationSerialization(string.Format("/{0}", serviceOpName), atomXPaths, jsonLiteXPaths);
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationSerializationWithSinglePrimitive()
         {
             string serviceOpName = "GetSinglePrimitive";
@@ -955,7 +956,7 @@ namespace AstoriaUnitTests.Tests
             TestServiceOperationSerialization(string.Format("/{0}", serviceOpName), atomXPaths, jsonLiteXPaths);
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ServiceOperationSerializationWithCollectionOfPrimitives()
         {
             string serviceOpName = "GetPrimitiveCollection";

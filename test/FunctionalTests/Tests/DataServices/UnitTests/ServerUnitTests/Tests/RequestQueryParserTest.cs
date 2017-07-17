@@ -360,7 +360,8 @@ namespace AstoriaUnitTests.Tests
             return null;
         }
 
-        [TestMethod]
+        // github: https://github.com/OData/odata.net/issues/878
+        // [TestMethod]
         [Ignore] // test case issue, request uri and service root in this case is null.
         public void RequestQueryParserTestFilterTest()
         {
@@ -379,7 +380,8 @@ namespace AstoriaUnitTests.Tests
                 "/Source//*[@NodeType='Lambda']/Body[@Type='System.Boolean']/*[@NodeType='MemberAccess' and contains(@Member, 'ID')]");
         }
 
-        [TestMethod]
+        // github: https://github.com/OData/odata.net/issues/878
+        // [TestMethod]
         [Ignore] // test case issue, request uri and service root in this case is null.
         public void RequestQueryParserTestBasicTests()
         {
@@ -552,8 +554,9 @@ namespace AstoriaUnitTests.Tests
         /// To get the Unicode code point for a character in hexadecimal notation in Microsoft Word,
         /// type the character and press Alt+X.
         /// </remarks>
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void RequestQueryParserReproTests()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())

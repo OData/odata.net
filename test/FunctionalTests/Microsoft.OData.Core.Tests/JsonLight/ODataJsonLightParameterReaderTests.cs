@@ -290,7 +290,7 @@ namespace Microsoft.OData.Tests.JsonLight
             entry.Properties.ElementAt(1).Value.Should().Be("TestName");
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ReadNullEntity()
         {
             var entityType = this.referencedModel.EntityType("EntityType", "NS").Property("ID", EdmPrimitiveTypeKind.Int32);
@@ -303,9 +303,7 @@ namespace Microsoft.OData.Tests.JsonLight
             pair.Key.Should().Be("entry");
             pair.Value.Count().Should().Be(1);
             var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.First().Value.Should().Be(1);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            entry.Should().BeNull();
         }
 
         [Fact]

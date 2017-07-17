@@ -354,7 +354,6 @@ namespace Microsoft.OData.Client
 
         /// <summary>Represents the URI of the query to the data service.</summary>
         /// <returns>A URI as string that represents the query to the data service for this <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0010", Justification = "ToString for display purpose is OK")]
         public override string ToString()
         {
             try

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OData.Edm.Vocabularies
 {
@@ -33,15 +34,10 @@ namespace Microsoft.OData.Edm.Vocabularies
             if (propertyValues != null)
             {
                 // If there are enough property values, make FindPropertyValue use a dictionary.
-                int propertyCount = 0;
-                foreach (IEdmPropertyValue propertyValue in propertyValues)
+                int propertyCount = propertyValues.Count();
+                if (propertyCount > 5)
                 {
-                    propertyCount++;
-                    if (propertyCount > 5)
-                    {
-                        this.propertiesDictionaryCache = new Cache<EdmStructuredValue, Dictionary<string, IEdmPropertyValue>>();
-                        break;
-                    }
+                    this.propertiesDictionaryCache = new Cache<EdmStructuredValue, Dictionary<string, IEdmPropertyValue>>();
                 }
             }
         }
