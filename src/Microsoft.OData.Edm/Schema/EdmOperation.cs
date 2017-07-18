@@ -117,6 +117,31 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Creates and adds an optional parameter to this function (as the last parameter).
+        /// </summary>
+        /// <param name="name">The name of the parameter being added.</param>
+        /// <param name="type">The type of the parameter being added.</param>
+        /// <returns>Created parameter.</returns>
+        public EdmOptionalParameter AddOptionalParameter(string name, IEdmTypeReference type)
+        {
+            return AddOptionalParameter(name, type, null);
+        }
+
+        /// <summary>
+        /// Creates and adds an optional parameter to this function (as the last parameter).
+        /// </summary>
+        /// <param name="name">The name of the parameter being added.</param>
+        /// <param name="type">The type of the parameter being added.</param>
+        /// <param name="defaultValue">The default value for the parameter being added.</param>
+        /// <returns>Created parameter.</returns>
+        public EdmOptionalParameter AddOptionalParameter(string name, IEdmTypeReference type, string defaultValue)
+        {
+            EdmOptionalParameter parameter = new EdmOptionalParameter(this, name, type, defaultValue);
+            this.parameters.Add(parameter);
+            return parameter;
+        }
+
+        /// <summary>
         /// Adds a parameter to this function (as the last parameter).
         /// </summary>
         /// <param name="parameter">The parameter being added.</param>

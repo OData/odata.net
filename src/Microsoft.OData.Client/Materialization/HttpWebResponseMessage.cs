@@ -56,7 +56,6 @@ namespace Microsoft.OData.Client
         /// Constructor.
         /// </summary>
         /// <param name="httpResponse">HttpWebResponse instance.</param>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public HttpWebResponseMessage(HttpWebResponse httpResponse)
         {
             Util.CheckArgumentNull(httpResponse, "httpResponse");

@@ -27,7 +27,6 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         {
         }
 
-
         [TestMethod]
         public void FunctionImportTest()
         {
@@ -169,14 +168,6 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual((product.UnitPrice * (1 - percentage / 100)), product1.UnitPrice);
         }
 
-        //TODO: not supported now
-        [Ignore]
-        [TestMethod]
-        public void ActionBoundOnEntitySet()
-        {
-            //Products.Discount();
-        }
-
         [TestMethod]
         public void ActionImportWithCollectionOfPrimitiveParameter()
         {
@@ -203,8 +194,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         //Complex type as function parameter in uri is not supported
-        [Ignore]
-        [TestMethod]
+        // [TestMethod] // github issuse: #896
         public void UnBoundFunctionReturnEntity()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;

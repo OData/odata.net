@@ -266,7 +266,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 VisitTypeReference(element.Type);
             }
 
-            this.EndElement(element);
+            this.VisitPrimitiveElementAnnotations(this.Model.DirectValueAnnotations(element));
+            IEdmVocabularyAnnotatable vocabularyAnnotatableElement = element as IEdmVocabularyAnnotatable;
+            if (vocabularyAnnotatableElement != null)
+            {
+                this.VisitElementVocabularyAnnotations(this.Model.FindDeclaredVocabularyAnnotations(vocabularyAnnotatableElement).Where(a => a.IsInline(this.Model)));
+            }
+
+            this.schemaWriter.WriteOperationParameterEndElement(element);
         }
 
         protected override void ProcessCollectionType(IEdmCollectionType element)

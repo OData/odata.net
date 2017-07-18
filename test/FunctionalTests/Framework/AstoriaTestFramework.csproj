@@ -210,20 +210,6 @@
     <EmbeddedResource Include="Workspaces\DeleteVDir.vbs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Workspaces\Databases\aruba.ldf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Workspaces\Databases\aruba.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Workspaces\Databases\northwind.ldf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Workspaces\Databases\northwind.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <DataFile Include="AstoriaClientTest_MediumTrustPermissionSet.xml" />
     <EmbeddedResource Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\stubs\ExpressionTreeTests\ExpressionTreeTestBaseVisitor.cs">
       <Link>Features\Expressions\Resources\ExpressionTreeTestBaseVisitor.cs</Link>
@@ -391,17 +377,20 @@
     <Compile Include="Workspaces\WorkspaceLibrary\CodeGeneratingDataInserter.cs" />
     <EmbeddedResource Include="Workspaces\ServiceHost\TestServiceHost.cs" />
     <None Include="AstoriaFramework.snk" />
-    <DataFile Include="Workspaces\Databases\Aruba.LDF" />
-    <DataFile Include="Workspaces\Databases\Aruba.mdf" />
-    <DataFile Include="Workspaces\Databases\northwind.ldf" />
-    <DataFile Include="Workspaces\Databases\northwind.mdf" />
-    <DataFile Include="Workspaces\Databases\PicturesTags.ldf" />
-    <DataFile Include="Workspaces\Databases\PicturesTags.mdf" />
     <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\CallerAnyDomain.xml" />
     <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\CallerDifferentDomain.xml" />
     <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\HeadersBlocked.xml" />
     <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\OnlyServiceRequestAllowed.xml" />
     <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\SubPathsNotallowed.xml" />
+    <Content Include="Workspaces\Databases\Aruba.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Workspaces\Databases\Northwind.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Workspaces\Databases\PicturesTags.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Workspaces\Silverlight\SilverlightAstoriaTestUI.csproj.user" />
     <Content Include="Workspaces\Silverlight\VBDispatch.vbproj.user" />
     <EmbeddedResource Include="Workspaces\Silverlight\AppManifest.xml" />

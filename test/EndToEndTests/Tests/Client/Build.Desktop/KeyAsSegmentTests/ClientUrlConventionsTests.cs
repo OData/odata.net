@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         }
 
         // This is an unsupported scenario and does not currently work.
-        [TestMethod, Ignore]
+        // [TestMethod] // github issuse: #896
         public void ClientChangesUrlConventionsBetweenQueryAndUpdate()
         {
             var contextWrapper = this.CreateWrappedContext();

@@ -133,7 +133,6 @@ namespace Microsoft.OData
         /// <param name="messageStreamFunc">A function that returns the stream backing the message.</param>
         /// <param name="isRequest">true if the message is a request message; false for a response message.</param>
         /// <returns>The <see cref="Stream"/> backing the message.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We don't own the underlying stream, so we should not dispose the wrapper.")]
         protected internal Stream GetStream(Func<Stream> messageStreamFunc, bool isRequest)
         {
             // Check whether we have an existing buffering read stream when reading

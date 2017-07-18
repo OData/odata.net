@@ -60,7 +60,6 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Begins the async request
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void Begin()
         {
             try
@@ -111,7 +110,6 @@ namespace Microsoft.OData.Client
         /// <returns>
         /// The response object for this request.
         /// </returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal DataServiceStreamResponse Execute()
         {
             try
@@ -177,7 +175,6 @@ namespace Microsoft.OData.Client
         /// Async callback registered with the underlying HttpWebRequest object.
         /// </summary>
         /// <param name="asyncResult">The async result associated with the HttpWebRequest operation.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected override void AsyncEndGetResponse(IAsyncResult asyncResult)
         {
             try

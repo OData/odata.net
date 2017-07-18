@@ -1057,6 +1057,14 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
+        private sealed class VisitorOfIEdmOptionalParameter : VisitorOfT<IEdmOptionalParameter>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmOptionalParameter parameter, List<object> followup, List<object> references)
+            {
+                return null;
+            }
+        }
+
         private sealed class VisitorOfIEdmCollectionTypeReference : VisitorOfT<IEdmCollectionTypeReference>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmCollectionTypeReference typeRef, List<object> followup, List<object> references)

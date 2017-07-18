@@ -119,7 +119,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="reader">The reader.</param>
         /// <param name="responsePipeline">The data service response pipeling configuration object.</param>
         /// <returns>A reader.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1811:'ODataReaderWrapper.CreateForTest(ODataReader)' appears to have no upstream public or protected callers.", Justification = "Method is only used for testing purposes.")]
         internal static ODataReaderWrapper CreateForTest(ODataReader reader, DataServiceClientResponsePipelineConfiguration responsePipeline)
         {
             return new ODataReaderWrapper(reader, responsePipeline);

@@ -442,8 +442,7 @@ namespace Microsoft.OData.UriParser
             SelectExpandSyntacticParser.Parse(select, expand, odataPathInfo.TargetStructuredType, configuration, out expandTree, out selectTree);
 
             // semantic pass
-            SelectExpandSemanticBinder binder = new SelectExpandSemanticBinder();
-            return binder.Bind(odataPathInfo, expandTree, selectTree, configuration);
+            return SelectExpandSemanticBinder.Bind(odataPathInfo, expandTree, selectTree, configuration);
         }
 
         /// <summary>

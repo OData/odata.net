@@ -793,8 +793,8 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
-                "No annotation name should have been added into the InstanceAnnotations collection twice.");
+            // Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
+            //    "No annotation name should have been added into the InstanceAnnotations collection twice.");
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResource resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
@@ -1639,7 +1639,7 @@ namespace Microsoft.OData.JsonLight
         /// Asserts that the current recursion depth of values is zero. This should be true on all calls into this class from outside of this class.
         /// </summary>
         [Conditional("DEBUG")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "The this is needed in DEBUG build.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This is needed in DEBUG build.")]
         private void AssertRecursionDepthIsZero()
         {
             Debug.Assert(this.recursionDepth == 0, "The current recursion depth must be 0.");

@@ -149,32 +149,29 @@ namespace Microsoft.OData.Metadata
 
             IList<string> parameterNameList = parameterNames.ToList();
 
-            // TODO: update code that is duplicate between operation and operation import, add more tests.
             foreach (IEdmFunctionImport functionImport in functionImports)
             {
-                IEnumerable<IEdmOperationParameter> parametersToMatch = functionImport.Operation.Parameters;
-
-                // bindable functions don't require the first parameter be specified, since its already implied in the path.
-                if (functionImport.Function.IsBound)
-                {
-                    parametersToMatch = parametersToMatch.Skip(1);
-                }
-
-                // if any parameter count is different, don't consider it a match.
-                List<IEdmOperationParameter> operationImportParameters = parametersToMatch.ToList();
-                if (operationImportParameters.Count != parameterNameList.Count)
-                {
-                    continue;
-                }
-
-                // if any parameter was missing, don't consider it a match.
-                if (operationImportParameters.Any(p => parameterNameList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+                if (!ParametersSatisfyFunction(functionImport.Operation, parameterNameList, caseInsensitive))
                 {
                     continue;
                 }
 
                 yield return functionImport;
             }
+        }
+
+        /// <summary>
+        /// Filters the operations by parameter names.
+        /// </summary>
+        /// <param name="functions">The operations.</param>
+        /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <returns>The best matching operations based on parameters.</returns>
+        internal static IEnumerable<IEdmOperationImport> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperationImport> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
+        {
+            // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
+            IEnumerable<IEdmOperationImport> exactMatches = functions.Where(f => f.Operation.Parameters.Count() == parameters.Count());
+            return exactMatches.Count() > 0 ? exactMatches : functions;
         }
 
         /// <summary>
@@ -249,6 +246,20 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
+        /// Filters the operations by parameter names.
+        /// </summary>
+        /// <param name="functions">The operations.</param>
+        /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <returns>The best matching operations based on parameters.</returns>
+        internal static IEnumerable<IEdmOperation> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperation> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
+        {
+            // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
+            IEnumerable<IEdmOperation> exactMatches = functions.Where(f => f.Parameters.Count() == parameters.Count() + (f.IsBound ? 1 : 0));
+            return exactMatches.Count() > 0 ? exactMatches : functions;
+        }
+
+        /// <summary>
         /// Given a list of possible operations and a list of parameter names, filter operations that exactly matches
         /// the parameter names. If more than one function matches, throw.
         /// </summary>
@@ -276,28 +287,12 @@ namespace Microsoft.OData.Metadata
             Debug.Assert(operations != null, "operations");
             Debug.Assert(parameters != null, "parameters");
 
-            IList<string> parametersList = parameters.ToList();
+            IList<string> parameterNameList = parameters.ToList();
 
             // TODO: update code that is duplicate between operation and operation import, add more tests.
             foreach (IEdmOperation operation in operations)
             {
-                IEnumerable<IEdmOperationParameter> parametersToMatch = operation.Parameters;
-
-                // bindable functions don't require the first parameter be specified, since its already implied in the path.
-                if (operation.IsBound)
-                {
-                    parametersToMatch = parametersToMatch.Skip(1);
-                }
-
-                // if any parameter count is different, don't consider it a match.
-                List<IEdmOperationParameter> functionImportParameters = parametersToMatch.ToList();
-                if (functionImportParameters.Count != parametersList.Count)
-                {
-                    continue;
-                }
-
-                // if any parameter was missing, don't consider it a match.
-                if (functionImportParameters.Any(p => parametersList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+                if (!ParametersSatisfyFunction(operation, parameterNameList, caseInsensitive))
                 {
                     continue;
                 }
@@ -1348,9 +1343,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="containerElement">The container element to get the full name for.</param>
         /// <returns>The full name of the owning entity container, slash, name of the container element.</returns>
-#if ODATA_CLIENT
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will be used in a later change")]
-#endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
             Debug.Assert(containerElement != null, "containerElement != null");
@@ -1804,6 +1796,38 @@ namespace Microsoft.OData.Metadata
                     }
                 }
             }
+        }
+
+        private static bool ParametersSatisfyFunction(IEdmOperation operation, IList<string> parameterNameList, bool caseInsensitive)
+        {
+            IEnumerable<IEdmOperationParameter> parametersToMatch = operation.Parameters;
+
+            // bindable functions don't require the first parameter be specified, since its already implied in the path.
+            if (operation.IsBound)
+            {
+                parametersToMatch = parametersToMatch.Skip(1);
+            }
+
+            List<IEdmOperationParameter> functionParameters = parametersToMatch.ToList();
+
+            // if any required parameters are missing, don't consider it a match.
+            if (functionParameters.Where(
+                p => !(p is IEdmOptionalParameter)).Any(
+                    p => parameterNameList.All(
+                        k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+            {
+                return false;
+            }
+
+            // if any specified parameters don't match, don't consider it a match.
+            if (parameterNameList.Any(
+                k => functionParameters.All(
+                    p => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

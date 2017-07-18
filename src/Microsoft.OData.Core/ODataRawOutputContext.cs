@@ -294,7 +294,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <remarks>This can only be called if the text writer was not yet initialized or it has been closed.
         /// It can be called several times with CloseWriter calls in between though.</remarks>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We create a NonDisposingStream which doesn't need to be disposed, even though it's IDisposable.")]
         internal void InitializeRawValueWriter()
         {
             Debug.Assert(this.rawValueWriter == null, "The rawValueWriter has already been initialized.");

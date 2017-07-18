@@ -122,6 +122,7 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraintPrimaryEnd = "EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraintPrimaryEnd";
         internal const string EdmModel_Validator_Semantic_InvalidPropertyType = "EdmModel_Validator_Semantic_InvalidPropertyType";
         internal const string EdmModel_Validator_Semantic_BoundOperationMustHaveParameters = "EdmModel_Validator_Semantic_BoundOperationMustHaveParameters";
+        internal const string EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional = "EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional";
         internal const string EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType = "EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType";
         internal const string EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet = "EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet";
         internal const string EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2 = "EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2";

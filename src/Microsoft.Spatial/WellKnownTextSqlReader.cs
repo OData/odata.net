@@ -100,7 +100,6 @@ namespace Microsoft.Spatial
             /// <summary>
             /// Read WellKnownText into an instance of Geography
             /// </summary>
-            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Literals should not be localized")]
             public void Read()
             {
                 this.ParseSRID();
