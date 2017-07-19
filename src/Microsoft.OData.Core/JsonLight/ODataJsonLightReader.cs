@@ -1613,6 +1613,32 @@ namespace Microsoft.OData.JsonLight
                     this.CurrentScope.NavigationSource =
                         this.jsonLightResourceDeserializer.ContextUriParseResult.NavigationSource;
                 }
+
+                if (this.CurrentScope.ResourceType == null)
+                {
+                    IEdmType typeFromContext = this.jsonLightResourceDeserializer.ContextUriParseResult.EdmType;
+                    if (typeFromContext != null)
+                    {
+                        if (typeFromContext.TypeKind == EdmTypeKind.Collection)
+                        {
+                            typeFromContext = ((IEdmCollectionType)typeFromContext).ElementType.Definition;
+                            if (!(typeFromContext is IEdmStructuredType))
+                            {
+                                typeFromContext = new EdmUntypedStructuredType();
+                                this.jsonLightResourceDeserializer.ContextUriParseResult.EdmType = new EdmCollectionType(typeFromContext.ToTypeReference());
+                            }
+                        }
+
+                        IEdmStructuredType resourceType = typeFromContext as IEdmStructuredType;
+                        if (resourceType == null)
+                        {
+                            resourceType = new EdmUntypedStructuredType();
+                            this.jsonLightResourceDeserializer.ContextUriParseResult.EdmType = resourceType;
+                        }
+
+                        this.CurrentScope.ResourceType = resourceType;
+                    }
+                }
             }
         }
 

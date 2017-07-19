@@ -1104,7 +1104,15 @@ namespace Microsoft.OData.JsonLight
                     out typeAnnotation);
             }
 
-            payloadTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference, this.MessageReaderSettings.PrimitiveTypeResolver, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+            payloadTypeReference = ResolveUntypedType(
+                this.JsonReader.NodeType,
+                this.JsonReader.Value,
+                payloadTypeName,
+                payloadTypeReference,
+                this.MessageReaderSettings.PrimitiveTypeResolver,
+                this.MessageReaderSettings.ReadUntypedAsString,
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+
             IEdmStructuredType payloadTypeOrItemType = payloadTypeReference.ToStructuredType();
             if (payloadTypeOrItemType != null)
             {

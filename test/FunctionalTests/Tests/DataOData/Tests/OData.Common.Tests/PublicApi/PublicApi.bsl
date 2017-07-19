@@ -2602,7 +2602,7 @@ public class Microsoft.OData.Edm.EdmTypeDefinitionReference : Microsoft.OData.Ed
 }
 
 public class Microsoft.OData.Edm.EdmUntypedStructuredTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference, IEdmUntypedTypeReference {
-	public EdmUntypedStructuredTypeReference (Microsoft.OData.Edm.EdmUntypedStructuredType definition)
+	public EdmUntypedStructuredTypeReference (Microsoft.OData.Edm.IEdmStructuredType definition)
 }
 
 public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeReference, IEdmUntypedTypeReference {
@@ -2635,9 +2635,13 @@ public sealed class Microsoft.OData.Edm.EdmNavigationPropertyInfo {
 	public Microsoft.OData.Edm.EdmNavigationPropertyInfo Clone ()
 }
 
-public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.OData.Edm.EdmStructuredType, IEdmElement, IEdmStructuredType, IEdmType {
+public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.OData.Edm.EdmStructuredType, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmStructuredType, IEdmType, IEdmVocabularyAnnotatable {
 	public EdmUntypedStructuredType ()
+	public EdmUntypedStructuredType (string namespaceName, string name)
 
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
 	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
 }
 

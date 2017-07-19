@@ -1,4 +1,9 @@
-﻿namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataJsonLightEntryAndFeedDeSerializerUndeclaredTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
 {
     using System;
     using System.Collections;
@@ -14,6 +19,7 @@
     using Microsoft.OData.Edm;
     using Microsoft.OData.Tests;
     // ReSharper restore RedundantUsingDirective
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     public class ODataJsonLightEntryAndFeedDeserializerUndeclaredTests
     {
@@ -63,6 +69,11 @@
             this.serverOpenEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
             this.serverOpenEntityType.AddStructuralProperty("MyEdmUntypedProp2", EdmCoreModel.Instance.GetUntyped());
 
+            // enum type
+            var enumType = new EdmEnumType("Server.NS", "EnumType");
+            enumType.AddMember(new EdmEnumMember(enumType, "Member", new EdmEnumMemberValue(1)));
+            this.serverModel.AddElement(enumType);
+
             EdmEntityContainer container = new EdmEntityContainer("Server.NS", "container1");
             this.serverEntitySet = container.AddEntitySet("serverEntitySet", this.serverEntityType);
             this.serverOpenEntitySet = container.AddEntitySet("serverOpenEntitySet", this.serverOpenEntityType);
@@ -81,6 +92,34 @@
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, this.serverModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
+                while (reader.Read())
+                {
+                    action(reader);
+                }
+            }
+        }
+
+        private void ReadCollectionPayload(string payload, Action<ODataReader> action)
+        {
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            message.SetHeader("Content-Type", "application/json");
+            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, UntypedAsValueReaderSettings, this.serverModel))
+            {
+                var reader = msgReader.CreateODataResourceSetReader();
+                while (reader.Read())
+                {
+                    action(reader);
+                }
+            }
+        }
+
+        private void ReadResourcePayload(string payload, Action<ODataReader> action)
+        {
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            message.SetHeader("Content-Type", "application/json");
+            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, UntypedAsValueReaderSettings, this.serverModel))
+            {
+                var reader = msgReader.CreateODataResourceReader();
                 while (reader.Read())
                 {
                     action(reader);
@@ -1219,9 +1258,7 @@
             undeclaredCollection1NestedEmail2.Value.Should().Be("email3@gmail2.com");
             address.Properties.Count().Should().Be(2);
             undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
-            //            undeclaredCollection1.TypeAnnotation.Type.Should().Be();
             undeclaredNestedCollection.Name.Should().Be("Address");
-            //            undeclaredNestedCollection.TypeAnnotation.Type.Should().Be();
         }
 
         [Fact]
@@ -1270,6 +1307,142 @@
             address.TypeName.Should().Be("Server.NS.Address");
             addressNestedInfo.Name.Should().Be("Address");
             address.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet")).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+        }
+
+        #endregion
+
+        #region untyped single value tests
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Server.NS.UndefinedType")]
+        public void ReadUntypedResource(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"id\":1}";
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            entry.Properties.Count().Should().Be(1);
+            entry.Properties.First(p => p.Name == "id").Value.As<Decimal>().Should().Be(1);
+        }
+
+        #endregion
+
+        #region untyped collection tests
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
+        [InlineData("Collection(Server.NS.UndefinedType)")]
+        public void ReadUntypedCollectionEmpty(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"value\":[]}";
+            bool readEntry = false;
+            this.ReadCollectionPayload(payload, reader =>
+             {
+                 if (reader.State == ODataReaderState.ResourceStart || reader.State == ODataReaderState.Primitive)
+                 {
+                     readEntry = true;
+                 }
+             });
+
+            readEntry.Should().Be(false);
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
+        [InlineData("Collection(Server.NS.UndefinedType)")]
+        public void ReadUntypedCollectionContainingNull(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"value\":[null]}";
+            object entry = null;
+            bool readEntry = false;
+            this.ReadCollectionPayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = reader.Item;
+                    readEntry = true;
+                }
+            });
+
+            readEntry.Should().Be(true);
+            entry.Should().Be(null);
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
+        [InlineData("Collection(Server.NS.UndefinedTypeDefinition)")]
+        public void ReadUntypedCollectionContainingPrimitive(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"value\":[\"primitiveString\"]}";
+            ODataPrimitiveValue entry = null;
+            this.ReadCollectionPayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.Primitive)
+                {
+                    entry = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            entry.Value.Should().Be("primitiveString");
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
+        [InlineData("Collection(Server.NS.UndefinedType)")]
+        public void ReadUntypedCollectionContainingResource(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"value\":[{\"id\":1}]}";
+            ODataResource entry = null;
+            this.ReadCollectionPayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            entry.Properties.Count().Should().Be(1);
+            entry.Properties.First(p=>p.Name == "id").Value.As<Decimal>().Should().Be(1);
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
+        public void ReadUntypedCollectionContainingCollection(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment +"\",\"value\":[[\"primitiveString\",{\"id\":1}]]}";
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            resourceMember.Properties.Count().Should().Be(1);
+            resourceMember.Properties.First(p => p.Name == "id").Value.As<Decimal>().Should().Be(1);
+            primitiveMember.Value.Should().Be("primitiveString");
         }
 
         #endregion
@@ -1542,6 +1715,105 @@
 
             result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}");
         }
+        #endregion
+
+        #region undeclared type tests
+
+        [Fact]
+        public void ReadResourceWithUndeclaredResourceTypeShouldSucceed()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
+                ""UndeclaredProperty"":{""@odata.type"":""#Server.NS.Undeclared"", ""Id"":""123""}}";
+            ODataResource entry = null;
+            ODataResource undeclaredProperty = null;
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (undeclaredProperty == null)
+                    {
+                        undeclaredProperty = (reader.Item as ODataResource);
+                    }
+                }
+            }, /*readUntypedAsValue*/ true);
+            entry.Properties.Count().Should().Be(1);
+            undeclaredProperty.TypeName.Should().Be("Server.NS.Undeclared");
+            undeclaredProperty.Properties.Count().Should().Be(1);
+            undeclaredProperty.Properties.Single(p => p.Name == "Id").Value.Should().Be("123");
+        }
+
+        [Fact]
+        public void ReadResourceWithUndeclaredCollectionTypeShouldFail()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
+                ""UndeclaredProperty"":{""@odata.type"":""#Collection(Server.NS.Undeclared)"", ""Id"":""123""}}";
+            Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
+            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected("Collection(Server.NS.Undeclared)"));
+        }
+
+        [Fact]
+        public void ReadCollectionWithUndeclaredCollectionTypeShouldSucceed()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
+                ""UndeclaredProperty@odata.type"":""#Collection(Server.NS.Undeclared)"",""UndeclaredProperty"":[{""Id"":""123""}]}";
+            ODataResource entry = null;
+            ODataResource undeclaredProperty = null;
+            int level = 0;
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (level == 0)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (level == 1)
+                    {
+                        undeclaredProperty = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    level++;
+                }
+            }, /*readUntypedAsValue*/ true);
+            entry.Properties.Count().Should().Be(1);
+            undeclaredProperty.TypeName.Should().Be("Server.NS.Undeclared");
+            undeclaredProperty.Properties.Count().Should().Be(1);
+            undeclaredProperty.Properties.Single(p => p.Name == "Id").Value.Should().Be("123");
+        }
+
+        [Fact]
+        public void ReadCollectionWithUndeclaredSingleTypeShouldFail()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
+                ""UndeclaredProperty@odata.type"":""#Server.NS.Undeclared"",""UndeclaredProperty"":[{""Id"":""123""}]}";
+            Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
+            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected("Server.NS.Undeclared"));
+        }
+
+        [Fact]
+        public void ReadResourceExpectingCollectionShouldFail()
+        {
+            string contextUrl = @"http://www.sampletest.com/$metadata#Collection(Server.NS.Undefined)";
+            string payload = "{\"@odata.context\":\"" + contextUrl + "\",\"id\":1}";
+            Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
+            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "Resource"));
+        }
+
+        [Fact]
+        public void ReadCollectionExpectingResourceShouldFail()
+        {
+            string contextUrl = @"http://www.sampletest.com/$metadata#Server.NS.Undefined";
+            string payload = "{\"@odata.context\":\"" + contextUrl + "\",\"value\":[{\"id\":1}]}";
+            Action test = () => this.ReadCollectionPayload(payload, reader => { });
+            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "ResourceSet"));
+        }
+        
         #endregion
 
         #region writer methods for roundtrip testing

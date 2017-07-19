@@ -333,7 +333,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     Property = new ODataProperty
                                 {
                                     Name = "Value",
-                                    Value = new ODataUntypedValue() { RawValue = "\"foo bar\"" }
+                                    Value = new ODataUntypedValue() { RawValue = "\"string\"" }
                                 },
                 },
                 new PropertyPayloadTestCase
@@ -378,7 +378,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                                                         {
                                                             new ODataUntypedValue()
                                                             {
-                                                                RawValue = "\"foo bar\""
+                                                                RawValue = "\"string\""
                                                             },
                                                             new ODataUntypedValue()
                                                             {
@@ -416,7 +416,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     Property = new ODataProperty
                                 {
                                     Name = "Value",
-                                    Value = new ODataPrimitiveValue("foo bar")
+                                    Value = new ODataPrimitiveValue("string")
                                 },
                 },
             };
@@ -457,7 +457,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         baselineLogger: this.Logger);
                 });
         }
-        
+
         /// <summary>
         /// Gets the expected JSON string from a given <see cref="T:ODataUntypedValue"/> or a
         /// <see cref="T:ODataCollectionValue"/> whose elements are <see cref="T:ODataUntypedValue"/>.

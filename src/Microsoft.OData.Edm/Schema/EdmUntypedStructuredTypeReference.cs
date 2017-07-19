@@ -16,8 +16,8 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="definition">EdmUntypedStructuredType definition.</param>
-        public EdmUntypedStructuredTypeReference(EdmUntypedStructuredType definition)
+        /// <param name="definition">IEdmStructuredType definition.</param>
+        public EdmUntypedStructuredTypeReference(IEdmStructuredType definition)
             : base(definition, true)
         {
         }

@@ -989,10 +989,8 @@
     <Compile Include="..\Schema\EdmUntypedStructuredType.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUntypedStructuredType.cs</Link>
     </Compile>
-    </Compile>
     <Compile Include="..\Schema\EdmUntypedStructuredTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUntypedStructuredTypeReference.cs</Link>
-    </Compile>
     </Compile>
     <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUntypedTypeReference.cs</Link>
