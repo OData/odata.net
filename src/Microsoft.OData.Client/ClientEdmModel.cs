@@ -53,6 +53,7 @@ namespace Microsoft.OData.Client
         internal ClientEdmModel(ODataProtocolVersion maxProtocolVersion)
         {
             this.maxProtocolVersion = maxProtocolVersion;
+            this.EdmStructuredSchemaElements = new ConcurrentDictionary<string, IEdmSchemaElement>();
         }
 
         /// <summary>
@@ -111,8 +112,9 @@ namespace Microsoft.OData.Client
         /// </summary>
         internal ConcurrentDictionary<string, IEdmSchemaElement> EdmStructuredSchemaElements
         {
-            get; 
-        } = new ConcurrentDictionary<string, IEdmSchemaElement>();
+            get;
+            private set;
+        }
 
         /// <summary>
         /// Gets the max protocol version of the model.
