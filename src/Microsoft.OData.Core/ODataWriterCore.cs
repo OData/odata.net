@@ -355,9 +355,12 @@ namespace Microsoft.OData
                 {
                     Debug.Assert(this.scopeStack.Count >= 3, "We should have at least the resource scope, the resourceSet scope and the start scope on the stack.");
 
-                    // Get the resourceSet's parent (if any)
+                    // Get the resourceSet's parent
                     parentScope = this.scopeStack.ParentOfParent;
-                    if (parentScope.State == WriterState.Start || (parentScope.State == WriterState.ResourceSet && parentScope.ResourceType != null && parentScope.ResourceType.TypeKind == EdmTypeKind.Untyped))
+                    if (parentScope.State == WriterState.Start ||
+                        (parentScope.State == WriterState.ResourceSet &&
+                        parentScope.ResourceType != null &&
+                        parentScope.ResourceType.TypeKind == EdmTypeKind.Untyped))
                     {
                         // Top-level resourceSet, or resourceSet within an untyped resourceSet.
                         return null;
@@ -1110,6 +1113,7 @@ namespace Microsoft.OData
 
                         break;
                     case WriterState.Primitive:
+                        // WriteEnd for WriterState.Primitive is a no-op; just leave scope
                         break;
                     case WriterState.Start:                 // fall through
                     case WriterState.Completed:             // fall through
@@ -1714,6 +1718,8 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.ResourceSet:
+                    // Within a typed resource set we can only write a resource.
+                    // Within an untyped resource set we can also write a primitive value or nested resource set.
                     if (newState != WriterState.Resource &&
                         (this.CurrentScope.ResourceType == null ||
                             (this.CurrentScope.ResourceType.TypeKind != EdmTypeKind.Untyped ||

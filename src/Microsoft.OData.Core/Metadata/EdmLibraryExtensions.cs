@@ -1184,6 +1184,11 @@ namespace Microsoft.OData.Metadata
             Debug.Assert(baseType != null, "baseType != null");
             Debug.Assert(subtype != null, "subtype != null");
 
+            if (baseType.TypeKind == EdmTypeKind.Untyped)
+            {
+                return true;
+            }
+
             if (baseType.TypeKind != subtype.TypeKind)
             {
                 return false;
@@ -1470,7 +1475,7 @@ namespace Microsoft.OData.Metadata
                 case EdmTypeKind.Enum:
                     return new EdmEnumTypeReference((IEdmEnumType)type, nullable);
                 case EdmTypeKind.Untyped:
-                    EdmUntypedStructuredType untypedType = type as EdmUntypedStructuredType;
+                    IEdmStructuredType untypedType = type as IEdmStructuredType;
                     if (untypedType != null)
                     {
                         return new EdmUntypedStructuredTypeReference(untypedType);

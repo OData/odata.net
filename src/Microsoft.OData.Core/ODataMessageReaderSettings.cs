@@ -88,15 +88,20 @@ namespace Microsoft.OData
         /// </summary>
         public Func<IEdmType, string, IEdmType> ClientCustomTypeResolver { get; set; }
 
-        /// <summary>Gets or sets a custom resolver for resolving untyped primitive values
+        /// <summary>
+        /// Gets or sets a custom resolver for resolving untyped primitive values
         /// </summary>
         public Func<object, string, IEdmTypeReference> PrimitiveTypeResolver { get; set; }
 
-        /// <summary>Gets or sets a value that indicates whether to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
+        /// <summary>
+        /// Gets or sets a value that indicates whether to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.
+        /// </summary>
         /// <returns>false if primitive values and report values are not converted; true if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is true.</returns>
         public bool EnablePrimitiveTypeConversion { get; set; }
 
-        /// <summary>Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.</summary>
+        /// <summary>
+        /// Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.
+        /// </summary>
         /// <returns>true if the message stream will be disposed after finishing writing with the message; otherwise false. The default value is true.</returns>
         public bool EnableMessageStreamDisposal { get; set; }
 
@@ -105,7 +110,9 @@ namespace Microsoft.OData
         /// </summary>
         public bool EnableCharactersCheck { get; set; }
 
-        /// <summary>Gets or sets the maximum OData protocol version the reader should accept and understand.</summary>
+        /// <summary>
+        /// Gets or sets the maximum OData protocol version the reader should accept and understand.
+        /// </summary>
         /// <returns>The maximum OData protocol version the reader should accept and understand.</returns>
         /// <remarks>
         /// If the payload to be read has higher OData-Version than the value specified for this property

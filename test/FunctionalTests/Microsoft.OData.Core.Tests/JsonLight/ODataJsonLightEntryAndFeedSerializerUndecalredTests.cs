@@ -1,4 +1,10 @@
-﻿using Microsoft.OData;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataJsonLightEntryAndFeedSerializerUndecalredTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using Microsoft.OData;
 
 namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
 {
@@ -323,7 +329,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
                 { Name = "UntypedCollection", IsCollection = true });   //  "UntypedCollection" :
                 writer.WriteStart(new ODataResourceSet()                //  
                 { TypeName = "Collection(Edm.Untyped)" });              //  [
-                writer.Write(new ODataPrimitiveValue("foo bar"));       //     "foo bar",
+                writer.Write(new ODataPrimitiveValue("string"));        //     "string",
                 writer.WriteStart(new ODataResourceSet()                //  
                 { TypeName = "Collection(Edm.Untyped)" });              //     [
                 writer.Write((ODataResource)null);                      //        null,
@@ -361,7 +367,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             },
             true);
 
-            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UntypedCollection"":[""foo bar"",[null,1,{""prop"":1,""nullProp"":null,""collectionProp@odata.type"":""#Collection(String)"",""collectionProp"":[""abc"",null],""nestedCollection"":[1,null,{},[]]}]]}");
+            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UntypedCollection"":[""string"",[null,1,{""prop"":1,""nullProp"":null,""collectionProp@odata.type"":""#Collection(String)"",""collectionProp"":[""abc"",null],""nestedCollection"":[1,null,{},[]]}]]}");
         }
 
         [Fact]

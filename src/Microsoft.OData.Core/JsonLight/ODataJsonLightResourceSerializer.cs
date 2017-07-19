@@ -111,7 +111,7 @@ namespace Microsoft.OData.JsonLight
                 resource,
                 resourceState.IsUndeclared);
 
-            if (typeName != null && !String.Equals(typeName, ODataConstants.ContextUriFragmentUntyped, StringComparison.Ordinal))
+            if (typeName != null && !string.Equals(typeName, ODataConstants.ContextUriFragmentUntyped, StringComparison.Ordinal))
             {
                 this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
             }

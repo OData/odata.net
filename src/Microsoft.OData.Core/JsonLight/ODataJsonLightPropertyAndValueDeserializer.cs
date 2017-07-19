@@ -216,7 +216,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="readUntypedAsString">Whether unknown properties should be read as a raw string value.</param>
         /// <param name="generateTypeIfMissing">Whether to generate a type if not already part of the model.</param>
         /// <returns>The <see cref="IEdmTypeReference"/> of the current value to be read.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Each code path casts to bool at most one time, and only if needed.")]
         internal static IEdmTypeReference ResolveUntypedType(
                 JsonNodeType jsonReaderNodeType,
                 object jsonReaderValue,
@@ -264,9 +264,7 @@ namespace Microsoft.OData.JsonLight
                             TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                             Debug.Assert(namespaceName != Metadata.EdmConstants.EdmNamespace, "If type was in the edm namespace it should already have been resolved");
 
-                            // if there is a payload type name that is not in the Edm namespace, assume complex
-                            // (it doesn't really matter; we just need someplace to hang the name)
-                            typeReference = new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true).ToTypeReference(/*isNullable*/ true);
+                            typeReference = new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true);
                             return isCollection ? new EdmCollectionType(typeReference).ToTypeReference(/*isNullable*/ true) : typeReference;
                         }
 
@@ -288,6 +286,11 @@ namespace Microsoft.OData.JsonLight
                     if (payloadTypeName != null)
                     {
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
+                        if (isCollection)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected(payloadTypeName));
+                        }
+
                         typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(/*isNullable*/ true);
                     }
 
@@ -297,8 +300,12 @@ namespace Microsoft.OData.JsonLight
                     if (payloadTypeName != null && generateTypeIfMissing)
                     {
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
-                        Debug.Assert(!isCollection, "NodeType is StartObject but payload specifies a collection.");
-                        return new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true).ToTypeReference(/*isNullable*/ true);
+                        if (isCollection)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected(payloadTypeName));
+                        }
+
+                        return new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true);
                     }
 
                     return new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true);
@@ -307,11 +314,15 @@ namespace Microsoft.OData.JsonLight
                     if (payloadTypeName != null && generateTypeIfMissing)
                     {
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
-                        Debug.Assert(isCollection, "NodeType is start array but payload specifies a non-collection type");
-                        return new EdmCollectionType(new EdmComplexTypeReference(new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true), /*isNullable*/ true)).ToTypeReference(/*isNullable*/ true);
+                        if (!isCollection)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected(payloadTypeName));
+                        }
+
+                        return new EdmCollectionType(new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true)).ToTypeReference(/*isNullable*/true);
                     }
 
-                    return new EdmCollectionTypeReference(new EdmCollectionType(new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true)));
+                    return new EdmCollectionType(new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true)).ToTypeReference(/*isNullable*/true);
 
                 default:
                     return EdmCoreModel.Instance.GetUntyped();
@@ -398,7 +409,14 @@ namespace Microsoft.OData.JsonLight
             }
 
             object propertyValue = null;
-            payloadTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference, this.MessageReaderSettings.PrimitiveTypeResolver, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+            payloadTypeReference = ResolveUntypedType(
+                this.JsonReader.NodeType,
+                this.JsonReader.Value,
+                payloadTypeName,
+                payloadTypeReference,
+                this.MessageReaderSettings.PrimitiveTypeResolver,
+                this.MessageReaderSettings.ReadUntypedAsString,
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -886,7 +904,8 @@ namespace Microsoft.OData.JsonLight
                         : resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName))
             {
                 Debug.Assert(annotation.Value != null);
-                if (String.Equals(annotation.Key, ODataAnnotationNames.ODataType, StringComparison.Ordinal) || String.Equals(annotation.Key, JsonLightConstants.SimplifiedODataTypePropertyName, StringComparison.Ordinal))
+                if (String.Equals(annotation.Key, ODataAnnotationNames.ODataType, StringComparison.Ordinal)
+                    || String.Equals(annotation.Key, JsonLightConstants.SimplifiedODataTypePropertyName, StringComparison.Ordinal))
                 {
                     property.TypeAnnotation = new ODataTypeAnnotation(
                         ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)annotation.Value)));
@@ -1512,7 +1531,15 @@ namespace Microsoft.OData.JsonLight
 
             if (targetTypeKind == EdmTypeKind.Untyped || targetTypeKind == EdmTypeKind.None)
             {
-                targetTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, expectedTypeReference, this.MessageReaderSettings.PrimitiveTypeResolver, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                targetTypeReference = ResolveUntypedType(
+                    this.JsonReader.NodeType,
+                    this.JsonReader.Value,
+                    payloadTypeName,
+                    expectedTypeReference,
+                    this.MessageReaderSettings.PrimitiveTypeResolver,
+                    this.MessageReaderSettings.ReadUntypedAsString,
+                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+
                 targetTypeKind = targetTypeReference.TypeKind();
             }
 

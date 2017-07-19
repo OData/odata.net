@@ -89,7 +89,7 @@ namespace Microsoft.OData
             }
 
             // TODO: Clean up handling of expected types/sets during writing
-            var typeFromResource = ResolveAndValidateTypeName(model, typeName, EdmTypeKind.None, /* expectStructuredType */ true, writerValidator);
+            IEdmType typeFromResource = ResolveAndValidateTypeName(model, typeName, EdmTypeKind.None, /* expectStructuredType */ true, writerValidator);
             IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(
                 expectedType.ToTypeReference(),
                 typeFromResource == null ? null : typeFromResource.ToTypeReference(),

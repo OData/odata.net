@@ -461,7 +461,6 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightValueSerializer.WritePrimitiveValue(primitiveValue == null ? null : primitiveValue.Value, /*expectedType*/null);
         }
 
-
         /// <summary>
         /// Start writing a deferred (non-expanded) nested resource info.
         /// </summary>
