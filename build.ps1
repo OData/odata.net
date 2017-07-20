@@ -76,7 +76,7 @@ $NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
 
-$NugetRestoreSolutions = "OData.Product.NetStandard.sln"
+$NugetRestoreSolutions = "OData.NetStandard.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -502,15 +502,15 @@ Function BuildProcess
         rm $BUILDLOG
     }
 
-    RunBuild ('OData.Product.Net45.sln')
+    RunBuild ('OData.Net45.sln')
 
     if ($TestType -ne 'Quick')
     {
         # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
         RunBuild ('OData.Tests.E2E.sln')
-        RunBuild ('OData.Product.Net35.sln')
-        RunBuild ('OData.Product.NetStandard.sln')
-        RunBuild ('OData.Product.CodeGen.sln')
+        RunBuild ('OData.Net35.sln')
+        RunBuild ('OData.NetStandard.sln')
+        RunBuild ('OData.CodeGen.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
         # Windows Store builds 8.0 apps which is needed to meet PCL111/.NET Standard 1.1 criteria
         # Because VS2015 doesn't support 8.0 apps, we need to use VS2013. Skip if VS2013 not installed.
