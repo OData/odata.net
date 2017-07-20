@@ -1,18 +1,8 @@
 # OData .NET Libraries
-<table>
-  <tr>
-    <td align="right">Rolling</td>
-    <td align="left">
-        <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/106/badge"/>
-    </td> 
-  </tr>
-  <tr>
-    <td align="right">Nightly</td>
-    <td align="left">
-        <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/107/badge"/>
-    </td> 
-  </tr>
-</table>
+ Build  | Status
+--------|---------
+Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/106/badge"/>
+Nightly | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/107/badge"/>
 
 ## 1. Introduction
 
