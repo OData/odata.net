@@ -21,7 +21,13 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using c = Microsoft.OData.Client;
-    using System.Collections.Concurrent;
+
+#if PORTABLELIB
+    // Windows Phone 8.0 doesn't support ConcurrentDictionary
+    using ConcurrentEdmSchemaDictionary = System.Collections.Generic.Dictionary<string, Edm.IEdmSchemaElement>;
+#else
+    using ConcurrentEdmSchemaDictionary = System.Collections.Concurrent.ConcurrentDictionary<string, Edm.IEdmSchemaElement>;
+#endif
 
     #endregion Namespaces.
 
@@ -53,7 +59,7 @@ namespace Microsoft.OData.Client
         internal ClientEdmModel(ODataProtocolVersion maxProtocolVersion)
         {
             this.maxProtocolVersion = maxProtocolVersion;
-            this.EdmStructuredSchemaElements = new ConcurrentDictionary<string, IEdmSchemaElement>();
+            this.EdmStructuredSchemaElements = new ConcurrentEdmSchemaDictionary();
         }
 
         /// <summary>
@@ -110,7 +116,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the state of edm structured schema elements keyed by their Name.
         /// </summary>
-        internal ConcurrentDictionary<string, IEdmSchemaElement> EdmStructuredSchemaElements
+        internal ConcurrentEdmSchemaDictionary EdmStructuredSchemaElements
         {
             get;
             private set;
