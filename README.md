@@ -79,7 +79,7 @@ Here is the usage of each solution file (the `OData.sln` shortcut opens the one 
 
 - OData.CodeGen.sln - OData T4 client code generator product source and tests.
 - OData.Net35.sln - Product source built with .Net Framework 3.5.
-- OData.Net45.sln - Product source built with .Net Framework Portable 4.5 and contains corresponding unit tests. _Recommended_ for doing general bug fixes and feature development.
+- OData.Net45.sln (default) - Product source built with .Net Framework Portable 4.5 and contains corresponding unit tests. _Recommended_ for doing general bug fixes and feature development.
 - OData.NetStandard.sln - Product source built with .Net Standard 1.1.
 - OData.Tests.E2E.sln - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression) and not intended to be opened frequently. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
 - OData.Tests.NetStandard.sln - Product source built with .Net Standard 1.1 and contains corresponding unit tests written in .NET Core. Note that once OData has migrated to VS2017, this solution will replace OData.NetStandard.sln (and take its name) to reduce the number of solutions.
