@@ -77,20 +77,21 @@ Note: The project T4CrossPlatformTests.WindowsStore.csproj will not be loaded un
 
 ### 3.1 Building and Testing in Visual Studio
 
-Simply open the solution files under 'sln' folder and build them in Visual Studio 2013 or 2015.
+Simply open the shortcut `OData.sln` at the root level folder to launch a solution that contains the product source and relevant unit tests. Should you see the need to modify or add additional tests, please see the `sln` folder for the whole set of solution files.
 
-Here is the usage of each solution file:
+Here is the usage of each solution file (the `OData.sln` shortcut opens the one marked default):
 
-- Microsoft.OData.Lite.sln - Product source and minimal functional tests. _Recommended_ for doing general bugfix and feature development. It is built with .Net Framework Portable version 4.0.
-- Microsoft.OData.Full.sln - Product source and full functional tests (excluding test cases in Lite and E2E solution). Used to _fully_ test your code.
-- Microsoft.OData.E2E.sln - Product source and end-to-end tests.
-- Microsoft.OData.Net35.sln - Solution with product source built with .Net Framework version 3.5.
-- Microsoft.OData.Net45.sln - Solution with product source built with .Net Framework version 4.5.
-- Microsoft.OData.Portable45.sln - Solution with product source built with .Net Framework Portable version 4.5.
-- Microsoft.OData.Performance.sln - Product source and performance tests built with .Net Framework version 4.6.
-- Microsoft.OData.CodeGen.sln - Source and tests for OData T4 client code generator.
+- OData.CodeGen.sln - OData T4 client code generator product source and tests.
+- OData.Net35.sln - Product source built with .Net Framework 3.5.
+- OData.Net45.sln (default) - Product source built with .Net Framework Portable 4.5 and contains corresponding unit tests. _Recommended_ for doing general bug fixes and feature development.
+- OData.NetStandard.sln - Product source built with .Net Standard 1.1.
+- OData.Tests.E2E.sln - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression) and not intended to be opened frequently. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
+- OData.Tests.NetStandard.sln - Product source built with .Net Standard 1.1 and contains corresponding unit tests written in .NET Core. Note that once OData has migrated to VS2017, this solution will replace OData.NetStandard.sln (and take its name) to reduce the number of solutions.
+- OData.Tests.Performance.sln - Product source and performance tests built with .Net Framework version 4.6.
+- OData.Tests.WindowsApps.sln - Product source and test harnesses written in Windows Portable and Windows Phone 8.1.
+- OData.Tests.WindowsStore.VS2013.sln - Product source and test harnesses written in Windows Store 8.0. Note: this solution requires VS2013 as newer versions don't support this platform anymore; however, there is no hard requirement for you to have VS2013 on your machine and the build script will skip this solution if VS2013 is not installed.
 
-Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within Microsoft.OData.Full.sln and Microsoft.OData.E2E.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
+Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within OData.Tests.E2E.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
 
 ### 3.2 One-click build and test script in command line
 

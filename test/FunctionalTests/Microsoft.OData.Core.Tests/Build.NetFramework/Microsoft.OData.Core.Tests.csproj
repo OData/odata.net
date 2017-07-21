@@ -69,6 +69,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs">
+      <Link>ExceptionUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs">
+      <Link>EdmConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs">
+      <Link>EdmToStockModelConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataExtensionMethods.cs">
+      <Link>MetadataExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs">
+      <Link>MetadataUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs">
+      <Link>TestModels.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs">
+      <Link>ModelBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\AnnotationFilterPatternTests.cs" />
     <Compile Include="..\AnnotationFilterTests.cs" />
     <Compile Include="..\ArgumentValidationUtils.cs" />
@@ -137,7 +158,7 @@
     <Compile Include="..\JsonLight\PayloadValueConverters.cs" />
     <Compile Include="..\JsonLight\ReorderingJsonReaderTests.cs" />
     <Compile Include="..\JsonLight\TestEntityMetadataBuilder.cs" />
-    <Compile Include="..\JsonLight\ODataJsonLightReaderUtilsTests.cs" />	
+    <Compile Include="..\JsonLight\ODataJsonLightReaderUtilsTests.cs" />
     <Compile Include="..\Json\BufferingJsonReaderTests.cs" />
     <Compile Include="..\Json\JsonLightInstanceAnnotationWriterTests.cs" />
     <Compile Include="..\Json\JsonReaderTests.cs" />
@@ -436,10 +457,6 @@
     <ProjectReference Include="..\..\Microsoft.OData.TestCommon\Build.NetFramework\Microsoft.OData.TestCommon.csproj">
       <Project>{9037ff4a-4636-41aa-bfa2-0930ef1563ee}</Project>
       <Name>Microsoft.OData.TestCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
-      <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
-      <Name>Microsoft.Test.OData.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
