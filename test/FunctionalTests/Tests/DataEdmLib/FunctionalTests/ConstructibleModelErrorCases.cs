@@ -215,6 +215,26 @@ namespace EdmLibTests.FunctionalTests
             {
                 Assert.AreEqual("ArgumentNullException", e.GetType().Name, "null name");
             }
+
+            try
+            {
+                new EdmUntypedStructuredType("null", null);
+                Assert.Fail("exception expected");
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual("ArgumentNullException", e.GetType().Name, "null name");
+            }
+
+            try
+            {
+                new EdmUntypedStructuredType(null, "null");
+                Assert.Fail("exception expected");
+            }
+            catch (Exception e)
+            {
+                Assert.AreEqual("ArgumentNullException", e.GetType().Name, "null name");
+            }
         }
 
         private class AnEdmOperationElement : IEdmOperation, IEdmAction

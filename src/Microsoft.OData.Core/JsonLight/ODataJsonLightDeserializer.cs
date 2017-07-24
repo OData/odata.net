@@ -251,7 +251,8 @@ namespace Microsoft.OData.JsonLight
                     contextUriAnnotationValue,
                     payloadKind,
                     this.MessageReaderSettings.ClientCustomTypeResolver,
-                    this.JsonLightInputContext.ReadingResponse);
+                    this.JsonLightInputContext.ReadingResponse,
+                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
             }
 
             this.contextUriParseResult = parseResult;

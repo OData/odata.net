@@ -22,6 +22,13 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm.Vocabularies;
     using c = Microsoft.OData.Client;
 
+#if PORTABLELIB
+    // Windows Phone 8.0 doesn't support ConcurrentDictionary
+    using ConcurrentEdmSchemaDictionary = System.Collections.Generic.Dictionary<string, Edm.IEdmSchemaElement>;
+#else
+    using ConcurrentEdmSchemaDictionary = System.Collections.Concurrent.ConcurrentDictionary<string, Edm.IEdmSchemaElement>;
+#endif
+
     #endregion Namespaces.
 
     /// <summary>
@@ -52,6 +59,7 @@ namespace Microsoft.OData.Client
         internal ClientEdmModel(ODataProtocolVersion maxProtocolVersion)
         {
             this.maxProtocolVersion = maxProtocolVersion;
+            this.EdmStructuredSchemaElements = new ConcurrentEdmSchemaDictionary();
         }
 
         /// <summary>
@@ -106,12 +114,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the state of whether the edm structured schema elements have been set.
+        /// Gets the state of edm structured schema elements keyed by their Name.
         /// </summary>
-        internal List<IEdmSchemaElement> EdmStructuredSchemaElements
+        internal ConcurrentEdmSchemaDictionary EdmStructuredSchemaElements
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -408,11 +416,10 @@ namespace Microsoft.OData.Client
             {
                 Type collectionType;
                 bool isOpen = false;
-                if (EdmStructuredSchemaElements != null && EdmStructuredSchemaElements.Any())
+                IEdmSchemaElement edmSchemaElement = null;
+                if (EdmStructuredSchemaElements.TryGetValue(ClientTypeUtil.GetServerDefinedTypeName(type), out edmSchemaElement))
                 {
-                    IEdmStructuredType edmStructuredType =
-                        EdmStructuredSchemaElements.FirstOrDefault(
-                            et => (et != null && et.Name == ClientTypeUtil.GetServerDefinedTypeName(type))) as IEdmStructuredType;
+                    var edmStructuredType = edmSchemaElement as IEdmStructuredType;
                     if (edmStructuredType != null)
                     {
                         isOpen = edmStructuredType.IsOpen;

@@ -174,6 +174,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Value_ScaleVariable = EdmConstants.Value_ScaleVariable;
 
         internal const string TypeName_Untyped = "Edm.Untyped";
+        internal const string TypeName_Untyped_Short = "Untyped";
 
         internal const bool Default_Abstract = false;
         internal const bool Default_ContainsTarget = false;

@@ -3218,6 +3218,22 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "A collection type '{0}' was specified for a non-collection value."
+        /// </summary>
+        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected, p0);
+        }
+
+        /// <summary>
+        /// A string like "A non-collection type '{0}' was specified for a collection value."
+        /// </summary>
+        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected, p0);
+        }
+
+        /// <summary>
         /// A string like "The value specified for the spatial property was not valid. You must specify a valid spatial value."
         /// </summary>
         internal static string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue {
@@ -3347,7 +3363,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a resource set; however, a node of type 'StartObject' or 'EndArray' was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a typed resource set; however, a node of type 'StartObject' or 'EndArray', or a null value, was expected."
         /// </summary>
         internal static string ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, p0);
@@ -3424,10 +3440,10 @@ namespace Microsoft.OData {
         internal static string ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource, p0, p1);
         }
-
+        
         /// <summary>
-        /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
-        /// </summary>
+         /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
+         /// </summary>
         internal static string ODataJsonLightResourceDeserializer_CannotReadNestedResource(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadNestedResource, p0);
         }

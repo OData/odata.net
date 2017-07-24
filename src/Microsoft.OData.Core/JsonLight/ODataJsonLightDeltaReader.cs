@@ -1077,9 +1077,13 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
             this.jsonLightResourceDeserializer.ReadResourceSetContentStart();
-            this.EnterScope(new JsonLightDeltaResourceSetScope(resourceSet, this.CurrentNavigationSource, this.CurrentEntityType, selectedProperties, this.CurrentScope.ODataUri));
+            IJsonReader jsonReader = this.jsonLightResourceDeserializer.JsonReader;
+            if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
+            }
 
-            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
+            this.EnterScope(new JsonLightDeltaResourceSetScope(resourceSet, this.CurrentNavigationSource, this.CurrentEntityType, selectedProperties, this.CurrentScope.ODataUri));
         }
 
         /// <summary>

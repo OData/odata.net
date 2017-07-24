@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Performance.ComponentTests", "..\test\PerformanceTests\ComponentTests\Microsoft.OData.Performance.ComponentTests.csproj", "{7D98AD3B-6685-498A-834C-F18F7FAE9138}"
 EndProject
@@ -23,6 +23,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Services.PerfService", "..\test\PerformanceTests\Framework\PerfServiceCore\Microsoft.Test.OData.Services.PerfService.csproj", "{6DA1260D-FE35-424B-ADFA-158368AD02DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.TestService", "..\test\PerformanceTests\Framework\TestService\Microsoft.Test.OData.TestService.csproj", "{7FC34D8C-EB95-4C16-81BF-5CDC8E221536}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7FEDC028-14C8-4438-9EF0-9633057E4826}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2CCDC07F-FAFD-4D00-AA73-991CD2AB9DC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "helper", "helper", "{6120E0DE-DE46-49C7-B517-15E449D17BAC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "perfTests", "perfTests", "{90DC3112-A209-499B-8A43-FFFF83A216C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -166,5 +174,17 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7D98AD3B-6685-498A-834C-F18F7FAE9138} = {90DC3112-A209-499B-8A43-FFFF83A216C3}
+		{989A83CC-B864-4A75-8BF3-5EDA99203A86} = {7FEDC028-14C8-4438-9EF0-9633057E4826}
+		{7D921888-FE03-4C3F-80FE-2F624505461C} = {7FEDC028-14C8-4438-9EF0-9633057E4826}
+		{5D921888-FE03-4C3F-40FE-2F624505461D} = {7FEDC028-14C8-4438-9EF0-9633057E4826}
+		{DF028E55-CE75-4F32-822E-F9EC9C756AE2} = {6120E0DE-DE46-49C7-B517-15E449D17BAC}
+		{1277D018-9DFD-45B4-B9AA-9A6D7229B02C} = {90DC3112-A209-499B-8A43-FFFF83A216C3}
+		{6DA1260D-FE35-424B-ADFA-158368AD02DC} = {6120E0DE-DE46-49C7-B517-15E449D17BAC}
+		{7FC34D8C-EB95-4C16-81BF-5CDC8E221536} = {6120E0DE-DE46-49C7-B517-15E449D17BAC}
+		{6120E0DE-DE46-49C7-B517-15E449D17BAC} = {2CCDC07F-FAFD-4D00-AA73-991CD2AB9DC7}
+		{90DC3112-A209-499B-8A43-FFFF83A216C3} = {2CCDC07F-FAFD-4D00-AA73-991CD2AB9DC7}
 	EndGlobalSection
 EndGlobal

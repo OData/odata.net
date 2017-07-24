@@ -2601,6 +2601,10 @@ public class Microsoft.OData.Edm.EdmTypeDefinitionReference : Microsoft.OData.Ed
 	System.Nullable`1[[System.Int32]] SpatialReferenceIdentifier  { public virtual get; }
 }
 
+public class Microsoft.OData.Edm.EdmUntypedStructuredTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference, IEdmUntypedTypeReference {
+	public EdmUntypedStructuredTypeReference (Microsoft.OData.Edm.IEdmStructuredType definition)
+}
+
 public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeReference, IEdmUntypedTypeReference {
 	public EdmUntypedTypeReference (Microsoft.OData.Edm.IEdmUntypedType definition)
 }
@@ -2629,6 +2633,16 @@ public sealed class Microsoft.OData.Edm.EdmNavigationPropertyInfo {
 	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; public set; }
 
 	public Microsoft.OData.Edm.EdmNavigationPropertyInfo Clone ()
+}
+
+public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.OData.Edm.EdmStructuredType, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmStructuredType, IEdmType, IEdmVocabularyAnnotatable {
+	public EdmUntypedStructuredType ()
+	public EdmUntypedStructuredType (string namespaceName, string name)
+
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
 }
 
 public enum Microsoft.OData.Edm.Csdl.CsdlTarget : int {
@@ -3926,6 +3940,7 @@ public enum Microsoft.OData.ODataReaderState : int {
 	Exception = 8
 	NestedResourceInfoEnd = 6
 	NestedResourceInfoStart = 5
+	Primitive = 10
 	ResourceEnd = 4
 	ResourceSetEnd = 2
 	ResourceSetStart = 1
@@ -4245,7 +4260,7 @@ public abstract class Microsoft.OData.ODataServiceDocumentElement : Microsoft.OD
 	System.Uri Url  { public get; public set; }
 }
 
-public abstract class Microsoft.OData.ODataValue : Microsoft.OData.ODataAnnotatable {
+public abstract class Microsoft.OData.ODataValue : Microsoft.OData.ODataItem {
 	protected ODataValue ()
 }
 
@@ -4255,6 +4270,7 @@ public abstract class Microsoft.OData.ODataWriter {
 	public abstract void Flush ()
 	public abstract System.Threading.Tasks.Task FlushAsync ()
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataPrimitiveValue primitiveValue)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo, System.Action nestedAction)
@@ -4264,6 +4280,8 @@ public abstract class Microsoft.OData.ODataWriter {
 	public abstract System.Threading.Tasks.Task WriteEndAsync ()
 	public abstract void WriteEntityReferenceLink (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink)
 	public abstract System.Threading.Tasks.Task WriteEntityReferenceLinkAsync (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink)
+	public virtual void WritePrimitive (Microsoft.OData.ODataPrimitiveValue primitiveValue)
+	public virtual System.Threading.Tasks.Task WritePrimitiveAsync (Microsoft.OData.ODataPrimitiveValue primitiveValue)
 	public abstract void WriteStart (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract void WriteStart (Microsoft.OData.ODataResource resource)
 	public abstract void WriteStart (Microsoft.OData.ODataResourceSet resourceSet)
@@ -4843,6 +4861,8 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	bool EnablePrimitiveTypeConversion  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
+	System.Func`3[[System.Object],[System.String],[Microsoft.OData.Edm.IEdmTypeReference]] PrimitiveTypeResolver  { public get; public set; }
+	bool ReadUntypedAsString  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 

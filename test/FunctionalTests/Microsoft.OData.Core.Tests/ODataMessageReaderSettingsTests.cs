@@ -25,6 +25,7 @@ namespace Microsoft.OData.Tests
             Assert.True((settings.Validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0, "The ThrowOnDuplicatePropertyNames should be true by default");
             Assert.Null(settings.BaseUri);
             Assert.Null(settings.ClientCustomTypeResolver);
+            Assert.Null(settings.PrimitiveTypeResolver);
             Assert.True(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion should be true by default.");
             Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
@@ -166,6 +167,7 @@ namespace Microsoft.OData.Tests
             Assert.True(Uri.Compare(expected.BaseUri, actual.BaseUri, UriComponents.AbsoluteUri, UriFormat.Unescaped, StringComparison.CurrentCulture) == 0,
                 "BaseUri does not match");
             Assert.True(expected.ClientCustomTypeResolver == actual.ClientCustomTypeResolver, "ClientCustomTypeResolver does not match");
+            Assert.True(expected.PrimitiveTypeResolver == actual.PrimitiveTypeResolver, "PrimitiveTypeResolver does not match");
             Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
             Assert.True(expected.EnablePrimitiveTypeConversion == actual.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion does not match");
             Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");

@@ -392,6 +392,15 @@ namespace Microsoft.OData
         protected abstract bool ReadAtResourceEndImplementation();
 
         /// <summary>
+        /// Implementation of the reader logic when in state 'Primitive'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtPrimitiveImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
@@ -599,6 +608,10 @@ namespace Microsoft.OData
                     result = this.ReadAtResourceEndImplementation();
                     break;
 
+                case ODataReaderState.Primitive:
+                    result = this.ReadAtPrimitiveImplementation();
+                    break;
+
                 case ODataReaderState.NestedResourceInfoStart:
                     result = this.ReadAtNestedResourceInfoStartImplementation();
                     break;
@@ -727,7 +740,8 @@ namespace Microsoft.OData
                 Debug.Assert(
                     state == ODataReaderState.Exception && item == null ||
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||
-                    state == ODataReaderState.ResourceEnd && (item == null || item is ODataResource) ||
+                    state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
+                    state == ODataReaderState.Primitive &&  (item == null || item is ODataPrimitiveValue) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||

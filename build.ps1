@@ -76,7 +76,7 @@ $NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
 
-$NugetRestoreSolutions = "Microsoft.OData.DotNetStandard.sln"
+$NugetRestoreSolutions = "OData.NetStandard.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -501,33 +501,32 @@ Function BuildProcess
     {
         rm $BUILDLOG
     }
-    RunBuild ('Microsoft.OData.Lite.sln')
+
+    RunBuild ('OData.Net45.sln')
 
     if ($TestType -ne 'Quick')
     {
-        RunBuild ('Microsoft.OData.Full.sln')
-        RunBuild ('Microsoft.OData.Net35.sln')
-        RunBuild ('Microsoft.OData.E2E.Portable.sln')
-        RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.Desktop.sln')
-        RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsPhone.sln')
+        # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
+        RunBuild ('OData.Tests.E2E.sln')
+        RunBuild ('OData.Net35.sln')
+        RunBuild ('OData.NetStandard.sln')
+        RunBuild ('OData.CodeGen.sln')
+        RunBuild ('OData.Tests.WindowsApps.sln')
         # Windows Store builds 8.0 apps which is needed to meet PCL111/.NET Standard 1.1 criteria
         # Because VS2015 doesn't support 8.0 apps, we need to use VS2013. Skip if VS2013 not installed.
         if([System.IO.File]::Exists($VS12MSBUILD) -And [System.IO.File]::Exists($VS12XAMLTARGETFILE))
         {
-            RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln') -vsToolVersion '12.0'
+            RunBuild ('OData.Tests.WindowsStore.VS2013.sln') -vsToolVersion '12.0'
         }
         else
         {
-            Write-Host 'Skipping Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln because VS2013 not installed or `
+            Write-Host 'Skipping OData.Tests.WindowsStore.VS2013.sln because VS2013 not installed or `
             missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013'
         }
-        RunBuild ('Microsoft.OData.CodeGen.sln')
-        RunBuild ('Microsoft.OData.E2E.sln')
 
         # Requires VS2015 (14.0) due to .NET Core test projects
-        # RunBuild ('Microsoft.Test.OData.DotNetStandard.sln')
+        # RunBuild ('OData.Tests.NetStandard.sln')
         # CopyNetCoreOutput
-
     }
 
     Write-Host "Build Done" -ForegroundColor $Success

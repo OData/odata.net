@@ -333,7 +333,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     Property = new ODataProperty
                                 {
                                     Name = "Value",
-                                    Value = new ODataUntypedValue() { RawValue = "\"foo bar\"" }
+                                    Value = new ODataUntypedValue() { RawValue = "\"string\"" }
                                 },
                 },
                 new PropertyPayloadTestCase
@@ -378,7 +378,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                                                         {
                                                             new ODataUntypedValue()
                                                             {
-                                                                RawValue = "\"foo bar\""
+                                                                RawValue = "\"string\""
                                                             },
                                                             new ODataUntypedValue()
                                                             {
@@ -390,6 +390,33 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                                                             }
                                                         }
                                             }
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Integer.",
+                    Property = new ODataProperty
+                                {
+                                    Name = "Value",
+                                    Value = new ODataPrimitiveValue(42)
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Float.",
+                    Property = new ODataProperty
+                                {
+                                    Name = "Value",
+                                    Value = new ODataPrimitiveValue(3.1415)
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "String.",
+                    Property = new ODataProperty
+                                {
+                                    Name = "Value",
+                                    Value = new ODataPrimitiveValue("string")
                                 },
                 },
             };
