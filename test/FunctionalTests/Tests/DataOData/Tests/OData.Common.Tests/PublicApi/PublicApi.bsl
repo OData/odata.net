@@ -5079,6 +5079,7 @@ public sealed class Microsoft.OData.ODataUri {
 	public ODataUri ()
 
 	Microsoft.OData.UriParser.Aggregation.ApplyClause Apply  { public get; public set; }
+	Microsoft.OData.UriParser.ComputeClause Compute  { public get; public set; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryNode]] CustomQueryOptions  { public get; public set; }
 	string DeltaToken  { public get; public set; }
 	Microsoft.OData.UriParser.FilterClause Filter  { public get; public set; }
