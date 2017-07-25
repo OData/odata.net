@@ -54,7 +54,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             equalOperator.Right.ShouldBeConstantQueryNode("Bob");
         }
 
-       [Fact]
+        [Fact]
+        public void ParseCompute()
+        {
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$compute=tolower(Name) as Name"));
+            ODataUri parsedUri = parser.ParseUri();
+            parsedUri.Compute.ComputedItems.Single().Expression.ShouldBeSingleValueFunctionCallQueryNode();
+        }
+
+        [Fact]
         public void ParseOrderby()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$orderby=Name asc"));
