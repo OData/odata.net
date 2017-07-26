@@ -1,15 +1,16 @@
+<#
+Name: ExecutePerf.ps1
+Usage: -Workspace [workspace] -TestType Component|Service -Threshold [Percentage] -Judgement [Percentage] -BuildId [Num] -RunnerParams [XunitRunnerParams]
+CopyRight: Copyright (C) Microsoft Corporation. All rights reserved.
+#>
+
 Param
 (
     [String]$Workspace = $(throw "Workspace path is required."), # The performance working space
-
-    [String]$TestType = $(throw "TestType is required."), # the performance test type
-    
-    [Int]$Threshold = $(throw "Threshold is required."), # Percentage, the how many better.
-
-    [Int]$Judgement = $(throw "Judgement is required."), # Percentage, if the percentage ups to this value, it's regression
-    
+    [String]$TestType = $(throw "TestType is required."), # the performance test type    
+    [Int]$Threshold = $(throw "Threshold is required."), # Percentage, if the percentage ups to this value, it's regression
+    [Int]$Judgement = $(throw "Judgement is required."), # Percentage, the how many better.
     [String]$BuildId = $(throw "BuildId is required."),
-
     [String]$RunnerParams
 )
 
@@ -19,12 +20,15 @@ $BaseBitsPath = $Workspace + "\BaseBits"
 # In which has the test running bits
 $TestBitsPath = $Workspace + "\TestBits" 
 
-# OData performance test dll
+# Performance test type
 If($TestType -eq "")
 {
     $TestType = "Component"
 }
 
+<#
+Description: Analysis result between test and base
+#>
 Function AnalysisTestResult
 {
     Param(        
@@ -34,7 +38,7 @@ Function AnalysisTestResult
         [Int] $threshold,
         [string]$logFile
     )
-
+    # reading the test xml results
     [Xml]$currXml = Get-Content $currResult
     $currRun = $currXml.results.run
     $currTests = $currRun.test
@@ -50,9 +54,7 @@ Function AnalysisTestResult
         $baseTest = FindBaseTest $baseResult $fullName
         If ($baseTest -eq $null)
         {
-            # "Cannot find $fullName in base" | Out-File $logFile
-            #exit 1 # something bad
-            throw "Cannot find $fullName in base result"
+            throw "Cannot find $fullName in base result."
         }
         
         $info = @{}
@@ -74,7 +76,7 @@ Function AnalysisTestResult
         [decimal]$percentage = ( $delta / [decimal]$baseMean ) * 100;
         If ($percentage -gt [decimal]$judgement)
         {
-            $exitResult = $False
+            $exitResult = $False # It's for global
             $itemResult = "Fail"
         }
                 
@@ -140,18 +142,14 @@ Function UpdateBase
     Copy-Item $source -Destination $dest -Recurse
 }
 
-# run the performance test cases
-Function Execute
+<#
+Description: Run the performance test cases
+#>
+Function Execute([string]$testFolder, [string]$testType, [string]$runid)
 {
-    Param(
-        [string]$testFolder,
-        [string]$testType,
-        [string]$runid
-    )
-
     $location = Get-Location
     Set-Location ($testFolder + "\bin")
-    #dir
+
     $testDllName = "Microsoft.OData.Performance." + $testType + ".Tests.dll"
     $result = $runid + ".xml"
     $analysisResult = $runid + ".analysisResult.xml"
@@ -161,31 +159,26 @@ Function Execute
     Set-Location $location
 }
 
-Function GetRunId([string]$testType, [string]$data, [string]$buildId)
+<#
+Description: Get the RunId based on inputs, the output is similar as "Component.20170725.101"
+#>
+Function GetRunId([string]$testType, [string]$date, [string]$buildId)
 {
     If($testType -eq "Component")
     {
-        return "Component." + $data + "." + $buildId
+        return "Component." + $date + "." + $buildId
     }
     
     If($testType -eq "Service")
     {
-        return "Service." + $data + "." + $buildId
+        return "Service." + $date + "." + $buildId
     }
 
     # failed.
     throw "Wrong test type input. It should be '-TestType Component|Service'" 
 }
 
-# Step 0. Get the running date & test result name
-$RunDate = Get-Date -Format yyyyMMdd
-$TestRunId = GetRunId $TestType $RunDate $BuildId
-
-# Step 1. Run the current tests
-Execute $TestBitsPath $TestType $TestRunId
-$TestResult = $TestBitsPath + "\bin\" + $TestRunId + ".analysisResult.xml"
-
-# Step 2. if the base isnot existed, update the base
+# Step 0. if the base path is not existed, update the base directly
 If((Test-Path $BaseBitsPath) -eq $False)
 {
    # Update the "BaseBits" with "TestBits"
@@ -195,15 +188,27 @@ If((Test-Path $BaseBitsPath) -eq $False)
    exit 0
 }
 
+# Step 1. Get the running date & test result name
+$RunDate = Get-Date -Format yyyyMMdd
+$TestRunId = GetRunId $TestType $RunDate $BuildId
+
+# Step 2. Run the current tests
+Execute $TestBitsPath $TestType $TestRunId
+$TestResult = $TestBitsPath + "\bin\" + $TestRunId + ".analysisResult.xml"
+
 # Step 3. Run the base tests
-# Remove-Item -Path ($BaseBitsPath + "\bin\") -Include *.etl
-# Remove-Item -Path ($BaseBitsPath + "\bin\") -Include Performance*.xml
-# Remove-Item -Path ($BaseBitsPath + "\bin\") -Include Performance*.xml
+Remove-Item -Path ($BaseBitsPath + "\bin\") -Include Component.*
+Remove-Item -Path ($BaseBitsPath + "\bin\") -Include Service.*
 Execute $BaseBitsPath $TestType $TestRunId
 $BaseResult = $BaseBitsPath + "\bin\" + $TestRunId + ".analysisResult.xml"
 
-# Step 4. Compare the result
+# Step 4. Analysis the between test results and base results
 $LogFolder = $Workspace + "\Logs"
+If((Test-Path $LogFolder) -eq $False)
+{
+    New-Item -Path $Workspace -name Logs -ItemType directory
+}
+
 $LogFileName = $TestRunId + ".log"
 $LogFilePath = $LogFolder + "\" + $LogFileName
 If((Test-Path $LogFilePath ) -eq $False)
