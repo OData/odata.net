@@ -6813,8 +6813,8 @@ this.Write(" to its derived type ");
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
 this.Write("\r\n        \'\'\' </summary>\r\n        \'\'\' <param name=\"source\">source entity</param>\r" +
-        "\n        <Global.System.Runtime.CompilerServices.Extension()>\r\n        Public Fu" +
-        "nction CastTo");
+        "\n        <Global.System.Runtime.CompilerServices.Extension()>\r\n        Public " +
+        "Function CastTo");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeName));
 
