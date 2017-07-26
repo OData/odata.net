@@ -99,9 +99,11 @@ Notes: If there is build error with message "build.ps1 cannot be loaded", right 
 Please refer to the [How to debug](http://odata.github.io/WebApi/10-01-debug-webapi-source).
 
 ### 3.4 Nightly Builds
-We keep uploading the daily nightly signed NuGet packages for ODataLib/EdmLib/ClientLib/SpatialLib to [our MyGet feed](https://www.myget.org/F/odlnightly).
+The nightly build process will upload a NuGet packages for ODataLib (Core, Edm, Spatial, Client) to the [MyGet.org odlnightly-maintenance6x feed](https://www.myget.org/gallery/odlnightly-maintenance6x).
 
-You can query the latest nightly NuGet packages using [this MAGIC OData query](https://www.myget.org/F/odlnightly/Packages?$select=Id,Version&$orderby=Version%20desc&$top=4&$format=application/json)
+To connect to odlnightly-maintenance6x feed, use this feed URL: [odlnightly-maintenance6x MyGet feed URL](https://www.myget.org/F/odlnightly-maintenance6x).
+
+You can query the latest nightly NuGet packages using this query: [MAGIC OData query](https://www.myget.org/F/odlnightly-maintenance6x/Packages?$select=Id,Version&$orderby=Version%20desc&$top=4&$format=application/json)
 
 ### 3.5 Official Release
 The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/).
