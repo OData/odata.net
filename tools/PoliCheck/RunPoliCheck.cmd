@@ -1,0 +1,2 @@
+set ENLISTMENT_ROOT=%1
+'C:\Program Files (x86)\Microsoft\PoliCheck\Policheck.exe' /FL:'C:\Users\ODatabld\Documents\PoliCheck\subdirs.txt' /T:9 /Sev:'1|2' /O:'c:\Users\ODatabld\Documents\PoliCheck\poli32.xml'
