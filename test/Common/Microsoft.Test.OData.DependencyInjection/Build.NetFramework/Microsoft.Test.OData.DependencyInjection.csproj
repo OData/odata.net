@@ -29,12 +29,24 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <Choose>
+    <When Condition=" '$(TestType)'=='Private' ">
+      <ItemGroup>
+        <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
+          <Project>{989a83cc-b864-4a75-8bf3-5eda99203a86}</Project>
+          <Name>Microsoft.OData.Core</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </When>
+    <When Condition=" '$(TestType)'=='Official' ">
+      <ItemGroup>
+        <Reference Include="Microsoft.OData.Core, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+          <HintPath>$(NugetPack)\Microsoft.OData.Core.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <ItemGroup>
     <Compile Include="..\ContainerBuilderHelper.cs" />
     <Compile Include="..\ServiceProviderExtensions.cs" />
@@ -42,7 +54,7 @@
     <Compile Include="..\ServiceScopeWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\packages.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
