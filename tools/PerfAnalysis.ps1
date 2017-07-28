@@ -1,6 +1,6 @@
 <#
 Name: PerfAnalysis.ps1
-Usage: -Workspace [workspace] -TestType Component|Service -Threshold [Percentage] -Judgement [Percentage] -BuildId [Num] -RunnerParams [XunitRunnerParams]
+Usage: -Workspace [workspace] -TestType Component|Service -Threshold [Percentage] -BuildId [Num] -RunnerParams [XunitRunnerParams]
 CopyRight: Copyright (C) Microsoft Corporation. All rights reserved.
 #>
 
@@ -86,7 +86,7 @@ Function AnalysisTestResult
 
         $itemResult = "Pass"
         [decimal]$percentage = ( $delta / [decimal]$baseMean ) * 100;
-        If ($percentage -gt [decimal]$judgement)
+        If ($percentage -gt [decimal]$threshold)
         {
             $exitResult = $False # It's for global
             $itemResult = "Fail"
