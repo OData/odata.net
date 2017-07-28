@@ -103,7 +103,7 @@ Function AnalysisTestResult
     If($exitResult -eq $False)
     {
         # exit 1 # fail
-        throw "Performance regression found, please see result: $logFile"
+        throw $a | ConvertTo-json        
     }
 }
 
