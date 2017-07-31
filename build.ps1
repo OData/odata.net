@@ -55,7 +55,7 @@ $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = $ENLISTMENT_ROOT + "\bin"
 
-# Default to use Visual Studio 2015 since the upgrade to .Net Core.
+# Default to use Visual Studio 2015
 $VS14MSBUILD=$PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
 $VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
 $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
@@ -66,6 +66,24 @@ $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools
 $VS12MSBUILD=$PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
 $VS12XAMLTARGETFILE=$PROGRAMFILESX86 + "\MSBuild\Microsoft\WindowsXaml\v12.0\Microsoft.Windows.UI.Xaml.CSharp.targets"
 
+# Use Visual Studio 2017 compiler for .NET Core and .NET Standard. Because VS2017 has different paths for different
+# versions, we have to check for each version.
+$VS15VERSIONS = "Enterprise",
+    "Professional",
+    "Community"
+$VS15MSBUILD = $null
+ForEach ($version in $VS15VERSIONS)
+{
+    $tempMSBuildPath = ($PROGRAMFILESX86 + "\Microsoft Visual Studio\2017\{0}\MSBuild\15.0\Bin\MSBuild.exe") -f $version
+    if([System.IO.File]::Exists($tempMSBuildPath))
+    {
+        $VS15MSBUILD = $tempMSBuildPath
+        Write-Host "Found VS2017 version: $VS15MSBUILD"
+        break
+    }
+}
+
+# Other variables
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
 $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
@@ -289,6 +307,10 @@ Function RunBuild ($sln, $vsToolVersion)
     {
         $MSBUILD=$VS12MSBUILD
     }
+    elseif($vsToolVersion -eq '15.0')
+    {
+        $MSBUILD=$VS15MSBUILD
+    }
     
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
@@ -472,30 +494,13 @@ Function NugetRestoreSolution
     foreach($solution in $NugetRestoreSolutions)
     {
         & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)
-    } 
-}
-
-# Copy any xproj output to the appropriate bin folder. We use this workaround instead of doing it in the
-# xproj file due to xproj appending additional directory paths in its OutputPath parameter.
-# See https://github.com/aspnet/Tooling/issues/383
-Function CopyNetCoreOutput
-{
-    Write-Host '**********Copying NetCore Output Binaries*********'
-
-    $NETCOREUNITTESTROOT = $ENLISTMENT_ROOT + "\test\FunctionalTests\"
-    $UNITTESTFOLDERS = "Microsoft.OData.Core.Tests",
-        "Microsoft.OData.Edm.Tests",
-        "Microsoft.Spatial.Tests"
-
-    ForEach($TEST in $UNITTESTFOLDERS)
-    {
-        Copy-Item ($NETCOREUNITTESTROOT + $TEST + "\bin\$Configuration\*") ($ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable") -Recurse -Force
     }
 }
 
 Function BuildProcess
 {
     Write-Host '**********Start To Build The Project*********'
+    
     $script:BUILD_START_TIME = Get-Date
     if (Test-Path $BUILDLOG)
     {
@@ -509,7 +514,17 @@ Function BuildProcess
         # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
         RunBuild ('OData.Tests.E2E.sln')
         RunBuild ('OData.Net35.sln')
-        RunBuild ('OData.NetStandard.sln')
+        # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
+        if($VS15MSBUILD)
+        {
+            RunBuild ('OData.Tests.NetStandard.VS2017.sln') -vsToolVersion '15.0'
+        }
+        else
+        {
+            Write-Host 'Warning! Skipping build for .NET Core tests because no versions of VS2017 found. `
+            Building only product in .NET Standard.' -ForegroundColor $Warning
+            RunBuild ('OData.NetStandard.sln')
+        }
         RunBuild ('OData.CodeGen.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
         # Windows Store builds 8.0 apps which is needed to meet PCL111/.NET Standard 1.1 criteria
@@ -521,12 +536,8 @@ Function BuildProcess
         else
         {
             Write-Host 'Skipping OData.Tests.WindowsStore.VS2013.sln because VS2013 not installed or `
-            missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013'
+            missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013' -ForegroundColor $Warning
         }
-
-        # Requires VS2015 (14.0) due to .NET Core test projects
-        # RunBuild ('OData.Tests.NetStandard.sln')
-        # CopyNetCoreOutput
     }
 
     Write-Host "Build Done" -ForegroundColor $Success
@@ -579,6 +590,7 @@ Function FxCopProcess
     Write-Host "$LOGDIR\ClientFxCopReport.xml"
     Write-Host "FxCop Done" -ForegroundColor $Success
 }
+
 # Main Process
 
 if (! (Test-Path $LOGDIR))
@@ -591,7 +603,6 @@ if ($TestType -eq 'EnableSkipStrongName')
     CleanBeforeScorch
     NugetRestoreSolution
     BuildProcess
-    CopyNetCoreOutput
     SkipStrongName
     Exit
 }
@@ -600,7 +611,6 @@ elseif ($TestType -eq 'DisableSkipStrongName')
     CleanBeforeScorch
     NugetRestoreSolution
     BuildProcess
-    CopyNetCoreOutput
     DisableSkipStrongName
     Exit
 }
