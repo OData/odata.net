@@ -102,7 +102,7 @@
     <Property Name="City" Type="String" />
     <Property Name="Region" Type="String" />
     <Property Name="PostalCode" Type="String" />
-    <Property Name="Country" Type="String" />
+    <Property Name="CountryOrRegion" Type="String" />
     <Property Name="Phone" Type="String" />
     <Property Name="Fax" Type="String" />
     <NavigationProperty Name="Orders" Relationship="northwind.FK_Orders_Customers" FromRole="Customers" ToRole="Orders" />
@@ -123,7 +123,7 @@
     <Property Name="City" Type="String" />
     <Property Name="Region" Type="String" />
     <Property Name="PostalCode" Type="String" />
-    <Property Name="Country" Type="String" />
+    <Property Name="CountryOrRegion" Type="String" />
     <Property Name="HomePhone" Type="String" />
     <Property Name="Extension" Type="String" />
     <Property Name="Photo" Type="Binary" />
@@ -212,7 +212,7 @@
     <Property Name="City" Type="String" />
     <Property Name="Region" Type="String" />
     <Property Name="PostalCode" Type="String" />
-    <Property Name="Country" Type="String" />
+    <Property Name="CountryOrRegion" Type="String" />
     <Property Name="Phone" Type="String" />
     <Property Name="Fax" Type="String" />
     <Property Name="HomePage" Type="String" />
