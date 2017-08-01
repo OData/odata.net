@@ -198,7 +198,7 @@ namespace System.Data.Services.Client
         /// <returns>true if expression is disallowed, false otherwise.</returns>
         internal static bool IsDisallowedExpressionForMethodCall(Expression e, ClientEdmModel model)
         {
-            // If this is a collection hanging off a Entity, then that is fine.
+            // If collection property belongs to an entity, then that is fine.
             MemberExpression me = e as MemberExpression;
             if (me != null && ClientTypeUtil.TypeIsEntity(me.Expression.Type, model))
             {
