@@ -78,7 +78,6 @@ ForEach ($version in $VS15VERSIONS)
     if([System.IO.File]::Exists($tempMSBuildPath))
     {
         $VS15MSBUILD = $tempMSBuildPath
-        Write-Host "Found VS2017 version: $VS15MSBUILD"
         break
     }
 }
@@ -517,12 +516,13 @@ Function BuildProcess
         # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
         if($VS15MSBUILD)
         {
+            Write-Host 'Found VS2017 version: $VS15MSBUILD'
             RunBuild ('OData.Tests.NetStandard.VS2017.sln') -vsToolVersion '15.0'
         }
         else
         {
-            Write-Host 'Warning! Skipping build for .NET Core tests because no versions of VS2017 found. `
-            Building only product in .NET Standard.' -ForegroundColor $Warning
+            Write-Host ('Warning! Skipping build for .NET Core tests because no versions of VS2017 found. ' + `
+            'Building only product in .NET Standard.') -ForegroundColor $Warning
             RunBuild ('OData.NetStandard.sln')
         }
         RunBuild ('OData.CodeGen.sln')
@@ -535,8 +535,8 @@ Function BuildProcess
         }
         else
         {
-            Write-Host 'Skipping OData.Tests.WindowsStore.VS2013.sln because VS2013 not installed or `
-            missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013' -ForegroundColor $Warning
+            Write-Host ('Skipping OData.Tests.WindowsStore.VS2013.sln because VS2013 not installed or ' + `
+            'missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013') -ForegroundColor $Warning
         }
     }
 
