@@ -602,7 +602,7 @@ Function TestProcess
     }
     else
     {
-        Write-Host 'The dotnet CLI must be installed to run any .NET Core tests.'
+        Write-Host 'The dotnet CLI must be installed to run any .NET Core tests.' -ForegroundColor $Warning
     }
 
     Write-Host "Test Done" -ForegroundColor $Success
