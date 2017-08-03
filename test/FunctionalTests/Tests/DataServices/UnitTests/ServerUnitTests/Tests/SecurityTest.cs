@@ -244,10 +244,10 @@ namespace AstoriaUnitTests.Tests
                     {
                         string trustLevel = (string)values["trustLevel"];
 
-                        if (trustLevel == "Medium")
+                        if (trustLevel == "Medium" || trustLevel == "High")
                         {
                             Trace.WriteLine(
-                                "'Medium' trust level cannot be tested reliably in unit tests, " +
+                                "'Medium'/'High' trust level cannot be tested reliably in unit tests, " +
                                 "because it may run into problems depending on the local file system " +
                                 "permissions and/or the local web server (as far as can be told). " +
                                 "You can still use the generated files to prop them to IIS, set up an application " +
