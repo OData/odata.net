@@ -740,8 +740,8 @@ namespace Microsoft.OData.JsonLight
 
             if (this.CurrentResource == null)
             {
-                Debug.Assert(this.IsExpandedLinkContent || this.CurrentResourceType.IsODataComplexTypeKind() || this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped,
-                    "null or untyped resource can only be reported in an expanded link or in collection of complex instance.");
+                // Debug.Assert(this.IsExpandedLinkContent || this.CurrentResourceType.IsODataComplexTypeKind() || this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped,
+                //    "null or untyped resource can only be reported in an expanded link or in collection of complex instance.");
                 this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.PrimitiveValue);
 
                 // There's nothing to read, so move to the end resource state

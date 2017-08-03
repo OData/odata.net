@@ -477,6 +477,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Return the request DSV header value for this request.
         /// </summary>
+        /// <param name="headers">Web headers.</param>
         /// <returns>The request DSV header value for this request as Version instance.</returns>
         private static Version GetRequestVersion(WebHeaderCollection headers)
         {
