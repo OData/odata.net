@@ -112,15 +112,15 @@
     </When>
     <When Condition=" '$(TestType)'=='Official' ">
       <ItemGroup>
-        <Reference Include="Microsoft.OData.Core, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.OData.Core">
           <HintPath>$(NugetPack)\Microsoft.OData.Core.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.OData.Edm, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.OData.Edm">
           <HintPath>$(NugetPack)\Microsoft.OData.Edm.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.OData.Edm.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.Spatial, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.Spatial">
           <HintPath>$(NugetPack)\Microsoft.Spatial.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
           <Private>True</Private>
         </Reference>
