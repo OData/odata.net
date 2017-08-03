@@ -41,7 +41,7 @@
     </When>
     <When Condition=" '$(TestType)'=='Official' ">
       <ItemGroup>
-        <Reference Include="Microsoft.OData.Core, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+        <Reference Include="Microsoft.OData.Core">
           <HintPath>$(NugetPack)\Microsoft.OData.Core.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
           <Private>True</Private>
         </Reference>
