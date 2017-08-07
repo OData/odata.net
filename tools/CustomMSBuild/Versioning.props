@@ -17,7 +17,7 @@
     <VersionMajor Condition="'$(VersionMajor)' == ''">7</VersionMajor>
     <VersionMinor Condition="'$(VersionMinor)' == ''">3</VersionMinor>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
-    <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">2</VersionBuildRevision>
+    <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">4</VersionBuildRevision>
   </PropertyGroup>
 
   <!-- Product Version -->
