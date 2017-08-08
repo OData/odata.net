@@ -20,48 +20,56 @@ namespace Microsoft.OData.Performance
         private static readonly IEdmEntityType TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeed()
         { 
             ReadFeedTestAndMeasure("Entry.json", 1000, true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatial()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, true); 
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedWithExpansions()
         {
             ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatialWithExpansions()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeed_NoValidation()
         {
             ReadFeedTestAndMeasure("Entry.json", 1000, false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatial_NoValidation()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedWithExpansions_NoValidation()
         {
             ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatialWithExpansions_NoValidation()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, false);

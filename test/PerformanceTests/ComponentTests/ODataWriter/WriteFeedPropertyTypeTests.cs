@@ -22,42 +22,49 @@ namespace Microsoft.OData.Performance
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithStringSet()
         {
             TestAndMeasure("EntityStringSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithInt32Set()
         {
             TestAndMeasure("EntityInt32Set");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithInt64Set()
         {
             TestAndMeasure("EntityInt64Set");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithDecimalSet()
         {
             TestAndMeasure("EntityDecimalSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithDateTimeOffsetSet()
         {
             TestAndMeasure("EntityDateTimeOffsetSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithGuidSet()
         {
             TestAndMeasure("EntityGuidSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithMixedSet()
         {
             TestAndMeasure("EntityMixedSet");

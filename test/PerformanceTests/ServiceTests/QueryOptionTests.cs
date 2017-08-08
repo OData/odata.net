@@ -21,6 +21,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void QueryOptionsWithoutExpand()
         {
             int RequestsPerIteration = 20;
@@ -38,6 +39,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void QueryOptionsWithExpand()
         {
             foreach (var iteration in Benchmark.Iterations)
@@ -50,6 +52,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void NestedQueryOptionsWithExpand()
         {
             foreach (var iteration in Benchmark.Iterations)
