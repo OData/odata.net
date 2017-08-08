@@ -18,6 +18,7 @@ namespace Microsoft.OData.Performance
         private static readonly Uri ServiceRoot = new Uri(@"http://odata.org/Perf.svc/");
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ParseUri()
         {
             string query = "Employee(1)/PurchaseOrderHeader/Vendor/ProductVendor/Product?" +
@@ -36,6 +37,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ParsePath()
         {
             string query = "Employee(1)/PurchaseOrderHeader/Vendor/ProductVendor/Product/ProductInventory(ProductID = 1,LocationID = 1)/Location/WorkOrderRouting/WorkOrder/Product/BillOfMaterials(1)/UnitMeasure/ModifiedDate";
@@ -46,6 +48,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ParseFilter()
         {
             string query = "Product?$filter=contains(Name, 'aaaa') and startswith(ProductNumber, '000') " +
@@ -58,6 +61,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ParseOrderBy()
         {
             string query = "Product?$orderby=Name,ProductNumber,MakeFlag,Color,SizeUnitMeasureCode desc,SellStartDate desc,ListPrice,StandardCost asc,ModifiedDate asc";
@@ -68,6 +72,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ParseSelectAndExpand()
         {
             string query = "Product?$select=BillOfMaterials,ProductModel,ProductSubcategory,ProductCostHistory,ProductListPriceHistory" +

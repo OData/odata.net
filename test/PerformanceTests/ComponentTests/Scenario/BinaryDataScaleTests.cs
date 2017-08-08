@@ -24,6 +24,7 @@ namespace Microsoft.OData.Performance
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedBinaryData_4MB()
         {
             Action<ODataWriter> writeEntry = (writer) => this.WriteEntry(writer, 4 * 1024);
@@ -40,6 +41,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedBinaryData_4MB()
         {
             Action<ODataWriter> writeEntry = (writer) => this.WriteEntry(writer, 4 * 1024);
