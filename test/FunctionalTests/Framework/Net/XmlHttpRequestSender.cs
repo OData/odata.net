@@ -56,8 +56,8 @@ namespace System.Data.Test.Astoria
                 string password = null;
                 if (AstoriaTestProperties.HostAuthenicationMethod.ToLower().Equals("windows"))
                 {
-                    userName = "user1";
-                    password = "fakepwd";
+                    userName = string.Empty;
+                    password = string.Empty;
                 }
 
                 nativeWebRequest.open(request.Verb.ToHttpMethod(), uri, false, userName, password);
