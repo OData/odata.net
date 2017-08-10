@@ -62,10 +62,6 @@ $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static 
 $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
-# Use Visual Studio 2013 compiler for older apps, such as Windows Store for 8.0 (as needed for PCL111/.NET Standard 1.1)
-$VS12MSBUILD=$PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
-$VS12XAMLTARGETFILE=$PROGRAMFILESX86 + "\MSBuild\Microsoft\WindowsXaml\v12.0\Microsoft.Windows.UI.Xaml.CSharp.targets"
-
 # Use Visual Studio 2017 compiler for .NET Core and .NET Standard. Because VS2017 has different paths for different
 # versions, we have to check for each version. Meanwhile, the dotnet CLI is required to run the .NET Core unit tests in this script.
 $VS15VERSIONS = "Enterprise",
@@ -306,11 +302,7 @@ Function RunBuild ($sln, $vsToolVersion)
     # Default to VS2015
     $MSBUILD = $VS14MSBUILD
     
-    if($vsToolVersion -eq '12.0')
-    {
-        $MSBUILD=$VS12MSBUILD
-    }
-    elseif($vsToolVersion -eq '15.0')
+    if($vsToolVersion -eq '15.0')
     {
         $MSBUILD=$VS15MSBUILD
     }
@@ -555,17 +547,6 @@ Function BuildProcess
         }
         RunBuild ('OData.CodeGen.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
-        # Windows Store builds 8.0 apps which is needed to meet PCL111/.NET Standard 1.1 criteria
-        # Because VS2015 doesn't support 8.0 apps, we need to use VS2013. Skip if VS2013 not installed.
-        if([System.IO.File]::Exists($VS12MSBUILD) -And [System.IO.File]::Exists($VS12XAMLTARGETFILE))
-        {
-            RunBuild ('OData.Tests.WindowsStore.VS2013.sln') -vsToolVersion '12.0'
-        }
-        else
-        {
-            Write-Host ('Skipping OData.Tests.WindowsStore.VS2013.sln because VS2013 not installed or ' + `
-            'missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013') -ForegroundColor $Warning
-        }
     }
 
     Write-Host "Build Done" -ForegroundColor $Success
