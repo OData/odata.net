@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <StrongNamePublicKeysPath>D:\VSO\src\Toolsets\Signing</StrongNamePublicKeysPath>
-    <CustomStrongNamePublicKeysPath>D:\VSO\src\Toolsets\Signing</CustomStrongNamePublicKeysPath>
-    <StrongNameKeyFile Condition="'$(StrongNameKeyFile)' == ''">FinalPublicKey.snk</StrongNameKeyFile>
+    <StrongNamePublicKeysPath>D:\Source\ODataAgg\odata.net\tools\StrongNamePublicKeys</StrongNamePublicKeysPath>
+    <CustomStrongNamePublicKeysPath>D:\Source\ODataAgg\odata.net\tools\StrongNamePublicKeys</CustomStrongNamePublicKeysPath>
+    <StrongNameKeyFile Condition="'$(StrongNameKeyFile)' == ''">35MSSharedLib1024.snk</StrongNameKeyFile>
     <TestStrongNameKeyFile Condition="'$(TestStrongNameKeyFile)' == ''">testkey.snk</TestStrongNameKeyFile>
     <SigningType Condition="'$(SigningType)' == ''">None</SigningType>
     <SigningScenarioForRelease Condition="'$(SigningScenarioForRelease)' == ''">Delay</SigningScenarioForRelease>
