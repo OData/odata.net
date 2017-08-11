@@ -34,101 +34,6 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class RequestUriProcessorTest
     {
-        [TestMethod]
-        public void RequestUriCaseInsensitive()
-        {
-            // Repro: Path to the .svc file shoud not be case sensitive.
-            WebServerLocation[] locations = new WebServerLocation[]
-            {
-                WebServerLocation.InProcessWcf,
-                WebServerLocation.Local
-            };
-            CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                new Dimension("location", locations));
-            TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
-            {
-                WebServerLocation location = (WebServerLocation)values["location"];
-                using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
-                {
-                    request.DataServiceType = typeof(CustomDataContext);
-                    request.RequestUriString = "/Customers";
-                    request.FullRequestUriString = request.FullRequestUriString
-                        .Replace(".svc", ".SvC")
-                        .Replace("Test", "test");
-                    request.SendRequest();
-                    string response = request.GetResponseStreamAsText();
-                    Trace.WriteLine(response);
-                }
-            });
-        }
-
-        [TestMethod]
-        public void RequestUriProcessorKeySpecialCharsTest()
-        {
-            ServiceModelData.Northwind.EnsureDependenciesAvailable();
-
-            CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                new Dimension("WebServerLocation", TestWebRequest.LocalWebServerLocations));
-            TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
-            {
-                WebServerLocation location = (WebServerLocation)values["WebServerLocation"];
-                using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
-                {
-                    Exception exception;
-                    request.DataServiceType = typeof(NorthwindContext);
-
-                    int expectedStatusCode;
-                    if (location == WebServerLocation.InProcess)
-                    {
-                        expectedStatusCode = 404;
-                    }
-                    else
-                    {
-                        // See http://support.microsoft.com/kb/820129 for more information,
-                        // including how to apply the changes.
-                        // HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\HTTP\Parameters
-                        int keyValue;
-                        using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Services\HTTP\Parameters"))
-                        {
-                            keyValue = (int)key.GetValue("AllowRestrictedChars", 0);
-                        }
-
-                        expectedStatusCode = (keyValue == 0) ? 400 : 404;
-                    }
-
-                    // Check that control characters are accepted.
-                    request.RequestUriString = "/Customers('\x003')";
-                    exception = TestUtil.RunCatching(request.SendRequest);
-                    TestUtil.AssertExceptionStatusCode(exception, expectedStatusCode, "404 expected for not-found entity with control character in key");
-
-                    // Check that other special characters are accepted.
-                    if (location == WebServerLocation.InProcess || location == WebServerLocation.InProcessWcf)
-                    {
-                        expectedStatusCode = 404;
-                    }
-                    else
-                    {
-                        // NOTE: this would work on IIS, but Cassini doesn't use this registry key.
-                        // See http://support.microsoft.com/kb/932552 for more information,
-                        // including how to apply the changes.
-                        // HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ASP.NET
-                        //int keyValue;
-                        //using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\ASP.NET"))
-                        //{
-                        //    keyValue = (int)key.GetValue("VerificationCompatibility", 0);
-                        //}
-
-                        //expectedStatusCode = (keyValue == 0) ? 400 : 404;
-                        expectedStatusCode = 400;
-                    }
-
-                    request.RequestUriString = "/Customers('.:')";
-                    exception = TestUtil.RunCatching(request.SendRequest);
-                    TestUtil.AssertExceptionStatusCode(exception, expectedStatusCode, "404 expected for not-found entity with special characters in key");
-                }
-            });
-        }
-
         /// <summary>This test verifies that special real keywords (Infinity, -Infinity, NaN) are covered.</summary>
         [TestMethod]
         public void RequestUriProcessorKeySpecialRealTest()
@@ -457,6 +362,77 @@ namespace AstoriaUnitTests.Tests
         }
 
         [TestMethod]
+        public void RequestUriProcessorKeySpecialCharsTest()
+        {
+            ServiceModelData.Northwind.EnsureDependenciesAvailable();
+
+            CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
+                new Dimension("WebServerLocation", new WebServerLocation[]{
+                        WebServerLocation.InProcess,
+                        WebServerLocation.InProcessWcf
+                    }
+                ));
+            TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
+            {
+                WebServerLocation location = (WebServerLocation)values["WebServerLocation"];
+                using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
+                {
+                    Exception exception;
+                    request.DataServiceType = typeof(NorthwindContext);
+
+                    int expectedStatusCode;
+                    if (location == WebServerLocation.InProcess)
+                    {
+                        expectedStatusCode = 404;
+                    }
+                    else
+                    {
+                        // See http://support.microsoft.com/kb/820129 for more information,
+                        // including how to apply the changes.
+                        // HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\HTTP\Parameters
+                        int keyValue;
+                        using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Services\HTTP\Parameters"))
+                        {
+                            keyValue = (int)key.GetValue("AllowRestrictedChars", 0);
+                        }
+
+                        expectedStatusCode = (keyValue == 0) ? 400 : 404;
+                    }
+
+                    // Check that control characters are accepted.
+                    request.RequestUriString = "/Customers('\x003')";
+                    exception = TestUtil.RunCatching(request.SendRequest);
+                    TestUtil.AssertExceptionStatusCode(exception, expectedStatusCode, "404 expected for not-found entity with control character in key");
+
+                    // Check that other special characters are accepted.
+                    if (location == WebServerLocation.InProcess || location == WebServerLocation.InProcessWcf)
+                    {
+                        expectedStatusCode = 404;
+                    }
+                    else
+                    {
+                        // NOTE: this would work on IIS, but Cassini doesn't use this registry key.
+                        // See http://support.microsoft.com/kb/932552 for more information,
+                        // including how to apply the changes.
+                        // HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\ASP.NET
+                        //int keyValue;
+                        //using (var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\ASP.NET"))
+                        //{
+                        //    keyValue = (int)key.GetValue("VerificationCompatibility", 0);
+                        //}
+
+                        //expectedStatusCode = (keyValue == 0) ? 400 : 404;
+                        expectedStatusCode = 400;
+                    }
+
+                    request.RequestUriString = "/Customers('.:')";
+                    exception = TestUtil.RunCatching(request.SendRequest);
+                    TestUtil.AssertExceptionStatusCode(exception, expectedStatusCode, "404 expected for not-found entity with special characters in key");
+                }
+            });
+        }
+
+        [TestMethod]
         public void RequestUriResourceKeyTest()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -678,7 +654,7 @@ namespace AstoriaUnitTests.Tests
 
                 string value = "value of Pròjè_x00A2_tÎð瑞갂థ్క_x0020_Iiلإَّ";
 
-                context.AddObject("EntitySet", new MyType() { 
+                context.AddObject("EntitySet", new MyType() {
                     ID = 1,
                     Pròjè_x00A2_tÎð瑞갂థ్క_x0020_Iiلإَّ = value,
                 });
@@ -692,6 +668,33 @@ namespace AstoriaUnitTests.Tests
                     Assert.AreEqual(exception.Message, "An error occurred while processing this request.");
                 }
             }
+        }
+
+        [TestMethod]
+        public void RequestUriCaseInsensitive()
+        {
+            // Repro: Path to the .svc file should not be case sensitive.
+            WebServerLocation[] locations = new WebServerLocation[]
+            {
+                WebServerLocation.InProcessWcf
+            };
+            CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
+                new Dimension("location", locations));
+            TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
+            {
+                WebServerLocation location = (WebServerLocation)values["location"];
+                using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
+                {
+                    request.DataServiceType = typeof(CustomDataContext);
+                    request.RequestUriString = "/Customers";
+                    request.FullRequestUriString = request.FullRequestUriString
+                        .Replace(".svc", ".SvC")
+                        .Replace("Test", "test");
+                    request.SendRequest();
+                    string response = request.GetResponseStreamAsText();
+                    Trace.WriteLine(response);
+                }
+            });
         }
 
         public class MyType
