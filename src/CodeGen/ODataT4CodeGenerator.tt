@@ -3,17 +3,17 @@
 public static class Configuration
 {
 	// The URI of the metadata document. The value must be set to a valid service document URI or a local file path 
-    // eg : "http://services.odata.org/V4/OData/OData.svc/", "File:///C:/Odata.edmx", or @"C:\Odata.edmx"
-    // ### Notice ### If the OData service requires authentication for accessing the metadata document, the value of
-    // MetadataDocumentUri has to be set to a local file path, or the client code generation process will fail.
+	// eg : "http://services.odata.org/V4/OData/OData.svc/", "File:///C:/Odata.edmx", or @"C:\Odata.edmx"
+	// ### Notice ### If the OData service requires authentication for accessing the metadata document, the value of
+	// MetadataDocumentUri has to be set to a local file path, or the client code generation process will fail.
 	public const string MetadataDocumentUri = "";
 
 	// The use of DataServiceCollection enables entity and property tracking. The value must be set to true or false.
 	public const bool UseDataServiceCollection = true;
 
 	// The namespace of the client code generated. It replaces the original namespace in the metadata document, 
-    // unless the model has several namespaces.
-	public const string NamespacePrefix = "$rootnamespace$";
+	// unless the model has several namespaces.
+	public const string NamespacePrefix = "#RootNamespace#";
 
 	// The target language of the generated client code. The value must be set to "CSharp" or "VB".
 	public const string TargetLanguage = "OutputLanguage";
