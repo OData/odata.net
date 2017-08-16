@@ -226,8 +226,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [Ignore] //Removed due to local IIS server instance racing on build machine.
-            // [TestMethod]
+            // [TestMethod] Removed due to local IIS server instance racing on build machine.
             public void SecurityPartialTrustTest()
             {
                 // Repro: Astoria not working in partial trust with the EF
