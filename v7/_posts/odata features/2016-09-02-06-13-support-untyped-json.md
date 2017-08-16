@@ -5,7 +5,7 @@ description: ""
 category: "5. OData Features"
 ---
 
-In ODataLib 7.x, `ODataMessageReader` & `ODataMessageWriter` are able to read & write untyped primitive, structured, and collection values.  
+Starting with ODataLib 7.0, `ODataMessageReader` & `ODataMessageWriter` are able to read & write untyped primitive, structured, and collection values.  
 
 Values read from a payload are considered untyped if:
 
@@ -15,7 +15,7 @@ Values read from a payload are considered untyped if:
 
 The `ODataMessageReaderSettings` & `ODataMessageWriterSettings` `Validations` property can be set with `~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType` to enable reading/writing undeclared & untyped value properties in a payload. 
 
-Untyped values can be read and written as raw strings or, starting with OataLib 7.3, can be read and written as structured values.
+Untyped values can be read and written as raw strings or, starting with ODataLib 7.3, can be read and written as structured values.
 
 For compatiblity with ODataLib 7.0, untyped values are read by default as a raw string representing the untyped content. To use the standard OData reader APIs to read untyped content in ODataLib 7.3, set the `ODataMessageReaderSettings.ReadAsString` property to `false`.
 
