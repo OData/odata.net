@@ -370,6 +370,9 @@ namespace AstoriaUnitTests.Tests
                 new Dimension("WebServerLocation", new WebServerLocation[]{
                         WebServerLocation.InProcess,
                         WebServerLocation.InProcessWcf
+
+                        // Removed due to local IIS server instance racing on build machine.
+                        // WebServerLocation.Local
                     }
                 ));
             TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
