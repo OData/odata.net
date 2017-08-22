@@ -414,11 +414,11 @@ namespace Microsoft.OData.Core
                 if (kind == ODataPayloadKind.Batch)
                 {
                     // Appending the json media types AFTER the existing MIME media type(s), which is the default media type for Batch payload kind.
-                    this.mediaTypesForPayloadKind[(int) kind].AddRange(mediaTypeWithFormat);
+                    this.mediaTypesForPayloadKind[(int)kind].AddRange(mediaTypeWithFormat);
                 }
                 else
                 {   // For other payload kinds, insert the json media types to the front.
-                    this.mediaTypesForPayloadKind[(int) kind].InsertRange(0, mediaTypeWithFormat);
+                    this.mediaTypesForPayloadKind[(int)kind].InsertRange(0, mediaTypeWithFormat);
                 }
             }
         }

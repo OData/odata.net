@@ -24,14 +24,14 @@ namespace Microsoft.OData.Core
     /// </summary>
     public abstract class ODataBatchReader : IODataBatchOperationListener
     {
-        /// <summary>The input context to read the content from.</summary>
-        private ODataInputContext inputContext;
+        /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
+        internal readonly ODataBatchUrlResolver UrlResolver;
 
         /// <summary>True if the writer was created for synchronous operation; false for asynchronous.</summary>
         private readonly bool synchronous;
 
-        /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        internal readonly ODataBatchUrlResolver urlResolver;
+        /// <summary>The input context to read the content from.</summary>
+        private ODataInputContext inputContext;
 
         /// <summary>The current state of the batch reader.</summary>
         private ODataBatchReaderState batchReaderState;
@@ -57,33 +57,10 @@ namespace Microsoft.OData.Core
         /// </summary>
         private bool allowLegacyContentIdBehavior;
 
-        protected ODataInputContext InputContext
-        {
-            get { return this.inputContext; }
-        }
-
-        protected string ContentIdToAddOnNextRead
-        {
-            get { return this.contentIdToAddOnNextRead; }
-            set { this.contentIdToAddOnNextRead = value; }
-        }
-
-        protected OperationState ReaderOperationState
-        {
-            get { return this.operationState; }
-            set { this.operationState = value; }
-        }
-
-        protected bool AllowLegacyContentIdBehavior
-        {
-            get { return this.allowLegacyContentIdBehavior;}
-        }
-
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
         protected ODataBatchReader(ODataInputContext inputContext, bool synchronous)
         {
@@ -91,7 +68,7 @@ namespace Microsoft.OData.Core
 
             this.inputContext = inputContext;
             this.synchronous = synchronous;
-            this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
+            this.UrlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
 
             this.allowLegacyContentIdBehavior = true;
         }
@@ -124,10 +101,44 @@ namespace Microsoft.OData.Core
                 return this.batchReaderState;
             }
 
-            protected set
+            set
             {
                 this.batchReaderState = value;
             }
+        }
+
+        /// <summary>
+        /// Reader's input context.
+        /// </summary>
+        protected ODataInputContext InputContext
+        {
+            get { return this.inputContext; }
+        }
+
+        /// <summary>
+        /// Previously cache contentId that should be applied to the next message read.
+        /// </summary>
+        protected string ContentIdToAddOnNextRead
+        {
+            get { return this.contentIdToAddOnNextRead; }
+            set { this.contentIdToAddOnNextRead = value; }
+        }
+
+        /// <summary>
+        /// The reader's Operation state
+        /// </summary>
+        protected OperationState ReaderOperationState
+        {
+            get { return this.operationState; }
+            set { this.operationState = value; }
+        }
+
+        /// <summary>
+        /// Boolean flag indicating whether legacy content Id behavior is used.
+        /// </summary>
+        protected bool AllowLegacyContentIdBehavior
+        {
+            get { return this.allowLegacyContentIdBehavior; }
         }
 
         /// <summary> Reads the next part from the batch message payload. </summary>
@@ -218,6 +229,40 @@ namespace Microsoft.OData.Core
         void IODataBatchOperationListener.BatchOperationContentStreamDisposed()
         {
             this.operationState = OperationState.StreamDisposed;
+        }
+
+        /// <summary>
+        /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
+        /// </summary>
+        protected void IncreaseBatchSize()
+        {
+            this.currentBatchSize++;
+
+            if (this.currentBatchSize > this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch)
+            {
+                throw new ODataException(Strings.ODataBatchReader_MaxBatchSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch));
+            }
+        }
+
+        /// <summary>
+        /// Increases the size of the current change set; throws if the allowed limit is exceeded.
+        /// </summary>
+        protected void IncreaseChangesetSize()
+        {
+            this.currentChangeSetSize++;
+
+            if (this.currentChangeSetSize > this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset)
+            {
+                throw new ODataException(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset));
+            }
+        }
+
+        /// <summary>
+        /// Resets the size of the current change set to 0.
+        /// </summary>
+        protected void ResetChangesetSize()
+        {
+            this.currentChangeSetSize = 0;
         }
 
         /// <summary>
@@ -367,40 +412,6 @@ namespace Microsoft.OData.Core
                 Debug.Assert(false, "Async calls are not allowed in this build.");
 #endif
             }
-        }
-
-        /// <summary>
-        /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
-        /// </summary>
-        protected void IncreaseBatchSize()
-        {
-            this.currentBatchSize++;
-
-            if (this.currentBatchSize > this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch)
-            {
-                throw new ODataException(Strings.ODataBatchReader_MaxBatchSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch));
-            }
-        }
-
-        /// <summary>
-        /// Increases the size of the current change set; throws if the allowed limit is exceeded.
-        /// </summary>
-        protected void IncreaseChangesetSize()
-        {
-            this.currentChangeSetSize++;
-
-            if (this.currentChangeSetSize > this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset)
-            {
-                throw new ODataException(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset));
-            }
-        }
-
-        /// <summary>
-        /// Resets the size of the current change set to 0.
-        /// </summary>
-        protected void ResetChangesetSize()
-        {
-            this.currentChangeSetSize = 0;
         }
 
         /// <summary>

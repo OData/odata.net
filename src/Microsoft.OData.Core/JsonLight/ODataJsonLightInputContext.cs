@@ -746,6 +746,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Create a concrete <see cref="ODataJsonLightBatchReader"/> instance.
         /// </summary>
+        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
+        /// <returns>Newly created <see cref="ODataBatchReader"/></returns>
         private ODataBatchReader CreateBatchReaderImplementation(bool synchronous)
         {
             Debug.Assert(this.textReader != null);

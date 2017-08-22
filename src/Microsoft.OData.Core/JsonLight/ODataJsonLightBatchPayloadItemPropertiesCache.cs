@@ -91,15 +91,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Wrapper method with validation to scan the Json object for known properties.
-        /// </summary>
-        private void ScanJsonProperties()
-        {
-            Debug.Assert(this.jsonProperties == null, "this.jsonProperties == null");
-            ScanJsonPropertiesImplementation();
-        }
-
-        /// <summary>
         /// Abstract method to scan the Json object for known properties.
         /// </summary>
         /// <remark>
@@ -140,6 +131,15 @@ namespace Microsoft.OData.Core.JsonLight
         protected static string Normalize(string propertyName)
         {
             return propertyName.ToUpperInvariant();
+        }
+
+        /// <summary>
+        /// Wrapper method with validation to scan the Json object for known properties.
+        /// </summary>
+        private void ScanJsonProperties()
+        {
+            Debug.Assert(this.jsonProperties == null, "this.jsonProperties == null");
+            ScanJsonPropertiesImplementation();
         }
     }
 }

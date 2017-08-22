@@ -13,7 +13,6 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Text;
 
     using Microsoft.OData.Core.Json;
@@ -46,21 +45,8 @@ namespace Microsoft.OData.Core.JsonLight
         private BatchPayloadBodyContentType contentType;
 
         /// <summary>
-        /// Enum type for data type of body content.
-        /// </summary>
-        private enum BatchPayloadBodyContentType
-        {
-            // The body content contains Json data.
-            Json,
-
-            // The body content contains binary data, e.g. jpeg image raw data.
-            Binary,
-        }
-
-        /// <summary>
         /// Constructor using default encoding (UTF-8 without the BOM preamble)
         /// </summary>
-        /// <param name="batchEncoding">The encoding to use to read & write from the batch stream.</param>
         internal ODataJsonLightBatchBodyContentReaderStream()
             : this(MediaTypeUtils.FallbackEncoding)
         {
@@ -69,7 +55,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="batchEncoding">The encoding to use to read & write from the batch stream.</param>
+        /// <param name="batchEncoding">The encoding to use to read and write from the batch stream.</param>
         internal ODataJsonLightBatchBodyContentReaderStream(Encoding batchEncoding)
             : base(batchEncoding)
         {
@@ -78,6 +64,18 @@ namespace Microsoft.OData.Core.JsonLight
             this.streamWriter = new StreamWriter(this.bodyContentStream, batchEncoding);
 
             this.isDataPopulatedToStream = false;
+        }
+
+        /// <summary>
+        /// Enum type for data type of body content.
+        /// </summary>
+        private enum BatchPayloadBodyContentType
+        {
+            // The body content contains Json data.
+            Json,
+
+            // The body content contains binary data, e.g. jpeg image raw data.
+            Binary
         }
 
         /// <summary>
@@ -96,7 +94,20 @@ namespace Microsoft.OData.Core.JsonLight
                         len,
                         ODataConstants.DefaultMaxReadMessageSize));
                 }
+
                 return (int)len;
+            }
+        }
+
+        /// <summary>
+        /// Dispose the IDisposable resources in this class.
+        /// </summary>
+        public void Dispose()
+        {
+            if (this.streamWriter != null)
+            {
+                // Note that the stream writer will dispose the underlying stream as well.
+                this.streamWriter.Dispose();
             }
         }
 
@@ -107,34 +118,11 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="userBuffer">The byte array to read bytes into.</param>
         /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
         /// <param name="count">The number of bytes to read.</param>
-        /// <throws>NotImplementedException</returns>
+        /// <returns>The number of bytes actually read.</returns>
+        /// <throws>NotImplementedException</throws>
         internal override int ReadWithDelimiter(byte[] userBuffer, int userBufferOffset, int count)
         {
             throw new NotImplementedException("Read with delimiter is not applicable for body content stream.");
-        }
-
-        /// <summary>
-        /// Detect batch item (request or response) body content's data type.
-        /// The conent of the "body" property can be either Json type or binary type.
-        /// </summary>
-        /// <param name="jsonReader">The json reader that provides access to the json object.</param>
-        private void DetectBatchPayloadBodyContentType(JsonReader jsonReader)
-        {
-            if (jsonReader.NodeType == JsonNodeType.StartObject)
-            {
-                this.contentType = BatchPayloadBodyContentType.Json;
-            }
-            else if (jsonReader.NodeType == JsonNodeType.PrimitiveValue)
-            {
-                this.contentType = BatchPayloadBodyContentType.Binary;
-            }
-            else
-            {
-                throw new ODataException(string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Unsupported body content of NodeType: [{0}]",
-                    jsonReader.NodeType));
-            }
         }
 
         /// <summary>
@@ -153,6 +141,7 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     WriteJsonContent(jsonReader);
                 }
+
                 break;
 
                 case BatchPayloadBodyContentType.Binary:
@@ -164,6 +153,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                     WriteBinaryContent(contentBytes);
                 }
+
                 break;
 
                 default:
@@ -195,6 +185,117 @@ namespace Microsoft.OData.Core.JsonLight
 
             this.isDataPopulatedToStream = true;
             this.bodyContentStream.Position = 0;
+        }
+
+        /// <summary>
+        /// Reads from the batch stream since we know the length of the stream.
+        /// </summary>
+        /// <param name="userBuffer">The byte array to read bytes into.</param>
+        /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
+        /// <param name="count">The number of bytes to read.</param>
+        /// <returns>The number of bytes actually read.</returns>
+        internal override int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count)
+        {
+            Debug.Assert(userBuffer != null, "userBuffer != null");
+            Debug.Assert(userBufferOffset >= 0, "userBufferOffset >= 0");
+            Debug.Assert(count >= 0, "count >= 0");
+            Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
+
+            // Ensure that the memory stream contains data to be consumed.
+            if (!this.isDataPopulatedToStream)
+            {
+                throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+            }
+
+            // NOTE: if we have a stream with length we don't even check for boundaries but rely solely on the content length
+            int remainingNumberOfBytesToRead = count;
+            while (remainingNumberOfBytesToRead > 0)
+            {
+                // check whether we can satisfy the full read  from the buffer
+                // or whether we have to split the request and read more data into the buffer.
+                if (this.BatchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
+                {
+                    // we can satisfy the full read from the buffer
+                    Buffer.BlockCopy(
+                        this.BatchBuffer.Bytes,
+                        this.BatchBuffer.CurrentReadPosition,
+                        userBuffer,
+                        userBufferOffset,
+                        remainingNumberOfBytesToRead);
+
+                    this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
+                    remainingNumberOfBytesToRead = 0;
+                }
+                else
+                {
+                    // we can only partially satisfy the read
+                    int availableBytesToRead = this.BatchBuffer.NumberOfBytesInBuffer;
+                    Buffer.BlockCopy(
+                        this.BatchBuffer.Bytes,
+                        this.BatchBuffer.CurrentReadPosition,
+                        userBuffer,
+                        userBufferOffset,
+                        availableBytesToRead);
+
+                    remainingNumberOfBytesToRead -= availableBytesToRead;
+                    userBufferOffset += availableBytesToRead;
+
+                    // we exhausted the buffer; if the underlying stream is not exhausted, refill the buffer
+                    if (this.underlyingStreamExhausted)
+                    {
+                        // We cannot fully satisfy the read since there are not enough bytes in the stream.
+                        // This means that the content length of the stream was incorrect; this should never happen
+                        // since the caller should already have checked this.
+                        throw new ODataException(Strings.General_InternalError(
+                            InternalErrorCodes.ODataBatchReaderStreamBuffer_ReadWithLength));
+                    }
+                    else
+                    {
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(
+                                this.bodyContentStream,
+                            /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                    }
+                }
+            }
+
+            // return the number of bytes that were read
+            return count - remainingNumberOfBytesToRead;
+        }
+
+        /// <summary>
+        /// Dispose internal resource of stream writer and associated memory stream.
+        /// This is the internal api overriding default no-op implementation of <see cref="ODataBatchReaderStream"/>
+        /// to ensure proper disposing of resources.
+        /// </summary>
+        protected internal override void DisposeResources()
+        {
+            // dispose the IDisposable resources used by this class.
+            this.Dispose();
+            base.DisposeResources();
+        }
+
+        /// <summary>
+        /// Detect batch item (request or response) body content's data type.
+        /// The conent of the "body" property can be either Json type or binary type.
+        /// </summary>
+        /// <param name="jsonReader">The json reader that provides access to the json object.</param>
+        private void DetectBatchPayloadBodyContentType(JsonReader jsonReader)
+        {
+            if (jsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                this.contentType = BatchPayloadBodyContentType.Json;
+            }
+            else if (jsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            {
+                this.contentType = BatchPayloadBodyContentType.Binary;
+            }
+            else
+            {
+                throw new ODataException(string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Unsupported body content of NodeType: [{0}]",
+                    jsonReader.NodeType));
+            }
         }
 
         /// <summary>
@@ -252,23 +353,27 @@ namespace Microsoft.OData.Core.JsonLight
                             jsonWriter.WriteValue((string)null);
                         }
                     }
+
                     break;
                     case JsonNodeType.Property:
                     {
                         jsonWriter.WriteName(reader.Value.ToString());
                     }
+
                     break;
                     case JsonNodeType.StartObject:
                     {
                         nodeTypes.Push(reader.NodeType);
                         jsonWriter.StartObjectScope();
                     }
+
                     break;
                     case JsonNodeType.StartArray:
                     {
                         nodeTypes.Push(reader.NodeType);
                         jsonWriter.StartArrayScope();
                     }
+
                     break;
                     case JsonNodeType.EndObject:
                     {
@@ -276,6 +381,7 @@ namespace Microsoft.OData.Core.JsonLight
                         nodeTypes.Pop();
                         jsonWriter.EndObjectScope();
                     }
+
                     break;
                     case JsonNodeType.EndArray:
                     {
@@ -283,6 +389,7 @@ namespace Microsoft.OData.Core.JsonLight
                         nodeTypes.Pop();
                         jsonWriter.EndArrayScope();
                     }
+
                     break;
                     default:
                     {
@@ -294,110 +401,10 @@ namespace Microsoft.OData.Core.JsonLight
                 }
 
                 reader.ReadNext(); // This can be EndOfInput, where nodeTypes should be empty.
-
             }
             while (nodeTypes.Count != 0);
 
             jsonWriter.Flush();
-        }
-
-        /// <summary>
-        /// Reads from the batch stream since we know the length of the stream.
-        /// </summary>
-        /// <param name="userBuffer">The byte array to read bytes into.</param>
-        /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
-        /// <param name="count">The number of bytes to read.</param>
-        /// <returns>The number of bytes actually read.</returns>
-        internal override int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count)
-        {
-            Debug.Assert(userBuffer != null, "userBuffer != null");
-            Debug.Assert(userBufferOffset >= 0, "userBufferOffset >= 0");
-            Debug.Assert(count >= 0, "count >= 0");
-            Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
-
-            // Ensure that the memory stream contains data to be consumed.
-            if (!this.isDataPopulatedToStream)
-            {
-                throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
-            }
-
-            // NOTE: if we have a stream with length we don't even check for boundaries but rely solely on the content length
-            int remainingNumberOfBytesToRead = count;
-            while (remainingNumberOfBytesToRead > 0)
-            {
-                // check whether we can satisfy the full read  from the buffer
-                // or whether we have to split the request and read more data into the buffer.
-                if (this.batchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
-                {
-                    // we can satisfy the full read from the buffer
-                    Buffer.BlockCopy(
-                        this.batchBuffer.Bytes,
-                        this.batchBuffer.CurrentReadPosition,
-                        userBuffer,
-                        userBufferOffset,
-                        remainingNumberOfBytesToRead);
-
-                    this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
-                    remainingNumberOfBytesToRead = 0;
-                }
-                else
-                {
-                    // we can only partially satisfy the read
-                    int availableBytesToRead = this.batchBuffer.NumberOfBytesInBuffer;
-                    Buffer.BlockCopy(
-                        this.batchBuffer.Bytes,
-                        this.batchBuffer.CurrentReadPosition,
-                        userBuffer,
-                        userBufferOffset,
-                        availableBytesToRead);
-
-                    remainingNumberOfBytesToRead -= availableBytesToRead;
-                    userBufferOffset += availableBytesToRead;
-
-                    // we exhausted the buffer; if the underlying stream is not exhausted, refill the buffer
-                    if (this.underlyingStreamExhausted)
-                    {
-                        // We cannot fully satisfy the read since there are not enough bytes in the stream.
-                        // This means that the content length of the stream was incorrect; this should never happen
-                        // since the caller should already have checked this.
-                        throw new ODataException(Strings.General_InternalError(
-                            InternalErrorCodes.ODataBatchReaderStreamBuffer_ReadWithLength));
-                    }
-                    else
-                    {
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(
-                                this.bodyContentStream,
-                                /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
-                    }
-                }
-            }
-
-            // return the number of bytes that were read
-            return count - remainingNumberOfBytesToRead;
-        }
-
-        /// <summary>
-        /// Dispose internal resource of stream writer and associated memory stream.
-        /// This is the internal api overriding default no-op implementation of <see cref="ODataBatchReaderStream"/>
-        /// to ensure proper disposing of resources.
-        /// </summary>
-        protected internal override void DisposeResources()
-        {
-            // dispose the IDisposable resources used by this class.
-            this.Dispose();
-            base.DisposeResources();
-        }
-
-        /// <summary>
-        /// Dispose ther IDisposable resources in this class.
-        /// </summary>
-        public void Dispose()
-        {
-            if (this.streamWriter != null)
-            {
-                // Note that the stream writer will dispose the underlying stream as well.
-                this.streamWriter.Dispose();
-            }
         }
     }
 }

@@ -139,12 +139,13 @@ namespace Microsoft.OData.Client
         /// Indicates that the client should use the JSON format for the batch request.
         /// Will invoke the LoadServiceModel delegate property in order to get the required service model.
         /// </summary>
+        /// <param name="serviceModel">The model of the service.</param>
         public void UseJsonForBatch(IEdmModel serviceModel)
         {
             Util.CheckArgumentNull(serviceModel, "serviceModel");
 
-            this.IsJsonBatchFormat = true;
             this.serviceModel = serviceModel;
+            UseJsonForBatch();
         }
 
         /// <summary>

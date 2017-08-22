@@ -69,7 +69,7 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
-            Debug.Assert(urlResolver != null, "urlResolver != null");
+            Debug.Assert(urlResolver != null, "UrlResolver != null");
 
             this.Method = method;
             this.Url = requestUrl;
@@ -195,6 +195,7 @@ namespace Microsoft.OData.Core
         /// <param name="operationListener">The operation listener.</param>
         /// <param name="contentId">The content-ID for the operation request message.</param>
         /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="dependsOnReqIds">The (optional) list of request Ids as prerequisites.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to read the request content from.</returns>
         internal static ODataBatchOperationRequestMessage CreateReadMessage(
             ODataBatchReaderStream batchReaderStream,

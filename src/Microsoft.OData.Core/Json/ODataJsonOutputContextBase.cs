@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.Json
             TextWriter textWriter,
             ODataMessageWriterSettings messageWriterSettings,
             IEdmModel model)
-            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*urlResolver*/)
+            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*UrlResolver*/)
         {
             Debug.Assert(textWriter != null, "textWriter != null");
 
@@ -214,6 +214,7 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// The output stream to write the payload to.
         /// </summary>
+        /// <returns>The output stream.</returns>
         internal Stream GetOutputStream()
         {
             return this.Synchronous
@@ -221,6 +222,10 @@ namespace Microsoft.OData.Core.Json
                 : this.asynchronousOutputStream;
         }
 
+        /// <summary>
+        /// Test whether the output stream is <see cref="ODataBatchOperationWriteStream"/>
+        /// </summary>
+        /// <returns>True if the stream is write stream for batch operation.</returns>
         internal bool IsOutputToBatchOperationWriteStream()
         {
             return GetOutputStream() is ODataBatchOperationWriteStream;

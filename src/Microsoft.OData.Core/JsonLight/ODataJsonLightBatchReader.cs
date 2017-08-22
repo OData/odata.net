@@ -26,8 +26,17 @@ namespace Microsoft.OData.Core.JsonLight
     /// Class for reading OData batch messages in json format.
     /// Also verifies the proper sequence of read calls on the reader.
     /// </summary>
-    internal sealed class ODataJsonLightBatchReader: ODataBatchReader
+    internal sealed class ODataJsonLightBatchReader : ODataBatchReader
     {
+        /// <summary>The batch stream used by the batch reader to devide a batch payload into parts.</summary>
+        private readonly ODataJsonLightBatchReaderStream batchStream;
+
+        /// <summary>
+        /// The cache to keep track of atomicity group information during json batch message reading.
+        /// </summary>
+        private readonly ODataJsonLightBatchAtomicGroupCache atomicGroups
+            = new ODataJsonLightBatchAtomicGroupCache();
+
         /// <summary>
         /// Top-level attribute name for request arrays in Json batch format.
         /// </summary>
@@ -39,37 +48,9 @@ namespace Microsoft.OData.Core.JsonLight
         private static string PropertyNameResponses = "responses";
 
         /// <summary>
-        /// Definition of modes for Json reader.
-        /// </summary>
-        private enum ReaderMode
-        {
-            /// <summary>
-            /// Initial mode, not operatable in this mode.
-            /// </summary>
-            NotDetected,
-            /// <summary>
-            /// Reading batch requests.
-            /// </summary>
-            Requests,
-            /// <summary>
-            /// Reading batch responses.
-            /// </summary>
-            Responses
-        };
-
-        /// <summary>
         /// The reader's mode.
         /// </summary>
         private ReaderMode mode = ReaderMode.NotDetected;
-
-        /// <summary>The batch stream used by the batch reader to devide a batch payload into parts.</summary>
-        private readonly ODataJsonLightBatchReaderStream batchStream;
-
-        /// <summary>
-        /// The cache to keep track of atomicity group information during json batch message reading.
-        /// </summary>
-        private readonly ODataJsonLightBatchAtomicGroupCache atomicGroups
-            = new ODataJsonLightBatchAtomicGroupCache();
 
         /// <summary>
         /// The cache for json property-value pairs of the current request.
@@ -80,17 +61,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// The cache for json property-value pairs of the current response.
         /// </summary>
         private ODataJsonLightBatchResponsePropertiesCache responsePropertiesCache = null;
-
-        /// <summary>
-        /// Gets the reader's input context as real runtime type.
-        /// </summary>
-        internal ODataJsonLightInputContext JsonLightInputContext
-        {
-            get
-            {
-                return this.InputContext as ODataJsonLightInputContext;
-            }
-        }
 
         /// <summary>
         /// Constructor.
@@ -104,6 +74,31 @@ namespace Microsoft.OData.Core.JsonLight
             this.batchStream = new ODataJsonLightBatchReaderStream(inputContext, batchEncoding);
         }
 
+        /// <summary>
+        /// Definition of modes for Json reader.
+        /// </summary>
+        private enum ReaderMode
+        {
+            // Initial mode, not operatable in this mode.
+            NotDetected,
+
+            // Reading batch requests.
+            Requests,
+
+            // Reading batch responses.
+            Responses
+        }
+
+        /// <summary>
+        /// Gets the reader's input context as real runtime type.
+        /// </summary>
+        internal ODataJsonLightInputContext JsonLightInputContext
+        {
+            get
+            {
+                return this.InputContext as ODataJsonLightInputContext;
+            }
+        }
 
         /// <summary>
         /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
@@ -181,10 +176,94 @@ namespace Microsoft.OData.Core.JsonLight
                 headers,
                 /*operationListener*/ this,
                 this.ContentIdToAddOnNextRead,
-                this.urlResolver,
+                this.UrlResolver,
                 dependsOnReqIds);
 
             return requestMessage;
+        }
+
+        /// <summary>
+        /// Continue reading from the batch message payload.
+        /// </summary>
+        /// <returns>true if more items were read; otherwise false.</returns>
+        protected override bool ReadImplementation()
+        {
+            Debug.Assert(this.ReaderOperationState != OperationState.StreamRequested, "Should have verified that no operation stream is still active.");
+
+            if (this.State == ODataBatchReaderState.Initial)
+            {
+                DetectReaderMode();
+            }
+
+
+            if (this.mode == ReaderMode.Requests)
+            {
+                ReadImplementationForRequests();
+            }
+            else if (this.mode == ReaderMode.Responses)
+            {
+                ReadImplementationForResponses();
+            }
+            else
+            {
+                throw new ODataException(Strings.ODataBatchReader_ReaderModeNotInitilized);
+            }
+
+            return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
+        }
+
+        /// <summary>
+        /// Returns the cached <see cref="ODataBatchOperationResponseMessage"/> for reading the content of a
+        /// batch response.
+        /// </summary>
+        /// <returns>The message that can be used to read the content of the batch response from.</returns>
+        protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
+        {
+            Debug.Assert(this.responsePropertiesCache != null, "this.responsePropertiesCache != null");
+
+            // body. Use empty stream when request body is not present.
+            ODataBatchReaderStream bodyContentStream =
+                (ODataBatchReaderStream)this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameBody)
+                ?? new ODataJsonLightBatchBodyContentReaderStream();
+
+            int statusCode = (int)
+                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchResponsePropertiesCache.PropertyNameStatus);
+            ODataBatchOperationHeaders headers = (ODataBatchOperationHeaders)
+                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameHeaders);
+
+            // Add the potential id value to the URL resolver so that it will be available
+            // to subsequent operations.
+            string valueId = (string)
+                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
+            if (valueId != null && this.UrlResolver.ContainsContentId(valueId))
+            {
+                throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(valueId));
+            }
+            else if (this.ContentIdToAddOnNextRead == null)
+            {
+                this.ContentIdToAddOnNextRead = valueId;
+            }
+
+            this.ReaderOperationState = OperationState.MessageCreated;
+
+            // Reset the response property cache since all data in cache has been processed.
+            // So that new instance can be created during subsequent read in operation state.
+            this.responsePropertiesCache = null;
+
+            // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
+            // so use the URL resolver from the batch message instead.
+            ODataBatchOperationResponseMessage responseMessage = ODataBatchOperationResponseMessage.CreateReadMessage(
+                bodyContentStream,
+                statusCode,
+                headers,
+                this.ContentIdToAddOnNextRead,
+                /*operationListener*/ this,
+                this.UrlResolver.BatchMessageUrlResolver);
+
+            //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
+            ////       we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).
+
+            return responseMessage;
         }
 
         /// <summary>
@@ -225,7 +304,7 @@ namespace Microsoft.OData.Core.JsonLight
                         dependsOnId,
                         requestId));
                 }
-                else if (this.urlResolver.ContainsContentId(dependsOnId))
+                else if (this.UrlResolver.ContainsContentId(dependsOnId))
                 {
                     // For request Id referred to by dependsOn attribute, check that it is not part of atomic group.
                     string groupId = this.atomicGroups.GetGroupId(dependsOnId);
@@ -276,62 +355,8 @@ namespace Microsoft.OData.Core.JsonLight
             requestUri = ODataBatchUtils.CreateOperationRequestUri(
                 requestUri,
                 this.JsonLightInputContext.MessageReaderSettings.BaseUri,
-                this.urlResolver);
+                this.UrlResolver);
             return requestUri;
-        }
-
-        /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationResponseMessage"/> for reading the content of a
-        /// batch response.
-        /// </summary>
-        /// <returns>The message that can be used to read the content of the batch response from.</returns>
-        protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
-        {
-            Debug.Assert(this.responsePropertiesCache != null, "this.responsePropertiesCache != null");
-
-            // body. Use empty stream when request body is not present.
-            ODataBatchReaderStream bodyContentStream =
-                (ODataBatchReaderStream)this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameBody)
-                ?? new ODataJsonLightBatchBodyContentReaderStream();
-
-            int statusCode = (int)
-                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchResponsePropertiesCache.PropertyNameStatus);
-            ODataBatchOperationHeaders headers = (ODataBatchOperationHeaders)
-                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameHeaders);
-
-            // Add the potential id value to the URL resolver so that it will be available
-            // to subsequent operations.
-            string valueId =(string)
-                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
-            if (valueId != null && this.urlResolver.ContainsContentId(valueId))
-            {
-                throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(valueId));
-            }
-            else if (this.ContentIdToAddOnNextRead == null)
-            {
-                this.ContentIdToAddOnNextRead = valueId;
-            }
-
-            this.ReaderOperationState = OperationState.MessageCreated;
-
-            // Reset the response property cache since all data in cache has been processed.
-            // So that new instance can be created during subsequent read in operation state.
-            this.responsePropertiesCache = null;
-
-            // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
-            // so use the URL resolver from the batch message instead.
-            ODataBatchOperationResponseMessage responseMessage = ODataBatchOperationResponseMessage.CreateReadMessage(
-                bodyContentStream,
-                statusCode,
-                headers,
-                this.ContentIdToAddOnNextRead,
-                /*operationListener*/ this,
-                this.urlResolver.BatchMessageUrlResolver);
-
-            //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
-            ////       we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).
-
-            return responseMessage;
         }
 
         /// <summary>
@@ -389,36 +414,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Continue reading from the batch message payload.
-        /// </summary>
-        /// <returns>true if more items were read; otherwise false.</returns>
-        protected override bool ReadImplementation()
-        {
-            Debug.Assert(this.ReaderOperationState != OperationState.StreamRequested, "Should have verified that no operation stream is still active.");
-
-            if (this.State == ODataBatchReaderState.Initial)
-            {
-                DetectReaderMode();
-            }
-
-
-            if (this.mode == ReaderMode.Requests)
-            {
-                ReadImplementationForRequests();
-            }
-            else if (this.mode == ReaderMode.Responses)
-            {
-                ReadImplementationForResponses();
-            }
-            else
-            {
-                throw new ODataException(Strings.ODataBatchReader_ReaderModeNotInitilized);
-            }
-
-            return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
-        }
-
-        /// <summary>
         /// Reads json response and setup the readers' state for subsequent processing.
         /// </summary>
         private void ReadImplementationForResponses()
@@ -445,6 +440,7 @@ namespace Microsoft.OData.Core.JsonLight
                             currentGroup);
                     }
                 }
+
                 break;
 
                 case ODataBatchReaderState.Operation:
@@ -473,7 +469,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // a potential content ID header) have been read.
                     if (this.ContentIdToAddOnNextRead != null)
                     {
-                        this.urlResolver.AddContentId(this.ContentIdToAddOnNextRead);
+                        this.UrlResolver.AddContentId(this.ContentIdToAddOnNextRead);
                         this.ContentIdToAddOnNextRead = null;
                     }
 
@@ -505,6 +501,7 @@ namespace Microsoft.OData.Core.JsonLight
                         this.IncreaseBatchSize();
                     }
                 }
+
                 break;
 
                 case ODataBatchReaderState.ChangesetStart:
@@ -514,13 +511,15 @@ namespace Microsoft.OData.Core.JsonLight
                     this.IncreaseBatchSize();
                     this.State = ODataBatchReaderState.Operation;
                 }
-                    break;
+
+                break;
 
                 case ODataBatchReaderState.ChangesetEnd:
                 {
                     this.ResetChangesetSize();
                     ReadAtChangesetEndState(this.responsePropertiesCache);
                 }
+
                 break;
 
                 default:
@@ -576,6 +575,7 @@ namespace Microsoft.OData.Core.JsonLight
                             currentGroup);
                     }
                 }
+
                 break;
 
                 case ODataBatchReaderState.Operation:
@@ -604,7 +604,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // a potential content ID header) have been read.
                     if (this.ContentIdToAddOnNextRead != null)
                     {
-                        this.urlResolver.AddContentId(this.ContentIdToAddOnNextRead);
+                        this.UrlResolver.AddContentId(this.ContentIdToAddOnNextRead);
                         this.ContentIdToAddOnNextRead = null;
                     }
 
@@ -636,6 +636,7 @@ namespace Microsoft.OData.Core.JsonLight
                         this.IncreaseBatchSize();
                     }
                 }
+
                 break;
 
                 case ODataBatchReaderState.ChangesetStart:
@@ -643,9 +644,10 @@ namespace Microsoft.OData.Core.JsonLight
                     // Direct transition back to opration state.
                     Debug.Assert(this.requestPropertiesCache != null,
                         "request properties cache must have been set by now.");
-                    this.IncreaseBatchSize(); 
+                    this.IncreaseBatchSize();
                     this.State = ODataBatchReaderState.Operation;
                 }
+
                 break;
 
                 case ODataBatchReaderState.ChangesetEnd:
@@ -653,6 +655,7 @@ namespace Microsoft.OData.Core.JsonLight
                     this.ResetChangesetSize();
                     ReadAtChangesetEndState(this.requestPropertiesCache);
                 }
+
                 break;
 
                 default:
@@ -708,16 +711,16 @@ namespace Microsoft.OData.Core.JsonLight
             bool changesetEnd = false;
 
             // Validate message Id.
-            string valueId = (string) messagePropertiesCache.GetPropertyValue(
+            string valueId = (string)messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
             ValidateRequiredProperty(valueId, ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
 
-            if (this.urlResolver.ContainsContentId(valueId))
+            if (this.UrlResolver.ContainsContentId(valueId))
             {
                 throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(valueId));
             }
 
-            string currentGroup = (string) messagePropertiesCache.GetPropertyValue(
+            string currentGroup = (string)messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
 
             // ChangesetEnd check first; If not, check for changesetStart.

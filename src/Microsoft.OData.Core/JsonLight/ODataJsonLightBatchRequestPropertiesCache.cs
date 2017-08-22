@@ -86,6 +86,7 @@ namespace Microsoft.OData.Core.JsonLight
                         {
                             jsonProperties.Add(propertyName, this.jsonReader.ReadStringValue());
                         }
+
                         break;
 
                         case PropertyNameDependsOn:
@@ -96,10 +97,12 @@ namespace Microsoft.OData.Core.JsonLight
                             {
                                 dependsOnIds.Add(this.jsonReader.ReadStringValue());
                             }
+
                             this.jsonReader.ReadEndArray();
 
                             jsonProperties.Add(propertyName, dependsOnIds);
                         }
+
                         break;
 
                         case PropertyNameHeaders:
@@ -119,6 +122,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                             jsonProperties.Add(propertyName, headers);
                         }
+
                         break;
 
                         case PropertyNameBody:
@@ -126,6 +130,7 @@ namespace Microsoft.OData.Core.JsonLight
                             ODataBatchReaderStream bodyContentStream = CreateJsonPayloadBodyContentStream();
                             jsonProperties.Add(propertyName, bodyContentStream);
                         }
+
                         break;
 
                         default:

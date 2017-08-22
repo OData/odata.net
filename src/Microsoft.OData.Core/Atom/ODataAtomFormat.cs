@@ -206,7 +206,7 @@ namespace Microsoft.OData.Core.Atom
                 readingResponse,
                 synchronous,
                 detectionInfo.Model,
-                /*urlResolver*/ null))
+                /*UrlResolver*/ null))
             {
                 return inputContext.DetectPayloadKind(detectionInfo);
             }

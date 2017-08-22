@@ -289,91 +289,84 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(Encoding.ASCII.GetBytes(requestPayload)) };
             requestMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
-            using (var messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings(), this.edmModel))
+            using (ODataMessageReader messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings(), this.edmModel))
             {
-                var responseStream = new MemoryStream();
+                MemoryStream responseStream = new MemoryStream();
 
                 IODataResponseMessage responseMessage = new InMemoryMessage { Stream = responseStream };
 
                 // Client is expected to receive the response message in the same format as that is used in the request sent.
                 responseMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
-                var messageWriter = new ODataMessageWriter(responseMessage);
+                ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage);
                 int operationIdx = 0;
 
-                try
-                {
-                    var batchWriter = messageWriter.CreateODataBatchWriter();
-                    batchWriter.WriteStartBatch();
+                ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
 
-                    var batchReader = messageReader.CreateODataBatchReader();
-                    while (batchReader.Read())
+                ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
+                while (batchReader.Read())
+                {
+                    switch (batchReader.State)
                     {
-                        switch (batchReader.State)
-                        {
-                            case ODataBatchReaderState.Operation:
-                                // Encountered an operation (either top-level or in a changeset)
-                                var operationMessage = batchReader.CreateOperationRequestMessage();
+                        case ODataBatchReaderState.Operation:
+                            // Encountered an operation (either top-level or in a changeset)
+                            ODataBatchOperationRequestMessage operationMessage = batchReader.CreateOperationRequestMessage();
 
-                                // Verify operation mesasge if applicable.
-                                if (requestOpMessageVerifier != null)
-                                {
-                                    requestOpMessageVerifier(operationMessage, testCase.ListOfDependsOnIds.ElementAt(operationIdx));
-                                }
+                            // Verify operation mesasge if applicable.
+                            if (requestOpMessageVerifier != null)
+                            {
+                                requestOpMessageVerifier(operationMessage, testCase.ListOfDependsOnIds.ElementAt(operationIdx));
+                            }
 
-                                if (operationMessage.Method == "POST")
+                            if (operationMessage.Method == "POST")
+                            {
+                                ODataBatchOperationResponseMessage response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
+                                response.StatusCode = 201;
+                                response.SetHeader("Content-Type", batchContentTypeApplicationJson);
+                            }
+                            else if (operationMessage.Method == "GET")
+                            {
+                                ODataBatchOperationResponseMessage response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
+                                response.StatusCode = 200;
+                                response.SetHeader("Content-Type", batchContentTypeApplicationJson);
+                                ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+                                settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
+                                using (
+                                    ODataMessageWriter operationMessageWriter = new ODataMessageWriter(response, settings,
+                                        this.edmModel))
                                 {
-                                    var response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
-                                    response.StatusCode = 201;
-                                    response.SetHeader("Content-Type", batchContentTypeApplicationJson);
-                                }
-                                else if (operationMessage.Method == "GET")
-                                {
-                                    var response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
-                                    response.StatusCode = 200;
-                                    response.SetHeader("Content-Type", batchContentTypeApplicationJson);
-                                    var settings = new ODataMessageWriterSettings();
-                                    settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
-                                    using (
-                                        var operationMessageWriter = new ODataMessageWriter(response, settings,
-                                            this.edmModel))
+                                    ODataWriter entryWriter = operationMessageWriter.CreateODataEntryWriter(this.singleton,
+                                        this.userType);
+                                    ODataEntry entry = new ODataEntry()
                                     {
-                                        var entryWriter = operationMessageWriter.CreateODataEntryWriter(this.singleton,
-                                            this.userType);
-                                        var entry = new ODataEntry()
-                                        {
-                                            TypeName = "NS.User",
-                                            Properties =
-                                                new[]
-                                                {
-                                                    new ODataProperty() {Name = "UserPrincipalName", Value = "foo@bar.com"},
-                                                    new ODataProperty() {Name = "GivenName", Value = "Jon"}
-                                                }
-                                        };
-                                        entryWriter.WriteStart(entry);
-                                        entryWriter.WriteEnd();
-                                    }
+                                        TypeName = "NS.User",
+                                        Properties =
+                                            new[]
+                                            {
+                                                new ODataProperty() {Name = "UserPrincipalName", Value = "foo@bar.com"},
+                                                new ODataProperty() {Name = "GivenName", Value = "Jon"}
+                                            }
+                                    };
+                                    entryWriter.WriteStart(entry);
+                                    entryWriter.WriteEnd();
                                 }
+                            }
 
-                                operationIdx++;
-                                break;
-                            case ODataBatchReaderState.ChangesetStart:
-                                batchWriter.WriteStartChangeset();
-                                break;
-                            case ODataBatchReaderState.ChangesetEnd:
-                                batchWriter.WriteEndChangeset();
-                                break;
-                        }
+                            operationIdx++;
+                            break;
+                        case ODataBatchReaderState.ChangesetStart:
+                            batchWriter.WriteStartChangeset();
+                            break;
+                        case ODataBatchReaderState.ChangesetEnd:
+                            batchWriter.WriteEndChangeset();
+                            break;
                     }
+                }
 
-                    batchWriter.WriteEndBatch();
-                    responseStream.Position = 0;
-                    return responseStream.ToArray();
-                }
-                catch (Exception e)
-                {
-                    throw;
-                }
+                batchWriter.WriteEndBatch();
+                responseStream.Position = 0;
+                return responseStream.ToArray();
             }
         }
     }

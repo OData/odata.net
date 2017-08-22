@@ -202,7 +202,7 @@ namespace Microsoft.OData.Core.Json
                 readingResponse,
                 /*synchronous*/ true,
                 detectionInfo.Model,
-                /*urlResolver*/ null))
+                /*UrlResolver*/ null))
             {
                 return jsonLightInputContext.DetectPayloadKind(detectionInfo);
             }
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Core.Json
                 readingResponse,
                 /*synchronous*/ false,
                 detectionInfo.Model,
-                /*urlResolver*/ null);
+                /*UrlResolver*/ null);
 
             return jsonLightInputContext.DetectPayloadKindAsync(detectionInfo)
                 .FollowAlwaysWith(t =>

@@ -182,7 +182,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 testConfiguration, 
                 this.PayloadKind,
                 /*customContentTypeHeader*/ null,
-                /*urlResolver*/ null);
+                /*UrlResolver*/ null);
             return testMessage;
         }
 

@@ -98,7 +98,7 @@ namespace Microsoft.OData.Core.JsonLight
             else if (!groupToMessageIds.ContainsKey(groupId))
             {
                 // We get a new groupId.
-                groupToMessageIds.Add( groupId, new List<string> { messageId });
+                groupToMessageIds.Add(groupId, new List<string> { messageId });
 
                 this.preceedingMessageGroupId = groupId;
 
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The group Id if found; null otherwise.</returns>
         internal string GetGroupId(string targetMessageId)
         {
-            foreach (KeyValuePair<string,IList<string>> pair in this.groupToMessageIds)
+            foreach (KeyValuePair<string, IList<string>> pair in this.groupToMessageIds)
             {
                 IList<string> messageIds = pair.Value;
                 if (messageIds != null && messageIds.Contains(targetMessageId))
@@ -130,6 +130,7 @@ namespace Microsoft.OData.Core.JsonLight
                     return pair.Key;
                 }
             }
+
             return null;
         }
 

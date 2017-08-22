@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.JsonLight
     /// Class used by the <see cref="ODataJsonLightBatchReader"/> to read the various pieces of a batch payload
     /// in MIME application/json format.
     /// </summary>
-    internal sealed class ODataJsonLightBatchReaderStream: ODataBatchReaderStream
+    internal sealed class ODataJsonLightBatchReaderStream : ODataBatchReaderStream
     {
         /// <summary>
         /// The input context used by the JsonLight reader.
@@ -86,18 +86,18 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 // check whether we can satisfy the full read request from the buffer
                 // or whether we have to split the request and read more data into the buffer.
-                if (this.batchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
+                if (this.BatchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
                 {
                     // we can satisfy the full read request from the buffer
-                    Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, remainingNumberOfBytesToRead);
-                    this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
+                    Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, remainingNumberOfBytesToRead);
+                    this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
                     remainingNumberOfBytesToRead = 0;
                 }
                 else
                 {
                     // we can only partially satisfy the read request
-                    int availableBytesToRead = this.batchBuffer.NumberOfBytesInBuffer;
-                    Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, availableBytesToRead);
+                    int availableBytesToRead = this.BatchBuffer.NumberOfBytesInBuffer;
+                    Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, availableBytesToRead);
                     remainingNumberOfBytesToRead -= availableBytesToRead;
                     userBufferOffset += availableBytesToRead;
 
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Core.JsonLight
                     }
                     else
                     {
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                     }
                 }
             }
@@ -119,6 +119,5 @@ namespace Microsoft.OData.Core.JsonLight
             // return the number of bytes that were read
             return count - remainingNumberOfBytesToRead;
         }
-
     }
 }

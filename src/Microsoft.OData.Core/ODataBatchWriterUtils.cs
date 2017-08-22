@@ -18,8 +18,6 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal static class ODataBatchWriterUtils
     {
-        internal const int HTTP_STATUS_NO_CONTENT = 204;
-
         /// <summary>
         /// Creates a new batch boundary string based on a randomly created GUID.
         /// </summary>
@@ -28,7 +26,7 @@ namespace Microsoft.OData.Core
         internal static string CreateBatchBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.BatchResponseBoundaryTemplate : ODataConstants.BatchRequestBoundaryTemplate;
-            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
         }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace Microsoft.OData.Core
         internal static string CreateChangeSetBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
-            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
         }
 
         /// <summary>
@@ -166,45 +164,6 @@ namespace Microsoft.OData.Core
 
             // write separator line between headers and first change set operation
             writer.WriteLine();
-        }
-
-        internal static bool HasResponseBody(ODataBatchOperationResponseMessage responseMessage)
-        {
-            switch (responseMessage.StatusCode)
-            {
-                case HTTP_STATUS_NO_CONTENT:
-                case 202:
-                {
-                    return false;
-                }
-
-                default:
-                    return true;
-            }
-        }
-
-        /// <summary>
-        /// Determine whether the specified batch operation has request body.
-        /// </summary>
-        /// <param name="httpMethod">Http method name of the batch operation.</param>
-        /// <returns>true if the specified operation requires request body.</returns>
-        internal static bool HasRequestBody(string httpMethod)
-        {
-            if (string.CompareOrdinal(ODataConstants.MethodPost, httpMethod)==0
-                || string.CompareOrdinal(ODataConstants.MethodPut, httpMethod) == 0
-                || string.CompareOrdinal(ODataConstants.MethodPatch, httpMethod) == 0)
-            {
-                return true;
-            }
-            else if (string.CompareOrdinal(ODataConstants.MethodGet, httpMethod) == 0
-                     || string.CompareOrdinal(ODataConstants.MethodDelete, httpMethod) == 0)
-            {
-                return false;
-            }
-            else
-            {
-                throw new ODataException(Strings.HttpUtils_InvalidHttpMethodString(httpMethod));
-            }
         }
     }
 }

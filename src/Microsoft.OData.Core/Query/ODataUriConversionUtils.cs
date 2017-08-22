@@ -88,7 +88,7 @@ namespace Microsoft.OData.Core.UriParser
                     false /*readingResponse*/,
                     true /*synchronous*/,
                     model,
-                    null /*urlResolver*/))
+                    null /*UrlResolver*/))
                 {
                     ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
 

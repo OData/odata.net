@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Runtime.CompilerServices;
-
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -64,7 +62,6 @@ namespace Microsoft.OData.Client
         /// <param name="options">options</param>
         /// <param name="callback">user callback</param>
         /// <param name="state">user state object</param>
-         /// <param name="batchContentType">The content type header information.</param>
        internal BatchSaveResult(DataServiceContext context, string method, DataServiceRequest[] queries, SaveChangesOptions options, AsyncCallback callback, object state)
             : base(context, method, queries, options, callback, state)
         {

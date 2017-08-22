@@ -3915,6 +3915,8 @@ public abstract class Microsoft.OData.Core.ODataAnnotatable {
 }
 
 public abstract class Microsoft.OData.Core.ODataBatchReader : IODataBatchOperationListener {
+	protected ODataBatchReader (Microsoft.OData.Core.ODataInputContext inputContext, bool synchronous)
+
 	bool AllowLegacyContentIdBehavior  { protected get; }
 	string ContentIdToAddOnNextRead  { protected get; protected set; }
 	Microsoft.OData.Core.ODataInputContext InputContext  { protected get; }
@@ -3927,12 +3929,15 @@ public abstract class Microsoft.OData.Core.ODataBatchReader : IODataBatchOperati
 	public Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync ()
 	protected abstract Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation ()
+	protected void IncreaseBatchSize ()
+	protected void IncreaseChangesetSize ()
 	void Microsoft.OData.Core.IODataBatchOperationListener.BatchOperationContentStreamDisposed ()
 	void Microsoft.OData.Core.IODataBatchOperationListener.BatchOperationContentStreamRequested ()
 	System.Threading.Tasks.Task Microsoft.OData.Core.IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync ()
 	public bool Read ()
 	public System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
 	protected abstract bool ReadImplementation ()
+	protected void ResetChangesetSize ()
 }
 
 public abstract class Microsoft.OData.Core.ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener {
@@ -3969,7 +3974,6 @@ public abstract class Microsoft.OData.Core.ODataBatchWriter : IODataBatchOperati
 	protected abstract void WritePendingMessageData (bool reportMessageCompleted)
 	public void WriteStartBatch ()
 	public System.Threading.Tasks.Task WriteStartBatchAsync ()
-	protected abstract void WriteStartBatchImplementation ()
 	protected abstract void WriteStartBoundaryForOperation ()
 	public void WriteStartChangeset ()
 	public System.Threading.Tasks.Task WriteStartChangesetAsync ()

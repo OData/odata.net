@@ -170,7 +170,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 testConfiguration, 
                 ODataPayloadKind.MetadataDocument,
                 this.ContentType,
-                /*urlResolver*/ null);
+                /*UrlResolver*/ null);
             return testMessage;
         }
 

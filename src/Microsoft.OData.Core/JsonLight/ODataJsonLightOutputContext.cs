@@ -232,35 +232,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 #endif
 
-        /// <summary>
-        /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses in Json.
-        /// </summary>
-        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
-        /// <returns>The created batch writer.</returns>
-        /// <remarks>We don't plan to make this public!</remarks>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
-        {
-            this.AssertSynchronous();
 
-            return this.CreateODataBatchWriterImplementation();
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
-        /// </summary>
-        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
-        /// <returns>A running task for the created batch writer.</returns>
-        /// <remarks>We don't plan to make this public!</remarks>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
-        }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataProperty"/> as message payload.
@@ -333,6 +305,36 @@ namespace Microsoft.OData.Core.JsonLight
                     this.WriteErrorImplementation(error, includeDebugInformation);
                     return this.FlushAsync();
                 });
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses in Json.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>The created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataBatchWriterImplementation();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>A running task for the created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
         }
 #endif
 

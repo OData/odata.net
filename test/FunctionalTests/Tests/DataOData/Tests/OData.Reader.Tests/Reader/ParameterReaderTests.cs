@@ -444,7 +444,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 messageStream = new TestStream();
             }
 
-            TestMessage message = TestReaderUtils.CreateInputMessageFromStream(messageStream, testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*urlResolver*/null);
+            TestMessage message = TestReaderUtils.CreateInputMessageFromStream(messageStream, testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*UrlResolver*/null);
             ODataMessageReaderTestWrapper messageReader = TestReaderUtils.CreateMessageReader(message, model, testConfiguration);
             return messageReader.CreateODataParameterReader(functionImport);
         }

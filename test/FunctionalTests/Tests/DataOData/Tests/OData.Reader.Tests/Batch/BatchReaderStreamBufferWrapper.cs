@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <param name="batchReaderStream">The batch reader stream instance to get the buffer from.</param>
         public BatchReaderStreamBufferWrapper(object batchReaderStream)
         {
-            this.batchReaderStreamBuffer = ReflectionUtils.GetField(batchReaderStream, "batchBuffer");
+            this.batchReaderStreamBuffer = ReflectionUtils.GetField(batchReaderStream, "BatchBuffer");
         }
 
         /// <summary>

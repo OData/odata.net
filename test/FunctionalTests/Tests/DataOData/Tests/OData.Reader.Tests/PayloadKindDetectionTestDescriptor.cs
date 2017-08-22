@@ -154,7 +154,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 testConfiguration,
                 /*payloadKind*/ null,
                 this.ContentType,
-                /*urlResolver*/ null);
+                /*UrlResolver*/ null);
 
             if (this.TestMessageWrapper != null)
             {

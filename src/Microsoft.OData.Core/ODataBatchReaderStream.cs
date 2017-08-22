@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core
     internal abstract class ODataBatchReaderStream
     {
         /// <summary>The buffer used by the batch reader stream to scan for boundary strings.</summary>
-        protected readonly ODataBatchReaderStreamBuffer batchBuffer;
+        protected readonly ODataBatchReaderStreamBuffer BatchBuffer;
 
         /// <summary>The encoding to use to read from the batch stream.</summary>
         protected Encoding batchEncoding;
@@ -40,14 +40,14 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Constructor.
+        /// </summary>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
-        /// <param name="batchBufferLength">The length of the buffer.</param>
         internal ODataBatchReaderStream(
             Encoding batchEncoding)
         {
             this.batchEncoding = batchEncoding;
 
-            this.batchBuffer = new ODataBatchReaderStreamBuffer();
+            this.BatchBuffer = new ODataBatchReaderStreamBuffer();
         }
 
         /// <summary>
@@ -90,13 +90,14 @@ namespace Microsoft.OData.Core
         /// Note that, instead of defining IDisposable on the root level and causing ripples to handle IDisposable
         /// in other related types, we use this out-of-band method and its overrides for disposing.
         /// </remarks>
-        internal protected virtual void DisposeResources()
+        protected internal virtual void DisposeResources()
         {
         }
 
         /// <summary>
         /// Ensure that a batch encoding exists; if not, detect it from the first couple of bytes of the stream.
         /// </summary>
+        /// <param name="stream">The stream to read.</param>
         protected void EnsureBatchEncoding(Stream stream)
         {
             // If no batch encoding is specified we detect it from the first bytes in the buffer.
@@ -112,6 +113,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>Detect the encoding based data from the stream.</summary>
+        /// <param name="stream">The stream to read.</param>
         /// <returns>The encoding discovered from the bytes in the buffer or the fallback encoding.</returns>
         /// <remarks>
         /// We don't have to skip a potential preamble of the encoding since the batch reader
@@ -122,13 +124,13 @@ namespace Microsoft.OData.Core
         {
             // We need at most 4 bytes in the buffer to determine the encoding; if we have less than that,
             // refill the buffer.
-            while (!this.underlyingStreamExhausted && this.batchBuffer.NumberOfBytesInBuffer < 4)
+            while (!this.underlyingStreamExhausted && this.BatchBuffer.NumberOfBytesInBuffer < 4)
             {
-                this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(stream, this.batchBuffer.CurrentReadPosition);
+                this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(stream, this.BatchBuffer.CurrentReadPosition);
             }
 
             // Now we should have a full buffer unless the underlying stream did not have enough bytes.
-            int numberOfBytesInBuffer = this.batchBuffer.NumberOfBytesInBuffer;
+            int numberOfBytesInBuffer = this.BatchBuffer.NumberOfBytesInBuffer;
             if (numberOfBytesInBuffer < 2)
             {
                 Debug.Assert(this.underlyingStreamExhausted, "Underlying stream must be exhausted if we have less than 2 bytes in the buffer after refilling.");
@@ -141,17 +143,17 @@ namespace Microsoft.OData.Core
                 return Encoding.ASCII;
 #endif
             }
-            else if (this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xFE && this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xFF)
+            else if (this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0xFE && this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0xFF)
             {
                 // Big Endian Unicode
                 return new UnicodeEncoding(/*bigEndian*/ true, /*byteOrderMark*/ true);
             }
-            else if (this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xFF && this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xFE)
+            else if (this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0xFF && this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0xFE)
             {
                 // Little Endian Unicode, or possibly little endian UTF32
                 if (numberOfBytesInBuffer >= 4 &&
-                    this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0 &&
-                    this.batchBuffer[this.batchBuffer.CurrentReadPosition + 3] == 0)
+                    this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0 &&
+                    this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 3] == 0)
                 {
 #if !ORCAS
                     // Little Endian UTF32 not available
@@ -166,18 +168,18 @@ namespace Microsoft.OData.Core
                 }
             }
             else if (numberOfBytesInBuffer >= 3 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xEF &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xBB &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0xBF)
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0xEF &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0xBB &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0xBF)
             {
                 // UTF-8
                 return Encoding.UTF8;
             }
             else if (numberOfBytesInBuffer >= 4 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0xFE &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 3] == 0xFF)
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0 &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0 &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0xFE &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 3] == 0xFF)
             {
                 // Big Endian UTF32
 #if !ORCAS

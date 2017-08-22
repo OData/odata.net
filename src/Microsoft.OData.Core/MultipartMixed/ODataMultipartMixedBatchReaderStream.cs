@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.MultipartMixed
     /// This stream separates a batch payload into multiple parts by scanning ahead and matching
     /// a boundary string against the current payload.
     /// </remarks>
-    internal sealed class ODataMultipartMixedBatchReaderStream: ODataBatchReaderStream
+    internal sealed class ODataMultipartMixedBatchReaderStream : ODataBatchReaderStream
     {
         /// <summary>
         /// The default length for the line buffer byte array used to read lines; expecting lines to normally be less than 2000 bytes.
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Core.MultipartMixed
             while (scanResult != ODataBatchReaderStreamScanResult.Match)
             {
                 int boundaryStartPosition, boundaryEndPosition;
-                scanResult = this.batchBuffer.ScanForBoundary(
+                scanResult = this.BatchBuffer.ScanForBoundary(
                     this.CurrentBoundaries,
                     /*stopAfterIfNotFound*/int.MaxValue,
                     out boundaryStartPosition,
@@ -152,30 +152,30 @@ namespace Microsoft.OData.Core.MultipartMixed
                         if (this.underlyingStreamExhausted)
                         {
                             // there is nothing else to load from the underlying stream; the requested boundary does not exist
-                            this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + this.batchBuffer.NumberOfBytesInBuffer);
+                            this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + this.BatchBuffer.NumberOfBytesInBuffer);
                             return false;
                         }
 
                         // skip everything in the buffer and refill it from the underlying stream; continue scanning
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ODataBatchReaderStreamBuffer.BufferLength);
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ODataBatchReaderStreamBuffer.BufferLength);
 
                         break;
                     case ODataBatchReaderStreamScanResult.PartialMatch:
                         if (this.underlyingStreamExhausted)
                         {
                             // there is nothing else to load from the underlying stream; the requested boundary does not exist
-                            this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + this.batchBuffer.NumberOfBytesInBuffer);
+                            this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + this.BatchBuffer.NumberOfBytesInBuffer);
                             return false;
                         }
 
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/boundaryStartPosition);
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/boundaryStartPosition);
 
                         break;
                     case ODataBatchReaderStreamScanResult.Match:
                         // If we found the expected boundary, position the reader on the position after the boundary end.
                         // If we found a parent boundary, position the reader on the boundary start so we'll detect the boundary
                         // again on the next Read call.
-                        this.batchBuffer.SkipTo(isParentBoundary ? boundaryStartPosition : boundaryEndPosition + 1);
+                        this.BatchBuffer.SkipTo(isParentBoundary ? boundaryStartPosition : boundaryEndPosition + 1);
                         return true;
 
                     default:
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Core.MultipartMixed
             {
                 int boundaryStartPosition, boundaryEndPosition;
                 bool isEndBoundary, isParentBoundary;
-                scanResult = this.batchBuffer.ScanForBoundary(
+                scanResult = this.BatchBuffer.ScanForBoundary(
                     this.CurrentBoundaries,
                     remainingNumberOfBytesToRead,
                     out boundaryStartPosition,
@@ -228,18 +228,18 @@ namespace Microsoft.OData.Core.MultipartMixed
                         // The boundary was not found in the buffer or after the required number of bytes to be read;
                         // Check whether we can satisfy the full read request from the buffer
                         // or whether we have to split the request and read more data into the buffer.
-                        if (this.batchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
+                        if (this.BatchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
                         {
                             // we can satisfy the full read request from the buffer
-                            Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, remainingNumberOfBytesToRead);
-                            this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
+                            Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, remainingNumberOfBytesToRead);
+                            this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
                             return count;
                         }
                         else
                         {
                             // we can only partially satisfy the read request
-                            int availableBytesToRead = this.batchBuffer.NumberOfBytesInBuffer;
-                            Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, availableBytesToRead);
+                            int availableBytesToRead = this.BatchBuffer.NumberOfBytesInBuffer;
+                            Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, availableBytesToRead);
                             remainingNumberOfBytesToRead -= availableBytesToRead;
                             userBufferOffset += availableBytesToRead;
 
@@ -248,12 +248,12 @@ namespace Microsoft.OData.Core.MultipartMixed
                             {
                                 // We cannot fully satisfy the read request since there are not enough bytes in the stream.
                                 // Return the number of bytes we read.
-                                this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + availableBytesToRead);
+                                this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + availableBytesToRead);
                                 return count - remainingNumberOfBytesToRead;
                             }
                             else
                             {
-                                this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                                this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                             }
                         }
 
@@ -267,36 +267,36 @@ namespace Microsoft.OData.Core.MultipartMixed
                             // We cannot fully satisfy the read request since there are not enough bytes in the stream.
                             // Return the remaining bytes in the buffer independently of where a portentially boundary
                             // start was detected since no full boundary can ever be detected if the stream is exhausted.
-                            int bytesToReturn = Math.Min(this.batchBuffer.NumberOfBytesInBuffer, remainingNumberOfBytesToRead);
-                            Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, bytesToReturn);
-                            this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + bytesToReturn);
+                            int bytesToReturn = Math.Min(this.BatchBuffer.NumberOfBytesInBuffer, remainingNumberOfBytesToRead);
+                            Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, bytesToReturn);
+                            this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + bytesToReturn);
                             remainingNumberOfBytesToRead -= bytesToReturn;
                             return count - remainingNumberOfBytesToRead;
                         }
                         else
                         {
                             // Copy the bytes prior to the potential boundary start into the user buffer, refill the buffer and continue.
-                            bytesBeforeBoundaryStart = boundaryStartPosition - this.batchBuffer.CurrentReadPosition;
+                            bytesBeforeBoundaryStart = boundaryStartPosition - this.BatchBuffer.CurrentReadPosition;
                             Debug.Assert(bytesBeforeBoundaryStart < remainingNumberOfBytesToRead, "When reporting a partial match we should never have read all the remaining bytes to read (or more).");
 
-                            Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, bytesBeforeBoundaryStart);
+                            Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, bytesBeforeBoundaryStart);
                             remainingNumberOfBytesToRead -= bytesBeforeBoundaryStart;
                             userBufferOffset += bytesBeforeBoundaryStart;
 
-                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ boundaryStartPosition);
+                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ boundaryStartPosition);
                         }
 
                         break;
                     case ODataBatchReaderStreamScanResult.Match:
                         // We found the full boundary match; copy everything before the boundary to the buffer
-                        bytesBeforeBoundaryStart = boundaryStartPosition - this.batchBuffer.CurrentReadPosition;
+                        bytesBeforeBoundaryStart = boundaryStartPosition - this.BatchBuffer.CurrentReadPosition;
                         Debug.Assert(bytesBeforeBoundaryStart <= remainingNumberOfBytesToRead, "When reporting a full match we should never have read more than the remaining bytes to read.");
-                        Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, bytesBeforeBoundaryStart);
+                        Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, bytesBeforeBoundaryStart);
                         remainingNumberOfBytesToRead -= bytesBeforeBoundaryStart;
                         userBufferOffset += bytesBeforeBoundaryStart;
 
                         // position the reader on the position of the boundary start
-                        this.batchBuffer.SkipTo(boundaryStartPosition);
+                        this.BatchBuffer.SkipTo(boundaryStartPosition);
 
                         // return the number of bytes that were read
                         return count - remainingNumberOfBytesToRead;
@@ -331,18 +331,18 @@ namespace Microsoft.OData.Core.MultipartMixed
             {
                 // check whether we can satisfy the full read request from the buffer
                 // or whether we have to split the request and read more data into the buffer.
-                if (this.batchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
+                if (this.BatchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
                 {
                     // we can satisfy the full read request from the buffer
-                    Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, remainingNumberOfBytesToRead);
-                    this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
+                    Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, remainingNumberOfBytesToRead);
+                    this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + remainingNumberOfBytesToRead);
                     remainingNumberOfBytesToRead = 0;
                 }
                 else
                 {
                     // we can only partially satisfy the read request
-                    int availableBytesToRead = this.batchBuffer.NumberOfBytesInBuffer;
-                    Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, availableBytesToRead);
+                    int availableBytesToRead = this.BatchBuffer.NumberOfBytesInBuffer;
+                    Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, availableBytesToRead);
                     remainingNumberOfBytesToRead -= availableBytesToRead;
                     userBufferOffset += availableBytesToRead;
 
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     }
                     else
                     {
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                     }
                 }
             }
@@ -497,18 +497,18 @@ namespace Microsoft.OData.Core.MultipartMixed
             while (scanResult != ODataBatchReaderStreamScanResult.Match)
             {
                 int byteCount, lineEndStartPosition, lineEndEndPosition;
-                scanResult = this.batchBuffer.ScanForLineEnd(out lineEndStartPosition, out lineEndEndPosition);
+                scanResult = this.BatchBuffer.ScanForLineEnd(out lineEndStartPosition, out lineEndEndPosition);
 
                 switch (scanResult)
                 {
                     case ODataBatchReaderStreamScanResult.NoMatch:
-                        // Copy all the bytes in the batchBuffer into the result byte[] and then continue
-                        byteCount = this.batchBuffer.NumberOfBytesInBuffer;
+                        // Copy all the bytes in the BatchBuffer into the result byte[] and then continue
+                        byteCount = this.BatchBuffer.NumberOfBytesInBuffer;
                         if (byteCount > 0)
                         {
                             // TODO: [Design] Consider security limits for data being read
                             ODataBatchUtils.EnsureArraySize(ref bytesForString, lineBufferSize, byteCount);
-                            Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, bytesForString, lineBufferSize, byteCount);
+                            Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, bytesForString, lineBufferSize, byteCount);
                             lineBufferSize += byteCount;
                         }
 
@@ -523,11 +523,11 @@ namespace Microsoft.OData.Core.MultipartMixed
 
                             // Nothing more to read; stop looping
                             scanResult = ODataBatchReaderStreamScanResult.Match;
-                            this.batchBuffer.SkipTo(this.batchBuffer.CurrentReadPosition + byteCount);
+                            this.BatchBuffer.SkipTo(this.BatchBuffer.CurrentReadPosition + byteCount);
                         }
                         else
                         {
-                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                         }
 
                         break;
@@ -539,11 +539,11 @@ namespace Microsoft.OData.Core.MultipartMixed
                         // It is safe to copy the string right here because we will also accept \r as a line end; we are just not sure whether there
                         // will be a subsequent \n.
                         // This can also happen if the last byte in the stream is \r.
-                        byteCount = lineEndStartPosition - this.batchBuffer.CurrentReadPosition;
+                        byteCount = lineEndStartPosition - this.BatchBuffer.CurrentReadPosition;
                         if (byteCount > 0)
                         {
                             ODataBatchUtils.EnsureArraySize(ref bytesForString, lineBufferSize, byteCount);
-                            Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, bytesForString, lineBufferSize, byteCount);
+                            Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, bytesForString, lineBufferSize, byteCount);
                             lineBufferSize += byteCount;
                         }
 
@@ -551,28 +551,28 @@ namespace Microsoft.OData.Core.MultipartMixed
                         {
                             // Nothing more to read; stop looping
                             scanResult = ODataBatchReaderStreamScanResult.Match;
-                            this.batchBuffer.SkipTo(lineEndStartPosition + 1);
+                            this.BatchBuffer.SkipTo(lineEndStartPosition + 1);
                         }
                         else
                         {
-                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ lineEndStartPosition);
+                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ lineEndStartPosition);
                         }
 
                         break;
                     case ODataBatchReaderStreamScanResult.Match:
                         // We found a line end in the buffer
-                        Debug.Assert(lineEndStartPosition >= this.batchBuffer.CurrentReadPosition, "Line end must be at or after current position.");
-                        Debug.Assert(lineEndEndPosition < this.batchBuffer.CurrentReadPosition + this.batchBuffer.NumberOfBytesInBuffer, "Line end must finish withing buffer range.");
+                        Debug.Assert(lineEndStartPosition >= this.BatchBuffer.CurrentReadPosition, "Line end must be at or after current position.");
+                        Debug.Assert(lineEndEndPosition < this.BatchBuffer.CurrentReadPosition + this.BatchBuffer.NumberOfBytesInBuffer, "Line end must finish withing buffer range.");
 
-                        byteCount = lineEndStartPosition - this.batchBuffer.CurrentReadPosition;
+                        byteCount = lineEndStartPosition - this.BatchBuffer.CurrentReadPosition;
                         if (byteCount > 0)
                         {
                             ODataBatchUtils.EnsureArraySize(ref bytesForString, lineBufferSize, byteCount);
-                            Buffer.BlockCopy(this.batchBuffer.Bytes, this.batchBuffer.CurrentReadPosition, bytesForString, lineBufferSize, byteCount);
+                            Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, bytesForString, lineBufferSize, byteCount);
                             lineBufferSize += byteCount;
                         }
 
-                        this.batchBuffer.SkipTo(lineEndEndPosition + 1);
+                        this.BatchBuffer.SkipTo(lineEndEndPosition + 1);
                         break;
                     default:
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStream_ReadLine));

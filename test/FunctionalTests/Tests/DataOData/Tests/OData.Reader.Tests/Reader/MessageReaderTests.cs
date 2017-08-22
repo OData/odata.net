@@ -320,7 +320,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ODataMessageReaderTestWrapper messageReader;
 
                     // Specifying a non-null functionImport without an EdmModel should fail.
-                    message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*urlResolver*/null);
+                    message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*UrlResolver*/null);
                     messageReader = TestReaderUtils.CreateMessageReader(message, null, testConfiguration);
                     this.Assert.ExpectedException(
                         () => messageReader.CreateODataParameterReader(functionImport),
@@ -328,14 +328,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         this.ExceptionVerifier);
 
                     // Specifying a null functionImport should fail.
-                    message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*urlResolver*/null);
+                    message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*UrlResolver*/null);
                     messageReader = TestReaderUtils.CreateMessageReader(message, model, testConfiguration);
                     this.Assert.ExpectedException(
                         () => messageReader.CreateODataParameterReader(null),
                             ODataExpectedExceptions.ArgumentNullException("ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader", "operation"),
                         this.ExceptionVerifier);
 
-                    message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*urlResolver*/null);
+                    message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*UrlResolver*/null);
                     messageReader = TestReaderUtils.CreateMessageReader(message, model, testConfiguration);
                     if (testConfiguration.IsRequest)
                     {

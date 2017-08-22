@@ -145,6 +145,7 @@ namespace Microsoft.OData.Core
         /// <param name="outputStream">The output stream underlying the operation message.</param>
         /// <param name="operationListener">The operation listener.</param>
         /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="contentId">The string representing the content Id.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
         internal static ODataBatchOperationResponseMessage CreateWriteMessage(
             Stream outputStream,

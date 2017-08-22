@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Globalization;
-
 namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
@@ -20,7 +18,6 @@ namespace Microsoft.OData.Core.JsonLight
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 
     /// <summary>

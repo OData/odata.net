@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Text;
-
 #if SPATIAL
 namespace Microsoft.Data.Spatial
 #else
@@ -18,6 +16,7 @@ namespace Microsoft.OData.Core.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Text;
     using System.Xml;
     using Microsoft.OData.Edm.Library;
     #endregion Namespaces

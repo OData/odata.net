@@ -489,7 +489,7 @@ namespace Microsoft.OData.Core
         /// The write must flush the output when it's finished (inside the last Write call).
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual ODataBatchWriter  CreateODataBatchWriter(string batchBoundary)
+        internal virtual ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }

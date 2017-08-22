@@ -106,21 +106,6 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Disposes the object.
-        /// </summary>
-        /// <param name="disposing">True if called from Dispose; false if called form the finalizer.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // Dispose resource used by underlying batch reader stream.
-                this.batchReaderStream.DisposeResources();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        /// <summary>
         /// Create a batch operation read stream over the specified batch stream with a given content length.
         /// </summary>
         /// <param name="batchReaderStream">The batch stream underlying the operation stream to create.</param>
@@ -141,6 +126,21 @@ namespace Microsoft.OData.Core
         internal static ODataBatchOperationReadStream Create(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
         {
             return new ODataBatchOperationReadStreamWithDelimiter(batchReaderStream, listener);
+        }
+
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose; false if called form the finalizer.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose resource used by underlying batch reader stream.
+                this.batchReaderStream.DisposeResources();
+            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>
