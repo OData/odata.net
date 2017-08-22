@@ -268,23 +268,6 @@ namespace Microsoft.OData.Core.MultipartMixed
         }
 
         /// <summary>
-        /// Validates that HTTP GET is not allowed within changeset for MIME multipart/mixed batch format.
-        /// </summary>
-        /// <param name="httpMethod">The HTTP method string.</param>
-        private void ValidateQueryMethodNotAllowedInChangeSet(string httpMethod)
-        {
-            // Validate the HTTP method when reading a request
-            if (this.batchStream.ChangeSetBoundary != null)
-            {
-                // allow all methods except for GET
-                if (HttpUtils.IsQueryMethod(httpMethod))
-                {
-                    throw new ODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(httpMethod));
-                }
-            }
-        }
-
-        /// <summary>
         /// Continues reading from the batch message payload.
         /// </summary>
         /// <returns>true if more items were read; otherwise false.</returns>
@@ -342,7 +325,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                 case ODataBatchReaderState.ChangesetEnd:
                     // When at the end of a changeset, reset the changeset boundary and the
                     // changeset size and then skip to the next part.
-                    this.ResetChangeSetSize();
+                    this.ResetChangesetSize();
                     this.batchStream.ResetChangeSetBoundary();
                     this.State = this.SkipToNextPartAndReadHeaders();
                     break;
@@ -410,7 +393,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                 {
                     Debug.Assert(!isChangeSetPart, "Should have validated that nested changesets are not allowed.");
                     nextState = ODataBatchReaderState.Operation;
-                    this.IncreaseChangeSetSize();
+                    this.IncreaseChangesetSize();
                 }
                 else
                 {

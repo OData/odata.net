@@ -385,7 +385,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Increases the size of the current change set; throws if the allowed limit is exceeded.
         /// </summary>
-        protected void IncreaseChangeSetSize()
+        protected void IncreaseChangesetSize()
         {
             this.currentChangeSetSize++;
 
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Resets the size of the current change set to 0.
         /// </summary>
-        protected void ResetChangeSetSize()
+        protected void ResetChangesetSize()
         {
             this.currentChangeSetSize = 0;
         }

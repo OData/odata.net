@@ -498,7 +498,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                     if (this.atomicGroups.IsWithinAtomicGroup)
                     {
-                        this.IncreaseChangeSetSize();
+                        this.IncreaseChangesetSize();
                     }
                     else
                     {
@@ -518,7 +518,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 case ODataBatchReaderState.ChangesetEnd:
                 {
-                    this.ResetChangeSetSize();
+                    this.ResetChangesetSize();
                     ReadAtChangesetEndState(this.responsePropertiesCache);
                 }
                 break;
@@ -629,7 +629,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                     if (this.atomicGroups.IsWithinAtomicGroup)
                     {
-                        this.IncreaseChangeSetSize();
+                        this.IncreaseChangesetSize();
                     }
                     else
                     {
@@ -650,7 +650,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 case ODataBatchReaderState.ChangesetEnd:
                 {
-                    this.ResetChangeSetSize();
+                    this.ResetChangesetSize();
                     ReadAtChangesetEndState(this.requestPropertiesCache);
                 }
                 break;
