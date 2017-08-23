@@ -809,12 +809,14 @@ namespace Microsoft.OData.Core
                         // and at least in theory security issues.
                         contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
                     }
-                    else
+                    else if (this.format == ODataFormat.Json)
                     {
-                        Debug.Assert(this.format == ODataFormat.Json);
-
                         // Build the application/json content type
                         contentType = HttpUtils.BuildContentType(this.mediaType, this.encoding);
+                    }
+                    else
+                    {
+                        throw new ODataException(Strings.ODataMessageWriter_InvalidBatchFormat);
                     }
                 }
                 else

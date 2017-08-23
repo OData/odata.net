@@ -602,6 +602,17 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Invalid batch format: only multipart (Batch) or application/json are supported for batch."
+        /// </summary>
+        internal static string ODataMessageWriter_InvalidBatchFormat
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageWriter_InvalidBatchFormat);
+            }
+        }
+
+        /// <summary>
         /// A string like "Cannot set message headers for the invalid payload kind '{0}'."
         /// </summary>
         internal static string ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind(object p0) {

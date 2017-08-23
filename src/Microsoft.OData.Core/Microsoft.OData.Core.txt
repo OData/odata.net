@@ -102,6 +102,7 @@ ODataMessageWriter_CannotWriteMetadataWithoutModel=No model was specified in the
 ODataMessageWriter_CannotSpecifyOperationWithoutModel=No model was specified in the ODataMessageWriterSettings; a model has to be provided in the ODataMessageWriterSettings when CreateODataParameterWriter is called with a non-null operation.
 ODataMessageWriter_JsonPaddingOnInvalidContentType=A JsonPaddingFunctionName was specified, but the content-type '{0}' is not supported with Json Padding.
 ODataMessageWriter_NonCollectionType=The type '{0}' specified as the collection's item type is not primitive, enum or complex. An ODataCollectionWriter can only write collections of primitive, enum or complex values.
+ODataMessageWriter_InvalidBatchFormat=Invalid batch format: only multipart (Batch) or application/json are supported for batch.
 
 ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth=Both startEntryXmlCustomizationCallback and endEntryXmlCustomizationCallback must be either null or non-null.
 
