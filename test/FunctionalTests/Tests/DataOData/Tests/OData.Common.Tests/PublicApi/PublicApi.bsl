@@ -4630,8 +4630,6 @@ public sealed class Microsoft.OData.Core.ODataErrorDetail {
 	string ErrorCode  { public get; public set; }
 	string Message  { public get; public set; }
 	string Target  { public get; public set; }
-
-	public virtual string ToString ()
 }
 
 [
@@ -4690,8 +4688,6 @@ public sealed class Microsoft.OData.Core.ODataInnerError {
 	string Message  { public get; public set; }
 	string StackTrace  { public get; public set; }
 	string TypeName  { public get; public set; }
-
-	public virtual string ToString ()
 }
 
 public sealed class Microsoft.OData.Core.ODataInstanceAnnotation : Microsoft.OData.Core.ODataAnnotatable {

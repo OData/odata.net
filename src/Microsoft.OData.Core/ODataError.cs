@@ -93,7 +93,7 @@ namespace Microsoft.OData.Core
                 this.Message  == null ? ""  : JsonValueUtils.GetEscapedJsonString(this.Message),
                 this.Target == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Target),
                 this.Details == null ? "{}" : GetJsonStringForDetails(),
-                this.InnerError == null ? "{}" : this.InnerError.ToString());
+                this.InnerError == null ? "{}" : this.InnerError.ToJson());
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Core
         /// <returns>Json format string representing collection.</returns>
         private string GetJsonStringForDetails()
         {
-            return "[" + String.Join(",", this.Details.Select(i => i.ToString()).ToArray()) + "]";
+            return "[" + String.Join(",", this.Details.Select(i => i.ToJson()).ToArray()) + "]";
         }
     }
 }

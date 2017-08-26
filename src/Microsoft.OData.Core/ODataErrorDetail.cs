@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core
         /// Serilization to Json format string.
         /// </summary>
         /// <returns>The string in Json format</returns>
-        public override string ToString()
+        internal string ToJson()
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{{ \"errorcode\": \"{0}\", \"message\": \"{1}\", \"target\": \"{2}\" }}",

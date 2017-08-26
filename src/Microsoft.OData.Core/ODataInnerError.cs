@@ -80,7 +80,7 @@ namespace Microsoft.OData.Core
         /// Serilization to Json format string.
         /// </summary>
         /// <returns>The string in Json format</returns>
-        public override string ToString()
+        internal string ToJson()
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{{" +
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Core
                 this.Message == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Message),
                 this.TypeName == null ? "" : JsonValueUtils.GetEscapedJsonString(this.TypeName),
                 this.StackTrace == null ? "" : JsonValueUtils.GetEscapedJsonString(this.StackTrace),
-                this.InnerError == null ? "{}" : this.InnerError.ToString());
+                this.InnerError == null ? "{}" : this.InnerError.ToJson());
         }
     }
 }
