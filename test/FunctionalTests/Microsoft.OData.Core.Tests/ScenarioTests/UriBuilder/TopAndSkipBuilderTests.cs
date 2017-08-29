@@ -63,6 +63,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri res = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/People?$top=5&$skip=4"), res);
         }
+
+        [Fact]
+        public void BuildUrlWithSkipTokenODataUri()
+        {
+            ODataUri uri = new ODataUri();
+            uri.ServiceRoot = new Uri("http://gobbledygook/");
+            uri.SkipToken = "MyToken";
+            uri.Top = 5;
+            uri.Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet()));
+            Assert.Equal(uri.ParameterAliasNodes.Count, 0);
+
+            Uri res = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(new Uri("http://gobbledygook/People?$top=5&$skiptoken=MyToken"), res);
+        }
+
+        [Fact]
+        public void BuildUrlWithDeltaTokenODataUri()
+        {
+            ODataUri uri = new ODataUri();
+            uri.ServiceRoot = new Uri("http://gobbledygook/");
+            uri.DeltaToken = "MyToken";
+            uri.Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet()));
+            Assert.Equal(uri.ParameterAliasNodes.Count, 0);
+
+            Uri res = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(new Uri("http://gobbledygook/People?$deltatoken=MyToken"), res);
+        }
         #endregion
 
     }
