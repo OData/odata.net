@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.Json
             TextWriter textWriter,
             ODataMessageWriterSettings messageWriterSettings,
             IEdmModel model)
-            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*UrlResolver*/)
+            : base(format, messageWriterSettings, false /*writingResponse*/, true /*synchronous*/, model, null /*urlResolver*/)
         {
             Debug.Assert(textWriter != null, "textWriter != null");
 

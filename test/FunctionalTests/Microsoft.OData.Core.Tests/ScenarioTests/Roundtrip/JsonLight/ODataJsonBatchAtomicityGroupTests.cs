@@ -98,6 +98,16 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                               ""id"": ""g1r1"",
                               ""body"": {""userPrincipalName"": ""mu1@odata.org"", ""givenName"": ""Jon1"", ""surname"": ""Doe""}
                             },{
+                              ""method"": ""POST"",
+                              ""atomicityGroup"": ""g1"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                                ""OData-Version"": ""4.0""
+                              },
+                              ""id"": ""g1r2"",
+                              ""body"": {""userPrincipalName"": ""mu2@odata.org"", ""givenName"": ""Jon1"", ""surname"": ""Doe""}
+                            },{
                               ""id"": ""r2"",
                               ""dependsOn"": [""g1""],
                               ""method"": ""POST"",
@@ -106,7 +116,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                                 ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
                                 ""OData-Version"": ""4.0""
                               },
-                              ""body"": {""userPrincipalName"": ""mu6@odata.org"", ""givenName"": ""Jon6"", ""surname"": ""Doe""}
+                              ""body"": {""userPrincipalName"": ""mu5@odata.org"", ""givenName"": ""Jon6"", ""surname"": ""Doe""}
                             },{
                               ""id"": ""g2r6"",
                               ""dependsOn"": [""g1"", ""r2""],
@@ -118,14 +128,26 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                                 ""OData-Version"": ""4.0""
                               },
                               ""body"": {""userPrincipalName"": ""mu6@odata.org"", ""givenName"": ""Jon6"", ""surname"": ""Doe""}
+                            },{
+                              ""method"": ""POST"",
+                              ""atomicityGroup"": ""g3"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=none; odata.streaming=false"",
+                                ""OData-Version"": ""4.0""
+                              },
+                              ""id"": ""g3r1"",
+                              ""body"": {""userPrincipalName"": ""mu7@odata.org"", ""givenName"": ""Jon1"", ""surname"": ""Doe""}
                             }
                           ]
                         }",
                     ListOfDependsOnIds = new IList<string>[]
                     {
                         null,
-                        new List<string>(){"g1r1"},
-                        new List<string>{"g1r1", "r2"}
+                        null,
+                        new List<string>(){"g1r1", "g1r2"},
+                        new List<string>{"g1r1", "g1r2", "r2"},
+                        null
                     }
                 },
                 new ODataJsonBatchPayloadAtomicGroupTestCase
@@ -160,8 +182,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    //TODO: Would be best to get the string from resource file. For now, partial token serves the purpose.
-                    TokenInExceptionMessage = "Therefore dependsOn property should refer to atomic group Id"
+                    TokenInExceptionMessage = Core.Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed("g1r1", "g1")
                 },
                 new ODataJsonBatchPayloadAtomicGroupTestCase
                 {
@@ -195,8 +216,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    //TODO: Would be best to get the string from resource file. For now, partial token serves the purpose.
-                    TokenInExceptionMessage = "is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed."
+                    TokenInExceptionMessage = Core.Strings.ODataBatchReader_DependsOnIdNotFound("invalidId", "g2r6")
                 },
                 new ODataJsonBatchPayloadAtomicGroupTestCase
                 {
@@ -227,8 +247,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    //TODO: Would be best to get the string from resource file. For now, partial token serves the purpose.
-                    TokenInExceptionMessage = "Content IDs have to be unique across all operations of a change set."
+                    TokenInExceptionMessage = Core.Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed("duplicate")
                 },
                 new ODataJsonBatchPayloadAtomicGroupTestCase
                 {
@@ -259,8 +278,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    //TODO: Would be best to get the string from resource file. For now, partial token serves the purpose.
-                    TokenInExceptionMessage = "is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed."
+                    TokenInExceptionMessage = Core.Strings.ODataBatchReader_DependsOnIdNotFound("r2", "r1")
                 },
             };
 
@@ -289,9 +307,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(Encoding.ASCII.GetBytes(requestPayload)) };
             requestMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
+            MemoryStream responseStream = new MemoryStream();
+
             using (ODataMessageReader messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings(), this.edmModel))
             {
-                MemoryStream responseStream = new MemoryStream();
 
                 IODataResponseMessage responseMessage = new InMemoryMessage { Stream = responseStream };
 
@@ -365,9 +384,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 }
 
                 batchWriter.WriteEndBatch();
-                responseStream.Position = 0;
-                return responseStream.ToArray();
             }
+
+            responseStream.Position = 0;
+            return responseStream.ToArray();
         }
     }
 }

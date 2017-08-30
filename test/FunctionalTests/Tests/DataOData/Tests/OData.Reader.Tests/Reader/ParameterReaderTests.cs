@@ -310,7 +310,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmModel model = TestModels.BuildModelWithFunctionImport();
             IEdmOperationImport functionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_MultipleNullableParameters").Single();
 
-            var parameterValues = new[] 
+            var parameterValues = new[]
             {
               "\"p1\" : \"AAEC\"",
               "\"p2\" : true",
@@ -444,7 +444,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 messageStream = new TestStream();
             }
 
-            TestMessage message = TestReaderUtils.CreateInputMessageFromStream(messageStream, testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*UrlResolver*/null);
+            TestMessage message = TestReaderUtils.CreateInputMessageFromStream(messageStream, testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*urlResolver*/null);
             ODataMessageReaderTestWrapper messageReader = TestReaderUtils.CreateMessageReader(message, model, testConfiguration);
             return messageReader.CreateODataParameterReader(functionImport);
         }
