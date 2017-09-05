@@ -171,6 +171,8 @@ For example, the following custom primitive type resolver will recognize strings
      return null;
     }
 
+{% endhighlight %}
+
 To write a raw string into the payload, create an `ODataUntypedValue` and set the `RawValue` to the value to be written. Note that there is no validation of the contents of the string written to the payload and it will break clients if it is malformed or if it does not match the expected content-type of the payload.
 
 {% highlight csharp %}
