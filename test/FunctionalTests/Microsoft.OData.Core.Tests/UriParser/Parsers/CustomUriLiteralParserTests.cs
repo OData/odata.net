@@ -10,7 +10,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// <summary>
     /// Test the public API of CustomUriLiteralParser class
     /// </summary>
-    public class CustomUriLiteralParserUnitTests
+    public class CustomUriLiteralParserUnitTests : IDisposable
     {
         #region Consts
 
@@ -31,6 +31,30 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public const string BOOLEAN_LITERAL_PREFIX = "myCustomBooleanTypePrefixLiteral";
 
         public const string STRING_LITERAL_PREFIX = "myCustomStringTypePrefixLiteral";
+
+        #endregion
+
+        #region Private Fields
+
+        IUriLiteralParser _CustomHeartbeatUriTypePraser;
+
+        #endregion
+
+        #region Ctor
+
+        public CustomUriLiteralParserUnitTests()
+        {
+            _CustomHeartbeatUriTypePraser = new HeatBeatCustomUriLiteralParser();
+
+            CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HeatBeatCustomUriLiteralParser.HEARTBEAT_LITERAL_PREFIX, HeatBeatCustomUriLiteralParser.HeartbeatComplexType);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(HeatBeatCustomUriLiteralParser.HeartbeatComplexType, _CustomHeartbeatUriTypePraser);
+        }
+
+        public void Dispose()
+        {
+            CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HeatBeatCustomUriLiteralParser.HEARTBEAT_LITERAL_PREFIX);
+            CustomUriLiteralParsers.RemoveCustomUriLiteralParser(_CustomHeartbeatUriTypePraser);
+        }
 
         #endregion
 
@@ -797,30 +821,70 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CustomUriLiteralPrefix_CanSetCustomLiteralWithCustomLiteralParserCustomType()
         {
             RegisterTestCase("CustomUriLiteralPrefix_CanSetCustomLiteralWithCustomLiteralParserCustomType");
-            const string HEARTBEAT_LITERAL_PREFIX = "myCustomHeartbeatTypePrefixLiteral";
-            IUriLiteralParser customHeartbeatUriTypePraser = new HeatBeatCustomUriLiteralParser();
-            IEdmTypeReference heartbeatTypeReference = HeatBeatCustomUriLiteralParser.HeartbeatComplexType;
 
-            try
-            {
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HEARTBEAT_LITERAL_PREFIX, heartbeatTypeReference);
-                CustomUriLiteralParsers.AddCustomUriLiteralParser(heartbeatTypeReference, customHeartbeatUriTypePraser);
+            var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9'", HeatBeatCustomUriLiteralParser.HEARTBEAT_LITERAL_PREFIX));
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9'", HEARTBEAT_LITERAL_PREFIX));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+            HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue =
+              (parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(HeatBeatCustomUriLiteralParser.HeartbeatComplexType).And.Source as ConstantNode).
+              Value.As<HeatBeatCustomUriLiteralParser.HeatBeat>();
 
-                HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue =
-                  (parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(heartbeatTypeReference).And.Source as ConstantNode).
-                  Value.As<HeatBeatCustomUriLiteralParser.HeatBeat>();
+            heartbeatValue.Should().NotBeNull();
+            heartbeatValue.Frequency.Should().Be(55.9);
+        }
 
-                heartbeatValue.Should().NotBeNull();
-                heartbeatValue.Frequency.Should().Be(55.9);
-            }
-            finally
-            {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HEARTBEAT_LITERAL_PREFIX);
-                CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customHeartbeatUriTypePraser);
-            }
+        [Fact]
+        public void CustomUriLiteralPrefix_CanSetCustomComplexLiteralOtherUrlSegmentsBefore()
+        {
+            RegisterTestCase("CustomUriLiteralPrefix_CanSetCustomComplexLiteralOtherUrlSegmentsBefore");
+            var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=ID1 eq {0} and LionHeartbeat eq {1}'55.9'", 3, HeatBeatCustomUriLiteralParser.HEARTBEAT_LITERAL_PREFIX));
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+            SingleValueNode expressionParseResult = parser.ParseFilter().Expression;
+
+            int idValue =
+                (expressionParseResult.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.
+                Left.As<ConvertNode>().Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right as ConstantNode).
+                Value.As<int>();
+
+            idValue.Should().Be(3);
+
+            HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue =
+              (expressionParseResult.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.Right.
+              ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(HeatBeatCustomUriLiteralParser.HeartbeatComplexType).And.Source as ConstantNode).
+              Value.As<HeatBeatCustomUriLiteralParser.HeatBeat>();
+
+            heartbeatValue.Should().NotBeNull();
+            heartbeatValue.Frequency.Should().Be(55.9);
+
+        }
+
+        [Fact]
+        public void CustomUriLiteralPrefix_CanSetCustomComplexLiteralOtherUrlSegmentsAfter()
+        {
+            RegisterTestCase("CustomUriLiteralPrefix_CanSetCustomComplexLiteralOtherUrlSegmentsAfter");
+
+            var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9' and ID1 eq {1}", HeatBeatCustomUriLiteralParser.HEARTBEAT_LITERAL_PREFIX, 3));
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+            SingleValueNode expressionParseResult = parser.ParseFilter().Expression;
+
+            int idValue =
+                (expressionParseResult.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.
+                Right.
+                As<ConvertNode>().Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right as ConstantNode).
+                Value.As<int>();
+
+            idValue.Should().Be(3);
+
+            HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue =
+              (expressionParseResult.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.
+              Left.
+              ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(HeatBeatCustomUriLiteralParser.HeartbeatComplexType).And.Source as ConstantNode).
+              Value.As<HeatBeatCustomUriLiteralParser.HeatBeat>();
+
+            heartbeatValue.Should().NotBeNull();
+            heartbeatValue.Frequency.Should().Be(55.9);
         }
 
         [Fact]
@@ -847,7 +911,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 CustomUriLiteralParsers.RemoveCustomUriLiteralParser(customstringUriTypePraser);
             }
         }
-
 
         [Fact]
         public void CustomUriLiteralPrefix_ParseTypeWithCorrectLiteralPrefixAndUriParser()
@@ -1185,8 +1248,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
         }
 
-        internal class HeatBeatCustomUriLiteralParser : IUriLiteralParser
+        private class HeatBeatCustomUriLiteralParser : IUriLiteralParser
         {
+            public const string HEARTBEAT_LITERAL_PREFIX = "myCustomHeartbeatTypePrefixLiteral";
+
             public static EdmComplexTypeReference HeartbeatComplexType;
 
             static HeatBeatCustomUriLiteralParser()
@@ -1197,10 +1262,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
-                if (!RegisteredTestCases.Exists(testCase => Environment.StackTrace.ToString().Contains(testCase)))
-                {
-                    return null;
-                }
 
                 if (!targetType.IsEquivalentTo(HeartbeatComplexType))
                 {
@@ -1212,12 +1273,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 }
 
                 // Take care of literals
-                if (!text.StartsWith("myCustomHeartbeatTypePrefixLiteral"))
+                if (!text.StartsWith(HEARTBEAT_LITERAL_PREFIX))
                 {
                     return null;
                 }
 
-                text = text.Replace("myCustomHeartbeatTypePrefixLiteral", string.Empty);
+                text = text.Replace(HEARTBEAT_LITERAL_PREFIX, string.Empty);
 
                 if (!UriParserHelper.IsUriValueQuoted(text))
                 {
