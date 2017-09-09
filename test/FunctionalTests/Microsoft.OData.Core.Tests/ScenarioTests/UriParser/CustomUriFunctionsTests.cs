@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
 using Xunit;
 using Microsoft.OData.Edm;
@@ -16,7 +14,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
     public class CustomUriFunctionsTests : IDisposable
     {
         #region Constants
-
         // Existing built-in uri functions
         private const string BUILT_IN_GEODISTANCE_FUNCTION_NAME = "geo.distance";
 
