@@ -537,6 +537,44 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
+        /// Try getting the constant DateTimeOffset node value
+        /// </summary>
+        /// <param name="sourceNodeOrNull">The Node</param>
+        /// <param name="primitiveValue">The out parameter if succeeds</param>
+        /// <returns>true if the constant node is for date type</returns>
+        internal static bool TryGetConstantNodePrimitiveDate(SingleValueNode sourceNodeOrNull, out object primitiveValue)
+        {
+            primitiveValue = null;
+
+            ConstantNode constantNode = sourceNodeOrNull as ConstantNode;
+            if (constantNode != null)
+            {
+                IEdmPrimitiveTypeReference primitiveTypeReference = constantNode.TypeReference.AsPrimitiveOrNull();
+                if (primitiveTypeReference != null)
+                {
+                    IEdmPrimitiveType primitiveType = primitiveTypeReference.Definition as IEdmPrimitiveType;
+
+                    switch (primitiveType.PrimitiveKind)
+                    {
+                        case EdmPrimitiveTypeKind.DateTimeOffset:
+                            Date result;
+                            if (UriParser.UriUtils.TryUriStringToDate(constantNode.LiteralText, out result))
+                            {
+                                primitiveValue = constantNode.LiteralText;
+                                return true;
+                            }
+
+                            break;
+                        default:
+                            return false;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Tries getting the constant node's primitive L M D F value (which can be converted to other primitive type while primitive AccessPropertyNode can't).
         /// </summary>
         /// <param name="sourceNodeOrNull">The Node</param>
@@ -549,9 +587,11 @@ namespace Microsoft.OData.Metadata
             ConstantNode tmp = sourceNodeOrNull as ConstantNode;
             if (tmp != null)
             {
-                IEdmPrimitiveType primitiveType = tmp.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
-                if (primitiveType != null)
+                IEdmPrimitiveTypeReference primitiveTypeReference = tmp.TypeReference.AsPrimitiveOrNull();
+                if (primitiveTypeReference != null)
                 {
+                    IEdmPrimitiveType primitiveType = primitiveTypeReference.Definition as IEdmPrimitiveType;
+
                     switch (primitiveType.PrimitiveKind)
                     {
                         case EdmPrimitiveTypeKind.Int32:

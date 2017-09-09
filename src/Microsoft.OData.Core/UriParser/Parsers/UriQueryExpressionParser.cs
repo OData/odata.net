@@ -604,7 +604,18 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            LiteralToken result = new LiteralToken(targetValue, lexer.CurrentToken.Text);
+            LiteralToken result;
+
+            if (targetTypeReference.IsPrimitive())
+            {
+                result = new LiteralToken(targetValue, lexer.CurrentToken.Text);
+            }
+            // For non-primitive type, we have to pass parameterType to LiteralToken, then to ConstantNode so the service can know what the type it is.
+            else
+            {
+                result = new LiteralToken(targetValue, lexer.CurrentToken.Text, targetTypeReference);
+            }
+
             lexer.NextToken();
             return result;
         }

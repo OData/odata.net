@@ -1,21 +1,27 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
-using Xunit;
-using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.OData.Tests.UriParser;
+using FluentAssertions;
+using Microsoft.OData.Core;
+using Microsoft.OData.Core.Tests.UriParser;
+using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Core.UriParser.Parsers.Common;
+using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Library;
+using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Tests the CustomUriFunctions class.
     /// </summary>
-    public class CustomUriFunctionsTests
+    public class CustomUriFunctionsTests : IDisposable
     {
         #region Constants
 
@@ -26,6 +32,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                             EdmCoreModel.Instance.GetDouble(true),
                             EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true),
                             EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true));
+
+        #endregion
+
+        #region Private Fields
+
+        IUriLiteralParser _CustomFoodUriTypePraser;
+
+        #endregion
+
+        #region Ctor
+
+        public CustomUriFunctionsTests()
+        {
+            _CustomFoodUriTypePraser = new FoodCustomUriLiteralParser();
+
+            CustomUriLiteralPrefixes.AddCustomLiteralPrefix(FoodCustomUriLiteralParser.FOOD_LITERAL_PREFIX, FoodCustomUriLiteralParser.FoodComplexType);
+            CustomUriLiteralParsers.AddCustomUriLiteralParser(FoodCustomUriLiteralParser.FoodComplexType, _CustomFoodUriTypePraser);
+        }
+
+        public void Dispose()
+        {
+            CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(FoodCustomUriLiteralParser.FOOD_LITERAL_PREFIX);
+            CustomUriLiteralParsers.RemoveCustomUriLiteralParser(_CustomFoodUriTypePraser);
+        }
 
         #endregion
 
@@ -534,6 +564,226 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
         }
 
+        [Fact]
+        public void ParseWithCustomUriFunction_WithOtherSegmentsBeforeAndAfter()
+        {
+            try
+            {
+                FunctionSignatureWithReturnType myStringFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("mystringfunction", myStringFunction);
+
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=ID gt 1 and mystringfunction(Name, 'BlaBla') and ID lt 5");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                SingleValueNode expression = parser.ParseFilter().Expression;
+                expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And.Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThan);
+                expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.Left.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And.Source.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+
+                var startsWithArgs = expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And.Right.
+                    ShouldBeSingleValueFunctionCallQueryNode("mystringfunction").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("mystringfunction").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_BooleanEqualTrue()
+        {
+            try
+            {
+                FunctionSignatureWithReturnType myStringFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("mystringfunction", myStringFunction);
+
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mystringfunction(Name, 'BlaBla') eq true");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                SingleValueNode resultExpression = parser.ParseFilter().Expression;
+
+                (resultExpression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And.Source as ConstantNode).Value.As<bool>().Should().BeTrue();
+
+                var startsWithArgs = resultExpression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left.ShouldBeSingleValueFunctionCallQueryNode("mystringfunction").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("mystringfunction").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_BooleanEqualFalse()
+        {
+            try
+            {
+                FunctionSignatureWithReturnType myStringFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("mystringfunction", myStringFunction);
+
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mystringfunction(Name, 'BlaBla') eq false");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                SingleValueNode resultExpression = parser.ParseFilter().Expression;
+
+                (resultExpression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Boolean).And.Source as ConstantNode).Value.As<bool>().Should().BeFalse();
+
+                var startsWithArgs = resultExpression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left.ShouldBeSingleValueFunctionCallQueryNode("mystringfunction").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("mystringfunction").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_IntReturnType()
+        {
+            try
+            {
+                FunctionSignatureWithReturnType myIntFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetInt32(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("myIntFunction", myIntFunction);
+
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=myIntFunction(Name, 'BlaBla') eq 6");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                SingleValueNode parsedExpression = parser.ParseFilter().Expression;
+
+                var startsWithArgs = parsedExpression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left.
+                    ShouldBeSingleValueFunctionCallQueryNode("myIntFunction").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+
+                parsedExpression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode<int>(6);
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("myIntFunction").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_WithComplexType()
+        {
+            try
+            {
+                FunctionSignatureWithReturnType myComplexFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true),
+                        FoodCustomUriLiteralParser.FoodComplexType,
+                        EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("myComplexFunction", myComplexFunction);
+
+                var fullUri = new Uri("http://www.odata.com/OData/Lions?$filter=myComplexFunction(FavoriteFood, 'BlaBla')");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("myComplexFunction").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.None).And.Source.ShouldBeSingleValuePropertyAccessQueryNode(FoodCustomUriLiteralParser.FoodLionsProperty);
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("myComplexFunction").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_WithComplexReturnType()
+        {
+            FunctionSignatureWithReturnType myComplexFunction
+                = new FunctionSignatureWithReturnType(
+                    FoodCustomUriLiteralParser.FoodComplexType,
+                    FoodCustomUriLiteralParser.FoodComplexType,
+                    EdmCoreModel.Instance.GetString(true));
+
+            try
+            {                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("myComplexFunctionWithReturnValue", myComplexFunction);
+
+                var fullUri = new Uri(string.Format("http://www.odata.com/OData/Lions?$filter=myComplexFunctionWithReturnValue(FavoriteFood, 'BlaBla') eq {0}'Yogev'", FoodCustomUriLiteralParser.FOOD_LITERAL_PREFIX));
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                SingleValueNode expressionParseResult = parser.ParseFilter().Expression;
+
+                FoodCustomUriLiteralParser.Food colorValue =
+                  (expressionParseResult.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                  And.Right as ConstantNode).
+                  Value.As<FoodCustomUriLiteralParser.Food>();
+
+                colorValue.Should().NotBeNull();
+                colorValue.Color.Should().Be("Yogev");
+
+                var startsWithArgs = expressionParseResult.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                  And.Left.ShouldBeSingleValueFunctionCallQueryNode("myComplexFunctionWithReturnValue").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.None).And.Source.ShouldBeSingleValuePropertyAccessQueryNode(FoodCustomUriLiteralParser.FoodLionsProperty);
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("myComplexFunctionWithReturnValue");
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_WithComplexReturnTypeAndOtherUrlSegments()
+        {
+            FunctionSignatureWithReturnType myComplexFunction
+                = new FunctionSignatureWithReturnType(
+                    FoodCustomUriLiteralParser.FoodComplexType,
+                    FoodCustomUriLiteralParser.FoodComplexType,
+                    EdmCoreModel.Instance.GetString(true));
+
+            try
+            {
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("myComplexFunction", myComplexFunction);
+
+                var fullUri = new Uri(string.Format("http://www.odata.com/OData/Lions?$filter=myComplexFunction(FavoriteFood, 'BlaBla') eq {0}'Yogev' and ID1 eq {1}", FoodCustomUriLiteralParser.FOOD_LITERAL_PREFIX, 3));
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+
+                SingleValueNode expressionParseResult = parser.ParseFilter().Expression;
+
+                BinaryOperatorNode binary = expressionParseResult.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And).And;
+
+                (binary.Right.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right as ConstantNode).
+                    Value.As<int>().Should().Be(3);
+
+                FoodCustomUriLiteralParser.Food colorValue =
+                  (binary.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                  And.Right as ConstantNode).
+                  Value.As<FoodCustomUriLiteralParser.Food>();
+
+                colorValue.Should().NotBeNull();
+                colorValue.Color.Should().Be("Yogev");
+
+                var startsWithArgs = binary.Left.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                  And.Left.ShouldBeSingleValueFunctionCallQueryNode("myComplexFunction").And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.None).And.Source.ShouldBeSingleValuePropertyAccessQueryNode(FoodCustomUriLiteralParser.FoodLionsProperty);
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("myComplexFunction");
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -544,6 +794,61 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CustomUriFunctions.TryGetCustomFunction(customFunctionName, out resultFunctionSignaturesWithReturnType);
 
             return resultFunctionSignaturesWithReturnType as FunctionSignatureWithReturnType[];
+        }
+
+        #endregion
+
+        #region Private Classes
+
+        private class FoodCustomUriLiteralParser : IUriLiteralParser
+        {
+            public const string FOOD_LITERAL_PREFIX = "myCustomFoodTypePrefixLiteral";
+
+            public static EdmComplexTypeReference FoodComplexType;
+            public static IEdmStructuralProperty FoodLionsProperty;
+
+            static FoodCustomUriLiteralParser()
+            {
+                FoodComplexType = new EdmComplexTypeReference(HardCodedTestModel.GetFoodComplexType(), false);
+                FoodLionsProperty = HardCodedTestModel.GetFoodStructuredProperty();
+            }
+
+            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            {
+                parsingException = null;
+
+                if (!targetType.IsEquivalentTo(FoodComplexType))
+                {
+                    return null;
+                }
+                if (text == null)
+                {
+                    return null;
+                }
+
+                // Take care of literals
+                if (!text.StartsWith(FOOD_LITERAL_PREFIX))
+                {
+                    return null;
+                }
+
+                text = text.Replace(FOOD_LITERAL_PREFIX, string.Empty);
+
+                if (!UriParserHelper.IsUriValueQuoted(text))
+                {
+                    parsingException = new UriLiteralParsingException("Edm.Food value must be quoted");
+                    return null;
+                }
+
+                text = UriParserHelper.RemoveQuotes(text);
+
+                return new Food() { Color = text };
+            }
+
+            internal class Food
+            {
+                public string Color { get; set; }
+            }
         }
 
         #endregion
