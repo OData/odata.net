@@ -155,6 +155,9 @@
     <Compile Include="MaterializeFromAtom.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="Attribute\IgnoreClientPropertyAttribute.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
   </ItemGroup>
 
   <Import Project="..\Build.props" />
