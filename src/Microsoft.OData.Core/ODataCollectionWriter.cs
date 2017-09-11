@@ -28,12 +28,12 @@ namespace Microsoft.OData
         public abstract Task WriteStartAsync(ODataCollectionStart collectionStart);
 #endif
 
-        /// <summary>Starts writing a resource.</summary>
+        /// <summary>Write a collection item.</summary>
         /// <param name="item">The collection item to write.</param>
         public abstract void WriteItem(object item);
 
 #if PORTABLELIB
-        /// <summary>Asynchronously start writing a collection item.</summary>
+        /// <summary>Asynchronously write a collection item.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="item">The collection item to write.</param>
         public abstract Task WriteItemAsync(object item);

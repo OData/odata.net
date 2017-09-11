@@ -76,5 +76,12 @@ namespace Microsoft.OData
         /// In this state the Item property of the <see cref="ODataReader"/> returns null.
         /// </remarks>
         Completed,
+
+        /// <summary>The reader is positioned on a non-null primivite value within an untyped collection.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataPrimitiveValue"/>.
+        /// </remarks>
+        Primitive,
     }
 }

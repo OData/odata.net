@@ -119,6 +119,32 @@ namespace Microsoft.OData
         public abstract Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo);
 #endif
 
+        /// <summary>Writes a primitive value within an untyped collection.</summary>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        public virtual void WritePrimitive(ODataPrimitiveValue primitiveValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Writes a primitive value within an untyped collection.</summary>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataPrimitiveValue primitiveValue)
+        {
+            WritePrimitive(primitiveValue);
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously write a primitive value within an untyped collection. </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        public virtual Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitive(primitiveValue));
+        }
+#endif
+
         /// <summary>Finishes the writing of a resource set, a resource, or a nested resource info.</summary>
         public abstract void WriteEnd();
 

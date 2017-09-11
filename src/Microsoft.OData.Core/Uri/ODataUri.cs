@@ -54,6 +54,7 @@ namespace Microsoft.OData
         /// <param name="skip">Any $skip option for this uri. Can be null.</param>
         /// <param name="top">Any $top option for this uri. Can be null.</param>
         /// <param name="queryCount">Any query $count option for this uri. Can be null.</param>
+        /// <param name="compute">Any query $compute option for this uri. Can be null.</param>
         internal ODataUri(
             ParameterAliasValueAccessor parameterAliasValueAccessor,
             ODataPath path,
@@ -65,7 +66,8 @@ namespace Microsoft.OData
             ApplyClause apply,
             long? skip,
             long? top,
-            bool? queryCount)
+            bool? queryCount,
+            ComputeClause compute = null)
         {
             this.ParameterAliasValueAccessor = parameterAliasValueAccessor;
             this.Path = path;
@@ -78,6 +80,7 @@ namespace Microsoft.OData
             this.Skip = skip;
             this.Top = top;
             this.QueryCount = queryCount;
+            this.Compute = compute;
         }
 
         /// <summary>
@@ -164,6 +167,11 @@ namespace Microsoft.OData
         /// Gets or sets any $apply option for this uri.
         /// </summary>
         public ApplyClause Apply { get; set; }
+
+        /// <summary>
+        /// Gets or sets any $compute option for this uri.
+        /// </summary>
+        public ComputeClause Compute { get; set; }
 
         /// <summary>
         /// Gets or sets any $skip option for this uri.

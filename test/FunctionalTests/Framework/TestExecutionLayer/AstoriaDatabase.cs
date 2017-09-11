@@ -173,7 +173,10 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             {
                 if (_databaseName == null)
                 {
-                    _databaseName = String.Format("{0}_{1}_{2}", this.DatabasePrefixName, System.Net.Dns.GetHostName(), Guid.NewGuid().ToString("N"));
+                    _databaseName = String.Format("{0}_{1}_{2}",
+                        this.DatabasePrefixName,
+                        System.Net.Dns.GetHostName().Replace('-', '_'),
+                        Guid.NewGuid().ToString("N"));
                 }
 
                 return _databaseName;

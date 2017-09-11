@@ -449,6 +449,7 @@ namespace Microsoft.OData.UriParser
             OrderByClause orderBy = this.ParseOrderBy();
             SearchClause search = this.ParseSearch();
             ApplyClause apply = this.ParseApply();
+            ComputeClause compute = this.ParseCompute();
             long? top = this.ParseTop();
             long? skip = this.ParseSkip();
             bool? count = this.ParseCount();
@@ -458,7 +459,7 @@ namespace Microsoft.OData.UriParser
             // TODO:  check it shouldn't be empty
             List<QueryNode> boundQueryOptions = new List<QueryNode>();
 
-            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, count);
+            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, count, compute);
             odataUri.ServiceRoot = this.serviceRoot;
             odataUri.SkipToken = skipToken;
             odataUri.DeltaToken = deltaToken;

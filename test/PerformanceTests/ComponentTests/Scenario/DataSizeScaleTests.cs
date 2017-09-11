@@ -25,6 +25,7 @@ namespace Microsoft.OData.Performance
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedDataSize_4MB()
         {
             long numberOfEntries = 0;
@@ -49,6 +50,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedDataSize_8MB()
         {
             long numberOfEntries = 0;
@@ -73,6 +75,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedDataSize_4MB()
         {
             long numberOfEntries = 0;
@@ -99,6 +102,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedDataSize_8MB()
         {
             long numberOfEntries = 0;

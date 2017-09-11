@@ -32,13 +32,13 @@ namespace Microsoft.OData.UriParser
         /// Used for General uri literal parsers. These parsers will be called for every text that has to parsed.
         /// The parses could parse multiple EdmTypes.
         /// </summary>
-        private static List<IUriLiteralParser> customUriLiteralParsers = new List<IUriLiteralParser>();
+        private static IUriLiteralParser[] customUriLiteralParsers = new IUriLiteralParser[0];
 
         /// <summary>
         /// "Registered" uri literal parser to an EdmType. These parsers will be called when the text has to be parsed to the
         /// specific EdmType they had registered to. Each of these parsers could parse only one EdmType. Better performace.
         /// </summary>
-        private static List<UriLiteralParserPerEdmType> customUriLiteralParserPerEdmType = new List<UriLiteralParserPerEdmType>();
+        private static UriLiteralParserPerEdmType[] customUriLiteralParserPerEdmType = new UriLiteralParserPerEdmType[0];
 
         //// TODO: Consider use Dictionary<EmdTypeReference,IUriLiteralParser> which is a better solution.
         //// The problem with dictionary is to generate an HashCode for an EdmTypeReference.
@@ -85,33 +85,37 @@ namespace Microsoft.OData.UriParser
         {
             object targetValue;
 
+            IUriLiteralParser uriLiteralParserForEdmType;
+            IUriLiteralParser[] localCustomUriLiteralParsers;
             lock (Locker)
             {
-                // Search for Uri literal parser which is registered for the given EdmType
-                IUriLiteralParser uriLiteralParserForEdmType = GetUriLiteralParserByEdmType(targetType);
-                if (uriLiteralParserForEdmType != null)
+                uriLiteralParserForEdmType = GetUriLiteralParserByEdmType(targetType);
+                localCustomUriLiteralParsers = customUriLiteralParsers;
+            }
+
+            // Search for Uri literal parser which is registered for the given EdmType
+            if (uriLiteralParserForEdmType != null)
+            {
+                return uriLiteralParserForEdmType.ParseUriStringToType(text, targetType, out parsingException);
+            }
+
+            // Parse with all the general parsers
+            // Stop when a parser succeeded parsing the text.
+            foreach (IUriLiteralParser customUriLiteralParser in localCustomUriLiteralParsers)
+            {
+                // Try to parse
+                targetValue = customUriLiteralParser.ParseUriStringToType(text, targetType, out parsingException);
+
+                // The uriCustomParser could parse the given targetType but failed during the parsing proccess
+                if (parsingException != null)
                 {
-                    return uriLiteralParserForEdmType.ParseUriStringToType(text, targetType, out parsingException);
+                    return null;
                 }
 
-                // Parse with all the general parsers
-                // Stop when a parser succeeded parsing the text.
-                foreach (IUriLiteralParser customUriLiteralParser in customUriLiteralParsers)
+                // In case of no exception and no value - The parse cannot parse the given text
+                if (targetValue != null)
                 {
-                    // Try to parse
-                    targetValue = customUriLiteralParser.ParseUriStringToType(text, targetType, out parsingException);
-
-                    // The uriCustomParser could parse the given targetType but failed during the parsing proccess
-                    if (parsingException != null)
-                    {
-                        return null;
-                    }
-
-                    // In case of no exception and no value - The parse cannot parse the given text
-                    if (targetValue != null)
-                    {
-                        return targetValue;
-                    }
+                    return targetValue;
                 }
             }
 
@@ -141,7 +145,7 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
                 }
 
-                customUriLiteralParsers.Add(customUriLiteralParser);
+                customUriLiteralParsers = customUriLiteralParsers.Concat(new IUriLiteralParser[] { customUriLiteralParser }).ToArray();
             }
         }
 
@@ -165,12 +169,16 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(edmTypeReference.FullName()));
                 }
 
-                customUriLiteralParserPerEdmType.Add(
-                    new UriLiteralParserPerEdmType
+                customUriLiteralParserPerEdmType = customUriLiteralParserPerEdmType.Concat(
+                    new UriLiteralParserPerEdmType[]
                     {
-                        EdmTypeOfUriParser = edmTypeReference,
-                        UriLiteralParser = customUriLiteralParser
-                    });
+                        new UriLiteralParserPerEdmType
+                        {
+                            EdmTypeOfUriParser = edmTypeReference,
+                            UriLiteralParser = customUriLiteralParser
+                        }
+                    })
+                    .ToArray();
             }
         }
 
@@ -188,13 +196,23 @@ namespace Microsoft.OData.UriParser
             lock (Locker)
             {
                 // Remove parser from the customUriLiteralParserPerEdmType. Same instance can be registered to multiple EdmTypes.
-                int numberOfParsersRemoved = customUriLiteralParserPerEdmType.RemoveAll((parser) => parser.UriLiteralParser.Equals(customUriLiteralParser));
+                UriLiteralParserPerEdmType[] newCustomUriLiteralParserPerEdmType = customUriLiteralParserPerEdmType
+                    .Where((parser) => !parser.UriLiteralParser.Equals(customUriLiteralParser))
+                    .ToArray();
 
                 // Remove parser from the general custom uri literal parsers. Same instance can be add only once.
-                bool isGeneralParserRemoved = customUriLiteralParsers.Remove(customUriLiteralParser);
+                IUriLiteralParser[] newCustomUriLiteralParsers = customUriLiteralParsers
+                    .Where((parser) => !parser.Equals(customUriLiteralParser))
+                    .ToArray();
 
                 // Returns 'True' if at least one parser has been removed from the general parser of those registered to EdmType
-                return (numberOfParsersRemoved > 0) || isGeneralParserRemoved;
+                bool removed = newCustomUriLiteralParserPerEdmType.Length < customUriLiteralParserPerEdmType.Length ||
+                    newCustomUriLiteralParsers.Length < customUriLiteralParsers.Length;
+
+                customUriLiteralParserPerEdmType = newCustomUriLiteralParserPerEdmType;
+                customUriLiteralParsers = newCustomUriLiteralParsers;
+
+                return removed;
             }
         }
 

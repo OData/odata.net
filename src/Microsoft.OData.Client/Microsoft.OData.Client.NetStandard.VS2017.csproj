@@ -1,0 +1,231 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Client</AssemblyName>
+    <RootNamespace>Microsoft.OData.Client</RootNamespace>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>True</DelaySign>
+    <SignAssembly>True</SignAssembly>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <DefineConstants>$(DefineConstants);ODATA_CLIENT;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;SUPPRESS_SECURITY_RULES</DefineConstants>
+    <EnableLocalization>true</EnableLocalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Build.NetStandard\**" />
+    <Compile Remove="Build.NuGet\**" />
+    <Compile Remove="Build.Portable\**" />
+    <Compile Remove="Diagrams\**" />
+    <EmbeddedResource Remove="Build.NetStandard\**" />
+    <EmbeddedResource Remove="Build.NuGet\**" />
+    <EmbeddedResource Remove="Build.Portable\**" />
+    <EmbeddedResource Remove="Diagrams\**" />
+    <None Remove="Build.NetStandard\**" />
+    <None Remove="Build.NuGet\**" />
+    <None Remove="Build.Portable\**" />
+    <None Remove="Diagrams\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ALinq\ProjectionAnalyzer.cs" />
+    <Compile Remove="ALinq\ProjectionRewriter.cs" />
+    <Compile Remove="ALinq\ProjectionQueryOptionExpression.cs" />
+    <Compile Remove="ALinq\ReflectionUtil.cs" />
+    <Compile Remove="ALinq\ResourceExpression.cs" />
+    <Compile Remove="ALinq\ExpressionNormalizer.cs" />
+    <Compile Remove="ALinq\ResourceBinder.cs" />
+    <Compile Remove="ArraySet.cs" />
+    <Compile Remove="AtomParser.cs" />
+    <Compile Remove="DataServiceTransportInfo.cs" />
+    <Compile Remove="Error.cs" />
+    <Compile Remove="MaterializeFromAtom.cs" />
+    <Compile Remove="Metadata\EdmEntitySetFacade.cs" />
+    <Compile Remove="Metadata\EdmFunctionImportFacade.cs" />
+    <Compile Remove="Metadata\EdmFunctionParameterFacade.cs" />
+    <Compile Remove="Metadata\EdmNavigationPropertyFacade.cs" />
+    <Compile Remove="Microsoft.OData.Client.cs" />
+    <Compile Remove="Parameterized.Microsoft.OData.Client.cs" />
+    <Compile Remove="ShippingAssemblyAttributes.cs" />
+    <None Remove="Microsoft.OData.Client.Common.txt" />
+    <None Remove="Microsoft.OData.Client.Desktop.txt" />
+    <None Remove="Microsoft.OData.Client.tt" />
+    <None Remove="Microsoft.OData.Client.txt" />
+    <None Remove="Parameterized.Microsoft.OData.Client.tt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <PackageReference Include="System.ComponentModel.EventBasedAsync" Version="4.3.0" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
+    <PackageReference Include="System.Net.Requests" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.OData.Core\Microsoft.OData.Core.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.NetStandard.VS2017.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
+    <!-- Files reused from the server code base. -->
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" Link="EdmValueParser.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" Link="EdmValueWriter.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\EdmValueUtils.cs" Link="EdmValueUtils.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataResourceMetadataBuilder.cs" Link="ODataResourceMetadataBuilder.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataUriBuilder.cs" Link="ODataUriBuilder.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Json\JsonSharedUtils.cs" Link="Serialization\JsonSharedUtils.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\SimpleLazy.cs" Link="SimpleLazy.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\LiteralFormatter.cs" Link="LiteralFormatter.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\KeySerializer.cs" Link="KeySerializer.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs" Link="Metadata\EdmLibraryExtensions.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\InternalErrorCodesCommon.cs" Link="InternalErrorCodesCommon.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs" Link="ALinq\UriParser\SyntacticAst\AggregateExpressionToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateToken.cs" Link="ALinq\UriParser\SyntacticAst\AggregateToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\ApplyTransformationToken.cs" Link="ALinq\UriParser\SyntacticAst\ApplyTransformationToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\GroupByToken.cs" Link="ALinq\UriParser\SyntacticAst\GroupByToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\AllToken.cs" Link="ALinq\UriParser\SyntacticAst\AllToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\AnyToken.cs" Link="ALinq\UriParser\SyntacticAst\AnyToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\BinaryOperatorToken.cs" Link="ALinq\UriParser\SyntacticAst\BinaryOperatorToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ComputeToken.cs" Link="ALinq\UriParser\SyntacticAst\ComputeToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ComputeExpressionToken.cs" Link="ALinq\UriParser\SyntacticAst\ComputeExpressionToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\CustomQueryOptionToken.cs" Link="ALinq\UriParser\SyntacticAst\CustomQueryOptionToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\DottedIdentifierToken.cs" Link="ALinq\UriParser\SyntacticAst\DottedIdentifierToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\EndPathToken.cs" Link="ALinq\UriParser\SyntacticAst\EndPathToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\ExceptionUtils.cs" Link="ALinq\UriParser\ExceptionUtils.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ExpandTermToken.cs" Link="ALinq\UriParser\SyntacticAst\ExpandTermToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ExpandToken.cs" Link="ALinq\UriParser\SyntacticAst\ExpandToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\FunctionCallToken.cs" Link="ALinq\UriParser\SyntacticAst\FunctionCallToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\FunctionParameterAliasToken.cs" Link="ALinq\UriParser\SyntacticAst\FunctionParameterAliasToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\FunctionParameterToken.cs" Link="ALinq\UriParser\SyntacticAst\FunctionParameterToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\InnerPathToken.cs" Link="ALinq\UriParser\SyntacticAst\InnerPathToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\IPathSegmentTokenVisitor.cs" Link="ALinq\UriParser\Visitors\IPathSegmentTokenVisitor.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\ISyntacticTreeVisitor.cs" Link="ALinq\UriParser\Visitors\ISyntacticTreeVisitor.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\SyntacticTreeVisitor.cs" Link="ALinq\UriParser\Visitors\SyntacticTreeVisitor.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\LambdaToken.cs" Link="ALinq\UriParser\SyntacticAst\LambdaToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\LiteralToken.cs" Link="ALinq\UriParser\SyntacticAst\LiteralToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\NamedValue.cs" Link="ALinq\UriParser\NamedValue.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\NonSystemToken.cs" Link="ALinq\UriParser\SyntacticAst\NonSystemToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\OrderByToken.cs" Link="ALinq\UriParser\SyntacticAst\OrderByToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\PathSegmentToken.cs" Link="ALinq\UriParser\SyntacticAst\PathSegmentToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\PathToken.cs" Link="ALinq\UriParser\SyntacticAst\PathToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryToken.cs" Link="ALinq\UriParser\SyntacticAst\QueryToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryTokenKind.cs" Link="ALinq\UriParser\SyntacticAst\QueryTokenKind.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\RangeVariableToken.cs" Link="ALinq\UriParser\SyntacticAst\RangeVariableToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\ReadOnlyEnumerableForUriParser.cs" Link="ALinq\UriParser\ReadOnlyEnumerableForUriParser.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\SelectToken.cs" Link="ALinq\UriParser\SyntacticAst\SelectToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\StarToken.cs" Link="ALinq\UriParser\SyntacticAst\StarToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\SystemToken.cs" Link="ALinq\UriParser\SyntacticAst\SystemToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\UnaryOperatorToken.cs" Link="ALinq\UriParser\SyntacticAst\UnaryOperatorToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\TaskUtils.cs" Link="Client\TaskUtils.cs" />
+    <Compile Include="ALinq\ProjectionRewriter.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ALinq\ProjectionAnalyzer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ALinq\ProjectionQueryOptionExpression.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ALinq\ReflectionUtil.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ALinq\ResourceExpression.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ALinq\ExpressionNormalizer.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ALinq\ResourceBinder.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ArraySet.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Error.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="MaterializeFromAtom.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+
+  <Import Project="..\Build.props" />
+
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Client.txt">
+      <ResFile>Microsoft.OData.Client</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Client.TextRes</FullClassName>
+      <SRAttributes>skip</SRAttributes>
+    </TextStringResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="ShippingAssemblyAttributes.cs">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Diagrams\ALinq.cd">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ALinq.cs</LastGenOutput>
+    </None>
+    <None Include="Diagrams\Materialization.cd" />
+  </ItemGroup>
+
+  <Target Name="BuildTextFile">
+    <Exec Command="copy &quot;$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.Common.txt&quot; + Microsoft.OData.Client.Portable.txt Microsoft.OData.Client.txt /B" />
+  </Target>
+
+  <PropertyGroup>
+    <GenerateTextStringResourcesDependsOn>BuildTextFile;$(GenerateTextStringResourcesDependsOn)</GenerateTextStringResourcesDependsOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Common.txt" />
+    <Content Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Client.Portable.cs</LastGenOutput>
+    </None>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.OData.Client.Portable.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <None Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Parameterized.Microsoft.OData.Client.Portable.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Client.Portable.cs</LastGenOutput>
+    </None>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Parameterized.Microsoft.OData.Client.Portable.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.OData.Client.Portable.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+
+</Project>
