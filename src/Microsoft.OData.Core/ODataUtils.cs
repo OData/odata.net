@@ -21,6 +21,9 @@ namespace Microsoft.OData
         /// <summary>String representation of the version 4.0 of the OData protocol.</summary>
         private const string Version4NumberString = "4.0";
 
+        /// <summary>String representation of the version 4.01 of the OData protocol.</summary>
+        private const string Version4Dot01NumberString = "4.01";
+
         /// <summary>Sets the content-type and OData-Version headers on the message used by the message writer.</summary>
         /// <returns>The content-type and OData-Version headers on the message used by the message writer.</returns>
         /// <param name="messageWriter">The message writer to set the headers for.</param>
@@ -110,6 +113,9 @@ namespace Microsoft.OData
                 case ODataVersion.V4:
                     return Version4NumberString;
 
+                case ODataVersion.V4_01:
+                    return Version4Dot01NumberString;
+
                 default:
                     // invalid enum value - unreachable.
                     throw new ODataException(Strings.ODataUtils_UnsupportedVersionNumber);
@@ -138,6 +144,9 @@ namespace Microsoft.OData
             {
                 case Version4NumberString:
                     return ODataVersion.V4;
+
+                case Version4Dot01NumberString:
+                    return ODataVersion.V4_01;
 
                 default:
                     // invalid version string

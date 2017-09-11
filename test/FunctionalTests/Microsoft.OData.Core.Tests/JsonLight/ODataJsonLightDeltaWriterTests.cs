@@ -946,11 +946,11 @@ namespace Microsoft.OData.Tests.JsonLight
                             "\"Orders@delta\":" +
                             "[" +
                                 "{" +
-                                    "\"@id\":\"Orders(10643)\"," +
                                     "\"@removed\":" +
                                     "{" +
                                         "\"reason\":\"deleted\"" +
-                                    "}" +
+                                    "}," +
+                                    "\"@id\":\"Orders(10643)\"" +
                                 "}" +
                             "]" +
                         "}" +

@@ -102,11 +102,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// OData Version being written.
-        /// </summary>
-        internal ODataVersion? Version { get; set; }
-
-        /// <summary>
         /// An enumeration representing the current state of the writer.
         /// </summary>
         internal enum WriterState
@@ -153,6 +148,11 @@ namespace Microsoft.OData
             /// <summary>The writer is in error state; nothing can be written anymore.</summary>
             Error
         }
+
+        /// <summary>
+        /// OData Version being written.
+        /// </summary>
+        internal ODataVersion? Version { get; set; }
 
         /// <summary>
         /// The current scope for the writer.
@@ -562,7 +562,7 @@ namespace Microsoft.OData
             });
         }
 #endif
-        
+
         /// <summary>
         /// Writing a delta deleted link.
         /// </summary>
@@ -845,7 +845,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Write a delta link or delta deleted link.
         /// </summary>
-        /// <param name="deletedEntry">The deleted entry to write.</param>
+        /// <param name="deltaLink">The deleted entry to write.</param>
         protected virtual void StartDeltaLink(ODataDeltaLinkBase deltaLink)
         {
             // todo: improve error message
@@ -1065,15 +1065,12 @@ namespace Microsoft.OData
                     }
                 }
             }
-
             else
             {
                 resourceSerializationInfo = new ODataResourceSerializationInfo
                 {
                     NavigationSourceName = serializationInfo.NavigationSourceName,
                     NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
-                    NavigationSourceEntityTypeName = null, // Won't write out in delta (deleted) entries.
-                    ExpectedTypeName = null // Same as above.
                 };
             }
 
@@ -1374,7 +1371,7 @@ namespace Microsoft.OData
                     else
                     {
                         resourceScope.ResourceTypeFromMetadata = this.ParentScope.ResourceType;
-                        if (this.CurrentResourceSetValidator != null && (this.ParentScope.State != WriterState.DeltaResourceSet || this.currentResourceDepth > 2 ))
+                        if (this.CurrentResourceSetValidator != null && (this.ParentScope.State != WriterState.DeltaResourceSet || this.currentResourceDepth > 2))
                             {
                                 // Validate the consistency of resource types in the top-level resource sets
                                 this.CurrentResourceSetValidator.ValidateResource(resourceType);
@@ -2048,7 +2045,6 @@ namespace Microsoft.OData
                 {
                     ((ResourceSetScope)currentScope).ResourceCount++;
                 }
-
                 else if (currentState == WriterState.DeltaResourceSet)
                 {
                     ((DeltaResourceSetScope)currentScope).ResourceCount++;
@@ -2215,10 +2211,9 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.DeltaResourceSet:
-                    if (newState != WriterState.Resource && newState != WriterState.DeletedResource && !(this.ScopeLevel <3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
+                    if (newState != WriterState.Resource && newState != WriterState.DeletedResource && !(this.ScopeLevel < 3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
                     {
-                        // TODO: update error message
-                        throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -2230,7 +2225,7 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.NestedResourceInfoWithContent:
-                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.DeltaResourceSet)
+                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && (this.Version < ODataVersion.V4_01 || newState != WriterState.DeltaResourceSet))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink(this.State.ToString(), newState.ToString()));
                     }
@@ -2307,7 +2302,6 @@ namespace Microsoft.OData
                 {
                     resourceScope.ResourceTypeFromMetadata = entityTypeFromResourceSet;
                 }
-
                 else
                 {
                     deletedResourceScope.ResourceTypeFromMetadata = entityTypeFromResourceSet;
@@ -2764,7 +2758,7 @@ namespace Microsoft.OData
 
             /// <summary>The number of entries in this delta resource set seen so far.</summary>
             private int resourceCount;
-            
+
             /// <summary>Maintains the write status for each annotation using its key.</summary>
             private InstanceAnnotationWriteTracker instanceAnnotationWriteTracker;
 
@@ -2791,22 +2785,6 @@ namespace Microsoft.OData
             }
 
             /// <summary>
-            /// The number of entries in this delta resource set seen so far.
-            /// </summary>
-            internal int ResourceCount
-            {
-                get
-                {
-                    return this.resourceCount;
-                }
-
-                set
-                {
-                    this.resourceCount = value;
-                }
-            }
-
-            /// <summary>
             /// Tracks the write status of the annotations.
             /// </summary>
             public InstanceAnnotationWriteTracker InstanceAnnotationWriteTracker
@@ -2826,6 +2804,22 @@ namespace Microsoft.OData
             /// The context uri info created for this scope.
             /// </summary>
             public ODataContextUrlInfo ContextUriInfo { get; set; }
+
+            /// <summary>
+            /// The number of entries in this delta resource set seen so far.
+            /// </summary>
+            internal int ResourceCount
+            {
+                get
+                {
+                    return this.resourceCount;
+                }
+
+                set
+                {
+                    this.resourceCount = value;
+                }
+            }
 
             /// <summary>
             /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
@@ -3002,7 +2996,6 @@ namespace Microsoft.OData
             /// <summary>
             /// Constructor to create a new resource scope.
             /// </summary>
-            /// <param name="state">The writer state of this scope.</param>
             /// <param name="resource">The resource for the new scope.</param>
             /// <param name="serializationInfo">The serialization info for the current resource.</param>
             /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
@@ -3084,7 +3077,7 @@ namespace Microsoft.OData
         /// <summary>
         /// A scope for a delta link.
         /// </summary>
-        protected abstract class DeltaLinkScope : Scope
+        internal abstract class DeltaLinkScope : Scope
         {
             /// <summary>The serialization info for the current link.</summary>
             private readonly ODataResourceSerializationInfo serializationInfo;

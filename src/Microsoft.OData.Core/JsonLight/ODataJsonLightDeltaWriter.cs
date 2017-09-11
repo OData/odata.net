@@ -309,7 +309,7 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         void IODataOutputInStreamErrorListener.OnInStreamError()
         {
-            //TODO: hook up to resourcewriter...
+            //TODO: [MikeP] hook up to resourcewriter...
             //this.VerifyNotDisposed();
 
             //// We're in a completed state trying to write an error (we can't write error after the payload was finished as it might

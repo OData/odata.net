@@ -170,9 +170,9 @@ namespace Microsoft.OData
                         break;
                 }
             }
-
-            else // no path information
+            else
             {
+                // No path information
                 switch (info.DeltaKind)
                 {
                     case ODataDeltaKind.ResourceSet:
@@ -189,7 +189,6 @@ namespace Microsoft.OData
                 {   // #TypeName
                     builder.Append(info.TypeName);
                 }
-
                 else
                 {
                     return null;

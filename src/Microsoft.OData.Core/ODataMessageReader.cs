@@ -119,7 +119,11 @@ namespace Microsoft.OData
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against request message.
-            ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            if (requestedVersion > this.settings.MaxProtocolVersion)
+            {
+                throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
+            }
 
             this.model = model ?? GetModel(this.container);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
@@ -160,7 +164,11 @@ namespace Microsoft.OData
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against response message.
-            ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            if (requestedVersion > this.settings.MaxProtocolVersion)
+            {
+                throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
+            }
 
             this.model = model ?? GetModel(this.container);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);

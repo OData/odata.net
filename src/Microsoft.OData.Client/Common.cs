@@ -149,6 +149,9 @@ namespace Microsoft.OData.Service
                 case ODataProtocolVersion.V4:
                     return ODataVersion.V4;
 
+                case ODataProtocolVersion.V401:
+                    return ODataVersion.V4_01;
+
                 default:
                     Debug.Assert(false, "Need to add a case for the new version that got added");
                     return (ODataVersion)(-1);
@@ -164,8 +167,15 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(version != null, "version != null");
 
-            Debug.Assert(version.Major == 4 && version.Minor == 0, "version.Major == 4 && version.Minor == 0");
-            return ODataVersion.V4;
+            Debug.Assert(version.Major == 4 && (version.Minor == 0 || version.Minor == 1), "version.Major == 4 && version.Minor == 0  || version.Minor == 1");
+            if (version.Major == 4 && version.Minor == 1)
+            {
+                return ODataVersion.V4_01;
+            }
+            else
+            {
+                return ODataVersion.V4;
+            }
         }
 
         /// <summary>

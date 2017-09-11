@@ -269,6 +269,7 @@ namespace Microsoft.OData {
         internal const string ODataUtils_DidNotFindDefaultMediaType = "ODataUtils_DidNotFindDefaultMediaType";
         internal const string ODataUtils_UnsupportedVersionHeader = "ODataUtils_UnsupportedVersionHeader";
         internal const string ODataUtils_UnsupportedVersionNumber = "ODataUtils_UnsupportedVersionNumber";
+        internal const string ODataUtils_MaxProtocolVersionExceeded = "ODataUtils_MaxProtocolVersionExceeded";
         internal const string ODataUtils_ModelDoesNotHaveContainer = "ODataUtils_ModelDoesNotHaveContainer";
         internal const string ReaderUtils_EnumerableModified = "ReaderUtils_EnumerableModified";
         internal const string ReaderValidationUtils_NullValueForNonNullableType = "ReaderValidationUtils_NullValueForNonNullableType";

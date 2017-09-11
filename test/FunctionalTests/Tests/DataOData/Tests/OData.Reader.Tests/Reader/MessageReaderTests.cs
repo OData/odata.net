@@ -68,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of constructor of ODataMessageReader in regard to verion validation.")]
+        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of constructor of ODataMessageReader in regard to version validation.")]
         public void MessageReaderConstructorVersionsTest()
         {
             var versions = new[]
@@ -77,6 +77,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         DataServiceVersion = "4.0",
                         ODataVersion = ODataVersion.V4,
+                        ExpectedException = (ExpectedException)null
+                    },
+                    new
+                    {
+                        DataServiceVersion = "4.01",
+                        ODataVersion = ODataVersion.V4_01,
                         ExpectedException = (ExpectedException)null
                     },
                     new
@@ -108,7 +114,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     ExpectedException expectedException = version.ExpectedException ??
                         (maxProtocolVersion < version.ODataVersion
-                            ? ODataExpectedExceptions.ODataException("ODataVersionChecker_MaxProtocolVersionExceeded", version.ODataVersion.ToText(), maxProtocolVersion.ToText())
+                            ? ODataExpectedExceptions.ODataException("ODataUtils_MaxProtocolVersionExceeded", version.ODataVersion.ToText(), maxProtocolVersion.ToText())
                             : (ExpectedException)null);
 
                     this.Assert.ExpectedException(

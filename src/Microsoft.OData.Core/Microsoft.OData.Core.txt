@@ -242,7 +242,8 @@ ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType=Type verification faile
 
 ODataUtils_CannotConvertValueToRawString=The value of type '{0}' could not be converted to a raw string.
 ODataUtils_DidNotFindDefaultMediaType=A default MIME type could not be found for the requested payload in format '{0}'.
-ODataUtils_UnsupportedVersionHeader=The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' is supported as values for the OData-Version header.
+ODataUtils_UnsupportedVersionHeader=The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' and '4.01' are supported as values for the OData-Version header.
+ODataUtils_MaxProtocolVersionExceeded=An OData version of {0} was specified and the maximum supported OData version is {1}.
 ODataUtils_UnsupportedVersionNumber=An invalid enum value was specified for the version number.
 ODataUtils_ModelDoesNotHaveContainer=The provided model does not contain an entity container.
 

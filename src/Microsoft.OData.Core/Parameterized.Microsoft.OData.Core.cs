@@ -1580,7 +1580,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' is supported as values for the OData-Version header."
+        /// A string like "The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' and '4.01' are supported as values for the OData-Version header."
         /// </summary>
         internal static string ODataUtils_UnsupportedVersionHeader(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_UnsupportedVersionHeader, p0);
@@ -1593,6 +1593,14 @@ namespace Microsoft.OData {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_UnsupportedVersionNumber);
             }
+        }
+
+        /// <summary>
+        /// A string like "An OData version of {0} was specified and the maximum supported OData version is {1}."
+        /// </summary>
+        internal static string ODataUtils_MaxProtocolVersionExceeded(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_MaxProtocolVersionExceeded, p0, p1);
         }
 
         /// <summary>
