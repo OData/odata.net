@@ -652,7 +652,6 @@ namespace Microsoft.OData.JsonLight
                         ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
 
                 this.WriteDeltaResourceId(resource);
-                this.WriteDeltaResourceProperties(resource.Properties);
                 this.WriteDeltaResourceReason(resource);
             }
             else

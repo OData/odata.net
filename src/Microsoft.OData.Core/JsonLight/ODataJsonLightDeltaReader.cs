@@ -1262,7 +1262,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is the id property - read it.
+            // If the current node is the reason property - read it.
             if (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property &&
                 string.CompareOrdinal(JsonLightConstants.ODataReasonPropertyName, this.jsonLightResourceDeserializer.JsonReader.GetPropertyName()) == 0)
             {
