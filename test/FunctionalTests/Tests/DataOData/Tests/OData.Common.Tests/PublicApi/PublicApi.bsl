@@ -4470,7 +4470,7 @@ public sealed class Microsoft.OData.Core.ODataAsynchronousWriter : IODataOutputI
 public sealed class Microsoft.OData.Core.ODataBatchOperationRequestMessage : IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
 	public const readonly string ContentId = 
 
-	System.Collections.Generic.IList`1[[System.String]] DependsOnRequestIds  { public get; public set; }
+	System.Collections.Generic.IList`1[[System.String]] DependsOnRequestIds  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
 	System.Uri Url  { public virtual get; public virtual set; }

@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core
         /// <param name="contentId">The content-ID for the operation request message.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
-        /// <param name="dependsOnRequestIds">The list of request Ids that current request has dependency on.</param>
+        /// <param name="dependsOnRequestIds">The enumeration of request Ids that current request has dependency on.</param>
         private ODataBatchOperationRequestMessage(
             Func<Stream> contentStreamCreatorFunc,
             string method,
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core
             string contentId,
             IODataUrlResolver urlResolver,
             bool writing,
-            IList<string> dependsOnRequestIds)
+            IEnumerable<string> dependsOnRequestIds)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -76,7 +76,9 @@ namespace Microsoft.OData.Core
             this.ContentId = contentId;
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, urlResolver, writing);
-            this.dependsOnRequestIds = dependsOnRequestIds;
+            this.dependsOnRequestIds = dependsOnRequestIds != null
+                ? new List<string>(dependsOnRequestIds)
+                : new List<string>();
         }
 
         /// <summary>Gets an enumerable over all the headers for this message.</summary>
@@ -110,11 +112,6 @@ namespace Microsoft.OData.Core
             get
             {
                 return this.dependsOnRequestIds;
-            }
-
-            set
-            {
-                this.dependsOnRequestIds = value;
             }
         }
 
