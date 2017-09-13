@@ -42,7 +42,7 @@ namespace Microsoft.OData.Core
         /// ODL-caller needs to ensure that all the prerequisites have returned successfully
         /// before current operation can start.
         /// </summary>
-        private IList<string> dependsOnRequestIds;
+        private readonly IList<string> dependsOnRequestIds;
 
         /// <summary>
         /// Constructor. Creates a request message for an operation of a batch request.
