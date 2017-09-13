@@ -209,15 +209,5 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ODataBatchOperationMessage_VerifyNotCompleted);
             }
         }
-
-        /// <summary>
-        /// Queries the operation listener for the specified type.
-        /// </summary>
-        /// <typeparam name="TType">The class type to query for.</typeparam>
-        /// <returns>The typed instance as specified, or null if operation listener is not of the specified type.</returns>
-        internal TType QueryOperationListenerType<TType>() where TType : class
-        {
-            return this.operationListener as TType;
-        }
     }
 }

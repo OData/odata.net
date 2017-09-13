@@ -104,11 +104,8 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         public void Dispose()
         {
-            if (this.streamWriter != null)
-            {
-                // Note that the stream writer will dispose the underlying stream as well.
-                this.streamWriter.Dispose();
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -274,6 +271,18 @@ namespace Microsoft.OData.Core.JsonLight
             base.DisposeResources();
         }
 
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.streamWriter != null)
+                {
+                    // Note that the stream writer will dispose the underlying stream as well.
+                    this.streamWriter.Dispose();
+                }
+            }
+        }
+
         /// <summary>
         /// Detect batch item (request or response) body content's data type.
         /// The conent of the "body" property can be either Json type or binary type.
@@ -355,12 +364,14 @@ namespace Microsoft.OData.Core.JsonLight
                     }
 
                     break;
+
                     case JsonNodeType.Property:
                     {
                         jsonWriter.WriteName(reader.Value.ToString());
                     }
 
                     break;
+
                     case JsonNodeType.StartObject:
                     {
                         nodeTypes.Push(reader.NodeType);
@@ -368,6 +379,7 @@ namespace Microsoft.OData.Core.JsonLight
                     }
 
                     break;
+
                     case JsonNodeType.StartArray:
                     {
                         nodeTypes.Push(reader.NodeType);
@@ -375,6 +387,7 @@ namespace Microsoft.OData.Core.JsonLight
                     }
 
                     break;
+
                     case JsonNodeType.EndObject:
                     {
                         Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartObject);
@@ -383,6 +396,7 @@ namespace Microsoft.OData.Core.JsonLight
                     }
 
                     break;
+
                     case JsonNodeType.EndArray:
                     {
                         Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartArray);
@@ -391,6 +405,7 @@ namespace Microsoft.OData.Core.JsonLight
                     }
 
                     break;
+
                     default:
                     {
                         throw new ODataException(String.Format(

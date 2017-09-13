@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
-
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -15,11 +13,8 @@ namespace Microsoft.OData.Core
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
-    using System.Text;
-
     using Microsoft.OData.Core.Json;
     #endregion Namespaces
-
 
     /// <summary>
     /// Class representing an error payload.

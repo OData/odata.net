@@ -2757,12 +2757,6 @@ namespace Microsoft.OData.Service
                 string contentIdValue = operationRequestMessage.ContentId;
                 if (!String.IsNullOrEmpty(contentIdValue))
                 {
-//                    int contentId;
-//                    if (!Int32.TryParse(contentIdValue, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out contentId))
-//                    {
-//                        throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeAnInteger(contentIdValue));
-//                    }
-
                     if (!contentIds.Add(contentIdValue))
                     {
                         throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeUniqueInBatch(contentIdValue));

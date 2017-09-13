@@ -10,8 +10,6 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.Linq;
-
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
@@ -53,6 +51,8 @@ namespace Microsoft.OData.Client
         /// <summary>The service edm model.</summary>
         private IEdmModel serviceModel;
 
+        private BatchType batchType;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataServiceClientFormat"/> class.
         /// </summary>
@@ -64,9 +64,15 @@ namespace Microsoft.OData.Client
             // On V6.0.2, we change the default format to be json for the client
             this.ODataFormat = ODataFormat.Json;
 
-            this.IsJsonBatchFormat = false;
+            this.batchType = BatchType.MultipartMixed;
 
             this.context = context;
+        }
+
+        private enum BatchType
+        {
+            MultipartMixed,
+            ApplicationJson
         }
 
         /// <summary>
@@ -114,16 +120,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the flag for using Json in current batch request.
-        /// Default value is false.
-        /// For now, ODL-client sets both the Accept and Content-Type headers to application/json
-        /// if this flag is set to true.
-        /// </summary>
-        internal bool IsJsonBatchFormat { get; private set; }
-
-        /// <summary>
         /// Indicates that the client should use the JSON format for the batch request.
-        /// Will invoke the LoadServiceModel delegate property in order to get the required service model.
         /// </summary>
         public void UseJsonForBatch()
         {
@@ -132,7 +129,7 @@ namespace Microsoft.OData.Client
                 throw new InvalidOperationException(Strings.DataServiceClientFormat_LoadServiceModelRequired);
             }
 
-            this.IsJsonBatchFormat = true;
+            this.batchType = BatchType.ApplicationJson;
         }
 
         /// <summary>
@@ -228,7 +225,7 @@ namespace Microsoft.OData.Client
         internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers)
         {
             this.SetAcceptHeaderAndCharset(headers,
-                this.IsJsonBatchFormat
+                this.batchType == BatchType.ApplicationJson
                 ? MimeApplicationJson
                 : MimeMultiPartMixed);
         }
@@ -241,7 +238,7 @@ namespace Microsoft.OData.Client
         internal void SetRequestContentTypeHeaderForBatch(HeaderCollection headers)
         {
             this.SetRequestContentTypeHeader(headers,
-                this.IsJsonBatchFormat
+                this.batchType == BatchType.ApplicationJson
                 ? MimeApplicationJson
                 : string.Format(
                         CultureInfo.InvariantCulture, "{0}; {1}={2}_{3}",

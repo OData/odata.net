@@ -42,7 +42,7 @@ namespace Microsoft.OData.Core
         /// ODL-caller needs to ensure that all the prerequisites have returned successfully
         /// before current operation can start.
         /// </summary>
-        private readonly IList<string> dependsOnRequestIds;
+        private IList<string> dependsOnRequestIds;
 
         /// <summary>
         /// Constructor. Creates a request message for an operation of a batch request.
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core
             string contentId,
             IODataUrlResolver urlResolver,
             bool writing,
-            IList<string> dependsOnRequestIds = null)
+            IList<string> dependsOnRequestIds)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -107,7 +107,15 @@ namespace Microsoft.OData.Core
         /// </summary>
         public IList<string> DependsOnRequestIds
         {
-            get { return this.dependsOnRequestIds; }
+            get
+            {
+                return this.dependsOnRequestIds;
+            }
+
+            set
+            {
+                this.dependsOnRequestIds = value;
+            }
         }
 
         /// <summary>
@@ -182,7 +190,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(operationListener != null, "operationListener != null");
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true);
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true, null);
         }
 
         /// <summary>

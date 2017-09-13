@@ -41,12 +41,12 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // value
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType),ODataFormat.RawValue),
             },
             // binary
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType) ,ODataFormat.RawValue),
             },
             // collection
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // metadata document
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata),
             },
             // error
@@ -68,11 +68,11 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // delta
             new ODataMediaTypeFormat[]
-            { 
+            {
             },
             // async
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType) ,ODataFormat.RawValue),
             },
         };
@@ -169,9 +169,9 @@ namespace Microsoft.OData.Core.Tests
                 ODataMediaType expectedMediaType = MyFormat.MediaTypeWithFormatA.MediaType;
                 if (payloadKind == ODataPayloadKind.Batch)
                 {
-                    expectedBoundary = "ba_" + Guid.NewGuid();
-                    contentType += ";boundary=" + expectedBoundary;
-                    expectedMediaType = new ODataMediaType("text", "x-A", new KeyValuePair<string, string>("boundary", expectedBoundary));
+                    string boundaryParamValue = "ba_" + Guid.NewGuid();
+                    contentType += ";boundary=" + boundaryParamValue;
+                    expectedMediaType = new ODataMediaType("text", "x-A", new KeyValuePair<string, string>("boundary", boundaryParamValue));
                 }
 
                 ODataMediaType mediaType;

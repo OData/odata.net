@@ -158,8 +158,8 @@ namespace Microsoft.OData.Core.MultipartMixed
 
                         // skip everything in the buffer and refill it from the underlying stream; continue scanning
                         this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ODataBatchReaderStreamBuffer.BufferLength);
-
                         break;
+
                     case ODataBatchReaderStreamScanResult.PartialMatch:
                         if (this.underlyingStreamExhausted)
                         {
@@ -169,8 +169,8 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
 
                         this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/boundaryStartPosition);
-
                         break;
+
                     case ODataBatchReaderStreamScanResult.Match:
                         // If we found the expected boundary, position the reader on the position after the boundary end.
                         // If we found a parent boundary, position the reader on the boundary start so we'll detect the boundary
@@ -258,6 +258,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
 
                         break;
+
                     case ODataBatchReaderStreamScanResult.PartialMatch:
                         // A partial match for the boundary was found at the end of the buffer.
                         // If the underlying stream is not exceeded, refill the buffer. Otherwise return
@@ -287,6 +288,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
 
                         break;
+
                     case ODataBatchReaderStreamScanResult.Match:
                         // We found the full boundary match; copy everything before the boundary to the buffer
                         bytesBeforeBoundaryStart = boundaryStartPosition - this.BatchBuffer.CurrentReadPosition;
@@ -531,6 +533,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
 
                         break;
+
                     case ODataBatchReaderStreamScanResult.PartialMatch:
                         // We found the start of a line end in the buffer but could not verify whether we saw all of it.
                         // This can happen if a line end is represented as \r\n and we found \r at the very last position in the buffer.
@@ -559,6 +562,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
 
                         break;
+
                     case ODataBatchReaderStreamScanResult.Match:
                         // We found a line end in the buffer
                         Debug.Assert(lineEndStartPosition >= this.BatchBuffer.CurrentReadPosition, "Line end must be at or after current position.");
@@ -574,6 +578,7 @@ namespace Microsoft.OData.Core.MultipartMixed
 
                         this.BatchBuffer.SkipTo(lineEndEndPosition + 1);
                         break;
+
                     default:
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStream_ReadLine));
                 }
