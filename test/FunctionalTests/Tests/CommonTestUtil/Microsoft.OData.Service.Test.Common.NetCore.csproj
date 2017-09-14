@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Service.Test.Common</AssemblyName>
+    <RootNamespace>Microsoft.OData.Service.Test.Common</RootNamespace>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <OutputPath>..\..\..\..\bin\AnyCPU\$(Configuration)\Test\.NETPortable</OutputPath>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TransparentAssembly>true</TransparentAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Microsoft.OData.TestCommon\SpatialFactory.cs" Link="SpatialFactory.cs" />
+    <Compile Include="..\..\Microsoft.Spatial.Tests\PositionData.cs" Link="PositionData.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+    <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.NetStandard.VS2017.csproj" />
+  </ItemGroup>
+
+</Project>
