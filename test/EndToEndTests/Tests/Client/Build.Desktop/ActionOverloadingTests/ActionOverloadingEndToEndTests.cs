@@ -69,8 +69,10 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         public void ExecuteActionImport()
         {
             var contextWrapper = this.CreateWrappedContext();
+#if !NETCOREAPP1_0
             var productId = contextWrapper.Context.RetrieveProduct().GetValue();
             Assert.AreEqual(-10, productId);
+#endif
 
             contextWrapper.Context.UpdatePersonInfo();
         }
@@ -86,6 +88,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
 
             employee.UpdatePersonInfo();
 
+#if !NETCOREAPP1_0
             SpecialEmployee specialEmployee = (SpecialEmployee)contextWrapper.Context.Person.Where(p => p.PersonId == -7).Single();
             int salary = specialEmployee.IncreaseEmployeeSalary().GetValue();
             Assert.AreEqual(2016141257, salary);
@@ -93,6 +96,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             specialEmployee.IncreaseEmployeeSalary().GetValue();
             specialEmployee = (SpecialEmployee)contextWrapper.Context.Person.Where(p => p.PersonId == -7).Single();
             Assert.AreEqual(2016141258, specialEmployee.Salary);
+#endif
         }
 
         [TestMethod] 
@@ -291,7 +295,12 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         {
             foreach (KeyValuePair<string, string> expected in expectedValues)
             {
-                OperationDescriptor od = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Key, StringComparison.InvariantCultureIgnoreCase)).First();
+                OperationDescriptor od;
+#if NETCOREAPP1_0
+                od = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Key, StringComparison.OrdinalIgnoreCase)).First();
+#else
+                od = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Key, StringComparison.InvariantCultureIgnoreCase)).First();
+#endif
                 Assert.AreEqual(this.ServiceUri + expected.Value, od.Target.AbsoluteUri, true);
             }
         }
@@ -300,7 +309,13 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         {
             foreach (var expected in expectedValues)
             {
-                var ods = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Item1, StringComparison.InvariantCultureIgnoreCase));
+                IEnumerable<OperationDescriptor> ods;
+#if NETCOREAPP1_0
+                ods = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Item1, StringComparison.OrdinalIgnoreCase));
+#else
+                ods = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Item1, StringComparison.InvariantCultureIgnoreCase));
+#endif
+
                 bool matched = false;
                 foreach (var od in ods)
                 {
