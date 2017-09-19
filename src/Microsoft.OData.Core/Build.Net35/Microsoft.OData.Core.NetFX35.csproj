@@ -475,6 +475,15 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReader.cs">
       <Link>Microsoft\OData\Core\ODataBatchReader.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>  	
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReaderState.cs">
       <Link>Microsoft\OData\Core\ODataBatchReaderState.cs</Link>
     </Compile>
