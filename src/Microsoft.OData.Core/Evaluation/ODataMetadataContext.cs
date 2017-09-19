@@ -209,7 +209,7 @@ namespace Microsoft.OData.Evaluation
             {
                 if (this.metadataDocumentUri == null)
                 {
-                    throw new ODataException(Strings.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload(ODataAnnotationNames.ODataContext));
+                    throw new ODataException(OData.Strings.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload(ODataAnnotationNames.ODataContext));
                 }
 
                 Debug.Assert(this.metadataDocumentUri.IsAbsoluteUri, "this.metadataDocumentUri.IsAbsoluteUri");

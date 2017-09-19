@@ -287,7 +287,7 @@ namespace Microsoft.OData.JsonLight
                     case WriterState.DeltaDeletedEntry:
                         return this.CurrentDeltaResourceScope.DuplicatePropertyNameChecker;
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
+                        throw new ODataException(OData.Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
                 }
             }
         }
@@ -543,7 +543,7 @@ namespace Microsoft.OData.JsonLight
             // introduce another top-level element in XML)
             if (this.State == WriterState.Completed)
             {
-                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
+                throw new ODataException(OData.Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
             }
 
             this.StartPayloadInStartState();
@@ -575,7 +575,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (!this.jsonLightOutputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataWriterCore_SyncCallOnAsyncWriter);
+                    throw new ODataException(OData.Strings.ODataWriterCore_SyncCallOnAsyncWriter);
                 }
             }
             else
@@ -583,7 +583,7 @@ namespace Microsoft.OData.JsonLight
 #if PORTABLELIB
                 if (this.jsonLightOutputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataWriterCore_AsyncCallOnSyncWriter);
+                    throw new ODataException(OData.Strings.ODataWriterCore_AsyncCallOnSyncWriter);
                 }
 #else
                 Debug.Assert(false, "Async calls are not allowed in this build.");
@@ -694,7 +694,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.State != WriterState.DeltaResource && newState == WriterState.NestedResource)
             {
-                throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource(this.State.ToString(), newState.ToString()));
+                throw new ODataException(OData.Strings.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource(this.State.ToString(), newState.ToString()));
             }
 
             switch (this.State)
@@ -702,7 +702,7 @@ namespace Microsoft.OData.JsonLight
                 case WriterState.Start:
                     if (newState != WriterState.DeltaResourceSet)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromStart(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(OData.Strings.ODataWriterCore_InvalidTransitionFromStart(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -712,7 +712,7 @@ namespace Microsoft.OData.JsonLight
                 case WriterState.DeltaDeletedLink:
                     if (this.CurrentScope.Item == null)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullResource(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(OData.Strings.ODataWriterCore_InvalidTransitionFromNullResource(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -720,25 +720,25 @@ namespace Microsoft.OData.JsonLight
                     if (newState != WriterState.DeltaResource && newState != WriterState.DeltaDeletedEntry &&
                         newState != WriterState.DeltaLink && newState != WriterState.DeltaDeletedLink)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(OData.Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case WriterState.NestedResource:
-                    throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource(this.State.ToString(), newState.ToString()));
+                    throw new ODataException(OData.Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource(this.State.ToString(), newState.ToString()));
                 case WriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
-                    throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
+                    throw new ODataException(OData.Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
                 case WriterState.Error:
                     if (newState != WriterState.Error)
                     {
                         // No more state transitions once we are in error state except for the fatal error
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromError(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(OData.Strings.ODataWriterCore_InvalidTransitionFromError(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_ValidateTransition_UnreachableCodePath));
+                    throw new ODataException(OData.Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_ValidateTransition_UnreachableCodePath));
             }
         }
 
@@ -795,7 +795,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (!IsNestedResourceState(this.State))
             {
-                throw new ODataException(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState(this.State.ToString()));
+                throw new ODataException(OData.Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState(this.State.ToString()));
             }
 
             this.InterceptException(() => this.CurrentExpandedNavigationPropertyScope
@@ -1016,9 +1016,9 @@ namespace Microsoft.OData.JsonLight
                     case WriterState.Start:                 // fall through
                     case WriterState.Completed:             // fall through
                     case WriterState.Error:                 // fall through
-                        throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                        throw new ODataException(OData.Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
+                        throw new ODataException(OData.Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
                 }
 
                 this.LeaveScope();
@@ -1507,7 +1507,7 @@ namespace Microsoft.OData.JsonLight
                     scope = new Scope(state, item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 default:
-                    string errorMessage = Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
+                    string errorMessage = OData.Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
                     Debug.Assert(false, errorMessage);
                     throw new ODataException(errorMessage);
             }

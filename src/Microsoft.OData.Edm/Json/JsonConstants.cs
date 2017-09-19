@@ -6,10 +6,6 @@
 
 namespace Microsoft.OData.Json
 {
-    #region Namespaces
-
-    #endregion Namespaces
-
     /// <summary>
     /// Constants for the JSON format.
     /// </summary>

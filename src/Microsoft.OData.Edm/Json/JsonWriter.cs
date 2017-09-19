@@ -4,18 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.Json
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
-    using Microsoft.OData.Edm;
-    #endregion Namespaces
-
     /// <summary>
     /// Writer for the JSON format. http://www.json.org
     /// </summary>

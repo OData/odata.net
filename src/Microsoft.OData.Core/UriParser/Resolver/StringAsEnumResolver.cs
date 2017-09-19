@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
                 // ensure parameter name existis
                 if (functionParameter == null)
                 {
-                    throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(item.Key, operation.Name));
+                    throw new ODataException(OData.Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(item.Key, operation.Name));
                 }
 
                 SingleValueNode newVal = item.Value;

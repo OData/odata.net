@@ -555,7 +555,7 @@ namespace Microsoft.OData.Evaluation
                     uri = this.ComputeIdForContainment();
                     break;
                 case EdmNavigationSourceKind.UnknownEntitySet:
-                    throw new ODataException(Strings.ODataMetadataBuilder_UnknownEntitySet(this.ResourceMetadataContext.TypeContext.NavigationSourceName));
+                    throw new ODataException(OData.Strings.ODataMetadataBuilder_UnknownEntitySet(this.ResourceMetadataContext.TypeContext.NavigationSourceName));
                 default:
                     uri = this.ComputeId();
                     break;
@@ -596,7 +596,7 @@ namespace Microsoft.OData.Evaluation
 
                 if (odataUri == null || odataUri.Path == null || odataUri.Path.Count == 0)
                 {
-                    throw new ODataException(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+                    throw new ODataException(OData.Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
                 }
 
                 uri = this.GetContainingEntitySetUri(uri, odataUri);

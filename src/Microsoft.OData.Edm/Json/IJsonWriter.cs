@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.Json
 {
-    using System;
-    using Microsoft.OData.Edm;
-
     /// <summary>
     /// Interface for a class that can write arbitrary JSON.
     /// </summary>

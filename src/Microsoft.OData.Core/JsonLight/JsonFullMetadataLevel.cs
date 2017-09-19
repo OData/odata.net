@@ -64,7 +64,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.metadataDocumentUri == null)
                 {
-                    throw new ODataException(Strings.ODataOutputContext_MetadataDocumentUriMissing);
+                    throw new ODataException(OData.Strings.ODataOutputContext_MetadataDocumentUriMissing);
                 }
 
                 return this.metadataDocumentUri;
