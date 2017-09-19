@@ -521,6 +521,15 @@
     <Compile Include="..\ODataBatchReader.cs">
       <Link>ODataBatchReader.cs</Link>
     </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>  	
     <Compile Include="..\ODataBatchReaderState.cs">
       <Link>ODataBatchReaderState.cs</Link>
     </Compile>
