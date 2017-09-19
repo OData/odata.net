@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser
                     if (existingBuiltInFunctionOverload.Any(builtInFunction =>
                             AreFunctionsSignatureEqual(functionSignature, builtInFunction)))
                     {
-                        throw new ODataException(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(functionName));
+                        throw new ODataException(OData.Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(functionName));
                     }
                 }
 
@@ -180,7 +180,7 @@ namespace Microsoft.OData.UriParser
                 if (isOverloadAlreadyExist)
                 {
                     // Throw if already exists - User is stupid (inserted the same function twice)
-                    throw new ODataException(Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
+                    throw new ODataException(OData.Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
                 }
 
                 // Add the custom function as an overload to the same function name

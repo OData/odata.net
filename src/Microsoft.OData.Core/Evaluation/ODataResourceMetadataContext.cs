@@ -164,7 +164,7 @@ namespace Microsoft.OData.Evaluation
             {
                 if (String.IsNullOrEmpty(resource.TypeName))
                 {
-                    throw new ODataException(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
+                    throw new ODataException(OData.Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
                 }
 
                 actualEntityTypeName = resource.TypeName;
@@ -200,7 +200,7 @@ namespace Microsoft.OData.Evaluation
             ODataProperty property = resource.NonComputedProperties == null ? null : resource.NonComputedProperties.SingleOrDefault(p => p.Name == propertyName);
             if (property == null)
             {
-                throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(entityTypeName, propertyName));
+                throw new ODataException(OData.Strings.EdmValueUtils_PropertyDoesntExist(entityTypeName, propertyName));
             }
 
             return GetPrimitiveOrEnumPropertyValue(entityTypeName, property, isKeyProperty);
@@ -218,12 +218,12 @@ namespace Microsoft.OData.Evaluation
             object propertyValue = property.Value;
             if (propertyValue == null && isKeyProperty)
             {
-                throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(property.Name, entityTypeName));
+                throw new ODataException(OData.Strings.ODataResourceMetadataContext_NullKeyValue(property.Name, entityTypeName));
             }
 
             if (propertyValue is ODataValue && !(propertyValue is ODataEnumValue))
             {
-                throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(property.Name, entityTypeName));
+                throw new ODataException(OData.Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(property.Name, entityTypeName));
             }
 
             return propertyValue;
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(keyProperties != null, "keyProperties != null");
             if (keyProperties == null || keyProperties.Length == 0)
             {
-                throw new ODataException(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(actualEntityTypeName));
+                throw new ODataException(OData.Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(actualEntityTypeName));
             }
         }
 
@@ -336,7 +336,7 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (String.IsNullOrEmpty(this.Resource.TypeName))
                     {
-                        throw new ODataException(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
+                        throw new ODataException(OData.Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
                     }
 
                     return this.Resource.TypeName;
@@ -536,7 +536,7 @@ namespace Microsoft.OData.Evaluation
                                 IEdmStructuralProperty property = this.actualResourceType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.PathSegments.LastOrDefault());
                                 if (property == null)
                                 {
-                                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(this.ActualResourceTypeName, pathExpression.PathSegments.LastOrDefault()));
+                                    throw new ODataException(OData.Strings.EdmValueUtils_PropertyDoesntExist(this.ActualResourceTypeName, pathExpression.PathSegments.LastOrDefault()));
                                 }
 
                                 yield return property;

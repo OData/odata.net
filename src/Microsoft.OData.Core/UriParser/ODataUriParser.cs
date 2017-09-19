@@ -110,7 +110,7 @@ namespace Microsoft.OData.UriParser
 
             if (relativeUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.UriParser_RelativeUriMustBeRelative);
+                throw new ODataException(OData.Strings.UriParser_RelativeUriMustBeRelative);
             }
 
             this.configuration = new ODataUriParserConfiguration(model, container);
@@ -329,7 +329,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(UriQueryConstants.IdQueryOption));
+                    throw new ODataException(OData.Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(UriQueryConstants.IdQueryOption));
                 }
             }
 
@@ -552,7 +552,7 @@ namespace Microsoft.OData.UriParser
                     {
                         if (queryOptionDic.ContainsKey(fixedQueryOptionName))
                         {
-                            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                            throw new ODataException(OData.Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
                                 this.EnableNoDollarQueryOptions
                                 ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", fixedQueryOptionName.TrimStart('$'))
                                 : fixedQueryOptionName));

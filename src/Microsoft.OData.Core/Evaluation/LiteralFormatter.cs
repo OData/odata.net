@@ -289,7 +289,7 @@ namespace Microsoft.OData.Evaluation
                 return Error.InvalidOperation(Client.Strings.Context_CannotConvertKey(value));
 #endif
 #if ODATA_CORE
-                return new ODataException(Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
+                return new ODataException(OData.Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
 #endif
             }
 

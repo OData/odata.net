@@ -4,18 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Xml;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+
 namespace Microsoft.OData.Json
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
-    using System.Xml;
-    using Microsoft.OData.Edm;
-    #endregion Namespaces
-
     /// <summary>
     /// Provides helper method for converting data values to and from the OData JSON format.
     /// </summary>
@@ -131,7 +130,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            if (JsonSharedUtils.IsDoubleValueSerializedAsString(value))
+            if (IsDoubleValueSerializedAsString(value))
             {
                 WriteQuoted(writer, value.ToString(ODataNumberFormatInfo));
             }
@@ -385,6 +384,16 @@ namespace Microsoft.OData.Json
             // Ticks in .NET are in 100-nanoseconds and start at 1.1.0001.
             // Ticks in the JSON date time format are in milliseconds and start at 1.1.1970.
             return (ticks * 10000) + JsonDateTimeMinTimeTicks;
+        }
+
+        /// <summary>
+        /// Determines if the given double is serialized as a string in JSON.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <returns>true if the value should be written as a string, false if should be written as a JSON number.</returns>
+        internal static bool IsDoubleValueSerializedAsString(double value)
+        {
+            return Double.IsInfinity(value) || Double.IsNaN(value);
         }
 
         /// <summary>

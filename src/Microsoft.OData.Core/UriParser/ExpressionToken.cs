@@ -86,7 +86,7 @@ namespace Microsoft.OData.UriParser
         {
             if (this.Kind != ExpressionTokenKind.Identifier)
             {
-                string message = Strings.ExpressionToken_IdentifierExpected(this.Position);
+                string message = OData.Strings.ExpressionToken_IdentifierExpected(this.Position);
                 throw new ODataException(message);
             }
 

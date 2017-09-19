@@ -46,6 +46,14 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs" />
+    <Compile Include="Json\IJsonWriter.cs" />
+    <Compile Include="Json\JsonConstants.cs" />
+    <Compile Include="Json\JsonValueUtils.cs" />
+    <Compile Include="Json\JsonWriter.cs" />
+    <Compile Include="Json\IndentedTextWriter.cs" />
+    <Compile Include="Json\NonIndentedTextWriter.cs" />
+    <Compile Include="Json\ODataJsonDateTimeFormat.cs" />
+    <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs" />
     <Compile Include="Csdl\CsdlLocation.cs" />
     <Compile Include="Csdl\EdmParseException.cs" />

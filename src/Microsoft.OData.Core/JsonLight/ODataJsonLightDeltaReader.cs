@@ -370,7 +370,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.State == ODataDeltaReaderState.Exception || this.State == ODataDeltaReaderState.Completed)
             {
-                throw new ODataException(Strings.ODataReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
+                throw new ODataException(OData.Strings.ODataReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
             }
         }
 
@@ -384,7 +384,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (!this.jsonLightInputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataReaderCore_SyncCallOnAsyncReader);
+                    throw new ODataException(OData.Strings.ODataReaderCore_SyncCallOnAsyncReader);
                 }
             }
             else
@@ -392,7 +392,7 @@ namespace Microsoft.OData.JsonLight
 #if PORTABLELIB
                 if (this.jsonLightInputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataReaderCore_AsyncCallOnSyncReader);
+                    throw new ODataException(OData.Strings.ODataReaderCore_AsyncCallOnSyncReader);
                 }
 #else
                 Debug.Assert(false, "Async calls are not allowed in this build.");
@@ -506,11 +506,11 @@ namespace Microsoft.OData.JsonLight
 
                 case ODataDeltaReaderState.Exception:    // fall through
                 case ODataDeltaReaderState.Completed:
-                    throw new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
+                    throw new ODataException(OData.Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCore_ReadImplementation));
+                    throw new ODataException(OData.Strings.General_InternalError(InternalErrorCodes.ODataReaderCore_ReadImplementation));
             }
 
             return result;
@@ -562,12 +562,12 @@ namespace Microsoft.OData.JsonLight
 
                 case ODataDeltaReaderState.Exception:    // fall through
                 case ODataDeltaReaderState.Completed:
-                    result = TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State)));
+                    result = TaskUtils.GetFaultedTask<bool>(new ODataException(OData.Strings.ODataReaderCore_NoReadCallsAllowed(this.State)));
                     break;
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    result = TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously)));
+                    result = TaskUtils.GetFaultedTask<bool>(new ODataException(OData.Strings.General_InternalError(InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously)));
                     break;
             }
 

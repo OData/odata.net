@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
                     var list = namedValues.Keys.Where(key => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase)).ToList();
                     if (list.Count > 1)
                     {
-                        throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(kvp.Key));
+                        throw new ODataException(OData.Strings.UriParserMetadata_MultipleMatchingKeysFound(kvp.Key));
                     }
                     else if (list.Count == 0)
                     {

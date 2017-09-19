@@ -195,7 +195,7 @@ namespace Microsoft.OData.UriParser
                     Char.IsLetter(this.ch.Value) ||       // IsLetter covers: Ll, Lu, Lt, Lo, Lm
                     this.ch == '_' ||
                     this.ch == '$' ||
-                    PlatformHelper.GetUnicodeCategory(this.ch.Value) == UnicodeCategory.LetterNumber);
+                    OData.PlatformHelper.GetUnicodeCategory(this.ch.Value) == UnicodeCategory.LetterNumber);
             }
         }
 
@@ -211,7 +211,7 @@ namespace Microsoft.OData.UriParser
             {
                 return this.ch != null && (
                     Char.IsLetterOrDigit(this.ch.Value) ||    // covers: Ll, Lu, Lt, Lo, Lm, Nd
-                    AdditionalUnicodeCategoriesForIdentifier.Contains(PlatformHelper.GetUnicodeCategory(this.ch.Value)));  // covers the rest
+                    AdditionalUnicodeCategoriesForIdentifier.Contains(OData.PlatformHelper.GetUnicodeCategory(this.ch.Value)));  // covers the rest
             }
         }
         #endregion

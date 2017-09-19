@@ -17,8 +17,18 @@ namespace Microsoft.OData.Edm.Csdl
         EntityFramework,
 
         /// <summary>
-        /// The target is OData.
+        /// The target is OData XML Metadata.
         /// </summary>
-        OData
+        OData,
+
+        /// <summary>
+        /// The target is OData JSON Metadata.
+        /// </summary>
+        ODataJson,
+
+        /// <summary>
+        /// The target is One API metadata.
+        /// </summary>
+        OneApi
     }
 }

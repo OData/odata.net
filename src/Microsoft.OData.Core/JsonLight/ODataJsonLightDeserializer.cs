@@ -396,7 +396,7 @@ namespace Microsoft.OData.JsonLight
 
             if ((value is string) ^ this.JsonReader.IsIeee754Compatible)
             {
-                throw new ODataException(Strings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(Metadata.EdmConstants.EdmInt64TypeName));
+                throw new ODataException(OData.Strings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(Metadata.EdmConstants.EdmInt64TypeName));
             }
 
             return (long)ODataJsonLightReaderUtils.ConvertValue(
@@ -431,7 +431,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (metadataDocumentUri == null)
                 {
-                    throw new ODataException(Strings.ODataJsonLightDeserializer_RelativeUriUsedWithouODataMetadataAnnotation(uriFromPayload, ODataAnnotationNames.ODataContext));
+                    throw new ODataException(OData.Strings.ODataJsonLightDeserializer_RelativeUriUsedWithouODataMetadataAnnotation(uriFromPayload, ODataAnnotationNames.ODataContext));
                 }
 
                 uri = UriUtils.UriToAbsoluteUri(metadataDocumentUri, uri);
@@ -521,7 +521,7 @@ namespace Microsoft.OData.JsonLight
                     return null;
                 }
 
-                throw new ODataException(Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(OData.Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             // Must make sure the input odata.context has a '@' prefix
@@ -535,7 +535,7 @@ namespace Microsoft.OData.JsonLight
                     return null;
                 }
 
-                throw new ODataException(Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(OData.Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             // Read over the property name
@@ -709,7 +709,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (ODataJsonLightReaderUtils.IsAnnotationProperty(parsedPropertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
+                        throw new ODataException(OData.Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
                     }
 
                     return PropertyParsingResult.PropertyWithoutValue;
@@ -782,7 +782,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (ODataJsonLightReaderUtils.IsAnnotationProperty(parsedPropertyName))
                 {
-                    throw new ODataException(Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
+                    throw new ODataException(OData.Strings.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
                 }
 
                 return PropertyParsingResult.PropertyWithoutValue;
@@ -803,7 +803,7 @@ namespace Microsoft.OData.JsonLight
             // We don't currently support annotation targeting an instance annotation except for the @odata.type property annotation.
             if (ODataJsonLightReaderUtils.IsAnnotationProperty(annotatedPropertyName) && string.CompareOrdinal(annotationName, ODataAnnotationNames.ODataType) != 0)
             {
-                throw new ODataException(Strings.ODataJsonLightDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(annotationName, annotatedPropertyName, ODataAnnotationNames.ODataType));
+                throw new ODataException(OData.Strings.ODataJsonLightDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(annotationName, annotatedPropertyName, ODataAnnotationNames.ODataType));
             }
 
             ReadODataOrCustomInstanceAnnotationValue(annotatedPropertyName, annotationName, propertyAndAnnotationCollector, readPropertyAnnotationValue);
