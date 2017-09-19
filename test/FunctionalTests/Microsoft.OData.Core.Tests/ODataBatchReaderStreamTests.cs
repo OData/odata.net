@@ -10,7 +10,7 @@ using System.Text;
 using FluentAssertions;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
-
+using Microsoft.OData.MultipartMixed;
 namespace Microsoft.OData.Tests
 {
     public class ODataBatchReaderStreamTests
@@ -61,7 +61,7 @@ Second line";
             CreateBatchReaderStream(input).ReadFirstNonEmptyLine().Should().Be("First non-empty line");
         }
 
-        private static ODataBatchReaderStream CreateBatchReaderStream(string inputString)
+        private static ODataMultipartMixedBatchReaderStream CreateBatchReaderStream(string inputString)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -75,7 +75,7 @@ Second line";
                 ODataFormat.Batch, 
                 messageInfo,
                 new ODataMessageReaderSettings());
-            var batchStream = new ODataBatchReaderStream(inputContext, "batch_862fb28e-dc50-4af1-aad5-9608647761d1", Encoding.UTF8);
+            var batchStream = new ODataMultipartMixedBatchReaderStream(inputContext, "batch_862fb28e-dc50-4af1-aad5-9608647761d1", Encoding.UTF8);
             return batchStream;
         }
     }
