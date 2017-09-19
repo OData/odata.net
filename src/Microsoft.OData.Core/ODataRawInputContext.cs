@@ -16,6 +16,8 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
+    using Microsoft.OData.MultipartMixed;
+
     #endregion Namespaces
 
     /// <summary>
@@ -193,7 +195,7 @@ namespace Microsoft.OData
         /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
         private ODataBatchReader CreateBatchReaderImplementation(string batchBoundary, bool synchronous)
         {
-            return new ODataBatchReader(this, batchBoundary, this.encoding, synchronous);
+            return new ODataMultipartMixedBatchReader(this, batchBoundary, this.encoding, synchronous);
         }
 
         /// <summary>

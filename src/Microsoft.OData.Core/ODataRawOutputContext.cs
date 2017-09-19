@@ -15,6 +15,8 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.MultipartMixed;
+
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
@@ -424,7 +426,7 @@ namespace Microsoft.OData
         {
             // Batch writer needs the default encoding to not use the preamble.
             this.encoding = this.encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
-            ODataBatchWriter batchWriter = new ODataBatchWriter(this, batchBoundary);
+            ODataBatchWriter batchWriter = new ODataMultipartMixedBatchWriter(this, batchBoundary);
             this.outputInStreamErrorListener = batchWriter;
             return batchWriter;
         }
