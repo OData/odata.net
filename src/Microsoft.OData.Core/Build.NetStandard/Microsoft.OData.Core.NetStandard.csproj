@@ -470,6 +470,15 @@
     <Compile Include="..\MimeConstants.cs">
       <Link>MimeConstants.cs</Link>
     </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>    
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>      
     <Compile Include="..\NonDisposingStream.cs">
       <Link>NonDisposingStream.cs</Link>
     </Compile>
