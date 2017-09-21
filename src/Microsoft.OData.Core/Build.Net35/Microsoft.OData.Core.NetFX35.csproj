@@ -430,6 +430,15 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\MimeConstants.cs">
       <Link>Microsoft\OData\Core\MimeConstants.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>        
     <Compile Include="$(ODataCrossTargettingSourcePath)\NonDisposingStream.cs">
       <Link>Microsoft\OData\Core\NonDisposingStream.cs</Link>
     </Compile>
