@@ -21,6 +21,9 @@ namespace Microsoft.OData
     /// </summary>
     public abstract class ODataBatchReader : IODataBatchOperationListener
     {
+        /// <summary>The input context to read the content from.</summary>
+        private readonly ODataInputContext inputContext;
+
         /// <summary>True if the writer was created for synchronous operation; false for asynchronous.</summary>
         private readonly bool synchronous;
 
@@ -29,9 +32,6 @@ namespace Microsoft.OData
 
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
-
-        /// <summary>The input context to read the content from.</summary>
-        private ODataInputContext inputContext;
 
         /// <summary>The current state of the batch reader.</summary>
         private ODataBatchReaderState batchReaderState;
@@ -53,11 +53,6 @@ namespace Microsoft.OData
         private string contentIdToAddOnNextRead;
 
         /// <summary>
-        /// Internal switch for whether we support reading Content-ID header appear in HTTP head instead of ChangeSet head.
-        /// </summary>
-        private bool allowLegacyContentIdBehavior;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
@@ -70,7 +65,6 @@ namespace Microsoft.OData
             this.container = inputContext.Container;
             this.synchronous = synchronous;
             this.payloadUriConverter = new ODataBatchPayloadUriConverter(inputContext.PayloadUriConverter);
-            this.allowLegacyContentIdBehavior = true;
         }
 
         /// <summary>
@@ -101,7 +95,7 @@ namespace Microsoft.OData
                 return this.batchReaderState;
             }
 
-            set
+            protected set
             {
                 this.batchReaderState = value;
             }
@@ -139,14 +133,6 @@ namespace Microsoft.OData
         {
             get { return this.operationState; }
             set { this.operationState = value; }
-        }
-
-        /// <summary>
-        /// Boolean flag indicating whether legacy content Id behavior is used.
-        /// </summary>
-        protected bool AllowLegacyContentIdBehavior
-        {
-            get { return this.allowLegacyContentIdBehavior; }
         }
 
         /// <summary>

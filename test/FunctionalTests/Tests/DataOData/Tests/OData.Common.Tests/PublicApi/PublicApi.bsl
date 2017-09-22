@@ -4045,12 +4045,11 @@ public abstract class Microsoft.OData.ODataAnnotatable {
 public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationListener {
 	protected ODataBatchReader (Microsoft.OData.ODataInputContext inputContext, bool synchronous)
 
-	bool AllowLegacyContentIdBehavior  { protected get; }
 	System.IServiceProvider Container  { protected get; }
 	string ContentIdToAddOnNextRead  { protected get; protected set; }
 	Microsoft.OData.ODataInputContext InputContext  { protected get; }
 	Microsoft.OData.ODataBatchReader+OperationState ReaderOperationState  { protected get; protected set; }
-	Microsoft.OData.ODataBatchReaderState State  { public get; public set; }
+	Microsoft.OData.ODataBatchReaderState State  { public get; protected set; }
 
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
