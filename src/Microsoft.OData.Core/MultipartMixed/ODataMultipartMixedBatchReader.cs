@@ -12,7 +12,7 @@ namespace Microsoft.OData.MultipartMixed
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -146,20 +146,17 @@ namespace Microsoft.OData.MultipartMixed
 
             if (this.batchStream.ChangeSetBoundary != null)
             {
-                if (this.AllowLegacyContentIdBehavior)
+                // Add a potential Content-ID header to the URL resolver so that it will be available
+                // to subsequent operations.
+                string contentId;
+                if (this.ContentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                 {
-                    // Add a potential Content-ID header to the URL resolver so that it will be available
-                    // to subsequent operations.
-                    string contentId;
-                    if (this.ContentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
+                    if (contentId != null && this.PayloadUriConverter.ContainsContentId(contentId))
                     {
-                        if (contentId != null && this.PayloadUriConverter.ContainsContentId(contentId))
-                        {
-                            throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
-                        }
-
-                        this.ContentIdToAddOnNextRead = contentId;
+                        throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                     }
+
+                    this.ContentIdToAddOnNextRead = contentId;
                 }
 
                 if (this.ContentIdToAddOnNextRead == null)
@@ -199,20 +196,17 @@ namespace Microsoft.OData.MultipartMixed
 
             if (this.batchStream.ChangeSetBoundary != null)
             {
-                if (this.AllowLegacyContentIdBehavior)
+                // Add a potential Content-ID header to the URL resolver so that it will be available
+                // to subsequent operations.
+                string contentId;
+                if (this.ContentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                 {
-                    // Add a potential Content-ID header to the URL resolver so that it will be available
-                    // to subsequent operations.
-                    string contentId;
-                    if (this.ContentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
+                    if (contentId != null && this.PayloadUriConverter.ContainsContentId(contentId))
                     {
-                        if (contentId != null && this.PayloadUriConverter.ContainsContentId(contentId))
-                        {
-                            throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
-                        }
-
-                        this.ContentIdToAddOnNextRead = contentId;
+                        throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                     }
+
+                    this.ContentIdToAddOnNextRead = contentId;
                 }
             }
 

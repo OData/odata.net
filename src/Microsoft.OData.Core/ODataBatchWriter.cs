@@ -61,7 +61,7 @@ namespace Microsoft.OData
         /// Constructor.
         /// </summary>
         /// <param name="outputContext">The output context to write to.</param>
-        internal ODataBatchWriter(ODataRawOutputContext outputContext)
+        internal ODataBatchWriter(ODataOutputContext outputContext)
         {
             Debug.Assert(outputContext != null, "outputContext != null");
             Debug.Assert(
