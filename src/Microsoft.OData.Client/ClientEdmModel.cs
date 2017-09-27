@@ -468,7 +468,7 @@ namespace Microsoft.OData.Client
                                 if (edmBaseType == null && keyProperties.Any(k => k.DeclaringType == type && k.Name == property.Name))
                                 {
                                     Debug.Assert(edmProperty.PropertyKind == EdmPropertyKind.Structural, "edmProperty.PropertyKind == EdmPropertyKind.Structural");
-                                    Debug.Assert(edmProperty.Type.TypeKind() == EdmTypeKind.Primitive, "edmProperty.Type.TypeKind() == EdmTypeKind.Primitive");
+                                    Debug.Assert(edmProperty.Type.TypeKind() == EdmTypeKind.Primitive || edmProperty.Type.TypeKind() == EdmTypeKind.Enum, "edmProperty.Type.TypeKind() == EdmTypeKind.Primitive || edmProperty.Type.TypeKind() == EdmTypeKind.Enum");
                                     loadedKeyProperties.Add((IEdmStructuralProperty)edmProperty);
                                 }
                             }
