@@ -353,8 +353,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
             try
             {
-
-
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, CustomUriLiteralParserUnitTests.CUSTOM_PARSER_STRING_VALID_VALUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
 
