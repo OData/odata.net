@@ -18,7 +18,6 @@ namespace Microsoft.OData.Core.JsonLight
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core.Evaluation;
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -209,7 +208,7 @@ namespace Microsoft.OData.Core.JsonLight
             ODataNavigationLink parentNavLink = this.ParentNavigationLink;
             if (parentNavLink != null)
             {
-                // Write the property name of an expanded navigation property to start the value. 
+                // Write the property name of an expanded navigation property to start the value.
                 this.jsonWriter.WriteName(parentNavLink.Name);
             }
 
@@ -363,7 +362,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // Write the next link if it's available.
                     this.WriteFeedNextLink(feed, propertyName);
 
-                    // And then write the property name to start the value. 
+                    // And then write the property name to start the value.
                     this.jsonWriter.WriteName(propertyName);
 
                     // Start array which will hold the entries in the feed.
@@ -380,7 +379,7 @@ namespace Microsoft.OData.Core.JsonLight
                             this.jsonWriter.EndArrayScope();
                         }
 
-                        // And then write the property name to start the value. 
+                        // And then write the property name to start the value.
                         this.jsonWriter.WriteName(propertyName);
 
                         // Start array which will hold the entries in the feed.
@@ -438,7 +437,7 @@ namespace Microsoft.OData.Core.JsonLight
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
                     // End the array which holds the entries in the feed.
-                    // NOTE: in requests we will only write the EndArray of a feed 
+                    // NOTE: in requests we will only write the EndArray of a feed
                     //       when we hit the navigation link end since a navigation link
                     //       can contain multiple feeds that get collapesed into a single array value.
                     this.jsonWriter.EndArrayScope();
@@ -506,14 +505,14 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 JsonLightNavigationLinkScope navigationLinkScope = (JsonLightNavigationLinkScope)this.CurrentScope;
 
-                // If we wrote entity reference links for a collection navigation property but no 
+                // If we wrote entity reference links for a collection navigation property but no
                 // feed afterwards, we have to now close the array of links.
                 if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.FeedWritten && navigationLink.IsCollection.Value)
                 {
                     this.jsonWriter.EndArrayScope();
                 }
 
-                // In requests, the navigation link may have multiple entries in multiple feeds in it; if we 
+                // In requests, the navigation link may have multiple entries in multiple feeds in it; if we
                 // wrote at least one feed, close the resulting array here.
                 if (navigationLinkScope.FeedWritten)
                 {

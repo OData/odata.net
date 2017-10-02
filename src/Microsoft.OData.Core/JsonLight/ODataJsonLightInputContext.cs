@@ -35,13 +35,18 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>The text reader created for the input stream.</summary>
         /// <remarks>
-        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it. 
+        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it.
         /// We further set this field to null when the input is disposed and use it for checks whether the instance has already been disposed.
         /// </remarks>
         private TextReader textReader;
 
         /// <summary>The JSON reader to read from.</summary>
         private BufferingJsonReader jsonReader;
+
+        /// <summary>
+        /// The JsonLight message stream.
+        /// </summary>
+        private Stream stream;
 
         /// <summary>Constructor.</summary>
         /// <param name="format">The format for this input context.</param>
@@ -65,6 +70,8 @@ namespace Microsoft.OData.Core.JsonLight
             IODataUrlResolver urlResolver)
             : this(format, CreateTextReaderForMessageStreamConstructor(messageStream, encoding), contentType, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
         {
+            Debug.Assert(messageStream != null, "messageStream != null");
+            this.stream = messageStream;
         }
 
         /// <summary>Constructor.</summary>
@@ -137,6 +144,17 @@ namespace Microsoft.OData.Core.JsonLight
             // Uri metadataDocumentUri = messageReaderSettings..MetadataDocumentUri == null ? null : messageReaderSettings.MetadataDocumentUri.BaseUri;
             // the uri here is used here to create the FullMetadataLevel can pass null in
             this.metadataLevel = JsonLight.JsonLightMetadataLevel.Create(contentType, null, model, readingResponse);
+        }
+
+        /// <summary>
+        /// The stream of the JsonLight input context.
+        /// </summary>
+        internal Stream Stream
+        {
+            get
+            {
+                return this.stream;
+            }
         }
 
         /// <summary>
@@ -254,7 +272,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// This method creates an reads the property from the input and 
+        /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -271,7 +289,7 @@ namespace Microsoft.OData.Core.JsonLight
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously read the property from the input and 
+        /// Asynchronously read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -374,8 +392,31 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Create a <see cref="ODataBatchReader"/>.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
+        internal override ODataBatchReader CreateBatchReader(string batchBoundary)
+        {
+            return this.CreateBatchReaderImplementation(/*synchronous*/ true);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously create a <see cref="ODataBatchReader"/>.
+        /// </summary>
+        /// <param name="batchBoundary">The batch boundary to use.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
+        internal override Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
+        {
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+        }
+#endif
+
+        /// <summary>
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -389,8 +430,8 @@ namespace Microsoft.OData.Core.JsonLight
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Asynchronously read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -497,6 +538,8 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 try
                 {
+                    this.stream = null;
+
                     if (this.textReader != null)
                     {
                         this.textReader.Dispose();
@@ -698,6 +741,22 @@ namespace Microsoft.OData.Core.JsonLight
         private ODataParameterReader CreateParameterReaderImplementation(IEdmOperation operation)
         {
             return new ODataJsonLightParameterReader(this, operation);
+        }
+
+        /// <summary>
+        /// Create a concrete <see cref="ODataJsonLightBatchReader"/> instance.
+        /// </summary>
+        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
+        /// <returns>Newly created <see cref="ODataBatchReader"/></returns>
+        private ODataBatchReader CreateBatchReaderImplementation(bool synchronous)
+        {
+            Debug.Assert(this.textReader != null);
+            Debug.Assert(this.textReader is StreamReader);
+
+            return new ODataJsonLightBatchReader(
+                this,
+                (this.textReader as StreamReader).CurrentEncoding,
+                synchronous);
         }
     }
 }

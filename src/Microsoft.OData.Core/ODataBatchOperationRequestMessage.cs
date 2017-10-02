@@ -14,6 +14,7 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -37,6 +38,13 @@ namespace Microsoft.OData.Core
         private readonly ODataBatchOperationMessage message;
 
         /// <summary>
+        /// The list of request prerequisites for execution of  current batch operation.
+        /// ODL-caller needs to ensure that all the prerequisites have returned successfully
+        /// before current operation can start.
+        /// </summary>
+        private readonly IList<string> dependsOnRequestIds;
+
+        /// <summary>
         /// Constructor. Creates a request message for an operation of a batch request.
         /// </summary>
         /// <param name="contentStreamCreatorFunc">A function to create the content stream.</param>
@@ -47,6 +55,7 @@ namespace Microsoft.OData.Core
         /// <param name="contentId">The content-ID for the operation request message.</param>
         /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
+        /// <param name="dependsOnRequestIds">The enumeration of request Ids that current request has dependency on.</param>
         private ODataBatchOperationRequestMessage(
             Func<Stream> contentStreamCreatorFunc,
             string method,
@@ -55,17 +64,21 @@ namespace Microsoft.OData.Core
             IODataBatchOperationListener operationListener,
             string contentId,
             IODataUrlResolver urlResolver,
-            bool writing)
+            bool writing,
+            IEnumerable<string> dependsOnRequestIds)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
-            Debug.Assert(urlResolver != null, "urlResolver != null");
+            Debug.Assert(urlResolver != null, "UrlResolver != null");
 
             this.Method = method;
             this.Url = requestUrl;
             this.ContentId = contentId;
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, urlResolver, writing);
+            this.dependsOnRequestIds = dependsOnRequestIds != null
+                ? new List<string>(dependsOnRequestIds)
+                : new List<string>();
         }
 
         /// <summary>Gets an enumerable over all the headers for this message.</summary>
@@ -89,6 +102,17 @@ namespace Microsoft.OData.Core
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Gets the request prerequisites.
+        /// </summary>
+        public IList<string> DependsOnRequestIds
+        {
+            get
+            {
+                return this.dependsOnRequestIds;
+            }
         }
 
         /// <summary>
@@ -163,7 +187,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(operationListener != null, "operationListener != null");
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true);
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true, null);
         }
 
         /// <summary>
@@ -176,6 +200,7 @@ namespace Microsoft.OData.Core
         /// <param name="operationListener">The operation listener.</param>
         /// <param name="contentId">The content-ID for the operation request message.</param>
         /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="dependsOnReqIds">The (optional) list of request Ids as prerequisites.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to read the request content from.</returns>
         internal static ODataBatchOperationRequestMessage CreateReadMessage(
             ODataBatchReaderStream batchReaderStream,
@@ -184,13 +209,15 @@ namespace Microsoft.OData.Core
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
             string contentId,
-            IODataUrlResolver urlResolver)
+            IODataUrlResolver urlResolver,
+            IList<string> dependsOnReqIds = null)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
-            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, headers, operationListener, contentId, urlResolver, /*writing*/ false);
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, headers, operationListener, contentId,
+                urlResolver, /*writing*/ false, dependsOnReqIds);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Microsoft.OData.Service
     using System.ServiceModel.Activation;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
-#if ASTORIA_FF_CALLBACKS    
+#if ASTORIA_FF_CALLBACKS
     using System.ServiceModel.Syndication;
 #endif
     using Microsoft.OData.Core;
@@ -29,12 +29,12 @@ namespace Microsoft.OData.Service
     #endregion Namespaces
 
     /// <summary>
-    /// Represents a strongly typed service that can process data-oriented 
+    /// Represents a strongly typed service that can process data-oriented
     /// resource requests.
     /// </summary>
     /// <typeparam name="T">The type of the store to provide resources.</typeparam>
     /// <remarks>
-    /// <typeparamref name="T"/> will typically be a subtype of 
+    /// <typeparamref name="T"/> will typically be a subtype of
     /// <see cref="System.Data.Objects.ObjectContext" /> or another class that provides <see cref="IQueryable" />
     /// properties.
     /// </remarks>
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Public func to wrap the current DataServiceODataWriter with custom one to intercept 
+        /// Public func to wrap the current DataServiceODataWriter with custom one to intercept
         /// WCF Data Services calls to ODataWriter. This enables seeing the ODataFeed/ODataEntry/
         /// ODataNavigationLink instances that gets passed to underlying instance.
         /// </summary>
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Creates a <see cref="Message"/> that invokes the specified 
+        /// Creates a <see cref="Message"/> that invokes the specified
         /// <paramref name="writer"/> callback to write its body.
         /// </summary>
         /// <param name="version">Version for message.</param>
@@ -1221,7 +1221,7 @@ namespace Microsoft.OData.Service
                         WebUtil.Dispose(queryResults);
                         queryResults = null;
 
-                        // If you are querying reference nav property and the value is null, 
+                        // If you are querying reference nav property and the value is null,
                         // return 204 - No Content e.g. /Customers(1)/BestFriend
                         dataService.OperationContext.ResponseStatusCode = 204; // No Content
                         return WebUtil.GetEmptyStreamWriter();
@@ -1413,7 +1413,7 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Performs validation on <paramref name="singleResult"/>. We check that it is not both a direct reference ($value, key) and null. 
+        /// Performs validation on <paramref name="singleResult"/>. We check that it is not both a direct reference ($value, key) and null.
         /// We check that it is not an open property with a ResourceTypeKind.Collection value.
         /// </summary>
         /// <param name="singleResult">The resulting property value to be validated.</param>
@@ -1586,10 +1586,10 @@ namespace Microsoft.OData.Service
             //
             // Strictly we should only check for consistent visibility
             // for all entity sets of a given type, however the current
-            // metadata design doesn't differentiate between resource 
+            // metadata design doesn't differentiate between resource
             // container types and resource set instances on
-            // associations, and therefore all rights are checked at 
-            // the resource type level, which forces this check to have 
+            // associations, and therefore all rights are checked at
+            // the resource type level, which forces this check to have
             // consistent rights.
             //
             // The only exception could be references which are not connected
@@ -1857,19 +1857,19 @@ namespace Microsoft.OData.Service
         {
             // From the IDSP Spec:
             // If the class derived from DataService<T> implements IServiceProvider then:
-            // a. Invoke 
+            // a. Invoke
             //    IDataServiceMetadataProvider provider = IServiceProvider.GetService(TypeOf(IDataServiceMetadataProvider))
             //
             // b. If provider != null, then the service is using a Custom provider (ie. custom implementation of IDSP)
             //    Note: DataService<T>.CreateDataSource is NOT invoked for custom data service providers
             //
             // c. If provider == null, then:
-            //    i.   Create an instance of T by invoking DataService<T>.CreateDataSource (this method may be overridden by a service author) 
+            //    i.   Create an instance of T by invoking DataService<T>.CreateDataSource (this method may be overridden by a service author)
             //           and assign it to dataSourceInstance (or also CurrentDataSource)
             //    ii.  If T implements IDataServiceMetadataProvider then the service is using a custom data service provider (skip step iii. & iv.)
-            //    iii. If dataSourceInstance.GetType() == typeof(System.Data.Objects.ObjectContext) then the service will use the built-in IDSP implementation for EF 
+            //    iii. If dataSourceInstance.GetType() == typeof(System.Data.Objects.ObjectContext) then the service will use the built-in IDSP implementation for EF
             //           (ie. the �EF provider�)
-            //    iv.  If dataSourceInstance.GetType() != typeof(System.Data.Objects.ObjectContext) then the service will use the built-in reflection 
+            //    iv.  If dataSourceInstance.GetType() != typeof(System.Data.Objects.ObjectContext) then the service will use the built-in reflection
             //           for arbitrary .NET classes (ie. the �reflection provider�)
 
             // Always try to get IDataServiceMetadataProvider2 and IDataServiceQueryProvider2 before IDataServiceMetadataProvider and IDataServiceQueryProvider.
@@ -2021,7 +2021,7 @@ namespace Microsoft.OData.Service
             if (!isInternallyCreatedProvider)
             {
                 // New configuration every time, so we will create a new cache item for Wrapper.
-                // For custom providers, the only thing we cache is the configuration. Hence we need to 
+                // For custom providers, the only thing we cache is the configuration. Hence we need to
                 // create new cache item for every request to ensure that nothing else gets cached.
                 this.provider = new DataServiceProviderWrapper(
                     new DataServiceCacheItem(dynamicConfiguration, cacheItem.StaticConfiguration),
@@ -2194,7 +2194,8 @@ namespace Microsoft.OData.Service
             private readonly ODataMessageWriter messageWriter;
 
             /// <summary>Hashset to make sure that the content ids specified in the batch are all unique.</summary>
-            private readonly HashSet<int> contentIds = new HashSet<int>(new Int32EqualityComparer());
+//            private readonly HashSet<int> contentIds = new HashSet<int>(new Int32EqualityComparer());
+            private readonly HashSet<string> contentIds = new HashSet<string>();
 
             /// <summary>Dictionary to track objects represented by each content id within a changeset.</summary>
             private readonly Dictionary<string, SegmentInfo> contentIdsToSegmentInfoMapping = new Dictionary<string, SegmentInfo>(StringComparer.Ordinal);
@@ -2235,7 +2236,7 @@ namespace Microsoft.OData.Service
             #endregion Private fields
 
             /// <summary>
-            /// Creates an instance of the batch data service which keeps track of the 
+            /// Creates an instance of the batch data service which keeps track of the
             /// request and response headers per operation in the batch
             /// </summary>
             /// <param name="dataService">original data service to which the batch request was made</param>
@@ -2454,8 +2455,8 @@ namespace Microsoft.OData.Service
                     this.streamProvider = null;
                 }
 
-                // The DisposeDataSource() on the BatchDataService will be called by HandleBatchContent(). 
-                // And DataService<T>.DisposeDataSource() will always be called per request. We don't want to call this.dataService.DisposeDataService() here 
+                // The DisposeDataSource() on the BatchDataService will be called by HandleBatchContent().
+                // And DataService<T>.DisposeDataSource() will always be called per request. We don't want to call this.dataService.DisposeDataService() here
                 // or else it gets called twice.
             }
 
@@ -2639,7 +2640,7 @@ namespace Microsoft.OData.Service
                             if (this.batchReader.State == ODataBatchReaderState.ChangesetEnd)
                             {
                                 // If the operation context is not initialized, use the batch level header to get the response version.
-                                // If the operation context for the current operation exists, use it to get the response version. If the responseMessage in the 
+                                // If the operation context for the current operation exists, use it to get the response version. If the responseMessage in the
                                 // operation context is not initialized, use the batch level request header to get the response version.
                                 this.HandleChangesetException(exception, this.batchOperationContexts, batchWriter, responseStream, VersionUtil.GetEffectiveMaxResponseVersion(this.dataService.OperationContext.RequestMessage.RequestMaxVersion, this.dataService.Configuration.DataServiceBehavior.MaxProtocolVersion.ToVersion()));
 
@@ -2693,7 +2694,7 @@ namespace Microsoft.OData.Service
                         }
                     }
 
-                    // If we encountered an error while processing changeset while reading the batch boundary, we should write the 
+                    // If we encountered an error while processing changeset while reading the batch boundary, we should write the
                     // operation response, and then close the changeset boundary.
                     if (changesetStarted)
                     {
@@ -2742,7 +2743,7 @@ namespace Microsoft.OData.Service
             /// <param name="contentIds">content ids that are defined in the batch.</param>
             /// <param name="writer">Output writer.</param>
             /// <returns>An instance of the batch service host which represents the current operation.</returns>
-            private static BatchServiceHost CreateBatchServiceHostFromOperationMessage(IDataService dataService, ODataBatchOperationRequestMessage operationRequestMessage, HashSet<int> contentIds, ODataBatchWriter writer)
+            private static BatchServiceHost CreateBatchServiceHostFromOperationMessage(IDataService dataService, ODataBatchOperationRequestMessage operationRequestMessage, HashSet</*int*/string> contentIds, ODataBatchWriter writer)
             {
                 Debug.Assert(dataService != null && dataService.GetType() != typeof(BatchDataService), "dataService should not be of type BatchDataService.");
                 Debug.Assert(operationRequestMessage != null, "operationRequestMessage != null");
@@ -2756,15 +2757,9 @@ namespace Microsoft.OData.Service
                 string contentIdValue = operationRequestMessage.ContentId;
                 if (!String.IsNullOrEmpty(contentIdValue))
                 {
-                    int contentId;
-                    if (!Int32.TryParse(contentIdValue, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out contentId))
+                    if (!contentIds.Add(contentIdValue))
                     {
-                        throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeAnInteger(contentIdValue));
-                    }
-
-                    if (!contentIds.Add(contentId))
-                    {
-                        throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeUniqueInBatch(contentId));
+                        throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeUniqueInBatch(contentIdValue));
                     }
                 }
 
@@ -3048,7 +3043,7 @@ namespace Microsoft.OData.Service
                     // Get the content id of the POST request that is being cross-referenced
                     string contentId = identifier.Substring(1);
 
-                    // Now we need to scan all the previous request to find the 
+                    // Now we need to scan all the previous request to find the
                     // POST request resource which is cross-referenced by the current request
                     // and replace the resource in the POST request by the current one.
 
@@ -3084,7 +3079,7 @@ namespace Microsoft.OData.Service
                 Debug.Assert(batchHost != null, "responseMessage != null");
 
                 // Replace the Response Message we built earlier for this batch operation with a new one that ODataLib provides us.
-                // Since the ODataLib implementation does not directly match values like the Status Code that we have may set earlier, 
+                // Since the ODataLib implementation does not directly match values like the Status Code that we have may set earlier,
                 // we copy over those values from the old Response Message (which really is stored in the Host) to the new one.
                 var message = batchHost.GetOperationResponseMessage();
 

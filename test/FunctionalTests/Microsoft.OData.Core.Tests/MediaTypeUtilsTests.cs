@@ -53,7 +53,7 @@ namespace Microsoft.OData.Core.Tests
         {
             string[] args =
             {
-                "application/json;IEEE754Compatible=false", 
+                "application/json;IEEE754Compatible=false",
                 "application/json"
             };
             foreach (var arg in args)
@@ -270,6 +270,33 @@ namespace Microsoft.OData.Core.Tests
             result3.Should().BeUnspecifiedJson();
             result4.Should().BeUnspecifiedJson();
             result5.Should().BeUnspecifiedJson();
+        }
+
+        [Fact]
+        public void MediaTypeResolutionForJsonBatchShouldWork()
+        {
+            ODataMediaType mediaType;
+            Encoding encoding;
+            ODataPayloadKind payloadKind;
+            string batchBoundary;
+            string[] contentTypes = new string[]
+            {
+                "application/json",
+                "application/json;odata.metadata=minimal",
+                "application/json;odata.metadata=minimal;odata.streaming=true",
+                "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false"
+            };
+            foreach (string contentType in contentTypes)
+            {
+                ODataFormat format = MediaTypeUtils.GetFormatFromContentType(
+                    contentType, new[] { ODataPayloadKind.Batch }, ODataMediaTypeResolver.DefaultMediaTypeResolver,
+                    out mediaType, out encoding, out payloadKind, out batchBoundary);
+                mediaType.Should().NotBeNull();
+                encoding.Should().NotBeNull();
+                payloadKind.Should().Be(ODataPayloadKind.Batch);
+                batchBoundary.Should().BeNull();
+                format.Should().Be(ODataFormat.Json);
+            }
         }
 
         [Fact]

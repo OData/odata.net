@@ -3762,6 +3762,13 @@ public enum Microsoft.OData.Core.DeltaDeletedEntryReason : int {
 	Deleted = 0
 }
 
+protected enum Microsoft.OData.Core.ODataBatchReader+OperationState : int {
+	MessageCreated = 1
+	None = 0
+	StreamDisposed = 3
+	StreamRequested = 2
+}
+
 public enum Microsoft.OData.Core.ODataBatchReaderState : int {
 	ChangesetEnd = 3
 	ChangesetStart = 2
@@ -3769,6 +3776,18 @@ public enum Microsoft.OData.Core.ODataBatchReaderState : int {
 	Exception = 5
 	Initial = 0
 	Operation = 1
+}
+
+protected enum Microsoft.OData.Core.ODataBatchWriter+BatchWriterState : int {
+	BatchCompleted = 7
+	BatchStarted = 1
+	ChangesetCompleted = 6
+	ChangesetStarted = 2
+	Error = 8
+	OperationCreated = 3
+	OperationStreamDisposed = 5
+	OperationStreamRequested = 4
+	Start = 0
 }
 
 public enum Microsoft.OData.Core.ODataCollectionReaderState : int {
@@ -3893,6 +3912,72 @@ public abstract class Microsoft.OData.Core.ODataAnnotatable {
 
 	public T GetAnnotation ()
 	public void SetAnnotation (T annotation)
+}
+
+public abstract class Microsoft.OData.Core.ODataBatchReader : IODataBatchOperationListener {
+	protected ODataBatchReader (Microsoft.OData.Core.ODataInputContext inputContext, bool synchronous)
+
+	bool AllowLegacyContentIdBehavior  { protected get; }
+	string ContentIdToAddOnNextRead  { protected get; protected set; }
+	Microsoft.OData.Core.ODataInputContext InputContext  { protected get; }
+	Microsoft.OData.Core.ODataBatchReader+OperationState ReaderOperationState  { protected get; protected set; }
+	Microsoft.OData.Core.ODataBatchReaderState State  { public get; public set; }
+
+	public Microsoft.OData.Core.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
+	protected abstract Microsoft.OData.Core.ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation ()
+	public Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessage ()
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync ()
+	protected abstract Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation ()
+	protected void IncreaseBatchSize ()
+	protected void IncreaseChangesetSize ()
+	void Microsoft.OData.Core.IODataBatchOperationListener.BatchOperationContentStreamDisposed ()
+	void Microsoft.OData.Core.IODataBatchOperationListener.BatchOperationContentStreamRequested ()
+	System.Threading.Tasks.Task Microsoft.OData.Core.IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync ()
+	public bool Read ()
+	public System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
+	protected abstract bool ReadImplementation ()
+	protected void ResetChangesetSize ()
+}
+
+public abstract class Microsoft.OData.Core.ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener {
+	string CurrentOperationContentId  { protected get; protected set; }
+	Microsoft.OData.Core.ODataBatchOperationRequestMessage CurrentOperationRequestMessage  { protected get; protected set; }
+	Microsoft.OData.Core.ODataBatchOperationResponseMessage CurrentOperationResponseMessage  { protected get; protected set; }
+	Microsoft.OData.Core.ODataOutputContext OutputContext  { protected get; }
+	Microsoft.OData.Core.ODataBatchWriter+BatchWriterState State  { protected get; protected set; }
+
+	public abstract void BatchOperationContentStreamDisposed ()
+	public abstract void BatchOperationContentStreamRequested ()
+	public abstract System.Threading.Tasks.Task BatchOperationContentStreamRequestedAsync ()
+	public Microsoft.OData.Core.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync (string method, System.Uri uri, string contentId)
+	protected abstract Microsoft.OData.Core.ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation (string method, System.Uri uri, string contentId)
+	public Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessage (string contentId)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync (string contentId)
+	protected abstract Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation (string contentId)
+	protected abstract void DisposeBatchWriterAndSetContentStreamRequestedState ()
+	public abstract void Flush ()
+	public abstract System.Threading.Tasks.Task FlushAsync ()
+	public abstract void OnInStreamError ()
+	protected abstract void SetState (Microsoft.OData.Core.ODataBatchWriter+BatchWriterState newState)
+	protected abstract void StartBatchOperationContent ()
+	protected abstract void ValidateWriterReady ()
+	protected abstract void VerifyCanCreateOperationRequestMessage (bool synchronousCall, string method, System.Uri uri, string contentId)
+	protected abstract void VerifyCanFlush (bool synchronousCall)
+	public void WriteEndBatch ()
+	public System.Threading.Tasks.Task WriteEndBatchAsync ()
+	protected abstract void WriteEndBatchImplementation ()
+	public void WriteEndChangeset ()
+	public System.Threading.Tasks.Task WriteEndChangesetAsync ()
+	protected abstract void WriteEndChangesetImplementation ()
+	protected abstract void WritePendingMessageData (bool reportMessageCompleted)
+	public void WriteStartBatch ()
+	public System.Threading.Tasks.Task WriteStartBatchAsync ()
+	protected abstract void WriteStartBoundaryForOperation ()
+	public void WriteStartChangeset ()
+	public System.Threading.Tasks.Task WriteStartChangesetAsync ()
+	protected abstract void WriteStartChangesetImplementation ()
 }
 
 public abstract class Microsoft.OData.Core.ODataCollectionReader {
@@ -4385,6 +4470,7 @@ public sealed class Microsoft.OData.Core.ODataAsynchronousWriter : IODataOutputI
 public sealed class Microsoft.OData.Core.ODataBatchOperationRequestMessage : IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
 	public const readonly string ContentId = 
 
+	System.Collections.Generic.IList`1[[System.String]] DependsOnRequestIds  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
 	System.Uri Url  { public virtual get; public virtual set; }
@@ -4405,34 +4491,6 @@ public sealed class Microsoft.OData.Core.ODataBatchOperationResponseMessage : IO
 	public virtual System.IO.Stream GetStream ()
 	public virtual System.Threading.Tasks.Task`1[[System.IO.Stream]] GetStreamAsync ()
 	public virtual void SetHeader (string headerName, string headerValue)
-}
-
-public sealed class Microsoft.OData.Core.ODataBatchReader : IODataBatchOperationListener {
-	Microsoft.OData.Core.ODataBatchReaderState State  { public get; }
-
-	public Microsoft.OData.Core.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
-	public Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessage ()
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync ()
-	public bool Read ()
-	public System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
-}
-
-public sealed class Microsoft.OData.Core.ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener {
-	public Microsoft.OData.Core.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId)
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync (string method, System.Uri uri, string contentId)
-	public Microsoft.OData.Core.ODataBatchOperationResponseMessage CreateOperationResponseMessage (string contentId)
-	public System.Threading.Tasks.Task`1[[Microsoft.OData.Core.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync (string contentId)
-	public void Flush ()
-	public System.Threading.Tasks.Task FlushAsync ()
-	public void WriteEndBatch ()
-	public System.Threading.Tasks.Task WriteEndBatchAsync ()
-	public void WriteEndChangeset ()
-	public System.Threading.Tasks.Task WriteEndChangesetAsync ()
-	public void WriteStartBatch ()
-	public System.Threading.Tasks.Task WriteStartBatchAsync ()
-	public void WriteStartChangeset ()
-	public System.Threading.Tasks.Task WriteStartChangesetAsync ()
 }
 
 public sealed class Microsoft.OData.Core.ODataCollectionStart : Microsoft.OData.Core.ODataAnnotatable {
@@ -4562,6 +4620,8 @@ public sealed class Microsoft.OData.Core.ODataError : Microsoft.OData.Core.OData
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	string Message  { public get; public set; }
 	string Target  { public get; public set; }
+
+	public virtual string ToString ()
 }
 
 public sealed class Microsoft.OData.Core.ODataErrorDetail {
@@ -6802,6 +6862,8 @@ public sealed class Microsoft.OData.Client.DataServiceClientFormat {
 
 	public void UseJson ()
 	public void UseJson (Microsoft.OData.Edm.IEdmModel serviceModel)
+	public void UseJsonForBatch ()
+	public void UseJsonForBatch (Microsoft.OData.Edm.IEdmModel serviceModel)
 }
 
 public sealed class Microsoft.OData.Client.DataServiceQueryContinuation`1 : Microsoft.OData.Client.DataServiceQueryContinuation {

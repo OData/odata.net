@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Tests the ODataBatchReaderStream.ProcessPartHeader implementation.
+    /// Tests the ODataMultipartMixedBatchReaderStream.ProcessPartHeader implementation.
     /// </summary>
     [TestClass, TestCase]
     public class BatchReaderStreamProcessPartHeaderTests : ODataReaderTestCase
@@ -33,7 +33,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
 
 #if !SILVERLIGHT && !WINDOWS_PHONE
         // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.ProcessPartHeader method.")]
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.ProcessPartHeader method.")]
         public void BatchReaderStreamProcessPartHeaderTest()
         {
             IEnumerable<PartHeaderTestCase> testCases = new PartHeaderTestCase[]
@@ -230,7 +230,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.ProcessPartHeader method.")]
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.ProcessPartHeader method.")]
         public void BatchReaderStreamBoundaryHeaderValidationTest()
         {
             IEnumerable<BoundaryHeaderValidationTestCase> testCases = new BoundaryHeaderValidationTestCase[]

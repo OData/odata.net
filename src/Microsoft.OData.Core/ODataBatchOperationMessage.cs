@@ -18,7 +18,7 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Implementation class wrapped by the <see cref="ODataBatchOperationRequestMessage"/> and 
+    /// Implementation class wrapped by the <see cref="ODataBatchOperationRequestMessage"/> and
     /// <see cref="ODataBatchOperationResponseMessage"/> implementations.
     /// </summary>
     internal sealed class ODataBatchOperationMessage : ODataMessage
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Indicates that the headers and request/response line have been read or written.
-        /// Can be called only once per batch part and headers cannot be modified 
+        /// Can be called only once per batch part and headers cannot be modified
         /// anymore after this method was called.
         /// </summary>
         internal void PartHeaderProcessingCompleted()

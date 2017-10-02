@@ -102,7 +102,7 @@ namespace Microsoft.OData.Core.Json
                 }
 
                 this.textWriter = new StreamWriter(outputStream, encoding);
-                
+
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
                 this.jsonWriter = new JsonWriter(this.textWriter, messageWriterSettings.Indent, format, isIeee754Compatible);
@@ -180,6 +180,56 @@ namespace Microsoft.OData.Core.Json
                 .FollowOnSuccessWithTask((asyncBufferedStreamFlushTask) => this.messageOutputStream.FlushAsync());
         }
 #endif
+
+
+        /// <summary>
+        /// Flushes all buffered data to the underlying stream synchronously.
+        /// </summary>
+        internal void FlushBuffers()
+        {
+            if (this.asynchronousOutputStream != null)
+            {
+                this.asynchronousOutputStream.FlushSync();
+            }
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Flushes all buffered data to the underlying stream asynchronously.
+        /// </summary>
+        /// <returns>Task which represents the pending operation.</returns>
+        internal Task FlushBuffersAsync()
+        {
+            if (this.asynchronousOutputStream != null)
+            {
+                return this.asynchronousOutputStream.FlushAsync();
+            }
+            else
+            {
+                return TaskUtils.CompletedTask;
+            }
+        }
+#endif
+
+        /// <summary>
+        /// The output stream to write the payload to.
+        /// </summary>
+        /// <returns>The output stream.</returns>
+        internal Stream GetOutputStream()
+        {
+            return this.Synchronous
+                ? this.messageOutputStream
+                : this.asynchronousOutputStream;
+        }
+
+        /// <summary>
+        /// Test whether the output stream is <see cref="ODataBatchOperationWriteStream"/>
+        /// </summary>
+        /// <returns>True if the stream is write stream for batch operation.</returns>
+        internal bool IsOutputToBatchOperationWriteStream()
+        {
+            return GetOutputStream() is ODataBatchOperationWriteStream;
+        }
 
         /// <summary>
         /// Perform the actual cleanup work.

@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Tests the ODataBatchReaderStream.SkipToBoundary implementation.
+    /// Tests the ODataMultipartMixedBatchReaderStream.SkipToBoundary implementation.
     /// </summary>
     [TestClass, TestCase]
     public class BatchReaderSkipToBoundaryTests : ODataReaderTestCase
@@ -56,7 +56,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
 
 #if !SILVERLIGHT && !WINDOWS_PHONE
         // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.SkipToBoundary method.")]
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.SkipToBoundary method.")]
         public void BatchReaderSkipToBoundaryTest()
         {
             IEnumerable<SkipToBoundaryTestCase> testCases =

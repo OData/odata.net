@@ -310,7 +310,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmModel model = TestModels.BuildModelWithFunctionImport();
             IEdmOperationImport functionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_MultipleNullableParameters").Single();
 
-            var parameterValues = new[] 
+            var parameterValues = new[]
             {
               "\"p1\" : \"AAEC\"",
               "\"p2\" : true",

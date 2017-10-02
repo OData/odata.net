@@ -602,6 +602,17 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Invalid batch format: only multipart (Batch) or application/json are supported for batch."
+        /// </summary>
+        internal static string ODataMessageWriter_InvalidBatchFormat
+        {
+            get
+            {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataMessageWriter_InvalidBatchFormat);
+            }
+        }
+
+        /// <summary>
         /// A string like "Cannot set message headers for the invalid payload kind '{0}'."
         /// </summary>
         internal static string ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind(object p0) {
@@ -1176,10 +1187,85 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
+        /// A string like "Reader mode is not setup correctly."
+        /// </summary>
+        internal static string ODataBatchReader_ReaderModeNotInitilized {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_ReaderModeNotInitilized);
+            }
+        }
+
+        /// <summary>
+        /// A string like "JsonLight batch format requires top level property name 'requests' or 'responses'."
+        /// </summary>
+        internal static string ODataBatchReader_JsonBatchTopLevelPropertyMissing {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+            }
+        }
+
+        /// <summary>
         /// A string like "The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set."
         /// </summary>
         internal static string ODataBatchReader_DuplicateContentIDsNotAllowed(object p0) {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_DuplicateContentIDsNotAllowed, p0);
+        }
+
+        /// <summary>
+        /// A string like "The atomicityGroup ID [{0}] was found duplicated in the batch request. AtomicityGroup IDs have to be adjacent, otherwise would be detected as duplicated."
+        /// </summary>
+        internal static string ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed, p0);
+        }
+
+        /// <summary>
+        /// A string like "Request property [{0}] is required but is missing."
+        /// </summary>
+        internal static string ODataBatchReader_RequestPropertyMissing(object p0)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_RequestPropertyMissing, p0);
+        }
+
+        /// <summary>
+        /// A string like "The dependsOn request Id [{0}] is same as atomicityGroup property value [{1}], and is not allowed."
+        /// </summary>
+        internal static string ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed(object p0, object p1)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The dependsOn request Id [{0}] is same as id property value [{1}], and it is not allowed."
+        /// </summary>
+        internal static string ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed(object p0, object p1)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore
+        /// dependsOn property should refer to atomic group Id [{1}] instead."
+        /// </summary>
+        internal static string ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(object p0, object p1)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed."
+        /// </summary>
+        internal static string ODataBatchReader_DependsOnIdNotFound(object p0, object p1)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_DependsOnIdNotFound, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like " Message with id {0} is positioned incorrectly: all messages of same groupId {1} must be adjacent."
+        /// </summary>
+        internal static string ODataBatchReader_MessageIdPositionedIncorrectly(object p0, object p1)
+        {
+            return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.ODataBatchReader_MessageIdPositionedIncorrectly, p0, p1);
         }
 
         /// <summary>
@@ -6160,7 +6246,7 @@ namespace Microsoft.OData.Core {
         internal static Exception ArgumentNull(string paramName) {
             return new ArgumentNullException(paramName);
         }
-        
+
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -6176,7 +6262,7 @@ namespace Microsoft.OData.Core {
         }
 
         /// <summary>
-        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality. 
+        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
         /// </summary>
         internal static Exception NotSupported() {
             return new NotSupportedException();

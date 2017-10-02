@@ -9,12 +9,12 @@ namespace Microsoft.OData.Core
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using System.IO;
+
     #endregion Namespaces
 
     /// <summary>
-    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync. 
-    /// This stream communicates status changes to the owning batch reader (via IODataBatchOperationListener) 
+    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
+    /// This stream communicates status changes to the owning batch reader (via IODataBatchOperationListener)
     /// to prevent clients to use the batch reader while a content stream is still in use.
     /// </summary>
     internal abstract class ODataBatchOperationReadStream : ODataBatchOperationStream
@@ -129,6 +129,21 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose; false if called form the finalizer.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose resource used by underlying batch reader stream.
+                this.batchReaderStream.DisposeResources();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
         /// A batch operation stream with the content length specified.
         /// </summary>
         private sealed class ODataBatchOperationReadStreamWithLength : ODataBatchOperationReadStream
@@ -172,6 +187,7 @@ namespace Microsoft.OData.Core
                 int bytesRead = this.batchReaderStream.ReadWithLength(buffer, offset, Math.Min(count, this.length));
                 this.length -= bytesRead;
                 Debug.Assert(this.length >= 0, "Read beyond expected length.");
+
                 return bytesRead;
             }
         }

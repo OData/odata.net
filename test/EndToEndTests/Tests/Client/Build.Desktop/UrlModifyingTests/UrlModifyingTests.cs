@@ -115,27 +115,38 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
         [TestMethod]
         public void BatchRequest()
         {
-            var context = this.CreateWrappedContext<DefaultContainer>();
-            //Setup queries
-            DataServiceRequest[] reqs = new DataServiceRequest[] {
-                context.CreateQuery<Customer>("BatchRequest1"),
-                context.CreateQuery<Person>("BatchRequest2"),
-            };
-
-            var response = context.ExecuteBatch(reqs);
-            Assert.IsNotNull(response);
-            Assert.IsTrue(response.IsBatchResponse);
-            foreach (var item in response)
-            {
-                Assert.IsTrue(item.StatusCode == 200);
-            }
+            // Test case for Multipart MIME batch
+            TestBatchRequest(false);
         }
 
+        [TestMethod]
+        public void BatchRequestUseJson()
+        {
+            // Test case for Json batch
+            TestBatchRequest(true);
+        }
 
         [TestMethod]
         public void BatchRequestBaseUriDifferentBetweenBatchAndRequest()
         {
+            // Test case for Multipart MIME batch
+            TestBatchRequestBaseUriDifferentBetweenBatchAndRequest(false);
+        }
+
+        [TestMethod]
+        public void BatchRequestBaseUriDifferentBetweenBatchAndRequestUseJson()
+        {
+            // Test case for Json batch
+            TestBatchRequestBaseUriDifferentBetweenBatchAndRequest(true);
+        }
+
+        private void TestBatchRequestBaseUriDifferentBetweenBatchAndRequest(bool useJson)
+        {
             var context = this.CreateWrappedContext<DefaultContainer>();
+            if (useJson)
+            {
+                context.Format.UseJsonForBatch();
+            }
 
             //Setup queries
             DataServiceRequest[] reqs = new DataServiceRequest[] {
@@ -152,6 +163,30 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
                 Assert.IsInstanceOfType(item.Error, typeof(DataServiceClientException), "Unexpected inner exception type");
                 var ex = item.Error as DataServiceClientException;
                 StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(item), "DataServiceOperationContext_CannotModifyServiceUriInsideBatch");
+            }
+        }
+
+        private void TestBatchRequest(bool useJson)
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>();
+
+            if (useJson)
+            {
+                context.Format.UseJsonForBatch();
+            }
+
+            //Setup queries
+            DataServiceRequest[] requests = new DataServiceRequest[] {
+                context.CreateQuery<Customer>("BatchRequest1"),
+                context.CreateQuery<Person>("BatchRequest2")
+            };
+
+            var response = context.ExecuteBatch(requests);
+            Assert.IsNotNull(response);
+            Assert.IsTrue(response.IsBatchResponse);
+            foreach (var item in response)
+            {
+                Assert.IsTrue(item.StatusCode == 200);
             }
         }
     }

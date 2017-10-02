@@ -124,7 +124,7 @@ namespace Microsoft.OData.Core.UriParser
         internal static object VerifyAndCoerceUriPrimitiveLiteral(
             object primitiveValue,
             string literalValue,
-            IEdmModel model, 
+            IEdmModel model,
             IEdmTypeReference expectedTypeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(primitiveValue, "primitiveValue");
@@ -224,7 +224,7 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
             return ConverToJsonLightLiteral(
-                model, 
+                model,
                 context =>
             {
                 ODataWriter writer = context.CreateODataEntryWriter(null, null);
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Core.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
             return ConverToJsonLightLiteral(
-                model, 
+                model,
                 context =>
             {
                 ODataWriter writer = context.CreateODataFeedWriter(null, null);
@@ -327,7 +327,7 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>. 
+        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>.
         /// </summary>
         /// <param name="primitiveValue">Primitive value to coerce.</param>
         /// <param name="targetEdmType">Edm primitive type to check against.</param>
@@ -481,7 +481,7 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>. 
+        /// Coerces the given <paramref name="primitiveValue"/> to the appropriate CLR type based on <paramref name="targetEdmType"/>.
         /// </summary>
         /// <param name="primitiveValue">Primitive value to coerce.</param>
         /// <param name="targetEdmType">Edm primitive type to check against.</param>

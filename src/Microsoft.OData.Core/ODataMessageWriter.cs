@@ -23,6 +23,8 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.Atom;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Core.JsonLight;
+
     #endregion Namespaces
 
     /// <summary>
@@ -315,6 +317,7 @@ namespace Microsoft.OData.Core
         public ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataEntryWriter();
+
             return this.WriteToOutput(
                 ODataPayloadKind.Entry,
                 null /* verifyHeaders */,
@@ -676,7 +679,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// If no headers have been set, sets the content-type and OData-Version headers on the message used by the message writer.
-        /// If headers have been set explicitly (via ODataUtils.SetHeaderForPayload) this method verifies that the payload kind used to 
+        /// If headers have been set explicitly (via ODataUtils.SetHeaderForPayload) this method verifies that the payload kind used to
         /// create the headers is the same as the one being passed in <paramref name="payloadKind"/>.
         /// </summary>
         /// <param name="payloadKind">The kind of payload to be written with this message writer.</param>
@@ -684,7 +687,7 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(payloadKind != ODataPayloadKind.Unsupported, "payloadKind != ODataPayloadKind.Unsupported");
 
-            // verify that no payload kind has been set or that the payload kind set previously and the 
+            // verify that no payload kind has been set or that the payload kind set previously and the
             // payload that is attempted to being written are the same
             this.VerifyPayloadKind(payloadKind);
 
@@ -739,8 +742,8 @@ namespace Microsoft.OData.Core
         /// header of the message.
         /// </summary>
         /// <remarks>
-        /// This method computes and ensures that a content type exists and computes the 
-        /// OData format from it. If a content type is explicitly specified through 
+        /// This method computes and ensures that a content type exists and computes the
+        /// OData format from it. If a content type is explicitly specified through
         /// <see cref="Microsoft.OData.Core.ODataUtils.SetHeadersForPayload(Microsoft.OData.Core.ODataMessageWriter, Microsoft.OData.Core.ODataPayloadKind)"/>
         /// or <see cref="Microsoft.OData.Core.ODataMessageWriterSettings.SetContentType(string, string)"/> it will be used. If no
         /// content type is specified in either place, the message headers are checked for
@@ -785,21 +788,36 @@ namespace Microsoft.OData.Core
 
                 if (this.writerPayloadKind == ODataPayloadKind.Batch)
                 {
-                    // Note that this serves as verification only for now, since we only support a single content type and format for $batch payloads.
-                    Debug.Assert(this.format == ODataFormat.Batch, "$batch should only support batch format since it's format independent.");
-                    Debug.Assert(this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed, "$batch content type is currently only supported to be multipart/mixed.");
+                    Debug.Assert(this.format == ODataFormat.Batch || this.format == ODataFormat.Json,
+                        "$batch payload should only support batch or json format.");
+                    Debug.Assert(
+                        (this.format == ODataFormat.Batch && this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed)
+                     || (this.format == ODataFormat.Json && this.mediaType.FullTypeName == MimeConstants.MimeApplicationJson),
+                     "$batch content type is currently can only be multipart/mixed or application/json.");
 
                     //// TODO: What about the encoding - should we verify that it's 7bit US-ASCII only?
 
-                    this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
+                    if (this.format == ODataFormat.Batch)
+                    {
+                        this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
 
-                    // Set the content type header here since all headers have to be set before getting the stream
-                    // Note that the mediaType may have additional parameters, which we ignore here (intentional as per MIME spec).
-                    // Note that we always generate a new boundary string here, even if the accept header contained one.
-                    // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
-                    // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
-                    // and at least in theory security issues.
-                    contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
+                        // Set the content type MIME header here since all headers have to be set before getting the stream
+                        // Note that the mediaType may have additional parameters, which we ignore here (intentional as per MIME spec).
+                        // Note that we always generate a new boundary string here, even if the accept header contained one.
+                        // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
+                        // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
+                        // and at least in theory security issues.
+                        contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
+                    }
+                    else if (this.format == ODataFormat.Json)
+                    {
+                        // Build the application/json content type
+                        contentType = HttpUtils.BuildContentType(this.mediaType, this.encoding);
+                    }
+                    else
+                    {
+                        throw new ODataException(Strings.ODataMessageWriter_InvalidBatchFormat);
+                    }
                 }
                 else
                 {
@@ -980,7 +998,7 @@ namespace Microsoft.OData.Core
 
             this.VerifyNotDisposed();
 
-            // We only allow writing top-level error to response messages. Do we have any scenario to write in-stream errors to request messages? 
+            // We only allow writing top-level error to response messages. Do we have any scenario to write in-stream errors to request messages?
             //             We decided to not allow in-stream errors in requests.
             if (!this.writingResponse)
             {
@@ -1047,7 +1065,7 @@ namespace Microsoft.OData.Core
             this.VerifyWriterNotDisposedAndNotUsed();
 
             // We cannot use AtomValueUtils.TryConvertPrimitiveToString for all cases since binary values are
-            // converted into unencoded byte streams in the raw format 
+            // converted into unencoded byte streams in the raw format
             // (as opposed to base64 encoded byte streams in the AtomValueUtils); see OIPI 2.2.6.4.1.
             return value is byte[] ? ODataPayloadKind.BinaryValue : ODataPayloadKind.Value;
         }

@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.Core
 {
+    using System.Globalization;
+
     /// <summary>
     /// Class representing an error detail.
     /// </summary>
@@ -22,5 +24,16 @@ namespace Microsoft.OData.Core
         /// <summary>Gets or sets the target of the particular error.</summary>
         /// <returns>For example, the name of the property in error</returns>
         public string Target { get; set; }
+
+        /// <summary>
+        /// Serilization to Json format string.
+        /// </summary>
+        /// <returns>The string in Json format</returns>
+        internal string ToJson()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{{ \"errorcode\": \"{0}\", \"message\": \"{1}\", \"target\": \"{2}\" }}",
+                this.ErrorCode ?? "", this.Message ?? "", this.Target ?? "");
+        }
     }
 }

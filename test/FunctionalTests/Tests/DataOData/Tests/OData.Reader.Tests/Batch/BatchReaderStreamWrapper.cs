@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core.MultipartMixed;
+
 namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
 {
     #region Namespaces
@@ -15,14 +17,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Wrapper of ODataBatchReaderStream to expose the internal API.
+    /// Wrapper of ODataMultipartMixedBatchReaderStream to expose the internal API.
     /// </summary>
     public sealed class BatchReaderStreamWrapper
     {
         /// <summary>
         /// The type of the stream buffer class in the product code.
         /// </summary>
-        private static readonly Type batchStreamType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchReaderStream");
+        private static readonly Type batchStreamType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataMultipartMixedBatchReaderStream");
 
         /// <summary>
         /// The stream buffer instance from the product code.
@@ -38,7 +40,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// Constructor.
         /// </summary>
         /// <param name="batchReader">The batch reader to get the batch stream from.</param>
-        public BatchReaderStreamWrapper(ODataBatchReader batchReader)
+        internal BatchReaderStreamWrapper(ODataMultipartMixedBatchReader batchReader)
         {
             this.batchStream = ReflectionUtils.GetField(batchReader, "batchStream");
             this.batchStreamBuffer = new BatchReaderStreamBufferWrapper(this.batchStream);

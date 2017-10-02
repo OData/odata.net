@@ -14,6 +14,7 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -144,14 +145,16 @@ namespace Microsoft.OData.Core
         /// <param name="outputStream">The output stream underlying the operation message.</param>
         /// <param name="operationListener">The operation listener.</param>
         /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="contentId">The string representing the content Id.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
         internal static ODataBatchOperationResponseMessage CreateWriteMessage(
             Stream outputStream,
             IODataBatchOperationListener operationListener,
-            IODataUrlResolver urlResolver)
+            IODataUrlResolver urlResolver,
+            string contentId = null)
         {
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true);
+            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, contentId, urlResolver, /*writing*/ true);
         }
 
         /// <summary>

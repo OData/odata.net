@@ -17,6 +17,9 @@ namespace Microsoft.OData.Core.Tests
     {
         private static readonly List<ODataMediaTypeFormat> JsonMediaTypes = new List<ODataMediaTypeFormat>();
 
+        // List of media type mappings for Batch payload.
+        private static readonly List<ODataMediaTypeFormat> BatchMediaTypes = new List<ODataMediaTypeFormat>();
+
         /// <summary>
         /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/>, ATOM excluded.
         /// Here is a comparsion baseline
@@ -38,12 +41,12 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // value
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType),ODataFormat.RawValue),
             },
             // binary
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType) ,ODataFormat.RawValue),
             },
             // collection
@@ -52,29 +55,24 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // metadata document
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata),
             },
             // error
             JsonMediaTypes,
             // batch
-            new ODataMediaTypeFormat[]
-            { 
-                // Note that as per spec the multipart/mixed must have a boundary parameter which is not specified here. We will add that parameter
-                // when using this mime type because we need to generate a new boundary every time.
-                new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType) ,ODataFormat.Batch),
-            },
+            BatchMediaTypes,
             // parameter
             JsonMediaTypes,
             // individual property
             JsonMediaTypes,
             // delta
             new ODataMediaTypeFormat[]
-            { 
+            {
             },
             // async
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType) ,ODataFormat.RawValue),
             },
         };
@@ -112,6 +110,9 @@ namespace Microsoft.OData.Core.Tests
                     }
                 }
             }
+
+            BatchMediaTypes.Add(new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType), ODataFormat.Batch));
+            BatchMediaTypes.AddRange(JsonMediaTypes);
         }
 
         [Fact]
@@ -168,9 +169,9 @@ namespace Microsoft.OData.Core.Tests
                 ODataMediaType expectedMediaType = MyFormat.MediaTypeWithFormatA.MediaType;
                 if (payloadKind == ODataPayloadKind.Batch)
                 {
-                    expectedBoundary = "ba_" + Guid.NewGuid();
-                    contentType += ";boundary=" + expectedBoundary;
-                    expectedMediaType = new ODataMediaType("text", "x-A", new KeyValuePair<string, string>("boundary", expectedBoundary));
+                    string boundaryParamValue = "ba_" + Guid.NewGuid();
+                    contentType += ";boundary=" + boundaryParamValue;
+                    expectedMediaType = new ODataMediaType("text", "x-A", new KeyValuePair<string, string>("boundary", boundaryParamValue));
                 }
 
                 ODataMediaType mediaType;

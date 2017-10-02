@@ -16,8 +16,8 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.MultipartMixed;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <remarks>
         /// InitializeRawValueWriter must be called before this is used.
-        /// 
+        ///
         /// Also, within this class we should be using RawValueWriter for everything. Ideally we wouldn't leak the TextWriter out, but
         /// the Batch writer needs it at the moment.
         /// </remarks>
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>Task which represents the pending write operation.</returns>
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Core
         {
             // Batch writer needs the default encoding to not use the preamble.
             this.encoding = this.encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
-            ODataBatchWriter batchWriter = new ODataBatchWriter(this, batchBoundary);
+            ODataBatchWriter batchWriter = new ODataMultipartMixedBatchWriter(this, batchBoundary);
             this.outputInStreamErrorListener = batchWriter;
             return batchWriter;
         }

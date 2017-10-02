@@ -26,7 +26,7 @@ namespace Microsoft.OData.Core
         internal static string CreateBatchBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.BatchResponseBoundaryTemplate : ODataConstants.BatchRequestBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Core
         internal static string CreateChangeSetBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Core
         /// <returns>The multipart/mixed content type with the specified boundary (if any).</returns>
         internal static string CreateMultipartMixedContentType(string boundary)
         {
-            return string.Format(
+            return String.Format(
                 CultureInfo.InvariantCulture,
                 "{0}; {1}={2}",
                 MimeConstants.MimeMultipartMixed,

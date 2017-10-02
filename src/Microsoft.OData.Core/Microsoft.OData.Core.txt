@@ -102,6 +102,7 @@ ODataMessageWriter_CannotWriteMetadataWithoutModel=No model was specified in the
 ODataMessageWriter_CannotSpecifyOperationWithoutModel=No model was specified in the ODataMessageWriterSettings; a model has to be provided in the ODataMessageWriterSettings when CreateODataParameterWriter is called with a non-null operation.
 ODataMessageWriter_JsonPaddingOnInvalidContentType=A JsonPaddingFunctionName was specified, but the content-type '{0}' is not supported with Json Padding.
 ODataMessageWriter_NonCollectionType=The type '{0}' specified as the collection's item type is not primitive, enum or complex. An ODataCollectionWriter can only write collections of primitive, enum or complex values.
+ODataMessageWriter_InvalidBatchFormat=Invalid batch format: only multipart (Batch) or application/json are supported for batch.
 
 ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth=Both startEntryXmlCustomizationCallback and endEntryXmlCustomizationCallback must be either null or non-null.
 
@@ -175,7 +176,16 @@ ODataBatchReader_ReadOrReadAsyncCalledInInvalidState=ODataBatchReader.ReadAsync 
 ODataBatchReader_MaxBatchSizeExceeded=The current batch message contains too many parts. A maximum number of '{0}' query operations and change sets are allowed in a batch message.
 ODataBatchReader_MaxChangeSetSizeExceeded=The current change set contains too many operations. A maximum number of '{0}' operations are allowed in a change set.
 ODataBatchReader_NoMessageWasCreatedForOperation=An operation was detected, but no message was created for it. You must create a message for every operation found in a batch or change set.
+ODataBatchReader_ReaderModeNotInitilized=Reader mode is not setup correctly.
+ODataBatchReader_JsonBatchTopLevelPropertyMissing=JsonLight batch format requires top level property name 'requests' or 'responses'.
 ODataBatchReader_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set.
+ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed=The atomicityGroup ID [{0}] was found duplicated in the batch request. AtomicityGroup IDs have to be adjacent, otherwise would be detected as duplicated.
+ODataBatchReader_RequestPropertyMissing=Request property [{0}] is required but is missing.
+ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed=The dependsOn request Id [{0}] is same as atomicityGroup property value [{1}], and is not allowed.
+ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed=The dependsOn request Id [{0}] is same as id property value [{1}], and it is not allowed.
+ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed=The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore dependsOn property should refer to atomic group Id [{1}] instead.
+ODataBatchReader_DependsOnIdNotFound=The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed.
+ODataBatchReader_MessageIdPositionedIncorrectly=Message with id [{0}] is positioned incorrectly: all messages of same groupId [{1}] must be adjacent.
 
 ODataBatchReaderStream_InvalidHeaderSpecified=The message header '{0}' is invalid. The header value must be of the format '<header name>: <header value>'.
 ODataBatchReaderStream_InvalidRequestLine=The request line '{0}' is invalid. The request line at the start of each operation must be of the format 'HttpMethod RequestUrl HttpVersion'.
