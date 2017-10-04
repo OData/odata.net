@@ -177,11 +177,11 @@ namespace Microsoft.OData.MultipartMixed
             this.InterceptException(this.IncreaseBatchSize);
 
             // write the boundary string
-            ODataBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
+            ODataMultipartMixedBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
             this.batchStartBoundaryWritten = true;
 
             // write the change set headers
-            ODataBatchWriterUtils.WriteChangeSetPreamble(this.RawOutputContext.TextWriter, this.changeSetBoundary);
+            ODataMultipartMixedBatchWriterUtils.WriteChangeSetPreamble(this.RawOutputContext.TextWriter, this.changeSetBoundary);
             this.changesetStartBoundaryWritten = false;
         }
 
@@ -239,7 +239,7 @@ namespace Microsoft.OData.MultipartMixed
             this.WriteStartBoundaryForOperation();
 
             // write the headers and request line
-            ODataBatchWriterUtils.WriteRequestPreamble(this.RawOutputContext.TextWriter, method, uri,
+            ODataMultipartMixedBatchWriterUtils.WriteRequestPreamble(this.RawOutputContext.TextWriter, method, uri,
                 this.RawOutputContext.MessageWriterSettings.BaseUri, changeSetBoundary != null, contentId,
                 payloadUriOption);
 
@@ -262,7 +262,7 @@ namespace Microsoft.OData.MultipartMixed
             this.SetState(BatchWriterState.BatchCompleted);
 
             // write the end boundary for the batch
-            ODataBatchWriterUtils.WriteEndBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
+            ODataMultipartMixedBatchWriterUtils.WriteEndBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
 
             // For compatibility with WCF DS we write a newline after the end batch boundary.
             // Technically it's not needed, but it doesn't violate anything either.
@@ -289,7 +289,7 @@ namespace Microsoft.OData.MultipartMixed
             // otherwise WCF DS V2 won't be able to read it (it fails on the start-end boundary empty changeset).
 
             // write the end boundary for the change set
-            ODataBatchWriterUtils.WriteEndBoundary(this.RawOutputContext.TextWriter, currentChangeSetBoundary, !this.changesetStartBoundaryWritten);
+            ODataMultipartMixedBatchWriterUtils.WriteEndBoundary(this.RawOutputContext.TextWriter, currentChangeSetBoundary, !this.changesetStartBoundaryWritten);
 
             // Reset the cache of content IDs here. As per spec, content IDs are only unique inside a change set.
             this.PayloadUriConverter.Reset();
@@ -320,7 +320,7 @@ namespace Microsoft.OData.MultipartMixed
             this.WriteStartBoundaryForOperation();
 
             // write the headers and request separator line
-            ODataBatchWriterUtils.WriteResponsePreamble(this.RawOutputContext.TextWriter, changeSetBoundary != null, contentId);
+            ODataMultipartMixedBatchWriterUtils.WriteResponsePreamble(this.RawOutputContext.TextWriter, changeSetBoundary != null, contentId);
 
             return this.CurrentOperationResponseMessage;
         }
@@ -339,17 +339,6 @@ namespace Microsoft.OData.MultipartMixed
             // flush the text writer to make sure all buffers of the text writer
             // are flushed to the underlying async stream
             this.RawOutputContext.TextWriter.Flush();
-        }
-
-        /// <summary>
-        /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
-        /// called after the flush operation(s) have completed.
-        /// </summary>
-        protected override void DisposeBatchWriterAndSetContentStreamRequestedState()
-        {
-            this.RawOutputContext.CloseWriter();
-
-            this.SetState(BatchWriterState.OperationStreamRequested);
         }
 
         /// <summary>
@@ -396,7 +385,7 @@ namespace Microsoft.OData.MultipartMixed
                     break;
                 case BatchWriterState.ChangesetStarted:
                     Debug.Assert(this.changeSetBoundary == null, "this.changeSetBoundary == null");
-                    this.changeSetBoundary = ODataBatchWriterUtils.CreateChangeSetBoundary(this.RawOutputContext.WritingResponse);
+                    this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.RawOutputContext.WritingResponse);
                     break;
                 case BatchWriterState.ChangesetCompleted:
                     Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
@@ -408,16 +397,38 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Validates that the batch writer is ready to process a new write request.
+        /// Verifies that the writer is not disposed.
         /// </summary>
-        protected override void ValidateWriterReady()
+        protected override void VerifyNotDisposed()
         {
             this.RawOutputContext.VerifyNotDisposed();
+        }
 
-            // If the operation stream was requested but not yet disposed, the writer can't be used to do anything.
-            if (this.State == BatchWriterState.OperationStreamRequested)
+        /// <summary>
+        /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
+        /// called after the flush operation(s) have completed.
+        /// </summary>
+        private void DisposeBatchWriterAndSetContentStreamRequestedState()
+        {
+            this.RawOutputContext.CloseWriter();
+
+            this.SetState(BatchWriterState.OperationStreamRequested);
+        }
+
+        /// <summary>
+        /// Writes the start boundary for an operation. This is either the batch or the changeset boundary.
+        /// </summary>
+        private void WriteStartBoundaryForOperation()
+        {
+            if (this.changeSetBoundary == null)
             {
-                throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
+                ODataMultipartMixedBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
+                this.batchStartBoundaryWritten = true;
+            }
+            else
+            {
+                ODataMultipartMixedBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.changeSetBoundary, !this.changesetStartBoundaryWritten);
+                this.changesetStartBoundaryWritten = true;
             }
         }
 
@@ -427,7 +438,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="reportMessageCompleted">
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
         /// </param>
-        protected override void WritePendingMessageData(bool reportMessageCompleted)
+        private void WritePendingMessageData(bool reportMessageCompleted)
         {
             if (this.CurrentOperationMessage != null)
             {
@@ -461,23 +472,6 @@ namespace Microsoft.OData.MultipartMixed
                     this.CurrentOperationRequestMessage = null;
                     this.CurrentOperationResponseMessage = null;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Writes the start boundary for an operation. This is either the batch or the changeset boundary.
-        /// </summary>
-        protected override void WriteStartBoundaryForOperation()
-        {
-            if (this.changeSetBoundary == null)
-            {
-                ODataBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
-                this.batchStartBoundaryWritten = true;
-            }
-            else
-            {
-                ODataBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.changeSetBoundary, !this.changesetStartBoundaryWritten);
-                this.changesetStartBoundaryWritten = true;
             }
         }
 
