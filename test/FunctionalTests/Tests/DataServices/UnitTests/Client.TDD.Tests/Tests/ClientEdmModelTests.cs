@@ -187,7 +187,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [TestMethod]
-        public void GetOrCreateEdmTypeShouldShouldWorkForEnumTypes()
+        public void GetOrCreateEdmTypeShouldWorkForEnumTypes()
         {
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var enumType = clientModel.GetOrCreateEdmType(typeof(EdmEnumType));
