@@ -547,12 +547,6 @@ namespace Microsoft.OData
         protected abstract void StartBatchOperationContent();
 
         /// <summary>
-        /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
-        /// called after the flush operation(s) have completed.
-        /// </summary>
-        protected abstract void DisposeBatchWriterAndSetContentStreamRequestedState();
-
-        /// <summary>
         /// Verifies that the writer is in correct state for the Flush operation.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
@@ -586,22 +580,23 @@ namespace Microsoft.OData
         protected abstract void SetState(BatchWriterState newState);
 
         /// <summary>
+        /// Verifies that the writer is not disposed.
+        /// </summary>
+        protected abstract void VerifyNotDisposed();
+
+        /// <summary>
         /// Validates that the batch writer is ready to process a new write request.
         /// </summary>
-        protected abstract void ValidateWriterReady();
+        private void ValidateWriterReady()
+        {
+            VerifyNotDisposed();
 
-        /// <summary>
-        /// Write any pending headers for the current operation message (if any).
-        /// </summary>
-        /// <param name="reportMessageCompleted">
-        /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
-        /// </param>
-        protected abstract void WritePendingMessageData(bool reportMessageCompleted);
-
-        /// <summary>
-        /// Writes the start boundary for an operation. This is either the batch or the changeset boundary.
-        /// </summary>
-        protected abstract void WriteStartBoundaryForOperation();
+            // If the operation stream was requested but not yet disposed, the writer can't be used to do anything.
+            if (this.State == BatchWriterState.OperationStreamRequested)
+            {
+                throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
+            }
+        }
 
         /// <summary>
         /// Determines whether a given writer state is considered an error state.

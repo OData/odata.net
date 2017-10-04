@@ -1,22 +1,26 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataBatchWriterUtils.cs" company="Microsoft">
+// <copyright file="ODataMultipartMixedBatchWriterUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+
+namespace Microsoft.OData.MultipartMixed
 {
     #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
+
+
+
     #endregion Namespaces
 
     /// <summary>
     /// Helper methods used by the ODataBatchWriter.
     /// </summary>
-    internal static class ODataBatchWriterUtils
+    internal static class ODataMultipartMixedBatchWriterUtils
     {
         /// <summary>
         /// Creates a new batch boundary string based on a randomly created GUID.

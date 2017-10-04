@@ -17,6 +17,7 @@ namespace Microsoft.OData
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
+    using Microsoft.OData.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
@@ -909,7 +910,7 @@ namespace Microsoft.OData
 
                     //// TODO: What about the encoding - should we verify that it's 7bit US-ASCII only?
 
-                    this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
+                    this.batchBoundary = ODataMultipartMixedBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
 
                     // Set the content type header here since all headers have to be set before getting the stream
                     // Note that the mediaType may have additional parameters, which we ignore here (intentional as per MIME spec).
@@ -917,7 +918,7 @@ namespace Microsoft.OData
                     // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
                     // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
                     // and at least in theory security issues.
-                    contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
+                    contentType = ODataMultipartMixedBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
                 }
                 else
                 {
