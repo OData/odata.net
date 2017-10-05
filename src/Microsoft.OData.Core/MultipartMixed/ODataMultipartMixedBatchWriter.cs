@@ -64,34 +64,6 @@ namespace Microsoft.OData.MultipartMixed
             get { return this.OutputContext as ODataRawOutputContext; }
         }
 
-        /// <summary>Flushes the write buffer to the underlying stream.</summary>
-        public override void Flush()
-        {
-            this.VerifyCanFlush(true);
-
-            // make sure we switch to state FatalExceptionThrown if an exception is thrown during flushing.
-            try
-            {
-                this.RawOutputContext.Flush();
-            }
-            catch
-            {
-                this.SetState(BatchWriterState.Error);
-                throw;
-            }
-        }
-
-#if PORTABLELIB
-        /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
-        /// <returns>A task instance that represents the asynchronous operation.</returns>
-        public override Task FlushAsync()
-        {
-            this.VerifyCanFlush(false);
-
-            // make sure we switch to state FatalExceptionThrown if an exception is thrown during flushing.
-            return this.RawOutputContext.FlushAsync().FollowOnFaultWith(t => this.SetState(BatchWriterState.Error));
-        }
-#endif
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
@@ -159,6 +131,24 @@ namespace Microsoft.OData.MultipartMixed
             throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
         }
 
+        /// <summary>
+        /// Flush the output.
+        /// </summary>
+        protected override void FlushSynchronously()
+        {
+            this.RawOutputContext.Flush();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Flush the output.
+        /// </summary>
+        /// <returns>Task representing the pending flush operation.</returns>
+        protected override Task FlushAsynchronously()
+        {
+            return this.RawOutputContext.FlushAsync();
+        }
+#endif
 
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
@@ -342,33 +332,6 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Verifies that calling CreateOperationRequestMessage is valid.
-        /// </summary>
-        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        /// <param name="method">The Http method to be used for this request operation.</param>
-        /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        protected override void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri, string contentId)
-        {
-            this.CanCreateOperationRequestMessageVerifierCommon(synchronousCall, method, uri, contentId);
-            VerifyCanCreateOperationRequestMessageAgainstChangeSetBoundary(method, contentId);
-        }
-
-        /// <summary>
-        /// Verifies that the writer is in correct state for the Flush operation.
-        /// </summary>
-        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        protected override void VerifyCanFlush(bool synchronousCall)
-        {
-            this.RawOutputContext.VerifyNotDisposed();
-            this.VerifyCallAllowed(synchronousCall);
-            if (this.State == BatchWriterState.OperationStreamRequested)
-            {
-                this.ThrowODataException(Strings.ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState);
-            }
-        }
-
-        /// <summary>
         /// Sets a new writer state; verifies that the transition from the current state into new state is valid.
         /// </summary>
         /// <param name="newState">The writer state to transition into.</param>
@@ -402,6 +365,25 @@ namespace Microsoft.OData.MultipartMixed
         protected override void VerifyNotDisposed()
         {
             this.RawOutputContext.VerifyNotDisposed();
+        }
+
+        /// <summary>
+        /// Format specific implementation to verify that CreateOperationRequestMessage is valid.
+        /// </summary>
+        /// <param name="method">The HTTP method to be validated.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The content Id string to be validated.</param>
+        protected override void VerifyCanCreateOperationRequestMessageForFormat(string method, Uri uri, string contentId)
+        {
+            VerifyCanCreateOperationRequestMessageAgainstChangeSetBoundary(method, contentId);
+        }
+
+        /// <summary>
+        /// Starts a new batch - implementation of the actual functionality.
+        /// </summary>
+        protected override void WriteStartBatchImplementation()
+        {
+            this.SetState(BatchWriterState.BatchStarted);
         }
 
         /// <summary>
