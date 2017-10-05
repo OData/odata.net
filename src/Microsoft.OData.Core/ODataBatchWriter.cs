@@ -351,13 +351,36 @@ namespace Microsoft.OData
         }
 #endif
 
+
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
-        public abstract void Flush();
+        public void Flush()
+        {
+            this.VerifyCanFlush(true);
+
+            // make sure we switch to state FatalExceptionThrown if an exception is thrown during flushing.
+            try
+            {
+                this.FlushSynchronously();
+            }
+            catch
+            {
+                this.SetState(BatchWriterState.Error);
+                throw;
+            }
+        }
+
+
 
 #if PORTABLELIB
         /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
-        public abstract Task FlushAsync();
+        public Task FlushAsync()
+        {
+            this.VerifyCanFlush(false);
+
+            // Make sure we switch to writer state Error if an exception is thrown during flushing.
+            return this.FlushAsynchronously().FollowOnFaultWith(t => this.SetState(BatchWriterState.Error));
+        }
 #endif
 
         /// <summary>
@@ -389,54 +412,6 @@ namespace Microsoft.OData
         /// If the listener returns, the writer should not allow any more writing, since the in-stream error is the last thing in the payload.
         /// </remarks>
         public abstract void OnInStreamError();
-
-        /// <summary>
-        /// Verifies that calling CreateOperationRequestMessage is valid.
-        /// </summary>
-        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        /// <param name="method">The Http method to be used for this request operation.</param>
-        /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        internal void CanCreateOperationRequestMessageVerifierCommon(bool synchronousCall, string method, Uri uri, string contentId)
-        {
-            this.ValidateWriterReady();
-            this.VerifyCallAllowed(synchronousCall);
-
-            if (this.outputContext.WritingResponse)
-            {
-                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
-            }
-
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(method, "method");
-
-            ExceptionUtils.CheckArgumentNotNull(uri, "uri");
-        }
-
-        /// <summary>
-        /// Verifies that a call is allowed to the writer.
-        /// </summary>
-        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        internal void VerifyCallAllowed(bool synchronousCall)
-        {
-            if (synchronousCall)
-            {
-                if (!this.outputContext.Synchronous)
-                {
-                    throw new ODataException(Strings.ODataBatchWriter_SyncCallOnAsyncWriter);
-                }
-            }
-            else
-            {
-#if PORTABLELIB
-                if (this.outputContext.Synchronous)
-                {
-                    throw new ODataException(Strings.ODataBatchWriter_AsyncCallOnSyncWriter);
-                }
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
-            }
-        }
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
@@ -520,6 +495,19 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Flush the output.
+        /// </summary>
+        protected abstract void FlushSynchronously();
+
+#if PORTABLELIB
+        /// <summary>
+        /// Flush the output.
+        /// </summary>
+        /// <returns>Task representing the pending flush operation.</returns>
+        protected abstract Task FlushAsynchronously();
+#endif
+
+        /// <summary>
         /// Ends a batch.
         /// </summary>
         protected abstract void WriteEndBatchImplementation();
@@ -547,12 +535,6 @@ namespace Microsoft.OData
         protected abstract void StartBatchOperationContent();
 
         /// <summary>
-        /// Verifies that the writer is in correct state for the Flush operation.
-        /// </summary>
-        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        protected abstract void VerifyCanFlush(bool synchronousCall);
-
-        /// <summary>
         /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request.
         /// </summary>
         /// <param name="method">The Http method to be used for this request operation.</param>
@@ -564,14 +546,15 @@ namespace Microsoft.OData
             string contentId, BatchPayloadUriOption payloadUriOption);
 
         /// <summary>
-        /// Verifies that calling CreateOperationRequestMessage is valid.
+        /// Format specific implementation to verify that CreateOperationRequestMessage is valid.
+        /// Default implementation is no-op, and derived class can override as needed.
         /// </summary>
-        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        /// <param name="method">The Http method to be used for this request operation.</param>
+        /// <param name="method">The HTTP method to be validated.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        protected abstract void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
-            string contentId);
+        /// <param name="contentId">The content Id string to be validated.</param>
+        protected virtual void VerifyCanCreateOperationRequestMessageForFormat(string method, Uri uri, string contentId)
+        {
+        }
 
         /// <summary>
         /// Sets a new writer state; verifies that the transition from the current state into new state is valid.
@@ -583,6 +566,87 @@ namespace Microsoft.OData
         /// Verifies that the writer is not disposed.
         /// </summary>
         protected abstract void VerifyNotDisposed();
+
+        /// <summary>
+        /// Starts a new batch.
+        /// </summary>
+        protected abstract void WriteStartBatchImplementation();
+
+        /// <summary>
+        /// Verifies that calling CreateOperationRequestMessage is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="method">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        private void CanCreateOperationRequestMessageVerifierCommon(bool synchronousCall, string method, Uri uri, string contentId)
+        {
+            this.ValidateWriterReady();
+            this.VerifyCallAllowed(synchronousCall);
+
+            if (this.outputContext.WritingResponse)
+            {
+                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
+            }
+
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(method, "method");
+
+            ExceptionUtils.CheckArgumentNotNull(uri, "uri");
+        }
+
+        /// <summary>
+        /// Verifies that a call is allowed to the writer.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        private void VerifyCallAllowed(bool synchronousCall)
+        {
+            if (synchronousCall)
+            {
+                if (!this.outputContext.Synchronous)
+                {
+                    throw new ODataException(Strings.ODataBatchWriter_SyncCallOnAsyncWriter);
+                }
+            }
+            else
+            {
+#if PORTABLELIB
+                if (this.outputContext.Synchronous)
+                {
+                    throw new ODataException(Strings.ODataBatchWriter_AsyncCallOnSyncWriter);
+                }
+#else
+                Debug.Assert(false, "Async calls are not allowed in this build.");
+#endif
+            }
+        }
+
+        /// <summary>
+        /// Verifies that calling CreateOperationRequestMessage is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="method">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        private void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
+            string contentId)
+        {
+            this.CanCreateOperationRequestMessageVerifierCommon(synchronousCall, method, uri, contentId);
+            this.VerifyCanCreateOperationRequestMessageForFormat(method, uri, contentId);
+        }
+
+        /// <summary>
+        /// Verifies that the writer is in correct state for the Flush operation.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        private void VerifyCanFlush(bool synchronousCall)
+        {
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+            if (this.State == BatchWriterState.OperationStreamRequested)
+            {
+                this.ThrowODataException(Strings.ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState);
+            }
+        }
 
         /// <summary>
         /// Validates that the batch writer is ready to process a new write request.
@@ -616,14 +680,6 @@ namespace Microsoft.OData
         {
             this.ValidateWriterReady();
             this.VerifyCallAllowed(synchronousCall);
-        }
-
-        /// <summary>
-        /// Starts a new batch - implementation of the actual functionality.
-        /// </summary>
-        private void WriteStartBatchImplementation()
-        {
-            this.SetState(BatchWriterState.BatchStarted);
         }
 
         /// <summary>
