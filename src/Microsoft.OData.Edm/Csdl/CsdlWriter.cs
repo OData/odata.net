@@ -11,6 +11,7 @@ using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Validation;
+using System.Text;
 
 namespace Microsoft.OData.Edm.Csdl
 {
@@ -19,6 +20,9 @@ namespace Microsoft.OData.Edm.Csdl
     /// </summary>
     public class CsdlWriter
     {
+        private static readonly object memoryEdmxGenLock = new object();
+        private static string memoryEdmxDocument;
+
         private readonly IEdmModel model;
         private readonly IEnumerable<EdmSchema> schemas;
         private readonly XmlWriter writer;
@@ -51,35 +55,74 @@ namespace Microsoft.OData.Edm.Csdl
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writer, "writer");
 
-            errors = model.GetSerializationErrors();
-            if (errors.FirstOrDefault() != null)
+            if (memoryEdmxDocument == null)
             {
-                return false;
-            }
-
-            Version edmxVersion = model.GetEdmxVersion();
-
-            if (edmxVersion != null)
-            {
-                if (!CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion))
+                lock (memoryEdmxGenLock)
                 {
-                    errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmxVersion, Edm.Strings.Serializer_UnknownEdmxVersion) };
-                    return false;
+                    if (memoryEdmxDocument == null)
+                    {
+                        errors = model.GetSerializationErrors();
+                        if (errors.FirstOrDefault() != null)
+                        {
+                            return false;
+                        }
+
+                        Version edmxVersion = model.GetEdmxVersion();
+
+                        if (edmxVersion != null)
+                        {
+                            if (!CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion))
+                            {
+                                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmxVersion, Edm.Strings.Serializer_UnknownEdmxVersion) };
+                                return false;
+                            }
+                        }
+                        else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest, out edmxVersion))
+                        {
+                            errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmVersion, Edm.Strings.Serializer_UnknownEdmVersion) };
+                            return false;
+                        }
+
+                        StringBuilder memoryXmlDocumentBuilder = new StringBuilder();
+                        XmlWriter memoryWriter = XmlWriter.Create(memoryXmlDocumentBuilder, new XmlWriterSettings
+                        {
+                            ConformanceLevel = ConformanceLevel.Fragment,
+                            Encoding = writer.Settings.Encoding,
+                            CheckCharacters = writer.Settings.CheckCharacters,
+                            CloseOutput = writer.Settings.CloseOutput,
+                            Indent = writer.Settings.Indent,
+                            NamespaceHandling = writer.Settings.NamespaceHandling,
+                            IndentChars = writer.Settings.IndentChars,
+                            NewLineChars = writer.Settings.NewLineChars,
+                            NewLineHandling = writer.Settings.NewLineHandling,
+                            NewLineOnAttributes = writer.Settings.NewLineOnAttributes,
+                            OmitXmlDeclaration = writer.Settings.OmitXmlDeclaration,
+                        });
+
+                        IEnumerable<EdmSchema> schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
+
+                        CsdlWriter edmxWriter = new CsdlWriter(model, schemas, memoryWriter, edmxVersion, target);
+                        edmxWriter.WriteCsdl();
+
+                        // Flush and write the xml (edmx) to the string
+                        memoryWriter.Flush();
+                        memoryEdmxDocument = memoryXmlDocumentBuilder.ToString();
+                    }
                 }
             }
-            else if (!CsdlConstants.EdmToEdmxVersions.TryGetValue(model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest, out edmxVersion))
-            {
-                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmVersion, Edm.Strings.Serializer_UnknownEdmVersion) };
-                return false;
-            }
 
-            IEnumerable<EdmSchema> schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
-
-            CsdlWriter edmxWriter = new CsdlWriter(model, schemas, writer, edmxVersion, target);
-            edmxWriter.WriteCsdl();
-
+            writer.WriteRaw(memoryEdmxDocument);
+            writer.Flush();
             errors = Enumerable.Empty<EdmError>();
             return true;
+        }
+
+        /// <summary>
+        /// Resets the Edmx cache to so that it gets recreated on next access.
+        /// </summary>
+        public static void ResetEdmxMemoryCache()
+        {
+            memoryEdmxDocument = null;
         }
 
         private void WriteCsdl()
