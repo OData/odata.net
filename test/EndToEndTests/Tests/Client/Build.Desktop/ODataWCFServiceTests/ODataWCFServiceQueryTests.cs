@@ -628,6 +628,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void QueryPropertyWithNullValueFromODataClient()
         {
@@ -648,6 +649,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             List<string> enumResult = middleName.ToList();
             Assert.AreEqual(0, enumResult.Count);
         }
+#endif
 
         [TestMethod]
         public void QueryDelta()

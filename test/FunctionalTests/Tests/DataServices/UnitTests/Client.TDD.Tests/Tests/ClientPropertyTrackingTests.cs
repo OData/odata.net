@@ -534,7 +534,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void OnlyPostExplicitPropertiesUsedWithoutDataServiceCollectionShouldThrow()
         {

@@ -443,7 +443,9 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
 
         #endregion
 
-        #region Client
+#region Client
+
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ClientTest()
         {
@@ -486,7 +488,9 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
             Assert.AreEqual(Date.MaxValue, updatedOrder.ShipDate);
             Assert.AreEqual(TimeOfDay.MaxValue, updatedOrder.ShipTime);
         }
-        #endregion
+#endif
+
+    #endregion
     }
 }
 

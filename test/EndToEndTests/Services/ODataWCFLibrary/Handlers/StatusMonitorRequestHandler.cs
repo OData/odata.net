@@ -9,7 +9,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System;
     using System.Collections.Generic;
     using System.Net;
-    using System.Text;
     using Microsoft.OData;
 
     public class StatusMonitorRequestHandler : RequestHandler

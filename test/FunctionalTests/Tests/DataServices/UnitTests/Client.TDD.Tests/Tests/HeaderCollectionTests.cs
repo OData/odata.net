@@ -30,7 +30,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             }
 
             var dictionary = new HeaderCollection(headers);
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             // Implementation of BeEquivalentTo changed in newer version of FluentAssertions so use Contain
             dictionary.HeaderNames.Should().Contain(expectedKeys);
 #else

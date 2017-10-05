@@ -23,6 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
 
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // TODO : Reactive this test cases after merging entity and complex for writer
         [TestMethod]
         public void FunctionOfEntitiesTakeComplexsReturnEntities()
@@ -165,6 +166,22 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
         }
 
         [TestMethod]
+        public void FunctionOfEntitiesReturnEntityExpandNavigation()
+        {
+            var order = this.TestClientContext.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Expand(o => o.Customer).GetValue();
+            Assert.IsNotNull(order.Customer);
+        }
+
+        [TestMethod]
+        public void FunctionOfEntitiesReturnEntitySelect()
+        {
+            var order = this.TestClientContext.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Select(o => new Order() { ID = o.ID, Notes = o.Notes }).GetValue();
+            Assert.AreEqual(2, order.Notes.Count);
+            Assert.AreEqual<DateTimeOffset>(default(DateTimeOffset), order.OrderDate);
+        }
+#endif
+
+        [TestMethod]
         public void FunctionOfEntitiesReturnEntitiesExpandNavigation()
         {
             var orders = this.TestClientContext.Orders.GetOrdersByNote("1111").Expand(o => o.Customer).ToList();
@@ -174,26 +191,11 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
         }
 
         [TestMethod]
-        public void FunctionOfEntitiesReturnEntityExpandNavigation()
-        {
-            var order = this.TestClientContext.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Expand(o => o.Customer).GetValue();
-            Assert.IsNotNull(order.Customer);
-        }
-
-        [TestMethod]
         public void FunctionOfEntitiesReturnEntitiesFilter()
         {
             var orders = this.TestClientContext.Orders.GetOrdersByNote("1111").Where(o => o.ID < 1).ToList();
             Assert.AreEqual(1, orders.Count);
             Assert.IsNull(orders[0].Customer);
-        }
-
-        [TestMethod]
-        public void FunctionOfEntitiesReturnEntitySelect()
-        {
-            var order = this.TestClientContext.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Select(o => new Order() { ID = o.ID, Notes = o.Notes }).GetValue();
-            Assert.AreEqual(2, order.Notes.Count);
-            Assert.AreEqual<DateTimeOffset>(default(DateTimeOffset), order.OrderDate);
         }
     }
 }

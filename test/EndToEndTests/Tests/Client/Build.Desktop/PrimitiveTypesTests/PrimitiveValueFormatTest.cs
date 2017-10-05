@@ -35,6 +35,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
 
         private string dataPattern = "(" + @"[\+-]?\d\.?\d*E?[\+-]?\d*" + "|" + @"INF|-INF|NaN" + ")";
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void LongInFilterLinqQuery()
         {
@@ -59,6 +60,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
             var int64Query2 = contextWrapper.Context.EdmInt64Set.ByKey(new Dictionary<string, object> { { "Id", int64Id } });
             Assert.IsTrue(int64Query2.GetValue().Id == 1, "Expected one or more EdmInt64 entities could be returned ");
         }
+#endif
 
         [TestMethod]
         public void FloatInFilterLinqQuery()

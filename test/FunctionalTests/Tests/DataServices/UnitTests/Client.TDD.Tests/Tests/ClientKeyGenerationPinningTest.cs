@@ -7,7 +7,7 @@
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using System.Data.Linq;
 #endif
     using System.Linq;
@@ -75,7 +75,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ClientOtherTypesPinning()
         {
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             var keyValues = new object[] { 1, "abc", "abc pqr", new byte[0], new byte[] { 1, 2 }, new XElement("Fake") };
 
             const string expected = @"(1)
@@ -123,13 +123,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             RunClientPinningTest(builder, Date.MaxValue, Date.MinValue, new Date(2014, 9, 25));
             RunClientPinningTest(builder, TimeOfDay.MaxValue, TimeOfDay.MinValue, new TimeOfDay(12, 9, 25, 900));
             RunClientPinningTest(builder, Guid.Empty, Guid.Parse("b467459e-1eb5-4598-8a63-2c40c6a2590c"));
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
             RunClientPinningTest(builder, new Binary(new byte[0]), new Binary(new byte[] { 1, 2, byte.MaxValue }));
 #endif
             RunClientPinningTest(builder, XElement.Parse("<xelement>content<nested><!--comment--></nested> </xelement>"));
             RunClientPinningTest(builder, "", "  \t \r\n", ".,();", "\r\n", "\r\n\r\n\r\n\r\n", "\r", "\n", "\n\r", "a\x0302e\x0327\x0627\x0654\x0655", "a surrogate pair: \xd800\xdc00", "left to right \x05d0\x05d1 \x05ea\x05e9 english", "\x1\x2\x3\x4\x5\x20");
 
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             const string expected = @"(true)
 (false)
 (prop=true,prop=false)

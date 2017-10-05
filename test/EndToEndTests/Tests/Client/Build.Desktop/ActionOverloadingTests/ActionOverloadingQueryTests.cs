@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         /// <summary>
         /// Verify actions in entry payload format json minimalmetadata, and json nometadata.
         /// </summary>
@@ -251,7 +251,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType)
         {
             var verifyActionNotInPayload = (acceptMimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata);

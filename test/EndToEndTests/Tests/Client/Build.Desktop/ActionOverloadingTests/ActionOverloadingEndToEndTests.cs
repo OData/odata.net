@@ -65,17 +65,16 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ExecuteActionImport()
         {
             var contextWrapper = this.CreateWrappedContext();
-#if !NETCOREAPP1_0
             var productId = contextWrapper.Context.RetrieveProduct().GetValue();
             Assert.AreEqual(-10, productId);
-#endif
-
             contextWrapper.Context.UpdatePersonInfo();
         }
+#endif
 
         [TestMethod]
         public void ExcuteBoundAction()
@@ -88,7 +87,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
 
             employee.UpdatePersonInfo();
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
             SpecialEmployee specialEmployee = (SpecialEmployee)contextWrapper.Context.Person.Where(p => p.PersonId == -7).Single();
             int salary = specialEmployee.IncreaseEmployeeSalary().GetValue();
             Assert.AreEqual(2016141257, salary);
@@ -296,7 +295,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             foreach (KeyValuePair<string, string> expected in expectedValues)
             {
                 OperationDescriptor od;
-#if NETCOREAPP1_0
+#if NETCOREAPP2_0
                 od = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Key, StringComparison.OrdinalIgnoreCase)).First();
 #else
                 od = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Key, StringComparison.InvariantCultureIgnoreCase)).First();
@@ -310,7 +309,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             foreach (var expected in expectedValues)
             {
                 IEnumerable<OperationDescriptor> ods;
-#if NETCOREAPP1_0
+#if NETCOREAPP2_0
                 ods = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Item1, StringComparison.OrdinalIgnoreCase));
 #else
                 ods = actualDescriptors.Where(d => d.Metadata.AbsoluteUri.Equals(this.ServiceUri + expected.Item1, StringComparison.InvariantCultureIgnoreCase));

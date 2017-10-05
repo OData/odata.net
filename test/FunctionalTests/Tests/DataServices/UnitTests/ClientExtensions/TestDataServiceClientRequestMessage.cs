@@ -17,7 +17,7 @@ namespace AstoriaUnitTests.ClientExtensions
     {
         private readonly IODataRequestMessage requestMessage;
         private readonly Func<IODataResponseMessage> getResponseMessage;
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         private bool sendChunked;
 #endif
         private bool headersAlreadySent;
@@ -45,7 +45,7 @@ namespace AstoriaUnitTests.ClientExtensions
             set { this.requestMessage.Method = value; }
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override bool SendChunked
         {
             get { return this.sendChunked; }
@@ -73,7 +73,7 @@ namespace AstoriaUnitTests.ClientExtensions
             }
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override int Timeout
         {
             get
@@ -144,7 +144,7 @@ namespace AstoriaUnitTests.ClientExtensions
             return this.getResponseMessage();
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override IODataResponseMessage GetResponse()
         {
             this.LockHeaders();
@@ -220,7 +220,7 @@ namespace AstoriaUnitTests.ClientExtensions
                 {
                     // If the operation isn't done, wait for it
                     AsyncWaitHandle.WaitOne();
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
                     AsyncWaitHandle.Dispose();
 #else
                     AsyncWaitHandle.Close();
@@ -242,7 +242,7 @@ namespace AstoriaUnitTests.ClientExtensions
 
             public Boolean CompletedSynchronously
             {
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
                 // NET Core 1.0 does not have full support for threads. Replace Volate.Read with Thread.VolatileRead when on NET Core 2.0.
                 get { return Volatile.Read(ref this.completedState) == StateCompletedSynchronously; }
 #else
@@ -262,7 +262,7 @@ namespace AstoriaUnitTests.ClientExtensions
                         {
                             // Another thread created this object's event; dispose
                             // the event we just created
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
                             mre.Dispose();
 #else
                             mre.Close();
@@ -287,7 +287,7 @@ namespace AstoriaUnitTests.ClientExtensions
             {
                 get
                 {
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
                     // NET Core 1.0 does not have full support for threads. Replace Volate.Read with Thread.VolatileRead when on NET Core 2.0.
                     return Volatile.Read(ref this.completedState) != StatePending;
 #else

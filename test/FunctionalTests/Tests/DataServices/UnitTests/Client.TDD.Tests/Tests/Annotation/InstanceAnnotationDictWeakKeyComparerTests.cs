@@ -82,7 +82,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             }
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // Net Core 1.0 is missing GC APIs
         [TestMethod]
         public void TestRemoveDeadItem()
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             testAction.ShouldThrow<ArgumentException>();
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // Net Core 1.0 is missing GC APIs
         [TestMethod]
         public void TestCompareObjectRef()

@@ -483,7 +483,7 @@ namespace Microsoft.OData.Service
             if (cachedConstructor == null)
             {
                 Type dataContextType = typeof(T);
-                if (dataContextType.IsAbstract)
+                if (dataContextType.IsAbstract())
                 {
                     throw new InvalidOperationException(
                         Strings.DataService_ContextTypeIsAbstract(dataContextType, this.GetType()));
@@ -1085,7 +1085,7 @@ namespace Microsoft.OData.Service
                 {
                     throw DataServiceException.CreateBadRequestError(Strings.DataService_CannotUpdateKeyProperties(description.Property.Name));
                 }
-                else if (!WebUtil.IsNullableType(description.Property.Type) && description.Property.Type.IsValueType)
+                else if (!WebUtil.IsNullableType(description.Property.Type) && description.Property.Type.IsValueType())
                 {
                     // 403 - Forbidden
                     throw new DataServiceException(403, Strings.BadRequest_CannotNullifyValueTypeProperty);

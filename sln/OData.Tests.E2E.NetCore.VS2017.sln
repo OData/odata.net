@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 14.0.25420.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AE28D570-28A6-45E1-A695-35C5B27CC4F8}"
 EndProject
@@ -36,6 +36,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.TDDUnitTests.NetCore", "..\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj", "{67649063-ECB5-4A2F-BC62-A53B9BD03B22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Service.Test.Common.NetCore", "..\test\FunctionalTests\Tests\CommonTestUtil\Microsoft.OData.Service.Test.Common.NetCore.csproj", "{32266D34-34F3-4EE1-A870-C332CDAD6620}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2eTests", "e2eTests", "{C8E49548-264D-49A9-B73A-CA72FEA98E2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.Tests.Client.NetCore", "..\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.NetCore.csproj", "{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -266,6 +270,24 @@ Global
 		{32266D34-34F3-4EE1-A870-C332CDAD6620}.Release|x64.Build.0 = Release|Any CPU
 		{32266D34-34F3-4EE1-A870-C332CDAD6620}.Release|x86.ActiveCfg = Release|Any CPU
 		{32266D34-34F3-4EE1-A870-C332CDAD6620}.Release|x86.Build.0 = Release|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Cover|Any CPU.ActiveCfg = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Cover|Any CPU.Build.0 = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Cover|x64.ActiveCfg = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Cover|x64.Build.0 = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Cover|x86.ActiveCfg = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Cover|x86.Build.0 = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Debug|x64.Build.0 = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Debug|x86.Build.0 = Debug|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Release|x64.ActiveCfg = Release|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Release|x64.Build.0 = Release|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Release|x86.ActiveCfg = Release|Any CPU
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -286,6 +308,8 @@ Global
 		{0BDE0365-3053-45AF-A415-7888E1DBBC2C} = {F2442089-4BD1-4AEF-91FE-E7192432077E}
 		{67649063-ECB5-4A2F-BC62-A53B9BD03B22} = {0BDE0365-3053-45AF-A415-7888E1DBBC2C}
 		{32266D34-34F3-4EE1-A870-C332CDAD6620} = {56DEF0B0-DE00-478C-8191-F7A5526AB6F7}
+		{C8E49548-264D-49A9-B73A-CA72FEA98E2C} = {F2442089-4BD1-4AEF-91FE-E7192432077E}
+		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217} = {C8E49548-264D-49A9-B73A-CA72FEA98E2C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A8C8EA9-487D-4990-BFA6-2D5A9462AEDC}

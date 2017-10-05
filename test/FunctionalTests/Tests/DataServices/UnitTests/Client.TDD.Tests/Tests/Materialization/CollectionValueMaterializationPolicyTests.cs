@@ -173,7 +173,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             var clientTypeAnnotation = new ClientTypeAnnotation(edmType, typeof(ErrorThrowingList), "Points", testContext.Model);
 
             Action test = () => this.CreateCollectionValueMaterializationPolicy(testContext).CreateCollectionInstance((IEdmCollectionTypeReference)clientTypeAnnotation.EdmTypeReference, clientTypeAnnotation.ElementType);
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             test.ShouldThrow<TargetInvocationException>().WithInnerException<Exception>().WithInnerMessage("foo");
 #else
             test.ShouldThrow<TargetInvocationException>().WithInnerException<ApplicationException>().WithInnerMessage("foo");
@@ -201,7 +201,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         {
             public ErrorThrowingList()
             {
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
                 throw new Exception("foo");
 #else
                 throw new ApplicationException("foo");

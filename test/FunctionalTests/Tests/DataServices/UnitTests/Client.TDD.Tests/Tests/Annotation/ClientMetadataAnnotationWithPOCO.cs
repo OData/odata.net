@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
         private UserDefinedServiceContainer dsc = new UserDefinedServiceContainer(new Uri("http://UserDefinedService"));
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void GetAnnotationTargetingBoundFunction()
         {

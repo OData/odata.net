@@ -25,7 +25,7 @@ namespace AstoriaUnitTests.Tests.Client
 
             public bool HasPermissionsToCreateDynamicMethodsWithSkipVisibility { get; set; }
 
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             protected bool ThisAssemblyCanCreateHostedDynamicMethodsWithSkipVisibility()
 #else
             protected override bool ThisAssemblyCanCreateHostedDynamicMethodsWithSkipVisibility()
@@ -40,7 +40,7 @@ namespace AstoriaUnitTests.Tests.Client
         {
             // Arrange
             MethodInfo target;
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             target = ((Func<int, int, int>)Sum).GetMethodInfo();
 #else
             target = ((Func<int, int, int>)Sum).Method;
@@ -72,7 +72,7 @@ namespace AstoriaUnitTests.Tests.Client
             Assert.AreEqual(expectedSum, result);
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void When_client_can_create_DynamicMethod_with_skip_visibility_GetCallWrapper_returns_Expression_which_calls_DynamicMethod()
         {
@@ -99,7 +99,7 @@ namespace AstoriaUnitTests.Tests.Client
         {
             // Arrange
             MethodInfo target;
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             target = ((Action)Simple).GetMethodInfo();
 #else
             target = ((Action)Simple).Method;
@@ -144,7 +144,7 @@ namespace AstoriaUnitTests.Tests.Client
         {
             // Arrange
             MethodInfo target;
-#if NETCOREAPP1_0
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
             target = ((Action)Simple).GetMethodInfo();
 #else
             target = ((Action)Simple).Method;

@@ -9,7 +9,7 @@ using Microsoft.OData.Edm.Vocabularies;
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using System.Data.Linq;
 #endif
     using Microsoft.OData.Client;
@@ -55,7 +55,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             ConvertAndValidateString(XElement.Parse(testXml), testXml);
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void L2SBinaryValueShouldBeConvertable()
         {

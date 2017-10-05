@@ -177,7 +177,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.testSubject.GetEntityDescriptor(entity).Should().BeNull();
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ChangingStateToUnchangedShouldPreventRequestFromBeingSent()
         {
@@ -236,7 +236,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             new DefaultResolveTypeContext().TestDefaultResolveType(typeof(ResolveTypeEntityType).FullName, typeNamespace, typeNamespace).Should().Be(typeof(ResolveTypeEntityType));
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void DisposeShouldBeCalledOnResponseMessageForExecuteWithNoContent()
         {

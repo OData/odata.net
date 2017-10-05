@@ -7,13 +7,13 @@
 namespace AstoriaUnitTests.Tests
 {
     using System;
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using System.CodeDom.Compiler;
 #endif
     using System.Collections.Generic;
     using System.Linq;
     using FluentAssertions;
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using Microsoft.CSharp;
 #endif
     using Microsoft.OData.Client;
@@ -113,7 +113,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ClientEdmModel_GetOrCreateEdmType_SupportsTypesWithTheSameNamesFromDifferentAssemblies()
         {
@@ -263,7 +263,7 @@ namespace AstoriaUnitTests.Tests
             public TProperty2 Property2 { get; set; }
         }
 
-#if !NETCOREAPP1_0
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         private CompilerParameters CreateCompilerOptions()
         {
             var options = new System.CodeDom.Compiler.CompilerParameters()
