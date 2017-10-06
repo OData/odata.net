@@ -13,6 +13,7 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
+using System;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
@@ -190,7 +191,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             using (var writer = XmlWriter.Create(builder))
             {
                 IEnumerable<EdmError> errors;
-                CsdlWriter.TryWriteCsdl(this.representativeModel, writer, CsdlTarget.OData, out errors).Should().BeTrue();
+                CsdlWriter.TryWriteCsdl(this.representativeModel, writer, CsdlTarget.OData, new Uri("http://www.test.com"), out errors).Should().BeTrue();
                 errors.Should().BeEmpty();
                 writer.Flush();
             }

@@ -14,6 +14,7 @@ using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
+using System;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
@@ -519,7 +520,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
                     IEnumerable<EdmError> errors;
-                    CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
+                    CsdlWriter.TryWriteCsdl(model, xw, target, new Uri("http://www.test.com"), out errors);
                     xw.Flush();
                 }
 
