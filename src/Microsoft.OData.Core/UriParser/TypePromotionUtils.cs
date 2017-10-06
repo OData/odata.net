@@ -261,6 +261,13 @@ namespace Microsoft.OData.UriParser
                     return true;
                 }
 
+                // Comparing an enum with a string is valid
+                if (left.IsEnum() && right.IsString())
+                {
+                    right = left;
+                    return true;
+                }
+
                 // enum and spatial type support equality operator for null operand:
                 if ((left == null) && (right != null) && (right.IsEnum() || right is IEdmSpatialTypeReference))
                 {
