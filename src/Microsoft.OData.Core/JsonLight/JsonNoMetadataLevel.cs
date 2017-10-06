@@ -18,14 +18,6 @@ namespace Microsoft.OData.JsonLight
     /// </remarks>
     internal sealed class JsonNoMetadataLevel : JsonLightMetadataLevel
     {
-        ///// <summary>
-        ///// Indicates which level of context Url should be used when writing payload.
-        ///// </summary>
-        //internal override ODataContextUrlLevel ContextUrlLevel
-        //{
-        //    get { return ODataContextUrlLevel.None; }
-        //}
-
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
@@ -50,7 +42,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
-            ODataResource resource,
+            ODataResourceBase resource,
             IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
             IEdmStructuredType actualResourceType,

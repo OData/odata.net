@@ -21,11 +21,6 @@ namespace Microsoft.OData
         private List<ODataFunction> functions = new List<ODataFunction>();
 
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
-        /// </summary>
-        private ODataResourceSerializationInfo serializationInfo;
-
-        /// <summary>
         /// The type name of the resource set.
         /// </summary>
         private string typeName;
@@ -46,13 +41,13 @@ namespace Microsoft.OData
 
         /// <summary>Gets the resource set type name.</summary>
         /// <returns>The resource set type name.</returns>
-        public string TypeName
+        public override string TypeName
         {
             get
             {
                 if (typeName == null && this.SerializationInfo != null && this.SerializationInfo.ExpectedTypeName != null)
                 {
-                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.serializationInfo.ExpectedTypeName);
+                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.SerializationInfo.ExpectedTypeName);
                 }
 
                 return typeName;
@@ -61,22 +56,6 @@ namespace Microsoft.OData
             set
             {
                 this.typeName = value;
-            }
-        }
-
-        /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
-        /// </summary>
-        internal ODataResourceSerializationInfo SerializationInfo
-        {
-            get
-            {
-                return this.serializationInfo;
-            }
-
-            set
-            {
-                this.serializationInfo = ODataResourceSerializationInfo.Validate(value);
             }
         }
 

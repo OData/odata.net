@@ -78,7 +78,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
-            ODataResource resource = resourceState.Resource;
+            ODataResourceBase resource = resourceState.Resource;
 
             // expectedResourceTypeName : if expected is of base type. but the resource real type is derived,
             // we need to set the resource type name.
@@ -149,7 +149,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
-            ODataResource resource = resourceState.Resource;
+            ODataResourceBase resource = resourceState.Resource;
 
             // Write the "@odata.editLink": "edit-link-uri"
             Uri editLinkUriValue = resource.EditLink;
@@ -238,7 +238,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
-            ODataResource resource = resourceState.Resource;
+            ODataResourceBase resource = resourceState.Resource;
 
             var navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
             while (navigationLinkInfo != null)

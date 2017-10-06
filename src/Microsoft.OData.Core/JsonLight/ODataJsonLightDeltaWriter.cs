@@ -48,6 +48,9 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private IEdmEntityType entityType;
 
+        /// <summary>An in-stream error listener to notify when in-stream error is to be written. Or null if we don't need to notify anybody.</summary>
+        private IODataOutputInStreamErrorListener inStreamErrorListener;
+
         #endregion
 
         #region Constructor
@@ -70,6 +73,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.jsonLightResourceSerializer = new ODataJsonLightResourceSerializer(this.jsonLightOutputContext);
             this.resourceWriter = new ODataJsonLightWriter(jsonLightOutputContext, navigationSource, entityType, true, writingDelta: true);
+            this.inStreamErrorListener = resourceWriter;
         }
 
         #endregion
@@ -223,7 +227,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="deltaDeletedEntry">The delta deleted resource to write.</param>
         public override void WriteDeltaDeletedEntry(ODataDeltaDeletedEntry deltaDeletedEntry)
         {
-            this.resourceWriter.WriteStart(deltaDeletedEntry);
+            this.resourceWriter.WriteStart(ODataDeltaDeletedEntry.GetDeletedResource(deltaDeletedEntry));
             this.resourceWriter.WriteEnd();
         }
 
@@ -235,7 +239,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaDeletedEntry));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(ODataDeltaDeletedEntry.GetDeletedResource(deltaDeletedEntry)));
         }
 #endif
 
@@ -309,18 +313,7 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         void IODataOutputInStreamErrorListener.OnInStreamError()
         {
-            //TODO: [MikeP] hook up to resourcewriter...
-            //this.VerifyNotDisposed();
-
-            //// We're in a completed state trying to write an error (we can't write error after the payload was finished as it might
-            //// introduce another top-level element in XML)
-            //if (this.State == WriterState.Completed)
-            //{
-            //    throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
-            //}
-
-            //this.StartPayloadInStartState();
-            //this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+            this.inStreamErrorListener.OnInStreamError();
         }
 
         #endregion

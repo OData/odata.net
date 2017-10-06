@@ -51,7 +51,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// The resource whose payload metadata is being queried.
         /// </summary>
-        private ODataResource resource;
+        private ODataResourceBase resource;
 
         /// <summary>
         /// Constructor

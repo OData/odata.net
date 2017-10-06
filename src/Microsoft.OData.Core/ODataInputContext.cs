@@ -84,7 +84,7 @@ namespace Microsoft.OData
             this.container = messageInfo.Container;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
-            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container, messageReaderSettings.Version);
         }
 
         /// <summary>
@@ -220,6 +220,30 @@ namespace Microsoft.OData
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
         public virtual Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public virtual ODataReader CreateDeltaResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public virtual Task<ODataReader> CreateDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }

@@ -35,7 +35,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The nested resource set for nested resource info to be reported.
         /// </summary>
-        private ODataResourceSet resourceSet;
+        private ODataResourceSetBase resourceSet;
 
         /// <summary>
         /// List of entity reference links to be reported to the navigation link.
@@ -144,7 +144,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The nested resource set for nested resource info to be reported.
         /// </summary>
-        internal ODataResourceSet NestedResourceSet
+        internal ODataResourceSetBase NestedResourceSet
         {
             get
             {
@@ -223,7 +223,7 @@ namespace Microsoft.OData.JsonLight
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmProperty nestedProperty,
             IEdmStructuredType nestedResourceType,
-            ODataResourceSet resourceSet)
+            ODataResourceSetBase resourceSet)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(nestedResourceInfo.IsCollection == true, "Resource sets can only be reported for collection nested resource info.");

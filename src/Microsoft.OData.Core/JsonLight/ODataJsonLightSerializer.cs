@@ -62,7 +62,9 @@ namespace Microsoft.OData.JsonLight
             if (initContextUriBuilder)
             {
                 // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-                this.ContextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
+                this.ContextUriBuilder = ODataContextUriBuilder.Create(
+                    this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri,
+                    this.jsonLightOutputContext.WritingResponse && !(this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel));
             }
         }
 
@@ -138,6 +140,11 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
         internal ODataContextUrlInfo WriteContextUriProperty(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
         {
+            if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
+            {
+                return null;
+            }
+
             Uri contextUri = null;
             ODataContextUrlInfo contextUrlInfo = null;
 

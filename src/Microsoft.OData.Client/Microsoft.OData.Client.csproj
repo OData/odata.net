@@ -444,6 +444,7 @@
   </ItemGroup>
   <!-- Class Diagrams -->
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Diagrams\ALinq.cd" />
     <None Include="Diagrams\Materialization.cd" />
   </ItemGroup>

@@ -28,9 +28,23 @@ namespace Microsoft.OData
         /// </summary>
         private Uri deltaLink;
 
+        /// <summary>
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
+        /// </summary>
+        private ODataResourceSerializationInfo serializationInfo;
+
         /// <summary>Gets or sets the number of items in the resource set.</summary>
         /// <returns>The number of items in the resource set.</returns>
         public long? Count
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// URI representing the next page link.
+        /// </summary>
+        public abstract string TypeName
         {
             get;
             set;
@@ -82,6 +96,22 @@ namespace Microsoft.OData
                 }
 
                 this.deltaLink = value;
+            }
+        }
+
+        /// <summary>
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
+        /// </summary>
+        public ODataResourceSerializationInfo SerializationInfo
+        {
+            get
+            {
+                return this.serializationInfo;
+            }
+
+            set
+            {
+                this.serializationInfo = ODataResourceSerializationInfo.Validate(value);
             }
         }
 

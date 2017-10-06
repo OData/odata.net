@@ -87,6 +87,7 @@ namespace Microsoft.OData {
         internal const string ODataWriterCore_InvalidStateTransition = "ODataWriterCore_InvalidStateTransition";
         internal const string ODataWriterCore_InvalidTransitionFromStart = "ODataWriterCore_InvalidTransitionFromStart";
         internal const string ODataWriterCore_InvalidTransitionFromResource = "ODataWriterCore_InvalidTransitionFromResource";
+        internal const string ODataWriterCore_InvalidTransitionFrom40DeletedResource = "ODataWriterCore_InvalidTransitionFrom40DeletedResource";
         internal const string ODataWriterCore_InvalidTransitionFromNullResource = "ODataWriterCore_InvalidTransitionFromNullResource";
         internal const string ODataWriterCore_InvalidTransitionFromResourceSet = "ODataWriterCore_InvalidTransitionFromResourceSet";
         internal const string ODataWriterCore_InvalidTransitionFromExpandedLink = "ODataWriterCore_InvalidTransitionFromExpandedLink";
@@ -97,10 +98,13 @@ namespace Microsoft.OData {
         internal const string ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState = "ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState";
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
+        internal const string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter = "ODataWriterCore_CannotWriteDeltaWithResourceSetWriter";
+        internal const string ODataWriterCore_CannotWriteNestedContentIn40DeltaPayload = "ODataWriterCore_CannotWriteNestedContentIn40DeltaPayload";
         internal const string ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter = "ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter";
         internal const string ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter = "ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter";
         internal const string ODataWriterCore_SyncCallOnAsyncWriter = "ODataWriterCore_SyncCallOnAsyncWriter";
         internal const string ODataWriterCore_AsyncCallOnSyncWriter = "ODataWriterCore_AsyncCallOnSyncWriter";
+        internal const string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties = "ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties";
         internal const string ODataWriterCore_EntityReferenceLinkWithoutNavigationLink = "ODataWriterCore_EntityReferenceLinkWithoutNavigationLink";
         internal const string ODataWriterCore_EntityReferenceLinkInResponse = "ODataWriterCore_EntityReferenceLinkInResponse";
         internal const string ODataWriterCore_DeferredLinkInRequest = "ODataWriterCore_DeferredLinkInRequest";
@@ -497,6 +501,7 @@ namespace Microsoft.OData {
         internal const string ODataJsonLightContextUriParser_InvalidContextUrl = "ODataJsonLightContextUriParser_InvalidContextUrl";
         internal const string ODataJsonLightContextUriParser_LastSegmentIsKeySegment = "ODataJsonLightContextUriParser_LastSegmentIsKeySegment";
         internal const string ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute = "ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute";
+        internal const string ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject = "ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject";
         internal const string ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst = "ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst";
         internal const string ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty = "ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty";
         internal const string ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart = "ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart";

@@ -428,7 +428,7 @@ namespace Microsoft.OData.JsonLight
                 if (isCollection)
                 {
                     readerNestedResourceInfo = this.ReadingResponse
-                        ? ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName)
+                        ? ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName, /*isDeltaResourceSet*/ false)
                         : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, null, propertyName, /*isExpanded*/ true);
                 }
                 else
@@ -657,11 +657,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="navigationProperty">The navigation property for which to read the expanded link. null for undeclared property.</param>
         /// <param name="propertyType">The type of the collection.</param>
         /// <param name="propertyName">The propert name.</param>
+        /// <param name="isDeltaResourceSet">The property being read represents a nested delta resource set.</param>
         /// <returns>The nested resource info for the expanded link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        protected static ODataJsonLightReaderNestedResourceInfo ReadExpandedResourceSetNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmNavigationProperty navigationProperty, IEdmStructuredType propertyType, string propertyName)
+        protected static ODataJsonLightReaderNestedResourceInfo ReadExpandedResourceSetNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmNavigationProperty navigationProperty, IEdmStructuredType propertyType, string propertyName, bool isDeltaResourceSet)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(navigationProperty != null || propertyName != null, "navigationProperty != null || propertyName != null");
@@ -672,7 +673,15 @@ namespace Microsoft.OData.JsonLight
                 IsCollection = true
             };
 
-            ODataResourceSet expandedResourceSet = new ODataResourceSet();
+            ODataResourceSetBase expandedResourceSet;
+            if (isDeltaResourceSet)
+            {
+                expandedResourceSet = new ODataDeltaResourceSet();
+            }
+            else
+            {
+                expandedResourceSet = new ODataResourceSet();
+            }
 
             foreach (var propertyAnnotation
                      in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
@@ -890,7 +899,7 @@ namespace Microsoft.OData.JsonLight
             // Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
             //    "No annotation name should have been added into the InstanceAnnotations collection twice.");
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
-            ODataResource resource = resourceState.Resource;
+            ODataResourceBase resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
             resource.Properties = resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
             return property;

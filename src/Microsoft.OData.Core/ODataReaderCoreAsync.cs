@@ -67,6 +67,18 @@ namespace Microsoft.OData
         protected abstract Task<bool> ReadAtResourceEndImplementationAsync();
 
         /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected abstract Task<bool> ReadAtDeletedResourceEndImplementationAsync();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Primitive'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected abstract Task<bool> ReadAtPrimitiveImplementationAsync();
+
+        /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
@@ -83,6 +95,60 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected abstract Task<bool> ReadAtEntityReferenceLinkAsync();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaResourceSetStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetStartImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaResourceSetEndImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetEndImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceStart'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeletedResourceStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceStartImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadDeletedResourceEndImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceEndImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaLink'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaLinkImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaLinkImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaDeletedLink'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaDeletedLinkImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaDeletedLinkImplementation);
+        }
 
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
@@ -117,6 +183,10 @@ namespace Microsoft.OData
                         .FollowOnSuccessWithTask(t => this.ReadAtResourceEndImplementationAsync());
                     break;
 
+                case ODataReaderState.Primitive:
+                    result = this.ReadAtPrimitiveImplementationAsync();
+                    break;
+
                 case ODataReaderState.NestedResourceInfoStart:
                     result = this.ReadAtNestedResourceInfoStartImplementationAsync();
                     break;
@@ -127,6 +197,32 @@ namespace Microsoft.OData
 
                 case ODataReaderState.EntityReferenceLink:
                     result = this.ReadAtEntityReferenceLinkAsync();
+                    break;
+
+                case ODataReaderState.DeltaResourceSetStart:
+                    result = this.ReadAtDeltaResourceSetStartImplementationAsync();
+                    break;
+
+                case ODataReaderState.DeltaResourceSetEnd:
+                    result = this.ReadAtDeltaResourceSetEndImplementationAsync();
+                    break;
+
+                case ODataReaderState.DeletedResourceStart:
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseResourceDepth())
+                        .FollowOnSuccessWithTask(t => this.ReadAtDeletedResourceStartImplementationAsync());
+                    break;
+
+                case ODataReaderState.DeletedResourceEnd:
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseResourceDepth())
+                        .FollowOnSuccessWithTask(t => this.ReadAtDeletedResourceEndImplementationAsync());
+                    break;
+
+                case ODataReaderState.DeltaLink:
+                    result = this.ReadAtDeltaLinkImplementationAsync();
+                    break;
+
+                case ODataReaderState.DeltaDeletedLink:
+                    result = this.ReadAtDeltaDeletedLinkImplementationAsync();
                     break;
 
                 case ODataReaderState.Exception:    // fall through

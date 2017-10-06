@@ -123,7 +123,7 @@ namespace Microsoft.OData
         /// <summary>Writes a deleted resource.</summary>
         /// <param name="resource">The resource or item to write.</param>
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
-        public ODataWriter Write(ODataDeltaDeletedEntry resource)
+        public ODataWriter Write(ODataDeletedResource resource)
         {
             WriteStart(resource);
             WriteEnd();
@@ -134,7 +134,7 @@ namespace Microsoft.OData
         /// <param name="resource">The resource or item to write.</param>
         /// <param name="nestedAction">The action to perform in-between the writing.</param>
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
-        public ODataWriter Write(ODataDeltaDeletedEntry resource, Action nestedAction)
+        public ODataWriter Write(ODataDeletedResource resource, Action nestedAction)
         {
             WriteStart(resource);
             nestedAction();
@@ -170,7 +170,7 @@ namespace Microsoft.OData
 
         /// <summary> Writes a delta deleted resource.</summary>
         /// <param name="deletedResource">The delta deleted resource to write.</param>
-        public virtual void WriteStart(ODataDeltaDeletedEntry deletedResource)
+        public virtual void WriteStart(ODataDeletedResource deletedResource)
         {
             // todo: replace with better error message
             throw new NotImplementedException();
@@ -182,7 +182,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deletedResource">The delta deleted resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public virtual Task WriteStartAsync(ODataDeltaDeletedEntry deletedResource)
+        public virtual Task WriteStartAsync(ODataDeletedResource deletedResource)
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(deletedResource));
         }

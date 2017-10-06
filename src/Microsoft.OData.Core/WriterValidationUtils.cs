@@ -227,10 +227,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteStart call.
+        /// Validates an <see cref="ODataResourceBase"/> to ensure all required information is specified and valid on WriteStart call.
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
-        internal static void ValidateResourceAtStart(ODataResource resource)
+        internal static void ValidateResourceAtStart(ODataResourceBase resource)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -242,10 +242,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteEnd call.
+        /// Validates an <see cref="ODataResourceBase"/> to ensure all required information is specified and valid on WriteEnd call.
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
-        internal static void ValidateResourceAtEnd(ODataResource resource)
+        internal static void ValidateResourceAtEnd(ODataResourceBase resource)
         {
             Debug.Assert(resource != null, "resource != null");
 

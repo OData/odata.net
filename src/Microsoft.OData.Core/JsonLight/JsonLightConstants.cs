@@ -44,9 +44,6 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The 'delta' property name for the Json Light value property.</summary>
         internal const string ODataDeltaPropertyName = "delta";
 
-        /// <summary>The 'removed' property name for the Json Light value property.</summary>
-        internal const string ODataRemovedPropertyName = "removed";
-
         /// <summary>The 'reason' property name for the Json Light value property.</summary>
         internal const string ODataReasonPropertyName = "reason";
 
@@ -104,7 +101,13 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The simplified OData Context property name.</summary>
         internal const string SimplifiedODataContextPropertyName = "@context";
 
+        /// <summary>The simplified OData Id property name.</summary>
+        internal const string SimplifiedODataIdPropertyName = "@id";
+
         /// <summary>The simplified OData Type property name.</summary>
         internal const string SimplifiedODataTypePropertyName = "@type";
+
+        /// <summary>The simplified Removed property name.</summary>
+        internal const string SimplifiedRemovedPropertyName = "@removed";
     }
 }

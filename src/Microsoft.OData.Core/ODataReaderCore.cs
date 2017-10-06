@@ -68,12 +68,7 @@ namespace Microsoft.OData
             this.readingDelta = readingDelta;
             this.listener = listener;
             this.currentResourceDepth = 0;
-
-            // create a collection validator when reading a top-level resource set and a user model is present
-            if (this.readingResourceSet && this.inputContext.Model.IsUserModel())
-            {
-                this.resourceSetValidator = new ResourceSetWithoutExpectedTypeValidator();
-            }
+            this.Version = inputContext.MessageReaderSettings.Version;
         }
 
         /// <summary>
@@ -103,16 +98,9 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Returns the current item as <see cref="ODataResource"/>. Must only be called if the item actually is a resource.
+        /// OData Version being read.
         /// </summary>
-        protected ODataResource CurrentResource
-        {
-            get
-            {
-                Debug.Assert(this.Item == null || this.Item is ODataResource, "this.Item is ODataResource");
-                return (ODataResource)this.Item;
-            }
-        }
+        internal ODataVersion? Version { get; }
 
         /// <summary>
         /// Returns the current item as <see cref="ODataResourceSet"/>. Must only be called if the item actually is a resource set.
@@ -123,6 +111,42 @@ namespace Microsoft.OData
             {
                 Debug.Assert(this.Item is ODataResourceSet, "this.Item is ODataResourceSet");
                 return (ODataResourceSet)this.Item;
+            }
+        }
+
+        /// <summary>
+        /// Returns the current item as <see cref="ODataDeltaResourceSet"/>. Must only be called if the item actually is a delta resource set.
+        /// </summary>
+        protected ODataDeltaResourceSet CurrentDeltaResourceSet
+        {
+            get
+            {
+                Debug.Assert(this.Item is ODataDeltaResourceSet, "this.Item is ODataDeltaResourceSet");
+                return (ODataDeltaResourceSet)this.Item;
+            }
+        }
+
+        /// <summary>
+        /// Returns the current item as ODataDeltaLink
+        /// </summary>
+        protected ODataDeltaLink CurrentDeltaLink
+        {
+            get
+            {
+                Debug.Assert(this.Item == null || this.Item is ODataDeltaLink, "this.Item is ODataDeltaLink");
+                return (ODataDeltaLink)this.Item;
+            }
+        }
+
+        /// <summary>
+        /// Returns the current item as ODataDeltaDeletedLink.
+        /// </summary>
+        protected ODataDeltaDeletedLink CurrentDeltaDeletedLink
+        {
+            get
+            {
+                Debug.Assert(this.Item == null || this.Item is ODataDeltaDeletedLink, "this.Item is ODataDeltaDeletedLink");
+                return (ODataDeltaDeletedLink)this.Item;
             }
         }
 
@@ -282,6 +306,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Set to true if a delta response is being read.
+        /// </summary>
+        protected bool ReadingDelta
+        {
+            get
+            {
+                return this.readingDelta;
+            }
+        }
+
+        /// <summary>
         /// Returns true if we are reading a nested payload,
         /// e.g. an expanded resource or resource set within a delta payload,
         /// or a resource or a resource set within a parameters payload.
@@ -290,7 +325,7 @@ namespace Microsoft.OData
         {
             get
             {
-                return this.readingDelta || this.listener != null;
+                return this.listener != null;
             }
         }
 
@@ -304,10 +339,9 @@ namespace Microsoft.OData
         {
             get
             {
-                Debug.Assert(this.State == ODataReaderState.ResourceStart, "CurrentResourceSetValidator should only be called while reading a resource.");
+                Debug.Assert(this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.DeletedResourceStart, "CurrentResourceSetValidator should only be called while reading a resource.");
 
-                // Only return the collection validator for entries in top-level resource sets
-                return this.scopes.Count == 3 ? this.resourceSetValidator : null;
+                return this.ParentScope == null ? null : this.ParentScope.ResourceTypeValidator;
             }
         }
 
@@ -419,6 +453,60 @@ namespace Microsoft.OData
         protected abstract bool ReadAtEntityReferenceLink();
 
         /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtDeltaResourceSetStartImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtDeltaResourceSetEndImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceStart'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtDeletedResourceStartImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtDeletedResourceEndImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaLink'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtDeltaLinkImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaDeletedLink'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtDeltaDeletedLinkImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Pushes the <paramref name="scope"/> on the stack of scopes.
         /// </summary>
         /// <param name="scope">The scope to enter.</param>
@@ -478,7 +566,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.scopes.Count > 0, "Stack must always be non-empty.");
             Debug.Assert(scope != null, "scope != null");
-            Debug.Assert(scope.State == ODataReaderState.ResourceEnd, "scope.State == ODataReaderState.ResourceEnd");
+            Debug.Assert(scope.State == ODataReaderState.ResourceEnd | scope.State == ODataReaderState.DeletedResourceEnd, "Called EndEntry when not in ResourceEnd or DeletedResourceEnd state");
 
             this.scopes.Pop();
             this.EnterScope(scope);
@@ -493,7 +581,7 @@ namespace Microsoft.OData
         protected void ApplyResourceTypeNameFromPayload(string resourceTypeNameFromPayload)
         {
             Debug.Assert(
-                this.scopes.Count > 0 && this.scopes.Peek().Item is ODataResource,
+                this.scopes.Count > 0 && this.scopes.Peek().Item is ODataResourceBase,
                 "Resource type can be applied only when in resource scope.");
 
             ODataTypeAnnotation typeAnnotation;
@@ -511,7 +599,7 @@ namespace Microsoft.OData
                     out typeAnnotation);
 
             IEdmStructuredType targetResourceType = null;
-            ODataResource resource = this.CurrentResource;
+            ODataResourceBase resource = this.Item as ODataResourceBase;
             if (targetResourceTypeReference != null)
             {
                 targetResourceType = targetResourceTypeReference.StructuredDefinition();
@@ -624,6 +712,30 @@ namespace Microsoft.OData
                     result = this.ReadAtEntityReferenceLink();
                     break;
 
+                case ODataReaderState.DeltaResourceSetStart:
+                    result = this.ReadAtDeltaResourceSetStartImplementation();
+                    break;
+
+                case ODataReaderState.DeltaResourceSetEnd:
+                    result = this.ReadAtDeltaResourceSetEndImplementation();
+                    break;
+
+                case ODataReaderState.DeletedResourceStart:
+                    result = this.ReadAtDeletedResourceStartImplementation();
+                    break;
+
+                case ODataReaderState.DeletedResourceEnd:
+                    result = this.ReadAtDeletedResourceEndImplementation();
+                    break;
+
+                case ODataReaderState.DeltaLink:
+                    result = this.ReadAtDeltaLinkImplementation();
+                    break;
+
+                case ODataReaderState.DeltaDeletedLink:
+                    result = this.ReadAtDeltaDeletedLinkImplementation();
+                    break;
+
                 case ODataReaderState.Exception:    // fall through
                 case ODataReaderState.Completed:
                     throw new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
@@ -716,6 +828,11 @@ namespace Microsoft.OData
             private readonly ODataUri odataUri;
 
             /// <summary>
+            /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this resourceSet.
+            /// </summary>
+            private readonly ResourceSetWithoutExpectedTypeValidator resourceTypeValidator;
+
+            /// <summary>
             /// Constructor creating a new reader scope.
             /// </summary>
             /// <param name="state">The reader state of this scope.</param>
@@ -747,6 +864,12 @@ namespace Microsoft.OData
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||
                     state == ODataReaderState.NestedResourceInfoEnd && item is ODataNestedResourceInfo ||
                     state == ODataReaderState.EntityReferenceLink && item is ODataEntityReferenceLink ||
+                    state == ODataReaderState.DeletedResourceStart && (item == null || item is ODataDeletedResource) ||
+                    state == ODataReaderState.DeletedResourceEnd && (item is ODataDeletedResource || item == null) ||
+                    state == ODataReaderState.DeltaResourceSetStart && item is ODataDeltaResourceSet ||
+                    state == ODataReaderState.DeltaResourceSetEnd && item is ODataDeltaResourceSet ||
+                    state == ODataReaderState.DeltaLink && (item == null || item is ODataDeltaLink) ||
+                    state == ODataReaderState.DeltaDeletedLink && (item == null || item is ODataDeltaDeletedLink) ||
                     state == ODataReaderState.Start && item == null ||
                     state == ODataReaderState.Completed && item == null,
                     "Reader state and associated item do not match.");
@@ -756,6 +879,9 @@ namespace Microsoft.OData
                 this.ResourceType = expectedResourceType;
                 this.NavigationSource = navigationSource;
                 this.odataUri = odataUri;
+
+                //todo (mikep): only set if this.inputContext.Model.IsUserModel()
+                this.resourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(expectedResourceType);
             }
 
             /// <summary>
@@ -801,6 +927,17 @@ namespace Microsoft.OData
             /// was not found yet, or the one specified in the payload itself (the real one).
             /// </summary>
             internal IEdmStructuredType ResourceType { get; set; }
+
+            /// <summary>
+            /// Validator for resource type.
+            /// </summary>
+            internal ResourceSetWithoutExpectedTypeValidator ResourceTypeValidator
+            {
+                get
+                {
+                    return this.resourceTypeValidator;
+                }
+            }
         }
     }
 }

@@ -18,20 +18,15 @@ namespace Microsoft.OData
         /// </summary>
         private string typeName;
 
-        /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaResourceSet"/>.
-        /// </summary>
-        private ODataDeltaResourceSetSerializationInfo serializationInfo;
-
         /// <summary>Gets the resource set type name.</summary>
         /// <returns>The resource set type name.</returns>
-        public string TypeName
+        public override string TypeName
         {
             get
             {
                 if (typeName == null && this.SerializationInfo != null && this.SerializationInfo.ExpectedTypeName != null)
                 {
-                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.serializationInfo.ExpectedTypeName);
+                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.SerializationInfo.ExpectedTypeName);
                 }
 
                 return typeName;
@@ -40,22 +35,6 @@ namespace Microsoft.OData
             set
             {
                 this.typeName = value;
-            }
-        }
-
-        /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaResourceSet"/>.
-        /// </summary>
-        internal ODataDeltaResourceSetSerializationInfo SerializationInfo
-        {
-            get
-            {
-                return this.serializationInfo;
-            }
-
-            set
-            {
-                this.serializationInfo = ODataDeltaResourceSetSerializationInfo.Validate(value);
             }
         }
     }

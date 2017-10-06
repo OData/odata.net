@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.Evaluation
             AddMissingOperations(this.entry, this.entityType, selectedProperties, this.model, type => this.allOperations, entry => new NoOpResourceMetadataBuilder(entry), e => false);
         }
 
-        private static void AddMissingOperations(ODataResource entry, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, IEdmModel model, Func<IEdmType, IEdmOperation[]> getOperations, Func<ODataResource, ODataResourceMetadataBuilder> getEntityMetadataBuilder = null, Func<IEdmStructuredType, bool> typeIsOpen = null)
+        private static void AddMissingOperations(ODataResource entry, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, IEdmModel model, Func<IEdmType, IEdmOperation[]> getOperations, Func<ODataResourceBase, ODataResourceMetadataBuilder> getEntityMetadataBuilder = null, Func<IEdmStructuredType, bool> typeIsOpen = null)
         {
             var metadataContext = new TestMetadataContext
             {
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public Func<Uri> GetMetadataDocumentUriFunc { get; set; }
         public Func<Uri> GetServiceBaseUriFunc { get; set; }
         public Func<IEdmType, IEdmOperation[]> GetBindableOperationsForTypeFunc { get; set; }
-        public Func<ODataResource, ODataResourceMetadataBuilder> GetEntityMetadataBuilderFunc { get; set; }
+        public Func<ODataResourceBase, ODataResourceMetadataBuilder> GetEntityMetadataBuilderFunc { get; set; }
         public Func<IEdmStructuredType, bool> OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc { get; set; }
 
         public IEdmModel Model

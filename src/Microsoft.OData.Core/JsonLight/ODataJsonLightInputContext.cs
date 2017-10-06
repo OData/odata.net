@@ -134,7 +134,7 @@ namespace Microsoft.OData.JsonLight
             this.AssertSynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
-            return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, false);
+            return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ false);
         }
 
 #if PORTABLELIB
@@ -150,7 +150,38 @@ namespace Microsoft.OData.JsonLight
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, false));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ false));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public override ODataReader CreateDeltaResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            this.AssertSynchronous();
+            this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
+
+            return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ true);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public override Task<ODataReader> CreateDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            this.AssertAsynchronous();
+            this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
+
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ true));
         }
 #endif
 
@@ -285,7 +316,7 @@ namespace Microsoft.OData.JsonLight
             this.AssertSynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
-            return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, true);
+            return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ true, /*readingDelta*/ false);
         }
 
 #if PORTABLELIB
@@ -300,7 +331,7 @@ namespace Microsoft.OData.JsonLight
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, true));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ true, /*readingDelta*/ false));
         }
 #endif
 
@@ -583,7 +614,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Verifies that CreateResourceReader or CreateResourceSetReader or CreateDeltaReader can be called.
+        /// Verifies that CreateResourceReader, CreateResourceSetReader, CreateDeltaResourceSetReader or CreateDeltaReader can be called.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
         /// <param name="structuredType">The expected structured type for the resource/resource set to be read.</param>
@@ -682,10 +713,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <param name="readingParameter">true means reading a resource set in uri operation parameter, false reading a resource set in other payloads.</param>
+        /// <param name="readingDelta">true if reading a delta resource set.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateResourceSetReaderImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType, bool readingParameter)
+        private ODataReader CreateResourceSetReaderImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType, bool readingParameter, bool readingDelta)
         {
-            return new ODataJsonLightReader(this, entitySet, expectedResourceType, true, readingParameter);
+            return new ODataJsonLightReader(this, entitySet, expectedResourceType, /*readingResourceSet*/ true, readingParameter, readingDelta);
         }
 
         /// <summary>
