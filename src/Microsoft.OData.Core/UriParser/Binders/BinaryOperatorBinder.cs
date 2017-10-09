@@ -73,7 +73,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // If comparing an enum with a string, we must convert the string into the enum equivalent
-            if (left.TypeReference.IsEnum() && right.TypeReference.IsString())
+            if (left.TypeReference != null && right.TypeReference != null && left.TypeReference.IsEnum() && right.TypeReference.IsString())
             {
                 right = new ConstantNode(new ODataEnumValue(((ConstantNode)right).Value.ToString(), leftType.Definition.ToString()), ((ConstantNode)right).Value.ToString(), rightType);
             }
