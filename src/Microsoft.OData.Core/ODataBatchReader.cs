@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.IO;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -70,7 +72,7 @@ namespace Microsoft.OData
         /// <summary>
         /// An enumeration to track the state of a batch operation.
         /// </summary>
-        protected enum OperationState
+        private enum OperationState
         {
             /// <summary>No action has been performed on the operation.</summary>
             None,
@@ -95,52 +97,19 @@ namespace Microsoft.OData
                 return this.batchReaderState;
             }
 
-            protected set
+            private set
             {
                 this.batchReaderState = value;
             }
         }
 
         /// <summary>
-        /// >The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.
-        /// </summary>
-        internal ODataBatchPayloadUriConverter PayloadUriConverter
-        {
-            get { return this.payloadUriConverter; }
-        }
-
-        /// <summary>
-        /// Reader's input context.
-        /// </summary>
-        protected ODataInputContext InputContext
-        {
-            get { return this.inputContext; }
-        }
-
-        /// <summary>
-        /// Previously cache contentId that should be applied to the next message read.
-        /// </summary>
-        protected string ContentIdToAddOnNextRead
-        {
-            get { return this.contentIdToAddOnNextRead; }
-            set { this.contentIdToAddOnNextRead = value; }
-        }
-
-        /// <summary>
         /// The reader's Operation state
         /// </summary>
-        protected OperationState ReaderOperationState
+        private OperationState ReaderOperationState
         {
             get { return this.operationState; }
             set { this.operationState = value; }
-        }
-
-        /// <summary>
-        /// The dependency injection container to get related services.
-        /// </summary>
-        protected IServiceProvider Container
-        {
-            get { return this.container; }
         }
 
         /// <summary> Reads the next part from the batch message payload. </summary>
@@ -166,7 +135,10 @@ namespace Microsoft.OData
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage()
         {
             this.VerifyCanCreateOperationRequestMessage(/*synchronousCall*/ true);
-            return this.InterceptException((Func<ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
+            ODataBatchOperationRequestMessage result =
+                this.InterceptException((Func<ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
+            this.ReaderOperationState = OperationState.MessageCreated;
+            return result;
         }
 
 #if PORTABLELIB
@@ -177,6 +149,12 @@ namespace Microsoft.OData
             this.VerifyCanCreateOperationRequestMessage(/*synchronousCall*/ false);
             return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationRequestMessage>(
                 this.CreateOperationRequestMessageImplementation)
+                .FollowOnSuccessWithTask(
+                    t =>
+                    {
+                        this.ReaderOperationState = OperationState.MessageCreated;
+                        return t;
+                    })
                 .FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
         }
 #endif
@@ -186,7 +164,10 @@ namespace Microsoft.OData
         public ODataBatchOperationResponseMessage CreateOperationResponseMessage()
         {
             this.VerifyCanCreateOperationResponseMessage(/*synchronousCall*/ true);
-            return this.InterceptException((Func<ODataBatchOperationResponseMessage>)this.CreateOperationResponseMessageImplementation);
+            ODataBatchOperationResponseMessage result =
+                this.InterceptException((Func<ODataBatchOperationResponseMessage>)this.CreateOperationResponseMessageImplementation);
+            this.ReaderOperationState = OperationState.MessageCreated;
+            return result;
         }
 
 #if PORTABLELIB
@@ -197,6 +178,12 @@ namespace Microsoft.OData
             this.VerifyCanCreateOperationResponseMessage(/*synchronousCall*/ false);
             return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationResponseMessage>(
                 this.CreateOperationResponseMessageImplementation)
+                .FollowOnSuccessWithTask(
+                    t =>
+                    {
+                        this.ReaderOperationState = OperationState.MessageCreated;
+                        return t;
+                    })
                 .FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
         }
 #endif
@@ -233,44 +220,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
+        /// Sets the 'Exception' state and then throws an ODataException with the specified error message.
         /// </summary>
-        protected void IncreaseBatchSize()
+        /// <param name="errorMessage">The error message for the exception.</param>
+        protected void ThrowODataException(string errorMessage)
         {
-            this.currentBatchSize++;
-
-            if (this.currentBatchSize > this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch)
-            {
-                throw new ODataException(Strings.ODataBatchReader_MaxBatchSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch));
-            }
+            this.State = ODataBatchReaderState.Exception;
+            throw new ODataException(errorMessage);
         }
-
-        /// <summary>
-        /// Increases the size of the current change set; throws if the allowed limit is exceeded.
-        /// </summary>
-        protected void IncreaseChangesetSize()
-        {
-            this.currentChangeSetSize++;
-
-            if (this.currentChangeSetSize > this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset)
-            {
-                throw new ODataException(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset));
-            }
-        }
-
-        /// <summary>
-        /// Resets the size of the current change set to 0.
-        /// </summary>
-        protected void ResetChangesetSize()
-        {
-            this.currentChangeSetSize = 0;
-        }
-
-        /// <summary>
-        /// Continues reading from the batch message payload.
-        /// </summary>
-        /// <returns>true if more items were read; otherwise false.</returns>
-        protected abstract bool ReadImplementation();
 
         /// <summary>
         /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
@@ -285,6 +242,214 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
         protected abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Start'.
+        /// </summary>
+        /// <returns>The batch reader state after the read.</returns>
+        protected abstract ODataBatchReaderState ReadAtStartImplementation();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Operation'.
+        /// </summary>
+        /// <returns>The batch reader state after the read.</returns>
+        protected abstract ODataBatchReaderState ReadAtOperationImplementation();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'ChangesetStart'.
+        /// </summary>
+        /// <returns>The batch reader state after the read.</returns>
+        protected abstract ODataBatchReaderState ReadAtChangesetStartImplementation();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'ChangesetEnd'.
+        /// </summary>
+        /// <returns>The batch reader state after the read.</returns>
+        protected abstract ODataBatchReaderState ReadAtChangesetEndImplementation();
+
+        /// <summary>
+        /// Validate the reader state is setup properly when reader stream is at the start of changeset.
+        /// </summary>
+        protected abstract void VerifyReaderStreamChangesetStartImplementation();
+
+        /// <summary>
+        /// Reset the changeset boundary in the reader stream at the end of the changeset processing.
+        /// </summary>
+        protected abstract void ResetReaderStreamChangesetBoundary();
+
+        /// <summary>
+        /// Compute the next reader state. It also updates the size information about the batch.
+        /// </summary>
+        /// <param name="currentlyInChangeset">Whether reader is currently inside a changeset.</param>
+        /// <param name="isChangesetPart">Whether the new part is part of a changeset or an atomic group.</param>
+        /// <returns>The next reader state.</returns>
+        protected ODataBatchReaderState GetNextStateOnNewPart(bool currentlyInChangeset, bool isChangesetPart)
+        {
+            ODataBatchReaderState nextState;
+
+            // Compute the next reader state
+            if (currentlyInChangeset)
+            {
+                Debug.Assert(!isChangesetPart, "Should have validated that nested changesets are not allowed.");
+                nextState = ODataBatchReaderState.Operation;
+                this.IncreaseChangesetSize();
+            }
+            else
+            {
+                // We are at the top level (not inside a changeset)
+                nextState = isChangesetPart
+                    ? ODataBatchReaderState.ChangesetStart
+                    : ODataBatchReaderState.Operation;
+                this.IncreaseBatchSize();
+            }
+
+            return nextState;
+        }
+
+        /// <summary>
+        /// Instantiate an <see cref="ODataBatchOperationRequestMessage"/> instance.
+        /// </summary>
+        /// <param name="streamCreatorFunc">The function for stream creation.</param>
+        /// <param name="method">The HTTP method used for this request message.</param>
+        /// <param name="requestUri">The request Url for this request message.</param>
+        /// <param name="headers">The headers for this request message.</param>
+        /// <returns>The <see cref="ODataBatchOperationRequestMessage"/> instance.</returns>
+        protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(
+            Func<Stream> streamCreatorFunc,
+            string method,
+            Uri requestUri,
+            ODataBatchOperationHeaders headers)
+        {
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUri, headers, this,
+                this.contentIdToAddOnNextRead, this.payloadUriConverter, /*writing*/ false, this.container);
+        }
+
+        /// <summary>
+        /// Instantiate an <see cref="ODataBatchOperationResponseMessage"/> instance and set the status code.
+        /// </summary>
+        /// <param name="streamCreatorFunc">The function for stream creation.</param>
+        /// <param name="statusCode">The status code for the response.</param>
+        /// <param name="headers">The headers for this response message.</param>
+        /// <returns>The <see cref="ODataBatchOperationResponseMessage"/> instance.</returns>
+        protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(
+            Func<Stream> streamCreatorFunc,
+            int statusCode,
+            ODataBatchOperationHeaders headers)
+        {
+            ODataBatchOperationResponseMessage responseMessage = new ODataBatchOperationResponseMessage(
+                streamCreatorFunc, headers, this, this.contentIdToAddOnNextRead,
+                this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ false, this.container);
+            responseMessage.StatusCode = statusCode;
+            return responseMessage;
+        }
+
+        /// <summary>
+        /// Add a potential Content-ID header to the URL resolver so that it will be available
+        /// to subsequent operations.
+        /// Throws if Content-ID header is not found in request or if value is duplicated.
+        /// </summary>
+        /// <param name="headers">The message headers.</param>
+        /// <param name="isCreateRequest">True if this method is called during request creation.</param>
+        protected void RecordContentId(ODataBatchOperationHeaders headers, bool isCreateRequest)
+        {
+            string contentId;
+            if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
+            {
+                SetContentId(contentId);
+            }
+
+            if (isCreateRequest && this.contentIdToAddOnNextRead == null)
+            {
+                throw new ODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
+            }
+        }
+
+        /// <summary>
+        /// Set the content Id value.
+        /// Throws if it is a duplicated value.
+        /// </summary>
+        /// <param name="value">The content Id value.</param>
+        protected void VerifyAndSetContentId(string value)
+        {
+            Debug.Assert(this.contentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
+            SetContentId(value);
+        }
+
+        /// <summary>
+        /// Instantiate an <see cref="Uri"/> object.
+        /// </summary>
+        /// <param name="requestUri">The uri to process.</param>
+        /// <param name="baseUri">The base Uri to use.</param>
+        /// <returns>An URI to be used in the request line of a batch request operation.
+        /// In the default scheme, the method either returns the specified <paramref name="requestUri"/> if it was absolute,
+        /// or it's combination with the <paramref name="baseUri"/> if it was relative.</returns>
+        /// <remarks>
+        /// This method will fail if no custom resolution is implemented and the specified <paramref name="requestUri"/> is
+        /// relative and there's no base URI available.
+        /// </remarks>
+        protected Uri BuildOperationRequestUri(Uri requestUri, Uri baseUri)
+        {
+            return ODataBatchUtils.CreateOperationRequestUri(requestUri, baseUri, this.payloadUriConverter);
+        }
+
+        /// <summary>
+        /// Reset the URL converter
+        /// </summary>
+        protected void ResetPayloadUriConverter()
+        {
+            this.payloadUriConverter.Reset();
+        }
+
+        /// <summary>
+        /// Set the content Id value.
+        /// Throws if it is a duplicated value.
+        /// </summary>
+        /// <param name="value">The content Id value.</param>
+        private void SetContentId(string value)
+        {
+            if (value != null && this.payloadUriConverter.ContainsContentId(value))
+            {
+                throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(value));
+            }
+
+            this.contentIdToAddOnNextRead = value;
+        }
+
+
+
+        /// <summary>
+        /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
+        /// </summary>
+        private void IncreaseBatchSize()
+        {
+            if (this.currentBatchSize == this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch)
+            {
+                throw new ODataException(Strings.ODataBatchReader_MaxBatchSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch));
+            }
+
+            this.currentBatchSize++;
+        }
+
+        /// <summary>
+        /// Increases the size of the current change set; throws if the allowed limit is exceeded.
+        /// </summary>
+        private void IncreaseChangesetSize()
+        {
+            if (this.currentChangeSetSize == this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset)
+            {
+                throw new ODataException(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset));
+            }
+
+            this.currentChangeSetSize++;
+        }
+
+        /// <summary>
+        /// Resets the size of the current change set to 0.
+        /// </summary>
+        private void ResetChangesetSize()
+        {
+            this.currentChangeSetSize = 0;
+        }
 
         /// <summary>
         /// Reads the next part from the batch message payload.
@@ -309,6 +474,82 @@ namespace Microsoft.OData
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
         }
 #endif
+
+        /// <summary>
+        /// Continues reading from the batch message payload.
+        /// </summary>
+        /// <returns>true if more items were read; otherwise false.</returns>
+        private bool ReadImplementation()
+        {
+            Debug.Assert(this.ReaderOperationState != OperationState.StreamRequested, "Should have verified that no operation stream is still active.");
+
+            switch (this.State)
+            {
+                case ODataBatchReaderState.Initial:
+                    // The stream should be positioned at the beginning of the batch content,
+                    // that is before the first boundary (or the preamble if there is one).
+                    this.State = this.ReadAtStartImplementation();
+                    break;
+
+                case ODataBatchReaderState.Operation:
+                    // When reaching this state we already read the MIME headers of the operation.
+                    // Clients MUST call CreateOperationRequestMessage
+                    // or CreateOperationResponseMessage to read at least the headers of the operation.
+                    // This is important since we need to read the ContentId header (if present) and
+                    // add it to the URL resolver.
+                    if (this.ReaderOperationState == OperationState.None)
+                    {
+                        // No message was created; fail
+                        throw new ODataException(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
+                    }
+
+                    // Reset the operation state; the operation state only
+                    // tracks the state of a batch operation while in state Operation.
+                    this.ReaderOperationState = OperationState.None;
+
+                    // Also add a pending ContentId header to the URL resolver now. We ensured above
+                    // that a message has been created for this operation and thus the headers (incl.
+                    // a potential content ID header) have been read.
+                    if (this.contentIdToAddOnNextRead != null)
+                    {
+                        this.payloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
+                        this.contentIdToAddOnNextRead = null;
+                    }
+
+                    // When we are done with an operation, we have to skip ahead to the next part
+                    // when Read is called again. Note that if the operation stream was never requested
+                    // and the content of the operation has not been read, we'll skip it here.
+                    Debug.Assert(this.ReaderOperationState == OperationState.None, "Operation state must be 'None' at the end of the operation.");
+                    this.State = this.ReadAtOperationImplementation();
+                    break;
+
+                case ODataBatchReaderState.ChangesetStart:
+                    // When at the start of a changeset, skip ahead to the first operation in the
+                    // changeset (or the end boundary of the changeset).
+                    this.VerifyReaderStreamChangesetStartImplementation();
+                    this.State = this.ReadAtChangesetStartImplementation();
+                    break;
+
+                case ODataBatchReaderState.ChangesetEnd:
+                    // When at the end of a changeset, reset the changeset boundary and the
+                    // changeset size and then skip to the next part.
+                    this.ResetChangesetSize();
+                    this.ResetReaderStreamChangesetBoundary();
+                    this.State = this.ReadAtChangesetEndImplementation();
+                    break;
+
+                case ODataBatchReaderState.Exception:    // fall through
+                case ODataBatchReaderState.Completed:
+                    Debug.Assert(false, "Should have checked in VerifyCanRead that we are not in one of these states.");
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+
+                default:
+                    Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+            }
+
+            return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
+        }
 
         /// <summary>
         /// Verifies that calling CreateOperationRequestMessage if valid.
@@ -413,16 +654,6 @@ namespace Microsoft.OData
                 Debug.Assert(false, "Async calls are not allowed in this build.");
 #endif
             }
-        }
-
-        /// <summary>
-        /// Sets the 'Exception' state and then throws an ODataException with the specified error message.
-        /// </summary>
-        /// <param name="errorMessage">The error message for the exception.</param>
-        private void ThrowODataException(string errorMessage)
-        {
-            this.State = ODataBatchReaderState.Exception;
-            throw new ODataException(errorMessage);
         }
 
         /// <summary>
