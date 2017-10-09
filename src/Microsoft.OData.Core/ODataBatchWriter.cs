@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.IO;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -76,7 +78,7 @@ namespace Microsoft.OData
         /// <summary>
         /// An enumeration representing the current state of the writer.
         /// </summary>
-        protected internal enum BatchWriterState
+        protected enum BatchWriterState
         {
             /// <summary>The writer is in initial state; nothing has been written yet.</summary>
             Start,
@@ -110,66 +112,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// >The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.
-        /// </summary>
-        internal ODataBatchPayloadUriConverter PayloadUriConverter
-        {
-            get { return this.payloadUriConverter; }
-        }
-
-        /// <summary>The message for the operation that is currently written; or null if no operation is written right now.</summary>
-        internal ODataBatchOperationMessage CurrentOperationMessage
-        {
-            get
-            {
-                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or reponse message can be set, not both.");
-                if (this.currentOperationRequestMessage != null)
-                {
-                    Debug.Assert(!this.outputContext.WritingResponse, "Request message can only be set when writing request.");
-                    return this.currentOperationRequestMessage.OperationMessage;
-                }
-                else if (this.currentOperationResponseMessage != null)
-                {
-                    Debug.Assert(this.outputContext.WritingResponse, "Response message can only be set when writing response.");
-                    return this.currentOperationResponseMessage.OperationMessage;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>The container to get related services.</summary>
-        protected IServiceProvider Container
-        {
-            get { return this.container; }
-        }
-
-        /// <summary>
         /// Gets or Sets the content Id of the current operation.
         /// </summary>
         protected string CurrentOperationContentId
         {
             get { return this.currentOperationContentId; }
-            set { this.currentOperationContentId = value; }
-        }
-
-        /// <summary>
-        /// Gets or Sets the batch writer's state.
-        /// </summary>
-        protected BatchWriterState State
-        {
-            get { return this.state; }
-            set { this.state = value; }
-        }
-
-        /// <summary>
-        /// Gets the writer's output context.
-        /// </summary>
-        protected ODataOutputContext OutputContext
-        {
-            get { return this.outputContext; }
         }
 
         /// <summary>The request message for the operation that is currently written if it's a request; or null if no operation is written right now or it's a response operation.</summary>
@@ -178,14 +125,14 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.currentOperationRequestMessage == null || !this.outputContext.WritingResponse, "Request message can only be filled when writing request.");
-                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or reponse message can be set, not both.");
+                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or response message can be set, not both.");
                 return this.currentOperationRequestMessage;
             }
 
             set
             {
                 Debug.Assert(value == null || !this.outputContext.WritingResponse, "Can only set the request message if we're writing a request.");
-                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or reponse message can be set, not both.");
+                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or response message can be set, not both.");
                 this.currentOperationRequestMessage = value;
             }
         }
@@ -197,14 +144,14 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.currentOperationResponseMessage == null || this.outputContext.WritingResponse, "Response message can only be filled when writing response.");
-                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or reponse message can be set, not both.");
+                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or response message can be set, not both.");
                 return this.currentOperationResponseMessage;
             }
 
             set
             {
                 Debug.Assert(value == null || this.outputContext.WritingResponse, "Can only set the response message if we're writing a response.");
-                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or reponse message can be set, not both.");
+                Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or response message can be set, not both.");
                 this.currentOperationResponseMessage = value;
             }
         }
@@ -254,6 +201,10 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteStartChangeset(true);
             this.WriteStartChangesetImplementation();
+
+            // reset the size of the current changeset and increase the size of the batch
+            this.ResetChangeSetSize();
+            this.InterceptException(this.IncreaseBatchSize);
         }
 
 #if PORTABLELIB
@@ -262,7 +213,13 @@ namespace Microsoft.OData
         public Task WriteStartChangesetAsync()
         {
             this.VerifyCanWriteStartChangeset(false);
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteStartChangesetImplementation);
+            return TaskUtils.GetTaskForSynchronousOperation(this.WriteStartChangesetImplementation)
+                .FollowOnSuccessWith(t =>
+                    {
+                        // reset the size of the current changeset and increase the size of the batch
+                        this.ResetChangeSetSize();
+                        this.InterceptException(this.IncreaseBatchSize);
+                    });
         }
 #endif
 
@@ -271,6 +228,10 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEndChangeset(true);
             this.WriteEndChangesetImplementation();
+
+            // Reset the cache of content IDs here. As per spec, content IDs are only unique inside a change set.
+            this.payloadUriConverter.Reset();
+            this.currentOperationContentId = null;
         }
 
 #if PORTABLELIB
@@ -302,6 +263,16 @@ namespace Microsoft.OData
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
         {
             this.VerifyCanCreateOperationRequestMessage(true, method, uri, contentId);
+
+            if (!this.IsInsideSubBatch())
+            {
+                this.InterceptException(this.IncreaseBatchSize);
+            }
+            else
+            {
+                this.InterceptException(this.IncreaseChangeSetSize);
+            }
+
             return this.CreateOperationRequestMessageImplementation(method, uri, contentId, payloadUriOption);
         }
 
@@ -325,6 +296,16 @@ namespace Microsoft.OData
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
         {
             this.VerifyCanCreateOperationRequestMessage(false, method, uri, contentId);
+
+            if (!this.IsInsideSubBatch())
+            {
+                this.InterceptException(this.IncreaseBatchSize);
+            }
+            else
+            {
+                this.InterceptException(this.IncreaseChangeSetSize);
+            }
+
             return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationRequestMessage>(
                 () => this.CreateOperationRequestMessageImplementation(method, uri, contentId, payloadUriOption));
         }
@@ -415,7 +396,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state ExceptionThrown and then re-throw the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         internal void InterceptException(Action action)
@@ -436,21 +417,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Wrapper method to validate state transition with optional customized validation.
-        /// </summary>
-        /// <param name="newState">Teh new writer state to transition into.</param>
-        /// <param name="customizedValidationAction">Optional validation action.</param>
-        internal void ValidateTransition(BatchWriterState newState, Action customizedValidationAction)
-        {
-            if (customizedValidationAction != null)
-            {
-                customizedValidationAction();
-            }
-
-            CommonTransitionValidation(newState);
-        }
-
-        /// <summary>
         /// Sets the 'Error' state and then throws an ODataException with the specified error message.
         /// </summary>
         /// <param name="errorMessage">The error message for the exception.</param>
@@ -458,40 +424,6 @@ namespace Microsoft.OData
         {
             this.SetState(BatchWriterState.Error);
             throw new ODataException(errorMessage);
-        }
-
-        /// <summary>
-        /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
-        /// </summary>
-        internal void IncreaseBatchSize()
-        {
-            this.currentBatchSize++;
-
-            if (this.currentBatchSize > this.outputContext.MessageWriterSettings.MessageQuotas.MaxPartsPerBatch)
-            {
-                throw new ODataException(Strings.ODataBatchWriter_MaxBatchSizeExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxPartsPerBatch));
-            }
-        }
-
-        /// <summary>
-        /// Increases the size of the current change set; throws if the allowed limit is exceeded.
-        /// </summary>
-        internal void IncreaseChangeSetSize()
-        {
-            this.currentChangeSetSize++;
-
-            if (this.currentChangeSetSize > this.outputContext.MessageWriterSettings.MessageQuotas.MaxOperationsPerChangeset)
-            {
-                throw new ODataException(Strings.ODataBatchWriter_MaxChangeSetSizeExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxOperationsPerChangeset));
-            }
-        }
-
-        /// <summary>
-        /// Resets the size of the current change set to 0.
-        /// </summary>
-        internal void ResetChangeSetSize()
-        {
-            this.currentChangeSetSize = 0;
         }
 
         /// <summary>
@@ -535,6 +467,12 @@ namespace Microsoft.OData
         protected abstract void StartBatchOperationContent();
 
         /// <summary>
+        /// Whether the writer is currently processing inside a sub-batch (changeset or atomic group).
+        /// </summary>
+        /// <returns>True if the writer processing is inside a sub-batch.</returns>
+        protected abstract bool IsInsideSubBatch();
+
+        /// <summary>
         /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request.
         /// </summary>
         /// <param name="method">The Http method to be used for this request operation.</param>
@@ -545,22 +483,37 @@ namespace Microsoft.OData
         protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri,
             string contentId, BatchPayloadUriOption payloadUriOption);
 
-        /// <summary>
-        /// Format specific implementation to verify that CreateOperationRequestMessage is valid.
-        /// Default implementation is no-op, and derived class can override as needed.
-        /// </summary>
-        /// <param name="method">The HTTP method to be validated.</param>
-        /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The content Id string to be validated.</param>
-        protected virtual void VerifyCanCreateOperationRequestMessageForFormat(string method, Uri uri, string contentId)
-        {
-        }
 
         /// <summary>
         /// Sets a new writer state; verifies that the transition from the current state into new state is valid.
         /// </summary>
         /// <param name="newState">The writer state to transition into.</param>
-        protected abstract void SetState(BatchWriterState newState);
+        protected void SetState(BatchWriterState newState)
+        {
+            this.InterceptException(() => this.ValidateTransition(
+                newState,
+                () => ValidateTransitionImplementation(newState)));
+
+            SetStateImplementation(newState);
+
+            this.state = newState;
+        }
+
+        /// <summary>
+        /// Additional processing required when setting a new writer state.
+        /// </summary>
+        /// <param name="newState">The writer state to transition into.</param>
+        protected virtual void SetStateImplementation(BatchWriterState newState)
+        {
+        }
+
+        /// <summary>
+        /// Additional validation required when setting a new writer state.
+        /// </summary>
+        /// <param name="newState">The writer state to transition into.</param>
+        protected virtual void ValidateTransitionImplementation(BatchWriterState newState)
+        {
+        }
 
         /// <summary>
         /// Verifies that the writer is not disposed.
@@ -571,6 +524,144 @@ namespace Microsoft.OData
         /// Starts a new batch.
         /// </summary>
         protected abstract void WriteStartBatchImplementation();
+
+        /// <summary>
+        /// Writer specific implementation to verify that CreateOperationRequestMessage is valid.
+        /// Default implementation is no-op, and derived class can override as needed.
+        /// </summary>
+        /// <param name="method">The HTTP method to be validated.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The content Id string to be validated.</param>
+        protected virtual void VerifyCanCreateOperationRequestMessageImplementation(string method, Uri uri, string contentId)
+        {
+        }
+
+        /// <summary>
+        /// Wrapper method to create an operation request message that can be used to write the operation content to, utilizing
+        /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
+        /// </summary>
+        /// <param name="outputStream">The output stream underlying the operation message.</param>
+        /// <param name="method">The HTTP method to use for the message to create.</param>
+        /// <param name="uri">The request URL for the message to create.</param>
+        /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
+        protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri)
+        {
+            return ODataBatchOperationRequestMessage.CreateWriteMessage(
+                outputStream,
+                method,
+                uri,
+                this,
+                this.payloadUriConverter,
+                this.container);
+        }
+
+        /// <summary>
+        /// Wrapper method to create an operation response message that can be used to write the operation content to, utilizing
+        /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
+        /// </summary>
+        /// <param name="outputStream">The output stream underlying the operation message.</param>
+        /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
+        protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(Stream outputStream)
+        {
+            return ODataBatchOperationResponseMessage.CreateWriteMessage(
+                outputStream,
+                this,
+                this.payloadUriConverter.BatchMessagePayloadUriConverter,
+                this.container);
+        }
+
+        /// <summary>
+        /// Creates the URI for a batch request operation, utilizing private member <see cref="ODataBatchPayloadUriConverter"/>.
+        /// </summary>
+        /// <param name="uri">The uri to process.</param>
+        /// <param name="baseUri">The base Uri to use.</param>
+        /// <returns>An URI to be used in the request line of a batch request operation. </returns>
+        protected Uri CreateOperationRequestUriWrapper(Uri uri, Uri baseUri)
+        {
+            return ODataBatchUtils.CreateOperationRequestUri(uri, baseUri, this.payloadUriConverter);
+        }
+
+        /// <summary>
+        /// Add the content id to the <see cref="ODataBatchPayloadUriConverter"/>.
+        /// </summary>
+        /// <param name="contentId">The (non-null) content ID to add.</param>
+        protected void AddToPayloadUriConverter(string contentId)
+        {
+            this.payloadUriConverter.AddContentId(contentId);
+        }
+
+        /// <summary>
+        /// Remember a non-null Content-ID header for change set request operations.
+        /// If a non-null content ID header is specified for a change set request operation, record it in the URL resolver.
+        /// </summary>
+        /// <param name="contentId">The Content-ID header value read from the message.</param>
+        /// <remarks>
+        /// Note that the content ID of this operation will only
+        /// become visible once this operation has been written
+        /// and OperationCompleted has been called on the URL resolver.
+        /// </remarks>
+        protected void RememberContentIdHeader(string contentId)
+        {
+            // The Content-ID header is only supported in request messages and inside of changeSets.
+            Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
+
+            // Set the current content ID. If no Content-ID header is found in the message,
+            // the 'contentId' argument will be null and this will reset the current operation content ID field.
+            this.currentOperationContentId = contentId;
+
+            // Check for duplicate content IDs; we have to do this here instead of in the cache itself
+            // since the content ID of the last operation never gets added to the cache but we still
+            // want to fail on the duplicate.
+            if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
+            {
+                throw new ODataException(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed(contentId));
+            }
+        }
+
+        /// <summary>
+        /// Wrapper method to validate state transition with optional customized validation.
+        /// </summary>
+        /// <param name="newState">The new writer state to transition into.</param>
+        /// <param name="customizedValidationAction">Optional validation action.</param>
+        private void ValidateTransition(BatchWriterState newState, Action customizedValidationAction)
+        {
+            customizedValidationAction();
+            CommonTransitionValidation(newState);
+        }
+
+        /// <summary>
+        /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
+        /// </summary>
+        private void IncreaseBatchSize()
+        {
+            this.currentBatchSize++;
+
+            if (this.currentBatchSize > this.outputContext.MessageWriterSettings.MessageQuotas.MaxPartsPerBatch)
+            {
+                throw new ODataException(Strings.ODataBatchWriter_MaxBatchSizeExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxPartsPerBatch));
+            }
+        }
+
+        /// <summary>
+        /// Increases the size of the current change set; throws if the allowed limit is exceeded.
+        /// </summary>
+        private void IncreaseChangeSetSize()
+        {
+            this.currentChangeSetSize++;
+
+            if (this.currentChangeSetSize > this.outputContext.MessageWriterSettings.MessageQuotas.MaxOperationsPerChangeset)
+            {
+                throw new ODataException(Strings.ODataBatchWriter_MaxChangeSetSizeExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxOperationsPerChangeset));
+            }
+        }
+
+        /// <summary>
+        /// Resets the size of the current change set to 0.
+        /// </summary>
+        private void ResetChangeSetSize()
+        {
+            this.currentChangeSetSize = 0;
+        }
 
         /// <summary>
         /// Verifies that calling CreateOperationRequestMessage is valid.
@@ -631,7 +722,7 @@ namespace Microsoft.OData
             string contentId)
         {
             this.CanCreateOperationRequestMessageVerifierCommon(synchronousCall, method, uri, contentId);
-            this.VerifyCanCreateOperationRequestMessageForFormat(method, uri, contentId);
+            this.VerifyCanCreateOperationRequestMessageImplementation(method, uri, contentId);
         }
 
         /// <summary>
@@ -642,7 +733,7 @@ namespace Microsoft.OData
         {
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
-            if (this.State == BatchWriterState.OperationStreamRequested)
+            if (this.state == BatchWriterState.OperationStreamRequested)
             {
                 this.ThrowODataException(Strings.ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState);
             }
@@ -656,7 +747,7 @@ namespace Microsoft.OData
             VerifyNotDisposed();
 
             // If the operation stream was requested but not yet disposed, the writer can't be used to do anything.
-            if (this.State == BatchWriterState.OperationStreamRequested)
+            if (this.state == BatchWriterState.OperationStreamRequested)
             {
                 throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
             }

@@ -42,13 +42,13 @@ namespace Microsoft.OData
         /// <param name="contentStreamCreatorFunc">A function to create the content stream.</param>
         /// <param name="method">The HTTP method used for this request message.</param>
         /// <param name="requestUrl">The request Url for this request message.</param>
-        /// <param name="headers">The headers for the this request message.</param>
+        /// <param name="headers">The headers for this request message.</param>
         /// <param name="operationListener">Listener interface to be notified of operation changes.</param>
         /// <param name="contentId">The content-ID for the operation request message.</param>
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
-        private ODataBatchOperationRequestMessage(
+        internal ODataBatchOperationRequestMessage(
             Func<Stream> contentStreamCreatorFunc,
             string method,
             Uri requestUrl,
@@ -179,7 +179,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates an operation request message that can be used to read the operation content from.
         /// </summary>
-        /// <param name="batchReaderStream">The batch stream underyling the operation response message.</param>
+        /// <param name="batchReaderStream">The batch stream underlying the operation request message.</param>
         /// <param name="method">The HTTP method to use for the message to create.</param>
         /// <param name="requestUrl">The request URL for the message to create.</param>
         /// <param name="headers">The headers to use for the operation request message.</param>

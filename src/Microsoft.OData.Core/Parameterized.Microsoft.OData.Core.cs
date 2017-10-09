@@ -1035,6 +1035,16 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Changeset boundary must have been set by now."
+        /// </summary>
+        internal static string ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull);
+            }
+        }
+
+        /// <summary>
         /// A string like "The method CreateOperationResponseMessage was called in state '{0}', which is not allowed. CreateOperationResponseMessage can only be called in state 'Operation'."
         /// </summary>
         internal static string ODataBatchReader_InvalidStateForCreateOperationResponseMessage(object p0) {
@@ -3494,7 +3504,7 @@ namespace Microsoft.OData {
         internal static string ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource, p0, p1);
         }
-        
+
         /// <summary>
          /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
          /// </summary>
