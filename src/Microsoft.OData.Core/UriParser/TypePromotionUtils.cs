@@ -262,7 +262,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // Comparing an enum with a string is valid
-                if (left.IsEnum() && right.IsString())
+                if (left != null && right != null && left.IsEnum() && right.IsString())
                 {
                     right = left;
                     return true;
