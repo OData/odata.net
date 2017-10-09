@@ -26,7 +26,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         {
         }
 
-#if !WIN8 && !WINDOWSPHONE
+#if !WIN8 && !WINDOWSPHONE && !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void SimpleQuery()
         {

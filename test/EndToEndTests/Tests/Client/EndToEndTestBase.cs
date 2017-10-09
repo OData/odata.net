@@ -102,7 +102,6 @@ namespace Microsoft.Test.OData.Tests.Client
         {
             try
             {
-
                 var context = this.serviceDescriptor.CreateDataServiceContext(this.ServiceUri);
                 var ar = context.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), null, null, "POST");
                 ar.AsyncWaitHandle.WaitOne();

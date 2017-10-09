@@ -4,14 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.OData.Framework.Server
+namespace Microsoft.Test.OData.Tests.Client
 {
-    using System;
-
     /// <summary>
-    /// Implementation of the IServiceWrapper. This class is utilized to communicate with the service via RPC-like calls.
+    /// Implementation is mostly in ServiceWrapper base class.
     /// </summary>
-    public class DefaultServiceWrapper : IServiceWrapper
+    public class DefaultServiceWrapper : ServiceWrapper
     {
         /// <summary>
         /// Initializes a new instance of the DefaultServiceWrapper class.
@@ -19,29 +17,8 @@ namespace Microsoft.Test.OData.Framework.Server
         /// <param name="descriptor">Descriptor for the service to wrap.</param>
         public DefaultServiceWrapper(ServiceDescriptor descriptor)
         {
-            // TODO: Save service URI from response.
-            // this.ServiceUri = descriptor.CreateServiceUri();
-        }
-
-        /// <summary>
-        /// Gets the URI for the service.
-        /// </summary>
-        public Uri ServiceUri { get; private set; }
-
-        /// <summary>
-        /// Starts the service.
-        /// </summary>
-        public void StartService()
-        {
-            // TODO: Perform RPC call to start service.
-        }
-
-        /// <summary>
-        /// Stops the service.
-        /// </summary>
-        public void StopService()
-        {
-            // TODO: Perform RPC call to stop service.
+            ServiceProcess.StartInfo.Arguments = string.Format("{0} {1}",
+                (int)descriptor.IPCCommand, (int)IPCCommandMap.ServiceType.Default);
         }
     }
 }

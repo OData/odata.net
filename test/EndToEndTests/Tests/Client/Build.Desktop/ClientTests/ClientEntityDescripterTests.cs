@@ -153,6 +153,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void GetDiscontinuedProducts()
         {
@@ -256,6 +257,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
             }
         }
+#endif
 
         [TestMethod]
         public void ParseServiceDocument()

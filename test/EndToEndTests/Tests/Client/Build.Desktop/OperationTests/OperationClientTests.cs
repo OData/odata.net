@@ -18,7 +18,11 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
     {
 
         public OperationClientTests()
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            : base(ServiceDescriptors.OperationServiceDescriptor)
+#else
             : base(Microsoft.Test.OData.Services.TestServices.ServiceDescriptors.OperationServiceDescriptor)
+#endif
         {
 
         }

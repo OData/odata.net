@@ -53,11 +53,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="ActionOverloadingTests\ActionOverloadingEndToEndTests.cs" />
+    <Compile Remove="ClientTests\ClientOpenTypeUpdateTests.cs" />
     <Compile Remove="ClientTests\ClientQueryTests.cs" />
     <Compile Remove="ClientTests\ClientUpdateTests.cs" />
+    <Compile Remove="ClientWithoutTypeResolverTests\JsonWithoutTypeResolverTests.cs" />
+    <Compile Remove="ClientWithoutTypeResolverTests\MismatchedClientModelWithoutTypeResolverTests.cs" />
+    <Compile Remove="ClientWithoutTypeResolverTests\OpenTypesWithoutTypeResolverTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\ClientEndToEndTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\ClientUrlConventionsTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\DefaultUrlConventionsTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\DollarSegmentTests.cs" />
     <Compile Remove="KeyAsSegmentTests\LiteralFormatTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\PrimitiveKeyValuesTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\StreamTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\UpdateTests.cs" />
     <Compile Remove="ODataWCFServiceTests\AbstractEntityTypeTests.cs" />
     <Compile Remove="ODataWCFServiceTests\IDReadLinkEditLinkTests.cs" />
+    <Compile Remove="OperationTests\OperationClientTests.cs" />
     <Compile Remove="OperationTests\OperationT4Tests.cs" />
     <Compile Remove="QueryCountTests.cs" />
     <Compile Remove="SingletonTests\SingletonClientTests.cs" />
@@ -80,13 +93,13 @@
     <Compile Include="..\..\..\Framework\Core\Common\TestFailedException.cs" Link="References\TestFailedException.cs" />
     <Compile Include="..\..\..\Framework\Core\Common\ToStringConverter.cs" Link="References\ToStringConverter.cs" />
     <Compile Include="..\..\..\Framework\Core\Server\IServiceWrapper.cs" Link="ServiceWrapper\IServiceWrapper.cs" />
-    <Compile Include="..\..\..\Framework\Core\Server\ServiceDescriptor.cs" Link="ServiceWrapper\ServiceDescriptor.cs" />
     <Compile Include="..\..\..\Framework\Core\Verification\IStringResourceVerifier.cs" Link="References\IStringResourceVerifier.cs" />
     <Compile Include="..\..\..\Framework\Core\Verification\StringResourceUtil.cs" Link="References\StringResourceUtil.cs" />
     <Compile Include="..\..\..\Framework\Core\Verification\StringResourceVerifier.cs" Link="References\StringResourceVerifier.cs" />
     <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs" />
     <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs" />
     <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs" />
+    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs" />
     <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs" />
     <Compile Include="..\..\..\Services\TestServices\IServiceUriGenerator.cs" Link="ServiceWrapper\IServiceUriGenerator.cs" />
     <Compile Include="..\..\..\Services\TestServices\OpenTypesServiceClientTypes.cs" Link="ClientWithoutTypeResolverTests\OpenTypesServiceClientTypes.cs" />
@@ -98,129 +111,6 @@
     <Compile Include="..\ServiceGeneratorFactory.cs" Link="ServiceGeneratorFactory.cs" />
   </ItemGroup>
 
-<!--
-  <ItemGroup>
-    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs" Link="ODataItemWrapper.cs" />
-    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs" Link="ODataNestedResourceInfoWrapper.cs" />
-    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs" Link="ODataResourceSetWrapper.cs" />
-    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceWrapper.cs" Link="ODataResourceWrapper.cs" />
-    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataWriterHelper.cs" Link="ODataWriterHelper.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\DataService.cs" Link="DataService.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\DataServiceConfiguration.cs" Link="DataServiceConfiguration.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\DataServiceODataWriter.cs" Link="DataServiceODataWriter.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\DataServiceODataWriterEntryArgs.cs" Link="DataServiceODataWriterEntryArgs.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\DataServiceODataWriterFeedArgs.cs" Link="DataServiceODataWriterFeedArgs.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\DataServiceODataWriterNavigationLinkArgs.cs" Link="DataServiceODataWriterNavigationLinkArgs.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\EntitySetRights.cs" Link="EntitySetRights.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\IDataService.cs" Link="IDataService.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\IUpdatable.cs" Link="IUpdatable.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\ProcessRequestArgs.cs" Link="ProcessRequestArgs.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\Providers\DataServiceProviderWrapper.cs" Link="DataServiceProviderWrapper.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\Providers\IDataServiceUpdateProvider2.cs" Link="IDataServiceUpdateProvider2.cs" />
-    <Compile Include="..\..\..\..\FunctionalTests\Service\Microsoft\OData\Service\ServiceOperationRights.cs" Link="ServiceOperationRights.cs" />
-    <Compile Include="..\..\..\Framework\Core\Client\DataServiceContextWrapper.cs" Link="DataServiceContextWrapper.cs" />
-    <Compile Include="..\..\..\Framework\Core\Server\ServiceDescriptor.cs" Link="ServiceDescriptor.cs" />
-    <Compile Include="..\..\..\Framework\TestProviders\Reflection\ReflectionDataContext.cs" Link="ReflectionDataContext.cs" />
-    <Compile Include="..\..\..\Services\Astoria\ActionOverloadingService.svc.cs" Link="ActionOverloadingService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\AstoriaDefaultServiceDBModel.Context.cs" Link="AstoriaDefaultServiceDBModel.Context.cs" />
-    <Compile Include="..\..\..\Services\Astoria\DefaultService.svc.cs" Link="DefaultService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\DefaultServiceWithAccessRestrictions.svc.cs" Link="DefaultServiceWithAccessRestrictions.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\Default\DefaultContainer.cs" Link="DefaultContainer.cs" />
-    <Compile Include="..\..\..\Services\Astoria\Default\Entities.cs" Link="Entities.cs" />
-    <Compile Include="..\..\..\Services\Astoria\EFPerson.cs" Link="EFPerson.cs" />
-    <Compile Include="..\..\..\Services\Astoria\KeyAsSegmentService.svc.cs" Link="KeyAsSegmentService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\ODataWriterDefaultService.svc.cs" Link="ODataWriterDefaultService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\OpenTypeService.svc.cs" Link="OpenTypeService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\PrimitiveKeys.svc.cs" Link="PrimitiveKeys.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\PublicProviderEFService.svc.cs" Link="PublicProviderEFService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\PublicProviderHybridService.svc.cs" Link="PublicProviderHybridService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\PublicProviderReflectionService.svc.cs" Link="PublicProviderReflectionService.svc.cs" />
-    <Compile Include="..\..\..\Services\Astoria\PublicProvider\DatabaseHelper.cs" Link="DatabaseHelper.cs" />
-    <Compile Include="..\..\..\Services\Astoria\PublicProvider\EFProvider.cs" Link="EFProvider.cs" />
-    <Compile Include="..\..\..\Services\Astoria\PublicProvider\Log.cs" Link="Log.cs" />
-    <Compile Include="..\..\..\Services\Astoria\UrlModifyingService.svc.cs" Link="UrlModifyingService.svc.cs" />
-    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs" Link="Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs" />
-    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs" Link="Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs" />
-    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs" Link="Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs" />
-    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs" Link="Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs" />
-    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs" Link="Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs" />
-    <Compile Include="..\..\..\Services\ODataModelRefService\ModelRefService.cs" Link="ModelRefService.cs" />
-    <Compile Include="..\..\..\Services\ODataModelRefService\ModelRefSvcDataSource.cs" Link="ModelRefSvcDataSource.cs" />
-    <Compile Include="..\..\..\Services\ODataOperationService\OperationService.cs" Link="OperationService.cs" />
-    <Compile Include="..\..\..\Services\ODataPluggableFormatService\PayloadValueConverter\PayloadValueConverterService.cs" Link="PayloadValueConverterService.cs" />
-    <Compile Include="..\..\..\Services\ODataPluggableFormatService\PluggableFormatService.cs" Link="PluggableFormatService.cs" />
-    <Compile Include="..\..\..\Services\ODataSimplifiedService\ODataSimplifiedService.cs" Link="ODataSimplifiedService.cs" />
-    <Compile Include="..\..\..\Services\ODataTripPinService\TripPinService.cs" Link="TripPinService.cs" />
-    <Compile Include="..\..\..\Services\ODataTypeDefinitionService\TypeDefinitionService.cs" Link="TypeDefinitionService.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\AsyncTask.cs" Link="AsyncTask.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\BuiltInFunctionHelper\GeoFunctionHelper.cs" Link="GeoFunctionHelper.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\BuiltInFunctionHelper\TypeFunctionHelper.cs" Link="TypeFunctionHelper.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\DataSourceManager.cs" Link="DataSourceManager.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\DeletionContext.cs" Link="DeletionContext.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\InMemoryCLRTypes.cs" Link="InMemoryCLRTypes.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\IODataDataSource.cs" Link="IODataDataSource.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\IODataOperationProvider.cs" Link="IODataOperationProvider.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\IODataQueryProvider.cs" Link="IODataQueryProvider.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\IODataStreamProvider.cs" Link="IODataStreamProvider.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DataSource\IODataUpdateProvider.cs" Link="IODataUpdateProvider.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DeltaContext.cs" Link="DeltaContext.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\DeltaSnapshot.cs" Link="DeltaSnapshot.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\EdmClrTypeUtils.cs" Link="EdmClrTypeUtils.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\ExpandSelectItemHandler.cs" Link="ExpandSelectItemHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Extensions\ExtensionManager.cs" Link="ExtensionManager.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\CreateHandler.cs" Link="CreateHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\DeltaHandler.cs" Link="DeltaHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\DeltaLinkHandler.cs" Link="DeltaLinkHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\MediaStreamHandler.cs" Link="MediaStreamHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\MetadataDocumentHandler.cs" Link="MetadataDocumentHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\OperationHandler.cs" Link="OperationHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\QueryHandler.cs" Link="QueryHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\RequestHandler.cs" Link="RequestHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\RootRequestHandler.cs" Link="RootRequestHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\ServiceDocumentHandler.cs" Link="ServiceDocumentHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Handlers\StatusMonitorRequestHandler.cs" Link="StatusMonitorRequestHandler.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\HttpMethod.cs" Link="HttpMethod.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\InMemoryMessage.cs" Link="InMemoryMessage.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Models\InstanceAnnotationType.cs" Link="InstanceAnnotationType.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\NodeToExpressionTranslator.cs" Link="NodeToExpressionTranslator.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\ODataObjectModelConverter.cs" Link="ODataObjectModelConverter.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\ODataResponseMessage.cs" Link="ODataResponseMessage.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\ODataServiceErrorException.cs" Link="ODataServiceErrorException.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\PathSegmentToExpressionTranslator.cs" Link="PathSegmentToExpressionTranslator.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\PreferenceContext.cs" Link="PreferenceContext.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\QueryContext.cs" Link="QueryContext.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\ResponseWriter.cs" Link="ResponseWriter.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\SearchFieldAttribute.cs" Link="SearchFieldAttribute.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\SearchHelper.cs" Link="SearchHelper.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\ServiceConstants.cs" Link="ServiceConstants.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Services\IODataService.cs" Link="IODataService.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Services\IODataServiceDescriptor.cs" Link="IODataServiceDescriptor.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Services\ODataService.cs" Link="ODataService.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\StreamPipe.cs" Link="StreamPipe.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\UriHandlers\PathSegmentToResourcePathTranslator.cs" Link="PathSegmentToResourcePathTranslator.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\UriHandlers\QueryOptionExtensions.cs" Link="QueryOptionExtensions.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\UriHandlers\QueryTarget.cs" Link="QueryTarget.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Utility.cs" Link="Utility.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Vocabularies\CapabilitiesHelpers.cs" Link="CapabilitiesHelpers.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Vocabularies\CoreHelpers.cs" Link="CoreHelpers.cs" />
-    <Compile Include="..\..\..\Services\ODataWCFLibrary\Vocabularies\CorePermission.cs" Link="CorePermission.cs" />
-    <Compile Include="..\..\..\Services\TestServices\ServiceDescriptors.cs" Link="ServiceDescriptors.cs" />
-    <Compile Include="..\..\..\Services\TestServices\TestServiceUtil.cs" Link="TestServiceUtil.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" Link="AsynchronousAttribute.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" Link="AsynchronousDelayQueryTests.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" Link="AsynchronousQueryTests.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousSingletonClientTest.cs" Link="AsynchronousSingletonClientTest.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsDesktop.cs" Link="AsynchronousTestsExtensionMethodsDesktop.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsSilverlight.cs" Link="AsynchronousTestsExtensionMethodsSilverlight.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousUpdateTests.cs" Link="AsynchronousUpdateTests.cs" />
-    <Compile Include="..\AsynchronousTests\AsyncMethodTests.cs" Link="AsyncMethodTests.cs" />
-    <Compile Include="..\BindingTests.cs" Link="BindingTests.cs" />
-    <Compile Include="..\DataDrivenClientTestExtensionMethods.cs" Link="DataDrivenClientTestExtensionMethods.cs" />
-    <Compile Include="..\EndToEndTestBase.cs" Link="EndToEndTestBase.cs" />
-    <Compile Include="..\ServiceGeneratorFactory.cs" Link="ServiceGeneratorFactory.cs" />
-  </ItemGroup>
--->
-  
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
@@ -231,8 +121,6 @@
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
-    <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
-    <PackageReference Include="System.Web.HttpUtility" Version="4.4.0-beta-24913-02" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
@@ -248,27 +136,5 @@
   <ItemGroup>
     <Folder Include="References\" />
   </ItemGroup>
-
-<!--
-  <ItemGroup>
-    <Compile Include="..\..\..\..\..\src\CodeGen\ODataT4CodeGenerator.cs">
-      <Link>ODataT4CodeGenerator.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
-    </Compile>
-    <None Include="..\..\..\..\..\src\CodeGen\ODataT4CodeGenerator.tt">
-      <Link>ODataT4CodeGenerator.tt</Link>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
--->
 
 </Project>

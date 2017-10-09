@@ -27,6 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         {
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ValidReadReflectionEntity()
         {
@@ -42,7 +43,6 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsNotNull(context.PersonMetadata.Expand("Person").FirstOrDefault().Person);
         }
 
-#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ValidCUDReflectionEntity()
         {

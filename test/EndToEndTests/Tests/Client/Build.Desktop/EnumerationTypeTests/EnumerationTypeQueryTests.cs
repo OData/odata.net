@@ -361,6 +361,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
         #region client operations
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void QueryEntitySetFromODataClient()
         {
@@ -410,7 +411,6 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
         }
 
-#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void QueryEnumPropertyFromODataClient()
         {
@@ -454,7 +454,6 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 Assert.AreEqual(Color.Blue, enumResult[0][2]);
             }
         }
-#endif
 
         [TestMethod]
         public void QueryEntitiesWithQueryOptionsFromODataClient()
@@ -604,6 +603,8 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 Assert.AreEqual(expectedProd.CoverColors.Count, prod.CoverColors.Count);
             }
         }
-#endregion
+#endif
+
+        #endregion
     }
 }
