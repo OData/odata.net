@@ -186,6 +186,15 @@ namespace AstoriaUnitTests.Tests
             test.ShouldThrow<InvalidOperationException>().WithMessage(Strings.ClientType_NoSettableFields("System.Object"));
         }
 
+        [TestMethod]
+        public void GetOrCreateEdmTypeShouldWorkForEnumTypes()
+        {
+            var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
+            var enumType = clientModel.GetOrCreateEdmType(typeof(EdmEnumType));
+            Assert.IsNotNull(enumType);
+            Assert.IsNotNull(enumType.FullName());
+        }
+
         private class TypeWithCollectionOfObjectProperty
         {
             public ICollection<object> Objects { get; set; }
