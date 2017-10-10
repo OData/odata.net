@@ -315,22 +315,6 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Writes all the pending headers and prepares the writer to write a content of the operation.
-        /// </summary>
-        protected override void StartBatchOperationContent()
-        {
-            Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
-            Debug.Assert(this.rawOutputContext.TextWriter != null, "Must have a batch writer!");
-
-            // write the pending headers (if any)
-            this.WritePendingMessageData(false);
-
-            // flush the text writer to make sure all buffers of the text writer
-            // are flushed to the underlying async stream
-            this.rawOutputContext.TextWriter.Flush();
-        }
-
-        /// <summary>
         /// Additional processing required when setting a new writer state.
         /// </summary>
         /// <param name="newState">The writer state to transition into.</param>
@@ -400,12 +384,19 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Whether the writer is currently processing inside a changeset.
+        /// Writes all the pending headers and prepares the writer to write a content of the operation.
         /// </summary>
-        /// <returns>True if the writer processing is inside a changeset.</returns>
-        protected override bool IsInsideSubBatch()
+        private void StartBatchOperationContent()
         {
-            return this.changeSetBoundary != null;
+            Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
+            Debug.Assert(this.rawOutputContext.TextWriter != null, "Must have a batch writer!");
+
+            // write the pending headers (if any)
+            this.WritePendingMessageData(false);
+
+            // flush the text writer to make sure all buffers of the text writer
+            // are flushed to the underlying async stream
+            this.rawOutputContext.TextWriter.Flush();
         }
 
         /// <summary>
