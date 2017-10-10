@@ -72,12 +72,6 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError(leftTypeName, rightTypeName, binaryOperatorKind));
             }
 
-            // If comparing an enum with a string, we must convert the string into the enum equivalent
-            if (left.TypeReference != null && right.TypeReference != null && left.TypeReference.IsEnum() && right.TypeReference.IsString())
-            {
-                right = new ConstantNode(new ODataEnumValue(((ConstantNode)right).Value.ToString(), leftType.Definition.ToString()), ((ConstantNode)right).Value.ToString(), rightType);
-            }
-
             left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, leftType);
             right = MetadataBindingUtils.ConvertToTypeIfNeeded(right, rightType);
         }
