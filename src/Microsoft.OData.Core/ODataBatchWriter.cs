@@ -462,17 +462,6 @@ namespace Microsoft.OData
         protected abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId);
 
         /// <summary>
-        /// Writes all the pending headers and prepares the writer to write a content of the operation.
-        /// </summary>
-        protected abstract void StartBatchOperationContent();
-
-        /// <summary>
-        /// Whether the writer is currently processing inside a sub-batch (changeset or atomic group).
-        /// </summary>
-        /// <returns>True if the writer processing is inside a sub-batch.</returns>
-        protected abstract bool IsInsideSubBatch();
-
-        /// <summary>
         /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request.
         /// </summary>
         /// <param name="method">The Http method to be used for this request operation.</param>
@@ -664,28 +653,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Verifies that calling CreateOperationRequestMessage is valid.
-        /// </summary>
-        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        /// <param name="method">The Http method to be used for this request operation.</param>
-        /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        private void CanCreateOperationRequestMessageVerifierCommon(bool synchronousCall, string method, Uri uri, string contentId)
-        {
-            this.ValidateWriterReady();
-            this.VerifyCallAllowed(synchronousCall);
-
-            if (this.outputContext.WritingResponse)
-            {
-                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
-            }
-
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(method, "method");
-
-            ExceptionUtils.CheckArgumentNotNull(uri, "uri");
-        }
-
-        /// <summary>
         /// Verifies that a call is allowed to the writer.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
@@ -721,7 +688,20 @@ namespace Microsoft.OData
         private void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
             string contentId)
         {
-            this.CanCreateOperationRequestMessageVerifierCommon(synchronousCall, method, uri, contentId);
+            // Common verification.
+            this.ValidateWriterReady();
+            this.VerifyCallAllowed(synchronousCall);
+
+            if (this.outputContext.WritingResponse)
+            {
+                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
+            }
+
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(method, "method");
+
+            ExceptionUtils.CheckArgumentNotNull(uri, "uri");
+
+            // Verification specific for derived class
             this.VerifyCanCreateOperationRequestMessageImplementation(method, uri, contentId);
         }
 
@@ -907,6 +887,15 @@ namespace Microsoft.OData
                 default:
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchWriter_ValidateTransition_UnreachableCodePath));
             }
+        }
+
+        /// <summary>
+        /// Whether the writer is currently processing inside a sub-batch (changeset or atomic group).
+        /// </summary>
+        /// <returns>True if the writer processing is inside a sub-batch.</returns>
+        private bool IsInsideSubBatch()
+        {
+            return this.state == BatchWriterState.ChangesetStarted;
         }
     }
 }
