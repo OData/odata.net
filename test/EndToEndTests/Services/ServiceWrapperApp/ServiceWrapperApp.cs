@@ -37,6 +37,7 @@ namespace ServiceWrapperApp
             if (args.Contains("h") || args.Contains("help") || args.Contains("?"))
             {
                 PrintHelp();
+                return 0;
             }
 
             if (AttachDebugger(args))

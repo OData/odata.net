@@ -77,6 +77,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousAttribute.cs" Link="AsynchronousAttribute.cs" />
+    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousDelayQueryTests.cs" Link="AsynchronousDelayQueryTests.cs" />
+    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousQueryTests.cs" Link="AsynchronousQueryTests.cs" />
+    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousSingletonClientTest.cs" Link="AsynchronousSingletonClientTest.cs" />
+    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousUpdateTests.cs" Link="AsynchronousUpdateTests.cs" />
+    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsyncMethodTests.cs" Link="AsyncMethodTests.cs" />
     <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs" Link="References\ODataItemWrapper.cs" />
     <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs" Link="DisableAtomTests\ODataNestedResourceInfoWrapper.cs" />
     <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs" Link="DisableAtomTests\ODataResourceSetWrapper.cs" />
