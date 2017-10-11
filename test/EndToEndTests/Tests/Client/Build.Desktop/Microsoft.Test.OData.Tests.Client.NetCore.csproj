@@ -77,12 +77,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousAttribute.cs" Link="AsynchronousAttribute.cs" />
-    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousDelayQueryTests.cs" Link="AsynchronousDelayQueryTests.cs" />
-    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousQueryTests.cs" Link="AsynchronousQueryTests.cs" />
-    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousSingletonClientTest.cs" Link="AsynchronousSingletonClientTest.cs" />
-    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsynchronousUpdateTests.cs" Link="AsynchronousUpdateTests.cs" />
-    <Compile Include="..\..\..\..\..\..\netCoreTestsWorking\test\EndToEndTests\Tests\Client\AsynchronousTests\AsyncMethodTests.cs" Link="AsyncMethodTests.cs" />
     <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs" Link="References\ODataItemWrapper.cs" />
     <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs" Link="DisableAtomTests\ODataNestedResourceInfoWrapper.cs" />
     <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs" Link="DisableAtomTests\ODataResourceSetWrapper.cs" />
@@ -112,7 +106,13 @@
     <Compile Include="..\..\..\Services\TestServices\Service References\ODataWCFModelReferenceServiceReference\Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.cs" />
     <Compile Include="..\..\..\Services\TestServices\T4Clients\OperationService.cs" Link="OperationTests\OperationService.cs" />
     <Compile Include="..\..\..\Services\TestServices\TestServiceUtil.cs" Link="ServiceWrapper\TestServiceUtil.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" Link="AsynchronousAttribute.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" Link="AsynchronousDelayQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" Link="AsynchronousQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousSingletonClientTest.cs" Link="AsynchronousSingletonClientTest.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsDesktop.cs" Link="References\AsynchronousTestsExtensionMethodsDesktop.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousUpdateTests.cs" Link="AsynchronousUpdateTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsyncMethodTests.cs" Link="AsyncMethodTests.cs" />
     <Compile Include="..\EndToEndTestBase.cs" Link="EndToEndTestBase.cs" />
     <Compile Include="..\ServiceGeneratorFactory.cs" Link="ServiceGeneratorFactory.cs" />
   </ItemGroup>
