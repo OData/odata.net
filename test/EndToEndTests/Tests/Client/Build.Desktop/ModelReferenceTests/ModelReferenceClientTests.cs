@@ -23,7 +23,6 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         {
         }
 
-#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // Query set - Create entity - Get created entity - Update entity - Delete entity of set in referenced entity container
         // But type declared in main model
         [TestMethod]
@@ -352,7 +351,6 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             TestClientContext.LoadProperty(truck, "VehicleGPSGroupFromGPS");
             Assert.AreEqual(2, truck.VehicleGPSGroupFromGPS.Count);
         }
-#endif
 
         [TestMethod]
         public void TypeCast()

@@ -68,6 +68,7 @@
     <Compile Remove="KeyAsSegmentTests\PrimitiveKeyValuesTests.cs" />
     <Compile Remove="KeyAsSegmentTests\StreamTests.cs" />
     <Compile Remove="KeyAsSegmentTests\UpdateTests.cs" />
+    <Compile Remove="ModelReferenceTests\ModelReferenceClientTests.cs" />
     <Compile Remove="ODataWCFServiceTests\AbstractEntityTypeTests.cs" />
     <Compile Remove="ODataWCFServiceTests\IDReadLinkEditLinkTests.cs" />
     <Compile Remove="OperationTests\OperationClientTests.cs" />

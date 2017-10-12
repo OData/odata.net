@@ -8,7 +8,6 @@ namespace Microsoft.Test.OData.Tests.Client
 {
     using System;
     using System.Diagnostics;
-    using System.IO;
     using System.Threading;
     using Microsoft.Test.OData.Framework.Server;
 
@@ -29,6 +28,16 @@ namespace Microsoft.Test.OData.Tests.Client
         /// the app and receive information regarding the service from the app in a server/client model.
         /// </summary>
         private readonly string ServiceLocation = @"..\..\Desktop\ServiceWrapperApp.exe";
+
+        /// <summary>
+        /// Maximum wait time for the test service to initialize in milliseconds.
+        /// </summary>
+        private const int MaxTestServiceInitializationWaitTimeMS = 5000;
+
+        /// <summary>
+        /// Check to see whether test service has returned service URI at this interval in milliseconds.
+        /// </summary>
+        private const int ServiceUriRefreshIntervalMS = 100;
 
         /// <summary>
         /// Initializes a new instance of the ServiceWrapper class.
@@ -78,18 +87,27 @@ namespace Microsoft.Test.OData.Tests.Client
             ServiceProcess.BeginOutputReadLine();
             ServiceProcess.StandardInput.WriteLine(string.Format("{0}", (int)IPCCommandMap.ServiceCommands.StartService));
 
-            // To ensure that the test case does not last too long, make it a max of 2 seconds (8 cycles * 250ms sleeps)
-            for (int i = 0; i < 8; ++i)
+            // To ensure that the test case does not last too long, make sleep up to max of MaxTestServiceInitializationWaitTimeMS
+            // Pull URI every refreshIntervalMS milliseconds.
+            for (int i = 0, cycles = MaxTestServiceInitializationWaitTimeMS / ServiceUriRefreshIntervalMS; i < cycles; ++i)
             {
                 if (uri.Length > 0)
                 {
                     break;
                 }
 
-                Thread.Sleep(250);
+                Thread.Sleep(ServiceUriRefreshIntervalMS);
             }
 
-            ServiceUri = new Uri(uri);
+            try
+            {
+                ServiceUri = new Uri(uri);
+            }
+            catch (UriFormatException e)
+            {
+                throw new UriFormatException(string.Format("{0} / Has the ServiceWrapperApp been built already? '{1}'",
+                    e.Message, ServiceLocation));
+            }
         }
 
         /// <summary>

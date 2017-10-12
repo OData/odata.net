@@ -42,7 +42,7 @@ namespace ServiceWrapperApp
 
             if (AttachDebugger(args))
             {
-                Console.WriteLine("Attach a debugger. Press the any key to continue.");
+                Console.WriteLine("Attach a debugger. Press Enter to continue.");
                 commandText = Console.ReadLine();
             }
 
