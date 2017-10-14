@@ -320,7 +320,8 @@ namespace Microsoft.OData
             Uri requestUri,
             ODataBatchOperationHeaders headers)
         {
-            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUri, headers, this,
+            Uri uri = BuildOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri);
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
                 this.contentIdToAddOnNextRead, this.payloadUriConverter, /*writing*/ false, this.container);
         }
 
@@ -376,6 +377,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Reset the URL converter
+        /// </summary>
+        protected void ResetPayloadUriConverter()
+        {
+            this.payloadUriConverter.Reset();
+        }
+
+        /// <summary>
         /// Instantiate an <see cref="Uri"/> object.
         /// </summary>
         /// <param name="requestUri">The uri to process.</param>
@@ -387,17 +396,9 @@ namespace Microsoft.OData
         /// This method will fail if no custom resolution is implemented and the specified <paramref name="requestUri"/> is
         /// relative and there's no base URI available.
         /// </remarks>
-        protected Uri BuildOperationRequestUri(Uri requestUri, Uri baseUri)
+        private Uri BuildOperationRequestUri(Uri requestUri, Uri baseUri)
         {
             return ODataBatchUtils.CreateOperationRequestUri(requestUri, baseUri, this.payloadUriConverter);
-        }
-
-        /// <summary>
-        /// Reset the URL converter
-        /// </summary>
-        protected void ResetPayloadUriConverter()
-        {
-            this.payloadUriConverter.Reset();
         }
 
         /// <summary>
