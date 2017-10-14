@@ -263,7 +263,7 @@ namespace Microsoft.OData.MultipartMixed
                 }
             }
 
-            requestUri = BuildOperationRequestUri(new Uri(uriSegment, UriKind.RelativeOrAbsolute), this.rawInputContext.MessageReaderSettings.BaseUri);
+            requestUri = new Uri(uriSegment, UriKind.RelativeOrAbsolute);
         }
 
         /// <summary>

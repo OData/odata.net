@@ -180,9 +180,9 @@ namespace Microsoft.OData.MultipartMixed
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
-            // important to do this first since it will set up the change set boundary.
             this.SetState(BatchWriterState.ChangesetStarted);
-            Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
+            Debug.Assert(this.changeSetBoundary == null, "this.changeSetBoundary == null");
+            this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.rawOutputContext.WritingResponse);
 
             // write the boundary string
             ODataMultipartMixedBatchWriterUtils.WriteStartBoundary(this.rawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
@@ -206,28 +206,11 @@ namespace Microsoft.OData.MultipartMixed
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
-            // Add a potential Content-ID header to the URL resolver so that it will be available
-            // to subsequent operations.
-            // Note that what we add here is the Content-ID header of the previous operation (if any).
-            // This also means that the Content-ID of the last operation in a changeset will never get
-            // added to the cache which is fine since we cannot reference it anywhere.
-            if (this.CurrentOperationContentId != null)
-            {
-                AddToPayloadUriConverter(this.CurrentOperationContentId);
-            }
-
-            this.InterceptException(() => uri = CreateOperationRequestUriWrapper(uri, this.rawOutputContext.MessageWriterSettings.BaseUri));
-
             // create the new request operation
-            this.CurrentOperationRequestMessage = BuildOperationRequestMessage(
+            ODataBatchOperationRequestMessage operationRequestMessage = BuildOperationRequestMessage(
                 this.rawOutputContext.OutputStream,
                 method,
                 uri);
-
-            if (this.changeSetBoundary != null)
-            {
-                this.RememberContentIdHeader(contentId);
-            }
 
             this.SetState(BatchWriterState.OperationCreated);
 
@@ -239,7 +222,7 @@ namespace Microsoft.OData.MultipartMixed
                 this.rawOutputContext.MessageWriterSettings.BaseUri, changeSetBoundary != null, contentId,
                 payloadUriOption);
 
-            return this.CurrentOperationRequestMessage;
+            return operationRequestMessage;
         }
 
         /// <summary>
@@ -277,6 +260,9 @@ namespace Microsoft.OData.MultipartMixed
             // change the state first so we validate the change set boundary before attempting to write it.
             this.SetState(BatchWriterState.ChangesetCompleted);
 
+            Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
+            this.changeSetBoundary = null;
+
             // In the case of an empty changeset the start changeset boundary has not been written yet
             // we will leave it like that, since we want the empty changeset to be represented only as
             // the end changeset boundary.
@@ -303,8 +289,6 @@ namespace Microsoft.OData.MultipartMixed
 
             this.SetState(BatchWriterState.OperationCreated);
 
-            Debug.Assert(this.CurrentOperationContentId == null, "The Content-ID header is only supported in request messages.");
-
             // write the operation's start boundary string
             this.WriteStartBoundaryForOperation();
 
@@ -315,64 +299,11 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Additional processing required when setting a new writer state.
-        /// </summary>
-        /// <param name="newState">The writer state to transition into.</param>
-        protected override void SetStateImplementation(BatchWriterState newState)
-        {
-            // Sets the changeset boundary for changeset boundary changes.
-            switch (newState)
-            {
-                case BatchWriterState.BatchStarted:
-                    Debug.Assert(!this.batchStartBoundaryWritten, "The batch boundary must not be written before calling WriteStartBatch.");
-                    break;
-                case BatchWriterState.ChangesetStarted:
-                    Debug.Assert(this.changeSetBoundary == null, "this.changeSetBoundary == null");
-                    this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.rawOutputContext.WritingResponse);
-                    break;
-                case BatchWriterState.ChangesetCompleted:
-                    Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
-                    this.changeSetBoundary = null;
-                    break;
-            }
-        }
-
-        protected override void ValidateTransitionImplementation(BatchWriterState newState)
-        {
-            // Additional validation for multipart/mixed batch writer.
-            ValidateTransitionAgainstChangesetBoundary(newState, this.changeSetBoundary);
-        }
-
-        /// <summary>
         /// Verifies that the writer is not disposed.
         /// </summary>
         protected override void VerifyNotDisposed()
         {
             this.rawOutputContext.VerifyNotDisposed();
-        }
-
-        /// <summary>
-        /// Writer specific implementation to verify that CreateOperationRequestMessage is valid.
-        /// For Multipart/Mixed writer, this implementation verifies that, for the case within a changeset,
-        /// CreateOperationRequestMessage is valid.
-        /// </summary>
-        /// <param name="method">The HTTP method to be validated.</param>
-        /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The content Id string to be validated.</param>
-        protected override void VerifyCanCreateOperationRequestMessageImplementation(string method, Uri uri, string contentId)
-        {
-            if (this.changeSetBoundary != null)
-            {
-                if (HttpUtils.IsQueryMethod(method))
-                {
-                    this.ThrowODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(method));
-                }
-
-                if (string.IsNullOrEmpty(contentId))
-                {
-                    this.ThrowODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
-                }
-            }
         }
 
         /// <summary>
@@ -466,41 +397,6 @@ namespace Microsoft.OData.MultipartMixed
                     this.CurrentOperationMessage.PartHeaderProcessingCompleted();
                     this.CurrentOperationRequestMessage = null;
                     this.CurrentOperationResponseMessage = null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Validates state transition is allowed if we are within a changeset.
-        /// </summary>
-        /// <param name="newState">Teh new writer state to transition into.</param>
-        /// <param name="changeSetBoundary">The changeset boundary string.</param>
-        private static void ValidateTransitionAgainstChangesetBoundary(BatchWriterState newState, string changeSetBoundary)
-        {
-            // make sure that we are not starting a changeset when one is already active
-            if (newState == BatchWriterState.ChangesetStarted)
-            {
-                if (changeSetBoundary != null)
-                {
-                    throw new ODataException(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
-                }
-            }
-
-            // make sure that we are not completing a changeset without an active changeset
-            if (newState == BatchWriterState.ChangesetCompleted)
-            {
-                if (changeSetBoundary == null)
-                {
-                    throw new ODataException(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
-                }
-            }
-
-            // make sure that we are not completing a batch while a changeset is still active
-            if (newState == BatchWriterState.BatchCompleted)
-            {
-                if (changeSetBoundary != null)
-                {
-                    throw new ODataException(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
                 }
             }
         }
