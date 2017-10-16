@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.parseResult.MetadataDocumentUri = uriBuilderWithoutFragment.Uri;
 
             // Get the fragment of the context URI
-            this.parseResult.Fragment = contextUriFromPayload.GetComponents(UriComponents.Fragment, UriFormat.Unescaped);
+            this.parseResult.Fragment = contextUriFromPayload.GetComponents(UriComponents.Fragment, UriFormat.SafeUnescaped);
         }
 
         /// <summary>
