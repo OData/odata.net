@@ -1,7 +1,7 @@
-# OData .NET Libraries
+﻿# OData .NET Libraries
  Build  | Status
 --------|---------
-Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/106/badge"/>
+Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/394/badge"/>
 Nightly | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/107/badge"/>
 
 ## 1. Introduction
