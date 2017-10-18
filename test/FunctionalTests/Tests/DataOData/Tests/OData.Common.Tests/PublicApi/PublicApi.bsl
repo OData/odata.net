@@ -4033,15 +4033,14 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 
 	Microsoft.OData.ODataBatchReaderState State  { public get; }
 
-	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers)
-	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, int statusCode, Microsoft.OData.ODataBatchOperationHeaders headers)
+	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId)
+	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, int statusCode, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
 	protected abstract Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation ()
 	public Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync ()
 	protected abstract Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation ()
-	protected Microsoft.OData.ODataBatchReaderState GetNextStateOnNewPart (bool currentlyInChangeset, bool isChangesetPart)
 	void Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamDisposed ()
 	void Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamRequested ()
 	System.Threading.Tasks.Task Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync ()
@@ -4051,11 +4050,8 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 	protected abstract Microsoft.OData.ODataBatchReaderState ReadAtChangesetStartImplementation ()
 	protected abstract Microsoft.OData.ODataBatchReaderState ReadAtOperationImplementation ()
 	protected abstract Microsoft.OData.ODataBatchReaderState ReadAtStartImplementation ()
-	protected void RecordContentId (Microsoft.OData.ODataBatchOperationHeaders headers, bool isCreateRequest)
-	protected void ResetPayloadUriConverter ()
 	protected abstract void ResetReaderStreamChangesetBoundary ()
 	protected void ThrowODataException (string errorMessage)
-	protected void VerifyAndSetContentId (string value)
 	protected abstract void VerifyReaderStreamChangesetStartImplementation ()
 }
 
