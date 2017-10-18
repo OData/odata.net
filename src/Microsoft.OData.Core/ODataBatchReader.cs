@@ -4,15 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.IO;
-
 namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
+    using System.IO;
+
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
@@ -47,12 +46,8 @@ namespace Microsoft.OData
         /// <summary>An enumeration tracking the state of the current batch operation.</summary>
         private OperationState operationState;
 
-        /// <summary>The value of the content ID header of the current part.</summary>
-        /// <remarks>
-        /// The content ID header of the current part should only be visible to subsequent parts
-        /// so we can only add it to the URL resolver once we are done with the current part.
-        /// </remarks>
-        private string contentIdToAddOnNextRead;
+        /// <summary>Whether the reader is currently reading within a changeset.</summary>
+        private bool isInChangeset;
 
         /// <summary>
         /// Constructor.
@@ -278,51 +273,34 @@ namespace Microsoft.OData
         protected abstract void ResetReaderStreamChangesetBoundary();
 
         /// <summary>
-        /// Compute the next reader state. It also updates the size information about the batch.
-        /// </summary>
-        /// <param name="currentlyInChangeset">Whether reader is currently inside a changeset.</param>
-        /// <param name="isChangesetPart">Whether the new part is part of a changeset or an atomic group.</param>
-        /// <returns>The next reader state.</returns>
-        protected ODataBatchReaderState GetNextStateOnNewPart(bool currentlyInChangeset, bool isChangesetPart)
-        {
-            ODataBatchReaderState nextState;
-
-            // Compute the next reader state
-            if (currentlyInChangeset)
-            {
-                Debug.Assert(!isChangesetPart, "Should have validated that nested changesets are not allowed.");
-                nextState = ODataBatchReaderState.Operation;
-                this.IncreaseChangesetSize();
-            }
-            else
-            {
-                // We are at the top level (not inside a changeset)
-                nextState = isChangesetPart
-                    ? ODataBatchReaderState.ChangesetStart
-                    : ODataBatchReaderState.Operation;
-                this.IncreaseBatchSize();
-            }
-
-            return nextState;
-        }
-
-        /// <summary>
-        /// Instantiate an <see cref="ODataBatchOperationRequestMessage"/> instance.
+            /// Instantiate an <see cref="ODataBatchOperationRequestMessage"/> instance.
         /// </summary>
         /// <param name="streamCreatorFunc">The function for stream creation.</param>
         /// <param name="method">The HTTP method used for this request message.</param>
         /// <param name="requestUri">The request Url for this request message.</param>
         /// <param name="headers">The headers for this request message.</param>
+        /// <param name="contentId">The contentId of this request message.</param>
         /// <returns>The <see cref="ODataBatchOperationRequestMessage"/> instance.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(
             Func<Stream> streamCreatorFunc,
             string method,
             Uri requestUri,
-            ODataBatchOperationHeaders headers)
+            ODataBatchOperationHeaders headers,
+            string contentId)
         {
             Uri uri = BuildOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri);
+            if (contentId != null)
+            {
+                if (this.payloadUriConverter.ContainsContentId(contentId))
+                {
+                    throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
+                }
+
+                this.payloadUriConverter.AddContentId(contentId);
+            }
+
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
-                this.contentIdToAddOnNextRead, this.payloadUriConverter, /*writing*/ false, this.container);
+                contentId, this.payloadUriConverter, /*writing*/ false, this.container);
         }
 
         /// <summary>
@@ -331,57 +309,19 @@ namespace Microsoft.OData
         /// <param name="streamCreatorFunc">The function for stream creation.</param>
         /// <param name="statusCode">The status code for the response.</param>
         /// <param name="headers">The headers for this response message.</param>
+        /// <param name="contentId">The contentId of this request message.</param>
         /// <returns>The <see cref="ODataBatchOperationResponseMessage"/> instance.</returns>
         protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(
             Func<Stream> streamCreatorFunc,
             int statusCode,
-            ODataBatchOperationHeaders headers)
+            ODataBatchOperationHeaders headers,
+            string contentId)
         {
             ODataBatchOperationResponseMessage responseMessage = new ODataBatchOperationResponseMessage(
-                streamCreatorFunc, headers, this, this.contentIdToAddOnNextRead,
+                streamCreatorFunc, headers, this, contentId,
                 this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ false, this.container);
             responseMessage.StatusCode = statusCode;
             return responseMessage;
-        }
-
-        /// <summary>
-        /// Add a potential Content-ID header to the URL resolver so that it will be available
-        /// to subsequent operations.
-        /// Throws if Content-ID header is not found in request or if value is duplicated.
-        /// </summary>
-        /// <param name="headers">The message headers.</param>
-        /// <param name="isCreateRequest">True if this method is called during request creation.</param>
-        protected void RecordContentId(ODataBatchOperationHeaders headers, bool isCreateRequest)
-        {
-            string contentId;
-            if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
-            {
-                SetContentId(contentId);
-            }
-
-            if (isCreateRequest && this.contentIdToAddOnNextRead == null)
-            {
-                throw new ODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
-            }
-        }
-
-        /// <summary>
-        /// Set the content Id value.
-        /// Throws if it is a duplicated value.
-        /// </summary>
-        /// <param name="value">The content Id value.</param>
-        protected void VerifyAndSetContentId(string value)
-        {
-            Debug.Assert(this.contentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
-            SetContentId(value);
-        }
-
-        /// <summary>
-        /// Reset the URL converter
-        /// </summary>
-        protected void ResetPayloadUriConverter()
-        {
-            this.payloadUriConverter.Reset();
         }
 
         /// <summary>
@@ -400,23 +340,6 @@ namespace Microsoft.OData
         {
             return ODataBatchUtils.CreateOperationRequestUri(requestUri, baseUri, this.payloadUriConverter);
         }
-
-        /// <summary>
-        /// Set the content Id value.
-        /// Throws if it is a duplicated value.
-        /// </summary>
-        /// <param name="value">The content Id value.</param>
-        private void SetContentId(string value)
-        {
-            if (value != null && this.payloadUriConverter.ContainsContentId(value))
-            {
-                throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(value));
-            }
-
-            this.contentIdToAddOnNextRead = value;
-        }
-
-
 
         /// <summary>
         /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
@@ -508,33 +431,58 @@ namespace Microsoft.OData
                     // tracks the state of a batch operation while in state Operation.
                     this.ReaderOperationState = OperationState.None;
 
-                    // Also add a pending ContentId header to the URL resolver now. We ensured above
-                    // that a message has been created for this operation and thus the headers (incl.
-                    // a potential content ID header) have been read.
-                    if (this.contentIdToAddOnNextRead != null)
-                    {
-                        this.payloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
-                        this.contentIdToAddOnNextRead = null;
-                    }
+
+////// We still need to set it here in some feasible way... TBD...
+//                    // Also add a pending ContentId header to the URL resolver now. We ensured above
+//                    // that a message has been created for this operation and thus the headers (incl.
+//                    // a potential content ID header) have been read.
+//                    if (this.contentIdToAddOnNextRead != null)
+//                    {
+//                        this.payloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
+//                        this.contentIdToAddOnNextRead = null;
+//                    }
 
                     // When we are done with an operation, we have to skip ahead to the next part
                     // when Read is called again. Note that if the operation stream was never requested
                     // and the content of the operation has not been read, we'll skip it here.
                     Debug.Assert(this.ReaderOperationState == OperationState.None, "Operation state must be 'None' at the end of the operation.");
                     this.State = this.ReadAtOperationImplementation();
+
+                    if (this.isInChangeset)
+                    {
+                        this.IncreaseChangesetSize();
+                    }
+                    else
+                    {
+                        this.IncreaseBatchSize();
+                    }
+
                     break;
 
                 case ODataBatchReaderState.ChangesetStart:
                     // When at the start of a changeset, skip ahead to the first operation in the
                     // changeset (or the end boundary of the changeset).
+                    if (isInChangeset)
+                    {
+                        ThrowODataException(Strings.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
+                    }
+
                     this.VerifyReaderStreamChangesetStartImplementation();
+
                     this.State = this.ReadAtChangesetStartImplementation();
+                    if (this.inputContext.MessageReaderSettings.MaxProtocolVersion <= ODataVersion.V4)
+                    {
+                        this.payloadUriConverter.Reset();
+                    }
+
+                    this.isInChangeset = true;
                     break;
 
                 case ODataBatchReaderState.ChangesetEnd:
                     // When at the end of a changeset, reset the changeset boundary and the
                     // changeset size and then skip to the next part.
                     this.ResetChangesetSize();
+                    this.isInChangeset = false;
                     this.ResetReaderStreamChangesetBoundary();
                     this.State = this.ReadAtChangesetEndImplementation();
                     break;
