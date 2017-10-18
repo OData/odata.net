@@ -17,6 +17,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
     {
         private const string serviceDocumentUri = "http://odata.org/test/";
         private const string batchContentType = "multipart/mixed; boundary=batch_cb48b61f-511b-48e6-b00a-77c847badfb9";
+        private const string selfReferenceUriNotAllowed = "contains self-reference of Content-ID value";
         private readonly EdmEntityContainer defaultContainer;
         private readonly EdmModel userModel;
         private readonly EdmSingleton singleton;
@@ -159,6 +160,22 @@ HTTP/1.1 500 Internal Server Error
             this.ClientReadSingletonBatchResponse(responsePayload);
         }
 
+        [Fact]
+        public void BatchJsonLightSelfReferenceUriTest()
+        {
+            var requestPayload = this.CreateSelfReferenceBatchRequest();
+            bool expectedExceptionThrown = false;
+            try
+            {
+                this.ServiceReadSingletonBatchRequestAndWriterBatchResponse(requestPayload);
+            }
+            catch (Exception e)
+            {
+                expectedExceptionThrown = e.Message.Contains(selfReferenceUriNotAllowed);
+            }
+            Assert.True(expectedExceptionThrown, "Uri self-referencing with its Content-ID is not allowed.");
+        }
+
         private void VerifyPayload(string expectedPayload, byte[] payloadBytes)
         {
             Stream stream = null;
@@ -270,6 +287,15 @@ HTTP/1.1 500 Internal Server Error
                         case ODataBatchReaderState.Operation:
                             // Encountered an operation (either top-level or in a changeset)
                             var operationMessage = batchReader.CreateOperationRequestMessage();
+                            if (operationMessage.Url.ToString()
+                                .Contains(String.Format("${0}", operationMessage.ContentId)))
+                            {
+                                throw new ODataException(String.Format("Uri {0} {2} {1}",
+                                    operationMessage.Url.ToString(),
+                                    operationMessage.ContentId,
+                                    selfReferenceUriNotAllowed));
+                            }
+
                             if (operationMessage.Method == "PATCH")
                             {
                                 var response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
@@ -351,6 +377,54 @@ HTTP/1.1 500 Internal Server Error
                             break;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Create an invalid batch request with operation containing self-referencing uri.
+        /// </summary>
+        /// <returns>Stream containing the batch request.</returns>
+        private byte[] CreateSelfReferenceBatchRequest()
+        {
+            var stream = new MemoryStream();
+
+            IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
+            requestMessage.SetHeader("Content-Type", batchContentType);
+
+            using (var messageWriter = new ODataMessageWriter(requestMessage))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+
+                batchWriter.WriteStartBatch();
+
+                // Write a change set with an operation with self-referencing uri.
+                batchWriter.WriteStartChangeset();
+
+                // Create a update operation in the change set with uri referencing itself.
+                string resourceSegment = "MySingleton";
+                string contentId = "1";
+                var updateOperationMessage = batchWriter.CreateOperationRequestMessage(
+                    "PATCH",
+                    new Uri(String.Format("{0}/{1}/${2}", serviceDocumentUri, resourceSegment, contentId)),
+                    contentId);
+
+                // Use a new message writer to write the body of this operation.
+                using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
+                {
+                    var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    var entry = new ODataResource()
+                    {
+                        TypeName = "NS.Web",
+                    };
+                    entryWriter.WriteStart(entry);
+                    entryWriter.WriteEnd();
+                }
+
+                batchWriter.WriteEndChangeset();
+                batchWriter.WriteEndBatch();
+
+                stream.Position = 0;
+                return stream.ToArray();
             }
         }
     }
