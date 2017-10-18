@@ -144,6 +144,7 @@ namespace Microsoft.OData.MultipartMixed
 
         /// <summary>
         /// Implementation of the reader logic when in state 'ChangesetStart'.
+        /// First it validates the reader state is setup properly when reader stream is at the start of changeset.
         /// </summary>
         /// <returns>The batch reader state after the read.</returns>
         protected override ODataBatchReaderState ReadAtChangesetStartImplementation()
@@ -164,25 +165,6 @@ namespace Microsoft.OData.MultipartMixed
         {
             this.batchStream.ResetChangeSetBoundary();
             return this.SkipToNextPartAndReadHeaders();
-        }
-
-        /// <summary>
-        /// Validate the changeset boundary is setup properly in the reader stream.
-        /// </summary>
-        protected override void VerifyReaderStreamChangesetStartImplementation()
-        {
-            if (this.batchStream.ChangeSetBoundary == null)
-            {
-                ThrowODataException(Strings.ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull);
-            }
-        }
-
-        /// <summary>
-        /// Reset the changeset boundary in the reader stream at the end of the changeset processing.
-        /// </summary>
-        protected override void ResetReaderStreamChangesetBoundary()
-        {
-            this.batchStream.ResetChangeSetBoundary();
         }
 
         /// <summary>

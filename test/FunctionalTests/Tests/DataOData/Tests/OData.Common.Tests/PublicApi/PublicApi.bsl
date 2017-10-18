@@ -4057,9 +4057,7 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 	protected abstract Microsoft.OData.ODataBatchReaderState ReadAtChangesetStartImplementation ()
 	protected abstract Microsoft.OData.ODataBatchReaderState ReadAtOperationImplementation ()
 	protected abstract Microsoft.OData.ODataBatchReaderState ReadAtStartImplementation ()
-	protected abstract void ResetReaderStreamChangesetBoundary ()
 	protected void ThrowODataException (string errorMessage)
-	protected abstract void VerifyReaderStreamChangesetStartImplementation ()
 }
 
 public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener {

@@ -50,6 +50,12 @@ namespace Microsoft.OData
         private bool isInChangeset;
 
         /// <summary>
+        /// Content-ID header value for request part with associated entity, which can be referenced by subsequent requests
+        /// in the same changeset or other changesets.
+        /// </summary>
+        private string contentIdToAddOnNextRead;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
@@ -263,16 +269,6 @@ namespace Microsoft.OData
         protected abstract ODataBatchReaderState ReadAtChangesetEndImplementation();
 
         /// <summary>
-        /// Validate the reader state is setup properly when reader stream is at the start of changeset.
-        /// </summary>
-        protected abstract void VerifyReaderStreamChangesetStartImplementation();
-
-        /// <summary>
-        /// Reset the changeset boundary in the reader stream at the end of the changeset processing.
-        /// </summary>
-        protected abstract void ResetReaderStreamChangesetBoundary();
-
-        /// <summary>
             /// Instantiate an <see cref="ODataBatchOperationRequestMessage"/> instance.
         /// </summary>
         /// <param name="streamCreatorFunc">The function for stream creation.</param>
@@ -289,15 +285,7 @@ namespace Microsoft.OData
             string contentId)
         {
             Uri uri = BuildOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri);
-            if (contentId != null)
-            {
-                if (this.payloadUriConverter.ContainsContentId(contentId))
-                {
-                    throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
-                }
-
-                this.payloadUriConverter.AddContentId(contentId);
-            }
+            this.contentIdToAddOnNextRead = contentId;
 
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
                 contentId, this.payloadUriConverter, /*writing*/ false, this.container);
@@ -431,22 +419,25 @@ namespace Microsoft.OData
                     // tracks the state of a batch operation while in state Operation.
                     this.ReaderOperationState = OperationState.None;
 
+                    // Also add a pending ContentId header to the URL resolver now. We ensured above
+                    // that a message has been created for this operation and thus the headers (incl.
+                    // a potential content ID header) have been read.
+                    if (this.contentIdToAddOnNextRead != null)
+                    {
+                        if (this.payloadUriConverter.ContainsContentId(this.contentIdToAddOnNextRead))
+                        {
+                            throw new ODataException(
+                                Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(this.contentIdToAddOnNextRead));
+                        }
 
-////// We still need to set it here in some feasible way... TBD...
-//                    // Also add a pending ContentId header to the URL resolver now. We ensured above
-//                    // that a message has been created for this operation and thus the headers (incl.
-//                    // a potential content ID header) have been read.
-//                    if (this.contentIdToAddOnNextRead != null)
-//                    {
-//                        this.payloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
-//                        this.contentIdToAddOnNextRead = null;
-//                    }
+                        this.payloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
+                        this.contentIdToAddOnNextRead = null;
+                    }
 
                     // When we are done with an operation, we have to skip ahead to the next part
                     // when Read is called again. Note that if the operation stream was never requested
                     // and the content of the operation has not been read, we'll skip it here.
                     Debug.Assert(this.ReaderOperationState == OperationState.None, "Operation state must be 'None' at the end of the operation.");
-                    this.State = this.ReadAtOperationImplementation();
 
                     if (this.isInChangeset)
                     {
@@ -457,17 +448,21 @@ namespace Microsoft.OData
                         this.IncreaseBatchSize();
                     }
 
+                    this.State = this.ReadAtOperationImplementation();
+
                     break;
 
                 case ODataBatchReaderState.ChangesetStart:
                     // When at the start of a changeset, skip ahead to the first operation in the
                     // changeset (or the end boundary of the changeset).
-                    if (isInChangeset)
+                    if (this.isInChangeset)
                     {
                         ThrowODataException(Strings.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
                     }
 
-                    this.VerifyReaderStreamChangesetStartImplementation();
+                    // Increment the batch size at the start of the changeset since we haven't counted it yet
+                    // when the state was transitioned from Operation upon detection of this sub-batch.
+                    this.IncreaseBatchSize();
 
                     this.State = this.ReadAtChangesetStartImplementation();
                     if (this.inputContext.MessageReaderSettings.MaxProtocolVersion <= ODataVersion.V4)
@@ -483,7 +478,6 @@ namespace Microsoft.OData
                     // changeset size and then skip to the next part.
                     this.ResetChangesetSize();
                     this.isInChangeset = false;
-                    this.ResetReaderStreamChangesetBoundary();
                     this.State = this.ReadAtChangesetEndImplementation();
                     break;
 
