@@ -60,9 +60,9 @@ namespace Microsoft.OData
         private uint currentChangeSetSize;
 
         /// <summary>
-        /// Whether the writer is currently processing inside a sub-batch (changeset or atomic group).
+        /// Whether the writer is currently processing inside a changeset or atomic group.
         /// </summary>
-        private bool isInsideSubBatch;
+        private bool isInChangset;
 
         /// <summary>
         /// Constructor.
@@ -151,6 +151,14 @@ namespace Microsoft.OData
                 Debug.Assert(this.currentOperationRequestMessage == null || this.currentOperationResponseMessage == null, "Only request or response message can be set, not both.");
                 this.currentOperationResponseMessage = value;
             }
+        }
+
+        /// <summary>
+        /// The output context to write to.
+        /// </summary>
+        protected ODataOutputContext OutputContext
+        {
+            get { return this.outputContext; }
         }
 
         /// <summary>Starts a new batch; can be only called once and as first call.</summary>
@@ -499,7 +507,7 @@ namespace Microsoft.OData
         private ODataBatchOperationRequestMessage CreateOperationRequestMessageInternal(string method, Uri uri, string contentId,
             BatchPayloadUriOption payloadUriOption)
         {
-            if (!this.isInsideSubBatch)
+            if (!this.isInChangset)
             {
                 this.InterceptException(this.IncreaseBatchSize);
             }
@@ -523,7 +531,7 @@ namespace Microsoft.OData
 
             this.CurrentOperationRequestMessage = this.CreateOperationRequestMessageImplementation(method, uri, contentId, payloadUriOption);
 
-            if (this.isInsideSubBatch)
+            if (this.isInChangset || this.outputContext.MessageWriterSettings.Version <= ODataVersion.V4)
             {
                 this.RememberContentIdHeader(contentId);
             }
@@ -536,10 +544,18 @@ namespace Microsoft.OData
         /// </summary>
         private void UpdateAfterWriteStartChangeset()
         {
+            // Reset the cache of content IDs here. As per spec,
+            // For version up to V4 (inclusive): Content-IDs uniqueness scope is change set.
+            // For version above V4: Content-IDs uniqueness scope is whole batch.
+            if (this.outputContext.MessageWriterSettings.Version <= ODataVersion.V4)
+            {
+                this.payloadUriConverter.Reset();
+            }
+
             // reset the size of the current changeset and increase the size of the batch.
             this.ResetChangeSetSize();
             this.InterceptException(this.IncreaseBatchSize);
-            this.isInsideSubBatch = true;
+            this.isInChangset = true;
         }
 
         /// <summary>
@@ -547,10 +563,8 @@ namespace Microsoft.OData
         /// </summary>
         private void UpdateAfterWriteEndChangeset()
         {
-            // Reset the cache of content IDs here. As per spec, content IDs are only unique inside a change set.
-            this.payloadUriConverter.Reset();
             this.currentOperationContentId = null;
-            this.isInsideSubBatch = false;
+            this.isInChangset = false;
         }
 
         /// <summary>
@@ -652,23 +666,14 @@ namespace Microsoft.OData
         private void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
             string contentId)
         {
-            // Common verification.
-            this.ValidateWriterReady();
-            this.VerifyCallAllowed(synchronousCall);
-
-            if (this.outputContext.WritingResponse)
-            {
-                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
-            }
-
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(method, "method");
 
             ExceptionUtils.CheckArgumentNotNull(uri, "uri");
 
             // For the case within a changeset, verify CreateOperationRequestMessage is valid.
-            if (this.isInsideSubBatch)
+            if (this.isInChangset)
             {
-                if (HttpUtils.IsQueryMethod(method))
+                if (this.outputContext.MessageWriterSettings.Version <= ODataVersion.V4 && HttpUtils.IsQueryMethod(method))
                 {
                     this.ThrowODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(method));
                 }
@@ -677,6 +682,15 @@ namespace Microsoft.OData
                 {
                     this.ThrowODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
                 }
+            }
+
+            // Common verification.
+            this.ValidateWriterReady();
+            this.VerifyCallAllowed(synchronousCall);
+
+            if (this.outputContext.WritingResponse)
+            {
+                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
             }
         }
 
@@ -791,7 +805,7 @@ namespace Microsoft.OData
             {
                 case BatchWriterState.ChangesetStarted:
                     // make sure that we are not starting a changeset when one is already active
-                    if (this.isInsideSubBatch)
+                    if (this.isInChangset)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
                     }
@@ -799,7 +813,7 @@ namespace Microsoft.OData
                     break;
                 case BatchWriterState.ChangesetCompleted:
                     // make sure that we are not completing a changeset without an active changeset
-                    if (!this.isInsideSubBatch)
+                    if (!this.isInChangset)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
                     }
@@ -807,7 +821,7 @@ namespace Microsoft.OData
                     break;
                 case BatchWriterState.BatchCompleted:
                     // make sure that we are not completing a batch while a changeset is still active
-                    if (this.isInsideSubBatch)
+                    if (this.isInChangset)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
                     }

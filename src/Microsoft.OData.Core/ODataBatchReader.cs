@@ -105,6 +105,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// The input context to read the content from.
+        /// </summary>
+        protected ODataInputContext InputContext
+        {
+            get { return this.inputContext; }
+        }
+
+        /// <summary>
         /// The reader's Operation state
         /// </summary>
         private OperationState ReaderOperationState
@@ -139,6 +147,7 @@ namespace Microsoft.OData
             ODataBatchOperationRequestMessage result =
                 this.InterceptException((Func<ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
             this.ReaderOperationState = OperationState.MessageCreated;
+            this.contentIdToAddOnNextRead = result.ContentId;
             return result;
         }
 
@@ -154,6 +163,7 @@ namespace Microsoft.OData
                     t =>
                     {
                         this.ReaderOperationState = OperationState.MessageCreated;
+                        this.contentIdToAddOnNextRead = t.Result.ContentId;
                         return t;
                     })
                 .FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
@@ -284,8 +294,8 @@ namespace Microsoft.OData
             ODataBatchOperationHeaders headers,
             string contentId)
         {
-            Uri uri = BuildOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri);
-            this.contentIdToAddOnNextRead = contentId;
+            Uri uri = ODataBatchUtils.CreateOperationRequestUri(
+                requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.payloadUriConverter);
 
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
                 contentId, this.payloadUriConverter, /*writing*/ false, this.container);
@@ -310,23 +320,6 @@ namespace Microsoft.OData
                 this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ false, this.container);
             responseMessage.StatusCode = statusCode;
             return responseMessage;
-        }
-
-        /// <summary>
-        /// Instantiate an <see cref="Uri"/> object.
-        /// </summary>
-        /// <param name="requestUri">The uri to process.</param>
-        /// <param name="baseUri">The base Uri to use.</param>
-        /// <returns>An URI to be used in the request line of a batch request operation.
-        /// In the default scheme, the method either returns the specified <paramref name="requestUri"/> if it was absolute,
-        /// or it's combination with the <paramref name="baseUri"/> if it was relative.</returns>
-        /// <remarks>
-        /// This method will fail if no custom resolution is implemented and the specified <paramref name="requestUri"/> is
-        /// relative and there's no base URI available.
-        /// </remarks>
-        private Uri BuildOperationRequestUri(Uri requestUri, Uri baseUri)
-        {
-            return ODataBatchUtils.CreateOperationRequestUri(requestUri, baseUri, this.payloadUriConverter);
         }
 
         /// <summary>
@@ -461,7 +454,7 @@ namespace Microsoft.OData
                     }
 
                     // Increment the batch size at the start of the changeset since we haven't counted it yet
-                    // when the state was transitioned from Operation upon detection of this sub-batch.
+                    // when this state was transitioned into upon detection of this sub-batch.
                     this.IncreaseBatchSize();
 
                     this.State = this.ReadAtChangesetStartImplementation();
