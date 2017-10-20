@@ -23,11 +23,6 @@ namespace Microsoft.OData.MultipartMixed
         private readonly ODataMultipartMixedBatchReaderStream batchStream;
 
         /// <summary>
-        /// Gets the reader's input context as the real runtime type.
-        /// </summary>
-        private readonly ODataRawInputContext rawInputContext;
-
-        /// <summary>
         /// ContentId to apply to the next request.  For legacy reasons, this might appear in the mime part headers
         /// (which is why we have a property to remember it) but it should appear in the headers for the individual request (which will
         /// be read when the individual request is created).
@@ -47,8 +42,18 @@ namespace Microsoft.OData.MultipartMixed
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
-            this.rawInputContext = inputContext;
-            this.batchStream = new ODataMultipartMixedBatchReaderStream(this.rawInputContext, batchBoundary, batchEncoding);
+            this.batchStream = new ODataMultipartMixedBatchReaderStream(this.RawInputContext, batchBoundary, batchEncoding);
+        }
+
+        /// <summary>
+        /// Gets the reader's input context as the real runtime type.
+        /// </summary>
+        private ODataRawInputContext RawInputContext
+        {
+            get
+            {
+                return this.InputContext as ODataRawInputContext;
+            }
         }
 
         /// <summary>
@@ -220,7 +225,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="requestUri">The parsed <see cref="Uri"/> of the request.</param>
         private void ParseRequestLine(string requestLine, out string httpMethod, out Uri requestUri)
         {
-            Debug.Assert(!this.rawInputContext.ReadingResponse, "Must only be called for requests.");
+            Debug.Assert(!this.RawInputContext.ReadingResponse, "Must only be called for requests.");
 
             // Batch Request: POST /Customers HTTP/1.1
             // Since the uri can contain spaces, the only way to read the request url, is to
@@ -278,7 +283,7 @@ namespace Microsoft.OData.MultipartMixed
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "'this' is used when built in debug")]
         private int ParseResponseLine(string responseLine)
         {
-            Debug.Assert(this.rawInputContext.ReadingResponse, "Must only be called for responses.");
+            Debug.Assert(this.RawInputContext.ReadingResponse, "Must only be called for responses.");
 
             // Batch Response: HTTP/1.1 200 Ok
             // Since the http status code strings have spaces in them, we cannot use the same

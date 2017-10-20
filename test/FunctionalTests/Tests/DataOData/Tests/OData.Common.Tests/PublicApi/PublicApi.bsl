@@ -4031,6 +4031,7 @@ public abstract class Microsoft.OData.ODataAnnotatable {
 public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationListener {
 	protected ODataBatchReader (Microsoft.OData.ODataInputContext inputContext, bool synchronous)
 
+	Microsoft.OData.ODataInputContext InputContext  { protected get; }
 	Microsoft.OData.ODataBatchReaderState State  { public get; }
 
 	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId)
@@ -4056,6 +4057,7 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener {
 	Microsoft.OData.ODataBatchOperationRequestMessage CurrentOperationRequestMessage  { protected get; protected set; }
 	Microsoft.OData.ODataBatchOperationResponseMessage CurrentOperationResponseMessage  { protected get; protected set; }
+	Microsoft.OData.ODataOutputContext OutputContext  { protected get; }
 
 	public abstract void BatchOperationContentStreamDisposed ()
 	public abstract void BatchOperationContentStreamRequested ()
