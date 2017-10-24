@@ -91,7 +91,7 @@ namespace Microsoft.Test.OData.Tests.Client
             // Pull URI every refreshIntervalMS milliseconds.
             for (int i = 0, cycles = MaxTestServiceInitializationWaitTimeMS / ServiceUriRefreshIntervalMS; i < cycles; ++i)
             {
-                if (uri.Length > 0)
+                if (uri.Length > 0 && uri.StartsWith("http", StringComparison.InvariantCulture))
                 {
                     break;
                 }

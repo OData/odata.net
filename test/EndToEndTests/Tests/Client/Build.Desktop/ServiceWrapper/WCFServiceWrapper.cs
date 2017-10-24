@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <param name="descriptor">Descriptor for the service to wrap.</param>
         public WCFServiceWrapper(ServiceDescriptor descriptor)
         {
-            ServiceProcess.StartInfo.Arguments = string.Format("{0} {1}",
+            ServiceProcess.StartInfo.Arguments = string.Format("{0} {1} a",
                 (int)descriptor.IPCCommand, (int)IPCCommandMap.ServiceType.WCF);
         }
     }

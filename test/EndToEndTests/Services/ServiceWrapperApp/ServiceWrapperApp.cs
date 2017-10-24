@@ -32,6 +32,7 @@ namespace ServiceWrapperApp
             ServiceCommand serviceCommand;
             ServiceDescriptorType serviceDescriptorType;
             ServiceType serviceType;
+            bool isAutomation = false;
             string commandText;
 
             if (args.Contains("h") || args.Contains("help") || args.Contains("?"))
@@ -46,28 +47,59 @@ namespace ServiceWrapperApp
                 commandText = Console.ReadLine();
             }
 
-            if (!ParseArguments(args, out serviceDescriptorType, out serviceType))
+            if (args.Contains("a") || args.Contains("automation"))
             {
+                isAutomation = true;
+            }
+
+            if (!ParseServiceArguments(args, out serviceDescriptorType, out serviceType))
+            {
+                PrintHelp();
                 return 1;
             }
 
             // Initialize the service descriptor and wrapper
-            SetServiceDescriptorAndWrapper(serviceDescriptorType, serviceType);
+            try
+            {
+                SetServiceDescriptorAndWrapper(serviceDescriptorType, serviceType);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                PrintHelp();
+            }
+
+            if (!isAutomation)
+            {
+                Console.WriteLine("Service settings initialized.");
+            }
 
             // Wait for a Start command to start the service
             do
             {
+                if (!isAutomation)
+                {
+                    Console.WriteLine("Press {0} and enter to start service.", (int)ServiceCommand.StartService);
+                }
                 commandText = Console.ReadLine();
             } while (!ParseServiceCommand(commandText, out serviceCommand) || serviceCommand != ServiceCommand.StartService);
             StartService();
 
             // Console.WriteLine needs to happen to communicate the URI back to test client
             // At this point, the service URI should be up
+            if (!isAutomation)
+            {
+                Console.WriteLine("Service Uri:");
+            }
             Console.WriteLine("{0}", serviceWrapper.ServiceUri);
 
             // Wait for a Stop command to stop the service
             do
             {
+                if (!isAutomation)
+                {
+                    Console.WriteLine("Press {0} and enter to stop service.", (int)ServiceCommand.StopService);
+                }
                 commandText = Console.ReadLine();
             } while (!ParseServiceCommand(commandText, out serviceCommand) || serviceCommand != ServiceCommand.StopService);
             StopService();
@@ -191,7 +223,7 @@ namespace ServiceWrapperApp
         /// <param name="serviceDescriptorType">Service wrapper type used to create service wrapper.</param>
         /// <param name="serviceType">Service wrapper type used to create service wrapper.</param>
         /// <returns>True if there's nothing wrong with the provided arguemnts; false otherwise.</returns>
-        private static bool ParseArguments(
+        private static bool ParseServiceArguments(
             string[] args, out ServiceDescriptorType serviceDescriptorType, out ServiceType serviceType)
         {
             serviceDescriptorType = ServiceDescriptorType.Unknown;
@@ -277,6 +309,7 @@ namespace ServiceWrapperApp
             }
             Console.WriteLine();
 
+            Console.WriteLine("To disable logs for automation, provide the argument 'a' or 'automation' after the service arguments (first two).");
             Console.WriteLine("To attach debugger, provide the argument 'd' or 'debug' at the end of all arguments.");
         }
 
