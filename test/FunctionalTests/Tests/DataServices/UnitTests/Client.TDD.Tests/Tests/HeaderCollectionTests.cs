@@ -30,13 +30,20 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             }
 
             var dictionary = new HeaderCollection(headers);
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            // Implementation of BeEquivalentTo changed in newer version of FluentAssertions so use Contain
+            dictionary.HeaderNames.Should().Contain(expectedKeys);
+#else
             dictionary.HeaderNames.Should().BeEquivalentTo(expectedKeys);
+#endif
         }
 
         [TestMethod]
         public void HeaderDictionaryLookupsShouldBeCaseInsensitive()
         {
-            var dictionary = new HeaderCollection(new WebHeaderCollection { { "CONTENT-TYPE", "something" } });
+            WebHeaderCollection webHeaderCollection = new WebHeaderCollection();
+            webHeaderCollection["CONTENT-TYPE"] = "something";
+            var dictionary = new HeaderCollection(webHeaderCollection);
             dictionary.GetHeader("Content-Type").Should().Be("something");
             dictionary.GetHeader("content-type").Should().Be("something");
         }

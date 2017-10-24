@@ -29,7 +29,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             this.CutomizedHeaders = headers;
         }
 
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+        public IODataResponseMessage GetResponse()
+#else
         public override IODataResponseMessage GetResponse()
+#endif
         {
             return new HttpWebResponseMessage(
                 this.CutomizedHeaders,

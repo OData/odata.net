@@ -157,6 +157,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsTrue(entityFromAttachTo == entityFromQueryWithOfType, "Both variables should reference the same object.");
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void LoadPropertyWithNextLink()
         {
@@ -185,6 +186,6 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
             } while ((customerContinuation = response.GetContinuation()) != null);
         }
-
+#endif
     }
 }

@@ -23,6 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ExecuteDeleteMethod()
         {
@@ -30,5 +31,6 @@ namespace Microsoft.Test.OData.Tests.Client
             var response = this.TestClientContext.Execute(query.RequestUri, HttpMethod.Delete.Method);
             Assert.AreEqual(204, response.StatusCode);
         }
+#endif
     }
 }

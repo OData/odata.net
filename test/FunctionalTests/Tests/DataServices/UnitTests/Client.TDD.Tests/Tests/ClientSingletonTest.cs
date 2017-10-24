@@ -12,7 +12,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -169,8 +168,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         {
             return Expression.Call(typeof(Queryable), methodName, new[] { queryable.ElementType }, queryable.Expression);
         }
-
-        
 
         internal class TestQueryable<TElement> : IQueryable<TElement>
         {

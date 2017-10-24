@@ -272,6 +272,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             Assert.IsTrue(false);
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // [Ignore] // Remove Atom
         // [TestMethod] // github issuse: #896
         public void UpdateUsingAtomShouldBeFailedClientTest()
@@ -335,6 +336,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
                 return;
             }
         }
+#endif
 
         #endregion
 

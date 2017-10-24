@@ -162,6 +162,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
         #region client operations
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void CreateUpdateEntityFromODataClient()
         {
@@ -220,6 +221,8 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 Assert.AreEqual(Color.Green, result3[0].SkinColor);
             }
         }
+#endif
+
 
         #endregion
 

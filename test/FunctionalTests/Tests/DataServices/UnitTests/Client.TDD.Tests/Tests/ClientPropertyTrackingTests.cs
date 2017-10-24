@@ -534,6 +534,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void OnlyPostExplicitPropertiesUsedWithoutDataServiceCollectionShouldThrow()
         {
@@ -542,6 +543,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             Action action = () => context.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
             action.ShouldThrow<InvalidOperationException>().WithMessage("'SaveChangesOptions.OnlyPostExplicitProperties' must be used with 'DataServiceCollection'.");
         }
+#endif
 
         [TestMethod]
         public void TrackedEntityPayLoadShouldKeepEmptyIfNoPropertyHasBeenSetOnPost()

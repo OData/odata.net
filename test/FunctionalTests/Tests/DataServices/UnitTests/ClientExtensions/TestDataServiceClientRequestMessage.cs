@@ -17,7 +17,9 @@ namespace AstoriaUnitTests.ClientExtensions
     {
         private readonly IODataRequestMessage requestMessage;
         private readonly Func<IODataResponseMessage> getResponseMessage;
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         private bool sendChunked;
+#endif
         private bool headersAlreadySent;
 
         internal TestDataServiceClientRequestMessage(IODataRequestMessage requestMessage, Func<IODataResponseMessage> getResponseMessage): base(requestMessage.Method)
@@ -43,6 +45,7 @@ namespace AstoriaUnitTests.ClientExtensions
             set { this.requestMessage.Method = value; }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override bool SendChunked
         {
             get { return this.sendChunked; }
@@ -56,6 +59,7 @@ namespace AstoriaUnitTests.ClientExtensions
                 this.sendChunked = value;
             }
         }
+#endif
 
         public override System.Net.ICredentials Credentials
         {
@@ -69,6 +73,7 @@ namespace AstoriaUnitTests.ClientExtensions
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override int Timeout
         {
             get
@@ -80,6 +85,7 @@ namespace AstoriaUnitTests.ClientExtensions
                 throw new NotImplementedException();
             }
         }
+#endif
 
         public override string GetHeader(string headerName)
         {
@@ -138,11 +144,13 @@ namespace AstoriaUnitTests.ClientExtensions
             return this.getResponseMessage();
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override IODataResponseMessage GetResponse()
         {
             this.LockHeaders();
             return this.getResponseMessage();
         }
+#endif
 
         private void LockHeaders()
         {
@@ -212,7 +220,11 @@ namespace AstoriaUnitTests.ClientExtensions
                 {
                     // If the operation isn't done, wait for it
                     AsyncWaitHandle.WaitOne();
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+                    AsyncWaitHandle.Dispose();
+#else
                     AsyncWaitHandle.Close();
+#endif
                     this.asyncWaitHandle = null;
                     // Allow early GC
                 }
@@ -222,7 +234,7 @@ namespace AstoriaUnitTests.ClientExtensions
                     throw this.exception;
             }
 
-            #region Implementation of IAsyncResult
+#region Implementation of IAsyncResult
             public Object AsyncState
             {
                 get { return this.asyncState; }
@@ -230,7 +242,12 @@ namespace AstoriaUnitTests.ClientExtensions
 
             public Boolean CompletedSynchronously
             {
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+                // NET Core 1.0 does not have full support for threads. Replace Volate.Read with Thread.VolatileRead when on NET Core 2.0.
+                get { return Volatile.Read(ref this.completedState) == StateCompletedSynchronously; }
+#else
                 get { return Thread.VolatileRead(ref this.completedState) == StateCompletedSynchronously; }
+#endif
             }
 
             public WaitHandle AsyncWaitHandle
@@ -245,7 +262,11 @@ namespace AstoriaUnitTests.ClientExtensions
                         {
                             // Another thread created this object's event; dispose
                             // the event we just created
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+                            mre.Dispose();
+#else
                             mre.Close();
+#endif
                         }
                         else
                         {
@@ -266,11 +287,16 @@ namespace AstoriaUnitTests.ClientExtensions
             {
                 get
                 {
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+                    // NET Core 1.0 does not have full support for threads. Replace Volate.Read with Thread.VolatileRead when on NET Core 2.0.
+                    return Volatile.Read(ref this.completedState) != StatePending;
+#else
                     return Thread.VolatileRead(ref this.completedState) != StatePending;
+#endif
                 }
             }
 
-            #endregion
+#endregion
         }
     }
 }

@@ -139,7 +139,9 @@ $NightlyTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
 # .NET Core tests are different and require the dotnet tool. The tool references the .csproj (VS2017) files instead of dlls
 $NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.NetCore.csproj",
     "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.NetCore.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj"
+    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj"
 
 $QuickTestSuite = @()
 $NightlyTestSuite = @()
@@ -493,6 +495,7 @@ Function RunTest($title, $testdir, $framework)
     {
         foreach($testProj in $testdir)
         {
+            Write-Host "Launching $testProj..."
             & $DOTNETTEST "test" ($ENLISTMENT_ROOT + $testProj) "--no-build" >> $TESTLOG
         }
     }
@@ -537,7 +540,7 @@ Function BuildProcess
         if($VS15MSBUILD)
         {
             Write-Host "Found VS2017 version: $VS15MSBUILD"
-            RunBuild ('OData.Tests.NetStandard.VS2017.sln') -vsToolVersion '15.0'
+            RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
         }
         else
         {

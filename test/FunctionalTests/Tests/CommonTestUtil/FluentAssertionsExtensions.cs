@@ -12,7 +12,9 @@ namespace AstoriaUnitTests.TDD.Tests
 
     public static class FluentAssertionsExtensions
     {
+#if !NETCOREAPP1_0
         [CLSCompliant(false)]
+#endif
         public static ExceptionAssertions<TException> ShouldThrow<TException, TReturn>(this Func<TReturn> func) where TException : Exception
         {
             Action action = () => func();
