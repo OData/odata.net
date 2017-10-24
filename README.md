@@ -86,11 +86,12 @@ Here is the usage of each solution file (the `OData.sln` shortcut opens the one 
 - OData.Net45.sln (default) - Product source built with .Net Framework Portable 4.5 and contains corresponding unit tests. _Recommended_ for doing general bug fixes and feature development.
 - OData.NetStandard.sln - Product source built with .Net Standard 1.1.
 - OData.Tests.E2E.sln - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression) and not intended to be opened frequently. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
-- OData.Tests.NetStandard.sln - Product source built with .Net Standard 1.1 and contains corresponding unit tests written in .NET Core. Note that once OData has migrated to VS2017, this solution will replace OData.NetStandard.sln (and take its name) to reduce the number of solutions.
+- OData.Tests.E2E.NetCore.VS2017.sln - Product source built with .Net Standard 1.1 and E2E OData Client tests build with .Net Core 1.0-2.0. The purpose of this solution is to house .Net Core E2E test cases. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test the .Net Standard versions of the product code.
+- OData.Tests.NetStandard.VS2017.sln - Product source built with .Net Standard 1.1 and contains corresponding unit tests written in .NET Core. Note that once OData has migrated to VS2017, this solution will replace OData.NetStandard.sln (and take its name) to reduce the number of solutions.
 - OData.Tests.Performance.sln - Product source and performance tests built with .Net Framework version 4.6.
 - OData.Tests.WindowsApps.sln - Product source and test harnesses written in Windows Portable and Windows Phone 8.1.
 
-Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within OData.Tests.E2E.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
+Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within OData.Tests.E2E.sln and OData.Tests.E2E.NetCore.VS2017.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
 
 ### 3.2 One-click build and test script in command line
 
