@@ -176,15 +176,13 @@ namespace Microsoft.OData.Tests
                 ODataMediaType mediaType;
                 Encoding encoding;
                 ODataPayloadKind selectedPayloadKind;
-                string batchBoundary;
-                ODataFormat actual = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { payloadKind }, resolver, out mediaType, out encoding, out selectedPayloadKind, out batchBoundary);
+                ODataFormat actual = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { payloadKind }, resolver, out mediaType, out encoding, out selectedPayloadKind);
 
                 Console.WriteLine(payloadKind);
                 actual.ShouldBeEquivalentTo(MyFormat.Instance);
                 mediaType.ShouldBeEquivalentTo(expectedMediaType);
                 encoding.ShouldBeEquivalentTo(payloadKind == ODataPayloadKind.BinaryValue ? null : Encoding.UTF8);
                 selectedPayloadKind.ShouldBeEquivalentTo(payloadKind);
-                batchBoundary.ShouldBeEquivalentTo(expectedBoundary);
             }
         }
 

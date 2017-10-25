@@ -515,14 +515,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <returns>The created batch writer.</returns>
         /// <remarks>We don't plan to make this public!</remarks>
         /// <remarks>
         /// The write must flush the output when it's finished (inside the last Write call).
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
+        internal virtual ODataBatchWriter CreateODataBatchWriter()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
@@ -531,14 +530,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <returns>A running task for the created batch writer.</returns>
         /// <remarks>We don't plan to make this public!</remarks>
         /// <remarks>
         /// The write must flush the output when it's finished (inside the last Write call).
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
+        internal virtual Task<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }

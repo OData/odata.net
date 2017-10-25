@@ -11,6 +11,7 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+    using System.Text;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -129,5 +130,17 @@ namespace Microsoft.OData
         /// <returns>Task which represents the pending create operation.</returns>
         public abstract Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 #endif
+
+        /// <summary>
+        /// Returns the appropriate content-type for this format.
+        /// </summary>
+        /// <param name="mediaType">The specified media type.</param>
+        /// <param name="encoding">The specified encoding.</param>
+        /// <param name="writingResponse">True if the message writer is being used to write a response.</param>
+        /// <returns>The content-id for the format.</returns>
+        internal virtual string GetContentType(ODataMediaType mediaType, Encoding encoding, bool writingResponse)
+        {
+            return HttpUtils.BuildContentType(mediaType, encoding);
+        }
     }
 }

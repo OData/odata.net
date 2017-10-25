@@ -45,7 +45,7 @@ namespace Microsoft.OData.MultipartMixed
         /// </summary>
         /// <param name="rawOutputContext">The output context to write to.</param>
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        internal ODataMultipartMixedBatchWriter(ODataRawOutputContext rawOutputContext, string batchBoundary)
+        internal ODataMultipartMixedBatchWriter(ODataMultipartMixedBatchOutputContext rawOutputContext, string batchBoundary)
             : base(rawOutputContext)
         {
             Debug.Assert(rawOutputContext != null, "rawOutputContext != null");
@@ -57,9 +57,9 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// Gets the writer's output context as the real runtime type.
         /// </summary>
-        private ODataRawOutputContext RawOutputContext
+        private ODataMultipartMixedBatchOutputContext RawOutputContext
         {
-            get { return this.OutputContext as ODataRawOutputContext; }
+            get { return this.OutputContext as ODataMultipartMixedBatchOutputContext; }
         }
 
         /// <summary>

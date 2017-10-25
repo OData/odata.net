@@ -9,10 +9,11 @@ namespace Microsoft.OData
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-
+    using MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
@@ -56,7 +57,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataRawInputContext(this, messageInfo, messageReaderSettings);
+            return new ODataMultipartMixedBatchInputContext(this, messageInfo, messageReaderSettings);
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return new ODataRawOutputContext(this, messageInfo, messageWriterSettings);
+            return new ODataMultipartMixedBatchOutputContext(this, messageInfo, messageWriterSettings);
         }
 
 #if PORTABLELIB
@@ -105,7 +106,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
             return Task.FromResult<ODataInputContext>(
-                new ODataRawInputContext(this, messageInfo, messageReaderSettings));
+                new ODataMultipartMixedBatchInputContext(this, messageInfo, messageReaderSettings));
         }
 
         /// <summary>
@@ -122,9 +123,29 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
             return Task.FromResult<ODataOutputContext>(
-                new ODataRawOutputContext(this, messageInfo, messageWriterSettings));
+                new ODataMultipartMixedBatchOutputContext(this, messageInfo, messageWriterSettings));
         }
 #endif
+
+        /// <summary>
+        /// Returns the content type for the MultipartMime Batch format
+        /// </summary>
+        /// <param name="mediaType">The specified media type.</param>
+        /// <param name="encoding">The specified encoding.</param>
+        /// <param name="writingResponse">True if the message writer is being used to write a response.</param>
+        /// <returns>The content-id for the format.</returns>
+        internal override string GetContentType(ODataMediaType mediaType, Encoding encoding, bool writingResponse)
+        {
+            string batchBoundary = ODataMultipartMixedBatchWriterUtils.CreateBatchBoundary(writingResponse);
+
+            // Set the content type header here since all headers have to be set before getting the stream
+            // Note that the mediaType may have additional parameters, which we ignore here (intentional as per MIME spec).
+            // Note that we always generate a new boundary string here, even if the accept header contained one.
+            // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
+            // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
+            // and at least in theory security issues.
+            return ODataMultipartMixedBatchWriterUtils.CreateMultipartMixedContentType(batchBoundary);
+        }
 
         /// <summary>
         /// Detects the payload kind(s) from the message stream.

@@ -36,23 +36,23 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
-        internal ODataMultipartMixedBatchReader(ODataRawInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
+        internal ODataMultipartMixedBatchReader(ODataMultipartMixedBatchInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
             : base(inputContext, synchronous)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
-            this.batchStream = new ODataMultipartMixedBatchReaderStream(this.RawInputContext, batchBoundary, batchEncoding);
+            this.batchStream = new ODataMultipartMixedBatchReaderStream(this.MultipartMixedBatchInputContext, batchBoundary, batchEncoding);
         }
 
         /// <summary>
         /// Gets the reader's input context as the real runtime type.
         /// </summary>
-        private ODataRawInputContext RawInputContext
+        private ODataMultipartMixedBatchInputContext MultipartMixedBatchInputContext
         {
             get
             {
-                return this.InputContext as ODataRawInputContext;
+                return this.InputContext as ODataMultipartMixedBatchInputContext;
             }
         }
 
@@ -225,7 +225,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="requestUri">The parsed <see cref="Uri"/> of the request.</param>
         private void ParseRequestLine(string requestLine, out string httpMethod, out Uri requestUri)
         {
-            Debug.Assert(!this.RawInputContext.ReadingResponse, "Must only be called for requests.");
+            Debug.Assert(!this.MultipartMixedBatchInputContext.ReadingResponse, "Must only be called for requests.");
 
             // Batch Request: POST /Customers HTTP/1.1
             // Since the uri can contain spaces, the only way to read the request url, is to
@@ -283,7 +283,7 @@ namespace Microsoft.OData.MultipartMixed
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "'this' is used when built in debug")]
         private int ParseResponseLine(string responseLine)
         {
-            Debug.Assert(this.RawInputContext.ReadingResponse, "Must only be called for responses.");
+            Debug.Assert(this.MultipartMixedBatchInputContext.ReadingResponse, "Must only be called for responses.");
 
             // Batch Response: HTTP/1.1 200 Ok
             // Since the http status code strings have spaces in them, we cannot use the same
