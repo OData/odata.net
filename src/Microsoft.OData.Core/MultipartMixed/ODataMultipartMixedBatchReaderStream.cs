@@ -48,7 +48,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// The raw input context used by the reader.
         /// </summary>
-        private ODataRawInputContext rawInputContext;
+        private ODataMultipartMixedBatchInputContext multipartMixedBatchInputContext;
 
         /// <summary>
         /// Constructor.
@@ -57,14 +57,14 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         internal ODataMultipartMixedBatchReaderStream(
-            ODataRawInputContext inputContext,
+            ODataMultipartMixedBatchInputContext inputContext,
             string batchBoundary,
             Encoding batchEncoding)
             : base(batchEncoding)
         {
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
-            this.rawInputContext = inputContext;
+            this.multipartMixedBatchInputContext = inputContext;
             this.batchBoundary = batchBoundary;
 
             // When we allocate a batch reader stream we will in almost all cases also call ReadLine
@@ -134,7 +134,7 @@ namespace Microsoft.OData.MultipartMixed
         internal bool SkipToBoundary(out bool isEndBoundary, out bool isParentBoundary)
         {
             // Ensure we have a batch encoding; if not detect it on the first read/skip.
-            this.EnsureBatchEncoding(this.rawInputContext.Stream);
+            this.EnsureBatchEncoding(this.multipartMixedBatchInputContext.Stream);
 
             ODataBatchReaderStreamScanResult scanResult = ODataBatchReaderStreamScanResult.NoMatch;
             while (scanResult != ODataBatchReaderStreamScanResult.Match)
@@ -158,7 +158,7 @@ namespace Microsoft.OData.MultipartMixed
                         }
 
                         // skip everything in the buffer and refill it from the underlying stream; continue scanning
-                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ODataBatchReaderStreamBuffer.BufferLength);
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.multipartMixedBatchInputContext.Stream, /*preserveFrom*/ODataBatchReaderStreamBuffer.BufferLength);
 
                         break;
                     case ODataBatchReaderStreamScanResult.PartialMatch:
@@ -169,7 +169,7 @@ namespace Microsoft.OData.MultipartMixed
                             return false;
                         }
 
-                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/boundaryStartPosition);
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.multipartMixedBatchInputContext.Stream, /*preserveFrom*/boundaryStartPosition);
 
                         break;
                     case ODataBatchReaderStreamScanResult.Match:
@@ -254,7 +254,7 @@ namespace Microsoft.OData.MultipartMixed
                             }
                             else
                             {
-                                this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                                this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.multipartMixedBatchInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                             }
                         }
 
@@ -284,7 +284,7 @@ namespace Microsoft.OData.MultipartMixed
                             remainingNumberOfBytesToRead -= bytesBeforeBoundaryStart;
                             userBufferOffset += bytesBeforeBoundaryStart;
 
-                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ boundaryStartPosition);
+                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.multipartMixedBatchInputContext.Stream, /*preserveFrom*/ boundaryStartPosition);
                         }
 
                         break;
@@ -357,7 +357,7 @@ namespace Microsoft.OData.MultipartMixed
                     }
                     else
                     {
-                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                        this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.multipartMixedBatchInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                     }
                 }
             }
@@ -392,7 +392,7 @@ namespace Microsoft.OData.MultipartMixed
                     // NOTE: We do not have to skip over the potential preamble of the encoding
                     //       because the batch reader will skip over everything (incl. the preamble)
                     //       until it finds the first changeset (or batch) boundary
-                    this.changesetEncoding = this.DetectEncoding(this.rawInputContext.Stream);
+                    this.changesetEncoding = this.DetectEncoding(this.multipartMixedBatchInputContext.Stream);
                 }
 
                 // Verify that we only allow single byte encodings and UTF-8 for now.
@@ -528,7 +528,7 @@ namespace Microsoft.OData.MultipartMixed
                         }
                         else
                         {
-                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.multipartMixedBatchInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                         }
 
                         break;
@@ -556,7 +556,7 @@ namespace Microsoft.OData.MultipartMixed
                         }
                         else
                         {
-                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ lineEndStartPosition);
+                            this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(this.multipartMixedBatchInputContext.Stream, /*preserveFrom*/ lineEndStartPosition);
                         }
 
                         break;
@@ -670,11 +670,11 @@ namespace Microsoft.OData.MultipartMixed
                 this.mediaTypeResolver,
                 out mediaType,
                 out this.changesetEncoding,
-                out readerPayloadKind,
-                out this.changesetBoundary);
+                out readerPayloadKind);
             Debug.Assert(readerPayloadKind == ODataPayloadKind.Batch, "Must find batch payload kind.");
-            Debug.Assert(this.changesetBoundary != null && this.changesetBoundary.Length > 0, "Boundary string should have been validated by now.");
             Debug.Assert(HttpUtils.CompareMediaTypeNames(MimeConstants.MimeMultipartMixed, mediaType.FullTypeName), "Must be multipart/mixed media type.");
+            this.changesetBoundary = ODataMultipartMixedBatchWriterUtils.GetBatchBoundaryFromMediaType(mediaType);
+            Debug.Assert(this.changesetBoundary != null && this.changesetBoundary.Length > 0, "Boundary string should have been validated by now.");
         }
     }
 }

@@ -5,9 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Microsoft.OData.MultipartMixed
 {
@@ -57,6 +59,41 @@ namespace Microsoft.OData.MultipartMixed
                 MimeConstants.MimeMultipartMixed,
                 ODataConstants.HttpMultipartBoundary,
                 boundary);
+        }
+
+        /// <summary>
+        /// Gets the boundary from a multipart/mixed batch media type.
+        /// </summary>
+        /// <param name="mediaType">The multipart/mixed batch media type with a boundary type parameter.</param>
+        /// <returns>The boundary for the media type.</returns>
+        internal static string GetBatchBoundaryFromMediaType(ODataMediaType mediaType)
+        {
+            string batchBoundary;
+            KeyValuePair<string, string> boundaryPair = default(KeyValuePair<string, string>);
+            IEnumerable<KeyValuePair<string, string>> parameters = mediaType.Parameters;
+            if (parameters != null)
+            {
+                bool boundaryPairFound = false;
+                foreach (KeyValuePair<string, string> pair in parameters.Where(p => HttpUtils.CompareMediaTypeParameterNames(ODataConstants.HttpMultipartBoundary, p.Key)))
+                {
+                    if (boundaryPairFound)
+                    {
+                        throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.FullTypeName, ODataConstants.HttpMultipartBoundary));
+                    }
+
+                    boundaryPair = pair;
+                    boundaryPairFound = true;
+                }
+            }
+
+            if (boundaryPair.Key == null)
+            {
+                throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.FullTypeName, ODataConstants.HttpMultipartBoundary));
+            }
+
+            batchBoundary = boundaryPair.Value;
+            ValidationUtils.ValidateBoundaryString(batchBoundary);
+            return batchBoundary;
         }
 
         /// <summary>

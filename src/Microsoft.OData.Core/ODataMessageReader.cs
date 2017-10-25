@@ -77,10 +77,6 @@ namespace Microsoft.OData
         /// <remarks>This field is set implicitly when one of the read (or reader creation) methods is called.</remarks>
         private Encoding encoding;
 
-        /// <summary>The batch boundary string if the payload to be read is a batch request or response.</summary>
-        /// <remarks>This is set implicitly when the CreateBatchReader method is called.</remarks>
-        private string batchBoundary;
-
         /// <summary>The context information for the message.</summary>
         private ODataMessageInfo messageInfo;
 
@@ -596,7 +592,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateODataBatchReader();
             return this.ReadFromInput(
-                (context) => context.CreateBatchReader(this.batchBoundary),
+                (context) => context.CreateBatchReader(),
                 ODataPayloadKind.Batch);
         }
 
@@ -607,7 +603,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateODataBatchReader();
             return this.ReadFromInputAsync(
-                (context) => context.CreateBatchReaderAsync(this.batchBoundary),
+                (context) => context.CreateBatchReaderAsync(),
                 ODataPayloadKind.Batch);
         }
 #endif
@@ -998,7 +994,7 @@ namespace Microsoft.OData
 
             // Set the format, encoding and payload kind.
             string contentTypeHeader = this.GetContentTypeHeader(payloadKinds);
-            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.mediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind, out this.batchBoundary);
+            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.mediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind);
         }
 
         /// <summary>
