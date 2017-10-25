@@ -19,19 +19,76 @@ namespace Microsoft.OData
     using Microsoft.OData.MultipartMixed;
     #endregion Namespaces
 
+    // TODO: put this in a separate file
+
+    /// <summary>
+    /// Implementation of the OData input for MultipartMixed Batch.
+    /// </summary>
+    internal sealed class ODataMultipartMixedBatchInputContext : ODataRawInputContext
+    {
+        /// <summary>The boundary for writing a batch.</summary>
+        private string batchBoundary;
+
+        /// <summary>Constructor.</summary>
+        /// <param name="format">The format for this input context.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
+        public ODataMultipartMixedBatchInputContext(
+        ODataFormat format,
+        ODataMessageInfo messageInfo,
+        ODataMessageReaderSettings messageReaderSettings)
+            : base(format, messageInfo, messageReaderSettings)
+        {
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
+            Debug.Assert(messageInfo.MediaType != null, "Media type should have been set in messageInfo prior to creating Raw Input Context for Batch");
+            this.batchBoundary = ODataMultipartMixedBatchWriterUtils.GetBatchBoundaryFromMediaType(messageInfo.MediaType);
+        }
+
+        /// <summary>
+        /// Create a <see cref="ODataBatchReader"/>.
+        /// </summary>
+        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
+        internal override ODataBatchReader CreateBatchReader()
+        {
+            return this.CreateBatchReaderImplementation(/*synchronous*/ true);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously create a <see cref="ODataBatchReader"/>.
+        /// </summary>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
+        internal override Task<ODataBatchReader> CreateBatchReaderAsync()
+        {
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+        }
+#endif
+
+        /// <summary>
+        /// Create a <see cref="ODataBatchReader"/>.
+        /// </summary>
+        /// <param name="synchronous">If the reader should be created for synchronous or asynchronous API.</param>
+        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
+        private ODataBatchReader CreateBatchReaderImplementation(bool synchronous)
+        {
+            return new ODataMultipartMixedBatchReader(this, this.batchBoundary, this.Encoding, synchronous);
+        }
+    }
+
     /// <summary>
     /// Implementation of the OData input for RAW OData format (raw value and batch).
     /// </summary>
-    internal sealed class ODataRawInputContext : ODataInputContext
+    internal class ODataRawInputContext : ODataInputContext
     {
+        /// <summary>The encoding to use to read from the batch stream.</summary>
+        protected readonly Encoding Encoding;
+
         /// <summary>Use a buffer size of 4k that is read from the stream at a time.</summary>
         private const int BufferSize = 4096;
 
         /// <summary>The <see cref="ODataPayloadKind"/> to read.</summary>
         private readonly ODataPayloadKind readerPayloadKind;
-
-        /// <summary>The encoding to use to read from the batch stream.</summary>
-        private readonly Encoding encoding;
 
         /// <summary>The input stream to read the data from.</summary>
         private Stream stream;
@@ -55,7 +112,7 @@ namespace Microsoft.OData
             try
             {
                 this.stream = messageInfo.MessageStream;
-                this.encoding = messageInfo.Encoding;
+                this.Encoding = messageInfo.Encoding;
                 this.readerPayloadKind = messageInfo.PayloadKind;
             }
             catch (Exception e)
@@ -99,29 +156,6 @@ namespace Microsoft.OData
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
-        }
-#endif
-
-        /// <summary>
-        /// Create a <see cref="ODataBatchReader"/>.
-        /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
-        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
-        internal override ODataBatchReader CreateBatchReader(string batchBoundary)
-        {
-            return this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ true);
-        }
-
-#if PORTABLELIB
-        /// <summary>
-        /// Asynchronously create a <see cref="ODataBatchReader"/>.
-        /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
-        /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
-        internal override Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
-        {
-            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ false));
         }
 #endif
 
@@ -183,18 +217,7 @@ namespace Microsoft.OData
         /// <returns>The newly created <see cref="ODataAsynchronousReader"/>.</returns>
         private ODataAsynchronousReader CreateAsynchronousReaderImplementation()
         {
-            return new ODataAsynchronousReader(this, this.encoding);
-        }
-
-        /// <summary>
-        /// Create a <see cref="ODataBatchReader"/>.
-        /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
-        /// <param name="synchronous">If the reader should be created for synchronous or asynchronous API.</param>
-        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
-        private ODataBatchReader CreateBatchReaderImplementation(string batchBoundary, bool synchronous)
-        {
-            return new ODataMultipartMixedBatchReader(this, batchBoundary, this.encoding, synchronous);
+            return new ODataAsynchronousReader(this, this.Encoding);
         }
 
         /// <summary>
@@ -229,7 +252,7 @@ namespace Microsoft.OData
             else
             {
                 Debug.Assert(this.textReader == null, "this.textReader == null");
-                this.textReader = this.encoding == null ? new StreamReader(this.stream) : new StreamReader(this.stream, this.encoding);
+                this.textReader = this.Encoding == null ? new StreamReader(this.stream) : new StreamReader(this.stream, this.Encoding);
                 return this.ReadRawValue(expectedPrimitiveTypeReference);
             }
         }

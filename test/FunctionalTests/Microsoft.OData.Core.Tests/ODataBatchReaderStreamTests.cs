@@ -11,6 +11,7 @@ using FluentAssertions;
 using Microsoft.OData.MultipartMixed;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.Tests
 {
@@ -64,19 +65,20 @@ Second line";
 
         private static ODataMultipartMixedBatchReaderStream CreateBatchReaderStream(string inputString)
         {
+            string boundary = "batch_862fb28e-dc50-4af1-aad5-9608647761d1";
             var messageInfo = new ODataMessageInfo
             {
                 Encoding = Encoding.UTF8,
                 IsResponse = false,
                 IsAsync = false,
-                PayloadKind = ODataPayloadKind.Batch,
-                MessageStream = new MemoryStream(Encoding.UTF8.GetBytes(inputString))
+                MessageStream = new MemoryStream(Encoding.UTF8.GetBytes(inputString)),
+                MediaType = new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType, new KeyValuePair<string,string>(ODataConstants.HttpMultipartBoundary, boundary))
             };
-            var inputContext = new ODataRawInputContext(
+            var inputContext = new ODataMultipartMixedBatchInputContext(
                 ODataFormat.Batch,
                 messageInfo,
                 new ODataMessageReaderSettings());
-            var batchStream = new ODataMultipartMixedBatchReaderStream(inputContext, "batch_862fb28e-dc50-4af1-aad5-9608647761d1", Encoding.UTF8);
+            var batchStream = new ODataMultipartMixedBatchReaderStream(inputContext, boundary, Encoding.UTF8);
             return batchStream;
         }
     }

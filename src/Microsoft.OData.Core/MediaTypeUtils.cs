@@ -190,71 +190,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Determine the <see cref="ODataFormat"/> to use for the given <paramref name="contentTypeHeader"/>. If no supported content type
-        /// is found an exception is thrown.
-        /// </summary>
-        /// <param name="contentTypeHeader">The name of the content type to be checked.</param>
-        /// <param name="supportedPayloadKinds">All possiblel kinds of payload that can be read with this content type.</param>
-        /// <param name="mediaTypeResolver">The media type resolver to use when interpreting the content type.</param>
-        /// <param name="mediaType">The media type parsed from the <paramref name="contentTypeHeader"/>.</param>
-        /// <param name="encoding">The encoding from the content type or the default encoding for the <paramref name="mediaType" />.</param>
-        /// <param name="selectedPayloadKind">
-        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the
-        /// specified <paramref name="contentTypeHeader"/>.
-        /// </param>
-        /// <param name="batchBoundary">The batch boundary read from the content type for batch payloads; otherwise null.</param>
-        /// <returns>The <see cref="ODataFormat"/> for the <paramref name="contentTypeHeader"/>.</returns>
-        internal static ODataFormat GetFormatFromContentType(
-            string contentTypeHeader,
-            ODataPayloadKind[] supportedPayloadKinds,
-            ODataMediaTypeResolver mediaTypeResolver,
-            out ODataMediaType mediaType,
-            out Encoding encoding,
-            out ODataPayloadKind selectedPayloadKind,
-            out string batchBoundary)
-        {
-            Debug.Assert(!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported), "!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported)");
-
-            ODataFormat format = GetFormatFromContentType(contentTypeHeader, supportedPayloadKinds, mediaTypeResolver, out mediaType, out encoding, out selectedPayloadKind);
-
-            // for batch payloads, read the batch boundary from the content type header; this is the only
-            // content type parameter we support (and that is required for batch payloads)
-            if (selectedPayloadKind == ODataPayloadKind.Batch)
-            {
-                KeyValuePair<string, string> boundaryPair = default(KeyValuePair<string, string>);
-                IEnumerable<KeyValuePair<string, string>> parameters = mediaType.Parameters;
-                if (parameters != null)
-                {
-                    bool boundaryPairFound = false;
-                    foreach (KeyValuePair<string, string> pair in parameters.Where(p => HttpUtils.CompareMediaTypeParameterNames(ODataConstants.HttpMultipartBoundary, p.Key)))
-                    {
-                        if (boundaryPairFound)
-                        {
-                            throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
-                        }
-
-                        boundaryPair = pair;
-                        boundaryPairFound = true;
-                    }
-                }
-
-                if (boundaryPair.Key == null)
-                {
-                    throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
-                }
-
-                batchBoundary = boundaryPair.Value;
-                ValidationUtils.ValidateBoundaryString(batchBoundary);
-            }
-            else
-            {
-                batchBoundary = null;
-            }
-
-            return format;
-        }
-
-        /// <summary>
         /// Gets all payload kinds and their corresponding formats that match the specified content type header.
         /// </summary>
         /// <param name="contentTypeHeader">The content type header to get the payload kinds for.</param>
@@ -422,7 +357,7 @@ namespace Microsoft.OData
         /// specified <paramref name="contentTypeName"/>.
         /// </param>
         /// <returns>The <see cref="ODataFormat"/> for the <paramref name="contentTypeName"/>.</returns>
-        private static ODataFormat GetFormatFromContentType(string contentTypeName, ODataPayloadKind[] supportedPayloadKinds, ODataMediaTypeResolver mediaTypeResolver, out ODataMediaType mediaType, out Encoding encoding, out ODataPayloadKind selectedPayloadKind)
+        internal static ODataFormat GetFormatFromContentType(string contentTypeName, ODataPayloadKind[] supportedPayloadKinds, ODataMediaTypeResolver mediaTypeResolver, out ODataMediaType mediaType, out Encoding encoding, out ODataPayloadKind selectedPayloadKind)
         {
             Debug.Assert(!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported), "!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported)");
 
