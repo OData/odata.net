@@ -869,6 +869,9 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Annotation\InstanceAnnotationDictWeakKeyComparer.cs">
       <Link>Annotation\InstanceAnnotationDictWeakKeyComparer.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Attribute\IgnoreClientPropertyAttribute.cs">
+      <Link>Attribute\IgnoreClientPropertyAttribute.cs</Link>
+    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WeakDictionary.cs">
       <Link>WeakDictionary.cs</Link>
     </Compile>
