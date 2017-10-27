@@ -4,12 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
