@@ -231,9 +231,10 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 MessageStream = (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
                 Encoding = Encoding.UTF8,
                 IsResponse = response,
-                IsAsync = false
+                IsAsync = false,
+                MediaType = new ODataMediaType("Multipart", "Mixed", new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Boundary", "123") })
             };
-            Type odataRawOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.ODataRawOutputContext");
+            Type odataRawOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.ODataMultipartMixedBatchOutputContext");
             object rawOutputContext = ReflectionUtils.CreateInstance(odataRawOutputContextType,
                 new Type[]
                 {

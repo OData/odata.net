@@ -137,9 +137,14 @@ namespace Microsoft.OData
         /// <param name="mediaType">The specified media type.</param>
         /// <param name="encoding">The specified encoding.</param>
         /// <param name="writingResponse">True if the message writer is being used to write a response.</param>
-        /// <returns>The content-id for the format.</returns>
-        internal virtual string GetContentType(ODataMediaType mediaType, Encoding encoding, bool writingResponse)
+        /// <param name="mediaTypeParameters"> The resultant parameters list of the media type. Parameters list could be updated
+        /// when getting content type and should be returned if that is the case.
+        /// </param>
+        /// <returns>The content-type value for the format.</returns>
+        internal virtual string GetContentType(ODataMediaType mediaType, Encoding encoding,
+            bool writingResponse, out IEnumerable<KeyValuePair<string, string>> mediaTypeParameters)
         {
+            mediaTypeParameters = mediaType.Parameters;
             return HttpUtils.BuildContentType(mediaType, encoding);
         }
     }

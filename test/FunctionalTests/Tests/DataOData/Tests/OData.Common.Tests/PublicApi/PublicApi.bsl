@@ -4172,6 +4172,7 @@ public abstract class Microsoft.OData.ODataFormat {
 	public abstract System.Threading.Tasks.Task`1[[Microsoft.OData.ODataOutputContext]] CreateOutputContextAsync (Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings)
 	public abstract System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataPayloadKind]] DetectPayloadKind (Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings settings)
 	public abstract System.Threading.Tasks.Task`1[[System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataPayloadKind]]]] DetectPayloadKindAsync (Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings settings)
+	internal virtual string GetContentType (Microsoft.OData.ODataMediaType mediaType, System.Text.Encoding encoding, bool writingResponse, out System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]]& mediaTypeParameters)
 }
 
 public abstract class Microsoft.OData.ODataInputContext : IDisposable {
@@ -4185,8 +4186,8 @@ public abstract class Microsoft.OData.ODataInputContext : IDisposable {
 
 	internal virtual Microsoft.OData.ODataAsynchronousReader CreateAsynchronousReader ()
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataAsynchronousReader]] CreateAsynchronousReaderAsync ()
-	internal virtual Microsoft.OData.ODataBatchReader CreateBatchReader (string batchBoundary)
-	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchReader]] CreateBatchReaderAsync (string batchBoundary)
+	internal virtual Microsoft.OData.ODataBatchReader CreateBatchReader ()
+	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchReader]] CreateBatchReaderAsync ()
 	public virtual Microsoft.OData.ODataCollectionReader CreateCollectionReader (Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference)
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionReader]] CreateCollectionReaderAsync (Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference)
 	internal virtual Microsoft.OData.ODataDeltaReader CreateDeltaReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType expectedBaseEntityType)
@@ -4241,8 +4242,8 @@ public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
 
 	internal virtual Microsoft.OData.ODataAsynchronousWriter CreateODataAsynchronousWriter ()
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataAsynchronousWriter]] CreateODataAsynchronousWriterAsync ()
-	internal virtual Microsoft.OData.ODataBatchWriter CreateODataBatchWriter (string batchBoundary)
-	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchWriter]] CreateODataBatchWriterAsync (string batchBoundary)
+	internal virtual Microsoft.OData.ODataBatchWriter CreateODataBatchWriter ()
+	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchWriter]] CreateODataBatchWriterAsync ()
 	public virtual Microsoft.OData.ODataCollectionWriter CreateODataCollectionWriter (Microsoft.OData.Edm.IEdmTypeReference itemTypeReference)
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionWriter]] CreateODataCollectionWriterAsync (Microsoft.OData.Edm.IEdmTypeReference itemTypeReference)
 	internal virtual Microsoft.OData.ODataDeltaWriter CreateODataDeltaWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)

@@ -78,7 +78,7 @@ namespace Microsoft.OData.MultipartMixed
                 {
                     if (boundaryPairFound)
                     {
-                        throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.FullTypeName, ODataConstants.HttpMultipartBoundary));
+                        throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
                     }
 
                     boundaryPair = pair;
@@ -88,7 +88,7 @@ namespace Microsoft.OData.MultipartMixed
 
             if (boundaryPair.Key == null)
             {
-                throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.FullTypeName, ODataConstants.HttpMultipartBoundary));
+                throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
             }
 
             batchBoundary = boundaryPair.Value;
