@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -897,7 +899,14 @@ namespace Microsoft.OData
                 // we fall back to a default (of null accept headers).
                 this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.mediaTypeResolver, out this.mediaType, out this.encoding);
 
-                contentType = format.GetContentType(this.mediaType, this.encoding, this.writingResponse);
+                IEnumerable<KeyValuePair<string, string>> updatedParameters;
+                contentType = format.GetContentType(this.mediaType, this.encoding, this.writingResponse, out updatedParameters);
+
+                // Re-create the media type if the parameters list is updated.
+                if (this.mediaType.Parameters != updatedParameters)
+                {
+                    this.mediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, updatedParameters);
+                }
 
                 if (this.settings.HasJsonPaddingFunction())
                 {

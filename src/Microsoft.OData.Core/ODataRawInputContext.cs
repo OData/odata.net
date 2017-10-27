@@ -41,7 +41,21 @@ namespace Microsoft.OData
         {
             Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
             Debug.Assert(messageInfo.MediaType != null, "Media type should have been set in messageInfo prior to creating Raw Input Context for Batch");
-            this.batchBoundary = ODataMultipartMixedBatchWriterUtils.GetBatchBoundaryFromMediaType(messageInfo.MediaType);
+            try
+            {
+                this.batchBoundary =
+                    ODataMultipartMixedBatchWriterUtils.GetBatchBoundaryFromMediaType(messageInfo.MediaType);
+            }
+            catch (Exception e)
+            {
+                // Dispose the message stream if we failed to get a batch boundary.
+                if (ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    messageInfo.MessageStream.Dispose();
+                }
+
+                throw;
+            }
         }
 
         /// <summary>
