@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.MultipartMixed;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -27,7 +29,7 @@ namespace Microsoft.OData
         private static ODataRawValueFormat rawValueFormat = new ODataRawValueFormat();
 
         /// <summary>The batch format instance.</summary>
-        private static ODataBatchFormat batchFormat = new ODataBatchFormat();
+        private static ODataMultipartMixedBatchFormat batchFormat = new ODataMultipartMixedBatchFormat();
 
         /// <summary>The metadata format instance.</summary>
         private static ODataMetadataFormat metadataFormat = new ODataMetadataFormat();

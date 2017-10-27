@@ -47,6 +47,9 @@
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
+    <Compile Include="MultipartMixed\ODataMultipartMixedBatchFormat.cs" />
+    <Compile Include="MultipartMixed\ODataMultipartMixedBatchInputContext.cs" />
+    <Compile Include="MultipartMixed\ODataMultipartMixedBatchOutputContext.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchReader.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchReaderStream.cs" />
@@ -222,7 +225,6 @@
     <Compile Include="ODataAsynchronousReader.cs" />
     <Compile Include="ODataAsynchronousResponseMessage.cs" />
     <Compile Include="ODataAsynchronousWriter.cs" />
-    <Compile Include="ODataBatchFormat.cs" />
     <Compile Include="ODataBatchOperationHeaders.cs" />
     <Compile Include="ODataBatchOperationMessage.cs" />
     <Compile Include="ODataBatchOperationReadStream.cs" />

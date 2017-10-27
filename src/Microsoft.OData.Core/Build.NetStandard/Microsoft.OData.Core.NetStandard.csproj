@@ -470,6 +470,15 @@
     <Compile Include="..\MimeConstants.cs">
       <Link>MimeConstants.cs</Link>
     </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchFormat.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchInputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchOutputContext.cs</Link>
+    </Compile>
     <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReader.cs">
       <Link>MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
     </Compile>    
@@ -499,9 +508,6 @@
     </Compile>
     <Compile Include="..\ODataAsynchronousWriter.cs">
       <Link>ODataAsynchronousWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataBatchFormat.cs">
-      <Link>ODataBatchFormat.cs</Link>
     </Compile>
     <Compile Include="..\ODataBatchOperationHeaders.cs">
       <Link>ODataBatchOperationHeaders.cs</Link>
