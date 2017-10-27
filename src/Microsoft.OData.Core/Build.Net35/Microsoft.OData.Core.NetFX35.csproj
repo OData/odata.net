@@ -430,6 +430,15 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\MimeConstants.cs">
       <Link>Microsoft\OData\Core\MimeConstants.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchFormat.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchFormat.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchInputContext.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchInputContext.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReader.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
     </Compile>    
@@ -438,7 +447,10 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
-    </Compile>        
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
+    </Compile>    
     <Compile Include="$(ODataCrossTargettingSourcePath)\NonDisposingStream.cs">
       <Link>Microsoft\OData\Core\NonDisposingStream.cs</Link>
     </Compile>
@@ -456,9 +468,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataAsynchronousWriter.cs">
       <Link>Microsoft\OData\Core\ODataAsynchronousWriter.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchFormat.cs">
-      <Link>Microsoft\OData\Core\ODataBatchFormat.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationHeaders.cs">
       <Link>Microsoft\OData\Core\ODataBatchOperationHeaders.cs</Link>
@@ -504,9 +513,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriter.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriter.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
-      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionReader.cs">
       <Link>Microsoft\OData\Core\ODataCollectionReader.cs</Link>

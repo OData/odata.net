@@ -1,11 +1,10 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataBatchFormat.cs" company="Microsoft">
+//---------------------------------------------------------------------
+// <copyright file="ODataMultipartMixedBatchFormat.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-
-namespace Microsoft.OData
+namespace Microsoft.OData.MultipartMixed
 {
     #region Namespaces
     using System;
@@ -15,13 +14,13 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using MultipartMixed;
+
     #endregion Namespaces
 
     /// <summary>
     /// The $batch OData format.
     /// </summary>
-    internal sealed class ODataBatchFormat : ODataFormat
+    internal sealed class ODataMultipartMixedBatchFormat : ODataFormat
     {
         /// <summary>
         /// The text representation - the name of the format.
