@@ -67,6 +67,8 @@ namespace ServiceWrapperApp
             {
                 Console.WriteLine(e.Message);
                 PrintHelp();
+
+                return 1;
             }
 
             if (!isAutomation)
