@@ -24,6 +24,17 @@ namespace ServiceWrapperApp
         private static bool isServiceRunning = false;
 
         /// <summary>
+        /// Enums representing return codes for the main program.
+        /// </summary>
+        private enum ReturnCode
+        {
+            Success,
+            HelpPrinted,
+            ServiceArgumentError,
+            ServiceSetupError
+        }
+
+        /// <summary>
         /// App entry.
         /// </summary>
         /// <param name="args">Arguments passed into commandline.</param>
@@ -38,7 +49,7 @@ namespace ServiceWrapperApp
             if (args.Contains("h") || args.Contains("help") || args.Contains("?"))
             {
                 PrintHelp();
-                return 0;
+                return (int)ReturnCode.HelpPrinted;
             }
 
             if (AttachDebugger(args))
@@ -55,7 +66,7 @@ namespace ServiceWrapperApp
             if (!ParseServiceArguments(args, out serviceDescriptorType, out serviceType))
             {
                 PrintHelp();
-                return 1;
+                return (int)ReturnCode.ServiceArgumentError;
             }
 
             // Initialize the service descriptor and wrapper
@@ -67,6 +78,8 @@ namespace ServiceWrapperApp
             {
                 Console.WriteLine(e.Message);
                 PrintHelp();
+
+                return (int)ReturnCode.ServiceSetupError;
             }
 
             if (!isAutomation)
@@ -104,7 +117,7 @@ namespace ServiceWrapperApp
             } while (!ParseServiceCommand(commandText, out serviceCommand) || serviceCommand != ServiceCommand.StopService);
             StopService();
 
-            return 0;
+            return (int)ReturnCode.Success;
         }
 
         /// <summary>
@@ -311,6 +324,13 @@ namespace ServiceWrapperApp
 
             Console.WriteLine("To disable logs for automation, provide the argument 'a' or 'automation' after the service arguments (first two).");
             Console.WriteLine("To attach debugger, provide the argument 'd' or 'debug' at the end of all arguments.");
+            Console.WriteLine();
+
+            Console.WriteLine("Return codes:");
+            for (int i = 0, length = Enum.GetNames(typeof(ReturnCode)).Length; i < length; ++i)
+            {
+                Console.WriteLine("{0}: {1}", i, ((ReturnCode)i).ToString());
+            }
         }
 
         /// <summary>
