@@ -20,9 +20,9 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     </dependencies>
   </metadata>
   <files>
-    <file src="$ProductRoot$\Net35\Microsoft.OData.Core.NetFX35.dll" target="lib\net35" />
-    <file src="$ProductRoot$\Net35\Microsoft.OData.Core.NetFX35.pdb" target="lib\net35" />
-    <file src="$ProductRoot$\Net35\Microsoft.OData.Core.NetFX35.xml" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Core.NetFX35.V7.dll" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Core.NetFX35.V7.pdb" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Core.NetFX35.V7.xml" target="lib\net35" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\**\*.cs" target="src\Microsoft.OData.Core" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" />
