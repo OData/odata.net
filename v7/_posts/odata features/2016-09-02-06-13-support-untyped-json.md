@@ -17,7 +17,7 @@ The `ODataMessageReaderSettings` & `ODataMessageWriterSettings` `Validations
 
 Untyped values can be read and written as raw strings or, starting with ODataLib 7.3, can be read and written as structured values.
 
-For compatiblity with ODataLib 7.0, untyped values are read by default as a raw string representing the untyped content. To use the standard OData reader APIs to read untyped content in ODataLib 7.3, set the `ODataMessageReaderSettings.ReadAsString` property to `false`.
+For compatiblity with ODataLib 7.0, untyped values are read by default as a raw string representing the untyped content. To use the standard OData reader APIs to read untyped content in ODataLib 7.3, set the `ODataMessageReaderSettings.ReadUntypedAsString` property to `false`.
 
 Given the following model:
 
