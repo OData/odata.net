@@ -361,6 +361,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
         #region client operations
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void QueryEntitySetFromODataClient()
         {
@@ -602,6 +603,8 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 Assert.AreEqual(expectedProd.CoverColors.Count, prod.CoverColors.Count);
             }
         }
+#endif
+
         #endregion
     }
 }

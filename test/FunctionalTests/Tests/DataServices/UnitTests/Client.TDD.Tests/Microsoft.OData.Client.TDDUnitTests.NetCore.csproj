@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Client.TDDUnitTests</AssemblyName>
+    <RootNamespace>Microsoft.OData.Client.TDDUnitTests</RootNamespace>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <OutputPath>..\..\..\..\..\..\bin\AnyCPU\$(Configuration)\Test\.NETPortable</OutputPath>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <ApplicationIcon />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Portable\**" />
+    <EmbeddedResource Remove="Portable\**" />
+    <None Remove="Portable\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tests\Annotation\ClientAnnotationTests.cs" />
+    <Compile Remove="Tests\Common\TestPrimitiveType.cs" /> <!-- Removed because no support for Binary Type in Net Core 1.0 -->
+    <Compile Remove="Tests\DataServiceClientExceptionSerializationTests.cs" />
+    <Compile Remove="Tests\DataServiceClientRequestPipelineTests.cs" />
+    <Compile Remove="Tests\DataServiceClientResponsePipelineTests.cs" />
+    <Compile Remove="Tests\EntityParameter\EntityParameterTests.cs" />
+    <Compile Remove="Tests\Materialization\ODataEntriesEntityMaterializerUnitTests.cs" />
+    <Compile Remove="Tests\Materialization\ODataMaterializerTests.cs" />
+    <Compile Remove="Tests\T4\DelayQueryTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Build.props" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\Evaluation\EdmStructuredValueSimulator.cs" Link="Tests\Common\EdmStructuredValueSimulator.cs" />
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\InMemoryMessage.cs" Link="InMemoryMessage.cs" />
+    <Compile Include="..\ClientExtensions\TestDataServiceClientRequestMessage.cs" Link="TestDataServiceClientRequestMessage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\CommonTestUtil\Microsoft.OData.Service.Test.Common.NetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Tests\Common\" />
+  </ItemGroup>
+
+</Project>

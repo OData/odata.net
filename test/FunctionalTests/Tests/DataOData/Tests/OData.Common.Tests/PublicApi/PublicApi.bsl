@@ -7446,6 +7446,13 @@ public sealed class Microsoft.OData.Client.HasStreamAttribute : System.Attribute
 [
 AttributeUsageAttribute(),
 ]
+public sealed class Microsoft.OData.Client.IgnoreClientPropertyAttribute : System.Attribute, _Attribute {
+	public IgnoreClientPropertyAttribute ()
+}
+
+[
+AttributeUsageAttribute(),
+]
 public sealed class Microsoft.OData.Client.KeyAttribute : System.Attribute, _Attribute {
 	public KeyAttribute (string keyName)
 	public KeyAttribute (string[] keyNames)

@@ -80,6 +80,20 @@ namespace Microsoft.OData
                 queryOptions = string.Concat(queryOptions, "$search", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(nodeToStringBuilder.TranslateSearchClause(odataUri.Search)));
             }
 
+            if (odataUri.SkipToken != null)
+            {
+                queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
+                writeQueryPrefix = false;
+                queryOptions = string.Concat(queryOptions, "$skiptoken", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(odataUri.SkipToken));
+            }
+
+            if (odataUri.DeltaToken != null)
+            {
+                queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
+                writeQueryPrefix = false;
+                queryOptions = string.Concat(queryOptions, "$deltatoken", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(odataUri.DeltaToken));
+            }
+
             if (odataUri.ParameterAliasNodes != null && odataUri.ParameterAliasNodes.Count > 0)
             {
                 string aliasNode = nodeToStringBuilder.TranslateParameterAliasNodes(odataUri.ParameterAliasNodes);

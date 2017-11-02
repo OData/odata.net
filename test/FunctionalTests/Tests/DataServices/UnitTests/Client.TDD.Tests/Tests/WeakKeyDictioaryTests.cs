@@ -77,6 +77,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // Net Core 1.0 is missing GC APIs
         [TestMethod]
         public void TestRemoveDeadItem()
         {
@@ -168,6 +170,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 }
             }
         }
+#endif
 
         private void AddAnItem(WeakDictionary<KeyObject, int> dict, int id)
         {
@@ -194,6 +197,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             testAction.ShouldThrow<ArgumentException>();
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void TestWeakKeyComparerForRef()
         {
@@ -208,6 +212,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             }
         }
 
+        // Net Core 1.0 is missing GC APIs
         private void TestWeakKeyComparerForRefImplement(RefType leftRefType, RefType rightRefType)
         {
             KeyObject obj = new KeyObject(1);
@@ -244,6 +249,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 }
             }
         }
+#endif
 
         private WeakDictionary<object, int> CreateDict(out List<KeyObject> keys)
         {

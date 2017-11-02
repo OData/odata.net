@@ -57,10 +57,10 @@ namespace Microsoft.OData.Client
 #if PORTABLELIB
         /// <summary>
         /// Try to add a key/value pair to the dictionary and returns true if the key was added, false if it was already present.
-        /// The difference with Add is that it will not throw <see cref="ArgumentException"/> if the key is already present. 
+        /// The difference with Add is that it will not throw <see cref="ArgumentException"/> if the key is already present.
         /// </summary>
         /// <remarks>
-        /// This provides a shim for ConcurrentDictionary.TryAdd that isn't supported in Windows Phone 8.0. 
+        /// This provides a shim for ConcurrentDictionary.TryAdd that isn't supported in Windows Phone 8.0.
         /// </remarks>
         /// <typeparam name="TKey">The type of the key.</typeparam>
         /// <typeparam name="TValue">The type of the value.</typeparam>

@@ -172,11 +172,11 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(asyncResult, "asyncResult");
             if (this.isFunction)
             {
-                return this.Context.EndExecute<TElement>(asyncResult).Single();
+                return this.Context.EndExecute<TElement>(asyncResult).SingleOrDefault();
             }
             else
             {
-                return this.Query.EndExecute(asyncResult).Single();
+                return this.Query.EndExecute(asyncResult).SingleOrDefault();
             }
         }
 

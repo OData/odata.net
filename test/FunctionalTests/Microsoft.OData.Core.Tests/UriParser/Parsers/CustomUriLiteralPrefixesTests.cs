@@ -327,10 +327,30 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void CustomUriLiteralPrefix_CannotParseTypeWithWrongLiteralPrefix()
         {
+            // Ensure the prefix under test is registered. Handle the exception gracefully if
+            // the prefix is already registered.
+            IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
+
             try
             {
-                IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(
+                    CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
+            }
+            catch (ODataException e)
+            {
+                if (!String.Equals(e.Message, Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(
+                    CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX)))
+                {
+                    // unexpected exception, re-throw.
+                    throw;
+                }
+
+                // Swallow the exception since it is due to trying to register a prefix that is already added.
+            }
+
+            try
+            {
+
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, CustomUriLiteralParserUnitTests.CUSTOM_PARSER_STRING_VALID_VALUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);

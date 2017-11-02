@@ -261,6 +261,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.UserDefinedClient
                 .SingleOrDefault();
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public QueryOperationResponse<CT> FunctionWithoutParameter(ET entity)
         {
             return this.Execute(
@@ -300,6 +301,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.UserDefinedClient
                 "POST",
                 new BodyOperationParameter("", entity));
         }
+#endif
     }
 
     [Key("UserName")]

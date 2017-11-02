@@ -12,6 +12,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -209,10 +210,12 @@ namespace Microsoft.OData.Client.Metadata
             // don't write property if it is a dictionary
             // don't write mime data member or the mime type member for it
             // link properties need to be ignored
+            // don't write property if it is tagged with IgnoreClientProperty attribute
             return !property.IsDictionary
                 && property != type.MediaDataMember
                 && !property.IsStreamLinkProperty
-                && (type.MediaDataMember == null || type.MediaDataMember.MimeTypeProperty != property);
+                && (type.MediaDataMember == null || type.MediaDataMember.MimeTypeProperty != property)
+                && property.PropertyInfo.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute)).Count() == 0;
         }
 
         /// <summary>

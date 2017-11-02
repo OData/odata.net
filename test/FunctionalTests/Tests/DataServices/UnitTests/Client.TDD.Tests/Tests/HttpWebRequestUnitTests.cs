@@ -42,7 +42,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             request.Headers["UserAgent"].Should().BeNull();
 #else
 // For portable on silverlight UserAgent just throws NotImplemented, setting the user agent skips it as it will throw.
-#if !(SILVERLIGHT && PORTABLELIB)
+#if !(SILVERLIGHT && PORTABLELIB) && !(NETCOREAPP1_0 || NETCOREAPP2_0)
             request.UserAgent.Should().Be("MyUserAgent");
 #endif
 #endif
@@ -68,7 +68,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
 #if WIN8
             request.Headers["Content-Length"].Should().Be("0");
-#else
+#elif !(NETCOREAPP1_0 || NETCOREAPP2_0)
             request.ContentLength.Should().Be(1);
 #endif
         }
