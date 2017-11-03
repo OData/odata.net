@@ -548,7 +548,6 @@ Function BuildProcess
             'Building only product in .NET Standard.') -ForegroundColor $Warning
             RunBuild ('OData.NetStandard.sln')
         }
-        RunBuild ('OData.CodeGen.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
     }
 
