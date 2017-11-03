@@ -14,10 +14,10 @@
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
     </Dependencies>
     <Assets>
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.OData.Edm" Path="|Microsoft.OData.Edm|" AssemblyName="|Microsoft.OData.Edm;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.OData.Core" Path="|Microsoft.OData.Core|" AssemblyName="|Microsoft.OData.Core;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.Spatial" Path="|Microsoft.Spatial|" AssemblyName="|Microsoft.Spatial;AssemblyName|" />
-        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.OData.Client.Portable" Path="|Microsoft.OData.Client.Portable|" AssemblyName="|Microsoft.OData.Client.Portable;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Microsoft.OData.Edm.dll" AssemblyName="Microsoft.OData.Edm" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Microsoft.OData.Core.dll" AssemblyName="Microsoft.OData.Core" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Microsoft.Spatial.dll" AssemblyName="Microsoft.Spatial" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="File" Path="Microsoft.OData.Client.dll" AssemblyName="Microsoft.OData.Client" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\ODataT4Template.CSharp.zip" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\ODataT4Template.VisualBasic.zip" />
     </Assets>
