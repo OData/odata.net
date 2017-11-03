@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 ConstantNode constantNode = source as ConstantNode;
-                if (source.TypeReference.IsString() && targetTypeReference.IsEnum())
+                if (constantNode != null && constantNode.Value != null && source.TypeReference.IsString() && targetTypeReference.IsEnum())
                 {
                     return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), constantNode.Value.ToString(), targetTypeReference);
                 }
