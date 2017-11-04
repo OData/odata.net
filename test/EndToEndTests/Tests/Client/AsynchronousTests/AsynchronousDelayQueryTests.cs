@@ -20,7 +20,6 @@ using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 #else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Test.OData.Framework.Server;
 #endif
 
 namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests

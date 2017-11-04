@@ -23,7 +23,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             this.headers = new HeaderCollection();
         }
 
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+        public IODataResponseMessage GetResponse()
+#else
         public override IODataResponseMessage GetResponse()
+#endif
         {
             // Do NOT actually send the request and return a fake response.
             return new HttpWebResponseMessage(this.headers, 200, () => new MemoryStream());

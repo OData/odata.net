@@ -92,7 +92,7 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual("AAECAw==", converter.ToString(new byte[] { 0, 1, 2, 3 }));
         }
 
-#if !ASTORIA_LIGHT
+#if !ASTORIA_LIGHT && !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void BinaryTypeConverterTests()
         {
@@ -359,8 +359,9 @@ namespace AstoriaUnitTests.Tests
                 Tuple.Create(typeof(Uri), "Edm.String", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), typeof(Microsoft.OData.Client.UriTypeConverter), false),
                 Tuple.Create(typeof(XDocument), "Edm.String", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), typeof(XDocumentTypeConverter), false),
                 Tuple.Create(typeof(XElement), "Edm.String", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), typeof(XElementTypeConverter), false),
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
                 Tuple.Create(typeof(System.Data.Linq.Binary), "Edm.Binary", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Binary), typeof(BinaryTypeConverter), false),
-
+#endif
                 Tuple.Create(typeof(UInt16), (String)null, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), typeof(UInt16TypeConverter), false),
                 Tuple.Create(typeof(UInt32), (String)null, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), typeof(UInt32TypeConverter), false),
                 Tuple.Create(typeof(UInt64), (String)null, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), typeof(UInt64TypeConverter), false),
@@ -431,8 +432,10 @@ namespace AstoriaUnitTests.Tests
         }
     }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
     /// <summary>
     /// Test behavior of ClientConvert class
+    /// Several APIs within the test framework are not supported in Net Core 1.0 so test only on other platforms.
     /// </summary>
     [TestClass]
     public class ClientConvertTests
@@ -516,4 +519,5 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(prefix + "'" + Uri.EscapeDataString(wkt) + "'", result);
         }
     }
+#endif
 }

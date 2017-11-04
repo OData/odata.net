@@ -20,11 +20,6 @@ namespace Microsoft.OData
         /// <summary>The resource set functions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataFunction> functions = new List<ODataFunction>();
 
-        /// <summary>
-        /// The type name of the resource set.
-        /// </summary>
-        private string typeName;
-
         /// <summary>Gets the resource set actions.</summary>
         /// <returns>The resource set actions.</returns>
         public IEnumerable<ODataAction> Actions
@@ -37,26 +32,6 @@ namespace Microsoft.OData
         public IEnumerable<ODataFunction> Functions
         {
             get { return this.functions; }
-        }
-
-        /// <summary>Gets the resource set type name.</summary>
-        /// <returns>The resource set type name.</returns>
-        public override string TypeName
-        {
-            get
-            {
-                if (typeName == null && this.SerializationInfo != null && this.SerializationInfo.ExpectedTypeName != null)
-                {
-                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.SerializationInfo.ExpectedTypeName);
-                }
-
-                return typeName;
-            }
-
-            set
-            {
-                this.typeName = value;
-            }
         }
 
         /// <summary>

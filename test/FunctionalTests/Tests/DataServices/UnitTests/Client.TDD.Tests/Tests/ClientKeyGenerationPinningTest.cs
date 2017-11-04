@@ -7,7 +7,9 @@
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using System.Data.Linq;
+#endif
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -73,6 +75,18 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ClientOtherTypesPinning()
         {
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            var keyValues = new object[] { 1, "abc", "abc pqr", new byte[0], new byte[] { 1, 2 }, new XElement("Fake") };
+
+            const string expected = @"(1)
+('abc')
+('abc%20pqr')
+(binary'')
+(binary'AQI%3D')
+('%3CFake%20%2F%3E')
+(prop=1,prop='abc',prop='abc%20pqr',prop=binary'',prop=binary'AQI%3D',prop='%3CFake%20%2F%3E')
+";
+#else
             var keyValues = new object[] { 1, "abc", "abc pqr", new byte[0], new byte[] { 1, 2 }, new XElement("Fake"), new Binary(new byte[0]), new Binary(new byte[] { 1, 2 }) };
 
             const string expected = @"(1)
@@ -85,6 +99,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 (binary'AQI%3D')
 (prop=1,prop='abc',prop='abc%20pqr',prop=binary'',prop=binary'AQI%3D',prop='%3CFake%20%2F%3E',prop=binary'',prop=binary'AQI%3D')
 ";
+#endif
 
             RunClientPinningTest(expected, keyValues);
         }
@@ -108,9 +123,134 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             RunClientPinningTest(builder, Date.MaxValue, Date.MinValue, new Date(2014, 9, 25));
             RunClientPinningTest(builder, TimeOfDay.MaxValue, TimeOfDay.MinValue, new TimeOfDay(12, 9, 25, 900));
             RunClientPinningTest(builder, Guid.Empty, Guid.Parse("b467459e-1eb5-4598-8a63-2c40c6a2590c"));
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
             RunClientPinningTest(builder, new Binary(new byte[0]), new Binary(new byte[] { 1, 2, byte.MaxValue }));
+#endif
             RunClientPinningTest(builder, XElement.Parse("<xelement>content<nested><!--comment--></nested> </xelement>"));
             RunClientPinningTest(builder, "", "  \t \r\n", ".,();", "\r\n", "\r\n\r\n\r\n\r\n", "\r", "\n", "\n\r", "a\x0302e\x0327\x0627\x0654\x0655", "a surrogate pair: \xd800\xdc00", "left to right \x05d0\x05d1 \x05ea\x05e9 english", "\x1\x2\x3\x4\x5\x20");
+
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            const string expected = @"(true)
+(false)
+(prop=true,prop=false)
+
+(0)
+(1)
+(255)
+(prop=0,prop=1,prop=255)
+
+(0)
+(1)
+(-1)
+(127)
+(-128)
+(prop=0,prop=1,prop=-1,prop=127,prop=-128)
+
+(79228162514264337593543950335)
+(-79228162514264337593543950335)
+(1)
+(0)
+(-79228162514264337593543950335)
+(79228162514264337593543950335)
+(prop=79228162514264337593543950335,prop=-79228162514264337593543950335,prop=1,prop=0,prop=-79228162514264337593543950335,prop=79228162514264337593543950335)
+
+(0)
+(1)
+(-0.1)
+(4.94065645841247E-324)
+(1.7976931348623157E%2B308)
+(-1.7976931348623157E%2B308)
+(-INF)
+(INF)
+(NaN)
+(7E-06)
+(9000000000.0)
+(9E%2B16)
+(prop=0,prop=1,prop=-0.1,prop=4.94065645841247E-324,prop=1.7976931348623157E%2B308,prop=-1.7976931348623157E%2B308,prop=-INF,prop=INF,prop=NaN,prop=7E-06,prop=9000000000.0,prop=9E%2B16)
+
+(0)
+(1)
+(-0.1)
+(1.401298E-45)
+(3.40282347E%2B38)
+(-3.40282347E%2B38)
+(-INF)
+(INF)
+(NaN)
+(7E-06)
+(8.999999E%2B09)
+(prop=0,prop=1,prop=-0.1,prop=1.401298E-45,prop=3.40282347E%2B38,prop=-3.40282347E%2B38,prop=-INF,prop=INF,prop=NaN,prop=7E-06,prop=8.999999E%2B09)
+
+(0)
+(1)
+(-1)
+(32767)
+(-32768)
+(prop=0,prop=1,prop=-1,prop=32767,prop=-32768)
+
+(0)
+(1)
+(-1)
+(2147483647)
+(-2147483648)
+(prop=0,prop=1,prop=-1,prop=2147483647,prop=-2147483648)
+
+(0)
+(1)
+(-1)
+(9223372036854775807)
+(-9223372036854775808)
+(prop=0,prop=1,prop=-1,prop=9223372036854775807,prop=-9223372036854775808)
+
+(binary'')
+(binary'AA%3D%3D')
+(binary'AAEA%2Fw%3D%3D')
+(binary'AAECAwQFBgcICQoLDA0ODxA%3D')
+(prop=binary'',prop=binary'AA%3D%3D',prop=binary'AAEA%2Fw%3D%3D',prop=binary'AAECAwQFBgcICQoLDA0ODxA%3D')
+
+(9999-12-31T23%3A59%3A59.9999999Z)
+(0001-01-01T00%3A00%3A00Z)
+(2012-11-16T10%3A54%3A13.5422534-08%3A00)
+(2012-11-16T18%3A54%3A13.5422534Z)
+(prop=9999-12-31T23%3A59%3A59.9999999Z,prop=0001-01-01T00%3A00%3A00Z,prop=2012-11-16T10%3A54%3A13.5422534-08%3A00,prop=2012-11-16T18%3A54%3A13.5422534Z)
+
+(duration'P10675199DT2H48M5.4775807S')
+(duration'-P10675199DT2H48M5.4775808S')
+(duration'P1DT12H')
+(prop=duration'P10675199DT2H48M5.4775807S',prop=duration'-P10675199DT2H48M5.4775808S',prop=duration'P1DT12H')
+
+(9999-12-31)
+(0001-01-01)
+(2014-09-25)
+(prop=9999-12-31,prop=0001-01-01,prop=2014-09-25)
+
+(23%3A59%3A59.9999999)
+(00%3A00%3A00.0000000)
+(12%3A09%3A25.9000000)
+(prop=23%3A59%3A59.9999999,prop=00%3A00%3A00.0000000,prop=12%3A09%3A25.9000000)
+
+(00000000-0000-0000-0000-000000000000)
+(b467459e-1eb5-4598-8a63-2c40c6a2590c)
+(prop=00000000-0000-0000-0000-000000000000,prop=b467459e-1eb5-4598-8a63-2c40c6a2590c)
+
+('%3Cxelement%3Econtent%3Cnested%3E%3C%21--comment--%3E%3C%2Fnested%3E%3C%2Fxelement%3E')
+('%3Cxelement%3Econtent%3Cnested%3E%3C%21--comment--%3E%3C%2Fnested%3E%3C%2Fxelement%3E')
+
+('')
+('%20%20%09%20%0D%0A')
+('.%2C%28%29%3B')
+('%0D%0A')
+('%0D%0A%0D%0A%0D%0A%0D%0A')
+('%0D')
+('%0A')
+('%0A%0D')
+('a%CC%82e%CC%A7%D8%A7%D9%94%D9%95')
+('a%20surrogate%20pair%3A%20%F0%90%80%80')
+('left%20to%20right%20%D7%90%D7%91%20%D7%AA%D7%A9%20english')
+('%01%02%03%04%05%20')
+(prop='',prop='%20%20%09%20%0D%0A',prop='.%2C%28%29%3B',prop='%0D%0A',prop='%0D%0A%0D%0A%0D%0A%0D%0A',prop='%0D',prop='%0A',prop='%0A%0D',prop='a%CC%82e%CC%A7%D8%A7%D9%94%D9%95',prop='a%20surrogate%20pair%3A%20%F0%90%80%80',prop='left%20to%20right%20%D7%90%D7%91%20%D7%AA%D7%A9%20english',prop='%01%02%03%04%05%20')
+";
+#else
             const string expected = @"(true)
 (false)
 (prop=true,prop=false)
@@ -235,6 +375,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 ('%01%02%03%04%05%20')
 (prop='',prop='%20%20%09%20%0D%0A',prop='.%2C%28%29%3B',prop='%0D%0A',prop='%0D%0A%0D%0A%0D%0A%0D%0A',prop='%0D',prop='%0A',prop='%0A%0D',prop='a%CC%82e%CC%A7%D8%A7%D9%94%D9%95',prop='a%20surrogate%20pair%3A%20%F0%90%80%80',prop='left%20to%20right%20%D7%90%D7%91%20%D7%AA%D7%A9%20english',prop='%01%02%03%04%05%20')
 ";
+#endif
 
             var actual = builder.ToString().Replace("!", "%21").Replace("()", "%28%29");
             actual.Should().Be(expected);

@@ -184,10 +184,11 @@ namespace Microsoft.OData.JsonLight
             });
         }
 #endif
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
+#if PORTABLELIB
         /// <summary> Sets nested level following a successful read. </summary>
         private async void SkipToDeletedResourceEnd()
         {
@@ -199,6 +200,7 @@ namespace Microsoft.OData.JsonLight
                 });
             }
         }
+#endif
 
         /// <summary> Sets nested level following a successful read. </summary>
         private void SetNestedLevel()
@@ -213,6 +215,6 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-        #endregion
+#endregion
     }
 }

@@ -29,11 +29,6 @@ namespace Microsoft.OData.JsonLight
         private readonly ODataJsonLightOutputContext jsonLightOutputContext;
 
         /// <summary>
-        /// The JsonLight resource and resource set serializer to use.
-        /// </summary>
-        private readonly ODataJsonLightResourceSerializer jsonLightResourceSerializer;
-
-        /// <summary>
         /// JsonLightWriter
         /// </summary>
         private readonly ODataJsonLightWriter resourceWriter;
@@ -71,7 +66,6 @@ namespace Microsoft.OData.JsonLight
             this.navigationSource = navigationSource;
             this.entityType = entityType;
             this.jsonLightOutputContext = jsonLightOutputContext;
-            this.jsonLightResourceSerializer = new ODataJsonLightResourceSerializer(this.jsonLightOutputContext);
             this.resourceWriter = new ODataJsonLightWriter(jsonLightOutputContext, navigationSource, entityType, true, writingDelta: true);
             this.inStreamErrorListener = resourceWriter;
         }
@@ -244,7 +238,7 @@ namespace Microsoft.OData.JsonLight
 #endif
 
         /// <summary>
-        /// Writing a delta link.
+        /// Writes a delta link.
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         public override void WriteDeltaLink(ODataDeltaLink deltaLink)
@@ -254,7 +248,7 @@ namespace Microsoft.OData.JsonLight
 
 #if PORTABLELIB
         /// <summary>
-        /// Asynchronously writing a delta link.
+        /// Asynchronously writes a delta link.
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>

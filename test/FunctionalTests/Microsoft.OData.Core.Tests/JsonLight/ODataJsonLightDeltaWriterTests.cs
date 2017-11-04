@@ -432,6 +432,58 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void WriteDerivedEntityOfWrongTypeShouldFail()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataResource derivedEntity = new ODataResource()
+            {
+                TypeName = "MyNS.PhysicalProduct",
+                Properties = new[]
+                {
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
+                    new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
+                    new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
+                },
+            };
+
+            Action writeAction = () =>
+            {
+                ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(outputContext, this.GetCustomers(), this.GetCustomerType());
+                writer.WriteStart(deltaFeedWithInfo);
+                writer.WriteStart(derivedEntity);
+            };
+
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("MyNS.PhysicalProduct", "MyNS.Customer"));
+        }
+
+        [Fact]
+        public void WriteDerivedDeletedResourceOfWrongTypeShouldFail()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataDeletedResource derivedEntity = new ODataDeletedResource()
+            {
+                Reason = DeltaDeletedEntryReason.Changed,
+                TypeName = "MyNS.PhysicalProduct",
+                Properties = new[]
+                {
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
+                    new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
+                    new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
+                },
+            };
+            Action writeAction = () =>
+            {
+                ODataJsonLightWriter writer = new ODataJsonLightWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
+                writer.WriteStart(deltaFeedWithInfo);
+                writer.WriteStart(derivedEntity);
+            };
+
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("MyNS.PhysicalProduct", "MyNS.Customer"));
+        }
+
+        [Fact]
         public void WriteDerivedEntityWithSerilizationInfo()
         {
             this.TestInit(this.GetModel());
@@ -1402,8 +1454,50 @@ namespace Microsoft.OData.Tests.JsonLight
             writeAction.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
         }
 
+
         [Fact]
-        public void WriteNestedDeltaResourceSetInDeletedEntry()
+        public void WriteNestedSingletonResourceFromWrongSetShouldFail()
+        {
+            this.TestInit(this.GetModel());
+            Action writeAction = () =>
+            {
+                ODataResource customerWithContent = new ODataResource()
+                {
+                    Properties = new ODataProperty[]
+                    {
+                    new ODataProperty() {Name="Id", Value=1 },
+                    new ODataProperty() {Name="ContactName", Value="Samantha Stones" }
+                    }
+                };
+
+                ODataJsonLightWriter writer = new ODataJsonLightWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
+                writer.WriteStart(feed);
+                writer.WriteStart(customerWithContent);
+                writer.WriteStart(new ODataNestedResourceInfo()
+                {
+                    Name = "ProductBeingViewed"
+                });
+                writer.WriteStart(
+                    new ODataResource()
+                    {
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty() { Name = "Id", Value = 1 }
+                        },
+                        SerializationInfo = new ODataResourceSerializationInfo()
+                        {
+                            NavigationSourceEntityTypeName = "MyNS.Order",
+                            NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                            NavigationSourceName = "Orders"
+                        }
+                    });
+            };
+
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
+        }
+
+        [Fact]
+        public void WriteNestedSingletonDeltaResourceSetInDeletedEntry()
         {
             this.TestInit(this.GetModel());
             ODataDeletedResource deletedCustomerWithContent = new ODataDeletedResource(new Uri("Customer/1", UriKind.Relative), DeltaDeletedEntryReason.Changed)
@@ -1437,6 +1531,94 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.Flush();
 
             this.TestPayload().Should().Be("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"@id\":\"Customer/1\",\"ContactName\":\"Samantha Stones\",\"FavouriteProducts@count\":2,\"FavouriteProducts@nextLink\":\"Customers/1/FavouriteProducts?$skipToken=123\",\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Products/1\"}]}]}");
+        }
+
+        [Fact]
+        public void WriteNestedSingletonDeletedEntryFromWrongSetShouldFail()
+        {
+            this.TestInit(this.GetModel());
+            Action writeAction = () =>
+            {
+                ODataResource customerWithContent = new ODataResource()
+                {
+                    Properties = new ODataProperty[]
+                    {
+                    new ODataProperty() {Name="Id", Value=1 },
+                    new ODataProperty() {Name="ContactName", Value="Samantha Stones" }
+                    }
+                };
+
+                ODataJsonLightWriter writer = new ODataJsonLightWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
+                writer.WriteStart(feed);
+                writer.WriteStart(customerWithContent);
+                writer.WriteStart(new ODataNestedResourceInfo()
+                {
+                    Name = "FavouriteProducts",
+                    IsCollection = true
+                });
+                writer.WriteStart(new ODataDeltaResourceSet());
+                writer.WriteStart(
+                    new ODataDeletedResource()
+                    {
+                        Reason = DeltaDeletedEntryReason.Deleted,
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty() { Name = "Id", Value = 1 }
+                        },
+                        SerializationInfo = new ODataResourceSerializationInfo()
+                        {
+                            NavigationSourceEntityTypeName = "MyNS.Order",
+                            NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                            NavigationSourceName = "Orders"
+                        }
+                    });
+            };
+
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
+        }
+
+
+        [Fact]
+        public void WriteNestedResourceFromWrongSetShouldFail()
+        {
+            this.TestInit(this.GetModel());
+            Action writeAction = () =>
+            {
+                ODataResource customerWithContent = new ODataResource()
+                {
+                    Properties = new ODataProperty[]
+                    {
+                    new ODataProperty() {Name="Id", Value=1 },
+                    new ODataProperty() {Name="ContactName", Value="Samantha Stones" }
+                    }
+                };
+
+                ODataJsonLightWriter writer = new ODataJsonLightWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
+                writer.WriteStart(feed);
+                writer.WriteStart(customerWithContent);
+                writer.WriteStart(new ODataNestedResourceInfo()
+                {
+                    Name = "FavouriteProducts",
+                    IsCollection = true
+                });
+                writer.WriteStart(new ODataResourceSet());
+                writer.WriteStart(
+                    new ODataResource()
+                    {
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty() { Name = "Id", Value = 1 }
+                        },
+                        SerializationInfo = new ODataResourceSerializationInfo()
+                        {
+                            NavigationSourceEntityTypeName = "MyNS.Order",
+                            NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                            NavigationSourceName = "Orders"
+                        }
+                    });
+            };
+
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
         }
 
         [Fact]
@@ -1599,6 +1781,74 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.Flush();
 
             this.TestPayload().Should().Be("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"ProductBeingViewed\":{\"Id\":1,\"Name\":\"Car\"}}]}");
+        }
+
+        [Fact]
+        public void WriteRelatedDerivedEntityIn41()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataResource derivedEntity = new ODataResource()
+            {
+                TypeName = "MyNS.PhysicalProduct",
+                Properties = new[]
+                {
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
+                    new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
+                    new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
+                },
+            };
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
+            writer.WriteStart(feed);
+            writer.WriteStart(customerUpdated);
+            writer.WriteStart(new ODataNestedResourceInfo()
+            {
+                Name = "ProductBeingViewed"
+            });
+            writer.WriteStart(derivedEntity);
+            writer.WriteEnd(); // product
+            writer.WriteEnd(); // nested info
+            writer.WriteEnd(); // customer
+            writer.WriteEnd(); // delta resource set
+            writer.Flush();
+
+            this.TestPayload().Should().Be("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"ProductBeingViewed\":{\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}}]}");
+        }
+
+
+        [Fact]
+        public void WriteRelatedDerivedDeletedResourceIn41()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataDeletedResource derivedEntity = new ODataDeletedResource()
+            {
+                Reason = DeltaDeletedEntryReason.Changed,
+                TypeName = "MyNS.PhysicalProduct",
+                Properties = new[]
+                {
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
+                    new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
+                    new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
+                },
+            };
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
+            writer.WriteStart(feed);
+            writer.WriteStart(customerUpdated);
+            writer.WriteStart(new ODataNestedResourceInfo()
+            {
+                Name = "ProductBeingViewed"
+            });
+            writer.WriteStart(derivedEntity);
+            writer.WriteEnd(); // product
+            writer.WriteEnd(); // nested info
+            writer.WriteEnd(); // customer
+            writer.WriteEnd(); // delta resource set
+            writer.Flush();
+
+            this.TestPayload().Should().Be("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"changed\"},\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}}]}");
         }
 
         [Fact]
@@ -2053,7 +2303,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             this.stream = new MemoryStream();
             this.outputContext = CreateJsonLightOutputContext(this.stream, userModel, fullMetadata, null, ODataVersion.V4);
-            this.V401outputContext = CreateJsonLightOutputContext(this.stream, userModel, fullMetadata, null, ODataVersion.V4_01);
+            this.V401outputContext = CreateJsonLightOutputContext(this.stream, userModel, fullMetadata, null, ODataVersion.V401);
         }
 
         private IEdmModel GetModel()

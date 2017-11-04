@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
@@ -33,18 +34,34 @@ namespace Microsoft.OData
         /// </summary>
         private ODataResourceSerializationInfo serializationInfo;
 
-        /// <summary>Gets or sets the number of items in the resource set.</summary>
-        /// <returns>The number of items in the resource set.</returns>
-        public long? Count
+        /// <summary>
+        /// The type name of the resource set.
+        /// </summary>
+        private string typeName;
+
+        /// <summary>Gets the resource set type name.</summary>
+        /// <returns>The resource set type name.</returns>
+        public string TypeName
         {
-            get;
-            set;
+            get
+            {
+                if (typeName == null && this.SerializationInfo != null && this.SerializationInfo.ExpectedTypeName != null)
+                {
+                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.SerializationInfo.ExpectedTypeName);
+                }
+
+                return typeName;
+            }
+
+            set
+            {
+                this.typeName = value;
+            }
         }
 
-        /// <summary>
-        /// URI representing the next page link.
-        /// </summary>
-        public abstract string TypeName
+    /// <summary>Gets or sets the number of items in the resource set.</summary>
+    /// <returns>The number of items in the resource set.</returns>
+    public long? Count
         {
             get;
             set;
@@ -100,9 +117,19 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Collection of custom instance annotations.
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
+        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
+        {
+            get { return this.GetInstanceAnnotations(); }
+            set { this.SetInstanceAnnotations(value); }
+        }
+
+        /// <summary>
         /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
         /// </summary>
-        public ODataResourceSerializationInfo SerializationInfo
+        internal ODataResourceSerializationInfo SerializationInfo
         {
             get
             {
@@ -113,16 +140,6 @@ namespace Microsoft.OData
             {
                 this.serializationInfo = ODataResourceSerializationInfo.Validate(value);
             }
-        }
-
-        /// <summary>
-        /// Collection of custom instance annotations.
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
-        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
-        {
-            get { return this.GetInstanceAnnotations(); }
-            set { this.SetInstanceAnnotations(value); }
         }
     }
 }

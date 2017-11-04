@@ -139,33 +139,19 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         [Fact]
         public void TestStringAsEnumInFunctionParameter()
         {
-            this.TestStringAsEnum(
-                "GetColorCmykImport(co=TestNS.Color'Blue')",
-                "GetColorCmykImport(co='Blue')",
-                parser => parser.ParsePath(),
-                path => path.LastSegment.ShouldBeOperationImportSegment(GetColorCmykImport),
-                Strings.MetadataBinder_CannotConvertToType("Edm.String", "TestNS.Color"));
-        }
+            var uriParser = new ODataUriParser(
+                Model,
+                ServiceRoot,
+                new Uri("http://host/GetColorCmykImport(co='Blue')"))
+            {
+                Resolver = new ODataUriResolver()
+            };
 
-        [Fact]
-        public void TestStringAsEnumInFunctionParameterWithCaseInsensitive()
-        {
-            this.TestStringAsEnum(
-                "GetColorCmykImport(co=TestNS.Color'Blue')",
-                "GetColorCmykImport(CO='Blue')",
-                parser =>
-                {
-                    if (!(parser.Resolver is StringAsEnumResolver))
-                    {
-                        // Use a new instance in order not to affect the global instance.
-                        parser.Resolver = new ODataUriResolver();
-                    }
-
-                    parser.Resolver.EnableCaseInsensitive = true;
-                    return parser.ParsePath();
-                },
-                path => path.LastSegment.ShouldBeOperationImportSegment(GetColorCmykImport),
-                Strings.MetadataBinder_CannotConvertToType("Edm.String", "TestNS.Color"));
+            var path = uriParser.ParsePath();
+            path.LastSegment
+                .ShouldBeOperationImportSegment(GetColorCmykImport)
+                .And.ShouldHaveParameterCount(1)
+                .And.Parameters.Single().Value.As<ConstantNode>().Value.ShouldBeODataEnumValue("TestNS.Color", "Blue");
         }
 
         [Fact]

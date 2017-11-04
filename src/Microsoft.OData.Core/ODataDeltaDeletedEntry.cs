@@ -130,7 +130,7 @@ namespace Microsoft.OData
             {
                 id = new Uri(entry.Id, UriKind.Relative);
             }
-            catch
+            catch (FormatException)
             {
                 id = new Uri(entry.Id, UriKind.Absolute);
             }

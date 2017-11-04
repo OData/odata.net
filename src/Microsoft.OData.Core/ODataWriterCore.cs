@@ -813,7 +813,6 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The delta resource set to write.</param>
         protected virtual void StartDeltaResourceSet(ODataDeltaResourceSet deltaResourceSet)
         {
-            // todo: improve error message
             throw new NotImplementedException();
         }
 
@@ -823,7 +822,6 @@ namespace Microsoft.OData
         /// <param name="deletedEntry">The deleted entry to write.</param>
         protected virtual void StartDeletedResource(ODataDeletedResource deletedEntry)
         {
-            // todo: improve error message
             throw new NotImplementedException();
         }
 
@@ -833,7 +831,6 @@ namespace Microsoft.OData
         /// <param name="deltaLink">The deleted entry to write.</param>
         protected virtual void StartDeltaLink(ODataDeltaLinkBase deltaLink)
         {
-            // todo: improve error message
             throw new NotImplementedException();
         }
 
@@ -854,7 +851,6 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The delta resource set to write.</param>
         protected virtual void EndDeltaResourceSet(ODataDeltaResourceSet deltaResourceSet)
         {
-            // todo: better error
             throw new NotImplementedException();
         }
 
@@ -864,7 +860,6 @@ namespace Microsoft.OData
         /// <param name="deletedResource">The delta resource set to write.</param>
         protected virtual void EndDeletedResource(ODataDeletedResource deletedResource)
         {
-            // todo: better error
             throw new NotImplementedException();
         }
 
@@ -1627,7 +1622,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="contentPayloadKind">
         /// What kind of payload kind is being written as the content of a nested resource info.
-        /// Only Resource Set, Resource, or EntityReferenceLink are allowed.
+        /// Only Resource Set, Resource or EntityReferenceLink are allowed.
         /// </param>
         /// <param name="contentPayload">The ODataResource or ODataResourceSet to write, or null for ODataEntityReferenceLink.</param>
         private void CheckForNestedResourceInfoWithContent(ODataPayloadKind contentPayloadKind, ODataItem contentPayload)
@@ -1891,42 +1886,6 @@ namespace Microsoft.OData
                     {
                         try
                         {
-                            ODataResourceSerializationInfo serializationInfo = resource.SerializationInfo;
-                            if (serializationInfo != null)
-                            {
-                                // Try resolving navigation source from serialization info.
-                                IEdmStructuredType typeFromNavigationSource = null;
-                                if (serializationInfo.NavigationSourceName != null)
-                                {
-                                    ODataUriParser uriParser = new ODataUriParser(model, new Uri(serializationInfo.NavigationSourceName, UriKind.Relative), this.outputContext.Container);
-                                    odataUri = uriParser.ParseUri();
-                                    navigationSource = odataUri.Path.NavigationSource();
-                                    typeFromNavigationSource = navigationSource.EntityType();
-                                }
-
-                                // Try resolving entity type from SerializationInfo
-                                if (!string.IsNullOrEmpty(serializationInfo.ExpectedTypeName))
-                                {
-                                    resourceType = TypeNameOracle.ResolveAndValidateTypeName(
-                                        model,
-                                        serializationInfo.ExpectedTypeName,
-                                        EdmTypeKind.Entity,
-                                        /* expectStructuredType */ true,
-                                        this.outputContext.WriterValidator) as IEdmEntityType;
-                                }
-                                else if (!string.IsNullOrEmpty(serializationInfo.NavigationSourceEntityTypeName))
-                                {
-                                    resourceType = TypeNameOracle.ResolveAndValidateTypeName(
-                                        model,
-                                        serializationInfo.NavigationSourceEntityTypeName,
-                                        EdmTypeKind.Entity,
-                                        /* expectStructuredType */ true,
-                                        this.outputContext.WriterValidator) as IEdmEntityType;
-                                }
-
-                                resourceType = resourceType ?? typeFromNavigationSource;
-                            }
-
                             string typeNameFromResource = resource.TypeName;
                             if (!String.IsNullOrEmpty(typeNameFromResource))
                             {
@@ -1938,8 +1897,44 @@ namespace Microsoft.OData
                                     /* expectStructuredType */ true,
                                     this.outputContext.WriterValidator) as IEdmEntityType;
                             }
+
+                            // Try resolving navigation source from serialization info.
+                            ODataResourceSerializationInfo serializationInfo = resource.SerializationInfo;
+                            if (serializationInfo != null)
+                            {
+                                if (serializationInfo.NavigationSourceName != null)
+                                {
+                                    ODataUriParser uriParser = new ODataUriParser(model, new Uri(serializationInfo.NavigationSourceName, UriKind.Relative), this.outputContext.Container);
+                                    odataUri = uriParser.ParseUri();
+                                    navigationSource = odataUri.Path.NavigationSource();
+                                    resourceType = resourceType ?? navigationSource.EntityType();
+                                }
+
+                                if (typeNameFromResource == null)
+                                {
+                                    // Try resolving entity type from SerializationInfo
+                                    if (!string.IsNullOrEmpty(serializationInfo.ExpectedTypeName))
+                                    {
+                                        resourceType = TypeNameOracle.ResolveAndValidateTypeName(
+                                            model,
+                                            serializationInfo.ExpectedTypeName,
+                                            EdmTypeKind.Entity,
+                                            /* expectStructuredType */ true,
+                                            this.outputContext.WriterValidator) as IEdmEntityType;
+                                    }
+                                    else if (!string.IsNullOrEmpty(serializationInfo.NavigationSourceEntityTypeName))
+                                    {
+                                        resourceType = TypeNameOracle.ResolveAndValidateTypeName(
+                                            model,
+                                            serializationInfo.NavigationSourceEntityTypeName,
+                                            EdmTypeKind.Entity,
+                                            /* expectStructuredType */ true,
+                                            this.outputContext.WriterValidator) as IEdmEntityType;
+                                    }
+                                }
+                            }
                         }
-                        catch
+                        catch (ODataException)
                         {
                             // SerializationInfo doesn't match model.
                             // This should be an error but, for legacy reasons, we ignore this.
@@ -2237,7 +2232,7 @@ namespace Microsoft.OData
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                         }
 
-                        if (this.State == WriterState.DeletedResource && this.Version < ODataVersion.V4_01 && newState == WriterState.NestedResourceInfo)
+                        if (this.State == WriterState.DeletedResource && this.Version < ODataVersion.V401 && newState == WriterState.NestedResourceInfo)
                         {
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFrom40DeletedResource(this.State.ToString(), newState.ToString()));
                         }
@@ -2271,7 +2266,7 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.NestedResourceInfoWithContent:
-                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && (this.Version < ODataVersion.V4_01 || (newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)))
+                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && (this.Version < ODataVersion.V401 || (newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink(this.State.ToString(), newState.ToString()));
                     }
@@ -2343,9 +2338,21 @@ namespace Microsoft.OData
                     break;
                 case WriterState.ResourceSet:
                     scope = this.CreateResourceSetScope((ODataResourceSet)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
+                    if (this.outputContext.Model.IsUserModel())
+                    {
+                        Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
+                        ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(resourceType);
+                    }
+
                     break;
                 case WriterState.DeltaResourceSet:
                     scope = this.CreateDeltaResourceSetScope((ODataDeltaResourceSet)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
+                    if (this.outputContext.Model.IsUserModel())
+                    {
+                        Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
+                        ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(resourceType);
+                    }
+
                     break;
                 case WriterState.NestedResourceInfo:            // fall through
                 case WriterState.NestedResourceInfoWithContent:
@@ -2635,7 +2642,7 @@ namespace Microsoft.OData
             /// <summary>
             /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this resourceSet.
             /// </summary>
-            private readonly ResourceSetWithoutExpectedTypeValidator resourceTypeValidator;
+            private ResourceSetWithoutExpectedTypeValidator resourceTypeValidator;
 
             /// <summary>The number of entries in this resourceSet seen so far.</summary>
             private int resourceCount;
@@ -2660,9 +2667,6 @@ namespace Microsoft.OData
                 : base(writerState, resourceSet, navigationSource, resourceType, skipWriting, selectedProperties, odataUri)
             {
                 this.serializationInfo = resourceSet.SerializationInfo;
-
-                // todo (mikep): validate if (this.writer.Model.IsUserModel() before setting
-                resourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(resourceType);
             }
 
             /// <summary>
@@ -2705,6 +2709,11 @@ namespace Microsoft.OData
                 get
                 {
                     return this.resourceTypeValidator;
+                }
+
+                set
+                {
+                    this.resourceTypeValidator = value;
                 }
             }
 

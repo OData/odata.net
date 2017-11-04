@@ -25,6 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         {
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ValidReadEFEntity()
         {
@@ -41,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             //Verify navigation link is working
             Assert.IsNotNull(context.EFPersonMetadatas.Expand("EFPerson").FirstOrDefault().EFPerson);
         }
-        
+
         [TestMethod]
         public void ValidCUDEFEntity()
         {
@@ -86,6 +87,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsTrue(persons.Any(p=>p.PersonId == expectedPerson.PersonId));
         }
 
+        // Flaky test: OData.net GitHub #970
         [TestMethod]
         public void ValidMetadata()
         {
@@ -107,6 +109,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             }
         }
 
+        // Flaky test: OData.net GitHub #970
         [TestMethod]
         public void ValidServiceDocument()
         {
@@ -127,5 +130,6 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
                 Assert.IsTrue(workspace.EntitySets.All(e => e.Name.StartsWith("EF")));
             }
         }
+#endif
     }
 }

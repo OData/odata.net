@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{333077F2-0DBA-42A1-A5E1-E86361D96074}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ServiceWrapperApp</RootNamespace>
+    <AssemblyName>ServiceWrapperApp</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Debug\Test\Desktop\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Release\Test\Desktop\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\sln\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Tests\Client\Build.Desktop\ServiceWrapper\IPCCommandMap.cs">
+      <Link>ServiceWrapper\IPCCommandMap.cs</Link>
+    </Compile>
+    <Compile Include="ServiceWrapperApp.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{d1567c63-4a0d-4e18-a14e-79699b9bffff}</Project>
+      <Name>Microsoft.OData.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
+      <Project>{cec8af29-77bc-4c62-b79c-a9b22c311e3b}</Project>
+      <Name>Microsoft.Test.OData.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj">
+      <Project>{b57522a7-18b7-42f7-95fd-24835fc5ae46}</Project>
+      <Name>Microsoft.Test.OData.Tests.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestServices\Microsoft.Test.OData.Services.TestServices.csproj">
+      <Project>{b8a072be-5b90-4193-a289-6cc8750d0dad}</Project>
+      <Name>Microsoft.Test.OData.Services.TestServices</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

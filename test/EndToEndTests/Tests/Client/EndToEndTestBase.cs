@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client
     using System.Threading;
     using Microsoft.Silverlight.Testing;
 #endif
-#if !WIN8 && !SILVERLIGHT && !PORTABLELIB
+#if !WIN8 && !SILVERLIGHT && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using Microsoft.Test.DataDriven;
 #endif
     using Microsoft.Test.OData.Framework.Client;
@@ -41,7 +41,7 @@ namespace Microsoft.Test.OData.Tests.Client
     [DeploymentItem(@"Microsoft.VisualStudio.TeamSystem.Licensing.dll")]
 #endif
     public class EndToEndTestBase
-#if !WIN8 && !PORTABLELIB
+#if !WIN8 && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
  : DataDrivenTest
 #endif
     {
@@ -102,7 +102,6 @@ namespace Microsoft.Test.OData.Tests.Client
         {
             try
             {
-
                 var context = this.serviceDescriptor.CreateDataServiceContext(this.ServiceUri);
                 var ar = context.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), null, null, "POST");
                 ar.AsyncWaitHandle.WaitOne();
@@ -130,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client
             this.serviceWrapper.StopService();
         }
 
-#if !WIN8 && !PORTABLELIB
+#if !WIN8 && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
         /// <summary>
         /// Exposes the protected single parameter DataDrivenTest.Invoke method.
         /// </summary>
@@ -146,8 +145,6 @@ namespace Microsoft.Test.OData.Tests.Client
             this.Invoke(action, parameterData, new Constraint<T>[0]);
         }
 #endif
-
-
 
         /// <summary>
         /// Creates a wrapped DataServiceContext for the OData Service.

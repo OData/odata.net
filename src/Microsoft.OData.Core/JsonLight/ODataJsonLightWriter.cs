@@ -671,7 +671,7 @@ namespace Microsoft.OData.JsonLight
             if (parentNavLink != null)
             {
                 // Writing a nested deleted resource
-                if (this.Version == null || this.Version < ODataVersion.V4_01)
+                if (this.Version == null || this.Version < ODataVersion.V401)
                 {
                     throw new ODataException(Strings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
                 }
@@ -691,7 +691,7 @@ namespace Microsoft.OData.JsonLight
 
                 this.jsonWriter.StartObjectScope();
 
-                if (this.Version == null || this.Version < ODataVersion.V4_01)
+                if (this.Version == null || this.Version < ODataVersion.V401)
                 {
                     // Write ContextUrl
                     this.jsonLightResourceSerializer.WriteDeltaContextUri(
@@ -711,21 +711,13 @@ namespace Microsoft.OData.JsonLight
 
                     if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
                     {
-                        if (this.ScopeLevel == 3)
-                        {
-                            // We are writing a deleted resource in a top level delta resource set
-                            // from a different entity set, so include the context Url
-                            this.jsonLightResourceSerializer.WriteDeltaContextUri(
-                                    this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse),
-                                    ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
-                        }
-                        else
-                        {
-                            // Deleted entries outside of the top level delta resource set must
-                            // be from the specified resource set
-                            // todo (mikep): put the right exception here
-                            throw new Exception("Unexpected type in resource set");
-                        }
+                        Debug.Assert(this.ScopeLevel == 3, "Writing a nested deleted resource of the wrong type should already have been caught.");
+
+                        // We are writing a deleted resource in a top level delta resource set
+                        // from a different entity set, so include the context Url
+                        this.jsonLightResourceSerializer.WriteDeltaContextUri(
+                                this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse),
+                                ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
                     }
 
                     this.WriteDeletedEntryContents(resource);
@@ -740,7 +732,6 @@ namespace Microsoft.OData.JsonLight
         protected override void StartDeltaLink(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
-            Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
 
             this.jsonWriter.StartObjectScope();
 
@@ -750,6 +741,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
+                Debug.Assert(link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
                 this.WriteDeltaLinkContextUri(ODataDeltaKind.DeletedLink);
             }
 
@@ -1207,7 +1199,7 @@ namespace Microsoft.OData.JsonLight
         private void WriteDeletedResourceId(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
-            if (this.Version == null || this.Version < ODataVersion.V4_01)
+            if (this.Version == null || this.Version < ODataVersion.V401)
             {
                 this.jsonWriter.WriteName(JsonLightConstants.ODataIdPropertyName);
                 this.jsonWriter.WriteValue(resource.Id.OriginalString);
@@ -1477,20 +1469,11 @@ namespace Microsoft.OData.JsonLight
             }
 
             /// <summary>
-            /// The resource being written.
-            /// </summary>
-            public ODataDeletedResource Resource
-            {
-                get { return (ODataDeletedResource)this.Item; }
-            }
-
-            /// <summary>
             /// true if the resource set represents a complex property or a singleton navigation property that is undeclared, false otherwise.
             /// </summary>
             public bool IsUndeclared
             {
                 get { return isUndeclared; }
-                set { isUndeclared = value; }
             }
 
             /// <summary>
@@ -1763,14 +1746,6 @@ namespace Microsoft.OData.JsonLight
             ODataResourceBase IODataJsonLightWriterResourceState.Resource
             {
                 get { return (ODataResourceBase)this.Item; }
-            }
-
-            /// <summary>
-            /// The resource being written.
-            /// </summary>
-            public ODataResource Resource
-            {
-                get { return (ODataResource)this.Item; }
             }
 
             /// <summary>

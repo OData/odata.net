@@ -229,7 +229,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Returns the resource's Id property that has been set directly, and was not computed using the metadata builder.
         /// </summary>
-        internal virtual Uri NonComputedId
+        internal Uri NonComputedId
         {
             get
             {
@@ -240,7 +240,7 @@ namespace Microsoft.OData
         /// <summary>
         /// true if an id was provided by the user or seen on the wire, false otherwise.
         /// </summary>
-        internal virtual bool HasNonComputedId
+        internal bool HasNonComputedId
         {
             get
             {

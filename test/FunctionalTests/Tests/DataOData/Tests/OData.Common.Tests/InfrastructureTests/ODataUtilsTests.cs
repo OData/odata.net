@@ -69,16 +69,16 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
             this.Assert.AreEqual(ODataUtils.ODataVersionToString(ODataVersion.V4), DataServiceVersion4,
                 "Failed to parse Data Service Version enum");
 
-            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01), ODataVersion.V4_01,
+            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01), ODataVersion.V401,
                 "Failed to parse Data Service Version string");
 
-            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01 + ";"), ODataVersion.V4_01,
+            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01 + ";"), ODataVersion.V401,
                 "Failed to parse Data Service Version string");
 
-            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01 + ";anything"), ODataVersion.V4_01,
+            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01 + ";anything"), ODataVersion.V401,
                 "Failed to parse Data Service Version string");
 
-            this.Assert.AreEqual(ODataUtils.ODataVersionToString(ODataVersion.V4_01), DataServiceVersion4_01,
+            this.Assert.AreEqual(ODataUtils.ODataVersionToString(ODataVersion.V401), DataServiceVersion4_01,
                 "Failed to parse Data Service Version enum");
 
             //negative tests

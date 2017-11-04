@@ -35,6 +35,9 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
 
         private string dataPattern = "(" + @"[\+-]?\d\.?\d*E?[\+-]?\d*" + "|" + @"INF|-INF|NaN" + ")";
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void LongInFilterLinqQuery()
         {
@@ -60,6 +63,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
             Assert.IsTrue(int64Query2.GetValue().Id == 1, "Expected one or more EdmInt64 entities could be returned ");
         }
 
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void FloatInFilterLinqQuery()
         {
@@ -75,6 +80,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
 
         }
 
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void DoubleInFilterLinqQuery()
         {
@@ -89,6 +96,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
             Assert.IsTrue(doubleQueryResult.Count() > 0, "Expected one or more EdmDouble.MaxValue could be returned ");
         }
 
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void DecimalInFilterLinqQuery()
         {
@@ -102,6 +111,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
             decimalQueryResult = (from c in contextWrapper.Context.EdmDecimalSet where c.Id >= deciamlId select c) as DataServiceQuery<EdmDecimal>;
             Assert.IsTrue(decimalQueryResult.Count() > 0, "Expected one or more EdmDecimal entities could be returned ");
         }
+#endif
 
         [TestMethod]
         public void LongWithoutSuffixAsKeyInURL()

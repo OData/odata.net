@@ -806,6 +806,48 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void ReadNestedDerivedDeletedEntryIn41DeletedEntry()
+        {
+            string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":10,\"Name\":\"car\",\"Material\":\"gold\"}}]}";
+
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer);
+            ODataDeletedResource deletedResource = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
+            ODataDeletedResource nestedResource = null;
+            while (reader.Read())
+            {
+                switch (reader.State)
+                {
+                    case ODataReaderState.DeletedResourceEnd:
+                        if (nestedResource == null)
+                        {
+                            nestedResource = reader.Item as ODataDeletedResource;
+                        }
+                        else
+                        {
+                            deletedResource = reader.Item as ODataDeletedResource;
+                        }
+                        break;
+                    case ODataReaderState.NestedResourceInfoStart:
+                        nestedResourceInfo = reader.Item as ODataNestedResourceInfo;
+                        break;
+                }
+            }
+
+            Assert.NotNull(deletedResource);
+            Assert.NotNull(nestedResourceInfo);
+            nestedResourceInfo.Name.Should().Be("ProductBeingViewed");
+            Assert.NotNull(nestedResource);
+            nestedResource.TypeName.Should().Be("MyNS.PhysicalProduct");
+            nestedResource.Reason.Should().Be(DeltaDeletedEntryReason.Deleted);
+            nestedResource.Id.Should().Be(new Uri("http://host/service/Products/10"));
+            nestedResource.Properties.Count().Should().Be(3);
+            nestedResource.Properties.First(p => p.Name == "Id").Value.Should().Be(10);
+            nestedResource.Properties.First(p => p.Name == "Name").Value.Should().Be("car");
+            nestedResource.Properties.First(p => p.Name == "Material").Value.Should().Be("gold");
+        }
+
+        [Fact]
         public void ReadNestedDeletedEntryIn41DeltaResource()
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"Name\":\"Scissors\",\"Id\":10}}]}";
@@ -1229,6 +1271,10 @@ namespace Microsoft.OData.Tests.JsonLight
                     product.AddKeys(product.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
                     product.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
                     myModel.AddElement(product);
+
+                    var physicalProductType = new EdmEntityType("MyNS", "PhysicalProduct", product);
+                    physicalProductType.AddStructuralProperty("Material", EdmPrimitiveTypeKind.String);
+                    myModel.AddElement(physicalProductType);
 
                     EdmEntityType productDetail = new EdmEntityType("MyNS", "ProductDetail");
                     productDetail.AddKeys(productDetail.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));

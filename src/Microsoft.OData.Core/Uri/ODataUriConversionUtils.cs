@@ -190,7 +190,7 @@ namespace Microsoft.OData
                 context =>
             {
                 ODataWriter writer = context.CreateODataUriParameterResourceWriter(null, null);
-                WriteResource(writer, resource);
+                WriteStartResource(writer, resource);
                 writer.WriteEnd();
             });
         }
@@ -216,7 +216,7 @@ namespace Microsoft.OData
                 // TODO: Write Complex Properties in entry
                 foreach (var resource in entries)
                 {
-                    WriteResource(writer, resource);
+                    WriteStartResource(writer, resource);
                     writer.WriteEnd();
                 }
 
@@ -491,11 +491,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="writer">The <see cref="ODataWriter"/> to use to write the (deleted) resource.</param>
         /// <param name="resource">The resource, or deleted resource, to write.</param>
-        private static void WriteResource(ODataWriter writer, ODataResourceBase resource)
+        private static void WriteStartResource(ODataWriter writer, ODataResourceBase resource)
         {
-            if (resource is ODataDeletedResource)
+            ODataDeletedResource deletedResource = resource as ODataDeletedResource;
+            if (deletedResource != null)
             {
-                writer.WriteStart(resource as ODataDeletedResource);
+                writer.WriteStart(deletedResource);
             }
             else
             {

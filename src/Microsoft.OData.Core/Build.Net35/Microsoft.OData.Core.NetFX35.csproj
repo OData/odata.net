@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AllowCrossTargeting>true</AllowCrossTargeting>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <AssemblyName>Microsoft.OData.Core.NetFX35</AssemblyName>
+    <AssemblyName>Microsoft.OData.Core.NetFX35.V7</AssemblyName>
     <OutputType>Library</OutputType>
     <DefineConstants>$(DefineConstants);ODATA_CORE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>

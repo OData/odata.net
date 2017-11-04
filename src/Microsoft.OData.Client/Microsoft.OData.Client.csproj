@@ -198,6 +198,7 @@
     </Compile>
     <Compile Include="Annotation\AnnotationHelper.cs" />
     <Compile Include="Annotation\InstanceAnnotationDictWeakKeyComparer.cs" />
+    <Compile Include="Attribute\IgnoreClientPropertyAttribute.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="DataServiceActionQueryOfT.cs" />
     <Compile Include="ActionDescriptor.cs" />
@@ -444,7 +445,6 @@
   </ItemGroup>
   <!-- Class Diagrams -->
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Diagrams\ALinq.cd" />
     <None Include="Diagrams\Materialization.cd" />
   </ItemGroup>

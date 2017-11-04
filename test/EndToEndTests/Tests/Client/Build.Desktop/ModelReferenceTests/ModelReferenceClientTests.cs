@@ -261,24 +261,6 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         }
 
         [TestMethod]
-        public void TypeCast()
-        {
-            // Cast type from referenced model to type
-            var querable1 = TestClientContext.VehicleGPSSet.Where(v => v.Key == "VehicleKey6");
-            var derivedEntity = querable1.Single() as DerivedVehicleGPSType;
-            Assert.AreEqual("DisplayName6", derivedEntity.DisplayName);
-
-            var querable2 = TestClientContext.VehicleGPSSetInGPS.Where(v => v.Key == "DerivedVehicleGPSInGPSKey3");
-            var derivedEntity2 = querable2.Single() as DerivedVehicleGPSType;
-            Assert.AreEqual("DerivedVehicleGPSInGPSDP", derivedEntity2.DisplayName);
-
-            // Verify Linq result
-            var querable3 = TestClientContext.VehicleGPSSet.Where(v => v.Key == "VehicleKey6").OfType<DerivedVehicleGPSType>();
-            var test = querable3 as DataServiceQuery;
-            Assert.IsTrue(test.RequestUri.OriginalString.EndsWith("VehicleGPSSet/Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.DerivedVehicleGPSType('VehicleKey6')"));
-        }
-
-        [TestMethod]
         public void AddNavigationProperty()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -368,6 +350,24 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             TestClientContext.LoadProperty(truck, "VehicleGPSGroupFromGPS");
             Assert.AreEqual(2, truck.VehicleGPSGroupFromGPS.Count);
+        }
+
+        [TestMethod]
+        public void TypeCast()
+        {
+            // Cast type from referenced model to type
+            var querable1 = TestClientContext.VehicleGPSSet.Where(v => v.Key == "VehicleKey6");
+            var derivedEntity = querable1.Single() as DerivedVehicleGPSType;
+            Assert.AreEqual("DisplayName6", derivedEntity.DisplayName);
+
+            var querable2 = TestClientContext.VehicleGPSSetInGPS.Where(v => v.Key == "DerivedVehicleGPSInGPSKey3");
+            var derivedEntity2 = querable2.Single() as DerivedVehicleGPSType;
+            Assert.AreEqual("DerivedVehicleGPSInGPSDP", derivedEntity2.DisplayName);
+
+            // Verify Linq result
+            var querable3 = TestClientContext.VehicleGPSSet.Where(v => v.Key == "VehicleKey6").OfType<DerivedVehicleGPSType>();
+            var test = querable3 as DataServiceQuery;
+            Assert.IsTrue(test.RequestUri.OriginalString.EndsWith("VehicleGPSSet/Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.DerivedVehicleGPSType('VehicleKey6')"));
         }
     }
 }

@@ -15,6 +15,6 @@ namespace Microsoft.OData
         V4,
 
         /// <summary>Version 4.01.</summary>
-        V4_01,
+        V401,
     }
 }

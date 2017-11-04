@@ -22,12 +22,6 @@ namespace Microsoft.OData.Tests.JsonLight
             testSubject.GetTypeNameOracle().Should().BeOfType<JsonMinimalMetadataTypeNameOracle>();
         }
 
-        //[Fact]
-        //public void MinimalMetadataLevelShouldHaveContextUrlLevelOnDemand()
-        //{
-        //    testSubject.ContextUrlLevel.Should().Be(ODataContextUrlLevel.OnDemand);
-        //}
-
         [Fact]
         public void MinimalMetadataLevelShouldReturnNullForCreateEntityMetadataBuilder()
         {

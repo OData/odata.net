@@ -39,12 +39,6 @@ namespace Microsoft.OData
         /// <summary>If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</summary>
         private readonly IODataReaderWriterListener listener;
 
-        /// <summary>
-        /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this resource set.
-        /// Only applies when reading a top-level resource set; otherwise null.
-        /// </summary>
-        private readonly ResourceSetWithoutExpectedTypeValidator resourceSetValidator;
-
         /// <summary>The number of entries which have been started but not yet ended.</summary>
         private int currentResourceDepth;
 
@@ -340,7 +334,6 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.DeletedResourceStart, "CurrentResourceSetValidator should only be called while reading a resource.");
-
                 return this.ParentScope == null ? null : this.ParentScope.ResourceTypeValidator;
             }
         }
@@ -513,6 +506,12 @@ namespace Microsoft.OData
         protected void EnterScope(Scope scope)
         {
             Debug.Assert(scope != null, "scope != null");
+
+            if ((scope.State == ODataReaderState.ResourceSetStart || scope.State == ODataReaderState.DeltaResourceSetStart)
+                && this.inputContext.Model.IsUserModel())
+            {
+                scope.ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(scope.ResourceType);
+            }
 
             // TODO: implement some basic validation that the transitions are ok
             this.scopes.Push(scope);
@@ -830,7 +829,7 @@ namespace Microsoft.OData
             /// <summary>
             /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this resourceSet.
             /// </summary>
-            private readonly ResourceSetWithoutExpectedTypeValidator resourceTypeValidator;
+            private ResourceSetWithoutExpectedTypeValidator resourceTypeValidator;
 
             /// <summary>
             /// Constructor creating a new reader scope.
@@ -858,7 +857,7 @@ namespace Microsoft.OData
                     state == ODataReaderState.Exception && item == null ||
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||
                     state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
-                    state == ODataReaderState.Primitive &&  (item == null || item is ODataPrimitiveValue) ||
+                    state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||
@@ -879,9 +878,6 @@ namespace Microsoft.OData
                 this.ResourceType = expectedResourceType;
                 this.NavigationSource = navigationSource;
                 this.odataUri = odataUri;
-
-                //todo (mikep): only set if this.inputContext.Model.IsUserModel()
-                this.resourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(expectedResourceType);
             }
 
             /// <summary>
@@ -936,6 +932,11 @@ namespace Microsoft.OData
                 get
                 {
                     return this.resourceTypeValidator;
+                }
+
+                set
+                {
+                    this.resourceTypeValidator = value;
                 }
             }
         }

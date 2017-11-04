@@ -82,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     new
                     {
                         DataServiceVersion = "4.01",
-                        ODataVersion = ODataVersion.V4_01,
+                        ODataVersion = ODataVersion.V401,
                         ExpectedException = (ExpectedException)null
                     },
                     new

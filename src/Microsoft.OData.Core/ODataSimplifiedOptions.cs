@@ -14,16 +14,6 @@ namespace Microsoft.OData
     public sealed class ODataSimplifiedOptions
     {
         /// <summary>
-        /// Instance for <see cref="ODataSimplifiedOptions"/>.
-        /// </summary>
-        private static readonly ODataSimplifiedOptions V4DefaultOptions = new ODataSimplifiedOptions();
-
-        /// <summary>
-        /// Instance for <see cref="ODataSimplifiedOptions"/>.
-        /// </summary>
-        private static readonly ODataSimplifiedOptions DefaultOptions = new ODataSimplifiedOptions(ODataVersion.V4_01);
-
-        /// <summary>
         /// Constructor of ODataSimplifiedOptions
         /// </summary>
         public ODataSimplifiedOptions() : this(null /*version*/)
@@ -39,13 +29,15 @@ namespace Microsoft.OData
             this.EnableParsingKeyAsSegmentUrl = true;
             this.EnableWritingKeyAsSegment = false;
 
-            if (version == null || version < ODataVersion.V4_01)
+            if (version == null || version < ODataVersion.V401)
             {
+                this.EnableReadingKeyAsSegment = false;
                 this.EnableReadingODataAnnotationWithoutPrefix = false;
                 this.EnableWritingODataAnnotationWithoutPrefix = false;
             }
             else
             {
+                this.EnableReadingKeyAsSegment = true;
                 this.EnableReadingODataAnnotationWithoutPrefix = true;
                 this.EnableWritingODataAnnotationWithoutPrefix = true;
             }
@@ -106,14 +98,7 @@ namespace Microsoft.OData
         {
             if (container == null)
             {
-                if (version == null || version < ODataVersion.V4_01)
-                {
-                    return V4DefaultOptions;
-                }
-                else
-                {
-                    return DefaultOptions;
-                }
+                return new ODataSimplifiedOptions(version);
             }
 
             return container.GetRequiredService<ODataSimplifiedOptions>();

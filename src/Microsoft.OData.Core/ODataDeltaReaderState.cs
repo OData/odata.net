@@ -46,7 +46,7 @@ namespace Microsoft.OData
         /// <summary>An delta deleted resource was read.</summary>
         /// <remarks>
         /// In this state the Item property of the <see cref="ODataDeltaReader"/> returns
-        /// an <see cref="ODataDeletedResource"/> which is fully populated.
+        /// an <see cref="ODataDeltaDeletedEntry"/> which is fully populated.
         /// Note that there's no End state for this item.
         /// </remarks>
         DeltaDeletedEntry,

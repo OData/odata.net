@@ -1830,7 +1830,7 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                 default:
-                    Debug.Assert(true, String.Format("Uknown ODataDeltaKind {0}", resourceKind.ToString()));
+                    Debug.Assert(true, "Uknown ODataDeltaKind " + resourceKind.ToString());
                     break;
             }
         }
@@ -1868,22 +1868,6 @@ namespace Microsoft.OData.JsonLight
                 selectedProperties,
                 this.CurrentScope.ODataUri,
                 /*isDelta*/ true));
-        }
-
-        /// <summary>
-        /// Reads the end of the current delta resource set.
-        /// </summary>
-        private void ReadDeltaResourceSetEnd()
-        {
-            Debug.Assert(this.State == ODataReaderState.DeltaResourceSetStart, "this.State == ODataDeltaReaderState.DeltaResourceSetStart");
-
-            this.jsonLightResourceDeserializer.ReadResourceSetContentEnd();
-            this.jsonLightResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(
-                this.CurrentDeltaResourceSet,
-                /*expandedNestedResourceInfo*/null,
-                this.topLevelScope.PropertyAndAnnotationCollector);
-
-            this.ReplaceScope(ODataReaderState.DeltaResourceSetEnd);
         }
 
         #endregion DeltaResourceSet

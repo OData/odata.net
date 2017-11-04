@@ -34,7 +34,7 @@ namespace Microsoft.OData
             Debug.Assert(factory != null, "factory != null");
 
             this.v4 = new SimpleLazy<T>(() => factory(ODataVersion.V4), true /*isThreadSafe*/);
-            this.v401 = new SimpleLazy<T>(() => factory(ODataVersion.V4_01), true /*isThreadSafe*/);
+            this.v401 = new SimpleLazy<T>(() => factory(ODataVersion.V401), true /*isThreadSafe*/);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Microsoft.OData
                     case ODataVersion.V4:
                         return this.v4.Value;
 
-                    case ODataVersion.V4_01:
+                    case ODataVersion.V401:
                         return this.v401.Value;
 
                     default:
