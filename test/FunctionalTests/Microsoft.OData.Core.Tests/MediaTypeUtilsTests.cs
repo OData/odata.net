@@ -350,8 +350,7 @@ namespace Microsoft.OData.Tests
             ODataMediaType mediaType;
             Encoding encoding;
             ODataPayloadKind payloadKind;
-            string batchBoundary;
-            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Resource }, resolver ?? ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind, out batchBoundary);
+            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Resource }, resolver ?? ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind);
             mediaType.Should().NotBeNull();
             format.Should().NotBeNull();
             return new TestMediaTypeWithFormat { MediaType = mediaType, Format = format };

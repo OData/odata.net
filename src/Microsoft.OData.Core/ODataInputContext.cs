@@ -433,12 +433,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Create a <see cref="ODataBatchReader"/>.
         /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
         /// <returns>The newly created <see cref="ODataBatchReader"/>.</returns>
         /// <remarks>
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual ODataBatchReader CreateBatchReader(string batchBoundary)
+        internal virtual ODataBatchReader CreateBatchReader()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
@@ -447,12 +446,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataBatchReader"/>.</returns>
         /// <remarks>
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
+        internal virtual Task<ODataBatchReader> CreateBatchReaderAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }

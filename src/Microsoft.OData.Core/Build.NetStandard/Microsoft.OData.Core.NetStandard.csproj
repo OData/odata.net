@@ -470,6 +470,27 @@
     <Compile Include="..\MimeConstants.cs">
       <Link>MimeConstants.cs</Link>
     </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchFormat.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchInputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>    
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
+    </Compile>    
     <Compile Include="..\NonDisposingStream.cs">
       <Link>NonDisposingStream.cs</Link>
     </Compile>
@@ -487,9 +508,6 @@
     </Compile>
     <Compile Include="..\ODataAsynchronousWriter.cs">
       <Link>ODataAsynchronousWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataBatchFormat.cs">
-      <Link>ODataBatchFormat.cs</Link>
     </Compile>
     <Compile Include="..\ODataBatchOperationHeaders.cs">
       <Link>ODataBatchOperationHeaders.cs</Link>
@@ -538,9 +556,6 @@
     </Compile>
     <Compile Include="..\ODataBatchWriter.cs">
       <Link>ODataBatchWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataBatchWriterUtils.cs">
-      <Link>ODataBatchWriterUtils.cs</Link>
     </Compile>
     <Compile Include="..\ODataCollectionReader.cs">
       <Link>ODataCollectionReader.cs</Link>

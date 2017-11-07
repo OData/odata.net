@@ -49,7 +49,7 @@ namespace Microsoft.OData
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
-        private ODataBatchOperationResponseMessage(
+        internal ODataBatchOperationResponseMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
