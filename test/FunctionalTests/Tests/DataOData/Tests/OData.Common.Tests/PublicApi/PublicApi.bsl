@@ -4041,7 +4041,7 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 	Microsoft.OData.ODataInputContext InputContext  { protected get; }
 	Microsoft.OData.ODataBatchReaderState State  { public get; }
 
-	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId)
+	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnRequestIds)
 	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, int statusCode, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
@@ -4069,8 +4069,8 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	public abstract void BatchOperationContentStreamDisposed ()
 	public abstract void BatchOperationContentStreamRequested ()
 	public abstract System.Threading.Tasks.Task BatchOperationContentStreamRequestedAsync ()
-	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri)
-	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.IO.Stream outputStream)
+	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId)
+	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.IO.Stream outputStream, string contentId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync (string method, System.Uri uri, string contentId)
@@ -4564,6 +4564,7 @@ ExtensionAttribute(),
 ]
 public sealed class Microsoft.OData.ODataUtils {
 	public static string AppendDefaultHeaderValue (string headerName, string headerValue)
+	public static System.Uri BuildRequestUri (string value)
 	public static System.Func`2[[System.String],[System.Boolean]] CreateAnnotationFilter (string annotationFilter)
 	[
 	ExtensionAttribute(),
@@ -4690,6 +4691,7 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContain
 	public const readonly string ContentId = 
 
 	System.IServiceProvider Container  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] DependsOnRequestIds  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
 	System.Uri Url  { public virtual get; public virtual set; }

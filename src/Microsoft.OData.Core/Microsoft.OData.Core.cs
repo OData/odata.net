@@ -202,7 +202,16 @@ namespace Microsoft.OData {
         internal const string ODataBatchReader_MaxBatchSizeExceeded = "ODataBatchReader_MaxBatchSizeExceeded";
         internal const string ODataBatchReader_MaxChangeSetSizeExceeded = "ODataBatchReader_MaxChangeSetSizeExceeded";
         internal const string ODataBatchReader_NoMessageWasCreatedForOperation = "ODataBatchReader_NoMessageWasCreatedForOperation";
+        internal const string ODataBatchReader_ReaderModeNotInitilized = "ODataBatchReader_ReaderModeNotInitilized";
+        internal const string ODataBatchReader_JsonBatchTopLevelPropertyMissing = "ODataBatchReader_JsonBatchTopLevelPropertyMissing";
         internal const string ODataBatchReader_DuplicateContentIDsNotAllowed = "ODataBatchReader_DuplicateContentIDsNotAllowed";
+        internal const string ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed = "ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed";
+        internal const string ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed = "ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed";
+        internal const string ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed = "ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed";
+        internal const string ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed = "ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed";
+        internal const string ODataBatchReader_DependsOnIdNotFound = "ODataBatchReader_DependsOnIdNotFound";
+        internal const string ODataBatchReader_MessageIdPositionedIncorrectly = "ODataBatchReader_MessageIdPositionedIncorrectly";
+        internal const string ODataBatchReader_RequestPropertyMissing = "ODataBatchReader_RequestPropertyMissing";
         internal const string ODataBatchReaderStream_InvalidHeaderSpecified = "ODataBatchReaderStream_InvalidHeaderSpecified";
         internal const string ODataBatchReaderStream_InvalidRequestLine = "ODataBatchReaderStream_InvalidRequestLine";
         internal const string ODataBatchReaderStream_InvalidResponseLine = "ODataBatchReaderStream_InvalidResponseLine";

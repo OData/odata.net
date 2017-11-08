@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             {
                 #region RawValue test cases
                 new ContentTypeTestCase
-                { 
+                {
                     // only reading a raw value will succeed
                     ContentType = "text/plain",
                     ExpectedFormat = ODataFormat.RawValue,
@@ -55,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         || pk == ODataPayloadKind.BinaryValue,
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // only reading a raw value or binary value will succeed; raw values can be read as binary values when the content type is application/octet-stream
                     ContentType = "application/octet-stream",
                     ExpectedFormat = ODataFormat.RawValue,
@@ -64,14 +64,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         || pk == ODataPayloadKind.BinaryValue,
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // only raw value / binary value will succeed
                     ContentType = "multipart/mixed",
                     ExpectedFormat = ODataFormat.RawValue,
                     ShouldSucceedForPayloadKind = pk => false,
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // Test for: MimeType allows 0x7F character, but ContentType parsing doesn't
                     ContentType = "application/"+0x7F,
                     ExpectedFormat = ODataFormat.RawValue,
@@ -82,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                 #region JSON Lite test cases
                 new ContentTypeTestCase
-                { 
+                {
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
                     ContentType = ApplicationJsonODataLight,
                     ExpectedFormat = ODataFormat.Json,
@@ -91,7 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         && pk != ODataPayloadKind.BinaryValue,
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
                     ContentType = ApplicationJsonODataLightStreaming,
                     ExpectedFormat = ODataFormat.Json,
@@ -100,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         && pk != ODataPayloadKind.BinaryValue,
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
                     ContentType = ApplicationJsonODataLightNonStreaming,
                     ExpectedFormat = ODataFormat.Json,
@@ -112,19 +112,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                 #region Error test cases
                 new ContentTypeTestCase
-                { 
+                {
                     // unsupported content type; everything will fail
                     ContentType = "application/foo",
                     ShouldSucceedForPayloadKind = pk => false,
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // unsupported content type with parameters; everything will fail
                     ContentType = "abc/pqr;a=b;c=d",
                     ShouldSucceedForPayloadKind = pk => false,
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // "image/jpeg" is not supported, even for raw values.
                     ContentType = "image/jpeg",
                     ShouldSucceedForPayloadKind = pk => false,
@@ -133,7 +133,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                 #region Content Type is null or empty
                 new ContentTypeTestCase
-                { 
+                {
                     // null content type and zero content length should be default to Json if the payload kind is not binary value or value.
                     ContentType = null,
                     ContentLength = 0,
@@ -142,7 +142,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ShouldIgnoreTest = pk => pk == ODataPayloadKind.BinaryValue || pk == ODataPayloadKind.Value
                 },
                 new ContentTypeTestCase
-                { 
+                {
                     // null content type and zero content length should be default to RawValue if the payload kind is binary value or value.
                     ContentType = null,
                     ContentLength = 0,
@@ -314,6 +314,20 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedFormat = ODataFormat.Batch,
                 },
 
+                // correct batch content type -- JSON with parameters
+                new ContentTypeTestCase
+                {
+                    ContentType = ApplicationJsonODataLight,
+                    ExpectedFormat = ODataFormat.Json
+                },
+
+                // correct batch content type -- JSON
+                new ContentTypeTestCase
+                {
+                    ContentType = ApplicationJson,
+                    ExpectedFormat = ODataFormat.Json
+                },
+
                 // missing batch boundary
                 new ContentTypeTestCase
                 {
@@ -348,12 +362,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ContentType = "abc/pqr",
                     ExpectedFormat = ODataFormat.Batch,
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", TestMediaTypeUtils.GetSupportedMediaTypes(ODataPayloadKind.Batch), "abc/pqr")
-                },
-                new ContentTypeTestCase
-                {
-                    ContentType = ApplicationJson,
-                    ExpectedFormat = ODataFormat.Batch,
-                    ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", TestMediaTypeUtils.GetSupportedMediaTypes(ODataPayloadKind.Batch), ApplicationJson)
                 }
             };
 
