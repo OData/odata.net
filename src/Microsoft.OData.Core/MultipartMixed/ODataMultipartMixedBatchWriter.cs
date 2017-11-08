@@ -211,8 +211,7 @@ namespace Microsoft.OData.MultipartMixed
             // create the new request operation
             ODataBatchOperationRequestMessage operationRequestMessage = BuildOperationRequestMessage(
                 this.RawOutputContext.OutputStream,
-                method,
-                uri);
+                method, uri, contentId);
 
             this.SetState(BatchWriterState.OperationCreated);
 
@@ -287,7 +286,7 @@ namespace Microsoft.OData.MultipartMixed
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
             this.CurrentOperationResponseMessage = BuildOperationResponseMessage(
-                this.RawOutputContext.OutputStream);
+                this.RawOutputContext.OutputStream, /*contentId*/ null);
 
             this.SetState(BatchWriterState.OperationCreated);
 

@@ -145,53 +145,5 @@ namespace Microsoft.OData
         {
             return this.message.ResolveUrl(baseUri, payloadUri);
         }
-
-        /// <summary>
-        /// Creates an operation response message that can be used to write the operation content to.
-        /// </summary>
-        /// <param name="outputStream">The output stream underlying the operation message.</param>
-        /// <param name="operationListener">The operation listener.</param>
-        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
-        /// <param name="container">The dependency injection container to get related services.</param>
-        /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
-        internal static ODataBatchOperationResponseMessage CreateWriteMessage(
-            Stream outputStream,
-            IODataBatchOperationListener operationListener,
-            IODataPayloadUriConverter payloadUriConverter,
-            IServiceProvider container)
-        {
-            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, /*contentId*/ null, payloadUriConverter, /*writing*/ true, container);
-        }
-
-        /// <summary>
-        /// Creates an operation response message that can be used to read the operation content from.
-        /// </summary>
-        /// <param name="batchReaderStream">The batch stream underyling the operation response message.</param>
-        /// <param name="statusCode">The status code to use for the operation response message.</param>
-        /// <param name="headers">The headers to use for the operation response message.</param>
-        /// <param name="contentId">The content-ID for the operation response message.</param>
-        /// <param name="operationListener">The operation listener.</param>
-        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
-        /// <param name="container">The dependency injection container to get related services.</param>
-        /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to read the operation content.</returns>
-        internal static ODataBatchOperationResponseMessage CreateReadMessage(
-            ODataBatchReaderStream batchReaderStream,
-            int statusCode,
-            ODataBatchOperationHeaders headers,
-            string contentId,
-            IODataBatchOperationListener operationListener,
-            IODataPayloadUriConverter payloadUriConverter,
-            IServiceProvider container)
-        {
-            Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
-            Debug.Assert(operationListener != null, "operationListener != null");
-
-            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
-            ODataBatchOperationResponseMessage responseMessage =
-                new ODataBatchOperationResponseMessage(streamCreatorFunc, headers, operationListener, contentId, payloadUriConverter, /*writing*/ false, container);
-            responseMessage.statusCode = statusCode;
-            return responseMessage;
-        }
     }
 }

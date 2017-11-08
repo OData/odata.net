@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using Microsoft.OData.JsonLight;
     #endregion Namespaces
 
     /// <summary>
@@ -25,7 +26,7 @@ namespace Microsoft.OData
         /// <param name="baseUri">The base Uri to use.</param>
         /// <param name="payloadUriConverter">An optional custom URL converter to convert URLs for writing them into the payload.</param>
         /// <returns>An URI to be used in the request line of a batch request operation. It uses the <paramref name="payloadUriConverter"/>
-        /// first and falls back to the defaullt URI building schema if the no URL resolver is specified or the URL resolver
+        /// first and falls back to the default URI building schema if the no URL resolver is specified or the URL resolver
         /// returns null. In the default scheme, the method either returns the specified <paramref name="uri"/> if it was absolute,
         /// or it's combination with the <paramref name="baseUri"/> if it was relative.</returns>
         /// <remarks>
@@ -84,7 +85,16 @@ namespace Microsoft.OData
 
             // See whether we have a Content-Length header
             string contentLengthValue;
-            if (headers.TryGetValue(ODataConstants.ContentLengthHeader, out contentLengthValue))
+            ODataJsonLightBatchBodyContentReaderStream jsonLightBatchBodyContentReaderStream
+                 = batchReaderStream as ODataJsonLightBatchBodyContentReaderStream;
+            if (jsonLightBatchBodyContentReaderStream != null)
+            {
+                return ODataBatchOperationReadStream.Create(
+                        batchReaderStream,
+                        operationListener,
+                        jsonLightBatchBodyContentReaderStream.StreamContentLength);
+            }
+            else if (headers.TryGetValue(ODataConstants.ContentLengthHeader, out contentLengthValue))
             {
                 int length = Int32.Parse(contentLengthValue, CultureInfo.InvariantCulture);
                 if (length < 0)

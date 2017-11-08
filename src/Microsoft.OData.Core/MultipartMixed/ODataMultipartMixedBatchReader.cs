@@ -90,7 +90,8 @@ namespace Microsoft.OData.MultipartMixed
                 httpMethod,
                 requestUri,
                 headers,
-                this.currentContentId);
+                this.currentContentId,
+                /*dependsOnRequestIds*/ null);
 
             this.currentContentId = null;
             return requestMessage;

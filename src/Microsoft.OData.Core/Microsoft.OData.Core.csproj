@@ -47,6 +47,12 @@
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchAtomicGroupCache.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchReader.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchReaderStream.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchWriter.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchFormat.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchInputContext.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchOutputContext.cs" />

@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.IO;
-
 namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
+    using System.IO;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
@@ -243,7 +240,7 @@ namespace Microsoft.OData
         /// <returns>The message that can be used to write the request operation.</returns>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId)
         {
             return CreateOperationRequestMessage(method, uri, contentId, BatchPayloadUriOption.AbsoluteUri);
@@ -253,7 +250,7 @@ namespace Microsoft.OData
         /// <returns>The message that can be used to write the request operation.</returns>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
         /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
         {
@@ -266,7 +263,7 @@ namespace Microsoft.OData
         /// <returns>The message that can be used to asynchronously write the request operation.</returns>
         /// <param name="method">The HTTP method to be used for this request operation.</param>
         /// <param name="uri">The URI to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId)
         {
             return CreateOperationRequestMessageAsync(method, uri, contentId, BatchPayloadUriOption.AbsoluteUri);
@@ -276,7 +273,7 @@ namespace Microsoft.OData
         /// <returns>The message that can be used to asynchronously write the request operation.</returns>
         /// <param name="method">The HTTP method to be used for this request operation.</param>
         /// <param name="uri">The URI to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
         /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
         {
@@ -293,6 +290,8 @@ namespace Microsoft.OData
         public ODataBatchOperationResponseMessage CreateOperationResponseMessage(string contentId)
         {
             this.VerifyCanCreateOperationResponseMessage(true);
+            Debug.Assert(this.currentOperationContentId == null, "The Content-ID header is only supported in request messages.");
+
             return this.CreateOperationResponseMessageImplementation(contentId);
         }
 
@@ -445,16 +444,14 @@ namespace Microsoft.OData
         /// <param name="outputStream">The output stream underlying the operation message.</param>
         /// <param name="method">The HTTP method to use for the message to create.</param>
         /// <param name="uri">The request URL for the message to create.</param>
+        /// <param name="contentId">The contentId of this request message.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
-        protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri)
+        protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
+            string contentId)
         {
-            return ODataBatchOperationRequestMessage.CreateWriteMessage(
-                outputStream,
-                method,
-                uri,
-                this,
-                this.payloadUriConverter,
-                this.container);
+            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
+            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, /*headers*/ null, this, contentId,
+                this.payloadUriConverter, /*writing*/ true, this.container, null);
         }
 
         /// <summary>
@@ -462,14 +459,14 @@ namespace Microsoft.OData
         /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
         /// </summary>
         /// <param name="outputStream">The output stream underlying the operation message.</param>
+        /// <param name="contentId">The contentId of this response message.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
-        protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(Stream outputStream)
+        protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(Stream outputStream,
+            string contentId)
         {
-            return ODataBatchOperationResponseMessage.CreateWriteMessage(
-                outputStream,
-                this,
-                this.payloadUriConverter.BatchMessagePayloadUriConverter,
-                this.container);
+            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
+            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, this, contentId,
+                this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ true, this.container);
         }
 
         /// <summary>
@@ -531,9 +528,10 @@ namespace Microsoft.OData
 
             this.CurrentOperationRequestMessage = this.CreateOperationRequestMessageImplementation(method, uri, contentId, payloadUriOption);
 
-            if (this.isInChangset || this.outputContext.MessageWriterSettings.Version <= ODataVersion.V4)
+            if (this.isInChangset || this.outputContext.MessageWriterSettings.Version > ODataVersion.V4)
             {
-                this.RememberContentIdHeader(contentId);
+                // The content Id can be generated if the value passed in is null, therefore here we get the real value of the content Id.
+                this.RememberContentIdHeader(this.CurrentOperationRequestMessage.ContentId);
             }
 
             return this.CurrentOperationRequestMessage;
@@ -563,7 +561,13 @@ namespace Microsoft.OData
         /// </summary>
         private void UpdateAfterWriteEndChangeset()
         {
-            this.currentOperationContentId = null;
+            // When change set ends, only reset content Id for V4 (and below);
+            // We need to carry on the content Id for >V4 to ensure uniqueness (and therefore referable).
+            if (this.outputContext.MessageWriterSettings.Version <= ODataVersion.V4)
+            {
+                this.currentOperationContentId = null;
+            }
+
             this.isInChangset = false;
         }
 
@@ -582,10 +586,6 @@ namespace Microsoft.OData
             // The Content-ID header is only supported in request messages and inside of changeSets.
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
 
-            // Set the current content ID. If no Content-ID header is found in the message,
-            // the 'contentId' argument will be null and this will reset the current operation content ID field.
-            this.currentOperationContentId = contentId;
-
             // Check for duplicate content IDs; we have to do this here instead of in the cache itself
             // since the content ID of the last operation never gets added to the cache but we still
             // want to fail on the duplicate.
@@ -593,7 +593,12 @@ namespace Microsoft.OData
             {
                 throw new ODataException(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed(contentId));
             }
+
+            // Set the current content ID. If no Content-ID header is found in the message,
+            // the 'contentId' argument will be null and this will reset the current operation content ID field.
+            this.currentOperationContentId = contentId;
         }
+
 
 
         /// <summary>

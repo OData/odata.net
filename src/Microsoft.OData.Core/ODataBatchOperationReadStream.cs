@@ -129,6 +129,21 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose; false if called form the finalizer.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose resource used by underlying batch reader stream.
+                this.batchReaderStream.DisposeResources();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
         /// A batch operation stream with the content length specified.
         /// </summary>
         private sealed class ODataBatchOperationReadStreamWithLength : ODataBatchOperationReadStream

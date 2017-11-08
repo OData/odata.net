@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -279,26 +280,39 @@ namespace Microsoft.OData
         protected abstract ODataBatchReaderState ReadAtChangesetEndImplementation();
 
         /// <summary>
-            /// Instantiate an <see cref="ODataBatchOperationRequestMessage"/> instance.
+        /// Instantiate an <see cref="ODataBatchOperationRequestMessage"/> instance.
         /// </summary>
         /// <param name="streamCreatorFunc">The function for stream creation.</param>
         /// <param name="method">The HTTP method used for this request message.</param>
         /// <param name="requestUri">The request Url for this request message.</param>
         /// <param name="headers">The headers for this request message.</param>
         /// <param name="contentId">The contentId of this request message.</param>
+        /// <param name="dependsOnRequestIds">The dependsOn request Ids of this request message.</param>
         /// <returns>The <see cref="ODataBatchOperationRequestMessage"/> instance.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(
             Func<Stream> streamCreatorFunc,
             string method,
             Uri requestUri,
             ODataBatchOperationHeaders headers,
-            string contentId)
+            string contentId,
+            IEnumerable<string> dependsOnRequestIds)
         {
+            if (dependsOnRequestIds != null)
+            {
+                foreach (string id in dependsOnRequestIds)
+                {
+                    if (!this.payloadUriConverter.ContainsContentId(id))
+                    {
+                        throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                    }
+                }
+            }
+
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
                 requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.payloadUriConverter);
 
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
-                contentId, this.payloadUriConverter, /*writing*/ false, this.container);
+                contentId, this.payloadUriConverter, /*writing*/ false, this.container, dependsOnRequestIds);
         }
 
         /// <summary>
@@ -316,7 +330,8 @@ namespace Microsoft.OData
             string contentId)
         {
             ODataBatchOperationResponseMessage responseMessage = new ODataBatchOperationResponseMessage(
-                streamCreatorFunc, headers, this, contentId,
+                streamCreatorFunc, headers, this,
+                contentId ?? this.contentIdToAddOnNextRead,
                 this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ false, this.container);
             responseMessage.StatusCode = statusCode;
             return responseMessage;

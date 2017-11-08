@@ -61,16 +61,15 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     RunHeaderTest(() => requestMessage.Headers, writing, requestMessage.GetHeader, requestMessage.SetHeader, this.Assert, this.ExceptionVerifier);
                 });
 
-            // TODO: uncomment this block when JsonBatch writer is ported in subsequent steps.
-//            // ODataJsonLightBatchWriter as listener
-//            this.CombinatorialEngineProvider.RunCombinations(
-//                new bool[] { true, false },
-//                requestMessageFuncs,
-//                (writing, func) =>
-//                {
-//                    IODataRequestMessage requestMessage = func(writing, !useMimeWriterAsListener);
-//                    RunHeaderTest(() => requestMessage.Headers, writing, requestMessage.GetHeader, requestMessage.SetHeader, this.Assert, this.ExceptionVerifier);
-//                });
+            // ODataJsonLightBatchWriter as listener
+            this.CombinatorialEngineProvider.RunCombinations(
+                new bool[] { true, false },
+                requestMessageFuncs,
+                (writing, func) =>
+                {
+                    IODataRequestMessage requestMessage = func(writing, !useMimeWriterAsListener);
+                    RunHeaderTest(() => requestMessage.Headers, writing, requestMessage.GetHeader, requestMessage.SetHeader, this.Assert, this.ExceptionVerifier);
+                });
         }
 
         [TestMethod, Variation(Description = "Test the proper behavior of the headers of a response message.")]
@@ -93,16 +92,15 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     RunHeaderTest(() => responseMessage.Headers, writing, responseMessage.GetHeader, responseMessage.SetHeader, this.Assert, this.ExceptionVerifier);
                 });
 
-            // TODO: uncomment this block when JsonBatch writer is ported in subsequent steps.
-//            // ODataJsonLightBatchWriter as listener
-//            this.CombinatorialEngineProvider.RunCombinations(
-//                new bool[] { true, false },
-//                responseMessageFuncs,
-//                (writing, func) =>
-//                {
-//                    IODataResponseMessage responseMessage = func(writing, !useMimeWriterAsListener);
-//                    RunHeaderTest(() => responseMessage.Headers, writing, responseMessage.GetHeader, responseMessage.SetHeader, this.Assert, this.ExceptionVerifier);
-//                });
+            // ODataJsonLightBatchWriter as listener
+            this.CombinatorialEngineProvider.RunCombinations(
+                new bool[] { true, false },
+                responseMessageFuncs,
+                (writing, func) =>
+                {
+                    IODataResponseMessage responseMessage = func(writing, !useMimeWriterAsListener);
+                    RunHeaderTest(() => responseMessage.Headers, writing, responseMessage.GetHeader, responseMessage.SetHeader, this.Assert, this.ExceptionVerifier);
+                });
         }
 
         private static void RunHeaderTest(
@@ -114,7 +112,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             IExceptionVerifier exceptionVerifier)
         {
             assert.IsNotNull(getHeadersFunc(), "Non-null headers expected.");
-            assert.AreEqual(0, getHeadersFunc().Count(), "Empty header collection exptected.");
+            assert.AreEqual(0, getHeadersFunc().Count(), "Empty header collection expected.");
             assert.IsNull(getHeaderFunc("a"), "Unexpectedly found header.");
 
             ExpectedException expectedException = writing ? null : ODataExpectedExceptions.ODataException("ODataMessage_MustNotModifyMessage");
@@ -187,7 +185,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     typeof(string),
                     urlResolverType,
                     typeof(bool),
-                    typeof(IServiceProvider)
+                    typeof(IServiceProvider),
+                    typeof(IEnumerable<string>)
                 },
                 (object)(Func<Stream>)(() => stream),
                 ODataConstants.MethodGet,
@@ -199,7 +198,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 "1",
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataPayloadUriConverter) }, new object[] { null }),
                 writing,
-                /*container*/ null);
+                /*container*/ null,
+                /*dependsOnRequestIds*/ null);
         }
 
         private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing, bool mimeWriterAsListener)
@@ -278,11 +278,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             object jsonOutputContext = ReflectionUtils.CreateInstance(odataJsonLightOutputContextType,
                 new Type[]
                 {
-                    typeof(ODataFormat),
                     typeof(ODataMessageInfo),
                     typeof(ODataMessageWriterSettings),
                 },
-                ODataFormat.Json,
                 messageInfo,
                 settings);
 
