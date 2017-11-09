@@ -11,18 +11,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System.Collections.Generic;
     using System.Text;
     using Microsoft.OData;
+    using Microsoft.OData.MultipartMixed;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
     /// <summary>
-    /// Wrapper of ODataBatchReaderStream to expose the internal API.
+    /// Wrapper of ODataMultipartMixedBatchReaderStream to expose the internal API.
     /// </summary>
     public sealed class BatchReaderStreamWrapper
     {
         /// <summary>
         /// The type of the stream buffer class in the product code.
         /// </summary>
-        private static readonly Type batchStreamType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchReaderStream");
+        private static readonly Type batchStreamType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataMultipartMixedBatchReaderStream");
 
         /// <summary>
         /// The stream buffer instance from the product code.
@@ -105,7 +106,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         }
 
         /// <summary>
-        /// Reads from the batch stream without checking for a boundary delimiter since we 
+        /// Reads from the batch stream without checking for a boundary delimiter since we
         /// know the length of the stream.
         /// </summary>
         /// <param name="userBuffer">The byte array to read bytes into.</param>

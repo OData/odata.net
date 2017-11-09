@@ -23,23 +23,23 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// Creates a new batch boundary string based on a randomly created GUID.
         /// </summary>
-        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a resonse.</param>
+        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a response.</param>
         /// <returns>The newly created batch boundary as string.</returns>
         internal static string CreateBatchBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.BatchResponseBoundaryTemplate : ODataConstants.BatchRequestBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
         }
 
         /// <summary>
         /// Creates a new changeset boundary string based on a randomly created GUID.
         /// </summary>
-        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a resonse.</param>
+        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a response.</param>
         /// <returns>The newly created changeset boundary as string.</returns>
         internal static string CreateChangeSetBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Microsoft.OData.MultipartMixed
             Debug.Assert(boundary != null, "boundary != null");
 
             // write the CRLF that belongs to the boundary (see RFC 2046, Section 5.1.1)
-            // but only if it's not the only boundary, the new line is not required by the fisrt boundary
+            // but only if it's not the only boundary, the new line is not required by the first boundary
             // and we don't want to write it unless necessary.
             if (!missingStartBoundary)
             {

@@ -9,6 +9,8 @@ namespace Microsoft.OData
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using System.Globalization;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -72,5 +74,24 @@ namespace Microsoft.OData
             get;
             set;
         }
-    }
+
+        /// <summary>
+        /// Serialization to Json format string.
+        /// </summary>
+        /// <returns>The string in Json format</returns>
+        internal string ToJson()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{{" +
+                "\"message\":\"{0}\"," +
+                "\"type\":\"{1}\"," +
+                "\"stacktrace\":\"{2}\"," +
+                "\"innererror\":{3}" +
+                "}}",
+                this.Message == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Message),
+                this.TypeName == null ? "" : JsonValueUtils.GetEscapedJsonString(this.TypeName),
+                this.StackTrace == null ? "" : JsonValueUtils.GetEscapedJsonString(this.StackTrace),
+                this.InnerError == null ? "{}" : this.InnerError.ToJson());
+        }
+}
 }

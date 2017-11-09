@@ -287,6 +287,32 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void MediaTypeResolutionForJsonBatchShouldWork()
+        {
+            string[] contentTypes = new string[]
+            {
+                "application/json",
+                "application/json;odata.metadata=minimal",
+                "application/json;odata.metadata=minimal;odata.streaming=true",
+                "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false"
+            };
+            foreach (string contentType in contentTypes)
+            {
+                ODataMediaType mediaType;
+                Encoding encoding;
+                ODataPayloadKind payloadKind;
+
+                ODataFormat format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Batch },
+                    ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                    out mediaType, out encoding, out payloadKind);
+                mediaType.Should().NotBeNull();
+                encoding.Should().NotBeNull();
+                payloadKind.Should().Be(ODataPayloadKind.Batch);
+                format.Should().Be(ODataFormat.Json);
+            }
+        }
+
+        [Fact]
         public void AlterContentTypeForJsonPaddingIfNeededShouldThrowIfAtom()
         {
             const string original = "application/atom+xml";

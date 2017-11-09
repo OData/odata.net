@@ -11,6 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System.IO;
     using System.Text;
     using Microsoft.OData;
+    using Microsoft.OData.MultipartMixed;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
@@ -18,7 +19,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
 
     /// <summary>
-    /// Base class for all unit tests for the ODataBatchReaderStream.
+    /// Base class for all unit tests for the ODataMultipartMixedBatchReaderStream.
     /// </summary>
     public abstract class BatchReaderStreamTestCase : BatchReaderStreamOrBufferTestCase
     {
@@ -73,7 +74,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             // Create a message reader and then a batch reader for the message
             using (ODataMessageReader messageReader = this.CreateMessageReader(memoryStream))
             {
-                ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
+                ODataMultipartMixedBatchReader batchReader = messageReader.CreateODataBatchReader() as ODataMultipartMixedBatchReader;
                 BatchReaderStreamWrapper streamWrapper = new BatchReaderStreamWrapper(batchReader);
 
                 Exception exception = TestExceptionUtils.RunCatching(() =>

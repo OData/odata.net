@@ -132,8 +132,23 @@ namespace Microsoft.OData.Service
             MessageWriterBuilder messageWriterBuilder = new MessageWriterBuilder(serviceUri, responseVersion, dataService, dataService.OperationContext.ResponseMessage, null /*model*/);
 
             // Astoria does not do content negotiation for the top level batch payload at all in V1/V2
-            // Hence passing */* as the accept header value.
-            messageWriterBuilder.WriterSettings.SetContentType(XmlConstants.MimeAny, null /*acceptableCharSets*/);
+            // Hence passing */* as the accept header value by default.
+
+            string contentType = XmlConstants.MimeAny;
+            if (dataService.OperationContext.RequestMessage != null
+                && string.CompareOrdinal(
+                    XmlConstants.ODataVersion4Dot0,
+                    dataService.OperationContext.RequestMessage.GetHeader(XmlConstants.HttpODataVersion)) == 0)
+            {
+                // For V4, batch request & response payload can be in Json format
+                string accept = dataService.OperationContext.RequestMessage.GetHeader(XmlConstants.HttpAccept);
+
+                if (accept != null && accept.StartsWith(XmlConstants.MimeApplicationJson))
+                {
+                   contentType = accept;
+                }
+            }
+            messageWriterBuilder.WriterSettings.SetContentType(contentType, null /*acceptableCharSets*/);
 
             return messageWriterBuilder;
         }

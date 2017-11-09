@@ -290,6 +290,24 @@
     <Compile Include="..\JsonLight\ODataJsonLightOutputContext.cs">
       <Link>JsonLight\ODataJsonLightOutputContext.cs</Link>
     </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs">
+      <Link>JsonLight\ODataJsonLightBatchAtomicGroupCache.cs</Link>
+    </Compile>    
+    <Compile Include="..\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs">
+      <Link>JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchReader.cs">
+      <Link>JsonLight\ODataJsonLightBatchReader.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchWriter.cs">
+      <Link>JsonLight\ODataJsonLightBatchWriter.cs</Link>
+    </Compile>    
+    <Compile Include="..\JsonLight\ODataJsonLightBatchReaderStream.cs">
+      <Link>JsonLight\ODataJsonLightBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs">
+      <Link>JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs</Link>
+    </Compile>    
     <Compile Include="..\JsonLight\ODataJsonLightParameterDeserializer.cs">
       <Link>JsonLight\ODataJsonLightParameterDeserializer.cs</Link>
     </Compile>
