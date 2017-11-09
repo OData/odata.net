@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Tests the ODataBatchReaderStream.SkipToBoundary implementation.
+    /// Tests the ODataMultipartMixedBatchReaderStream.SkipToBoundary implementation.
     /// </summary>
     [TestClass, TestCase]
     public class BatchReaderSkipToBoundaryTests : ODataReaderTestCase
@@ -42,10 +42,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             new char[] { '\n' } 
         };
 
-        /// <summary>The counts of whitespaces used in the tests.</summary>
+        /// <summary>The counts of white spaces used in the tests.</summary>
         private static readonly IEnumerable<int> WhitespaceCounts = new int[] { 0, 1, 10 };
 
-        /// <summary>Array of boolean values indicating whether to preceed a boundary delimiter with a line feed or not.</summary>
+        /// <summary>Array of boolean values indicating whether to precede a boundary delimiter with a line feed or not.</summary>
         private static readonly bool[] LeadingLineFeedForBoundary = new bool[] { true, false };
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         public IDependencyInjector Injector { get; set; }
 
 #if !SILVERLIGHT && !WINDOWS_PHONE
-        // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.SkipToBoundary method.")]
+        // Batch stream buffer tests use private reflection and thus cannot run on SilverLight or the phone.
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.SkipToBoundary method.")]
         public void BatchReaderSkipToBoundaryTest()
         {
             IEnumerable<SkipToBoundaryTestCase> testCases =
