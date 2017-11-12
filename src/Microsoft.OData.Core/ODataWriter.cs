@@ -57,7 +57,6 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
         public virtual void WriteStart(ODataDeltaResourceSet deltaResourceSet)
         {
-            // todo: replace with better error message
             throw new NotImplementedException();
         }
 
@@ -89,7 +88,6 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            // todo: replace with better error message
             throw new NotImplementedException();
         }
 #endif

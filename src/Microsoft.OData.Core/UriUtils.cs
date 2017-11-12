@@ -77,10 +77,31 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Ensure the last character of Uri is a "/".
+        /// Safely returns the specified string as a relative or absolute Uri.
         /// </summary>
-        /// <param name="uri">The Uri to deal with.</param>
-        /// <returns>The uri with tailling "/".</returns>
+        /// <param name="uriString">The string to convert to a Uri.</param>
+        /// <returns>The string as a Uri.</returns>
+        internal static Uri StringToUri(string uriString)
+        {
+            Uri uri = null;
+            try
+            {
+                uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
+            }
+            catch (System.FormatException)
+            {
+                // The Uri constructor throws a format exception if it can't figure out the type of Uri
+                uri = new Uri(uriString, UriKind.Relative);
+            }
+
+            return uri;
+        }
+        
+        /// <summary>
+                 /// Ensure the last character of Uri is a "/".
+                 /// </summary>
+                 /// <param name="uri">The Uri to deal with.</param>
+                 /// <returns>The uri with tailling "/".</returns>
         internal static Uri EnsureTaillingSlash(Uri uri)
         {
             if (uri == null)

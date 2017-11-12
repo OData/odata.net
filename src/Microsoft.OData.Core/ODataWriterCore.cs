@@ -1161,7 +1161,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Start writing a resourceSet - implementation of the actual functionality.
         /// </summary>
-        /// <param name="resourceSet">The resource Set to write.</param>
+        /// <param name="resourceSet">The resource set to write.</param>
         private void WriteStartResourceSetImplementation(ODataResourceSet resourceSet)
         {
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, resourceSet);

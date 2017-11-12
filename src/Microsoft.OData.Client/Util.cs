@@ -59,7 +59,8 @@ namespace Microsoft.OData.Client
         /// </summary>
         internal static readonly Version[] SupportedResponseVersions =
         {
-            ODataVersion4
+            ODataVersion4,
+            ODataVersion401
         };
 
         /// <summary>

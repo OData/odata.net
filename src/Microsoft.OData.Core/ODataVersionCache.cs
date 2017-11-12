@@ -21,7 +21,7 @@ namespace Microsoft.OData
         private readonly SimpleLazy<T> v4;
 
         /// <summary>
-        /// Lazy constructing T for ODataVersion.V4_01.
+        /// Lazy constructing T for ODataVersion.V401.
         /// </summary>
         private readonly SimpleLazy<T> v401;
 

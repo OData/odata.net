@@ -4,12 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Metadata;
-
 namespace Microsoft.OData
 {
     /// <summary>
-    /// Describes a delta response.
+    /// Describes a set of delta changes.
     /// </summary>
     public sealed class ODataDeltaResourceSet : ODataResourceSetBase
     {

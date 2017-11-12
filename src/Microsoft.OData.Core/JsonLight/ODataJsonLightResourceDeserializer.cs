@@ -141,7 +141,7 @@ namespace Microsoft.OData.JsonLight
             {
                 string propertyName = this.JsonReader.GetPropertyName();
                 if (string.CompareOrdinal(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataRemoved, propertyName) == 0
-                    || this.CompareSimplifiedODataAnnotation(JsonLightConstants.SimplifiedRemovedPropertyName, propertyName))
+                    || this.CompareSimplifiedODataAnnotation(JsonLightConstants.SimplifiedODataRemovedPropertyName, propertyName))
                 {
                     DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
                     Uri id = null;
@@ -193,7 +193,7 @@ namespace Microsoft.OData.JsonLight
                         this.JsonReader.Read();
 
                         // Read the id value.
-                        id = new Uri(this.JsonReader.ReadStringValue(), UriKind.Relative);
+                        id = UriUtils.StringToUri(this.JsonReader.ReadStringValue());
                     }
 
                     deletedResource = ReaderUtils.CreateDeletedResource(id, reason);
