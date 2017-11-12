@@ -167,7 +167,7 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(version != null, "version != null");
 
-            Debug.Assert(version.Major == 4 && (version.Minor == 0 || version.Minor == 1), "version.Major == 4 && version.Minor == 0  || version.Minor == 1");
+            Debug.Assert(version.Major == 4 && (version.Minor == 0 || version.Minor == 1), "Major version should be 4 and minor version should be 0 or 1");
             if (version.Major == 4 && version.Minor == 1)
             {
                 return ODataVersion.V401;

@@ -4,12 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
 namespace Microsoft.OData
 {
+    using System;
+
     /// <summary>
     /// The reason of deleted resource in delta response.
     /// </summary>
@@ -125,16 +123,7 @@ namespace Microsoft.OData
         /// <returns>A returned ODataDeletedResource to write.</returns>
         internal static ODataDeletedResource GetDeletedResource(ODataDeltaDeletedEntry entry)
         {
-            Uri id;
-            try
-            {
-                id = new Uri(entry.Id, UriKind.Relative);
-            }
-            catch (FormatException)
-            {
-                id = new Uri(entry.Id, UriKind.Absolute);
-            }
-
+            Uri id = UriUtils.StringToUri(entry.Id);
             ODataDeletedResource deletedResource = new ODataDeletedResource()
             {
                 Id = id,

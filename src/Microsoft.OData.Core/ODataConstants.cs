@@ -182,16 +182,16 @@ namespace Microsoft.OData
         /// <summary>The $delta token indicates delta resource set.</summary>
         internal const string ContextUriDeltaResourceSet = UriSegmentSeparator + DeltaResourceSet;
 
-        /// <summary>The $deletedEntity token indicates delta resource.</summary>
+        /// <summary>The $deletedEntity token indicates deleted resource.</summary>
         internal const string DeletedEntry = "$deletedEntity";
 
-        /// <summary>The $delta token indicates delta resource set.</summary>
+        /// <summary>The $deletedEntity token indicates deleted resource.</summary>
         internal const string ContextUriDeletedEntry = UriSegmentSeparator + DeletedEntry;
 
-        /// <summary>The $delta token indicates delta link.</summary>
+        /// <summary>The $link token indicates delta link.</summary>
         internal const string DeltaLink = "$link";
 
-        /// <summary>The $delta token indicates delta link.</summary>
+        /// <summary>The $link token indicates delta link.</summary>
         internal const string ContextUriDeltaLink = UriSegmentSeparator + DeltaLink;
 
         /// <summary>The $deletedLink token indicates delta deleted link.</summary>

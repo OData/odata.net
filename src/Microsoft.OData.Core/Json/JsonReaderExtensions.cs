@@ -132,7 +132,7 @@ namespace Microsoft.OData.Json
         /// <returns>The string value read from the reader as a URI; throws an exception if no string value could be read.</returns>
         internal static Uri ReadUriValue(this IJsonReader jsonReader)
         {
-            return new Uri(ReadStringValue(jsonReader), UriKind.RelativeOrAbsolute);
+            return UriUtils.StringToUri(ReadStringValue(jsonReader));
         }
 
         /// <summary>

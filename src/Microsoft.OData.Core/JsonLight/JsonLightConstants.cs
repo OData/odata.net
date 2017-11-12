@@ -108,6 +108,6 @@ namespace Microsoft.OData.JsonLight
         internal const string SimplifiedODataTypePropertyName = "@type";
 
         /// <summary>The simplified Removed property name.</summary>
-        internal const string SimplifiedRemovedPropertyName = "@removed";
+        internal const string SimplifiedODataRemovedPropertyName = "@removed";
     }
 }

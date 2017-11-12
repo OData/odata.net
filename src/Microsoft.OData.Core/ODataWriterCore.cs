@@ -1161,7 +1161,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Start writing a resourceSet - implementation of the actual functionality.
         /// </summary>
-        /// <param name="resourceSet">The resource Set to write.</param>
+        /// <param name="resourceSet">The resource set to write.</param>
         private void WriteStartResourceSetImplementation(ODataResourceSet resourceSet)
         {
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, resourceSet);
@@ -1195,7 +1195,7 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">Resource Set/collection to write.</param>
         private void VerifyCanWriteStartDeltaResourceSet(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
         {
-            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "resourceSet");
+            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
 
             this.VerifyWritingDelta();
             this.VerifyNotDisposed();
@@ -1248,6 +1248,8 @@ namespace Microsoft.OData
         /// <param name="resource">Resource/item to write.</param>
         private void VerifyCanWriteStartDeletedResource(bool synchronousCall, ODataDeletedResource resource)
         {
+            ExceptionUtils.CheckArgumentNotNull(resource, "resource");
+
             this.VerifyWritingDelta();
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
@@ -1289,8 +1291,6 @@ namespace Microsoft.OData
         /// <param name="resource">Resource/item to write.</param>
         private void WriteStartDeletedResourceImplementation(ODataDeletedResource resource)
         {
-            Debug.Assert(resource != null, "resource != null");
-
             this.StartPayloadInStartState();
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.Resource, resource);
             this.EnterScope(WriterState.DeletedResource, resource);
@@ -1315,6 +1315,8 @@ namespace Microsoft.OData
         /// <param name="deltaLink">Delta (deleted) link to write.</param>
         private void WriteDeltaLinkImplementation(ODataDeltaLinkBase deltaLink)
         {
+            ExceptionUtils.CheckArgumentNotNull(deltaLink, "deltaLink");
+
             this.EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
             this.StartDeltaLink(deltaLink);
             this.WriteEnd();
@@ -2227,11 +2229,6 @@ namespace Microsoft.OData
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResource(this.State.ToString(), newState.ToString()));
                         }
 
-                        if (newState == WriterState.DeletedResource && this.ParentScope.State != WriterState.DeltaResourceSet)
-                        {
-                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
-                        }
-
                         if (this.State == WriterState.DeletedResource && this.Version < ODataVersion.V401 && newState == WriterState.NestedResourceInfo)
                         {
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFrom40DeletedResource(this.State.ToString(), newState.ToString()));
@@ -2252,7 +2249,9 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.DeltaResourceSet:
-                    if (newState != WriterState.Resource && newState != WriterState.DeletedResource && !(this.ScopeLevel < 3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
+                    if (newState != WriterState.Resource &&
+                        newState != WriterState.DeletedResource &&
+                        !(this.ScopeLevel < 3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
@@ -2304,9 +2303,9 @@ namespace Microsoft.OData
             Debug.Assert(
                 state == WriterState.Error ||
                 state == WriterState.Resource && (item == null || item is ODataResource) ||
-                state == WriterState.DeletedResource && (item == null || item is ODataDeletedResource) ||
-                state == WriterState.DeltaLink && (item == null || item is ODataDeltaLink) ||
-                state == WriterState.DeltaDeletedLink && (item == null || item is ODataDeltaDeletedLink) ||
+                state == WriterState.DeletedResource && item is ODataDeletedResource ||
+                state == WriterState.DeltaLink && item is ODataDeltaLink ||
+                state == WriterState.DeltaDeletedLink && item is ODataDeltaDeletedLink ||
                 state == WriterState.ResourceSet && item is ODataResourceSet ||
                 state == WriterState.DeltaResourceSet && item is ODataDeltaResourceSet ||
                 state == WriterState.Primitive && (item == null || item is ODataPrimitiveValue) ||
