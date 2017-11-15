@@ -85,16 +85,7 @@ namespace Microsoft.OData
 
             // See whether we have a Content-Length header
             string contentLengthValue;
-            ODataJsonLightBatchBodyContentReaderStream jsonLightBatchBodyContentReaderStream
-                 = batchReaderStream as ODataJsonLightBatchBodyContentReaderStream;
-            if (jsonLightBatchBodyContentReaderStream != null)
-            {
-                return ODataBatchOperationReadStream.Create(
-                        batchReaderStream,
-                        operationListener,
-                        jsonLightBatchBodyContentReaderStream.StreamContentLength);
-            }
-            else if (headers.TryGetValue(ODataConstants.ContentLengthHeader, out contentLengthValue))
+            if (headers.TryGetValue(ODataConstants.ContentLengthHeader, out contentLengthValue))
             {
                 int length = Int32.Parse(contentLengthValue, CultureInfo.InvariantCulture);
                 if (length < 0)

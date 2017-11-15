@@ -139,10 +139,10 @@ namespace Microsoft.OData.JsonLight
             }
 
             // body. Use empty stream when request body is not present.
-            ODataBatchReaderStream bodyContentStream =
-                (ODataBatchReaderStream)this.messagePropertiesCache.GetPropertyValue(
+            Stream bodyContentStream =
+                (Stream)this.messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameBody)
-                ?? new ODataJsonLightBatchBodyContentReaderStream();
+                ?? new ODataJsonLightBatchBodyContentReaderStream(this);
 
             // method. Support case-insensitive value of HTTP methods.
             string httpMethod = (string)this.messagePropertiesCache.GetPropertyValue(
@@ -163,7 +163,7 @@ namespace Microsoft.OData.JsonLight
             this.messagePropertiesCache = null;
 
             ODataBatchOperationRequestMessage requestMessage = BuildOperationRequestMessage(
-                () => ODataBatchUtils.CreateBatchOperationReadStream(bodyContentStream, headers, this),
+                () => bodyContentStream,
                 httpMethod,
                 requestUri,
                 headers,
@@ -194,7 +194,7 @@ namespace Microsoft.OData.JsonLight
 
                 Debug.Assert(this.messagePropertiesCache == null, "this.messagePropertiesCache == null");
                 this.messagePropertiesCache =
-                    new ODataJsonLightBatchPayloadItemPropertiesCache(this.JsonLightInputContext.JsonReader);
+                    new ODataJsonLightBatchPayloadItemPropertiesCache(this.JsonLightInputContext.JsonReader, this);
 
                 string currentGroup = (string)this.messagePropertiesCache.GetPropertyValue(
                     ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
@@ -259,7 +259,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Load the message details since operation is detected.
                 this.messagePropertiesCache =
-                    new ODataJsonLightBatchPayloadItemPropertiesCache(this.JsonLightInputContext.JsonReader);
+                    new ODataJsonLightBatchPayloadItemPropertiesCache(this.JsonLightInputContext.JsonReader, this);
             }
 
             // Calculate and return next state with changeset state detection.
@@ -277,9 +277,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.messagePropertiesCache != null, "this.responsePropertiesCache != null");
 
             // body. Use empty stream when request body is not present.
-            ODataBatchReaderStream bodyContentStream =
-                (ODataBatchReaderStream)this.messagePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameBody)
-                ?? new ODataJsonLightBatchBodyContentReaderStream();
+            Stream bodyContentStream =
+                (Stream)this.messagePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameBody)
+                ?? new ODataJsonLightBatchBodyContentReaderStream(this);
 
             int statusCode = (int)
                 this.messagePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameStatus);
@@ -295,7 +295,7 @@ namespace Microsoft.OData.JsonLight
             // In Json batch response, contentId is stored in base type batch reader, so we can use null to invoke
             // the base class's method.
             ODataBatchOperationResponseMessage responseMessage = BuildOperationResponseMessage(
-                () => ODataBatchUtils.CreateBatchOperationReadStream(bodyContentStream, headers, this),
+                () => bodyContentStream,
                 statusCode,
                 headers,
                 null);

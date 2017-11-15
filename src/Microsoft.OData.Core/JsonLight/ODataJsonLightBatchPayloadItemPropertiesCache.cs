@@ -78,6 +78,11 @@ namespace Microsoft.OData.JsonLight
         private IJsonReader jsonReader;
 
         /// <summary>
+        /// The Json reader to payload item in Json format.
+        /// </summary>
+        private IODataBatchOperationListener listener;
+
+        /// <summary>
         /// Cache for json properties.
         /// </summary>
         private Dictionary<string, object> jsonProperties = null;
@@ -86,11 +91,12 @@ namespace Microsoft.OData.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="jsonReader">The Json reader from the batch reader input context.</param>
-        internal ODataJsonLightBatchPayloadItemPropertiesCache(IJsonReader jsonReader)
+        internal ODataJsonLightBatchPayloadItemPropertiesCache(IJsonReader jsonReader, IODataBatchOperationListener listener)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             this.jsonReader = jsonReader;
+            this.listener = listener;
 
             // Use the sealed, most-derived class's implementation.
             ScanJsonProperties();
@@ -122,11 +128,11 @@ namespace Microsoft.OData.JsonLight
         /// Current supported data types are Json and binary types.
         /// </summary>
         /// <returns>The memory stream.</returns>
-        private ODataBatchReaderStream CreateJsonPayloadBodyContentStream()
+        private ODataJsonLightBatchBodyContentReaderStream CreateJsonPayloadBodyContentStream()
         {
             // Serialization of json object to batch buffer.
             ODataJsonLightBatchBodyContentReaderStream stream =
-                new ODataJsonLightBatchBodyContentReaderStream();
+                new ODataJsonLightBatchBodyContentReaderStream(listener);
 
             stream.PopulateBodyContent(this.jsonReader);
 
@@ -220,7 +226,7 @@ namespace Microsoft.OData.JsonLight
 
                         case PropertyNameBody:
                             {
-                                ODataBatchReaderStream bodyContentStream = CreateJsonPayloadBodyContentStream();
+                                ODataJsonLightBatchBodyContentReaderStream bodyContentStream = CreateJsonPayloadBodyContentStream();
                                 jsonProperties.Add(propertyName, bodyContentStream);
                             }
 
