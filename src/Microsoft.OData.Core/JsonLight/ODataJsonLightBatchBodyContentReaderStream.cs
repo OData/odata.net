@@ -56,7 +56,7 @@ namespace Microsoft.OData.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="batchEncoding">The encoding to use to read and write from the batch stream.</param>
-        internal ODataJsonLightBatchBodyContentReaderStream(Encoding batchEncoding)
+        private ODataJsonLightBatchBodyContentReaderStream(Encoding batchEncoding)
             : base(batchEncoding)
         {
             this.bodyContentStream = new MemoryStream();
@@ -161,24 +161,6 @@ namespace Microsoft.OData.JsonLight
             this.isDataPopulatedToStream = true;
 
             // Rewind the stream position to the beginning of the stream so that it is ready for consumption.
-            this.bodyContentStream.Position = 0;
-        }
-
-        /// <summary>
-        /// Populate the content to the created stream.
-        /// </summary>
-        /// <param name="content">Data to be populated.</param>
-        internal void PopulateBodyContentFromString(string content)
-        {
-            // Reader is on the value node after the "body" property name node.
-            IJsonWriter jsonWriter = new JsonWriter(
-                streamWriter,
-                true /*isIeee754Compatible*/);
-
-            jsonWriter.WriteRawValue(content);
-            jsonWriter.Flush();
-
-            this.isDataPopulatedToStream = true;
             this.bodyContentStream.Position = 0;
         }
 

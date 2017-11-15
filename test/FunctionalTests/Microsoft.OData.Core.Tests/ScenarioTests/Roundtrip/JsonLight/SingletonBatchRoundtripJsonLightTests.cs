@@ -520,7 +520,7 @@ OData-Version: 4.0
         }
 
         [Fact]
-        public void BatchJsonLightTestUsingJsonCanGenerateRequest_xyz()
+        public void BatchJsonLightTestUsingJsonCanGenerateRequest()
         {
             byte[] requestPayload =
                 CreateBatchRequestWithChangesetFirstAndQueryLast(GetContentTypeHeader(BatchFormat.ApplicationJson));

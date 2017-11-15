@@ -75,12 +75,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The Json reader to payload item in Json format.
         /// </summary>
-        protected IJsonReader jsonReader;
+        private IJsonReader jsonReader;
 
         /// <summary>
         /// Cache for json properties.
         /// </summary>
-        protected Dictionary<string, object> jsonProperties = null;
+        private Dictionary<string, object> jsonProperties = null;
 
         /// <summary>
         /// Constructor.
@@ -122,7 +122,7 @@ namespace Microsoft.OData.JsonLight
         /// Current supported data types are Json and binary types.
         /// </summary>
         /// <returns>The memory stream.</returns>
-        protected ODataBatchReaderStream CreateJsonPayloadBodyContentStream()
+        private ODataBatchReaderStream CreateJsonPayloadBodyContentStream()
         {
             // Serialization of json object to batch buffer.
             ODataJsonLightBatchBodyContentReaderStream stream =
@@ -138,7 +138,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="propertyName">Name to be normalized.</param>
         /// <returns>The normalized name.</returns>
-        protected static string Normalize(string propertyName)
+        private static string Normalize(string propertyName)
         {
             return propertyName.ToUpperInvariant();
         }
