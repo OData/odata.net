@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Microsoft.OData.Json
 {
-    internal sealed class DefaultJsonReaderFactory : IJsonReaderFactory
+    public sealed class DefaultJsonReaderFactory : IJsonReaderFactory
     {
         public IJsonReader CreateJsonReader(TextReader textReader, bool isIeee754Compatible)
         {

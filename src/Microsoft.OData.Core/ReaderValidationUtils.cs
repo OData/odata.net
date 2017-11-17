@@ -135,10 +135,6 @@ namespace Microsoft.OData
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
                 }
-                else
-                {
-                    Debug.Assert(!throwOnUndeclaredPropertyForNonOpenType, "!throwOnUndeclaredPropertyForNonOpenType");
-                }
             }
 
             return property;
@@ -1095,6 +1091,7 @@ namespace Microsoft.OData
                     expectedValueTypeReference.IsODataTypeDefinitionTypeKind() ||
                     expectedValueTypeReference.IsODataEnumTypeKind() ||
                     expectedValueTypeReference.IsODataComplexTypeKind() ||
+                    expectedValueTypeReference.IsUntyped() ||
                     expectedValueTypeReference.IsNonEntityCollectionType(),
                     "Only primitive, type definition, Enum, complex and collection types are supported by this method.");
 

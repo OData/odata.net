@@ -96,7 +96,7 @@ namespace Microsoft.OData
 
             return uri;
         }
-        
+
         /// <summary>
                  /// Ensure the last character of Uri is a "/".
                  /// </summary>

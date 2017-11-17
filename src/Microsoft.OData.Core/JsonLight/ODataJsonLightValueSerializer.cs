@@ -15,6 +15,7 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
+    using System.IO;
 
     #endregion Namespaces
 
@@ -260,6 +261,24 @@ namespace Microsoft.OData.JsonLight
             this.JsonWriter.WriteRawValue(value.RawValue);
         }
 
+        public virtual void WriteStreamValue(ODataStreamValue value)
+        {
+            ODataStreamValue streamValue = value as ODataStreamValue;
+            IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
+            if (streamWriter == null)
+            {
+                // write as a string
+                this.JsonWriter.WritePrimitiveValue(new StreamReader(streamValue.Stream).ReadToEnd());
+            }
+            else
+            {
+                Stream stream = streamWriter.StartStreamValueScope(streamValue.IsBinaryValue);
+                streamValue.Stream.CopyTo(stream);
+                stream.Flush();
+                stream.Dispose();
+                streamWriter.EndStreamValueScope();
+            }
+        }
         /// <summary>
         /// Asserts that the current recursion depth of values is zero. This should be true on all calls into this class from outside of this class.
         /// </summary>

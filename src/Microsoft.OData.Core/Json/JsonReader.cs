@@ -16,11 +16,7 @@ namespace Microsoft.OData.Json
     using System.Text;
     #endregion Namespaces
 
-    /// <summary>
-    /// Reader for the JSON format. http://www.json.org
-    /// </summary>
-    [DebuggerDisplay("{NodeType}: {Value}")]
-    internal class JsonReader : IJsonReader
+    internal class JsonReader : IJsonStreamReader
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -73,6 +69,13 @@ namespace Microsoft.OData.Json
         /// <remarks>This is used to avoid calling Read on the text reader multiple times
         /// even though it already reported the end of input.</remarks>
         private bool endOfInputReached;
+
+        /// <summary>
+        /// Whether the user is currently reading a string property as a stream.
+        /// </summary>
+        /// <remarks>This is used to avoid calling Read on the text reader multiple times
+        /// even though it already reported the end of input.</remarks>
+        private bool readingStream = false;
 
         /// <summary>
         /// Buffer of characters from the input.
@@ -219,6 +222,12 @@ namespace Microsoft.OData.Json
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Not really feasible to extract code to methods without introducing unnecessary complexity.")]
         public virtual bool Read()
         {
+            if (this.readingStream)
+            {
+                // todo (mikep): create a proper error for this
+                throw new Exception("Must read to end of stream before calling Read()");
+            }
+
             // Reset the node value.
             this.nodeValue = null;
 
@@ -361,6 +370,22 @@ namespace Microsoft.OData.Json
                 "Read should never go back to None and EndOfInput should be reported by directly returning.");
 
             return true;
+        }
+
+        /// <summary>
+        /// Creates a stream for reading a base64 URL encoded binary value.
+        /// </summary>
+        /// <param name="encoding">The encoding to use for string values, or null for base64UrlEncoded binary strings</param>
+        /// <returns>A stream for reading a base64 URL encoded binary value.</returns>
+        public Stream CreateReadStream(Encoding encoding)
+        {
+            // todo (mikep): read the quote character and determine type
+            this.tokenStartIndex++;
+            readingStream = true;
+            // if reading a property, pop property scope. Otherwise do nothing.
+            this.TryPopPropertyScope();
+            this.nodeType = JsonNodeType.PrimitiveValue;
+            return new ODataBinaryStreamReader(this.ReadChars, encoding);
         }
 
         /// <summary>
@@ -792,6 +817,58 @@ namespace Microsoft.OData.Json
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
 
             return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+        }
+
+        /// <summary>
+        /// Reads bytes from the current string value.
+        /// </summary>
+        /// <param name="chars">The character buffer to populate</param>
+        /// <param name="maxLength">The maximum number of characters to read into the buffer</param>
+        /// <returns>The number of characters read.</returns>
+        /// <remarks>
+        /// Assumes that the current token position points to the opening quote.
+        /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
+        /// So it can either return a string succesfully or fail.</remarks>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
+        private int ReadChars(char[] chars, int maxLength)
+        {
+            if (!readingStream)
+            {
+                return 0;
+            }
+
+            int charsRead = 0;
+
+            // todo (mikep): handle single or double quote characters, depending on what was first read
+            char openingQuoteCharacter = '"';
+
+            while (charsRead < maxLength && (this.tokenStartIndex < this.storedCharacterCount || this.ReadInput()))
+            {
+                char character = this.characterBuffer[this.tokenStartIndex];
+
+                if (character == openingQuoteCharacter)
+                {
+                    // Consume the quote character.
+                    this.tokenStartIndex++;
+                    readingStream = false;
+                    // move to next node
+                    this.Read();
+                    return charsRead;
+                }
+
+                // Normal character, just skip over it - it will become part of the value as is.
+                this.tokenStartIndex++;
+                chars[charsRead] = character;
+                charsRead++;
+            }
+
+            // we reached the end of the file without finding a closing quote character
+            if (charsRead < maxLength)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedEndOfString);
+            }
+
+            return charsRead;
         }
 
         /// <summary>

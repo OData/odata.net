@@ -31,7 +31,7 @@ ODataWriter_StreamPropertiesMustBePropertiesOfODataResource=The property '{0}' i
 
 ODataWriterCore_InvalidStateTransition=An invalid state transition has been detected in an OData writer. Cannot transition from state '{0}' to state '{1}'.
 ODataWriterCore_InvalidTransitionFromStart=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set.
-ODataWriterCore_InvalidTransitionFromResource=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a nested resource.
+ODataWriterCore_InvalidTransitionFromResource=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a property or a nested resource.
 ODataWriterCore_InvalidTransitionFrom40DeletedResource=Cannot transition from state '{0}' to state '{1}' when writing an OData 4.0 payload. To write content to a deleted resource, please specify ODataVersion 4.01 or greater in MessageWriterSettings.
 ODataWriterCore_InvalidTransitionFromNullResource=Cannot transition from state '{0}' to state '{1}'. You must first call ODataWriter.WriteEnd to finish writing a null ODataResource.
 ODataWriterCore_InvalidTransitionFromResourceSet=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a resource.

@@ -7,7 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
-    
+
     /// <summary>
     /// The reason of deleted resource in delta response.
     /// </summary>

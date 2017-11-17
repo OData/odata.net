@@ -11,12 +11,14 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Linq;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
+
     #endregion Namespaces
 
     /// <summary>
@@ -187,7 +189,7 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                IEdmStructuredType resourceType = this.scopes.Peek().ResourceType;
+                IEdmStructuredType resourceType = this.scopes.Peek().ResourceType as IEdmStructuredType;
                 Debug.Assert(resourceType == null || this.inputContext.Model.IsUserModel(), "We can only have structured type if we also have metadata.");
                 return resourceType;
             }
@@ -361,6 +363,25 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
+        /// Creates a stream for reading an inline stream property.
+        /// </summary>
+        /// <returns>A stream for reading the stream property.</returns>
+        public override sealed Stream CreateReadStream()
+        {
+            if (this.State == ODataReaderState.Stream)
+            {
+                // todo (mikep): if we decide we need async version, implement
+                // and call this.VerifyCanReadStream(true);
+                return this.InterceptException(this.CreateReadStreamImplementation);
+            }
+            else
+            {
+                // todo (mikep): create a proper error for this
+                throw new Exception("CreateReadStream can only be called while in ODataReaderState.Stream");
+            }
+        }
+
+        /// <summary>
         /// Seek scope in the stack which is type of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of scope to seek.</typeparam>
@@ -423,6 +444,24 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         protected virtual bool ReadAtPrimitiveImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Stream'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtStreamImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Creates a Stream for reading a stream property when in state 'Stream'.
+        /// </summary>
+        /// <returns>A stream for reading the stream property.</returns>
+        protected virtual Stream CreateReadStreamImplementation()
         {
             throw new NotImplementedException();
         }
@@ -699,6 +738,10 @@ namespace Microsoft.OData
                     result = this.ReadAtPrimitiveImplementation();
                     break;
 
+                case ODataReaderState.Stream:
+                    result = this.ReadAtStreamImplementation();
+                    break;
+
                 case ODataReaderState.NestedResourceInfoStart:
                     result = this.ReadAtNestedResourceInfoStartImplementation();
                     break;
@@ -851,13 +894,19 @@ namespace Microsoft.OData
             /// EntityReferenceLink - it's null, no need for types on entity reference links.
             /// In all cases the specified type must be an structured type.</remarks>
             [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
-            internal Scope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType, ODataUri odataUri)
+            internal Scope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType expectedResourceType, ODataUri odataUri)
             {
+                Debug.Assert(expectedResourceType == null ||
+                    expectedResourceType.AsElementType() is IEdmStructuredType ||
+                    expectedResourceType.AsElementType().IsStream(),
+                    "expectedType must be a structured type or stream");
+
                 Debug.Assert(
                     state == ODataReaderState.Exception && item == null ||
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||
                     state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
                     state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue) ||
+                    state == ODataReaderState.Stream && (item == null || item is ODataStreamReferenceValue) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||
@@ -922,7 +971,7 @@ namespace Microsoft.OData
             /// The resource type for this scope. Can be either the expected one if the real one
             /// was not found yet, or the one specified in the payload itself (the real one).
             /// </summary>
-            internal IEdmStructuredType ResourceType { get; set; }
+            internal IEdmType ResourceType { get; set; }
 
             /// <summary>
             /// Validator for resource type.

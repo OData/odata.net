@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unitTests", "unitTests", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "helper", "helper", "{B12AC8F3-9C8D-4343-A776-215D7C39DAED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamingTestApp", "..\..\..\Users\mikep\Documents\Visual Studio 2015\Projects\StreamingTestApp\StreamingTestApp\StreamingTestApp.csproj", "{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cover|Any CPU = Cover|Any CPU
@@ -175,6 +177,24 @@ Global
 		{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}.Release|x64.ActiveCfg = Release|Any CPU
 		{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}.Release|x86.ActiveCfg = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Cover|Any CPU.ActiveCfg = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Cover|Any CPU.Build.0 = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Cover|x64.ActiveCfg = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Cover|x64.Build.0 = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Cover|x86.ActiveCfg = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Cover|x86.Build.0 = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Debug|x64.Build.0 = Debug|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Debug|x86.Build.0 = Debug|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Release|x64.ActiveCfg = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Release|x64.Build.0 = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Release|x86.ActiveCfg = Release|Any CPU
+		{6C8A4C35-43EB-4FE0-A19D-F9096BAF0D71}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

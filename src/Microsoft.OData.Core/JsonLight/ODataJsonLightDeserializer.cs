@@ -450,10 +450,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use, it will also store the property annotations found.</param>
         /// <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
         /// <param name="handleProperty">Function callback to handle the result of parsing property.</param>
+        /// <param name="postionOnPropertyName">True if reader should remain positioned on property name when encountering PropertyWithValue.</param>
         internal void ProcessProperty(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             Func<string, object> readPropertyAnnotationValue,
-            Action<PropertyParsingResult, string> handleProperty)
+            Action<PropertyParsingResult, string> handleProperty,
+            bool positionOnPropertyName = false)
         {
             Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             Debug.Assert(readPropertyAnnotationValue != null, "readPropertyAnnotationValue != null");
@@ -470,6 +472,12 @@ namespace Microsoft.OData.JsonLight
                 this.JsonReader.SkipValue();
                 propertyParsingResult = this.ParseProperty(
                     propertyAndAnnotationCollector, readPropertyAnnotationValue, out propertyName);
+            }
+
+            // Read over property name
+            if (!positionOnPropertyName && propertyParsingResult == PropertyParsingResult.PropertyWithValue)
+            {
+                this.JsonReader.Read();
             }
 
             handleProperty(propertyParsingResult, propertyName);
@@ -670,7 +678,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="parsedPropertyName">The name of the property or instance annotation found.</param>
         /// <returns>
         /// PropertyWithValue - a property with value was found. The <paramref name="parsedPropertyName"/> contains the name of the property.
-        ///                     The reader is positioned on the property value.
+        ///                     The reader is positioned on the property name.
         /// PropertyWithoutValue - a property without a value was found. The <paramref name="parsedPropertyName"/> contains the name of the property.
         ///                        The reader is positioned on the node after property annotations (so either a property or end of object).
         /// ODataInstanceAnnotation - an odata instance annotation was found. The <paramref name="parsedPropertyName"/> contains the name of the annotation.
@@ -702,8 +710,6 @@ namespace Microsoft.OData.JsonLight
                 // reading a nested delta resource set
                 if (isPropertyAnnotation && String.CompareOrdinal(this.CompleteSimplifiedODataAnnotation(annotationNameFromReader), ODataAnnotationNames.ODataDelta) == 0)
                 {
-                    // Read over the property name.
-                    this.JsonReader.Read();
                     parsedPropertyName = propertyNameFromReader;
                     return PropertyParsingResult.NestedDeltaResourceSet;
                 }
@@ -760,20 +766,24 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // We are encountering the property name for the first time.
-                // Read over the property name.
-                this.JsonReader.Read();
                 parsedPropertyName = propertyNameFromReader;
 
                 if (!isInstanceAnnotation && ODataJsonLightUtils.IsMetadataReferenceProperty(propertyNameFromReader))
                 {
+                    // Read over the property name.
+                    this.JsonReader.Read();
                     return PropertyParsingResult.MetadataReferenceProperty;
                 }
 
                 if (!isInstanceAnnotation && !ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader))
                 {
                     // Normal property
+                    // Reader will have to move over property name node
                     return PropertyParsingResult.PropertyWithValue;
                 }
+
+                // Read over the property name.
+                this.JsonReader.Read();
 
                 // collect 'xxx.yyyy' annotation:
                 // here we know the original property name contains no '@', but '.' dot

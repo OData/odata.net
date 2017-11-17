@@ -416,7 +416,8 @@ namespace Microsoft.OData
                 }
 
                 if (actualTypeKind == EdmTypeKind.TypeDefinition && expectedTypeKind == EdmTypeKind.Primitive
-                    || actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.TypeDefinition)
+                    || actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.TypeDefinition
+                    || actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.None)
                 {
                     return;
                 }

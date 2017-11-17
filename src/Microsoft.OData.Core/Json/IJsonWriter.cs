@@ -7,7 +7,27 @@
 namespace Microsoft.OData.Json
 {
     using System;
+    using System.IO;
     using Microsoft.OData.Edm;
+
+    /// <summary>
+    /// Interface for writing JSON including streaming binary values.
+    /// </summary>
+    [CLSCompliant(false)]
+    public interface IJsonStreamWriter : IJsonWriter
+    {
+        /// <summary>
+        /// Start the stream property valuescope.
+        /// </summary>
+        /// <param name="base64UrlEncode">True if the stream should be base64UrlEncoded upon writing.</param>
+        /// <returns>The stream to write the property value to</returns>
+        Stream StartStreamValueScope(bool base64UrlEncode);
+
+        /// <summary>
+        /// End the current stream property value scope.
+        /// </summary>
+        void EndStreamValueScope();
+    }
 
     /// <summary>
     /// Interface for a class that can write arbitrary JSON.

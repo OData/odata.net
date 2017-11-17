@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 #if PORTABLELIB
 using System.Threading.Tasks;
 #endif
@@ -22,7 +23,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Base class for OData writers that verifies a proper sequence of write calls on the writer.
     /// </summary>
-    internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener
+    internal abstract class ODataWriterCore : ODataWriter, IODataOutputInStreamErrorListener, IODataBatchOperationListener
     {
         /// <summary>The writer validator to use.</summary>
         protected readonly IWriterValidator WriterValidator;
@@ -128,6 +129,12 @@ namespace Microsoft.OData
 
             /// <summary>The writer is currently writing a primitive value.</summary>
             Primitive,
+
+            /// <summary>The writer is currently writing a single property.</summary>
+            Property,
+
+            /// <summary>The writer is currently writing a stream value.</summary>
+            Stream,
 
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
@@ -301,7 +308,7 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(
-                    this.State == WriterState.Resource || this.State == WriterState.DeletedResource || this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
+                    this.State == WriterState.Resource || this.State == WriterState.DeletedResource || this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent || this.State == WriterState.Property,
                     "PropertyAndAnnotationCollector should only be called while writing a resource or an (expanded or deferred) nested resource info.");
 
                 ResourceBaseScope resourceScope;
@@ -311,6 +318,7 @@ namespace Microsoft.OData
                     case WriterState.Resource:
                         resourceScope = (ResourceBaseScope)this.CurrentScope;
                         break;
+                    case WriterState.Property:
                     case WriterState.NestedResourceInfo:
                     case WriterState.NestedResourceInfoWithContent:
                         resourceScope = (ResourceBaseScope)this.scopeStack.Parent;
@@ -387,7 +395,7 @@ namespace Microsoft.OData
         {
             get
             {
-                Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.DeletedResource, "CurrentCollectionValidator should only be called while writing a resource.");
+                Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.DeletedResource || this.State == WriterState.Primitive, "CurrentCollectionValidator should only be called while writing a resource.");
 
                 ResourceSetBaseScope resourceSetScope = this.ParentScope as ResourceSetBaseScope;
                 return resourceSetScope == null ? null : resourceSetScope.ResourceTypeValidator;
@@ -597,6 +605,43 @@ namespace Microsoft.OData
         }
 #endif
 
+        /// <summary>Writes a primitive property within a resource.</summary>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        public sealed override void WriteStart(ODataProperty primitiveProperty)
+        {
+            this.VerifyCanWriteProperty(true, primitiveProperty);
+            this.WriteStartPropertyImplementation(primitiveProperty);
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously write a primitive property within a resource. </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        public sealed override Task WriteAsync(ODataProperty primitiveProperty)
+        {
+            this.VerifyCanWriteProperty(true, primitiveProperty);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartPropertyImplementation(primitiveProperty));
+        }
+#endif
+
+        /// <summary>Creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public sealed override Stream CreateBinaryWriteStream()
+        {
+            this.VerifyCanCreateWriteStream(true);
+            return this.CreateWriteStreamImplementation();
+        }
+
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public sealed override Task<Stream> CreateWriteStreamAsync()
+        {
+            this.VerifyCanCreateWriteStream(false);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateWriteStreamImplementation());
+        }
+#endif
+
         /// <summary>
         /// Start writing a nested resource info.
         /// </summary>
@@ -717,6 +762,34 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// This method is called when a stream is requested. It is a no-op.
+        /// </summary>
+        void IODataBatchOperationListener.BatchOperationContentStreamRequested()
+        {
+        }
+
+        /// <summary>
+        /// This method is called when an async stream is requested. It is a no-op.
+        /// </summary>
+        /// <returns>A task for method called when a stream is requested.</returns>
+        Task IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataBatchOperationListener)this).BatchOperationContentStreamRequested());
+        }
+
+        /// <summary>
+        /// This method is called when a stream is disposed.
+        /// </summary>
+        void IODataBatchOperationListener.BatchOperationContentStreamDisposed()
+        {
+            Debug.Assert(this.State == WriterState.Stream, "Stream was disposed when not in WriterState.Stream state.");
+
+            // Complete writing the stream
+            this.EndBinaryStream();
+            this.LeaveScope();
+        }
+
+        /// <summary>
         /// Get instance of the parent resource scope
         /// </summary>
         /// <returns>
@@ -802,6 +875,24 @@ namespace Microsoft.OData
         protected abstract void EndResource(ODataResource resource);
 
         /// <summary>
+        /// Start writing a single property.
+        /// </summary>
+        /// <param name="property">The property to write.</param>
+        protected virtual void StartProperty(ODataProperty property)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Finish writing a property.
+        /// </summary>
+        /// <param name="property">The property to write.</param>
+        protected virtual void EndProperty(ODataProperty property)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Start writing a resourceSet.
         /// </summary>
         /// <param name="resourceSet">The resourceSet to write.</param>
@@ -830,6 +921,23 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaLink">The deleted entry to write.</param>
         protected virtual void StartDeltaLink(ODataDeltaLinkBase deltaLink)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Create a stream to write a binary value to.
+        /// </summary>
+        /// <returns>A stream for writing the binary value.</returns>
+        protected virtual Stream StartBinaryStream()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Finish writing a stream.
+        /// </summary>
+        protected virtual void EndBinaryStream()
         {
             throw new NotImplementedException();
         }
@@ -902,13 +1010,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resourceSet">The resource set for the new scope.</param>
         /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="itemType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
-        protected abstract ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared);
+        protected abstract ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared);
 
         /// <summary>
         /// Create a new delta resource set scope.
@@ -951,6 +1059,20 @@ namespace Microsoft.OData
         /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
         protected virtual DeletedResourceScope CreateDeletedResourceScope(ODataDeletedResource resource, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Create a new property scope.
+        /// </summary>
+        /// <param name="property">The property for the new scope.</param>
+        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="resourceType">The structured type for the resource containing the property to be written.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <returns>The newly created property scope.</returns>
+        protected virtual PropertyScope CreatePropertyScope(ODataProperty property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             throw new NotImplementedException();
         }
@@ -1051,7 +1173,7 @@ namespace Microsoft.OData
         /// <param name="writerState">The writer state for the new scope.</param>
         /// <param name="navLink">The nested resource info for the new scope.</param>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="resourceType">The resource type for the items in the resourceSet to be written (or null if the resource set base type should be used).</param>
+        /// <param name="itemType">The type for the items in the resourceSet to be written (or null if the resource set base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
@@ -1060,12 +1182,12 @@ namespace Microsoft.OData
             WriterState writerState,
             ODataNestedResourceInfo navLink,
             IEdmNavigationSource navigationSource,
-            IEdmStructuredType resourceType,
+            IEdmType itemType,
             bool skipWriting,
             SelectedPropertiesNode selectedProperties,
             ODataUri odataUri)
         {
-            return new NestedResourceInfoScope(writerState, navLink, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+            return new NestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
         }
 
         /// <summary>
@@ -1135,7 +1257,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
             Debug.Assert(
-                this.ParentNestedResourceInfo != null && this.ParentNestedResourceInfo.IsCollection.HasValue && this.ParentNestedResourceInfo.IsCollection.Value == true,
+                this.ParentNestedResourceInfo != null && (!this.ParentNestedResourceInfo.IsCollection.HasValue || this.ParentNestedResourceInfo.IsCollection.Value == true),
                 "This should only be called when writing an expanded resourceSet.");
 
             if (resourceSet.DeltaLink != null)
@@ -1310,6 +1432,35 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Verifies that calling WriteStart for a property is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="property">Primitive property to write.</param>
+        private void VerifyCanWriteProperty(bool synchronousCall, ODataProperty property)
+        {
+            ExceptionUtils.CheckArgumentNotNull(property, "property");
+
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+        }
+
+        /// <summary>
+        /// Start writing a property - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="property">Property to write.</param>
+        private void WriteStartPropertyImplementation(ODataProperty property)
+        {
+            this.EnterScope(WriterState.Property, property);
+            if (!this.SkipWriting)
+            {
+                this.InterceptException(() =>
+                {
+                    this.StartProperty(property);
+                });
+            }
+        }
+
+        /// <summary>
         /// Start writing a delta link or delta delted link - implementation of the actual functionality.
         /// </summary>
         /// <param name="deltaLink">Delta (deleted) link to write.</param>
@@ -1368,9 +1519,38 @@ namespace Microsoft.OData
         /// <param name="primitiveValue">Primitive value to write.</param>
         private void WritePrimitiveValueImplementation(ODataPrimitiveValue primitiveValue)
         {
-            this.EnterScope(WriterState.Primitive, primitiveValue);
-            this.WritePrimitiveValue(primitiveValue);
-            this.WriteEnd();
+            this.InterceptException(() =>
+            {
+                this.EnterScope(WriterState.Primitive, primitiveValue);
+                if (!(this.CurrentResourceSetValidator == null) && primitiveValue != null)
+                {
+                    Debug.Assert(primitiveValue.Value != null, "PrimitiveValue.Value should never be null!");
+                    IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
+                    this.CurrentResourceSetValidator.ValidateResource(itemType);
+                }
+                this.WritePrimitiveValue(primitiveValue);
+                this.WriteEnd();
+            });
+        }
+
+        /// <summary>
+        /// Verifies that calling CreateWriteStream is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        private void VerifyCanCreateWriteStream(bool synchronousCall)
+        {
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+        }
+
+        /// <summary>
+        /// Create a write stream - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A stream for writing the binary value.</returns>
+        private Stream CreateWriteStreamImplementation()
+        {
+            this.EnterScope(WriterState.Stream, null);
+            return new ODataNotificationStream(this.StartBinaryStream(), this);
         }
 
         /// <summary>
@@ -1461,9 +1641,19 @@ namespace Microsoft.OData
                         }
 
                         break;
+                    case WriterState.Property:
+                        {
+                            ODataProperty property = (ODataProperty)currentScope.Item;
+                            this.EndProperty(property);
+                        }
+
+                        break;
                     case WriterState.Primitive:
                         // WriteEnd for WriterState.Primitive is a no-op; just leave scope
                         break;
+                    case WriterState.Stream:
+                        // todo (mikep): make this a real error
+                        throw new ODataException("Stream must be disposed before calling WriteEnd");
                     case WriterState.Start:                 // fall through
                     case WriterState.Completed:             // fall through
                     case WriterState.Error:                 // fall through
@@ -1639,10 +1829,10 @@ namespace Microsoft.OData
                 {
                     if (this.ParentResourceType != null)
                     {
-                        IEdmStructuralProperty complexProperty = this.ParentResourceType.FindProperty(currentNestedResourceInfo.Name) as IEdmStructuralProperty;
-                        if (complexProperty != null)
+                        IEdmStructuralProperty structuralProperty = this.ParentResourceType.FindProperty(currentNestedResourceInfo.Name) as IEdmStructuralProperty;
+                        if (structuralProperty != null)
                         {
-                            this.CurrentScope.ResourceType = complexProperty.Type.ToStructuredType();
+                            this.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
                             IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
 
                             this.CurrentScope.NavigationSource = parentNavigationSource;
@@ -1691,6 +1881,7 @@ namespace Microsoft.OData
                     {
                         this.InterceptException(() =>
                         {
+                            // todo (mikep): check this logic for primitive itemType
                             if (!(currentNestedResourceInfo.SerializationInfo != null && currentNestedResourceInfo.SerializationInfo.IsComplex)
                                 && (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsEntityOrEntityCollectionType()))
                             {
@@ -1865,7 +2056,7 @@ namespace Microsoft.OData
             Scope currentScope = this.CurrentScope;
 
             IEdmNavigationSource navigationSource = null;
-            IEdmStructuredType resourceType = null;
+            IEdmType itemType = null;
             SelectedPropertiesNode selectedProperties = currentScope.SelectedProperties;
             ODataUri odataUri = currentScope.ODataUri.Clone();
             if (odataUri.Path == null)
@@ -1890,7 +2081,7 @@ namespace Microsoft.OData
                             if (!String.IsNullOrEmpty(typeNameFromResource))
                             {
                                 // try resolving type from resource TypeName
-                                resourceType = TypeNameOracle.ResolveAndValidateTypeName(
+                                itemType = TypeNameOracle.ResolveAndValidateTypeName(
                                     model,
                                     typeNameFromResource,
                                     EdmTypeKind.Entity,
@@ -1907,7 +2098,7 @@ namespace Microsoft.OData
                                     ODataUriParser uriParser = new ODataUriParser(model, new Uri(serializationInfo.NavigationSourceName, UriKind.Relative), this.outputContext.Container);
                                     odataUri = uriParser.ParseUri();
                                     navigationSource = odataUri.Path.NavigationSource();
-                                    resourceType = resourceType ?? navigationSource.EntityType();
+                                    itemType = itemType ?? navigationSource.EntityType();
                                 }
 
                                 if (typeNameFromResource == null)
@@ -1915,7 +2106,7 @@ namespace Microsoft.OData
                                     // Try resolving entity type from SerializationInfo
                                     if (!string.IsNullOrEmpty(serializationInfo.ExpectedTypeName))
                                     {
-                                        resourceType = TypeNameOracle.ResolveAndValidateTypeName(
+                                        itemType = TypeNameOracle.ResolveAndValidateTypeName(
                                             model,
                                             serializationInfo.ExpectedTypeName,
                                             EdmTypeKind.Entity,
@@ -1924,7 +2115,7 @@ namespace Microsoft.OData
                                     }
                                     else if (!string.IsNullOrEmpty(serializationInfo.NavigationSourceEntityTypeName))
                                     {
-                                        resourceType = TypeNameOracle.ResolveAndValidateTypeName(
+                                        itemType = TypeNameOracle.ResolveAndValidateTypeName(
                                             model,
                                             serializationInfo.NavigationSourceEntityTypeName,
                                             EdmTypeKind.Entity,
@@ -1943,10 +2134,10 @@ namespace Microsoft.OData
                 }
 
                 navigationSource = navigationSource ?? currentScope.NavigationSource;
-                resourceType = resourceType ?? currentScope.ResourceType;
+                itemType = itemType ?? currentScope.ItemType;
 
                 // This is to resolve the item type for a resource set for an undeclared nested resource info.
-                if (resourceType == null
+                if (itemType == null
                     && (currentState == WriterState.Start || currentState == WriterState.NestedResourceInfo || currentState == WriterState.NestedResourceInfoWithContent)
                     && (newState == WriterState.ResourceSet || newState == WriterState.DeltaResourceSet))
                 {
@@ -1962,7 +2153,7 @@ namespace Microsoft.OData
 
                         if (collectionType != null)
                         {
-                            resourceType = collectionType.ElementType.Definition as IEdmStructuredType;
+                            itemType = collectionType.ElementType.Definition;
                         }
                     }
                 }
@@ -1996,11 +2187,11 @@ namespace Microsoft.OData
                             nestedResourceInfo.Name, currentResourceType)
                             as IEdmStructuralProperty;
 
-                        // Handle complex type property.
+                        // Handle primitive or complex type property.
                         if (structuredProperty != null)
                         {
                             odataPath = AppendEntitySetKeySegment(odataPath, false);
-                            resourceType = structuredProperty.Type.ToStructuredType();
+                            itemType = structuredProperty.Type == null ? null : structuredProperty.Type.Definition.AsElementType();
                             navigationSource = null;
 
                             if (resourceTypeCast != null)
@@ -2015,7 +2206,7 @@ namespace Microsoft.OData
                             IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
                             if (navigationProperty != null)
                             {
-                                resourceType = navigationProperty.ToEntityType();
+                                itemType = navigationProperty.ToEntityType();
                                 if (!nestedResourceInfo.IsCollection.HasValue)
                                 {
                                     nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
@@ -2093,7 +2284,7 @@ namespace Microsoft.OData
                 navigationSource = this.CurrentScope.NavigationSource ?? odataUri.Path.TargetNavigationSource();
             }
 
-            this.PushScope(newState, item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+            this.PushScope(newState, item, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
 
             this.NotifyListener(newState);
         }
@@ -2167,18 +2358,27 @@ namespace Microsoft.OData
             Debug.Assert(
                 this.CurrentScope.Item != null && this.CurrentScope.Item is ODataNestedResourceInfo,
                 "Item must be a non-null nested resource info.");
-            Debug.Assert(content == null || content is ODataResourceBase || content is ODataResourceSet || content is ODataDeltaResourceSet);
+            Debug.Assert(content == null || content is ODataResourceBase || content is ODataResourceSetBase);
 
             this.ValidateTransition(WriterState.NestedResourceInfoWithContent);
             NestedResourceInfoScope previousScope = (NestedResourceInfoScope)this.scopeStack.Pop();
             NestedResourceInfoScope newScope = previousScope.Clone(WriterState.NestedResourceInfoWithContent);
+
             this.scopeStack.Push(newScope);
-            if (newScope.ResourceType == null && content != null && !SkipWriting)
+            if (newScope.ItemType == null && content != null && !SkipWriting && !(content is ODataPrimitiveValue))
             {
-                var resource = content as ODataResourceBase;
-                newScope.ResourceType = resource != null
-                                        ? GetResourceType(resource)
-                                        : GetResourceSetType(content as ODataResourceSetBase);
+                ODataPrimitiveValue primitiveValue = content as ODataPrimitiveValue;
+                if (primitiveValue != null)
+                {
+                    newScope.ItemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.GetType()).Definition;
+                }
+                else
+                {
+                    ODataResourceBase resource = content as ODataResourceBase;
+                    newScope.ResourceType = resource != null
+                                            ? GetResourceType(resource)
+                                            : GetResourceSetType(content as ODataResourceSetBase);
+                }
             }
         }
 
@@ -2222,7 +2422,7 @@ namespace Microsoft.OData
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullResource(this.State.ToString(), newState.ToString()));
                         }
 
-                        if (newState != WriterState.NestedResourceInfo)
+                        if (newState != WriterState.NestedResourceInfo && newState != WriterState.Property)
                         {
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResource(this.State.ToString(), newState.ToString()));
                         }
@@ -2243,9 +2443,9 @@ namespace Microsoft.OData
                     // Within a typed resource set we can only write a resource.
                     // Within an untyped resource set we can also write a primitive value or nested resource set.
                     if (newState != WriterState.Resource &&
-                        (this.CurrentScope.ResourceType == null ||
+                        (this.CurrentScope.ResourceType != null &&
                             (this.CurrentScope.ResourceType.TypeKind != EdmTypeKind.Untyped ||
-                                (newState != WriterState.Primitive && newState != WriterState.ResourceSet))))
+                                (newState != WriterState.Primitive && newState != WriterState.Stream && newState != WriterState.ResourceSet))))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
@@ -2266,12 +2466,22 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.NestedResourceInfoWithContent:
-                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && (this.Version < ODataVersion.V401 || (newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)))
+                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.Primitive && (this.Version < ODataVersion.V401 || (newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
+                case WriterState.Property:
+                    if (newState != WriterState.Stream)
+                    {
+                        throw new ODataException(Strings.ODataWriterCore_InvalidStateTransition(this.State.ToString(), newState.ToString()));
+                    }
+
+                    break;
+                case WriterState.Stream:
+                    // todo (mikep): create appropriate error string
+                    throw new ODataException("Stream must be disposed before calling Write on ODataWriter");
                 case WriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
                     throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
@@ -2294,13 +2504,15 @@ namespace Microsoft.OData
         /// <param name="state">The writer state of the scope to create.</param>
         /// <param name="item">The item attached to the scope to create.</param>
         /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the navigationSource base type should be used).</param>
+        /// <param name="itemType">The structured type for the items in the resource set to be written (or null if the navigationSource base type should be used).</param>
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The OdataUri info of this scope.</param>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
-        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private void PushScope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
+            IEdmStructuredType resourceType = itemType as IEdmStructuredType;
+
             Debug.Assert(
                 state == WriterState.Error ||
                 state == WriterState.Resource && (item == null || item is ODataResource) ||
@@ -2310,8 +2522,10 @@ namespace Microsoft.OData
                 state == WriterState.ResourceSet && item is ODataResourceSet ||
                 state == WriterState.DeltaResourceSet && item is ODataDeltaResourceSet ||
                 state == WriterState.Primitive && (item == null || item is ODataPrimitiveValue) ||
+                state == WriterState.Property && (item is ODataProperty) ||
                 state == WriterState.NestedResourceInfo && item is ODataNestedResourceInfo ||
                 state == WriterState.NestedResourceInfoWithContent && item is ODataNestedResourceInfo ||
+                state == WriterState.Stream && item == null ||
                 state == WriterState.Start && item == null ||
                 state == WriterState.Completed && item == null,
                 "Writer state and associated item do not match.");
@@ -2330,18 +2544,18 @@ namespace Microsoft.OData
                     scope = this.CreateResourceScope((ODataResource)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
                     break;
                 case WriterState.DeletedResource:
-                    scope = this.CreateDeletedResourceScope((ODataDeletedResource)item, navigationSource, (IEdmEntityType)resourceType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
+                    scope = this.CreateDeletedResourceScope((ODataDeletedResource)item, navigationSource, (IEdmEntityType)itemType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
                     break;
                 case WriterState.DeltaLink:
                 case WriterState.DeltaDeletedLink:
-                    scope = this.CreateDeltaLinkScope((ODataDeltaLinkBase)item, navigationSource, (IEdmEntityType)resourceType, selectedProperties, odataUri);
+                    scope = this.CreateDeltaLinkScope((ODataDeltaLinkBase)item, navigationSource, (IEdmEntityType)itemType, selectedProperties, odataUri);
                     break;
                 case WriterState.ResourceSet:
-                    scope = this.CreateResourceSetScope((ODataResourceSet)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
+                    scope = this.CreateResourceSetScope((ODataResourceSet)item, navigationSource, itemType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
                     if (this.outputContext.Model.IsUserModel())
                     {
                         Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
-                        ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(resourceType);
+                        ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(itemType);
                     }
 
                     break;
@@ -2354,15 +2568,19 @@ namespace Microsoft.OData
                     }
 
                     break;
+                case WriterState.Property:
+                    scope = this.CreatePropertyScope((ODataProperty)item, navigationSource, resourceType, selectedProperties, odataUri);
+                    break;
                 case WriterState.NestedResourceInfo:            // fall through
                 case WriterState.NestedResourceInfoWithContent:
-                    scope = this.CreateNestedResourceInfoScope(state, (ODataNestedResourceInfo)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+                    scope = this.CreateNestedResourceInfoScope(state, (ODataNestedResourceInfo)item, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
                     break;
                 case WriterState.Primitive:                 // fall through
+                case WriterState.Stream:                    // fall through
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
                 case WriterState.Error:
-                    scope = new Scope(state, item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+                    scope = new Scope(state, item, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
                     break;
                 default:
                     string errorMessage = Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
@@ -2523,6 +2741,9 @@ namespace Microsoft.OData
             /// <summary>The structured type for the resources in the resourceSet to be written (or null if the entity set base type should be used).</summary>
             private IEdmStructuredType resourceType;
 
+            /// <summary>The IEdmType of the item (may not be structured for primitive types).</summary>
+            private IEdmType itemType;
+
             /// <summary>The odata uri info for current scope.</summary>
             private ODataUri odataUri;
 
@@ -2532,15 +2753,16 @@ namespace Microsoft.OData
             /// <param name="state">The writer state of this scope.</param>
             /// <param name="item">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-            /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="resourceType">The type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of this scope should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            internal Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
             {
                 this.state = state;
                 this.item = item;
-                this.resourceType = resourceType;
+                this.itemType = itemType;
+                this.resourceType = itemType as IEdmStructuredType;
                 this.navigationSource = navigationSource;
                 this.skipWriting = skipWriting;
                 this.selectedProperties = selectedProperties;
@@ -2560,6 +2782,24 @@ namespace Microsoft.OData
                 set
                 {
                     this.resourceType = value;
+                    this.itemType = value;
+                }
+            }
+
+            /// <summary>
+            /// The structured type for the items in the resource set to be written (or null if the entity set base type should be used).
+            /// </summary>
+            public IEdmType ItemType
+            {
+                get
+                {
+                    return this.itemType;
+                }
+
+                set
+                {
+                    this.itemType = value;
+                    this.resourceType = value as IEdmStructuredType;
                 }
             }
 
@@ -2604,7 +2844,6 @@ namespace Microsoft.OData
             {
                 get
                 {
-                    Debug.Assert(this.selectedProperties != null, "this.selectedProperties != null");
                     return this.selectedProperties;
                 }
             }
@@ -2659,12 +2898,12 @@ namespace Microsoft.OData
             /// <param name="writerState">The writer state for the scope.</param>
             /// <param name="resourceSet">The resourceSet for the new scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-            /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="itemType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal ResourceSetBaseScope(WriterState writerState, ODataResourceSetBase resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(writerState, resourceSet, navigationSource, resourceType, skipWriting, selectedProperties, odataUri)
+            internal ResourceSetBaseScope(WriterState writerState, ODataResourceSetBase resourceSet, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(writerState, resourceSet, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
             {
                 this.serializationInfo = resourceSet.SerializationInfo;
             }
@@ -2753,12 +2992,12 @@ namespace Microsoft.OData
             /// </summary>
             /// <param name="item">The resource set for the new scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-            /// <param name="resourceType">The structured type of the items in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="itemType">The type of the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            protected ResourceSetScope(ODataResourceSet item, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(WriterState.ResourceSet, item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri)
+            protected ResourceSetScope(ODataResourceSet item, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.ResourceSet, item, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
             {
             }
         }
@@ -2814,13 +3053,13 @@ namespace Microsoft.OData
             /// <param name="resource">The resource for the new scope.</param>
             /// <param name="serializationInfo">The serialization info for the current resource.</param>
             /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-            /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="itemType">The type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal ResourceBaseScope(WriterState state, ODataResourceBase resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(state, resource, navigationSource, resourceType, skipWriting, selectedProperties, odataUri)
+            internal ResourceBaseScope(WriterState state, ODataResourceBase resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(state, resource, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
             {
                 Debug.Assert(writerSettings != null, "writerBehavior != null");
 
@@ -3013,6 +3252,34 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// A scope for writing a single property within a resource.
+        /// </summary>
+        internal class PropertyScope : Scope
+        {
+            /// <summary>
+            /// Constructor to create a new property scope.
+            /// </summary>
+            /// <param name="property">The property for the new scope.</param>
+            /// <param name="navigationSource">The navigation source.</param>
+            /// <param name="resourceType">The structured type for the resource containing the property to be written.</param>
+            /// <param name="selectedProperties">The selected properties of this scope.</param>
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            internal PropertyScope(ODataProperty property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(WriterState.Property, property, navigationSource, resourceType, /*skipWriting*/ false, selectedProperties, odataUri)
+            {
+            }
+
+            public ODataProperty Property
+            {
+                get
+                {
+                    Debug.Assert(this.Item is ODataProperty, "The item of a property scope is not an item.");
+                    return this.Item as ODataProperty;
+                }
+            }
+        }
+
+        /// <summary>
         /// A scope for a nested resource info.
         /// </summary>
         internal class NestedResourceInfoScope : Scope
@@ -3023,12 +3290,12 @@ namespace Microsoft.OData
             /// <param name="writerState">The writer state for the new scope.</param>
             /// <param name="navLink">The nested resource info for the new scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-            /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="itemType">The type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal NestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(writerState, navLink, navigationSource, resourceType, skipWriting, selectedProperties, odataUri)
+            internal NestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
             {
             }
 
@@ -3039,7 +3306,7 @@ namespace Microsoft.OData
             /// <returns>The cloned nested resource info scope with the specified writer state.</returns>
             internal virtual NestedResourceInfoScope Clone(WriterState newWriterState)
             {
-                return new NestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ResourceType, this.SkipWriting, this.SelectedProperties, this.ODataUri);
+                return new NestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ItemType, this.SkipWriting, this.SelectedProperties, this.ODataUri);
             }
         }
     }

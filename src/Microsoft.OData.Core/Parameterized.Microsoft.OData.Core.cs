@@ -155,7 +155,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a nested resource."
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a property or a nested resource."
         /// </summary>
         internal static string ODataWriterCore_InvalidTransitionFromResource(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromResource, p0, p1);
@@ -3465,13 +3465,6 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations."
-        /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_StreamPropertyWithValue(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyWithValue, p0);
         }
 
         /// <summary>

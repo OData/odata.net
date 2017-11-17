@@ -47,6 +47,8 @@
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
+    <Compile Include="ODataBinaryStreamReader.cs" />
+    <Compile Include="ODataBinaryStreamWriter.cs" />
     <Compile Include="UnknownEntitySet.cs" />
     <Compile Include="IContainerProvider.cs" />
     <Compile Include="IDuplicatePropertyNameChecker.cs" />

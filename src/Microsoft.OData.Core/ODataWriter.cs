@@ -9,9 +9,10 @@ namespace Microsoft.OData
     #region Namespaces
 
     using System;
-    #if PORTABLELIB
+    using System.IO;
+#if PORTABLELIB
     using System.Threading.Tasks;
-    #endif
+#endif
 
     #endregion Namespaces
 
@@ -88,7 +89,7 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            throw new NotImplementedException();
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(deltaResourceSet));
         }
 #endif
 
@@ -211,7 +212,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Write a delta deleted link.
         /// </summary>
-        /// <param name="deltaLink">The delta deleted link to write.</param>
+        /// <param name="deltaDeletedLink">The delta deleted link to write.</param>
         public virtual void WriteDeltaDeletedLink(ODataDeltaDeletedLink deltaDeletedLink)
         {
             throw new NotImplementedException();
@@ -286,6 +287,73 @@ namespace Microsoft.OData
         public virtual Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitive(primitiveValue));
+        }
+#endif
+
+        /// <summary>Writes a primitive property within a resource.</summary>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        public virtual void WriteStart(ODataProperty primitiveProperty)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Writes a primitive property within a resource.</summary>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataProperty primitiveProperty)
+        {
+            WriteStart(primitiveProperty);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a primitive property within a resource.</summary>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        /// <param name="nestedAction">The action to perform in-between the writing.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataProperty primitiveProperty, Action nestedAction)
+        {
+            WriteStart(primitiveProperty);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously write a primitive property within a resource. </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <param name="primitiveProperty">The primitive property to write.</param>
+        public virtual Task WriteAsync(ODataProperty primitiveProperty)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(primitiveProperty));
+        }
+#endif
+
+        /// <summary>Creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public virtual Stream CreateBinaryWriteStream()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Creates a stream for writing a binary value.</summary>
+        /// <param name="stream">The stream to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter WriteStream(Stream stream)
+        {
+            Stream writeStream = this.CreateBinaryWriteStream();
+            stream.CopyTo(writeStream);
+            writeStream.Flush();
+            writeStream.Dispose();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public virtual Task<Stream> CreateWriteStreamAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBinaryWriteStream());
         }
 #endif
 

@@ -76,7 +76,19 @@ namespace Microsoft.OData
         /// Implementation of the reader logic when in state 'Primitive'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtPrimitiveImplementationAsync();
+        protected virtual Task<bool> ReadAtPrimitiveImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtPrimitiveImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Stream'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtStreamImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtStreamImplementation);
+        }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
@@ -185,6 +197,10 @@ namespace Microsoft.OData
 
                 case ODataReaderState.Primitive:
                     result = this.ReadAtPrimitiveImplementationAsync();
+                    break;
+
+                case ODataReaderState.Stream:
+                    result = this.ReadAtStreamImplementationAsync();
                     break;
 
                 case ODataReaderState.NestedResourceInfoStart:

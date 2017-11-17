@@ -12,7 +12,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Represents a single property of a resource.
     /// </summary>
-    public sealed class ODataProperty : ODataAnnotatable
+    public sealed class ODataProperty : ODataItem
     {
         /// <summary>
         /// The value of this property, accessed and set by both <seealso cref="Value"/> and <seealso cref="ODataValue"/>.

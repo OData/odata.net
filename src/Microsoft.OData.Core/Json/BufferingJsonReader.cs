@@ -6,10 +6,12 @@
 
 namespace Microsoft.OData.Json
 {
+    using System;
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Text;
     using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
@@ -17,7 +19,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Reader for the JSON format (http://www.json.org) that supports look-ahead.
     /// </summary>
-    internal class BufferingJsonReader : IJsonReader
+    internal class BufferingJsonReader : IJsonStreamReader
     {
         /// <summary>The (possibly empty) list of buffered nodes.</summary>
         /// <remarks>This is a circular linked list where this field points to the first item of the list.</remarks>
@@ -141,6 +143,30 @@ namespace Microsoft.OData.Json
             {
                 return this.innerReader.IsIeee754Compatible;
             }
+        }
+
+        public Stream CreateReadStream(Encoding encoding)
+        {
+            if (this.NodeType != JsonNodeType.Property && this.NodeType != JsonNodeType.StartArray)
+            {
+                throw new Exception("must only call readstream when positioned on a property or start array");
+            }
+            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
+            if (!this.isBuffering && streamReader != null)
+            {
+                return streamReader.CreateReadStream(encoding);
+            }
+
+            this.innerReader.Read();
+
+            if (encoding == null)
+            {
+                return new MemoryStream(
+                    Convert.FromBase64String(((string)this.Value).Replace('_', '/').Replace('-', '+')));
+            }
+
+            return new MemoryStream(
+                encoding.GetBytes(((string)this.Value).Replace('_', '/').Replace('-', '+')));
         }
 
         /// <summary>
@@ -970,6 +996,7 @@ namespace Microsoft.OData.Json
 
             return false;
         }
+
 #endif
         /// <summary>
         /// Private class used to buffer nodes when reading in buffering mode.

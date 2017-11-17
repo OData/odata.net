@@ -527,33 +527,7 @@ namespace Microsoft.OData.JsonLight
                 IsComplex = true
             };
 
-            ODataResourceSet expandedResourceSet = new ODataResourceSet();
-
-            foreach (var propertyAnnotation
-                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
-            {
-                switch (propertyAnnotation.Key)
-                {
-                    case ODataAnnotationNames.ODataNextLink:
-                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.nextLink annotation should have been parsed as a non-null Uri.");
-                        expandedResourceSet.NextPageLink = (Uri)propertyAnnotation.Value;
-                        break;
-
-                    case ODataAnnotationNames.ODataCount:
-                        Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
-                        expandedResourceSet.Count = (long?)propertyAnnotation.Value;
-                        break;
-
-                    case ODataAnnotationNames.ODataType:
-                        expandedResourceSet.TypeName = (string)propertyAnnotation.Value;
-                        Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
-                        break;
-
-                    default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
-                }
-            }
-
+            ODataResourceSet expandedResourceSet = CreateCollectionResourceSet(resourceState, propertyName);
             return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, nestedResourceType, expandedResourceSet);
         }
 
@@ -707,6 +681,7 @@ namespace Microsoft.OData.JsonLight
                         Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
                         expandedResourceSet.Count = (long?)propertyAnnotation.Value;
                         break;
+
                     case ODataAnnotationNames.ODataContext:
                         Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
                         nestedResourceInfo.ContextUrl = (Uri)propertyAnnotation.Value;
@@ -724,6 +699,36 @@ namespace Microsoft.OData.JsonLight
             }
 
             return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, navigationProperty, propertyType, expandedResourceSet);
+        }
+
+
+        /// <summary>
+        /// Reads a nested stream collection as a resource set.
+        /// </summary>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
+        /// <param name="collectionProperty">The collection of complex property for which to read the nested resource info. null for undeclared property.</param>
+        /// <param name="propertyName">The propert name.</param>
+        /// <returns>The nested resource info for the stream collection.</returns>
+        /// <remarks>
+        /// This method doesn't move the reader.
+        /// </remarks>
+        protected static ODataJsonLightReaderNestedResourceInfo ReadStreamCollectionNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty collectionProperty, string propertyName)
+        {
+            Debug.Assert(resourceState != null, "resourceState != null");
+            Debug.Assert((propertyName != null) || (collectionProperty != null),
+                "The collection property and property name shouldn't both be null");
+            Debug.Assert(collectionProperty == null || collectionProperty.Type.Definition.AsElementType().IsStream(),
+                "The type of the property, if specified, must be Collection(Edm.Stream)");
+
+            ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
+            {
+                Name = propertyName,
+                IsCollection = true,
+                IsComplex = false
+            };
+
+            ODataResourceSet expandedResourceSet = CreateCollectionResourceSet(resourceState, propertyName);
+            return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), expandedResourceSet);
         }
 
         /// <summary>
@@ -1037,6 +1042,44 @@ namespace Microsoft.OData.JsonLight
                 case JsonNodeType.StartArray: return EdmTypeKind.Collection;
                 default: return EdmTypeKind.Complex;
             }
+        }
+
+        /// <summary>
+        /// Creates an instance of an ODataResourceSet that represents a nested collection
+        /// </summary>
+        /// <param name="resourceState">The current resource state</param>
+        /// <param name="propertyName">The name of the collection property being read</param>
+        /// <returns></returns>
+        private static ODataResourceSet CreateCollectionResourceSet(IODataJsonLightReaderResourceState resourceState, string propertyName)
+        {
+            ODataResourceSet collectionResourceSet = new ODataResourceSet();
+
+            foreach (var propertyAnnotation
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName))
+            {
+                switch (propertyAnnotation.Key)
+                {
+                    case ODataAnnotationNames.ODataNextLink:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.nextLink annotation should have been parsed as a non-null Uri.");
+                        collectionResourceSet.NextPageLink = (Uri)propertyAnnotation.Value;
+                        break;
+
+                    case ODataAnnotationNames.ODataCount:
+                        Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
+                        collectionResourceSet.Count = (long?)propertyAnnotation.Value;
+                        break;
+
+                    case ODataAnnotationNames.ODataType:
+                        collectionResourceSet.TypeName = (string)propertyAnnotation.Value;
+                        Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
+                        break;
+
+                    default:
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation(propertyName, propertyAnnotation.Key));
+                }
+            }
+
+            return collectionResourceSet;
         }
 
         /// <summary>

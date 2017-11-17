@@ -34,6 +34,11 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
 
+        /// <summary>
+        /// An in-memory stream for writing stream properties to non-streaming json writer.
+        /// </summary>
+        private MemoryStream binaryValueStream = null;
+
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
 
@@ -86,7 +91,7 @@ namespace Microsoft.OData.JsonLight
 
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
-                this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+                this.jsonWriter = CreateJsonWriter(this.Container, outputStream, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
             }
             catch (Exception e)
             {
@@ -121,7 +126,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, true /*isIeee754Compatible*/);
+            this.jsonWriter = CreateJsonWriter(messageInfo.Container, messageInfo.MessageStream, textWriter, true /*isIeee754Compatible*/);
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
@@ -135,6 +140,22 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(this.jsonWriter != null, "Trying to get JsonWriter while none is available.");
                 return this.jsonWriter;
+            }
+        }
+
+        /// <summary>
+        /// Returns an in-memory stream for writing stream properties to non-streaming json writer.
+        /// </summary>
+        public MemoryStream BinaryValueStream
+        {
+            get
+            {
+                return this.binaryValueStream;
+            }
+
+            set
+            {
+                this.binaryValueStream = value;
             }
         }
 
@@ -711,11 +732,17 @@ namespace Microsoft.OData.JsonLight
                     // Dipose the message stream (note that we OWN this stream, so we always dispose it).
                     this.messageOutputStream.Dispose();
                 }
+
+                if (this.binaryValueStream != null)
+                {
+                    this.binaryValueStream.Dispose();
+                }
             }
             finally
             {
                 this.messageOutputStream = null;
                 this.asynchronousOutputStream = null;
+                this.binaryValueStream = null;
                 this.textWriter = null;
                 this.jsonWriter = null;
             }
@@ -723,15 +750,15 @@ namespace Microsoft.OData.JsonLight
             base.Dispose(disposing);
         }
 
-        private static IJsonWriter CreateJsonWriter(IServiceProvider container, TextWriter textWriter, bool isIeee754Compatible)
+        private static IJsonWriter CreateJsonWriter(IServiceProvider container, Stream stream, TextWriter textWriter, bool isIeee754Compatible)
         {
             if (container == null)
             {
                 return new JsonWriter(textWriter, isIeee754Compatible);
             }
 
-            var jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
-            var jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, isIeee754Compatible);
+            IJsonWriterFactory jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
+            IJsonWriter jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, isIeee754Compatible);
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
 
             return jsonWriter;

@@ -8,14 +8,32 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.IO;
     using Microsoft.OData.Evaluation;
 
     #endregion
 
+    // todo (mikep): move to its own file
+
+    /// <summary>
+    /// Represents a stream value.
+    /// </summary>
+    public class ODataStreamValue : ODataValue
+    {
+        public ODataStreamValue(Stream stream, bool isBinaryValue)
+        {
+            this.Stream = stream;
+            this.IsBinaryValue = isBinaryValue;
+        }
+
+        public Stream Stream { get; private set; }
+        public bool IsBinaryValue { get; private set; }
+    }
+
     /// <summary>
     /// Represents a media resource.
     /// </summary>
-    public sealed class ODataStreamReferenceValue : ODataValue
+    public class ODataStreamReferenceValue : ODataValue
     {
         /// <summary>the metadata builder for this OData resource.</summary>
         private ODataResourceMetadataBuilder metadataBuilder;
