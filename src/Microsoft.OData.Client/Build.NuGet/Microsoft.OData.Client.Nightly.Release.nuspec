@@ -14,6 +14,7 @@
     <summary>LINQ-enabled client API for issuing OData queries and consuming OData JSON payloads. Supports OData v4 only. </summary>
     <description>LINQ-enabled client API for issuing OData queries and consuming OData JSON payloads. Supports OData v4 only. Targets .NET 4.0, and .NET Portable Lib with support for .NET 4.5, Win Phone 8, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
+    <copyright>© Microsoft Corporation.  All rights reserved.</copyright>
     <dependencies>
       <dependency id="Microsoft.OData.Core" version="[$VersionFullSemantic$-Nightly$NightlyBuildVersion$]" />
     </dependencies>
