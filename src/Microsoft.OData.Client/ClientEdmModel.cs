@@ -21,7 +21,13 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using c = Microsoft.OData.Client;
+
+#if PORTABLELIB && WINDOWSPHONE
+    // Windows Phone 8.0 doesn't support ConcurrentDictionary
+    using ConcurrentEdmSchemaDictionary = System.Collections.Generic.Dictionary<string, Edm.IEdmSchemaElement>;
+#else
     using ConcurrentEdmSchemaDictionary = System.Collections.Concurrent.ConcurrentDictionary<string, Edm.IEdmSchemaElement>;
+#endif
 
     #endregion Namespaces.
 
