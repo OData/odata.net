@@ -3936,6 +3936,12 @@ public enum Microsoft.OData.ODataPropertyKind : int {
 
 public enum Microsoft.OData.ODataReaderState : int {
 	Completed = 9
+	DeletedResourceEnd = 14
+	DeletedResourceStart = 13
+	DeltaDeletedLink = 16
+	DeltaLink = 15
+	DeltaResourceSetEnd = 12
+	DeltaResourceSetStart = 11
 	EntityReferenceLink = 7
 	Exception = 8
 	NestedResourceInfoEnd = 6
@@ -3950,6 +3956,7 @@ public enum Microsoft.OData.ODataReaderState : int {
 
 public enum Microsoft.OData.ODataVersion : int {
 	V4 = 0
+	V401 = 1
 }
 
 public enum Microsoft.OData.ServiceLifetime : int {
@@ -4114,6 +4121,8 @@ public abstract class Microsoft.OData.ODataInputContext : IDisposable {
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionReader]] CreateCollectionReaderAsync (Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference)
 	internal virtual Microsoft.OData.ODataDeltaReader CreateDeltaReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType expectedBaseEntityType)
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataDeltaReader]] CreateDeltaReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType expectedBaseEntityType)
+	public virtual Microsoft.OData.ODataReader CreateDeltaResourceSetReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateDeltaResourceSetReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
 	public virtual Microsoft.OData.ODataParameterReader CreateParameterReader (Microsoft.OData.Edm.IEdmOperation operation)
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataParameterReader]] CreateParameterReaderAsync (Microsoft.OData.Edm.IEdmOperation operation)
 	public virtual Microsoft.OData.ODataReader CreateResourceReader (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
@@ -4168,6 +4177,8 @@ public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchWriter]] CreateODataBatchWriterAsync (string batchBoundary)
 	public virtual Microsoft.OData.ODataCollectionWriter CreateODataCollectionWriter (Microsoft.OData.Edm.IEdmTypeReference itemTypeReference)
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionWriter]] CreateODataCollectionWriterAsync (Microsoft.OData.Edm.IEdmTypeReference itemTypeReference)
+	public virtual Microsoft.OData.ODataWriter CreateODataDeltaResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataDeltaResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType entityType)
 	internal virtual Microsoft.OData.ODataDeltaWriter CreateODataDeltaWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataDeltaWriter]] CreateODataDeltaWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
 	public virtual Microsoft.OData.ODataParameterWriter CreateODataParameterWriter (Microsoft.OData.Edm.IEdmOperation operation)
@@ -4242,6 +4253,28 @@ public abstract class Microsoft.OData.ODataReader {
 	public abstract System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
 }
 
+[
+DebuggerDisplayAttribute(),
+]
+public abstract class Microsoft.OData.ODataResourceBase : Microsoft.OData.ODataItem {
+	protected ODataResourceBase ()
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataAction]] Actions  { public get; }
+	System.Uri EditLink  { public get; public set; }
+	string ETag  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataFunction]] Functions  { public get; }
+	System.Uri Id  { public get; public set; }
+	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
+	bool IsTransient  { public get; public set; }
+	Microsoft.OData.ODataStreamReferenceValue MediaResource  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataProperty]] Properties  { public get; public set; }
+	System.Uri ReadLink  { public get; public set; }
+	string TypeName  { public get; public set; }
+
+	public void AddAction (Microsoft.OData.ODataAction action)
+	public void AddFunction (Microsoft.OData.ODataFunction function)
+}
+
 public abstract class Microsoft.OData.ODataResourceSetBase : Microsoft.OData.ODataItem {
 	protected ODataResourceSetBase ()
 
@@ -4250,6 +4283,7 @@ public abstract class Microsoft.OData.ODataResourceSetBase : Microsoft.OData.ODa
 	System.Uri Id  { public get; public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	System.Uri NextPageLink  { public get; public set; }
+	string TypeName  { public get; public set; }
 }
 
 public abstract class Microsoft.OData.ODataServiceDocumentElement : Microsoft.OData.ODataAnnotatable {
@@ -4269,22 +4303,36 @@ public abstract class Microsoft.OData.ODataWriter {
 
 	public abstract void Flush ()
 	public abstract System.Threading.Tasks.Task FlushAsync ()
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeletedResource deletedResource)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeltaLink deltaLink)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataPrimitiveValue primitiveValue)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeletedResource deletedResource, System.Action nestedAction)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet, System.Action nestedAction)
+	public virtual void WriteDeltaDeletedLink (Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink)
+	public virtual System.Threading.Tasks.Task WriteDeltaDeletedLinkAsync (Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink)
+	public virtual void WriteDeltaLink (Microsoft.OData.ODataDeltaLink deltaLink)
+	public virtual System.Threading.Tasks.Task WriteDeltaLinkAsync (Microsoft.OData.ODataDeltaLink deltaLink)
 	public abstract void WriteEnd ()
 	public abstract System.Threading.Tasks.Task WriteEndAsync ()
 	public abstract void WriteEntityReferenceLink (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink)
 	public abstract System.Threading.Tasks.Task WriteEntityReferenceLinkAsync (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink)
 	public virtual void WritePrimitive (Microsoft.OData.ODataPrimitiveValue primitiveValue)
 	public virtual System.Threading.Tasks.Task WritePrimitiveAsync (Microsoft.OData.ODataPrimitiveValue primitiveValue)
+	public virtual void WriteStart (Microsoft.OData.ODataDeletedResource deletedResource)
+	public virtual void WriteStart (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
 	public abstract void WriteStart (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract void WriteStart (Microsoft.OData.ODataResource resource)
 	public abstract void WriteStart (Microsoft.OData.ODataResourceSet resourceSet)
+	public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeletedResource deletedResource)
+	public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResource resource)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResourceSet resourceSet)
@@ -4378,12 +4426,22 @@ public sealed class Microsoft.OData.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
+	public static void SetSerializationInfo (Microsoft.OData.ODataDeltaDeletedEntry deltaDeletedEntry, Microsoft.OData.ODataResourceSerializationInfo serializationInfo)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static void SetSerializationInfo (Microsoft.OData.ODataDeltaLinkBase deltalink, Microsoft.OData.ODataDeltaSerializationInfo serializationInfo)
 
 	[
 	ExtensionAttribute(),
 	]
 	public static void SetSerializationInfo (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet, Microsoft.OData.ODataDeltaResourceSetSerializationInfo serializationInfo)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static void SetSerializationInfo (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet, Microsoft.OData.ODataResourceSerializationInfo serializationInfo)
 
 	[
 	ExtensionAttribute(),
@@ -4398,7 +4456,7 @@ public sealed class Microsoft.OData.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetSerializationInfo (Microsoft.OData.ODataResource resource, Microsoft.OData.ODataResourceSerializationInfo serializationInfo)
+	public static void SetSerializationInfo (Microsoft.OData.ODataResourceBase resource, Microsoft.OData.ODataResourceSerializationInfo serializationInfo)
 
 	[
 	ExtensionAttribute(),
@@ -4613,6 +4671,13 @@ public sealed class Microsoft.OData.ODataCollectionValue : Microsoft.OData.OData
 	string TypeName  { public get; public set; }
 }
 
+public sealed class Microsoft.OData.ODataDeletedResource : Microsoft.OData.ODataResourceBase {
+	public ODataDeletedResource ()
+	public ODataDeletedResource (System.Uri id, Microsoft.OData.DeltaDeletedEntryReason reason)
+
+	System.Nullable`1[[Microsoft.OData.DeltaDeletedEntryReason]] Reason  { public get; public set; }
+}
+
 public sealed class Microsoft.OData.ODataDeltaDeletedEntry : Microsoft.OData.ODataItem {
 	public ODataDeltaDeletedEntry (string id, Microsoft.OData.DeltaDeletedEntryReason reason)
 
@@ -4808,8 +4873,22 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 	public Microsoft.OData.ODataCollectionReader CreateODataCollectionReader (Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionReader]] CreateODataCollectionReaderAsync ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionReader]] CreateODataCollectionReaderAsync (Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference)
+	[
+	ObsoleteAttribute(),
+	]
 	public Microsoft.OData.ODataDeltaReader CreateODataDeltaReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType expectedBaseEntityType)
+
+	[
+	ObsoleteAttribute(),
+	]
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataDeltaReader]] CreateODataDeltaReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType expectedBaseEntityType)
+
+	public Microsoft.OData.ODataReader CreateODataDeltaResourceSetReader ()
+	public Microsoft.OData.ODataReader CreateODataDeltaResourceSetReader (Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public Microsoft.OData.ODataReader CreateODataDeltaResourceSetReader (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataDeltaResourceSetReaderAsync ()
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataDeltaResourceSetReaderAsync (Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateODataDeltaResourceSetReaderAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType)
 	public Microsoft.OData.ODataParameterReader CreateODataParameterReader (Microsoft.OData.Edm.IEdmOperation operation)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataParameterReader]] CreateODataParameterReaderAsync (Microsoft.OData.Edm.IEdmOperation operation)
 	public Microsoft.OData.ODataReader CreateODataResourceReader ()
@@ -4865,6 +4944,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	bool ReadUntypedAsString  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
+	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 
 	public Microsoft.OData.ODataMessageReaderSettings Clone ()
 }
@@ -4885,8 +4965,22 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 	public Microsoft.OData.ODataCollectionWriter CreateODataCollectionWriter (Microsoft.OData.Edm.IEdmTypeReference itemTypeReference)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionWriter]] CreateODataCollectionWriterAsync ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionWriter]] CreateODataCollectionWriterAsync (Microsoft.OData.Edm.IEdmTypeReference itemTypeReference)
+	public Microsoft.OData.ODataWriter CreateODataDeltaResourceSetWriter ()
+	public Microsoft.OData.ODataWriter CreateODataDeltaResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public Microsoft.OData.ODataWriter CreateODataDeltaResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataDeltaResourceSetWriterAsync ()
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataDeltaResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataDeltaResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
+	[
+	ObsoleteAttribute(),
+	]
 	public Microsoft.OData.ODataDeltaWriter CreateODataDeltaWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
+
+	[
+	ObsoleteAttribute(),
+	]
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataDeltaWriter]] CreateODataDeltaWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
+
 	public Microsoft.OData.ODataParameterWriter CreateODataParameterWriter (Microsoft.OData.Edm.IEdmOperation operation)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataParameterWriter]] CreateODataParameterWriterAsync (Microsoft.OData.Edm.IEdmOperation operation)
 	public Microsoft.OData.ODataWriter CreateODataResourceSetWriter ()
@@ -4986,26 +5080,8 @@ public sealed class Microsoft.OData.ODataPropertySerializationInfo {
 	Microsoft.OData.ODataPropertyKind PropertyKind  { public get; public set; }
 }
 
-[
-DebuggerDisplayAttribute(),
-]
-public sealed class Microsoft.OData.ODataResource : Microsoft.OData.ODataItem {
+public sealed class Microsoft.OData.ODataResource : Microsoft.OData.ODataResourceBase {
 	public ODataResource ()
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataAction]] Actions  { public get; }
-	System.Uri EditLink  { public get; public set; }
-	string ETag  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataFunction]] Functions  { public get; }
-	System.Uri Id  { public get; public set; }
-	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	bool IsTransient  { public get; public set; }
-	Microsoft.OData.ODataStreamReferenceValue MediaResource  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataProperty]] Properties  { public get; public set; }
-	System.Uri ReadLink  { public get; public set; }
-	string TypeName  { public get; public set; }
-
-	public void AddAction (Microsoft.OData.ODataAction action)
-	public void AddFunction (Microsoft.OData.ODataFunction function)
 }
 
 public sealed class Microsoft.OData.ODataResourceSerializationInfo {
@@ -5023,7 +5099,6 @@ public sealed class Microsoft.OData.ODataResourceSet : Microsoft.OData.ODataReso
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataAction]] Actions  { public get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataFunction]] Functions  { public get; }
-	string TypeName  { public get; public set; }
 
 	public void AddAction (Microsoft.OData.ODataAction action)
 	public void AddFunction (Microsoft.OData.ODataFunction function)
@@ -5039,6 +5114,7 @@ public sealed class Microsoft.OData.ODataServiceDocument : Microsoft.OData.OData
 
 public sealed class Microsoft.OData.ODataSimplifiedOptions {
 	public ODataSimplifiedOptions ()
+	public ODataSimplifiedOptions (System.Nullable`1[[Microsoft.OData.ODataVersion]] version)
 
 	bool EnableParsingKeyAsSegmentUrl  { public get; public set; }
 	bool EnableReadingKeyAsSegment  { public get; public set; }
@@ -6730,6 +6806,7 @@ public enum Microsoft.OData.Client.MergeOption : int {
 
 public enum Microsoft.OData.Client.ODataProtocolVersion : int {
 	V4 = 0
+	V401 = 1
 }
 
 [

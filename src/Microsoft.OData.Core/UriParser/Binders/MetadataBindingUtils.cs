@@ -60,7 +60,7 @@ namespace Microsoft.OData.UriParser
                 {
                     return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), constantNode.Value.ToString(), targetTypeReference);
                 }
-                
+
                 if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));

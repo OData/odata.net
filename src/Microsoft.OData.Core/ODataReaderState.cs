@@ -83,5 +83,47 @@ namespace Microsoft.OData
         /// an <see cref="ODataPrimitiveValue"/>.
         /// </remarks>
         Primitive,
+
+        /// <summary>The start of a delta resource set has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaResourceSet"/>.
+        /// </remarks>
+        DeltaResourceSetStart,
+
+        /// <summary>The end of a delta resource set has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaResourceSet"/>.
+        /// </remarks>
+        DeltaResourceSetEnd,
+
+        /// <summary>The start of a deleted resource has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeletedResource"/>.
+        /// </remarks>
+        DeletedResourceStart,
+
+        /// <summary>The end of a deleted resource has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeletedResource"/>.
+        /// </remarks>
+        DeletedResourceEnd,
+
+        /// <summary>The reder is positioned on a delta link.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaLink"/>.
+        /// </remarks>
+        DeltaLink,
+
+        /// <summary>The reader is positioned on a delta deleted link.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaDeletedLink"/>.
+        /// </remarks>
+        DeltaDeletedLink,
     }
 }

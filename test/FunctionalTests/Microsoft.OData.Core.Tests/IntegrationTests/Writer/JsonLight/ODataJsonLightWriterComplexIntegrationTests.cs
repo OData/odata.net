@@ -65,6 +65,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             edmModel.AddElement(this.derivedAddressType);
             edmModel.AddElement(this.openAddressType);
 
+            edmModel.AddEntityContainer("TestNamespace", "Container").AddEntitySet("entitySet", this.entityType);
+
             this.address = new ODataResource() { TypeName = "TestNamespace.Address", Properties = new ODataProperty[] { new ODataProperty { Name = "City", Value = "Shanghai" } } };
             this.homeAddress = new ODataResource { TypeName = "TestNamespace.HomeAddress", Properties = new ODataProperty[] { new ODataProperty { Name = "FamilyName", Value = "Green" }, new ODataProperty { Name = "City", Value = "Shanghai" } } };
             this.addressWithInstanceAnnotation = new ODataResource()

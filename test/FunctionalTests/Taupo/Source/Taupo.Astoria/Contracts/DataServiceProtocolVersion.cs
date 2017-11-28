@@ -18,6 +18,9 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
         /// <summary>Version 4 of the Server</summary>
         V4,
 
+        /// <summary>Version 4.01 of the Server</summary>
+        V4_01,
+
         /// <summary>Version 5 of the Server</summary>
         LatestVersionPlusOne
     }

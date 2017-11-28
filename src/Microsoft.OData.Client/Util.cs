@@ -50,11 +50,17 @@ namespace Microsoft.OData.Client
         internal static readonly Version ODataVersion4 = new Version(4, 0);
 
         /// <summary>
+        /// OData Version 4.01
+        /// </summary>
+        internal static readonly Version ODataVersion401 = new Version(4, 1);
+
+        /// <summary>
         /// Data service versions supported on the client
         /// </summary>
         internal static readonly Version[] SupportedResponseVersions =
         {
-            ODataVersion4
+            ODataVersion4,
+            ODataVersion401
         };
 
         /// <summary>
@@ -570,9 +576,13 @@ namespace Microsoft.OData.Client
         {
             switch (protocolVersion)
             {
-                default:
-                    Debug.Assert(protocolVersion == ODataProtocolVersion.V4, "Did you add a new version?");
+                case ODataProtocolVersion.V4:
                     return ODataVersion4;
+                case ODataProtocolVersion.V401:
+                    return ODataVersion401;
+                default:
+                    Debug.Assert(false, "Did you add a new version?");
+                    return null;
             }
         }
 

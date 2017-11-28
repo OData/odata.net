@@ -162,6 +162,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Cannot transition from state '{0}' to state '{1}' when writing an OData 4.0 payload. To write content to a deleted resource, please specify ODataVersion 4.01 or greater in MessageWriterSettings."
+        /// </summary>
+        internal static string ODataWriterCore_InvalidTransitionFrom40DeletedResource(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFrom40DeletedResource, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}'. You must first call ODataWriter.WriteEnd to finish writing a null ODataResource."
         /// </summary>
         internal static string ODataWriterCore_InvalidTransitionFromNullResource(object p0, object p1) {
@@ -234,6 +242,28 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Cannot write a deleted resource, delta link, or delta deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter."
+        /// </summary>
+        internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Nested content is not allowed in an OData 4.0 deleted entry. For content in deleted entries, please specify OData 4.01 or greater."
+        /// </summary>
+        internal static string ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteNestedContentIn40DeltaPayload);
+            }
+        }
+
+        /// <summary>
         /// A string like "Cannot write a top-level resource set with a writer that was created to write a top-level resource."
         /// </summary>
         internal static string ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter {
@@ -241,7 +271,7 @@ namespace Microsoft.OData {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter);
             }
         }
-
+        
         /// <summary>
         /// A string like "Cannot write a top-level resource with a writer that was created to write a top-level resource set."
         /// </summary>
@@ -266,6 +296,15 @@ namespace Microsoft.OData {
         internal static string ODataWriterCore_AsyncCallOnSyncWriter {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_AsyncCallOnSyncWriter);
+            }
+        }
+
+        /// <summary>
+        /// A string like "No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified."
+        /// </summary>
+        internal static string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
             }
         }
 
@@ -1580,7 +1619,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' is supported as values for the OData-Version header."
+        /// A string like "The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' and '4.01' are supported as values for the OData-Version header."
         /// </summary>
         internal static string ODataUtils_UnsupportedVersionHeader(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_UnsupportedVersionHeader, p0);
@@ -1593,6 +1632,14 @@ namespace Microsoft.OData {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_UnsupportedVersionNumber);
             }
+        }
+
+        /// <summary>
+        /// A string like "An OData version of {0} was specified and the maximum supported OData version is {1}."
+        /// </summary>
+        internal static string ODataUtils_MaxProtocolVersionExceeded(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_MaxProtocolVersionExceeded, p0, p1);
         }
 
         /// <summary>
@@ -1644,7 +1691,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An resource without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified."
+        /// A string like "A resource without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified."
         /// </summary>
         internal static string ReaderValidationUtils_ResourceWithoutType {
             get {
@@ -2361,21 +2408,21 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An resource with type '{0}' was found with a media resource, but this entity type is not a media link resource (MLE). When the type is not an MLE entity, the resource cannot have a media resource."
+        /// A string like "A resource with type '{0}' was found with a media resource, but this entity type is not a media link resource (MLE). When the type is not an MLE entity, the resource cannot have a media resource."
         /// </summary>
         internal static string ValidationUtils_ResourceWithMediaResourceAndNonMLEType(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_ResourceWithMediaResourceAndNonMLEType, p0);
         }
 
         /// <summary>
-        /// A string like "An resource with type '{0}' was found without a media resource, but this entity type is a media link resource (MLE). When the type is an MLE entity, the resource must have a media resource."
+        /// A string like "A resource with type '{0}' was found without a media resource, but this entity type is a media link resource (MLE). When the type is an MLE entity, the resource must have a media resource."
         /// </summary>
         internal static string ValidationUtils_ResourceWithoutMediaResourceAndMLEType(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_ResourceWithoutMediaResourceAndMLEType, p0);
         }
 
         /// <summary>
-        /// A string like "An resource with type '{0}' was found, but it is not assignable to the expected type '{1}'. The type specified in the resource must be equal to either the expected type or a derived type."
+        /// A string like "A resource with type '{0}' was found, but it is not assignable to the expected type '{1}'. The type specified in the resource must be equal to either the expected type or a derived type."
         /// </summary>
         internal static string ValidationUtils_ResourceTypeNotAssignableToExpectedType(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_ResourceTypeNotAssignableToExpectedType, p0, p1);
@@ -2521,7 +2568,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An resource with an empty ID value was detected. In OData, a resource must either a non-empty ID value or no ID value."
+        /// A string like "A resource with an empty ID value was detected. In OData, a resource must either a non-empty ID value or no ID value."
         /// </summary>
         internal static string WriterValidationUtils_EntriesMustHaveNonEmptyId {
             get {
@@ -2802,7 +2849,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An resource of type '{0}' was found in a resource set that otherwise has entries of type '{1}'. In OData, all entries in a resource set must have a common base type."
+        /// A string like "A resource of type '{0}' was found in a resource set that otherwise has entries of type '{1}'. In OData, all entries in a resource set must have a common base type."
         /// </summary>
         internal static string ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, p0, p1);
@@ -3249,6 +3296,13 @@ namespace Microsoft.OData {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource);
             }
+        }
+
+        /// <summary>
+        /// A string like "Invalid primitive value '{0}' for @removed annotation. @removed annotation must be a JSON object, optionally containing a 'reason' property."
+        /// </summary>
+        internal static string ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject, p0);
         }
 
         /// <summary>

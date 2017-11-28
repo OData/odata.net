@@ -88,7 +88,7 @@ namespace Microsoft.OData
         /// If the <paramref name="resourceType"/> is available, only resource-level tests are
         /// performed; properties and such are not validated.
         /// </remarks>
-        void ValidateMetadataResource(ODataResource resource, IEdmEntityType resourceType);
+        void ValidateMetadataResource(ODataResourceBase resource, IEdmEntityType resourceType);
 
         /// <summary>
         /// Validates that the expected property allows null value.

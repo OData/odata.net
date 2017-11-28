@@ -174,17 +174,6 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// The Context Url level used when writing.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get
-            {
-                return metadataLevel.ContextUrlLevel;
-            }
-        }
-
-        /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
@@ -195,7 +184,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertSynchronous();
 
-            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false);
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false);
         }
 
 #if PORTABLELIB
@@ -210,7 +199,38 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false));
+        }
+#endif
+
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataWriter CreateODataDeltaResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true));
         }
 #endif
 
@@ -309,7 +329,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertSynchronous();
 
-            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true);
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false);
         }
 
 #if PORTABLELIB
@@ -325,7 +345,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false));
         }
 #endif
 
@@ -723,10 +743,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingParameter">true means writing a resource set into a uri operation parameter, false writing a resource set in other payloads.</param>
+        /// <param name="writingDelta">true means writing a delta resource set.</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType, bool writingParameter)
+        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType, bool writingParameter, bool writingDelta)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, resourceType, /*writingResourceSet*/true, writingParameter);
+            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, resourceType, /*writingResourceSet*/true, writingParameter, writingDelta);
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }

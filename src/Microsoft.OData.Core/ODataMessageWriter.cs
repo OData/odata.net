@@ -258,12 +258,78 @@ namespace Microsoft.OData
         }
 #endif
 
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
+        /// <returns>The created writer.</returns>
+        public ODataWriter CreateODataDeltaResourceSetWriter()
+        {
+            return CreateODataDeltaResourceSetWriter(/*entitySet*/null, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        public ODataWriter CreateODataDeltaResourceSetWriter(IEdmEntitySetBase entitySet)
+        {
+            return CreateODataDeltaResourceSetWriter(entitySet, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a resource set.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        public ODataWriter CreateODataDeltaResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataDeltaResourceSetWriter(entitySet, resourceType));
+        }
+
+#if PORTABLELIB
+
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync()
+        {
+            return CreateODataDeltaResourceSetWriterAsync(/*entitySet*/null, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet)
+        {
+            return CreateODataDeltaResourceSetWriterAsync(entitySet, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataDeltaResourceSetWriterAsync(entitySet, entityType));
+        }
+#endif
+
         /// <summary>
         /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        [Obsolete("Use CreateODataDeltaResourceSetWriter.", false)]
         public ODataDeltaWriter CreateODataDeltaWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataDeltaWriter();
@@ -279,6 +345,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
+        [Obsolete("Use CreateODataDeltaResourceSetWriterAsync.", false)]
         public Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataResourceSetWriter();

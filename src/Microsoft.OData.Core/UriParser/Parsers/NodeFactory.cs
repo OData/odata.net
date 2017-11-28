@@ -68,7 +68,7 @@ namespace Microsoft.OData.UriParser
         /// Creates a RangeVariableReferenceNode for a given range variable
         /// </summary>
         /// <param name="rangeVariable">Name of the rangeVariable.</param>
-        /// <returns>A new SingleValueNode (either an Resource or NonResource RangeVariableReferenceNode.</returns>
+        /// <returns>A new SingleValueNode (either a Resource or NonResource RangeVariableReferenceNode.</returns>
         internal static SingleValueNode CreateRangeVariableReferenceNode(RangeVariable rangeVariable)
         {
             if (rangeVariable.Kind == RangeVariableKind.NonResource)
