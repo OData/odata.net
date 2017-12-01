@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         internal Action<ODataBatchOperationRequestMessage, IList<string>> RequestMessageDependsOnIdVerifier =
             (message, dependsOnIds) =>
             {
-                Assert.Equal(message.DependsOnRequestIds, dependsOnIds);
+                Assert.Equal(message.DependsOnIds, dependsOnIds);
             };
 
         internal IList<IList<string>> ListOfDependsOnIds;

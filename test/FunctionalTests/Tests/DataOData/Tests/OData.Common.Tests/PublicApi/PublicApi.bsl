@@ -4038,17 +4038,19 @@ public abstract class Microsoft.OData.ODataAnnotatable {
 public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationListener {
 	protected ODataBatchReader (Microsoft.OData.ODataInputContext inputContext, bool synchronous)
 
+	string CurrentGroupId  { public get; }
 	Microsoft.OData.ODataInputContext InputContext  { protected get; }
 	Microsoft.OData.ODataBatchReaderState State  { public get; }
 
 	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnRequestIds)
-	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, int statusCode, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId)
+	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, int statusCode, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, string groupId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
 	protected abstract Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation ()
 	public Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync ()
 	protected abstract Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation ()
+	protected virtual string GetCurrentGroupIdImplementation ()
 	void Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamDisposed ()
 	void Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamRequested ()
 	System.Threading.Tasks.Task Microsoft.OData.IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync ()
@@ -4064,13 +4066,15 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener {
 	Microsoft.OData.ODataBatchOperationRequestMessage CurrentOperationRequestMessage  { protected get; protected set; }
 	Microsoft.OData.ODataBatchOperationResponseMessage CurrentOperationResponseMessage  { protected get; protected set; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] DependsOnIds  { public get; public set; }
 	Microsoft.OData.ODataOutputContext OutputContext  { protected get; }
 
 	public abstract void BatchOperationContentStreamDisposed ()
 	public abstract void BatchOperationContentStreamRequested ()
 	public abstract System.Threading.Tasks.Task BatchOperationContentStreamRequestedAsync ()
 	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId)
-	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.IO.Stream outputStream, string contentId)
+	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId, string groupId)
+	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.IO.Stream outputStream, string contentId, string groupId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync (string method, System.Uri uri, string contentId)
@@ -4083,6 +4087,7 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	public System.Threading.Tasks.Task FlushAsync ()
 	protected abstract System.Threading.Tasks.Task FlushAsynchronously ()
 	protected abstract void FlushSynchronously ()
+	protected virtual System.Collections.Generic.IEnumerable`1[[System.String]] GetDependsOnRequestIds (System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
 	public abstract void OnInStreamError ()
 	protected void SetState (Microsoft.OData.ODataBatchWriter+BatchWriterState newState)
 	protected abstract void VerifyNotDisposed ()
@@ -4096,8 +4101,10 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	public System.Threading.Tasks.Task WriteStartBatchAsync ()
 	protected abstract void WriteStartBatchImplementation ()
 	public void WriteStartChangeset ()
+	public void WriteStartChangeset (string groupId)
 	public System.Threading.Tasks.Task WriteStartChangesetAsync ()
-	protected abstract void WriteStartChangesetImplementation ()
+	public System.Threading.Tasks.Task WriteStartChangesetAsync (string groupId)
+	protected abstract void WriteStartChangesetImplementation (string groupId)
 }
 
 public abstract class Microsoft.OData.ODataCollectionReader {
@@ -4691,7 +4698,7 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContain
 	public const readonly string ContentId = 
 
 	System.IServiceProvider Container  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[System.String]] DependsOnRequestIds  { public get; }
+	string GroupId  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
 	System.Uri Url  { public virtual get; public virtual set; }
@@ -4706,6 +4713,7 @@ public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContai
 	public const readonly string ContentId = 
 
 	System.IServiceProvider Container  { public virtual get; }
+	string GroupId  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	int StatusCode  { public virtual get; public virtual set; }
 

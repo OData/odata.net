@@ -29,7 +29,7 @@ namespace Microsoft.OData.JsonLight
     internal sealed class ODataJsonLightInputContext : ODataInputContext
     {
         /// <summary>
-        /// The json meta-data level (i.e., full, none, minimal) being written.
+        /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
         private readonly JsonLightMetadataLevel metadataLevel;
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// The json meta-data level (i.e., full, none, minimal) being written.
+        /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
         public JsonLightMetadataLevel MetadataLevel
         {
@@ -662,7 +662,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(navigationSource == null || structuredType != null, "If an navigation source is specified, the structured type must be specified as well.");
 
-            // We require meta-data information for reading requests.
+            // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
                 this.VerifyUserModel();
@@ -689,7 +689,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="expectedItemTypeReference">The expected type reference for the items in the collection.</param>
         private void VerifyCanCreateCollectionReader(IEdmTypeReference expectedItemTypeReference)
         {
-            // We require meta-data information for reading requests.
+            // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
                 this.VerifyUserModel();
@@ -706,7 +706,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private void VerifyCanReadEntityReferenceLink()
         {
-            // We require meta-data information for reading requests.
+            // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
                 this.VerifyUserModel();
@@ -718,7 +718,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private void VerifyCanReadProperty()
         {
-            // We require meta-data information for reading requests.
+            // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
                 this.VerifyUserModel();

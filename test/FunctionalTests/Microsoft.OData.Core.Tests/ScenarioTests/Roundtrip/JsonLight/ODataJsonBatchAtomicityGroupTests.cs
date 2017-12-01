@@ -87,7 +87,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     ListOfDependsOnIds = new IList<string>[]
                     {
-                        new List<string>(),
+                        null,
                         new List<string>(){"r1"}
                     }
                 },
@@ -153,11 +153,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     ListOfDependsOnIds = new IList<string>[]
                     {
-                        new List<string>(),
-                        new List<string>(),
+                        null,
+                        null,
                         new List<string>(){"g1r1", "g1r2"},
                         new List<string>{"g1r1", "g1r2", "r2"},
-                        new List<string>()
+                        null
                     }
                 },
                 new ODataJsonBatchPayloadAtomicGroupTestCase
@@ -256,7 +256,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed("duplicate")
+                    TokenInExceptionMessage = Strings.ODataBatchReader_DuplicateContentIDsNotAllowed("duplicate")
                 },
                 new ODataJsonBatchPayloadAtomicGroupTestCase
                 {
@@ -357,7 +357,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 // Client is expected to receive the response message in the same format as that is used in the request sent.
                 responseMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
-                ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage);
+                ODataMessageWriterSettings settings = writerSettingsV401.Clone();
+                settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
+                ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, settings, null);
                 int operationIdx = 0;
 
                 ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
@@ -373,10 +375,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                             ODataBatchOperationRequestMessage operationMessage = batchReader.CreateOperationRequestMessage();
 
                             // Verify operation message if applicable.
-                            if (requestOpMessageVerifier != null)
-                            {
-                                requestOpMessageVerifier(operationMessage, testCase.ListOfDependsOnIds.ElementAt(operationIdx));
-                            }
+                            requestOpMessageVerifier?.Invoke(operationMessage, testCase.ListOfDependsOnIds.ElementAt(operationIdx));
 
                             if (operationMessage.Method == "POST")
                             {
@@ -390,12 +389,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                                 response.StatusCode = 200;
                                 response.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
-                                ODataMessageWriterSettings settings = writerSettingsV401.Clone();
-                                settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
-
-                                using (
-                                    ODataMessageWriter operationMessageWriter = new ODataMessageWriter(response, settings,
-                                        this.edmModel))
+                                using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(response, settings, this.edmModel))
                                 {
                                     ODataWriter entryWriter = operationMessageWriter.CreateODataResourceWriter(this.singleton,
                                         this.userType);

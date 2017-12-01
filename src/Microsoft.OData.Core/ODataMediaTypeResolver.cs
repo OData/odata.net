@@ -80,7 +80,7 @@ namespace Microsoft.OData
                 {
                 },
 
-                // meta-data document
+                // metadata document
                 new ODataMediaTypeFormat[]
                 {
                     new ODataMediaTypeFormat(ApplicationXmlMediaType, ODataFormat.Metadata),

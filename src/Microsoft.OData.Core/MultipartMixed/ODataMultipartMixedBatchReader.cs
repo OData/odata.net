@@ -118,11 +118,14 @@ namespace Microsoft.OData.MultipartMixed
 
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
+            // We don't have correlation of changeset boundary between request and response messages in
+            // changesets, so use null value for groupId.
             ODataBatchOperationResponseMessage responseMessage = BuildOperationResponseMessage(
                 () => ODataBatchUtils.CreateBatchOperationReadStream(this.batchStream, headers, this),
                 statusCode,
                 headers,
-                this.currentContentId);
+                this.currentContentId,
+                /*groupId*/ null);
 
             //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
             ////       we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).

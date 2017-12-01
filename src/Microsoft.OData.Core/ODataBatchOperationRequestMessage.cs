@@ -25,9 +25,16 @@ namespace Microsoft.OData
     public sealed class ODataBatchOperationRequestMessage : IODataRequestMessage, IODataPayloadUriConverter, IContainerProvider
 #endif
     {
-        /// <summary>Gets or Sets the Content-ID for this request message.</summary>
+        /// <summary>
+        /// The Content-ID for this request message.</summary>
         /// <returns>The Content-ID for this request message.</returns>
         public readonly string ContentId;
+
+        /// <summary>
+        /// The Group Id for this request message. Can be null.
+        /// </summary>
+        /// <returns>The Group Id for this request message.</returns>
+        private readonly string groupId;
 
         /// <summary>
         /// The actual implementation of the message.
@@ -41,7 +48,7 @@ namespace Microsoft.OData
         /// ODL-caller needs to ensure that all the prerequisites have returned successfully
         /// before current operation can start.
         /// </summary>
-        private readonly IEnumerable<string> dependsOnRequestIds;
+        private IEnumerable<string> dependsOnIds;
 
         /// <summary>
         /// Constructor. Creates a request message for an operation of a batch request.
@@ -55,7 +62,8 @@ namespace Microsoft.OData
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
-        /// <param name="dependsOnRequestIds">The enumeration of request Ids that current request has dependency on.</param>
+        /// <param name="dependsOnIds">Optional value for request or group Ids that current request has dependency on.</param>
+        /// <param name="groupId">Optional value for the group id that current request belongs to. Can be null.</param>
         internal ODataBatchOperationRequestMessage(
             Func<Stream> contentStreamCreatorFunc,
             string method,
@@ -66,7 +74,8 @@ namespace Microsoft.OData
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,
             IServiceProvider container,
-            IEnumerable<string> dependsOnRequestIds = null)
+            IEnumerable<string> dependsOnIds = null,
+            string groupId = null)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -75,12 +84,13 @@ namespace Microsoft.OData
             this.Method = method;
             this.Url = requestUrl;
             this.ContentId = contentId;
+            this.groupId = groupId;
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.Container = container;
-            this.dependsOnRequestIds = dependsOnRequestIds != null
-                             ? new List<string>(dependsOnRequestIds)
-                             : new List<string>();
+            this.dependsOnIds = dependsOnIds != null
+                             ? new List<string>(dependsOnIds)
+                             : null;
         }
 
         /// <summary>Gets an enumerable over all the headers for this message.</summary>
@@ -112,13 +122,27 @@ namespace Microsoft.OData
         public IServiceProvider Container { get; private set; }
 
         /// <summary>
-        /// Gets the request prerequisites.
+        /// The Group Id for this request message. Can be null.
         /// </summary>
-        public IEnumerable<string> DependsOnRequestIds
+        /// <returns>The Group Id for this request message.</returns>
+        public string GroupId
+        {
+            get { return this.groupId; }
+        }
+
+        /// <summary>
+        /// Gets the prerequisite request or group ids.
+        /// </summary>
+        internal IEnumerable<string> DependsOnIds
         {
             get
             {
-                return this.dependsOnRequestIds;
+                return this.dependsOnIds;
+            }
+
+            set
+            {
+                this.dependsOnIds = value;
             }
         }
 
