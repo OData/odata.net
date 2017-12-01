@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests
             JsonMediaTypes,
             // service document
             JsonMediaTypes,
-            // meta-data document
+            // metadata document
             new ODataMediaTypeFormat[]
             {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata),

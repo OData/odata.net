@@ -106,6 +106,21 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Public property for the current group id the reader is processing.
+        /// The primary usage of this property is, for Json batch, to correlate atomic group id
+        /// in request and response operation messages.
+        /// For multipart batch, since there are no correlations between the changeset boundaries in
+        /// request and response, this value is ignored / not used, is always null.
+        /// </summary>
+        public string CurrentGroupId
+        {
+            get
+            {
+                return GetCurrentGroupIdImplementation();
+            }
+        }
+
+        /// <summary>
         /// The input context to read the content from.
         /// </summary>
         protected ODataInputContext InputContext
@@ -242,6 +257,19 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Gets the group id for the current request.
+        /// This is for Json batch format only, which requires atomic group ids from corresponding request and
+        /// response should be the same.
+        /// Default implementation here is provided for multipart batch.
+        /// </summary>
+        /// <returns>The group id for the current request.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
+        protected virtual string GetCurrentGroupIdImplementation()
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
@@ -287,7 +315,10 @@ namespace Microsoft.OData
         /// <param name="requestUri">The request Url for this request message.</param>
         /// <param name="headers">The headers for this request message.</param>
         /// <param name="contentId">The contentId of this request message.</param>
-        /// <param name="dependsOnRequestIds">The dependsOn request Ids of this request message.</param>
+        /// <param name="dependsOnRequestIds">
+        /// The prerequisite request Ids of this request message. For batch in Json format,
+        /// some of these request Ids are resolved from prerequisite atomic groups that are
+        /// specified in the dependsOn attribute of the request.</param>
         /// <returns>The <see cref="ODataBatchOperationRequestMessage"/> instance.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(
             Func<Stream> streamCreatorFunc,
@@ -306,6 +337,9 @@ namespace Microsoft.OData
                         throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
                     }
                 }
+
+                ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
+                    this.inputContext);
             }
 
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
@@ -322,18 +356,23 @@ namespace Microsoft.OData
         /// <param name="statusCode">The status code for the response.</param>
         /// <param name="headers">The headers for this response message.</param>
         /// <param name="contentId">The contentId of this request message.</param>
+        /// <param name="groupId">The groupId of this request message.
+        /// Value is null for multipart batch operation response message.</param>
         /// <returns>The <see cref="ODataBatchOperationResponseMessage"/> instance.</returns>
         protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(
             Func<Stream> streamCreatorFunc,
             int statusCode,
             ODataBatchOperationHeaders headers,
-            string contentId)
+            string contentId,
+            string groupId)
         {
             ODataBatchOperationResponseMessage responseMessage = new ODataBatchOperationResponseMessage(
                 streamCreatorFunc, headers, this,
-                contentId ?? this.contentIdToAddOnNextRead,
-                this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ false, this.container);
-            responseMessage.StatusCode = statusCode;
+                contentId,
+                this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ false, this.container, groupId)
+            {
+                StatusCode = statusCode
+            };
             return responseMessage;
         }
 

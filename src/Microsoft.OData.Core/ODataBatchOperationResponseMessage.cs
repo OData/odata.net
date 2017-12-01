@@ -25,8 +25,7 @@ namespace Microsoft.OData
     public sealed class ODataBatchOperationResponseMessage : IODataResponseMessage, IODataPayloadUriConverter, IContainerProvider
 #endif
     {
-        /// <summary>Gets or Sets the Content-ID for this response message.</summary>
-        /// <returns>The Content-ID for this response message.</returns>
+        /// <summary>The Content-ID for this response message.</summary>
         public readonly string ContentId;
 
         /// <summary>
@@ -39,6 +38,8 @@ namespace Microsoft.OData
         /// <summary>The result status code of the response message.</summary>
         private int statusCode;
 
+
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -49,6 +50,7 @@ namespace Microsoft.OData
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
+        /// <param name="groupId">Value for the group id that corresponding request belongs to. Can be null.</param>
         internal ODataBatchOperationResponseMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
@@ -56,7 +58,8 @@ namespace Microsoft.OData
             string contentId,
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,
-            IServiceProvider container)
+            IServiceProvider container,
+            string groupId)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -64,6 +67,7 @@ namespace Microsoft.OData
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.ContentId = contentId;
             this.Container = container;
+            this.GroupId = groupId;
         }
 
         /// <summary>Gets or sets the result status code of the response message.</summary>
@@ -93,6 +97,12 @@ namespace Microsoft.OData
         /// The dependency injection container to get related services.
         /// </summary>
         public IServiceProvider Container { get; private set; }
+
+        /// <summary>
+        /// For Json batch, this is the atomic group id of the corresponding request (null for top level request).
+        /// For multipart batch, this is not used and the value should be null.
+        /// </summary>
+        public string GroupId { get; }
 
         /// <summary>
         /// Returns the actual operation message which is being wrapped.

@@ -12,6 +12,7 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
 
 #if PORTABLELIB
     using System.Threading.Tasks;
@@ -53,6 +54,11 @@ namespace Microsoft.OData.JsonLight
         private const string PropertyRequests = "requests";
 
         /// <summary>
+        /// Property name for preceding request Ids in Json batch request.
+        /// </summary>
+        private const string PropertyDependsOn = "dependsOn";
+
+        /// <summary>
         /// Property name for request HTTP method in Json batch request.
         /// </summary>
         private const string PropertyMethod = "method";
@@ -85,6 +91,18 @@ namespace Microsoft.OData.JsonLight
         /// that doesn't belong to atomic group.
         /// </summary>
         private string atomicityGroupId = null;
+
+        /// <summary>
+        /// Dictionary for keeping track of each request's associated atomic group id, which is null
+        /// for request that does not belong to atomic group.
+        /// </summary>
+        private Dictionary<string, string> requestIdToAtomicGroupId = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Dictionary for keeping track of each atomic group's member request id. This is optimization
+        /// for reversed lookup.
+        /// </summary>
+        private Dictionary<string, IList<string>> atomicityGroupIdToRequestId = new Dictionary<string, IList<string>>();
 
         /// <summary>
         /// Constructor.
@@ -227,6 +245,30 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Given an enumerable of dependsOn ids containing request ids and group ids, convert the group ids
+        /// into associated request ids.
+        /// </summary>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        /// <returns>An enumerable consists of request ids.</returns>
+        protected override IEnumerable<string> GetDependsOnRequestIds(IEnumerable<string> dependsOnIds)
+        {
+            List<string> dependsOnRequestIds = new List<string>();
+            foreach (string id in dependsOnIds)
+            {
+                if (this.atomicityGroupIdToRequestId.ContainsKey(id))
+                {
+                    dependsOnRequestIds.AddRange(this.atomicityGroupIdToRequestId[id]);
+                }
+                else
+                {
+                    dependsOnRequestIds.Add(id);
+                }
+            }
+
+            return dependsOnRequestIds;
+        }
+
+        /// <summary>
         /// Ends a batch - implementation of the actual functionality.
         /// </summary>
         protected override void WriteEndBatchImplementation()
@@ -246,7 +288,10 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
         /// </summary>
-        protected override void WriteStartChangesetImplementation()
+        /// <param name="groupId">
+        /// The atomic group id of the changeset to start.
+        /// If it is null for Json batch, an GUID will be generated and used as the atomic group id.</param>
+        protected override void WriteStartChangesetImplementation(string groupId)
         {
             Debug.Assert(this.atomicityGroupId == null, "this.atomicityGroupId == null");
 
@@ -255,7 +300,10 @@ namespace Microsoft.OData.JsonLight
 
             // important to do this first since it will set up the change set boundary.
             this.SetState(BatchWriterState.ChangesetStarted);
-            this.atomicityGroupId = Guid.NewGuid().ToString();
+
+            // When the changeset start is created for request, the <paramref name="groupId"/> could be null
+            // and we will create an GUID here.
+            this.atomicityGroupId = groupId ?? Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -274,12 +322,14 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request - implementation of the actual functionality.
+        /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a
+        /// batch request - implementation of the actual functionality.
         /// </summary>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
         Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
@@ -293,9 +343,12 @@ namespace Microsoft.OData.JsonLight
                 contentId = Guid.NewGuid().ToString();
             }
 
+            AddGroupIdLookup(contentId);
+
             // create the new request operation
             this.CurrentOperationRequestMessage = BuildOperationRequestMessage(
-                this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId);
+                this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId, this.atomicityGroupId);
+            Debug.Assert(this.DependsOnIds == null);
 
             this.SetState(BatchWriterState.OperationCreated);
 
@@ -311,6 +364,21 @@ namespace Microsoft.OData.JsonLight
                 this.jsonWriter.WriteValue(this.atomicityGroupId);
             }
 
+            if (this.CurrentOperationRequestMessage.DependsOnIds != null
+                && this.CurrentOperationRequestMessage.DependsOnIds.Any())
+            {
+                this.jsonWriter.WriteName(PropertyDependsOn);
+                this.jsonWriter.StartArrayScope();
+
+                foreach (string dependsOnId in this.CurrentOperationRequestMessage.DependsOnIds)
+                {
+                    ValidateDependsOnId(contentId, dependsOnId);
+                    this.jsonWriter.WriteValue(dependsOnId);
+                }
+
+                this.jsonWriter.EndArrayScope();
+            }
+
             this.jsonWriter.WriteName(PropertyMethod);
             this.jsonWriter.WriteValue(method);
 
@@ -324,7 +392,7 @@ namespace Microsoft.OData.JsonLight
         /// Creates an <see cref="ODataBatchOperationResponseMessage"/> for writing an operation of a batch
         /// response - implementation of the actual functionality.
         /// </summary>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet header.</param>
+        /// <param name="contentId">The Content-ID value to write for the response id.</param>
         /// <returns>The message that can be used to rite the response operation.</returns>
         protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
         {
@@ -334,11 +402,11 @@ namespace Microsoft.OData.JsonLight
             // so use the URL resolver from the batch message instead.
             //
             // ContentId: could be null from public API common for both formats, so we don't enforce non-null value for Json format
-            // for sake of backward compatibility. For Json Batch response message, normally caller should use a non-null value
-            // available from the request; and we generate a new one when a null value is passed in.
+            // for sake of backward compatibility. For Json Batch response message, normally caller should use the same value
+            // from the request.
             this.CurrentOperationResponseMessage = BuildOperationResponseMessage(
                 this.JsonLightOutputContext.GetOutputStream(),
-                contentId ?? Guid.NewGuid().ToString());
+                contentId, this.atomicityGroupId);
             this.SetState(BatchWriterState.OperationCreated);
 
             // Start the Json object for the response
@@ -353,6 +421,81 @@ namespace Microsoft.OData.JsonLight
         protected override void VerifyNotDisposed()
         {
             this.JsonLightOutputContext.VerifyNotDisposed();
+        }
+
+        /// <summary>
+        /// Validation of the dependsOnId. It needs to be a valid id, and cannot be inside another atomic group.
+        /// </summary>
+        /// <param name="requestId">Current request's id.</param>
+        /// <param name="dependsOnId">Prerequisite request id or atomic group id that current request depends on.</param>
+        private void ValidateDependsOnId(string requestId, string dependsOnId)
+        {
+            // Validate the dependsOn id and ensure it is not part of atomic group.
+            if (this.atomicityGroupIdToRequestId.ContainsKey(dependsOnId))
+            {
+                // The dependsOn id is a group id, throw if depondsOn id is the current group.
+                string currentGroupId;
+                this.requestIdToAtomicGroupId.TryGetValue(requestId, out currentGroupId);
+
+                if (dependsOnId.Equals(currentGroupId))
+                {
+                    throw new ODataException(
+                        Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(requestId, dependsOnId));
+                }
+            }
+            else
+            {
+                // The dependsOn id is a request Id.
+                // Throw if it doesn't exist, or if it belongs to a different group.
+                string groupId = null;
+
+                if (!this.requestIdToAtomicGroupId.TryGetValue(dependsOnId, out groupId))
+                {
+                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(dependsOnId, requestId));
+                }
+                else if (groupId != null)
+                {
+                    // Throw if these two ids are not belonged to the same group.
+                    string currentGroupId;
+                    this.requestIdToAtomicGroupId.TryGetValue(requestId, out currentGroupId);
+
+                    if (!groupId.Equals(currentGroupId))
+                    {
+                        throw new ODataException(
+                            Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(requestId, groupId));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add group id lookup.
+        /// </summary>
+        /// <param name="contentId">Add content Id to group Id lookup and reverse lookup.</param>
+        private void AddGroupIdLookup(string contentId)
+        {
+            // For request that is not part of an atomic group, the corresponding atomic group id is null.
+            try
+            {
+                this.requestIdToAtomicGroupId.Add(contentId, this.atomicityGroupId);
+            }
+            catch (ArgumentException ae)
+            {
+                // The Dictionary class will throw an exception if the key <paramref name="contentId"/>
+                // already exists. Convert and throw ODataException.
+                throw new ODataException(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed(contentId), ae);
+            }
+
+            // Add reverse lookup when current request is part of atomic group.
+            if (this.atomicityGroupId != null)
+            {
+                if (!this.atomicityGroupIdToRequestId.ContainsKey(this.atomicityGroupId))
+                {
+                    this.atomicityGroupIdToRequestId.Add(this.atomicityGroupId, new List<string>());
+                }
+
+                this.atomicityGroupIdToRequestId[this.atomicityGroupId].Add(contentId);
+            }
         }
 
         /// <summary>
@@ -458,7 +601,7 @@ namespace Microsoft.OData.JsonLight
             {
                 foreach (KeyValuePair<string, string> headerPair in headers)
                 {
-                    this.jsonWriter.WriteName(headerPair.Key);
+                    this.jsonWriter.WriteName(headerPair.Key.ToLower());
                     this.jsonWriter.WriteValue(headerPair.Value);
                 }
             }
@@ -497,7 +640,7 @@ namespace Microsoft.OData.JsonLight
             {
                 foreach (KeyValuePair<string, string> headerPair in headers)
                 {
-                    this.jsonWriter.WriteName(headerPair.Key);
+                    this.jsonWriter.WriteName(headerPair.Key.ToLower());
                     this.jsonWriter.WriteValue(headerPair.Value);
                 }
             }

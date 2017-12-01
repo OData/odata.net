@@ -186,7 +186,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     urlResolverType,
                     typeof(bool),
                     typeof(IServiceProvider),
-                    typeof(IEnumerable<string>)
+                    typeof(IEnumerable<string>),
+                    typeof(string)
                 },
                 (object)(Func<Stream>)(() => stream),
                 ODataConstants.MethodGet,
@@ -199,7 +200,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataPayloadUriConverter) }, new object[] { null }),
                 writing,
                 /*container*/ null,
-                /*dependsOnRequestIds*/ null);
+                /*dependsOnRequestIds*/ null,
+                null);
         }
 
         private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing, bool mimeWriterAsListener)
@@ -208,7 +210,17 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             return (IODataResponseMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationResponseMessage),
-                new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataPayloadUriConverter), typeof(bool), typeof(IServiceProvider) },
+                new Type[]
+                {
+                    typeof(Func<Stream>),
+                    batchOperationsHeadersType,
+                    batchOperationListenerType,
+                    typeof(string),
+                    typeof(IODataPayloadUriConverter),
+                    typeof(bool),
+                    typeof(IServiceProvider),
+                    typeof(string)
+                },
                 (object)(Func<Stream>)(() => stream),
                 /*headers*/null,
                 mimeWriterAsListener
@@ -217,7 +229,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 "1",
                 /*urlResolver*/null,
                 writing,
-                /*container*/ null);
+                /*container*/ null,
+                /*groupId*/ null);
         }
 
         private static object CreateODataMultipartMixedBatchWriterListener(Stream stream, bool response, bool writing)

@@ -177,7 +177,9 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
         /// </summary>
-        protected override void WriteStartChangesetImplementation()
+        /// <param name="groupId">Ignored value for multipart batch start changeset implementation
+        /// since in this format the changeset boundary is always created randomly for both request and response.</param>
+        protected override void WriteStartChangesetImplementation(/*ignored*/string groupId)
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
@@ -286,7 +288,7 @@ namespace Microsoft.OData.MultipartMixed
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
             this.CurrentOperationResponseMessage = BuildOperationResponseMessage(
-                this.RawOutputContext.OutputStream, /*contentId*/ null);
+                this.RawOutputContext.OutputStream, /*contentId*/ null, /*groupId*/ null);
 
             this.SetState(BatchWriterState.OperationCreated);
 

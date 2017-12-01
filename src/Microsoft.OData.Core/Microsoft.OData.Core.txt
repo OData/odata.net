@@ -141,7 +141,7 @@ ODataBatchWriter_MaxBatchSizeExceeded=The current batch message contains too man
 ODataBatchWriter_MaxChangeSetSizeExceeded=The current change set contains too many operations. Only change sets with a maximum number of '{0}' operations are allowed.
 ODataBatchWriter_SyncCallOnAsyncWriter=A synchronous operation was called on an asynchronous batch writer. Calls on a batch writer instance must be either all synchronous or all asynchronous.
 ODataBatchWriter_AsyncCallOnSyncWriter=An asynchronous operation was called on a synchronous batch writer. Calls on a batch writer instance must be either all synchronous or all asynchronous.
-ODataBatchWriter_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set.
+ODataBatchWriter_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01.
 ODataBatchWriter_CannotWriteInStreamErrorForBatch=The WriteError and WriteErrorAsync methods on ODataMessageWriter cannot be called when a batch is being written by using ODataBatchWriter. In OData, writing an in-stream error for a batch payload is not supported.
 
 ODataBatchUtils_RelativeUriUsedWithoutBaseUriSpecified=The relative URI '{0}' was specified in a batch operation, but a base URI was not specified for the batch writer or batch reader.
@@ -166,13 +166,15 @@ ODataBatchReader_MaxChangeSetSizeExceeded=The current change set contains too ma
 ODataBatchReader_NoMessageWasCreatedForOperation=An operation was detected, but no message was created for it. You must create a message for every operation found in a batch or change set.
 ODataBatchReader_ReaderModeNotInitilized=Reader mode is not setup correctly.
 ODataBatchReader_JsonBatchTopLevelPropertyMissing=JsonLight batch format requires top level property name 'requests' or 'response' but it is missing.
-ODataBatchReader_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set.
+ODataBatchReader_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01.
 ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed=The atomicityGroup ID [{0}] was found duplicated in the batch request. AtomicityGroup IDs have to be adjacent, otherwise would be detected as duplicated.
 ODataBatchReader_RequestPropertyMissing=Request property [{0}] is required but is missing.
 ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed=The dependsOn request Id [{0}] is same as atomicityGroup property value [{1}], and is not allowed.
 ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed=The dependsOn request Id [{0}] is same as id property value [{1}], and it is not allowed.
 ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed=The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore dependsOn property should refer to atomic group Id [{1}] instead.
 ODataBatchReader_DependsOnIdNotFound=The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed.
+ODataBatchReader_AbsoluteURINotMatchingBaseUri=Absolute URI {0} is not start with the base URI [{1}] specified by the operation message.
+ODataBatchReader_ReferenceIdNotIncludedInDependsOn=Request Id reference [{0}] in Uri [{1}] is not found in effective depends-on-Ids [{2}] of the request.
 ODataBatchReader_MessageIdPositionedIncorrectly=Message with id [{0}] is positioned incorrectly: all messages of same groupId [{1}] must be adjacent.
 ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull=Changeset boundary must have been set by now.
 

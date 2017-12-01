@@ -5,12 +5,15 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.MultipartMixed;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
@@ -25,7 +28,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         private const string batchContentTypeMultipartMime = "multipart/mixed; boundary=batch_cb48b61f-511b-48e6-b00a-77c847badfb9";
         private const string batchContentTypeApplicationJson = "application/json; odata.streaming=true";
         private const string serviceDocumentUri = "http://odata.org/test/";
-        private const string selfReferenceUriNotAllowed = "contains self-reference of Content-ID value";
+        private const string selfReferenceUriNotAllowed = "is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed.";
         private const string changesetContainingQueryNotAllowed =
             "was detected for a request in a change set. Requests in change sets only support the HTTP methods 'POST', 'PUT', 'DELETE', and 'PATCH'.";
         private readonly EdmEntityContainer defaultContainer;
@@ -33,7 +36,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         private readonly EdmSingleton singleton;
         private readonly EdmEntityType webType;
 
-        // GET and DELETE should containt extra empty line as content is empty, see RFC 2046 5.1.1
+        // GET and DELETE should contain extra empty line as content is empty, see RFC 2046 5.1.1
         private const string ExpectedRequestPayload1 = @"--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
 Content-Type: application/http
 Content-Transfer-Encoding: binary
@@ -247,7 +250,7 @@ OData-Version: 4.0
             ""method"": ""GET"",
             ""url"": ""http://odata.org/test//MySingleton"",
             ""headers"": {
-                ""Accept"": ""application/json;odata.metadata=full""
+                ""accept"": ""application/json;odata.metadata=full""
             }
         }, {
             ""id"": ""1"",
@@ -255,8 +258,8 @@ OData-Version: 4.0
             ""method"": ""PATCH"",
             ""url"": ""http://odata.org/test//MySingleton"",
             ""headers"": {
-                ""OData-Version"": ""4.0"",
-                ""Content-Type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
             },
             ""body"": {
                 ""@odata.type"": ""#NS.Web"",
@@ -269,8 +272,8 @@ OData-Version: 4.0
             ""method"": ""PATCH"",
             ""url"": ""http://odata.org/test//MySingleton"",
             ""headers"": {
-                ""OData-Version"": ""4.0"",
-                ""Content-Type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
             },
             ""body"": {
                 ""@odata.type"": ""#NS.Web"",
@@ -281,7 +284,7 @@ OData-Version: 4.0
             ""method"": ""GET"",
             ""url"": ""http://odata.org/test//MySingleton/WebId"",
             ""headers"": {
-                ""Accept"": ""application/json;odata.metadata=full""
+                ""accept"": ""application/json;odata.metadata=full""
             }
         }, {
             ""id"": ""1"",
@@ -301,8 +304,8 @@ OData-Version: 4.0
             ""method"": ""PATCH"",
             ""url"": ""http://odata.org/test//MySingleton1"",
             ""headers"": {
-                ""OData-Version"": ""4.0"",
-                ""Content-Type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
             },
             ""body"": {
                 ""@odata.type"": ""#NS.Web"",
@@ -315,8 +318,8 @@ OData-Version: 4.0
             ""method"": ""PATCH"",
             ""url"": ""http://odata.org/test//MySingleton2"",
             ""headers"": {
-                ""OData-Version"": ""4.0"",
-                ""Content-Type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
             },
             ""body"": {
                 ""@odata.type"": ""#NS.Web"",
@@ -328,8 +331,8 @@ OData-Version: 4.0
             ""method"": ""PATCH"",
             ""url"": ""http://odata.org/test//MySingleton3"",
             ""headers"": {
-                ""OData-Version"": ""4.0"",
-                ""Content-Type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
             },
             ""body"": {
                 ""@odata.type"": ""#NS.Web"",
@@ -341,7 +344,7 @@ OData-Version: 4.0
             ""method"": ""GET"",
             ""url"": ""http://odata.org/test//MySingleton3/WebId"",
             ""headers"": {
-                ""Accept"": ""application/json;odata.metadata=full""
+                ""accept"": ""application/json;odata.metadata=full""
             }
         }
     ]
@@ -353,8 +356,8 @@ OData-Version: 4.0
             ""id"": ""cbcdb345-afdc-4125-8832-fcd7e14a013f"",
             ""status"": 200,
             ""headers"": {
-                ""Content-Type"": ""application/json;"",
-                ""OData-Version"": ""4.0""
+                ""content-type"": ""application/json;"",
+                ""odata-version"": ""4.0""
             },
             ""body"": {
                 ""@odata.context"": ""http://odata.org/test/$metadata#MySingleton"",
@@ -366,21 +369,21 @@ OData-Version: 4.0
             ""atomicityGroup"": ""6e5679f2-2fb9-4097-84a9-623a0960a50f"",
             ""status"": 204,
             ""headers"": {
-                ""Content-Type"": ""application/json;odata.metadata=none""
+                ""content-type"": ""application/json;odata.metadata=none""
             }
         }, {
             ""id"": ""2"",
             ""atomicityGroup"": ""6e5679f2-2fb9-4097-84a9-623a0960a50f"",
             ""status"": 204,
             ""headers"": {
-                ""Content-Type"": ""application/json;odata.metadata=none""
+                ""content-type"": ""application/json;odata.metadata=none""
             }
         }, {
             ""id"": ""fd811ff7-4c67-4a2f-bbe1-60b606093f14"",
             ""status"": 200,
             ""headers"": {
-                ""Content-Type"": ""application/json;"",
-                ""OData-Version"": ""4.0""
+                ""content-type"": ""application/json;"",
+                ""odata-version"": ""4.0""
             },
             ""body"": {
                 ""@odata.context"": ""http://odata.org/test/$metadata#MySingleton"",
@@ -403,28 +406,28 @@ OData-Version: 4.0
             ""atomicityGroup"": ""b749ce30-c81d-4a04-af0f-342da47218ec"",
             ""status"": 204,
             ""headers"": {
-                ""Content-Type"": ""application/json;odata.metadata=none""
+                ""content-type"": ""application/json;odata.metadata=none""
             }
         }, {
             ""id"": ""2"",
             ""atomicityGroup"": ""b749ce30-c81d-4a04-af0f-342da47218ec"",
             ""status"": 204,
             ""headers"": {
-                ""Content-Type"": ""application/json;odata.metadata=none""
+                ""content-type"": ""application/json;odata.metadata=none""
             }
         }, {
             ""id"": ""3"",
             ""atomicityGroup"": ""630855a9-c931-478f-a6d7-860bba586e5e"",
             ""status"": 204,
             ""headers"": {
-                ""Content-Type"": ""application/json;odata.metadata=none""
+                ""content-type"": ""application/json;odata.metadata=none""
             }
         }, {
             ""id"": ""81133a6f-c773-4add-963f-54b167adb747"",
             ""status"": 200,
             ""headers"": {
-                ""Content-Type"": ""application/json;"",
-                ""OData-Version"": ""4.0""
+                ""content-type"": ""application/json;"",
+                ""odata-version"": ""4.0""
             },
             ""body"": {
                 ""@odata.context"": ""http://odata.org/test/$metadata#MySingleton"",
@@ -434,6 +437,76 @@ OData-Version: 4.0
         }
     ]
 }";
+
+        private const string ExpectedReferenceUriRequestPayload = @"
+{
+    ""requests"": [{
+            ""id"": ""1"",
+            ""atomicityGroup"": ""11d431dd-cfee-48c8-95fb-da8491644fa6"",
+            ""method"": ""PUT"",
+            ""url"": ""http://odata.org/test//MySingleton"",
+            ""headers"": {
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 10,
+                ""Name"": ""SingletonWebForRequestIdRefTest""
+            }
+        }, {
+            ""id"": ""2"",
+            ""atomicityGroup"": ""11d431dd-cfee-48c8-95fb-da8491644fa6"",
+            ""dependsOn"": [""1""],
+            ""method"": ""PATCH"",
+            ""url"": ""http://odata.org/test//$1"",
+            ""headers"": {
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 12
+            }
+        }, {
+            ""id"": ""3"",
+            ""dependsOn"": [""1"", ""2""],
+            ""method"": ""PATCH"",
+            ""url"": ""$1/alias"",
+            ""headers"": {
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 13
+            }
+        }
+    ]
+}";
+
+        private const string ExpectedReferenceUriResponsePayload = @"
+{
+    ""responses"": [{
+            ""id"": ""1"",
+            ""atomicityGroup"": ""6e5679f2-2fb9-4097-84a9-623a0960a50f"",
+            ""status"": 201,
+            ""headers"": {
+                ""content-type"": ""application/json;odata.metadata=none""
+            }
+        }, {
+            ""id"": ""2"",
+            ""atomicityGroup"": ""6e5679f2-2fb9-4097-84a9-623a0960a50f"",
+            ""status"": 204,
+            ""headers"": {}
+        }, {
+            ""id"": ""fd811ff7-4c67-4a2f-bbe1-60b606093f14"",
+            ""status"": 204,
+            ""headers"": {}
+        }
+    ]
+}";
+
         private readonly string[] ExpectedRequestPayloads =
         {
             ExpectedRequestPayload1,
@@ -501,22 +574,89 @@ OData-Version: 4.0
         [Fact]
         public void BatchJsonLightSelfReferenceUriTest()
         {
-            BatchFormat[] formats = new BatchFormat[] {BatchFormat.MultipartMIME, BatchFormat.ApplicationJson};
-            foreach (BatchFormat format in formats)
+            bool expectedExceptionThrown = true;
+            try
             {
-                var requestPayload = this.CreateSelfReferenceBatchRequest(format);
-                bool expectedExceptionThrown = false;
-                try
-                {
-                    this.ServiceReadSingletonBatchRequestAndWriterBatchResponse(requestPayload,
-                        GetContentTypeHeader(format));
-                }
-                catch (Exception e)
-                {
-                    expectedExceptionThrown = e.Message.Contains(selfReferenceUriNotAllowed);
-                }
-                Assert.True(expectedExceptionThrown, "Uri self-referencing with its Content-ID is not allowed.");
+            this.CreateSelfReferenceBatchRequest(BatchFormat.ApplicationJson);
+                expectedExceptionThrown = false;
             }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains(selfReferenceUriNotAllowed));
+            }
+            Assert.True(expectedExceptionThrown, "Uri self-referencing with its Content-ID should not be allowed.");
+        }
+
+        [Fact]
+        public void BatchJsonLightReferenceUriV4TestShouldThrow()
+        {
+            bool exceptionThrown = true;
+            try
+            {
+                this.CreateReferenceUriBatchRequest(ODataVersion.V4);
+                exceptionThrown = false;
+            }
+            catch (ODataException e)
+            {
+                e.Message.Should().Contain("is not matching any of the request Id and atomic group Id seen so far");
+                return;
+            }
+
+            Assert.True(exceptionThrown, "An exception should have been thrown when trying to refer to the " +
+                "content Id of the last request of a change set or atomic group in V4.");
+        }
+
+        [Fact]
+        public void BatchJsonLightUseInvalidDependsOnIdsV401Test()
+        {
+            bool exceptionThrown = true;
+            try
+            {
+                this.CreateReferenceUriBatchRequest(ODataVersion.V401,
+                    true /*useInvalidDependsOnIds*/,
+                    false  /*useRequestIdOfGroupForDependsOnIds*/);
+                exceptionThrown = false;
+            }
+            catch (ODataException e)
+            {
+                e.Message.Should().Contain("is not matching any of the request Id and atomic group Id"
+                    + " seen so far. Forward reference is not allowed.");
+                return;
+            }
+
+            Assert.True(exceptionThrown, "An exception should have been thrown when trying to create " +
+                "request with invalid dependsOn Ids in V401.");
+        }
+
+        [Fact]
+        public void BatchJsonLightInvalidUseRequestIdOfGroupForDependsOnIdsV401Test()
+        {
+            bool exceptionThrown = true;
+            try
+            {
+                this.CreateReferenceUriBatchRequest(ODataVersion.V401,
+                    false /*useInvalidDependsOnIds*/,
+                    true  /*useRequestIdOfGroupForDependsOnIds*/);
+                exceptionThrown = false;
+            }
+            catch (ODataException e)
+            {
+                e.Message.Should().Contain("Therefore dependsOn property should refer to atomic group Id");
+                return;
+            }
+
+            Assert.True(exceptionThrown, "An exception should have been thrown when trying to create " +
+                "request with invalid dependsOn Ids in V401.");
+        }
+
+        [Fact]
+        public void BatchJsonLightReferenceUriV401Test()
+        {
+            byte[] requestPayload = this.CreateReferenceUriBatchRequest(ODataVersion.V401);
+            VerifyPayload(requestPayload, ExpectedReferenceUriRequestPayload);
+
+            byte[] responsePayload = this.ServiceReadReferenceUriBatchRequestAndWriteResponse(requestPayload);
+            VerifyPayload(responsePayload, ExpectedReferenceUriResponsePayload);
         }
 
         [Fact]
@@ -528,7 +668,7 @@ OData-Version: 4.0
         }
 
         [Fact]
-        public void BatchJsonLightQueryInsideChangesetTest()
+        public void BatchJsonLightQueryInsideChangesetNotAllowedTest()
         {
             BatchFormat[] formats = new BatchFormat[] { BatchFormat.MultipartMIME, BatchFormat.ApplicationJson };
             foreach (BatchFormat format in formats)
@@ -542,8 +682,70 @@ OData-Version: 4.0
                 {
                     expectedExceptionThrown = e.Message.Contains(changesetContainingQueryNotAllowed);
                 }
-                Assert.True(expectedExceptionThrown, "change set containing query operation is not allowed.");
+                Assert.True(expectedExceptionThrown, "change set containing query operation should not be allowed.");
             }
+        }
+
+        [Fact]
+        public void BatchJsonLightContentIdUniquenessScopeForMultipartV4ShouldPass()
+        {
+            ODataMessageWriterSettings writerSettingsV4 = new ODataMessageWriterSettings {Version = ODataVersion.V4};
+
+            // Same Content-ID value in different change set should be allowed in V4 since
+            // Content-ID uniqueness scope is local (change set scope)
+            byte[] request = ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV4, batchContentTypeMultipartMime);
+            Assert.NotNull(request);
+        }
+
+        [Fact]
+        //        public void BatchJsonLightContentIdUniquenessScopeForMultipartV401ShouldThrow()
+        public void BatchJsonLightContentIdUniquenessScopeForMultipartV401ShouldPass()
+        {
+            ODataMessageWriterSettings writerSettingsV401 = new ODataMessageWriterSettings { Version = ODataVersion.V401 };
+
+//            string expectedPartialErrorMesage =
+//                "was found more than once in the same change set or same batch request. Content "
+//              + "IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique "
+//              + "across all operations in the whole batch request for OData V4.01.";
+//
+//            ODataException ode = Assert.Throws<ODataException>(
+//                () => ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeMultipartMime));
+//            Assert.Contains(expectedPartialErrorMesage, ode.Message);
+
+            byte[] request = ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeMultipartMime);
+            Assert.NotNull(request);
+        }
+
+//        [Fact]
+//        public void BatchJsonLightContentIdUniquenessScopeForMultipartV401ShouldThrow()
+//        {
+//            ODataMessageWriterSettings writerSettingsV401 = new ODataMessageWriterSettings {Version = ODataVersion.V401};
+//
+//
+//            string expectedPartialErrorMesage =
+//                "was found more than once in the same change set or same batch request. Content "
+//              + "IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique "
+//              + "across all operations in the whole batch request for OData V4.01.";
+//
+//            ODataException ode = Assert.Throws<ODataException>(
+//                () => ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeMultipartMime));
+//            Assert.Contains(expectedPartialErrorMesage, ode.Message);
+//        }
+
+        [Fact]
+        public void BatchJsonLightContentIdUniquenessScopeForJsonBatchV401ShouldThrow()
+        {
+            ODataMessageWriterSettings writerSettingsV401 = new ODataMessageWriterSettings { Version = ODataVersion.V401 };
+
+
+            string expectedPartialErrorMesage =
+                "was found more than once in the same change set or same batch request. Content "
+              + "IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique "
+              + "across all operations in the whole batch request for OData V4.01.";
+
+            ODataException ode = Assert.Throws<ODataException>(
+                () => ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeApplicationJson));
+            Assert.Contains(expectedPartialErrorMesage, ode.Message);
         }
 
         private void BatchJsonLightTestUsingBatchFormat(BatchFormat batchFormat, int idx)
@@ -587,8 +789,10 @@ OData-Version: 4.0
                             expectedPayload = Regex.Replace(
                                 forRequest ? ExpectedRequestPayloads[idx] : ExpectedResponsePayloads[idx],
                                 "changeset.*$", "changeset_GUID", RegexOptions.Multiline);
+                            expectedPayload = Regex.Replace(expectedPayload, "OData-Version: .*$", "OData-version: myODataVer", RegexOptions.Multiline);
 
                             payload = Regex.Replace(payload, "changeset.*$", "changeset_GUID", RegexOptions.Multiline);
+                            payload =  Regex.Replace(payload, "OData-Version: .*$", "OData-version: myODataVer", RegexOptions.Multiline);
                         }
                         break;
 
@@ -611,6 +815,18 @@ OData-Version: 4.0
             }
         }
 
+        private void VerifyPayload(byte[] payloadBytes, string expectedPayload)
+        {
+            using (MemoryStream stream = new MemoryStream(payloadBytes))
+            using (StreamReader sr = new StreamReader(stream))
+            {
+                string normalizedPayload = GetNormalizedJsonMessage(sr.ReadToEnd());
+                string normalizedExpectedPayload = GetNormalizedJsonMessage(expectedPayload);
+
+                Assert.Equal(normalizedExpectedPayload, normalizedPayload);
+            }
+        }
+
         private byte[] ClientWriteSingletonBatchRequest(string batchContentType)
         {
             var stream = new MemoryStream();
@@ -626,6 +842,12 @@ OData-Version: 4.0
 
                 // Write a query operation.
                 var queryOperationMessage = batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/MySingleton"), /*contentId*/ null);
+
+                // Verify that: for multipart batch the content id of the request generated by the writer can be null;
+                // for Json batch the content id of the request generated by the writer is not null.
+                Assert.True(
+                       (batchWriter is ODataJsonLightBatchWriter && queryOperationMessage.ContentId != null)
+                    || (batchWriter is ODataMultipartMixedBatchWriter && queryOperationMessage.ContentId == null));
 
                 // Header modification on inner payload.
                 queryOperationMessage.SetHeader("Accept", "application/json;odata.metadata=full");
@@ -703,14 +925,6 @@ OData-Version: 4.0
                         case ODataBatchReaderState.Operation:
                             // Encountered an operation (either top-level or in a change set)
                             var operationMessage = batchReader.CreateOperationRequestMessage();
-                            if (operationMessage.Url.ToString()
-                                .Contains(String.Format("${0}", operationMessage.ContentId)))
-                            {
-                                throw new ODataException(String.Format("Uri {0} {2} {1}",
-                                    operationMessage.Url.ToString(),
-                                    operationMessage.ContentId,
-                                    selfReferenceUriNotAllowed));
-                            }
 
                             if (operationMessage.Method == "PATCH")
                             {
@@ -720,7 +934,12 @@ OData-Version: 4.0
                             }
                             else if (operationMessage.Method == "GET")
                             {
-                                var response = batchWriter.CreateOperationResponseMessage(null);
+                                // Set the content-id of response to that of the corresponding request.
+                                // This enables us to correlate request and response to the maximum extend.
+                                // For multipart batch, it is still null.
+                                // For Json batch, it utilizes the possible non-null value created during the
+                                // writer's creating of the batch request.
+                                var response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
                                 response.StatusCode = 200;
                                 response.SetHeader("Content-Type", "application/json;");
                                 var settings = new ODataMessageWriterSettings();
@@ -767,21 +986,21 @@ OData-Version: 4.0
         {
             IODataResponseMessage responseMessage = new InMemoryMessage() { Stream = new MemoryStream(responsePayload) };
             responseMessage.SetHeader("Content-Type", batchContentType);
-            using (var messageReader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), this.userModel))
+            using (ODataMessageReader messageReader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), this.userModel))
             {
-                var batchReader = messageReader.CreateODataBatchReader();
+                ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
                 while (batchReader.Read())
                 {
                     switch (batchReader.State)
                     {
                         case ODataBatchReaderState.Operation:
                             // Encountered an operation (either top-level or in a change set)
-                            var operationMessage = batchReader.CreateOperationResponseMessage();
+                            ODataBatchOperationResponseMessage operationMessage = batchReader.CreateOperationResponseMessage();
                             if (operationMessage.StatusCode == 200)
                             {
                                 using (ODataMessageReader innerMessageReader = new ODataMessageReader(operationMessage, new ODataMessageReaderSettings(), this.userModel))
                                 {
-                                    var reader = innerMessageReader.CreateODataResourceReader();
+                                    ODataReader reader = innerMessageReader.CreateODataResourceReader();
 
                                     while (reader.Read())
                                     {
@@ -793,10 +1012,24 @@ OData-Version: 4.0
                                         }
                                     }
                                 }
+
+                                // The only two messages with HTTP-200 response codes are the two GET requests with content id value of null.
+                                // Verify that: for multipart batch the content id of the response is matching that of the request;
+                                // for Json batch the content id of the response is not null.
+                                Assert.True(
+                                       (batchReader is ODataJsonLightBatchReader && operationMessage.ContentId != null)
+                                    || (batchReader is ODataMultipartMixedBatchReader && operationMessage.ContentId == null));
                             }
                             else
                             {
                                 Assert.True(204 == operationMessage.StatusCode || 500 == operationMessage.StatusCode);
+
+                                // The only message above with HTTP-500 response code has content id value of "3".
+                                // Verify that the content id of the response is matching that of the request.
+                                if (500 == operationMessage.StatusCode)
+                                {
+                                    Assert.True(operationMessage.ContentId.Equals("3"));
+                                }
                             }
                             break;
                     }
@@ -815,7 +1048,9 @@ OData-Version: 4.0
             IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
             requestMessage.SetHeader("Content-Type", GetContentTypeHeader(format));
 
-            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage))
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+            settings.BaseUri = new Uri(serviceDocumentUri);
+            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
                 ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
 
@@ -825,11 +1060,11 @@ OData-Version: 4.0
                 batchWriter.WriteStartChangeset();
 
                 // Create a update operation in the change set with uri referencing itself.
-                string resourceSegment = "MySingleton";
                 string contentId = "1";
+                batchWriter.DependsOnIds = new string[] {contentId};
                 ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
-                    new Uri(String.Format("{0}/{1}/${2}", serviceDocumentUri, resourceSegment, contentId)),
+                    new Uri(string.Format("{0}/${1}", serviceDocumentUri, contentId)),
                     contentId);
 
                 // Use a new message writer to write the body of this operation.
@@ -846,6 +1081,181 @@ OData-Version: 4.0
 
                 stream.Position = 0;
                 return stream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Create a batch request that contains cross-referencing requests.
+        /// </summary>
+        /// <param name="version">The OData version for request.</param>
+        /// <param name="useInvalidDependsOnIds">
+        /// Whether to use invalid id value as dependsOn ids for the test case. Set to true to trigger exception.</param>
+        /// <param name="useRequestIdOfGroupForDependsOnIds">
+        /// Whether to use request id belonging to atomic group as dependsOn id. Set to true to trigger exception.</param>
+        /// <returns>Stream containing the batch request.</returns>
+        private byte[] CreateReferenceUriBatchRequest(ODataVersion version, bool useInvalidDependsOnIds = false, bool useRequestIdOfGroupForDependsOnIds = false)
+        {
+            MemoryStream stream = new MemoryStream();
+
+            IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
+            requestMessage.SetHeader("Content-Type", GetContentTypeHeader(BatchFormat.ApplicationJson));
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+            settings.BaseUri = new Uri(serviceDocumentUri);
+            settings.Version = version;
+
+            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage, settings))
+            {
+                ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+
+                batchWriter.WriteStartChangeset();
+
+                // Create operation.
+                string resourceSegment = "MySingleton";
+                ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage(
+                    "PUT",
+                    new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, resourceSegment)),
+                    "1");
+                string firstGroupId = updateOperationMessage.GroupId;
+
+                using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
+                {
+                    ODataWriter entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    ODataResource entry = new ODataResource()
+                    {
+                        TypeName = "NS.Web",
+                        Properties = new[] {
+                            new ODataProperty() { Name = "WebId", Value = 10 },
+                            new ODataProperty() { Name = "Name", Value = "SingletonWebForRequestIdRefTest" } }
+                    };
+                    entryWriter.WriteStart(entry);
+                    entryWriter.WriteEnd();
+                }
+
+                // A PATCH operation that depends on the preceding PUT operation.
+                Assert.Null(batchWriter.DependsOnIds);
+                batchWriter.DependsOnIds = new string[] {"1"};
+
+                updateOperationMessage = batchWriter.CreateOperationRequestMessage(
+                    "PATCH",
+                    new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, "$1")),
+                    "2",
+                    BatchPayloadUriOption.AbsoluteUri);
+                Assert.Null(batchWriter.DependsOnIds);
+
+                using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
+                {
+                    ODataWriter entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    ODataResource entry = new ODataResource()
+                    {
+                        TypeName = "NS.Web",
+                        Properties = new[]
+                        {
+                            new ODataProperty() { Name = "WebId", Value = 12 }
+                        }
+                    };
+                    entryWriter.WriteStart(entry);
+                    entryWriter.WriteEnd();
+                }
+
+                batchWriter.WriteEndChangeset();
+
+                // Another PATCH operation that depends on both operations above.
+                Assert.Null(batchWriter.DependsOnIds);
+
+                if (useInvalidDependsOnIds)
+                {
+                    batchWriter.DependsOnIds = new string[] { "nonExistant" };
+                }
+                else if(useRequestIdOfGroupForDependsOnIds)
+                {
+                    batchWriter.DependsOnIds = new string[] {"1", "2"};
+                }
+                else
+                {
+                    batchWriter.DependsOnIds = new string[] {firstGroupId};
+                }
+
+                updateOperationMessage = batchWriter.CreateOperationRequestMessage(
+                    "PATCH",
+                    new Uri("$1/alias", UriKind.Relative),
+                    "3",
+                    BatchPayloadUriOption.RelativeUri);
+
+                using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
+                {
+                    ODataWriter entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    ODataResource entry = new ODataResource()
+                    {
+                        TypeName = "NS.Web",
+                        Properties = new[]
+                        {
+                            new ODataProperty() { Name = "WebId", Value = 13 }
+                        }
+                    };
+                    entryWriter.WriteStart(entry);
+                    entryWriter.WriteEnd();
+                }
+
+                batchWriter.WriteEndBatch();
+
+                stream.Position = 0;
+                return stream.ToArray();
+            }
+        }
+
+        private byte[] ServiceReadReferenceUriBatchRequestAndWriteResponse(byte[] requestPayload)
+        {
+            IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
+            requestMessage.SetHeader("Content-Type", GetContentTypeHeader(BatchFormat.ApplicationJson));
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
+            settings.BaseUri = new Uri(serviceDocumentUri);
+
+            using (ODataMessageReader messageReader = new ODataMessageReader(requestMessage, settings, this.userModel))
+            {
+                MemoryStream responseStream = new MemoryStream();
+
+                IODataResponseMessage responseMessage = new InMemoryMessage { Stream = responseStream };
+
+                // Client is expected to receive the response message in the same format as that is used in the request sent.
+                responseMessage.SetHeader("Content-Type", GetContentTypeHeader(BatchFormat.ApplicationJson));
+                ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage);
+                ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+
+                ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
+                while (batchReader.Read())
+                {
+                    switch (batchReader.State)
+                    {
+                        case ODataBatchReaderState.Operation:
+                            // Encountered an operation (either top-level or in a change set)
+                            ODataBatchOperationRequestMessage operationMessage = batchReader.CreateOperationRequestMessage();
+
+                            ODataBatchOperationResponseMessage response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
+                            if (operationMessage.Method == "PUT")
+                            {
+                                response.StatusCode = 201;
+                                response.SetHeader("Content-Type", "application/json;odata.metadata=none");
+                            }
+                            else if (operationMessage.Method == "PATCH")
+                            {
+                                response.StatusCode = 204;
+                            }
+
+                            break;
+                        case ODataBatchReaderState.ChangesetStart:
+                            batchWriter.WriteStartChangeset();
+                            break;
+                        case ODataBatchReaderState.ChangesetEnd:
+                            batchWriter.WriteEndChangeset();
+                            break;
+                    }
+                }
+
+                batchWriter.WriteEndBatch();
+                responseStream.Position = 0;
+                return responseStream.ToArray();
             }
         }
 
@@ -949,14 +1359,14 @@ OData-Version: 4.0
         /// <returns>Thrown exception.</returns>
         private byte[] CreateQueryInsideChangesetBatchRequest(BatchFormat format)
         {
-            var stream = new MemoryStream();
+            MemoryStream stream = new MemoryStream();
 
             IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
             requestMessage.SetHeader("Content-Type", GetContentTypeHeader(format));
 
-            using (var messageWriter = new ODataMessageWriter(requestMessage))
+            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage))
             {
-                var batchWriter = messageWriter.CreateODataBatchWriter();
+                ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
 
                 // An invalid batch that has a change set containing query request
                 batchWriter.WriteStartBatch();
@@ -968,6 +1378,79 @@ OData-Version: 4.0
                 queryOperationMessage.SetHeader("Accept", "application/json;odata.metadata=full");
 
                 batchWriter.WriteEndChangeset();
+
+                // Create operation.
+                string resourceSegment = "MySingleton";
+                ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage(
+                    "PUT",
+                    new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, resourceSegment)),
+                    "1");
+                string firstGroupId = updateOperationMessage.GroupId;
+
+                using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
+                {
+                    ODataWriter entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    ODataResource entry = new ODataResource()
+                    {
+                        TypeName = "NS.Web",
+                        Properties = new[] {
+                            new ODataProperty() { Name = "WebId", Value = 10 },
+                            new ODataProperty() { Name = "Name", Value = "SingletonWebForRequestIdRefTest" } }
+                    };
+                    entryWriter.WriteStart(entry);
+                    entryWriter.WriteEnd();
+                }
+                batchWriter.WriteEndBatch();
+
+                stream.Position = 0;
+                return stream.ToArray();
+            }
+        }
+
+        private byte[] ClientWriteMuitipartChangesetsWithSameContentId(ODataMessageWriterSettings settings, string batchContentType)
+        {
+            MemoryStream stream = new MemoryStream();
+
+            IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
+            requestMessage.SetHeader("Content-Type", batchContentType);
+
+            string contentId = "contentIdUniqueInChangesetScope";
+
+            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage, settings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+
+                batchWriter.WriteStartBatch();
+
+                // Create two identical changesets such that each has a request with same Content-ID.
+                for (int i = 0; i < 2; i++)
+                {
+                    batchWriter.WriteStartChangeset();
+
+                    ODataBatchOperationRequestMessage updateOperationMessage =
+                        batchWriter.CreateOperationRequestMessage(
+                            "PATCH", new Uri(serviceDocumentUri + "/MySingleton"), contentId);
+
+                    // Use a new message writer to write the body of this operation.
+                    using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
+                    {
+                        var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                        var entry = new ODataResource()
+                        {
+                            TypeName = "NS.Web",
+                            Properties =
+                                new[]
+                                {
+                                    new ODataProperty() {Name = "WebId", Value = 10}
+                                }
+                        };
+                        entryWriter.WriteStart(entry);
+                        entryWriter.WriteEnd();
+                    }
+
+                    batchWriter.WriteEndChangeset();
+                }
+
                 batchWriter.WriteEndBatch();
 
                 stream.Position = 0;
@@ -991,11 +1474,14 @@ OData-Version: 4.0
         {
             const string myIdProperty = @"""id"":""my_id_guid""";
             const string myAtomicGroupProperty = @"""atomicityGroup"":""my_groupid_guid""";
+            const string myDependsOnProperty = @"""dependsOn"":""[my_ids]""";
+            const string myODataVersionProperty = @"""odata-version"":""myODataVer""";
 
             string result = Regex.Replace(jsonMessage, @"\s*", "", RegexOptions.Multiline);
             result = Regex.Replace(result, "\"id\":\"[^\"]*\"", myIdProperty, RegexOptions.Multiline);
             result = Regex.Replace(result, "\"atomicityGroup\":\"[^\"]*\"", myAtomicGroupProperty, RegexOptions.Multiline);
-
+            result = Regex.Replace(result, "\"dependsOn\":\\[\"[^\\]]*\\]", myDependsOnProperty, RegexOptions.Multiline);
+            result = Regex.Replace(result, "\"odata-version\":\"[^\"]*\"", myODataVersionProperty, RegexOptions.Multiline);
             return result;
         }
     }

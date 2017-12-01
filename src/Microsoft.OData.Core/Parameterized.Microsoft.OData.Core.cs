@@ -943,7 +943,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set."
+        /// A string like "The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01."
         /// </summary>
         internal static string ODataBatchWriter_DuplicateContentIDsNotAllowed(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchWriter_DuplicateContentIDsNotAllowed, p0);
@@ -1108,7 +1108,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set."
+        /// A string like "The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01."
         /// </summary>
         internal static string ODataBatchReader_DuplicateContentIDsNotAllowed(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_DuplicateContentIDsNotAllowed, p0);
@@ -1182,6 +1182,22 @@ namespace Microsoft.OData {
         internal static string ODataBatchReader_DependsOnIdNotFound(object p0, object p1)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_DependsOnIdNotFound, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Absolute URI {0} is not start with the base URI [{1}] specified by the operation message."
+        /// </summary>
+        internal static string ODataBatchReader_AbsoluteURINotMatchingBaseUri(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_AbsoluteURINotMatchingBaseUri, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Request Id reference [{0}] in Uri [{1}] is not found in effective depends-on-Ids [{2}] of the request."
+        /// </summary>
+        internal static string ODataBatchReader_ReferenceIdNotIncludedInDependsOn(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_ReferenceIdNotIncludedInDependsOn, p0, p1, p2);
         }
 
         /// <summary>

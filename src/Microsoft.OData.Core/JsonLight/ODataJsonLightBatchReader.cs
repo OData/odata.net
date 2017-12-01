@@ -96,6 +96,22 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Gets the atomic group id for the current request.
+        /// </summary>
+        /// <returns>The group id for the current request. Null if current request is not in an atomic group.</returns>
+        protected override string GetCurrentGroupIdImplementation()
+        {
+            string result = null;
+            if (this.messagePropertiesCache != null)
+            {
+                result = (string)this.messagePropertiesCache.GetPropertyValue(
+                    ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
@@ -194,7 +210,7 @@ namespace Microsoft.OData.JsonLight
 
                 Debug.Assert(this.messagePropertiesCache == null, "this.messagePropertiesCache == null");
                 this.messagePropertiesCache =
-                    new ODataJsonLightBatchPayloadItemPropertiesCache(this.JsonLightInputContext.JsonReader, this);
+                    new ODataJsonLightBatchPayloadItemPropertiesCache(this);
 
                 string currentGroup = (string)this.messagePropertiesCache.GetPropertyValue(
                     ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
@@ -205,7 +221,6 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-                    // Use null for messageId in response read since it is irrelevant.
                     HandleNewAtomicGroupStart(
                         (string)
                             this.messagePropertiesCache.GetPropertyValue(
@@ -259,7 +274,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Load the message details since operation is detected.
                 this.messagePropertiesCache =
-                    new ODataJsonLightBatchPayloadItemPropertiesCache(this.JsonLightInputContext.JsonReader, this);
+                    new ODataJsonLightBatchPayloadItemPropertiesCache(this);
             }
 
             // Calculate and return next state with changeset state detection.
@@ -283,6 +298,13 @@ namespace Microsoft.OData.JsonLight
 
             int statusCode = (int)
                 this.messagePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameStatus);
+
+            string contentId = (string)this.messagePropertiesCache.GetPropertyValue(
+                    ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
+
+            string groupId = (string)this.messagePropertiesCache.GetPropertyValue(
+                        ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
+
             ODataBatchOperationHeaders headers = (ODataBatchOperationHeaders)
                 this.messagePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameHeaders);
 
@@ -292,13 +314,12 @@ namespace Microsoft.OData.JsonLight
 
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
-            // In Json batch response, contentId is stored in base type batch reader, so we can use null to invoke
-            // the base class's method.
             ODataBatchOperationResponseMessage responseMessage = BuildOperationResponseMessage(
                 () => bodyContentStream,
                 statusCode,
                 headers,
-                null);
+                contentId,
+                groupId);
 
             //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
             //// we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).
@@ -346,9 +367,10 @@ namespace Microsoft.OData.JsonLight
                         requestId));
                 }
 
-                // For request Id referred to by dependsOn attribute, check that it is not part of atomic group.
+                // For request Id referred to by dependsOn attribute, check that it is not part of any atomic group
+                // other than the dependent request's atomic group (if dependent request belongs to an atomic group).
                 string groupId = this.atomicGroups.GetGroupId(dependsOnId);
-                if (groupId != null)
+                if (groupId != null && !groupId.Equals(this.atomicGroups.GetGroupId(requestId)))
                 {
                     throw new ODataException(Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(
                         dependsOnId,
@@ -445,7 +467,6 @@ namespace Microsoft.OData.JsonLight
             // Validate message Id.
             string valueId = (string)messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
-            ValidateRequiredProperty(valueId, ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
 
             string currentGroup = (string)messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);

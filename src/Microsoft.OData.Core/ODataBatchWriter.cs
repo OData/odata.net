@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -113,6 +114,14 @@ namespace Microsoft.OData
             Error
         }
 
+        /// <summary>
+        /// Prerequisite request ids or content ids for the current request object to write.
+        /// This property specifies the current request's dependency on preceding request. It needs to be set
+        /// accordingly for each dependent request operation before <see cref="ODataBatchWriter"/> invokes the
+        /// method CreateOperationRequestMessage or method CreateOperationRequestMessageAsync
+        /// </summary>
+        public IEnumerable<string> DependsOnIds { get; set; }
+
         /// <summary>The request message for the operation that is currently written if it's a request; or null if no operation is written right now or it's a response operation.</summary>
         protected ODataBatchOperationRequestMessage CurrentOperationRequestMessage
         {
@@ -198,21 +207,54 @@ namespace Microsoft.OData
         }
 #endif
 
-        /// <summary>Starts a new changeset; can only be called after WriteStartBatch and if no other active operation or changeset exists.</summary>
+        /// <summary>
+        /// Starts a new changeset without specifying group id.
+        /// This can only be called after WriteStartBatch and if no other active operation or changeset exists.
+        /// </summary>
         public void WriteStartChangeset()
         {
+            this.WriteStartChangeset(null);
+        }
+
+        /// <summary>
+        /// Starts a new changeset with the specified group id, which is null for multipart batch.
+        /// This can only be called after WriteStartBatch and if no other active operation or changeset exists.</summary>
+        /// <param name="groupId">
+        /// For Json batch, this is the atomic group id. Default value of null can be used for writing request and an GUID will be generated.
+        /// Non-null value from corresponding request atomic group should be used for writing response so that atomic groups
+        /// from request and response can be correlated.
+        /// For multipart batch, null value should be used and is ignored.
+        /// </param>
+        public void WriteStartChangeset(string groupId)
+        {
             this.VerifyCanWriteStartChangeset(true);
-            this.WriteStartChangesetImplementation();
+            this.WriteStartChangesetImplementation(groupId);
             this.UpdateAfterWriteStartChangeset();
         }
 
 #if PORTABLELIB
-        /// <summary>Asynchronously starts a new change set; can only be called after WriteStartBatch and if no other active operation or change set exists.</summary>
+        /// <summary>Asynchronously starts a new change set without specifying group id;
+        /// This can only be called after WriteStartBatch and if no other active operation or change set exists.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public Task WriteStartChangesetAsync()
         {
+            return WriteStartChangesetAsync(null);
+        }
+
+        /// <summary>
+        /// Asynchronously starts a new change set; can only be called after WriteStartBatch and if no other active operation or change set exists.
+        /// </summary>
+        /// <param name="groupId">
+        /// For Json Batch, this is the atomic group id. Default value of null can be used for writing request and an GUID will be generated.
+        /// Non-null value from corresponding request atomic group should be used for writing response so that atomic groups
+        /// from request and response can be correlated.
+        /// For multipart batch, null value should be used and is ignored.
+        /// </param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public Task WriteStartChangesetAsync(string groupId)
+        {
             this.VerifyCanWriteStartChangeset(false);
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteStartChangesetImplementation)
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartChangesetImplementation(groupId))
                 .FollowOnSuccessWith(t => this.UpdateAfterWriteStartChangeset());
         }
 #endif
@@ -246,13 +288,18 @@ namespace Microsoft.OData
             return CreateOperationRequestMessage(method, uri, contentId, BatchPayloadUriOption.AbsoluteUri);
         }
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for writing an operation of a batch request.</summary>
+        /// <summary>
+        /// Creates an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for writing an operation of a batch request.
+        /// </summary>
         /// <returns>The message that can be used to write the request operation.</returns>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
-        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
-        public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
+        /// <param name="contentId">
+        /// The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId,
+            BatchPayloadUriOption payloadUriOption)
         {
             this.VerifyCanCreateOperationRequestMessage(true, method, uri, contentId);
             return CreateOperationRequestMessageInternal(method, uri, contentId, payloadUriOption);
@@ -263,19 +310,24 @@ namespace Microsoft.OData
         /// <returns>The message that can be used to asynchronously write the request operation.</returns>
         /// <param name="method">The HTTP method to be used for this request operation.</param>
         /// <param name="uri">The URI to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="contentId">
+        /// The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId)
         {
             return CreateOperationRequestMessageAsync(method, uri, contentId, BatchPayloadUriOption.AbsoluteUri);
         }
 
-        /// <summary>Creates a message for asynchronously writing an operation of a batch request.</summary>
+        /// <summary>
+        /// Creates a message for asynchronously writing an operation of a batch request.</summary>
         /// <returns>The message that can be used to asynchronously write the request operation.</returns>
         /// <param name="method">The HTTP method to be used for this request operation.</param>
         /// <param name="uri">The URI to be used for this request operation.</param>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
-        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
-        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
+        /// <param name="contentId">
+        /// The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId,
+            BatchPayloadUriOption payloadUriOption)
         {
             this.VerifyCanCreateOperationRequestMessage(false, method, uri, contentId);
 
@@ -390,7 +442,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Starts a new changeset.
         /// </summary>
-        protected abstract void WriteStartChangesetImplementation();
+        /// <param name="groupId">The atomic group id for Json batch request.
+        /// For multipart batch, this parameter is ignored.
+        /// </param>
+        protected abstract void WriteStartChangesetImplementation(string groupId);
 
         /// <summary>
         /// Ends an active changeset.
@@ -410,7 +465,8 @@ namespace Microsoft.OData
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri,
             string contentId, BatchPayloadUriOption payloadUriOption);
@@ -438,6 +494,18 @@ namespace Microsoft.OData
         protected abstract void WriteStartBatchImplementation();
 
         /// <summary>
+        /// Given an enumerable of dependsOn ids containing request ids and group ids, convert the group ids
+        /// into associated request ids.
+        /// Base class implementation is provided here as default implementation for multipart batch writer.
+        /// </summary>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        /// <returns>An enumerable consists of request ids.</returns>
+        protected virtual IEnumerable<string> GetDependsOnRequestIds(IEnumerable<string> dependsOnIds)
+        {
+            return dependsOnIds;
+        }
+
+        /// <summary>
         /// Wrapper method to create an operation request message that can be used to write the operation content to, utilizing
         /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
         /// </summary>
@@ -449,9 +517,47 @@ namespace Microsoft.OData
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
             string contentId)
         {
+            return BuildOperationRequestMessage(outputStream, method, uri, contentId, null);
+        }
+
+        /// <summary>
+        /// Wrapper method to create an operation request message that can be used to write the operation content to, utilizing
+        /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
+        /// </summary>
+        /// <param name="outputStream">The output stream underlying the operation message.</param>
+        /// <param name="method">The HTTP method to use for the message to create.</param>
+        /// <param name="uri">The request URL for the message to create.</param>
+        /// <param name="contentId">The contentId of this request message.</param>
+        /// <param name="groupId">Optional value for the group id that this request belongs to. Can be null.</param>
+        /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
+        protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
+            string contentId, string groupId)
+        {
+            IEnumerable<string> flattenDependsOnIds = this.DependsOnIds == null
+                ? null
+                : GetDependsOnRequestIds(this.DependsOnIds);
+
+            if (flattenDependsOnIds != null)
+            {
+                foreach (string id in flattenDependsOnIds)
+                {
+                    if (!this.payloadUriConverter.ContainsContentId(id))
+                    {
+                        throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                    }
+                }
+            }
+
+            ODataBatchUtils.ValidateReferenceUri(uri, flattenDependsOnIds, this.outputContext);
+
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
-            return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, /*headers*/ null, this, contentId,
-                this.payloadUriConverter, /*writing*/ true, this.container, null);
+            ODataBatchOperationRequestMessage requestMessage =
+                new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, /*headers*/ null, this, contentId,
+                this.payloadUriConverter, /*writing*/ true, this.container, this.DependsOnIds, groupId);
+
+            // Reset the DependsOnIds and return the result.
+            this.DependsOnIds = null;
+            return requestMessage;
         }
 
         /// <summary>
@@ -460,13 +566,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="outputStream">The output stream underlying the operation message.</param>
         /// <param name="contentId">The contentId of this response message.</param>
+        /// <param name="groupId">The group id of the response message, should be the same as the group id
+        /// in the corresponding request message.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
         protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(Stream outputStream,
-            string contentId)
+            string contentId, string groupId)
         {
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
             return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, this, contentId,
-                this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ true, this.container);
+                this.payloadUriConverter.BatchMessagePayloadUriConverter, /*writing*/ true, this.container, groupId);
         }
 
         /// <summary>
@@ -501,6 +609,20 @@ namespace Microsoft.OData
             throw new ODataException(errorMessage);
         }
 
+        /// <summary>
+        /// Internal method to create an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for writing
+        /// an operation of a batch request.
+        /// </summary>
+        /// <returns>The message that can be used to write the request operation.</returns>
+        /// <param name="method">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">
+        /// For batch in multipart format, the Content-ID value to write in ChangeSet header, would be ignored if
+        /// <paramref name="method"/> is "GET".
+        /// For batch in Json format, if the value passed in is null, an GUID will be generated and used as the request id.
+        /// </param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         private ODataBatchOperationRequestMessage CreateOperationRequestMessageInternal(string method, Uri uri, string contentId,
             BatchPayloadUriOption payloadUriOption)
         {
@@ -543,7 +665,9 @@ namespace Microsoft.OData
         private void UpdateAfterWriteStartChangeset()
         {
             // Reset the cache of content IDs here. As per spec,
-            // For version up to V4 (inclusive): Content-IDs uniqueness scope is change set.
+            // For version up to V4 (inclusive): Content-IDs uniqueness scope is whole batch,
+            // but existing implementation is change set. We don't want to introduce breaking change, and shouldn't
+            // throw error for existing scenario of having same content Id in different changesets.
             // For version above V4: Content-IDs uniqueness scope is whole batch.
             if (this.outputContext.MessageWriterSettings.Version <= ODataVersion.V4)
             {
@@ -678,7 +802,7 @@ namespace Microsoft.OData
             // For the case within a changeset, verify CreateOperationRequestMessage is valid.
             if (this.isInChangset)
             {
-                if (this.outputContext.MessageWriterSettings.Version <= ODataVersion.V4 && HttpUtils.IsQueryMethod(method))
+                if (HttpUtils.IsQueryMethod(method))
                 {
                     this.ThrowODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(method));
                 }

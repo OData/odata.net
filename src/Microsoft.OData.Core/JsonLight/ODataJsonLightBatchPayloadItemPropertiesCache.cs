@@ -8,6 +8,7 @@ namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
 
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
@@ -16,7 +17,7 @@ namespace Microsoft.OData.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Base class for cache properties of a json object.
+    /// Class for cache properties of a json object.
     /// </summary>
     internal class ODataJsonLightBatchPayloadItemPropertiesCache
     {
@@ -73,12 +74,12 @@ namespace Microsoft.OData.JsonLight
         internal const string PropertyNameStatus = "STATUS";
 
         /// <summary>
-        /// The Json reader to payload item in Json format.
+        /// The Json reader for reading payload item in Json format.
         /// </summary>
         private IJsonReader jsonReader;
 
         /// <summary>
-        /// The Json reader to payload item in Json format.
+        /// The Json batch reader for batch processing.
         /// </summary>
         private IODataBatchOperationListener listener;
 
@@ -88,22 +89,26 @@ namespace Microsoft.OData.JsonLight
         private Dictionary<string, object> jsonProperties = null;
 
         /// <summary>
+        /// Whether the stream has been populated with body content from the operation request message.
+        /// </summary>
+        private bool isStreamPopulated = false;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="jsonReader">The Json reader from the batch reader input context.</param>
-        internal ODataJsonLightBatchPayloadItemPropertiesCache(IJsonReader jsonReader, IODataBatchOperationListener listener)
+        /// <param name="jsonBatchReader">The Json batch reader.</param>
+        internal ODataJsonLightBatchPayloadItemPropertiesCache(ODataJsonLightBatchReader jsonBatchReader)
         {
-            Debug.Assert(jsonReader != null, "jsonReader != null");
+            Debug.Assert(jsonBatchReader != null, "jsonBatchReader != null");
 
-            this.jsonReader = jsonReader;
-            this.listener = listener;
+            this.jsonReader = jsonBatchReader.JsonLightInputContext.JsonReader;
+            this.listener = jsonBatchReader;
 
-            // Use the sealed, most-derived class's implementation.
             ScanJsonProperties();
         }
 
         /// <summary>
-        /// Retrieve the value for the cached property.
+        /// Retrieves the value for the cached property.
         /// </summary>
         /// <param name="propertyName"> Name of the property.</param>
         /// <returns>Property value. Null if not found.</returns>
@@ -123,18 +128,19 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Create a batch reader stream backed by memory stream containing data the current
+        /// Creates a batch reader stream backed by memory stream containing data the current
         /// Json object the reader is pointing at.
         /// Current supported data types are Json and binary types.
         /// </summary>
+        /// <param name="contentTypeHeader">The content-type header value of the request.</param>
         /// <returns>The memory stream.</returns>
-        private ODataJsonLightBatchBodyContentReaderStream CreateJsonPayloadBodyContentStream()
+        private ODataJsonLightBatchBodyContentReaderStream CreateJsonPayloadBodyContentStream(string contentTypeHeader)
         {
             // Serialization of json object to batch buffer.
             ODataJsonLightBatchBodyContentReaderStream stream =
                 new ODataJsonLightBatchBodyContentReaderStream(listener);
 
-            stream.PopulateBodyContent(this.jsonReader);
+            this.isStreamPopulated = stream.PopulateBodyContent(this.jsonReader, contentTypeHeader);
 
             return stream;
         }
@@ -158,6 +164,8 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.jsonProperties == null, "this.jsonProperties == null");
 
             this.jsonProperties = new Dictionary<string, object>();
+            string contentTypeHeader = null;
+            ODataJsonLightBatchBodyContentReaderStream bodyContentStream = null;
 
             try
             {
@@ -208,25 +216,41 @@ namespace Microsoft.OData.JsonLight
                             {
                                 ODataBatchOperationHeaders headers = new ODataBatchOperationHeaders();
 
+                                // Use empty string (non-null value) to indicate that content-type header has been processed.
+                                contentTypeHeader = "";
+
                                 this.jsonReader.ReadStartObject();
 
                                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                                 {
-                                    headers.Add(
-                                        this.jsonReader.ReadPropertyName(),
-                                        this.jsonReader.ReadPrimitiveValue().ToString());
+                                    string headerName = this.jsonReader.ReadPropertyName();
+                                    string headerValue = this.jsonReader.ReadPrimitiveValue().ToString();
+
+                                    // Remember the Content-Type header value.
+                                    if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        contentTypeHeader = headerValue;
+                                    }
+
+                                    headers.Add(headerName, headerValue);
                                 }
 
                                 this.jsonReader.ReadEndObject();
 
                                 jsonProperties.Add(propertyName, headers);
+
+                                if (!this.isStreamPopulated && bodyContentStream != null)
+                                {
+                                    // Populate the stream now since the body content has been cached and we now have content-type.
+                                    bodyContentStream.PopulateCachedBodyContent(contentTypeHeader);
+                                }
                             }
 
                             break;
 
                         case PropertyNameBody:
                             {
-                                ODataJsonLightBatchBodyContentReaderStream bodyContentStream = CreateJsonPayloadBodyContentStream();
+                                bodyContentStream = CreateJsonPayloadBodyContentStream(contentTypeHeader);
                                 jsonProperties.Add(propertyName, bodyContentStream);
                             }
 
