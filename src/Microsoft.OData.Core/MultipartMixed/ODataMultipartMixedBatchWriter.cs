@@ -198,14 +198,20 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request - implementation of the actual functionality.
+        /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request
+        /// - implementation of the actual functionality.
         /// </summary>
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="dependsOnIds">The prerequisite request ids of this request.
+        /// For multipart format, it is less significant than it is for Json batch format and has a default value of null.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
-        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
+        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(
+            string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption,
+            /*ignored*/IEnumerable<string> dependsOnIds)
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);

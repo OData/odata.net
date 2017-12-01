@@ -1061,11 +1061,13 @@ OData-Version: 4.0
 
                 // Create a update operation in the change set with uri referencing itself.
                 string contentId = "1";
-                batchWriter.DependsOnIds = new string[] {contentId};
+                string[] dependsOnIds = new string[] {contentId};
                 ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
                     new Uri(string.Format("{0}/${1}", serviceDocumentUri, contentId)),
-                    contentId);
+                    contentId,
+                    BatchPayloadUriOption.AbsoluteUri,
+                    dependsOnIds);
 
                 // Use a new message writer to write the body of this operation.
                 using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
@@ -1133,15 +1135,14 @@ OData-Version: 4.0
                 }
 
                 // A PATCH operation that depends on the preceding PUT operation.
-                Assert.Null(batchWriter.DependsOnIds);
-                batchWriter.DependsOnIds = new string[] {"1"};
+                string[] dependsOnIds = new string[] {"1"};
 
                 updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
                     new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, "$1")),
                     "2",
-                    BatchPayloadUriOption.AbsoluteUri);
-                Assert.Null(batchWriter.DependsOnIds);
+                    BatchPayloadUriOption.AbsoluteUri,
+                    dependsOnIds);
 
                 using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
@@ -1161,26 +1162,25 @@ OData-Version: 4.0
                 batchWriter.WriteEndChangeset();
 
                 // Another PATCH operation that depends on both operations above.
-                Assert.Null(batchWriter.DependsOnIds);
-
                 if (useInvalidDependsOnIds)
                 {
-                    batchWriter.DependsOnIds = new string[] { "nonExistant" };
+                    dependsOnIds = new string[] { "nonExistant" };
                 }
                 else if(useRequestIdOfGroupForDependsOnIds)
                 {
-                    batchWriter.DependsOnIds = new string[] {"1", "2"};
+                    dependsOnIds = new string[] {"1", "2"};
                 }
                 else
                 {
-                    batchWriter.DependsOnIds = new string[] {firstGroupId};
+                    dependsOnIds = new string[] {firstGroupId};
                 }
 
                 updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
                     new Uri("$1/alias", UriKind.Relative),
                     "3",
-                    BatchPayloadUriOption.RelativeUri);
+                    BatchPayloadUriOption.RelativeUri,
+                    dependsOnIds);
 
                 using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
