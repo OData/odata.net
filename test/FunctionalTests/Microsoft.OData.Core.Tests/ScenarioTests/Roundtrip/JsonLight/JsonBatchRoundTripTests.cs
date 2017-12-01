@@ -107,13 +107,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 }
 
                 // A PATCH operation that depends on the preceding PUT operation.
-                batchWriter.DependsOnIds = new string[] { "1" };
+                string[] dependsOnIds = new string[] { "1" };
 
                 ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
                     new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, "$1")),
                     "2",
-                    BatchPayloadUriOption.AbsoluteUri);
+                    BatchPayloadUriOption.AbsoluteUri,
+                    dependsOnIds);
 
                 using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
@@ -341,14 +342,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     }
 
                     // A PATCH operation that depends on the preceding PUT operation.
-                    batchWriter.DependsOnIds = new string[] {"1"};
+                    string[] dependsOnIds = new string[] {"1"};
 
                     ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage
                         (
                             "PATCH",
                             new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, "$1")),
                             "2",
-                            BatchPayloadUriOption.AbsoluteUri);
+                            BatchPayloadUriOption.AbsoluteUri,
+                            dependsOnIds);
 
                     using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                     {
@@ -400,14 +402,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     }
 
                     // A PATCH operation that depends on the preceding PUT operation.
-                    batchWriter.DependsOnIds = new string[] { "1A" };
+                    string[] dependsOnIds = new string[] { "1A" };
 
                     ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage
                         (
                             "PATCH",
                             new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, "$1A")),
                             "2A",
-                            BatchPayloadUriOption.AbsoluteUri);
+                            BatchPayloadUriOption.AbsoluteUri,
+                            dependsOnIds);
 
                     using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                     {

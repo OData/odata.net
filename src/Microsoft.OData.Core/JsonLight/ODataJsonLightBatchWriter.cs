@@ -330,9 +330,10 @@ namespace Microsoft.OData.JsonLight
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <param name="payloadUriOption">
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
-        Uri uri, string contentId, BatchPayloadUriOption payloadUriOption)
+        Uri uri, string contentId, BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
         {
             // write pending message data (headers, request line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
@@ -347,8 +348,7 @@ namespace Microsoft.OData.JsonLight
 
             // create the new request operation
             this.CurrentOperationRequestMessage = BuildOperationRequestMessage(
-                this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId, this.atomicityGroupId);
-            Debug.Assert(this.DependsOnIds == null);
+                this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId, this.atomicityGroupId, dependsOnIds);
 
             this.SetState(BatchWriterState.OperationCreated);
 
