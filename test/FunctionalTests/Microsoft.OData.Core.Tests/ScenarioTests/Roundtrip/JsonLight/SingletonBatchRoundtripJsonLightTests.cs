@@ -698,39 +698,20 @@ OData-Version: 4.0
         }
 
         [Fact]
-        //        public void BatchJsonLightContentIdUniquenessScopeForMultipartV401ShouldThrow()
-        public void BatchJsonLightContentIdUniquenessScopeForMultipartV401ShouldPass()
+        public void BatchJsonLightContentIdUniquenessScopeForMultipartV401ShouldThrow()
         {
-            ODataMessageWriterSettings writerSettingsV401 = new ODataMessageWriterSettings { Version = ODataVersion.V401 };
+            ODataMessageWriterSettings writerSettingsV401 = new ODataMessageWriterSettings {Version = ODataVersion.V401};
 
-//            string expectedPartialErrorMesage =
-//                "was found more than once in the same change set or same batch request. Content "
-//              + "IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique "
-//              + "across all operations in the whole batch request for OData V4.01.";
-//
-//            ODataException ode = Assert.Throws<ODataException>(
-//                () => ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeMultipartMime));
-//            Assert.Contains(expectedPartialErrorMesage, ode.Message);
 
-            byte[] request = ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeMultipartMime);
-            Assert.NotNull(request);
+            string expectedPartialErrorMesage =
+                "was found more than once in the same change set or same batch request. Content "
+              + "IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique "
+              + "across all operations in the whole batch request for OData V4.01.";
+
+            ODataException ode = Assert.Throws<ODataException>(
+                () => ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeMultipartMime));
+            Assert.Contains(expectedPartialErrorMesage, ode.Message);
         }
-
-//        [Fact]
-//        public void BatchJsonLightContentIdUniquenessScopeForMultipartV401ShouldThrow()
-//        {
-//            ODataMessageWriterSettings writerSettingsV401 = new ODataMessageWriterSettings {Version = ODataVersion.V401};
-//
-//
-//            string expectedPartialErrorMesage =
-//                "was found more than once in the same change set or same batch request. Content "
-//              + "IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique "
-//              + "across all operations in the whole batch request for OData V4.01.";
-//
-//            ODataException ode = Assert.Throws<ODataException>(
-//                () => ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeMultipartMime));
-//            Assert.Contains(expectedPartialErrorMesage, ode.Message);
-//        }
 
         [Fact]
         public void BatchJsonLightContentIdUniquenessScopeForJsonBatchV401ShouldThrow()
