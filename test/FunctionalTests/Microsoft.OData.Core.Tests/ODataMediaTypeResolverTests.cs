@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests
         /// Here is a comparison baseline
         /// </summary>
         /// <remarks>
-        /// The set of supported media types is ordered (desc) by their precedence/priority with respect to (1) format and (2) media type.
+        /// The set of supported media types is ordered (descending) by their precedence/priority with respect to (1) format and (2) media type.
         /// As a result the default media type for a given payloadKind is the first entry in the MediaTypeWithFormat array.
         /// </remarks>
         private static readonly IList<ODataMediaTypeFormat>[] MediaTypeCollection = {

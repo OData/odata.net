@@ -348,7 +348,7 @@ namespace Microsoft.OData
         /// is found an exception is thrown.
         /// </summary>
         /// <param name="contentTypeName">The name of the content type to be checked.</param>
-        /// <param name="supportedPayloadKinds">All possiblel kinds of payload that can be read with this content type.</param>
+        /// <param name="supportedPayloadKinds">All possible kinds of payload that can be read with this content type.</param>
         /// <param name="mediaTypeResolver">The media type resolver to use when interpreting the content type.</param>
         /// <param name="mediaType">The media type parsed from the <paramref name="contentTypeName"/>.</param>
         /// <param name="encoding">The encoding from the content type or the default encoding for the <paramref name="mediaType" />.</param>
@@ -433,7 +433,7 @@ namespace Microsoft.OData
         {
             for (int i = 0; i < supportedMediaTypes.Count; ++i)
             {
-                // NOTE: the supportedMediaTypes are sorted (desc) by format and media type; so the
+                // NOTE: the supportedMediaTypes are sorted (DESC) by format and media type; so the
                 //       default format and media type is the first resource in the list
                 ODataMediaTypeFormat supportedMediaType = supportedMediaTypes[i];
                 if (specifiedFormat == null || supportedMediaType.Format == specifiedFormat)
@@ -447,7 +447,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Parses the accepted charsets and matches them against the supported encodings for the given <paramref name="payloadKind"/>.
+        /// Parses the accepted char sets and matches them against the supported encodings for the given <paramref name="payloadKind"/>.
         /// </summary>
         /// <param name="acceptCharsetHeader">The Accept-Charset header of the request.</param>
         /// <param name="payloadKind">The <see cref="ODataPayloadKind"/> for which to compute the encoding.</param>
@@ -863,7 +863,7 @@ namespace Microsoft.OData
                 }
 
                 // if the source does not have parameters or it only has accept extensions
-                // (parameters after the q value) or we match all the paramters we
+                // (parameters after the q value) or we match all the parameters we
                 // have a perfect parameter match.
                 if (!sourceHasParams ||
                     this.SourceTypeParameterCountForMatching == 0 ||

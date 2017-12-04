@@ -19,7 +19,7 @@ namespace Microsoft.OData.MultipartMixed
     internal sealed class ODataMultipartMixedBatchOutputContext : ODataRawOutputContext
     {
         /// <summary>The boundary for writing a batch.</summary>
-        private string batchBoundary;
+        private readonly string batchBoundary;
 
         /// <summary>
         /// Constructor.

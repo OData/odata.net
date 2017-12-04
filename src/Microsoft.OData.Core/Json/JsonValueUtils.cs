@@ -393,7 +393,7 @@ namespace Microsoft.OData.Json
         /// Note that the return value is not enclosed by the top level double-quotes.
         /// </summary>
         /// <param name="inputString">string that might contain special characters.</param>
-        /// <returns>A string with special characters escapted properly.</returns>
+        /// <returns>A string with special characters escaped properly.</returns>
         internal static string GetEscapedJsonString(string inputString)
         {
             Debug.Assert(inputString != null, "The string value must not be null.");
@@ -406,14 +406,14 @@ namespace Microsoft.OData.Json
             {
                 char c = inputString[currentIndex];
 
-                // Append the unhandled characters (that do not require special treament)
+                // Append the un-handled characters (that do not require special treatment)
                 // to the string builder when special characters are detected.
                 if (SpecialCharToEscapedStringMap[c] == null)
                 {
                     continue;
                 }
 
-                // Flush out the unescaped characters we've built so far.
+                // Flush out the un-escaped characters we've built so far.
                 subStrLength = currentIndex - startIndex;
                 if (subStrLength > 0)
                 {

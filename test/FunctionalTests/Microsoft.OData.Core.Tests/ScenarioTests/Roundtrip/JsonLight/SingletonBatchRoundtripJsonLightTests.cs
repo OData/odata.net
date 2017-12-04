@@ -1045,7 +1045,7 @@ OData-Version: 4.0
                 string[] dependsOnIds = new string[] {contentId};
                 ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
-                    new Uri(string.Format("{0}/${1}", serviceDocumentUri, contentId)),
+                    new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/${1}", serviceDocumentUri, contentId)),
                     contentId,
                     BatchPayloadUriOption.AbsoluteUri,
                     dependsOnIds);
@@ -1189,8 +1189,7 @@ OData-Version: 4.0
         {
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
             requestMessage.SetHeader("Content-Type", GetContentTypeHeader(BatchFormat.ApplicationJson));
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            settings.BaseUri = new Uri(serviceDocumentUri);
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings {BaseUri = new Uri(serviceDocumentUri)};
 
             using (ODataMessageReader messageReader = new ODataMessageReader(requestMessage, settings, this.userModel))
             {

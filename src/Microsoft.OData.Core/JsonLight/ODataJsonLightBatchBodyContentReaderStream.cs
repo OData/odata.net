@@ -75,7 +75,7 @@ namespace Microsoft.OData.JsonLight
 
             if (contentType == null)
             {
-                // We don't have determinative content-type, cached the string content.
+                // We don't have deterministic content-type, cached the string content.
                 Debug.Assert(jsonReader.NodeType == JsonNodeType.PrimitiveValue, "jsonReader.NodeType == JsonNodeType.PrimitiveValue");
                 this.cachedBodyContent = jsonReader.ReadStringValue();
                 Debug.Assert(isStreamPopulated == false, "isStreamPopulated == false");

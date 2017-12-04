@@ -7,18 +7,15 @@
 namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
-
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Text;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
     /// Class used by the <see cref="ODataJsonLightBatchReader"/> to read the various pieces of a batch payload
-    /// in MIME application/json format.
+    /// in application/json format.
     /// </summary>
     internal sealed class ODataJsonLightBatchReaderStream : ODataBatchReaderStream
     {
@@ -77,7 +74,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(userBuffer != null, "userBuffer != null");
             Debug.Assert(userBufferOffset >= 0, "userBufferOffset >= 0");
             Debug.Assert(count >= 0, "count >= 0");
-            Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
+            Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established.");
 
             //// NOTE: if we have a stream with length we don't even check for boundaries but rely solely on the content length
 

@@ -8,7 +8,6 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Text;
@@ -81,19 +80,6 @@ namespace Microsoft.OData
         /// <param name="count">The number of bytes to read.</param>
         /// <returns>The number of bytes actually read.</returns>
         internal abstract int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count);
-
-        /// <summary>
-        /// Dispose internal resource.
-        /// </summary>
-        /// <remarks>
-        /// Default implementation at base level is no-op.
-        /// Derived types provide specific implementation as needed.
-        /// Note that, instead of defining IDisposable on the root level and causing ripples to handle IDisposable
-        /// in other related types, we use this out-of-band method and its overrides for disposing.
-        /// </remarks>
-        protected internal virtual void DisposeResources()
-        {
-        }
 
         /// <summary>
         /// Ensure that a batch encoding exists; if not, detect it from the first couple of bytes of the stream.

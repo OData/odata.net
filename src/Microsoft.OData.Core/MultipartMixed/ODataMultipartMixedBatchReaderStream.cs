@@ -6,10 +6,12 @@
 
 namespace Microsoft.OData.MultipartMixed
 {
+    #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
+    #endregion Namespaces
 
     /// <summary>
     /// Class used by the <see cref="ODataMultipartMixedBatchReader"/> to read the various pieces of a batch payload
@@ -266,7 +268,7 @@ namespace Microsoft.OData.MultipartMixed
                         if (this.underlyingStreamExhausted)
                         {
                             // We cannot fully satisfy the read request since there are not enough bytes in the stream.
-                            // Return the remaining bytes in the buffer independently of where a portentially boundary
+                            // Return the remaining bytes in the buffer independently of where a potentially boundary
                             // start was detected since no full boundary can ever be detected if the stream is exhausted.
                             int bytesToReturn = Math.Min(this.BatchBuffer.NumberOfBytesInBuffer, remainingNumberOfBytesToRead);
                             Buffer.BlockCopy(this.BatchBuffer.Bytes, this.BatchBuffer.CurrentReadPosition, userBuffer, userBufferOffset, bytesToReturn);
@@ -482,7 +484,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// Reads a line (all bytes until a line resource set) from the underlying stream.
         /// </summary>
-        /// <returns>Returns the string that was read from the underyling stream (not including a terminating line resource set), or null if the end of input was reached.</returns>
+        /// <returns>Returns the string that was read from the underlying stream (not including a terminating line resource set), or null if the end of input was reached.</returns>
         private string ReadLine()
         {
             Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
@@ -588,7 +590,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// Reads and validates the headers of a batch part.
         /// </summary>
-        /// <param name="isChangeSetPart">true if the headers indicate a changset part; otherwise false.</param>
+        /// <param name="isChangeSetPart">true if the headers indicate a changeset part; otherwise false.</param>
         /// <returns>A dictionary of header names to header values; never null.</returns>
         private ODataBatchOperationHeaders ReadPartHeaders(out bool isChangeSetPart)
         {
@@ -601,7 +603,7 @@ namespace Microsoft.OData.MultipartMixed
         /// Validates the headers that have been read for a part.
         /// </summary>
         /// <param name="headers">The set of headers to validate.</param>
-        /// <param name="isChangeSetPart">true if the headers indicate a changset part; otherwise false.</param>
+        /// <param name="isChangeSetPart">true if the headers indicate a changeset part; otherwise false.</param>
         /// <returns>The set of validated headers.</returns>
         /// <remarks>
         /// An operation part is required to have content type 'application/http' and content transfer
