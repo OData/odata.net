@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.MultipartMixed;
-
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -15,6 +13,7 @@ namespace Microsoft.OData
 #endif
     using System.Text;
     using Microsoft.OData.Json;
+    using Microsoft.OData.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>

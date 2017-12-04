@@ -238,6 +238,7 @@
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchBodyContentTextualAndBinaryValueTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchAtomicityGroupTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchPayloadAtomicGroupTestCase.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchRoundTripTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\Utils.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\ContextUrlPathStringTests.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\CountBuilderTests.cs" />
@@ -436,9 +437,6 @@
     <Compile Include="..\UriParser\Visitors\SyntacticTreeVisitorTests.cs" />
     <Compile Include="..\ValidationUtilsTests.cs" />
     <Compile Include="..\WriterUtilsTests.cs" />
-    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchRoundTripTests.cs">
-      <Link>JsonBatchRoundTripTests.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

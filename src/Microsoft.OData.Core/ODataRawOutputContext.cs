@@ -336,14 +336,14 @@ namespace Microsoft.OData
                         this.rawValueWriter.Flush();
                     }
 
-                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitely.
+                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
                         this.asynchronousOutputStream.FlushSync();
                         this.asynchronousOutputStream.Dispose();
                     }
 
-                    // Dipose the message stream (note that we OWN this stream, so we always dispose it).
+                    // Dispose the message stream (note that we OWN this stream, so we always dispose it).
                     this.messageOutputStream.Dispose();
                 }
             }

@@ -26,12 +26,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Lookup table for atomicitGroup.
         /// </summary>
-        private Dictionary<string, IList<string>> groupToMessageIds = new Dictionary<string, IList<string>>();
+        private readonly Dictionary<string, IList<string>> groupToMessageIds = new Dictionary<string, IList<string>>();
 
         /// <summary>
         /// Group Id of the preceding message. Could be null.
         /// </summary>
-        private string preceedingMessageGroupId = null;
+        private string precedingMessageGroupId = null;
 
         /// <summary>
         /// Latest status of whether the processing is within scope of an atomic group.
@@ -57,11 +57,11 @@ namespace Microsoft.OData.JsonLight
         internal bool IsChangesetEnd(string groupId)
         {
             // Preceding group Id cannot null when we are within an atomic group.
-            Debug.Assert(!(isWithinAtomicGroup && preceedingMessageGroupId == null),
-                "!(isWithinAtomicGroup && preceedingGroupId == null)");
+            Debug.Assert(!(isWithinAtomicGroup && precedingMessageGroupId == null),
+                "!(isWithinAtomicGroup && precedingMessageGroupId == null)");
 
             if (!isWithinAtomicGroup
-                || ((preceedingMessageGroupId != null) && preceedingMessageGroupId.Equals(groupId))
+                || ((precedingMessageGroupId != null) && precedingMessageGroupId.Equals(groupId))
                 /*groupId is member of existing atomic group scope*/)
             {
                 return false;
@@ -69,7 +69,7 @@ namespace Microsoft.OData.JsonLight
 
             // This groupId ends the preceding atomic group.
             this.isWithinAtomicGroup = false;
-            this.preceedingMessageGroupId = null;
+            this.precedingMessageGroupId = null;
             return true;
         }
 
@@ -89,7 +89,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(groupId != null, "groupId != null");
 
             bool isChangesetStart = false;
-            if (groupId.Equals(this.preceedingMessageGroupId, StringComparison.Ordinal))
+            if (groupId.Equals(this.precedingMessageGroupId, StringComparison.Ordinal))
             {
                 // Adjacent groupIds, add messageId to the existing group
                 Debug.Assert(groupToMessageIds[groupId] != null, "groupToMessageIds[groupId] != null");
@@ -100,7 +100,7 @@ namespace Microsoft.OData.JsonLight
                 // We get a new groupId.
                 groupToMessageIds.Add(groupId, new List<string> { messageId });
 
-                this.preceedingMessageGroupId = groupId;
+                this.precedingMessageGroupId = groupId;
 
                 // Mark the atomic group status.
                 this.isWithinAtomicGroup = true;

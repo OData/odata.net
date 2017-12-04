@@ -87,7 +87,7 @@ namespace Microsoft.OData.JsonLight
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
-        /// The auto-generated Guid for AtomicityGroup of the Json item. Should be null for Json item
+        /// The auto-generated GUID for AtomicityGroup of the Json item. Should be null for Json item
         /// that doesn't belong to atomic group.
         /// </summary>
         private string atomicityGroupId = null;
@@ -424,7 +424,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Validation of the dependsOnId. It needs to be a valid id, and cannot be inside another atomic group.
+        /// Validates the dependsOnId. It needs to be a valid id, and cannot be inside another atomic group.
         /// </summary>
         /// <param name="requestId">Current request's id.</param>
         /// <param name="dependsOnId">Prerequisite request id or atomic group id that current request depends on.</param>
@@ -469,7 +469,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Add group id lookup.
+        /// Adds group id lookup and reverse lookup.
         /// </summary>
         /// <param name="contentId">Add content Id to group Id lookup and reverse lookup.</param>
         private void AddGroupIdLookup(string contentId)
@@ -530,7 +530,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Write any pending data for the current operation message (if any).
+        /// Writes any pending data for the current operation message (if any).
         /// </summary>
         /// <param name="reportMessageCompleted">
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
@@ -563,7 +563,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Close preceding message Json object if any.
+        /// Closes preceding message Json object if any.
         /// </summary>
         private void EnsurePreceedingMessageIsClosed()
         {
