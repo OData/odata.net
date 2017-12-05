@@ -183,9 +183,13 @@ namespace Microsoft.OData.JsonLight
 
             string propertyName = property.Name;
 
-            if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
+            if (this.JsonLightOutputContext.MessageWriterSettings.Validations != ValidationKinds.None)
             {
                 WriterValidationUtils.ValidatePropertyName(propertyName);
+            }
+
+            if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
+            {
                 this.currentPropertyInfo = new PropertySerializationInfo(propertyName, owningType) { IsTopLevel = isTopLevel };
             }
             else
@@ -261,17 +265,9 @@ namespace Microsoft.OData.JsonLight
 
         private void WriteUntypedValue(ODataUntypedValue untypedValue)
         {
-            if (!this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType)
-            {
-                this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
-                this.jsonLightValueSerializer.WriteUntypedValue(untypedValue);
-                return;
-            }
-
-            Debug.Assert(
-                this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType,
-                "this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType");
-            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(this.currentPropertyInfo.PropertyName, this.currentPropertyInfo.MetadataType.OwningType.FullTypeName()));
+            this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
+            this.jsonLightValueSerializer.WriteUntypedValue(untypedValue);
+            return;
         }
 
         /// <summary>

@@ -21,8 +21,6 @@ namespace Microsoft.OData
             PropertySerializationInfo propertyInfo;
             if (!propertyInfoDictionary.TryGetValue(uniqueName, out propertyInfo))
             {
-                WriterValidationUtils.ValidatePropertyName(name);
-
                 propertyInfo = new PropertySerializationInfo(name, owningType);
                 propertyInfoDictionary[uniqueName] = propertyInfo;
             }
