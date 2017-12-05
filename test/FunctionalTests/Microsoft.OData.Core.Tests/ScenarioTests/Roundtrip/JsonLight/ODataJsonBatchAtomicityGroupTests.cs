@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Tests;
-
 namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     using System;
@@ -13,10 +11,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
-
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData.Tests;
+    using Microsoft.OData.Tests.JsonLight;
+
     using Xunit;
 
     public class ODataJsonBatchAtomicityGroupTests
@@ -29,6 +27,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         private readonly EdmEntityType userType;
         private readonly ODataMessageReaderSettings readerSettingsV401;
         private readonly ODataMessageWriterSettings writerSettingsV401;
+        private readonly string textualSampleString;
+        private readonly byte[] binarySampleBytes;
+
 
         public ODataJsonBatchAtomicityGroupTests()
         {
@@ -46,6 +47,17 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             this.singleton = new EdmSingleton(defaultContainer, "MySingleton", this.userType);
             this.defaultContainer.AddElement(this.singleton);
 
+            textualSampleString = "azAZ09~!@#$%^&*()_+{}|:\"';?/.,\\etc\r\n\b\t\f";
+
+            // Generate array of bytes representing all byte values.
+            int binaryBytesLength = 256;
+            this.binarySampleBytes = new byte[binaryBytesLength];
+
+            for (int i = 0; i < binaryBytesLength; i++)
+            {
+                this.binarySampleBytes[i] = (byte)(i & 0xff);
+            }
+
             this.readerSettingsV401 = new ODataMessageReaderSettings();
             readerSettingsV401.MaxProtocolVersion = ODataVersion.V401;
 
@@ -54,13 +66,145 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         }
 
         [Fact]
+        public void JsonBatchJsonContentTypeTest()
+        {
+            ODataJsonBatchPayloadTestCase testCase = new ODataJsonBatchPayloadTestCase
+            {
+                Description = "Batch request of Json body and headers in different order.",
+                RequestPayload = @"
+                        {
+                          ""requests"": [
+                            {
+                              ""id"": ""r1"",
+                              ""body"": {""userPrincipalName"": ""mu6@odata.org"", ""givenName"": ""Jon6"", ""surname"": ""Doe""},
+                              ""method"": ""POST"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                                ""OData-Version"": ""4.0""
+                              }
+                            },
+                            {
+                              ""id"": ""r2"",
+                              ""method"": ""POST"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal""
+                              },
+                              ""body"": {""userPrincipalName"": ""mu6@odata.org""}
+                            }
+                          ]
+                        }",
+                RequestMessageDependsOnIdVerifier = null,
+                ContentTypeVerifier =
+                    (message, offset) => VerifyOperationRequestMessage(message, offset, new string[]{ "r1", "r2" }, new int[]{ 2, 1 })
+            };
+
+            ServiceProcessBatchRequest(testCase, ODataVersion.V4);
+        }
+
+        [Fact]
+        public void JsonBatchTextualContentTypeTest()
+        {
+            ODataJsonBatchPayloadTestCase testCase = new ODataJsonBatchPayloadTestCase
+            {
+                Description = "Batch request of Textual body and headers in different order.",
+                RequestPayload = @"
+                        {
+                          ""requests"": [
+                            {
+                              ""body"": ""__ENCODED_TEXTUAL_CONTENT__"",
+                              ""method"": ""POST"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""text/plain"",
+                                ""OData-Version"": ""4.0""
+                              },
+                              ""id"": ""r1""
+                            },
+                            {
+                              ""id"": ""r2"",
+                              ""method"": ""POST"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""text/*; odata.metadata=minimal""
+                              },
+                              ""body"": ""__ENCODED_TEXTUAL_CONTENT__""
+                            }
+                          ]
+                        }",
+                RequestMessageDependsOnIdVerifier = null,
+                ContentTypeVerifier =
+                    (message, offset) => VerifyOperationRequestMessage(message, offset, new string[] { "r1", "r2" }, new int[] { 2, 1 })
+            };
+
+            testCase.PopulateEncodedContent("__ENCODED_TEXTUAL_CONTENT__", JsonLightUtils.GetJsonEncodedString(textualSampleString));
+
+            ServiceProcessBatchRequest(testCase, ODataVersion.V4);
+        }
+
+        [Fact]
+        public void JsonBatchBinaryContentTypeTest()
+        {
+            ODataJsonBatchPayloadTestCase testCase = new ODataJsonBatchPayloadTestCase
+            {
+                Description = "Batch request of binary body and headers in different order, or content-type header is an empty string.",
+                RequestPayload = @"
+                        {
+                          ""requests"": [
+                            {
+                              ""body"": ""__ENCODED_BINARY_CONTENT__"",
+                              ""headers"": {
+                                ""Content-Type"": ""my-binary/*"",
+                                ""OData-Version"": ""4.0""
+                              },
+                              ""method"": ""POST"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+
+                              ""id"": ""r1""
+                            },
+                            {
+                              ""id"": ""r2"",
+                              ""headers"": {
+                                ""Content-Type"": ""my-other-binary/*""
+                              },
+                              ""method"": ""POST"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""body"": ""__ENCODED_BINARY_CONTENT__""
+                            },
+                            {
+                              ""id"": ""r3"",
+                              ""headers"": {
+                                ""Content-Type"": """"
+                              },
+                              ""method"": ""POST"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""body"": ""__ENCODED_BINARY_CONTENT__""
+                            }
+                          ]
+                        }",
+                RequestMessageDependsOnIdVerifier = null,
+                ContentTypeVerifier = (message, offset) =>
+                    VerifyOperationRequestMessage(
+                        message,
+                        offset,
+                        new string[] { "r1", "r2", "r3" },
+                        new int[] { 2, 1, 1 })
+            };
+
+            testCase.PopulateEncodedContent("__ENCODED_BINARY_CONTENT__", JsonLightUtils.GetBase64UrlEncodedString(this.binarySampleBytes));
+
+            ServiceProcessBatchRequest(testCase, ODataVersion.V4);
+        }
+
+        [Fact]
         public void JsonBatchAtomicityGroupTestCases()
         {
-            ODataJsonBatchPayloadAtomicGroupTestCase[] testCases =
+            ODataJsonBatchPayloadTestCase[] testCases =
             {
-                new ODataJsonBatchPayloadAtomicGroupTestCase
+                new ODataJsonBatchPayloadTestCase
                 {
-                    Desciption =  "Request depends on id of another request.",
+                    Description =  "Request depends on id of another request.",
                     RequestPayload = @"
                         {
                           ""requests"": [
@@ -91,9 +235,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         new List<string>(){"r1"}
                     }
                 },
-                new ODataJsonBatchPayloadAtomicGroupTestCase
+                new ODataJsonBatchPayloadTestCase
                 {
-                    Desciption =  "Request depends on groupId of another atomic group and another requestId.",
+                    Description =  "Request depends on groupId of another atomic group and another requestId.",
                     RequestPayload = @"
                         {
                           ""requests"": [
@@ -160,9 +304,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         null
                     }
                 },
-                new ODataJsonBatchPayloadAtomicGroupTestCase
+                new ODataJsonBatchPayloadTestCase
                 {
-                    Desciption =  "Bad Request: Request depends on requestId of request in another atomic group.",
+                    Description =  "Bad Request: Request depends on requestId of request in another atomic group.",
                     RequestPayload = @"
                         {
                           ""requests"": [
@@ -194,9 +338,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                     ExceptionType = typeof(ODataException),
                     TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed("g1r1", "g1")
                 },
-                new ODataJsonBatchPayloadAtomicGroupTestCase
+                new ODataJsonBatchPayloadTestCase
                 {
-                    Desciption =  "Bad Request: Request depends on invalid requestId.",
+                    Description =  "Bad Request: Request depends on invalid requestId.",
                     RequestPayload = @"
                         {
                           ""requests"": [
@@ -228,9 +372,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                     ExceptionType = typeof(ODataException),
                     TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnIdNotFound("invalidId", "g2r6")
                 },
-                new ODataJsonBatchPayloadAtomicGroupTestCase
+                new ODataJsonBatchPayloadTestCase
                 {
-                    Desciption =  "Bad Request: duplicate request Id.",
+                    Description =  "Bad Request: duplicate request Id.",
                     RequestPayload = @"
                         {
                           ""requests"": [
@@ -258,9 +402,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                     ExceptionType = typeof(ODataException),
                     TokenInExceptionMessage = Strings.ODataBatchReader_DuplicateContentIDsNotAllowed("duplicate")
                 },
-                new ODataJsonBatchPayloadAtomicGroupTestCase
+                new ODataJsonBatchPayloadTestCase
                 {
-                    Desciption =  "Bad Request: duplicate request Id and invalid dependsOn requestId.",
+                    Description =  "Bad Request: duplicate request Id and invalid dependsOn requestId.",
                     RequestPayload = @"
                         {
                           ""requests"": [
@@ -289,9 +433,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                     ExceptionType = typeof(ODataException),
                     TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnIdNotFound("invalidId", "duplicate")
                 },
-                new ODataJsonBatchPayloadAtomicGroupTestCase
+                new ODataJsonBatchPayloadTestCase
                 {
-                    Desciption =  "Bad Request: Request depends on id forward reference is not allowed.",
+                    Description =  "Bad Request: Request depends on id forward reference is not allowed.",
                     RequestPayload = @"
                         {
                           ""requests"": [
@@ -322,13 +466,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 },
             };
 
-            foreach (ODataJsonBatchPayloadAtomicGroupTestCase testCase in testCases)
+            foreach (ODataJsonBatchPayloadTestCase testCase in testCases)
             {
                 try
                 {
-                    byte[] response = ServiceReadSingletonBatchRequestAndWriterBatchResponse(testCase);
+                    byte[] response = ServiceReadSingletonBatchRequestAndWriterBatchResponse(testCase, ODataVersion.V401);
                     Assert.True(testCase.ExceptionType == null,
-                        "testCase should have been succeeded: " + testCase.Desciption);
+                        "testCase should have been succeeded: " + testCase.Description);
                     Assert.True(response != null && response.Length > 0);
                 }
                 catch (Exception e)
@@ -339,7 +483,57 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             }
         }
 
-        private byte[] ServiceReadSingletonBatchRequestAndWriterBatchResponse(ODataJsonBatchPayloadAtomicGroupTestCase testCase)
+        private void ServiceProcessBatchRequest(ODataJsonBatchPayloadTestCase testCase, ODataVersion version)
+        {
+            string requestPayload = testCase.RequestPayload;
+            ODataJsonBatchPayloadTestCase.ValidateContentType requestMessageContentTypeVerifier = testCase.ContentTypeVerifier;
+
+            IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(Encoding.ASCII.GetBytes(requestPayload)) };
+            requestMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
+
+            using (ODataMessageReader messageReader =
+                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() { MaxProtocolVersion = version }, this.edmModel))
+            {
+                ODataBatchReader batchReader = messageReader.CreateODataBatchReader();
+
+                int operationIdx = 0;
+                while (batchReader.Read())
+                {
+                    switch (batchReader.State)
+                    {
+                        case ODataBatchReaderState.Operation:
+                            ODataBatchOperationRequestMessage operationMessage = batchReader.CreateOperationRequestMessage();
+
+                            // Verify operation message content type processing.
+                            requestMessageContentTypeVerifier.Invoke(operationMessage, operationIdx);
+
+                            operationIdx++;
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validation for the operation request message by checking some sample data points.
+        /// </summary>
+        /// <param name="requestMessage">The request operation message to be verified.</param>
+        /// <param name="offset">The offset of the expected data used for verification.</param>
+        /// <param name="requestIds">Expected values of the request Ids for request messages.</param>
+        /// <param name="headersCounts">Expected counts of headers for the request messages.</param>
+        private static void VerifyOperationRequestMessage(
+            ODataBatchOperationRequestMessage requestMessage, int offset, string[] requestIds, int[] headersCounts)
+        {
+            Assert.Equal(requestIds[offset], requestMessage.ContentId);
+            Assert.Equal(headersCounts[offset], requestMessage.Headers.Count());
+
+            using (Stream contentStream = requestMessage.GetStream())
+            {
+                Assert.True(contentStream.Length > 0);
+            }
+        }
+
+        private byte[] ServiceReadSingletonBatchRequestAndWriterBatchResponse(ODataJsonBatchPayloadTestCase testCase, ODataVersion version)
         {
             string requestPayload = testCase.RequestPayload;
             Action<ODataBatchOperationRequestMessage, IList<string>> requestOpMessageVerifier = testCase.RequestMessageDependsOnIdVerifier;
@@ -349,7 +543,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 
             MemoryStream responseStream = new MemoryStream();
 
-            using (ODataMessageReader messageReader = new ODataMessageReader(requestMessage, readerSettingsV401.Clone(), this.edmModel))
+            using (ODataMessageReader messageReader =
+                new ODataMessageReader(requestMessage, new ODataMessageReaderSettings() {MaxProtocolVersion = version}, this.edmModel))
             {
 
                 IODataResponseMessage responseMessage = new InMemoryMessage { Stream = responseStream };
@@ -357,8 +552,12 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 // Client is expected to receive the response message in the same format as that is used in the request sent.
                 responseMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
 
-                ODataMessageWriterSettings settings = writerSettingsV401.Clone();
+                ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
+                {
+                    Version = version
+                };
                 settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
+
                 ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, settings, null);
                 int operationIdx = 0;
 

@@ -237,7 +237,7 @@
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\SingletonBatchRoundtripJsonLightTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchBodyContentTextualAndBinaryValueTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchAtomicityGroupTests.cs" />
-    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchPayloadAtomicGroupTestCase.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchPayloadTestCase.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchRoundTripTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\Utils.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\ContextUrlPathStringTests.cs" />

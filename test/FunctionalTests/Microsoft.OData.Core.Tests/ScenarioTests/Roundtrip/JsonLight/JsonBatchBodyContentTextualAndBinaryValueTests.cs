@@ -11,6 +11,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
     using System.Globalization;
     using System.Text;
     using System.Text.RegularExpressions;
+
+    using Microsoft.OData.Tests.JsonLight;
     using Xunit;
 
     public class JsonBatchBodyContentTextualAndBinaryValueTests
@@ -255,16 +257,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             switch (bodyContentType)
             {
                 case BodyContentType.Textual:
-                    string text = GetJsonEncodedString(forRequest ? this.textualSampleStringA : this.textualSampleStringB);
+                    string text = JsonLightUtils.GetJsonEncodedString(forRequest ? this.textualSampleStringA : this.textualSampleStringB);
                     result = string.Format(CultureInfo.InvariantCulture, "\"{0}\"", text);
                     break;
 
                 case BodyContentType.Binary:
                     byte[] bytes = forRequest ? this.binarySampleBytesA : this.binarySampleBytesB;
-                    string encoded = Convert.ToBase64String(bytes).Replace('+', '-').Replace('/', '_');
                     // Beginning double quote and ending double quote are needed for Json string representation of
                     // base64url-encoded data.
-                    result = string.Format(CultureInfo.InvariantCulture, "\"{0}\"", encoded);
+                    result = string.Format(CultureInfo.InvariantCulture, "\"{0}\"", JsonLightUtils.GetBase64UrlEncodedString(bytes));
                     break;
 
                 default:
@@ -294,17 +295,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             }
 
             return result;
-        }
-
-        private string GetJsonEncodedString(string text)
-        {
-            return text.Replace("\\", "\\\\")
-                .Replace("\r", "\\r")
-                .Replace("\n", "\\n")
-                .Replace("\f", "\\f")
-                .Replace("\t", "\\t")
-                .Replace("\"", "\\\"")
-                .Replace("\b", "\\b");
         }
 
         private byte[] ServiceReadBatchRequestAndWriterBatchResponse(byte[] requestPayload, BodyContentType bodyContentType)
