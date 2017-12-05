@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Legacy long-span integration tests that use SemanticTree to test various features.
-    /// 
+    ///
     /// TODO: remove tests that have already been covered by unit tests or functional tests through our actual public APIs.
     /// Note that there is some value is having these as integration tests for (what will become) ParseUri(). But the issues found
     /// here should be coverable in more targeted unit tests.
@@ -320,10 +320,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CountQueryWithInvalidArgument()
         {
-            string[] args = { 
-                                "Dogs?$count='true'", 
-                                "Dogs?$count=invalidValue", 
-                                "Dogs?$count=true/$count", 
+            string[] args = {
+                                "Dogs?$count='true'",
+                                "Dogs?$count=invalidValue",
+                                "Dogs?$count=true/$count",
                                 "Dogs/$count=true"
                             };
             foreach (var arg in args)
@@ -378,7 +378,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void LongFilterWithTrim()
         {
             // Query like "People?$filter=trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(Shoe)))))))))))))))))))) eq 'somevalue'";
-            int nestingLevel = 400;
+
+            // Nesting level = 400 likely will cause stack-overflow in default VS IDE environment.
+            int nestingLevel = 300;
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < nestingLevel; i++)
             {
