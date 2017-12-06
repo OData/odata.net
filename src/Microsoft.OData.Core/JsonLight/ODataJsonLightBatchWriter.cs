@@ -293,8 +293,6 @@ namespace Microsoft.OData.JsonLight
         /// If it is null for Json batch, an GUID will be generated and used as the atomic group id.</param>
         protected override void WriteStartChangesetImplementation(string groupId)
         {
-            Debug.Assert(this.atomicityGroupId == null, "this.atomicityGroupId == null");
-
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
@@ -311,8 +309,6 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         protected override void WriteEndChangesetImplementation()
         {
-            Debug.Assert(this.atomicityGroupId != null, "this.atomicityGroupId != null");
-
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
