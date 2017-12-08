@@ -32,14 +32,15 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Creates a new changeset boundary string based on a randomly created GUID.
+        /// Creates a new changeset boundary string based on a GUID.
         /// </summary>
         /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a response.</param>
+        /// <param name="changesetGuid">The value for construction of changeset boundary for multipart batch.</param>
         /// <returns>The newly created changeset boundary as string.</returns>
-        internal static string CreateChangeSetBoundary(bool isResponse)
+        internal static string CreateChangeSetBoundary(bool isResponse, string changesetGuid)
         {
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
+            return string.Format(CultureInfo.InvariantCulture, template, changesetGuid);
         }
 
         /// <summary>

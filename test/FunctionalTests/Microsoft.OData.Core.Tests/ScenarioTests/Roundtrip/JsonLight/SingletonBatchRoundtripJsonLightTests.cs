@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -1116,7 +1117,7 @@ OData-Version: 4.0
                 }
 
                 // A PATCH operation that depends on the preceding PUT operation.
-                string[] dependsOnIds = new string[] {"1"};
+                IList<string> dependsOnIds = new List<string>{"1"};
 
                 updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",

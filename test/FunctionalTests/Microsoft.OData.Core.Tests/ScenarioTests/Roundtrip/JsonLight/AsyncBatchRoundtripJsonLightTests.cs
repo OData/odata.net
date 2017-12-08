@@ -118,7 +118,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     "POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
                 updateOperationMessage = batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2", payloadUriOption);
 
-                // Attempt to start another changeset before ending the current one.
+                // Attempt to start another change set before ending the current one.
                 Action test = () => batchWriter.WriteStartChangeset();
                 test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
             }
@@ -728,7 +728,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Id"":""AFKIL"",
@@ -743,7 +743,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Id"":""AFKIL2"",
@@ -758,7 +758,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Name"":""Samurai"",
@@ -772,7 +772,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Name"":""Samurai4""
@@ -785,7 +785,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Name"":""Samurai3""
@@ -798,7 +798,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Name"":""Samurai2"",
@@ -850,7 +850,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Id"":""AFKIL2"",
@@ -865,7 +865,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Name"":""Samurai"",
@@ -901,7 +901,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Id"":""AFKIL2"",
@@ -916,7 +916,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Name"":""Samurai"",
@@ -952,7 +952,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Id"":""AFKIL2"",
@@ -967,7 +967,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         ""headers"":{
                             ""OData-Version"":""4.0"",
                             ""Content-Type"":""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
-                        }, 
+                        },
                         ""body"" :{
                             ""@odata.type"":""#MyNS.Customer"",
                             ""Name"":""Samurai"",

@@ -28,11 +28,7 @@ namespace Microsoft.OData.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The JsonLight input context.</param>
-        /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
-        internal ODataJsonLightBatchReaderStream(
-            ODataJsonLightInputContext inputContext,
-            Encoding batchEncoding)
-            : base(batchEncoding)
+        internal ODataJsonLightBatchReaderStream(ODataJsonLightInputContext inputContext)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
             this.inputContext = inputContext;
@@ -74,10 +70,8 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(userBuffer != null, "userBuffer != null");
             Debug.Assert(userBufferOffset >= 0, "userBufferOffset >= 0");
             Debug.Assert(count >= 0, "count >= 0");
-            Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established.");
 
             //// NOTE: if we have a stream with length we don't even check for boundaries but rely solely on the content length
-
             int remainingNumberOfBytesToRead = count;
             while (remainingNumberOfBytesToRead > 0)
             {

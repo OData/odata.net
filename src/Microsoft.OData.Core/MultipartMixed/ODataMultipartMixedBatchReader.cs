@@ -91,7 +91,9 @@ namespace Microsoft.OData.MultipartMixed
                 requestUri,
                 headers,
                 this.currentContentId,
-                /*dependsOnRequestIds*/ null);
+                /*groupId*/ null,
+                /*dependsOnRequestIds*/ null,
+                ODataFormat.Batch);
 
             this.currentContentId = null;
             return requestMessage;

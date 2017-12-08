@@ -293,6 +293,8 @@ namespace Microsoft.OData.JsonLight
         /// If it is null for Json batch, an GUID will be generated and used as the atomic group id.</param>
         protected override void WriteStartChangesetImplementation(string groupId)
         {
+            Debug.Assert(groupId != null, "groupId != null");
+
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
@@ -301,7 +303,7 @@ namespace Microsoft.OData.JsonLight
 
             // When the changeset start is created for request, the <paramref name="groupId"/> could be null
             // and we will create an GUID here.
-            this.atomicityGroupId = groupId ?? Guid.NewGuid().ToString();
+            this.atomicityGroupId = groupId;
         }
 
         /// <summary>
@@ -329,7 +331,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
-        Uri uri, string contentId, BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
+        Uri uri, string contentId, BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
         {
             // write pending message data (headers, request line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
@@ -344,7 +346,8 @@ namespace Microsoft.OData.JsonLight
 
             // create the new request operation
             this.CurrentOperationRequestMessage = BuildOperationRequestMessage(
-                this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId, this.atomicityGroupId, dependsOnIds);
+                this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId,
+                this.atomicityGroupId, dependsOnIds, ODataFormat.Json);
 
             this.SetState(BatchWriterState.OperationCreated);
 

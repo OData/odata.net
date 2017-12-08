@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.MultipartMixed;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -205,23 +207,27 @@ namespace Microsoft.OData
         /// </summary>
         public void WriteStartChangeset()
         {
-            this.WriteStartChangeset(null);
+            this.WriteStartChangeset(Guid.NewGuid().ToString());
         }
 
         /// <summary>
-        /// Starts a new changeset with the specified group id, which is null for multipart batch.
+        /// Starts a new atomic group or changeset with the specified group id or changeset GUID corresponding to change set boundary.
         /// This can only be called after WriteStartBatch and if no other active operation or changeset exists.</summary>
-        /// <param name="groupId">
-        /// For Json batch, this is the atomic group id. Default value of null can be used for writing request and an GUID will be generated.
-        /// Non-null value from corresponding request atomic group should be used for writing response so that atomic groups
-        /// from request and response can be correlated.
-        /// For multipart batch, null value should be used and is ignored.
+        /// <param name="groupOrChangesetId">
+        /// The atomic group id (for Json batch) / changeset GUID (for Multipart/Mixed batch) of the batch request.
+        /// Cannot be null.
         /// </param>
-        public void WriteStartChangeset(string groupId)
+        /// <exception cref="ODataException">Thrown if the <paramref name="groupOrChangesetId"/> is null.</exception>
+        public void WriteStartChangeset(string groupOrChangesetId)
         {
+            if (groupOrChangesetId == null)
+            {
+                throw new ODataException(Strings.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
+            }
+
             this.VerifyCanWriteStartChangeset(true);
-            this.WriteStartChangesetImplementation(groupId);
-            this.UpdateAfterWriteStartChangeset();
+            this.WriteStartChangesetImplementation(groupOrChangesetId);
+            this.FinishWriteStartChangeset();
         }
 
 #if PORTABLELIB
@@ -230,24 +236,28 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public Task WriteStartChangesetAsync()
         {
-            return WriteStartChangesetAsync(null);
+            return WriteStartChangesetAsync(Guid.NewGuid().ToString());
         }
 
         /// <summary>
         /// Asynchronously starts a new change set; can only be called after WriteStartBatch and if no other active operation or change set exists.
         /// </summary>
-        /// <param name="groupId">
-        /// For Json Batch, this is the atomic group id. Default value of null can be used for writing request and an GUID will be generated.
-        /// Non-null value from corresponding request atomic group should be used for writing response so that atomic groups
-        /// from request and response can be correlated.
-        /// For multipart batch, null value should be used and is ignored.
+        /// <param name="groupOrChangesetId">
+        /// The atomic group id (for Json batch) / changeset GUID (for Multipart/Mixed batch) of the batch request.
+        /// Cannot be null.
         /// </param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public Task WriteStartChangesetAsync(string groupId)
+        /// <exception cref="ODataException">Thrown if the <paramref name="groupOrChangesetId"/> is null.</exception>
+        public Task WriteStartChangesetAsync(string groupOrChangesetId)
         {
+            if (groupOrChangesetId == null)
+            {
+                throw new ODataException(Strings.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
+            }
+
             this.VerifyCanWriteStartChangeset(false);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartChangesetImplementation(groupId))
-                .FollowOnSuccessWith(t => this.UpdateAfterWriteStartChangeset());
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartChangesetImplementation(groupOrChangesetId))
+                .FollowOnSuccessWith(t => this.FinishWriteStartChangeset());
         }
 #endif
 
@@ -256,7 +266,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEndChangeset(true);
             this.WriteEndChangesetImplementation();
-            UpdateAfterWriteEndChangeset();
+            FinishWriteEndChangeset();
         }
 
 #if PORTABLELIB
@@ -266,7 +276,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEndChangeset(false);
             return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndChangesetImplementation)
-                .FollowOnSuccessWith(t => this.UpdateAfterWriteEndChangeset());
+                .FollowOnSuccessWith(t => this.FinishWriteEndChangeset());
         }
 #endif
 
@@ -305,7 +315,7 @@ namespace Microsoft.OData
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId,
-            BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
+            BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
         {
             this.VerifyCanCreateOperationRequestMessage(true, method, uri, contentId);
             return CreateOperationRequestMessageInternal(method, uri, contentId, payloadUriOption, dependsOnIds);
@@ -351,7 +361,7 @@ namespace Microsoft.OData
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>A task that when completed returns the newly created operation request message.</returns>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId,
-            BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
+            BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
         {
             this.VerifyCanCreateOperationRequestMessage(false, method, uri, contentId);
 
@@ -400,8 +410,6 @@ namespace Microsoft.OData
                 throw;
             }
         }
-
-
 
 #if PORTABLELIB
         /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
@@ -466,10 +474,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Starts a new changeset.
         /// </summary>
-        /// <param name="groupId">The atomic group id for Json batch request.
-        /// For multipart batch, this parameter is ignored.
+        /// <param name="groupOrChangesetId">
+        /// The atomic group id (for Json batch) / changeset GUID (for Multipart/Mixed batch) of the batch request.
         /// </param>
-        protected abstract void WriteStartChangesetImplementation(string groupId);
+        protected abstract void WriteStartChangesetImplementation(string groupOrChangesetId);
 
         /// <summary>
         /// Ends an active changeset.
@@ -494,7 +502,7 @@ namespace Microsoft.OData
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri,
-            string contentId, BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds);
+            string contentId, BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds);
 
 
         /// <summary>
@@ -542,23 +550,8 @@ namespace Microsoft.OData
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
             string contentId)
         {
-            return BuildOperationRequestMessage(outputStream, method, uri, contentId, /*groupId*/null);
-        }
-
-        /// <summary>
-        /// Wrapper method to create an operation request message that can be used to write the operation content to, utilizing
-        /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
-        /// </summary>
-        /// <param name="outputStream">The output stream underlying the operation message.</param>
-        /// <param name="method">The HTTP method to use for the message to create.</param>
-        /// <param name="uri">The request URL for the message to create.</param>
-        /// <param name="contentId">The contentId of this request message.</param>
-        /// <param name="groupId">The group id that this request belongs to. Can be null.</param>
-        /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
-        protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method,
-            Uri uri, string contentId, string groupId)
-        {
-            return BuildOperationRequestMessage(outputStream, method, uri, contentId, groupId, /*dependsOnIds*/null);
+            return BuildOperationRequestMessage(outputStream, method, uri, contentId,
+                /*groupId*/ null, /*dependsOnIds*/ null, ODataFormat.Batch);
         }
 
         /// <summary>
@@ -571,9 +564,10 @@ namespace Microsoft.OData
         /// <param name="contentId">The contentId of this request message.</param>
         /// <param name="groupId">The group id that this request belongs to. Can be null.</param>
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
+        /// <param name="batchFormat">Format of the batch.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
-            string contentId, string groupId, IEnumerable<string> dependsOnIds)
+            string contentId, string groupId, IList<string> dependsOnIds, ODataFormat batchFormat)
         {
             IEnumerable<string> flattenDependsOnIds = dependsOnIds == null
                 ? null
@@ -590,7 +584,8 @@ namespace Microsoft.OData
                 }
             }
 
-            ODataBatchUtils.ValidateReferenceUri(uri, flattenDependsOnIds, this.outputContext);
+            ODataBatchUtils.ValidateReferenceUri(uri, flattenDependsOnIds,
+                this.outputContext.MessageWriterSettings.BaseUri, batchFormat);
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
             ODataBatchOperationRequestMessage requestMessage =
@@ -665,7 +660,7 @@ namespace Microsoft.OData
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         private ODataBatchOperationRequestMessage CreateOperationRequestMessageInternal(string method, Uri uri, string contentId,
-            BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
+            BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
         {
             if (!this.isInChangset)
             {
@@ -704,7 +699,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Perform updates after changeset is started.
         /// </summary>
-        private void UpdateAfterWriteStartChangeset()
+        private void FinishWriteStartChangeset()
         {
             // Reset the cache of content IDs here. As per spec,
             // For version up to V4 (inclusive): Content-IDs uniqueness scope is whole batch,
@@ -725,7 +720,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Perform updates after changeset is ended.
         /// </summary>
-        private void UpdateAfterWriteEndChangeset()
+        private void FinishWriteEndChangeset()
         {
             // When change set ends, only reset content Id for V4 (and below);
             // We need to carry on the content Id for >V4 to ensure uniqueness (and therefore referable).
