@@ -177,16 +177,17 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
         /// </summary>
-        /// <param name="groupId">Ignored value for multipart batch start changeset implementation
-        /// since in this format the changeset boundary is always created randomly for both request and response.</param>
-        protected override void WriteStartChangesetImplementation(/*ignored*/string groupId)
+        /// <param name="changeSetGuid">The value for changeset boundary for multipart batch.</param>
+        protected override void WriteStartChangesetImplementation(string changeSetGuid)
         {
+            Debug.Assert(changeSetGuid != null, "changeSetGuid != null");
+
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
             this.SetState(BatchWriterState.ChangesetStarted);
             Debug.Assert(this.changeSetBoundary == null, "this.changeSetBoundary == null");
-            this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.RawOutputContext.WritingResponse);
+            this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.RawOutputContext.WritingResponse, changeSetGuid);
 
             // write the boundary string
             ODataMultipartMixedBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
@@ -206,12 +207,11 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <param name="payloadUriOption">
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
-        /// <param name="dependsOnIds">The prerequisite request ids of this request.
-        /// For multipart format, it is less significant than it is for Json batch format and has a default value of null.</param>
+        /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(
             string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption,
-            /*ignored*/IEnumerable<string> dependsOnIds)
+            IList<string> dependsOnIds)
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
@@ -219,7 +219,7 @@ namespace Microsoft.OData.MultipartMixed
             // create the new request operation
             ODataBatchOperationRequestMessage operationRequestMessage = BuildOperationRequestMessage(
                 this.RawOutputContext.OutputStream,
-                method, uri, contentId);
+                method, uri, contentId, /*groupId*/null, dependsOnIds, ODataFormat.Batch);
 
             this.SetState(BatchWriterState.OperationCreated);
 

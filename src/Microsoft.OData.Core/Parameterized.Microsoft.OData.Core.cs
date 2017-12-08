@@ -1201,6 +1201,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Group id or changeset GUID cannot be null."
+        /// </summary>
+        internal static string ODataBatch_GroupIdOrChangeSetIdCannotBeNull
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
+            }
+        }
+
+        /// <summary>
         /// A string like " Message with id {0} is positioned incorrectly: all messages of same groupId {1} must be adjacent."
         /// </summary>
         internal static string ODataBatchReader_MessageIdPositionedIncorrectly(object p0, object p1)

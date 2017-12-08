@@ -175,6 +175,7 @@ ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed=The dependsO
 ODataBatchReader_DependsOnIdNotFound=The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed.
 ODataBatchReader_AbsoluteURINotMatchingBaseUri=Absolute URI {0} is not start with the base URI [{1}] specified by the operation message.
 ODataBatchReader_ReferenceIdNotIncludedInDependsOn=Request Id reference [{0}] in Uri [{1}] is not found in effective depends-on-Ids [{2}] of the request.
+ODataBatch_GroupIdOrChangeSetIdCannotBeNull=Group id or changeset GUID cannot be null.
 ODataBatchReader_MessageIdPositionedIncorrectly=Message with id [{0}] is positioned incorrectly: all messages of same groupId [{1}] must be adjacent.
 ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull=Changeset boundary must have been set by now.
 

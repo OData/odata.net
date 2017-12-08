@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.MultipartMixed;
+
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -315,10 +317,13 @@ namespace Microsoft.OData
         /// <param name="requestUri">The request Url for this request message.</param>
         /// <param name="headers">The headers for this request message.</param>
         /// <param name="contentId">The contentId of this request message.</param>
+        /// <param name="groupId">The group id that this request belongs to. Can be null.</param>
         /// <param name="dependsOnRequestIds">
         /// The prerequisite request Ids of this request message. For batch in Json format,
         /// some of these request Ids are resolved from prerequisite atomic groups that are
-        /// specified in the dependsOn attribute of the request.</param>
+        /// specified in the dependsOn attribute of the request.
+        /// </param>
+        /// <param name="batchFormat">Format of the batch.</param>
         /// <returns>The <see cref="ODataBatchOperationRequestMessage"/> instance.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(
             Func<Stream> streamCreatorFunc,
@@ -326,7 +331,9 @@ namespace Microsoft.OData
             Uri requestUri,
             ODataBatchOperationHeaders headers,
             string contentId,
-            IEnumerable<string> dependsOnRequestIds)
+            string groupId,
+            IList<string> dependsOnRequestIds,
+            ODataFormat batchFormat)
         {
             if (dependsOnRequestIds != null)
             {
@@ -339,14 +346,14 @@ namespace Microsoft.OData
                 }
 
                 ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
-                    this.inputContext);
+                    this.inputContext.MessageReaderSettings.BaseUri, batchFormat);
             }
 
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
                 requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.payloadUriConverter);
 
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
-                contentId, this.payloadUriConverter, /*writing*/ false, this.container, dependsOnRequestIds);
+                contentId, this.payloadUriConverter, /*writing*/ false, this.container, dependsOnRequestIds, groupId);
         }
 
         /// <summary>

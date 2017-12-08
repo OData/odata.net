@@ -10,6 +10,7 @@ namespace Microsoft.OData.MultipartMixed
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Text;
     #endregion Namespaces
 
@@ -42,6 +43,12 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>The media type resolver to use when interpreting the incoming content type.</summary>
         private readonly ODataMediaTypeResolver mediaTypeResolver;
 
+        /// <summary>The encoding to use to read from the batch stream.</summary>
+        private Encoding batchEncoding;
+
+        /// <summary>The encoding for a given changeset.</summary>
+        private Encoding changesetEncoding;
+
         /// <summary>
         /// The boundary string for a changeset (or null if not in a changeset part).
         /// </summary>
@@ -62,10 +69,10 @@ namespace Microsoft.OData.MultipartMixed
             ODataMultipartMixedBatchInputContext inputContext,
             string batchBoundary,
             Encoding batchEncoding)
-            : base(batchEncoding)
         {
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
+            this.batchEncoding = batchEncoding;
             this.multipartMixedBatchInputContext = inputContext;
             this.batchBoundary = batchBoundary;
 
@@ -97,6 +104,18 @@ namespace Microsoft.OData.MultipartMixed
             get
             {
                 return this.changesetBoundary;
+            }
+        }
+
+        /// <summary>
+        /// The current encoding to use when reading from the stream.
+        /// </summary>
+        /// <remarks>This is the changeset encoding when reading a changeset or the batch encoding otherwise.</remarks>
+        private Encoding CurrentEncoding
+        {
+            get
+            {
+                return this.changesetEncoding ?? this.batchEncoding;
             }
         }
 
@@ -677,6 +696,113 @@ namespace Microsoft.OData.MultipartMixed
             Debug.Assert(HttpUtils.CompareMediaTypeNames(MimeConstants.MimeMultipartMixed, mediaType.FullTypeName), "Must be multipart/mixed media type.");
             this.changesetBoundary = ODataMultipartMixedBatchWriterUtils.GetBatchBoundaryFromMediaType(mediaType);
             Debug.Assert(this.changesetBoundary != null && this.changesetBoundary.Length > 0, "Boundary string should have been validated by now.");
+        }
+
+
+        /// <summary>
+        /// Ensure that a batch encoding exists; if not, detect it from the first couple of bytes of the stream.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        private void EnsureBatchEncoding(Stream stream)
+        {
+            // If no batch encoding is specified we detect it from the first bytes in the buffer.
+            if (this.batchEncoding == null)
+            {
+                // NOTE: The batch encoding will only ever be null on the first call to this method which
+                //       happens before the batch reader skips to the first boundary.
+                this.batchEncoding = this.DetectEncoding(stream);
+            }
+
+            // Verify that we only allow single byte encodings and UTF-8 for now.
+            ReaderValidationUtils.ValidateEncodingSupportedInBatch(this.batchEncoding);
+        }
+
+        /// <summary>Detect the encoding based data from the stream.</summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <returns>The encoding discovered from the bytes in the buffer or the fallback encoding.</returns>
+        /// <remarks>
+        /// We don't have to skip a potential preamble of the encoding since the batch reader
+        /// will skip over everything (incl. the potential preamble) until it finds the first
+        /// boundary.
+        /// </remarks>
+        private Encoding DetectEncoding(Stream stream)
+        {
+            // We need at most 4 bytes in the buffer to determine the encoding; if we have less than that,
+            // refill the buffer.
+            while (!this.underlyingStreamExhausted && this.BatchBuffer.NumberOfBytesInBuffer < 4)
+            {
+                this.underlyingStreamExhausted = this.BatchBuffer.RefillFrom(stream, this.BatchBuffer.CurrentReadPosition);
+            }
+
+            // Now we should have a full buffer unless the underlying stream did not have enough bytes.
+            int numberOfBytesInBuffer = this.BatchBuffer.NumberOfBytesInBuffer;
+            if (numberOfBytesInBuffer < 2)
+            {
+                Debug.Assert(this.underlyingStreamExhausted, "Underlying stream must be exhausted if we have less than 2 bytes in the buffer after refilling.");
+
+                // If we cannot read any of the known preambles we fall back to the default encoding, which is US-ASCII.
+#if !ORCAS
+                // ASCII not available; use UTF8 without preamble
+                return MediaTypeUtils.FallbackEncoding;
+#else
+                return Encoding.ASCII;
+#endif
+            }
+            else if (this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0xFE && this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0xFF)
+            {
+                // Big Endian Unicode
+                return new UnicodeEncoding(/*bigEndian*/ true, /*byteOrderMark*/ true);
+            }
+            else if (this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0xFF && this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0xFE)
+            {
+                // Little Endian Unicode, or possibly little endian UTF32
+                if (numberOfBytesInBuffer >= 4 &&
+                    this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0 &&
+                    this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 3] == 0)
+                {
+#if !ORCAS
+                    // Little Endian UTF32 not available
+                    throw Error.NotSupported();
+#else
+                    return new UTF32Encoding(/*bigEndian*/ false, /*byteOrderMark*/ true);
+#endif
+                }
+                else
+                {
+                    return new UnicodeEncoding(/*bigEndian*/ false, /*byteOrderMark*/ true);
+                }
+            }
+            else if (numberOfBytesInBuffer >= 3 &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0xEF &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0xBB &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0xBF)
+            {
+                // UTF-8
+                return Encoding.UTF8;
+            }
+            else if (numberOfBytesInBuffer >= 4 &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0 &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0 &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0xFE &&
+                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 3] == 0xFF)
+            {
+                // Big Endian UTF32
+#if !ORCAS
+                // Big Endian UTF32 not available
+                throw Error.NotSupported();
+#else
+                return new UTF32Encoding(/*bigEndian*/ true, /*byteOrderMark*/ true);
+#endif
+            }
+            else
+            {
+#if !ORCAS
+                // ASCII not available; use UTF8 without preamble
+                return MediaTypeUtils.FallbackEncoding;
+#else
+                return Encoding.ASCII;
+#endif
+            }
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Microsoft.OData
         /// ODL-caller needs to ensure that all the prerequisites have returned successfully
         /// before current operation can start.
         /// </summary>
-        private IEnumerable<string> dependsOnIds;
+        private readonly List<string> dependsOnIds;
 
         /// <summary>
         /// Constructor. Creates a request message for an operation of a batch request.
@@ -62,8 +62,11 @@ namespace Microsoft.OData
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
-        /// <param name="dependsOnIds">Optional value for request or group Ids that current request has dependency on.</param>
-        /// <param name="groupId">Optional value for the group id that current request belongs to. Can be null.</param>
+        /// <param name="dependsOnIds">
+        /// Request or group Ids that current request has dependency on. Values are added to a new list.
+        /// Empty list will be created if value is null.
+        /// </param>
+        /// <param name="groupId">Value for the group id that current request belongs to. Can be null.</param>
         internal ODataBatchOperationRequestMessage(
             Func<Stream> contentStreamCreatorFunc,
             string method,
@@ -74,8 +77,8 @@ namespace Microsoft.OData
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,
             IServiceProvider container,
-            IEnumerable<string> dependsOnIds = null,
-            string groupId = null)
+            IList<string> dependsOnIds,
+            string groupId)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -88,9 +91,10 @@ namespace Microsoft.OData
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.Container = container;
-            this.dependsOnIds = dependsOnIds != null
-                             ? new List<string>(dependsOnIds)
-                             : null;
+
+            this.dependsOnIds = dependsOnIds == null
+                ? new List<string>()
+                : new List<string>(dependsOnIds);
         }
 
         /// <summary>Gets an enumerable over all the headers for this message.</summary>
@@ -133,16 +137,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets the prerequisite request or group ids.
         /// </summary>
-        internal IEnumerable<string> DependsOnIds
+        public List<string> DependsOnIds
         {
             get
             {
                 return this.dependsOnIds;
-            }
-
-            set
-            {
-                this.dependsOnIds = value;
             }
         }
 

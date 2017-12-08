@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     urlResolverType,
                     typeof(bool),
                     typeof(IServiceProvider),
-                    typeof(IEnumerable<string>),
+                    typeof(IList<string>),
                     typeof(string)
                 },
                 (object)(Func<Stream>)(() => stream),

@@ -57,12 +57,11 @@ namespace Microsoft.OData.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
-        /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
-        internal ODataJsonLightBatchReader(ODataJsonLightInputContext inputContext, Encoding batchEncoding, bool synchronous)
+        internal ODataJsonLightBatchReader(ODataJsonLightInputContext inputContext, bool synchronous)
             : base(inputContext, synchronous)
         {
-            this.batchStream = new ODataJsonLightBatchReaderStream(inputContext, batchEncoding);
+            this.batchStream = new ODataJsonLightBatchReaderStream(inputContext);
         }
 
         /// <summary>
@@ -130,7 +129,7 @@ namespace Microsoft.OData.JsonLight
             // can decide, at the earliest opportunity, whether the depending request can be invoked.
             // Note that the forward reference of dependsOn id is not allowed, so the atomicGroups should have accurate
             // information of atomicGroup that needs to be flattened.
-            IEnumerable<string> dependsOnReqIds = null;
+            IList<string> dependsOnReqIds = null;
             List<string> dependsOn = (List<string>)this.messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameDependsOn);
             if (dependsOn != null && dependsOn.Count != 0)
@@ -180,7 +179,9 @@ namespace Microsoft.OData.JsonLight
                 requestUri,
                 headers,
                 id,
-                dependsOnReqIds);
+                atomicityGroupId,
+                dependsOnReqIds,
+                ODataFormat.Json);
 
             return requestMessage;
         }

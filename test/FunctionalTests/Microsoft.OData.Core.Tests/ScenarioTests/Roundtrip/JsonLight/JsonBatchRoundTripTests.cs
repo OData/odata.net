@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Globalization;
     using Xunit;
@@ -63,6 +64,26 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 atomicGroupAIdFromRequest);
         }
 
+        [Fact]
+        public void BatchJsonLightAtomicGroupCannotCreateGroupIdWithNullValue()
+        {
+            MemoryStream stream = new MemoryStream();
+
+            IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
+            requestMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+            settings.BaseUri = new Uri(serviceDocumentUri);
+
+            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage, settings))
+            {
+                ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+
+                ODataException ode = Assert.Throws<ODataException>(() => batchWriter.WriteStartChangeset(null));
+                Assert.Equal(ode.Message, Strings.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
+            }
+        }
+
         /// <summary>
         /// Create a batch request that contains one atomic groups.
         /// </summary>
@@ -107,7 +128,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 }
 
                 // A PATCH operation that depends on the preceding PUT operation.
-                string[] dependsOnIds = new string[] { "1" };
+                List<string> dependsOnIds = new List<string> { "1" };
 
                 ODataBatchOperationRequestMessage updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
@@ -115,6 +136,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     "2",
                     BatchPayloadUriOption.AbsoluteUri,
                     dependsOnIds);
+
+                // Verify that input values are copied into a new list.
+                Assert.Equal(dependsOnIds, updateOperationMessage.DependsOnIds);
+                Assert.NotSame(dependsOnIds, updateOperationMessage.DependsOnIds);
 
                 using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {

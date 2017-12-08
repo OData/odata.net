@@ -231,7 +231,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     ListOfDependsOnIds = new IList<string>[]
                     {
-                        null,
+                        new List<string>(),
                         new List<string>(){"r1"}
                     }
                 },
@@ -297,11 +297,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                         }",
                     ListOfDependsOnIds = new IList<string>[]
                     {
-                        null,
-                        null,
+                        new List<string>(),
+                        new List<string>(),
                         new List<string>(){"g1r1", "g1r2"},
                         new List<string>{"g1r1", "g1r2", "r2"},
-                        null
+                        new List<string>()
                     }
                 },
                 new ODataJsonBatchPayloadTestCase

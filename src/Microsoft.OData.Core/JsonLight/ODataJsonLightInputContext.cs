@@ -815,7 +815,6 @@ namespace Microsoft.OData.JsonLight
 
             return new ODataJsonLightBatchReader(
                 this,
-                (this.textReader as StreamReader).CurrentEncoding,
                 synchronous);
         }
     }

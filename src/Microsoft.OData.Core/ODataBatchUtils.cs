@@ -148,67 +148,43 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// For Json batch, validates that the uri's reference of $requestId, if used, is one of the depends-on requests.
+        /// Validates that the uri's reference of $requestId, if used, is one of the depends-on requests.
         /// The Uri can be either absolute or relative.
-        /// No-op for Multipart batch.
         /// Exception is thrown if the request Id reference is not found in the list of depends-on requests.
         /// </summary>
         /// <param name="uri">The Uri to validate the request Id reference.</param>
         /// <param name="dependsOnRequestIds">Enumeration of request Ids used to lookup the request Id reference.</param>
-        /// <param name="outputContext">The current output context.</param>
-        internal static void ValidateReferenceUri(Uri uri, IEnumerable<string> dependsOnRequestIds,
-            ODataOutputContext outputContext)
+        /// <param name="baseUri">The base Uri of the service.</param>
+        /// <param name="batchFormat">Format of the batch.</param>
+        internal static void ValidateReferenceUri(Uri uri, IEnumerable<string> dependsOnRequestIds, Uri baseUri, ODataFormat batchFormat)
         {
-            Debug.Assert(outputContext != null, "outputContext != null");
-            if (!(outputContext is ODataJsonLightOutputContext))
+            // To be backward compatible with multipart batch creation, when batch is created with V4 API, the dependsOnId is
+            // default as null and therefore it should not enforce any Uri reference check.
+            if (batchFormat == ODataFormat.Batch && dependsOnRequestIds == null)
             {
                 return;
             }
             else
             {
-                ValidateReferenceUriForJsonBatch(uri, dependsOnRequestIds, outputContext.MessageWriterSettings.BaseUri);
+                ValidateReferenceUri(uri, dependsOnRequestIds, baseUri);
             }
         }
 
         /// <summary>
-        /// For Json batch, validates that the uri's reference of $requestId, if used, is one of the depends-on requests.
-        /// The Uri can be either absolute or relative.
-        /// No-op for Multipart batch.
-        /// Exception is thrown if the request Id reference is not found in the list of depends-on requests.
-        /// </summary>
-        /// <param name="uri">The Uri to validate the request Id reference.</param>
-        /// <param name="dependsOnRequestIds">Enumeration of request Ids used to lookup the request Id reference.</param>
-        /// <param name="inputContext">The current input context.</param>
-        internal static void ValidateReferenceUri(Uri uri, IEnumerable<string> dependsOnRequestIds,
-            ODataInputContext inputContext)
-        {
-            Debug.Assert(inputContext != null, "inputContext != null");
-            if (!(inputContext is ODataJsonLightInputContext))
-            {
-                return;
-            }
-            else
-            {
-                ValidateReferenceUriForJsonBatch(uri, dependsOnRequestIds, inputContext.MessageReaderSettings.BaseUri);
-            }
-        }
-
-        /// <summary>
-        /// For Json batch, validates that the uri's reference of $requestId, if used, is one of the depends-on requests.
+        /// Validates that the uri's reference of $requestId, if used, is one of the depends-on requests.
         /// The Uri can be either absolute or relative.
         /// Exception is thrown if the request Id reference is not found in the list of depends-on requests.
         /// </summary>
         /// <param name="uri">The Uri to validate the request Id reference.</param>
         /// <param name="dependsOnRequestIds">Enumeration of request Ids used to lookup the request Id reference.</param>
         /// <param name="baseUri">The baseUri used for validation.</param>
-        private static void ValidateReferenceUriForJsonBatch(Uri uri, IEnumerable<string> dependsOnRequestIds, Uri baseUri)
+        private static void ValidateReferenceUri(Uri uri, IEnumerable<string> dependsOnRequestIds, Uri baseUri)
         {
             Debug.Assert(uri != null, "uri != null");
 
             if (UriUtils.UriToString(uri).IndexOf('$') == -1)
             {
                 // uri does not use $requestId,
-                // or request is in MultipartMixed format where  dependsOn is not required for reference Uri validation.
                 return;
             }
 

@@ -149,7 +149,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="ids">List of ids to be flattened.</param>
         /// <returns>The list containing comma-separated message Ids.</returns>
-        internal IEnumerable<string> GetFlattenedMessageIds(IList<string> ids)
+        internal IList<string> GetFlattenedMessageIds(IList<string> ids)
         {
             List<string> result = new List<string>();
             if (ids.Count == 0)
