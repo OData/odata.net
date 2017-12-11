@@ -4071,7 +4071,6 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	public abstract void BatchOperationContentStreamDisposed ()
 	public abstract void BatchOperationContentStreamRequested ()
 	public abstract System.Threading.Tasks.Task BatchOperationContentStreamRequestedAsync ()
-	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId)
 	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId, string groupId, System.Collections.Generic.IList`1[[System.String]] dependsOnIds, Microsoft.OData.ODataFormat batchFormat)
 	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.IO.Stream outputStream, string contentId, string groupId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId)
@@ -4462,6 +4461,7 @@ public sealed class Microsoft.OData.ContainerBuilderExtensions {
 public sealed class Microsoft.OData.ODataConstants {
 	public static string ContentIdHeader = "Content-ID"
 	public static string ContentTypeHeader = "Content-Type"
+	public static string DependsOnIdsHeader = "DependsOn-IDs"
 	public static string MethodDelete = "DELETE"
 	public static string MethodGet = "GET"
 	public static string MethodPatch = "PATCH"

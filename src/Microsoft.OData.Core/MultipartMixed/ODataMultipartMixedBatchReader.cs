@@ -30,6 +30,11 @@ namespace Microsoft.OData.MultipartMixed
         private string currentContentId;
 
         /// <summary>
+        /// The DependsOn-IDs for the current request.
+        /// </summary>
+        private string dependsOnIds;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
@@ -92,10 +97,11 @@ namespace Microsoft.OData.MultipartMixed
                 headers,
                 this.currentContentId,
                 /*groupId*/ null,
-                /*dependsOnRequestIds*/ null,
+                this.dependsOnIds == null ? null : this.dependsOnIds.Split(','),
                 ODataFormat.Batch);
 
             this.currentContentId = null;
+            this.dependsOnIds = null;
             return requestMessage;
         }
 
@@ -361,7 +367,7 @@ namespace Microsoft.OData.MultipartMixed
             else
             {
                 bool currentlyInChangeSet = this.batchStream.ChangeSetBoundary != null;
-                bool isChangeSetPart = this.batchStream.ProcessPartHeader(out this.currentContentId);
+                bool isChangeSetPart = this.batchStream.ProcessPartHeader(out this.currentContentId, out this.dependsOnIds);
 
                 // Compute the next reader state
                 if (currentlyInChangeSet)

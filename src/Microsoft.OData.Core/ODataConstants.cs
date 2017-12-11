@@ -60,6 +60,11 @@ namespace Microsoft.OData
         public const string ContentIdHeader = "Content-ID";
 
         /// <summary>
+        /// Name of the DependsOn-IDs header.
+        /// </summary>
+        public const string DependsOnIdsHeader = "DependsOn-IDs";
+
+        /// <summary>
         /// Name of the Content-Length HTTP header.
         /// </summary>
         internal const string ContentLengthHeader = "Content-Length";

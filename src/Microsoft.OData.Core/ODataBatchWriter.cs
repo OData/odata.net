@@ -546,22 +546,6 @@ namespace Microsoft.OData
         /// <param name="method">The HTTP method to use for the message to create.</param>
         /// <param name="uri">The request URL for the message to create.</param>
         /// <param name="contentId">The contentId of this request message.</param>
-        /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
-        protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
-            string contentId)
-        {
-            return BuildOperationRequestMessage(outputStream, method, uri, contentId,
-                /*groupId*/ null, /*dependsOnIds*/ null, ODataFormat.Batch);
-        }
-
-        /// <summary>
-        /// Wrapper method to create an operation request message that can be used to write the operation content to, utilizing
-        /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
-        /// </summary>
-        /// <param name="outputStream">The output stream underlying the operation message.</param>
-        /// <param name="method">The HTTP method to use for the message to create.</param>
-        /// <param name="uri">The request URL for the message to create.</param>
-        /// <param name="contentId">The contentId of this request message.</param>
         /// <param name="groupId">The group id that this request belongs to. Can be null.</param>
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <param name="batchFormat">Format of the batch.</param>
