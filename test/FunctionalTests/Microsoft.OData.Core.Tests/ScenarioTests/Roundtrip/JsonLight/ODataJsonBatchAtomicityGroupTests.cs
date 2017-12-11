@@ -464,6 +464,71 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                     ExceptionType = typeof(ODataException),
                     TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnIdNotFound("r2", "r1")
                 },
+                new ODataJsonBatchPayloadTestCase
+                {
+                    Description =  "Bad Request: Request depends on its own groupId.",
+                    RequestPayload = @"
+                        {
+                          ""requests"": [
+                            {
+                              ""method"": ""POST"",
+                              ""atomicityGroup"": ""g1"",
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                                ""OData-Version"": ""4.0""
+                              },
+                              ""id"": ""g1r1"",
+                              ""body"": {""userPrincipalName"": ""mu1@odata.org"", ""givenName"": ""Jon1"", ""surname"": ""Doe""}
+                            },{
+                              ""method"": ""POST"",
+                              ""atomicityGroup"": ""g1"",
+                              ""dependsOn"": [""g1"", ""g1r1""],
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                                ""OData-Version"": ""4.0""
+                              },
+                              ""id"": ""g1r2"",
+                              ""body"": {""userPrincipalName"": ""mu2@odata.org"", ""givenName"": ""Jon1"", ""surname"": ""Doe""}
+                            }
+                          ]
+                        }",
+                    ListOfDependsOnIds = new IList<string>[]
+                    {
+                        new List<string>(),
+                        new List<string>(){ "g1", "g1r1" }
+                    },
+                    ExceptionType = typeof(ODataException),
+                    TokenInExceptionMessage = Strings.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed("g1", "g1")
+                },
+                new ODataJsonBatchPayloadTestCase
+                {
+                    Description =  "Bad Request: Request depends on itself.",
+                    RequestPayload = @"
+                        {
+                          ""requests"": [
+                            {
+                              ""method"": ""POST"",
+                              ""atomicityGroup"": ""g1"",
+                              ""dependsOn"": [""g1r1""],
+                              ""url"": ""http://odata.org/test/Users HTTP/1.1"",
+                              ""headers"": {
+                                ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                                ""OData-Version"": ""4.0""
+                              },
+                              ""id"": ""g1r1"",
+                              ""body"": {""userPrincipalName"": ""mu1@odata.org"", ""givenName"": ""Jon1"", ""surname"": ""Doe""}
+                            }
+                          ]
+                        }",
+                    ListOfDependsOnIds = new IList<string>[]
+                    {
+                        new List<string>(){ "g1r1" }
+                    },
+                    ExceptionType = typeof(ODataException),
+                    TokenInExceptionMessage = Strings.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed("g1r1", "g1r1")
+                },
             };
 
             foreach (ODataJsonBatchPayloadTestCase testCase in testCases)

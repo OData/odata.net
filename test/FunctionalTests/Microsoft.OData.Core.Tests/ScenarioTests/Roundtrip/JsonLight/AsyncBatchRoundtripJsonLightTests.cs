@@ -53,6 +53,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
         #region Client Write Request Tests
         [Fact]
+        public void AsyncBatchJsonLightTestJsonBatchWithMissingTopLevelPropertyThrowsException()
+        {
+            string payload = @"{
+                ""invalid"":[{
+                        ""id"":""77934a5b-e7cb-4959-a799-20351246d0b5"",
+                        ""url"":""http://service/Customers('ALFKI')"",
+                        ""headers"":{
+                            ""Content-Type"": ""application/json; odata.metadata=minimal; odata.streaming=true"",
+                            ""OData-Version"": ""4.0""
+                        },
+                        ""body"":{""userPrincipalName"": ""mu6@odata.org"", ""givenName"": ""Jon6"", ""surname"": ""Doe""}
+                    }
+                ]
+            }";
+
+            byte[] requestPayload = ConvertStringToByteArray(payload);
+
+            Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+        }
+
+        [Fact]
         public void AsyncBatchJsonLightTestWithInvalidBatchContentThrowsException()
         {
             Action test = () => AsyncBatchJsonLightTestFromSpecExample85(null);
