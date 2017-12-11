@@ -129,7 +129,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// </remarks>
         public bool ProcessPartHeader()
         {
-            return (bool)ReflectionUtils.InvokeMethod(this.batchStream, "ProcessPartHeader", /*Content-ID*/ "1");
+            return (bool)ReflectionUtils.InvokeMethod(this.batchStream, "ProcessPartHeader", /*Content-ID*/ "1", /*dependsOnIds*/"1,2,3");
         }
 
         /// <summary>

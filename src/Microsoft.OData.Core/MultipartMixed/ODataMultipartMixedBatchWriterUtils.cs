@@ -148,6 +148,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="inChangeSetBound">Whether we are in ChangeSetBound.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="dependsOnIds">The DependsOn-IDs value to be written if it is not empty.</param>
         internal static void WriteRequestPreamble(
             TextWriter writer,
             string httpMethod,
@@ -155,14 +156,15 @@ namespace Microsoft.OData.MultipartMixed
             Uri baseUri,
             bool inChangeSetBound,
             string contentId,
-            BatchPayloadUriOption payloadUriOption)
+            BatchPayloadUriOption payloadUriOption,
+            string dependsOnIds)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(uri != null, "uri != null");
             Debug.Assert(uri.IsAbsoluteUri || UriUtils.UriToString(uri).StartsWith("$", StringComparison.Ordinal), "uri.IsAbsoluteUri || uri.OriginalString.StartsWith(\"$\")");
 
             // write the headers
-            WriteHeaders(writer, inChangeSetBound, contentId);
+            WriteHeaders(writer, inChangeSetBound, contentId, dependsOnIds);
 
             // write separator line between headers and the request line
             writer.WriteLine();
@@ -182,7 +184,7 @@ namespace Microsoft.OData.MultipartMixed
             Debug.Assert(writer != null, "writer != null");
 
             // write the headers
-            WriteHeaders(writer, inChangeSetBound, contentId);
+            WriteHeaders(writer, inChangeSetBound, contentId, /*dependsOnIds*/null);
 
             // write separator line between headers and the response line
             writer.WriteLine();
@@ -210,13 +212,19 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="writer">Writer to write headers.</param>
         /// <param name="inChangeSetBound">Whether we are in ChangeSetBound.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        private static void WriteHeaders(TextWriter writer, bool inChangeSetBound, string contentId)
+        /// <param name="dependsOnIds">The DependsOn-IDs value to be written if it is not empty.</param>
+        private static void WriteHeaders(TextWriter writer, bool inChangeSetBound, string contentId, string dependsOnIds)
         {
             writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, MimeConstants.MimeApplicationHttp);
             writer.WriteLine("{0}: {1}", ODataConstants.ContentTransferEncoding, ODataConstants.BatchContentTransferEncoding);
             if (inChangeSetBound && contentId != null)
             {
                 writer.WriteLine("{0}: {1}", ODataConstants.ContentIdHeader, contentId);
+            }
+
+            if (!string.IsNullOrEmpty(dependsOnIds))
+            {
+                writer.WriteLine("{0}: {1}", ODataConstants.DependsOnIdsHeader, dependsOnIds);
             }
         }
 

@@ -229,7 +229,7 @@ namespace Microsoft.OData.MultipartMixed
             // write the headers and request line
             ODataMultipartMixedBatchWriterUtils.WriteRequestPreamble(this.RawOutputContext.TextWriter, method, uri,
                 this.RawOutputContext.MessageWriterSettings.BaseUri, changeSetBoundary != null, contentId,
-                payloadUriOption);
+                payloadUriOption, string.Join(",", operationRequestMessage.DependsOnIds.ToArray()));
 
             return operationRequestMessage;
         }
