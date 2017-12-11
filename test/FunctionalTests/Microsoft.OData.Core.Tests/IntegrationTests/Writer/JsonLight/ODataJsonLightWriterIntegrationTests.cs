@@ -186,6 +186,48 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         }
 
         [Fact]
+        public void WriteEntityWithInvalidPropertyNames()
+        {
+            EdmModel model = new EdmModel();
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            ODataResource res = new ODataResource() { Properties = new[] 
+                {
+                    new ODataProperty { Name = "Key", Value = "son" },
+                    new ODataProperty { Name = "@invalid", Value = "@invalid" },
+                    new ODataProperty { Name = "in.valid", Value = "in.valid" },
+                    new ODataProperty { Name = "in@val.id", Value = "in@val.id" },
+                    new ODataProperty { Name = "odata@odata.odata", Value = "odata@odata.odata" },
+                }
+            };
+
+            var actual = WriteJsonLightEntry(
+                isRequest: false,
+                serviceDocumentUri: new Uri("http://temp.org/"),
+                specifySet: true,
+                odataEntry: null,
+                entitySet: entitySet,
+                resourceType: entityType,
+                odataUri: odataUri,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(res);
+                    writer.WriteEnd();
+                },
+                ValidatePropertyNames:false
+                );
+
+            var expected = "{\"@odata.context\":\"http://temp.org/$metadata#FakeSet/$entity\",\"@odata.id\":\"FakeSet('son')\",\"@odata.editLink\":\"FakeSet('son')\",\"Key\":\"son\",\"@invalid\":\"@invalid\",\"in.valid\":\"in.valid\",\"in@val.id\":\"in@val.id\",\"odata@odata.odata\":\"odata@odata.odata\"}";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void WriteEntityWithComplexProperty()
         {
             EdmModel model = new EdmModel();
@@ -227,7 +269,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         }
 
         [Fact]
-        public void WriteEntityWithColletionOfComplexProperty()
+        public void WriteEntityWithCollectionOfComplexProperty()
         {
             EdmModel model = new EdmModel();
             EdmComplexType complexType = AddAndGetComplexType(model);
@@ -290,7 +332,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         }
 
         [Fact]
-        public void WriteEntityWithColletionOfComplexPropertyInherit()
+        public void WriteEntityWithCollectionOfComplexPropertyInherit()
         {
             EdmModel model = new EdmModel();
             EdmComplexType complexType = AddAndGetComplexType(model);
@@ -748,7 +790,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet,
             ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmStructuredType resourceType,
             ODataUri odataUri, Action<ODataWriter> writeAction = null, bool isResourceSet = false,
-            EdmModel model = null)
+            EdmModel model = null,
+            bool ValidatePropertyNames = true)
         {
             if (model == null)
             {
@@ -765,6 +808,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
             settings.SetContentType(ODataFormat.Json);
             settings.SetContentType("application/json;odata.metadata=full", null);
+
+            if (!ValidatePropertyNames)
+            {
+                settings.Validations = ValidationKinds.None;
+            }
 
             ODataMessageWriter messageWriter;
             if (isRequest)
