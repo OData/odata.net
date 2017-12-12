@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             string atomicGroupIdFromRequest;
             byte[] requestPayload = this.CreateBatchRequestWithAtomicGroup(out atomicGroupIdFromRequest);
 
-            byte[] responsePayload = this.ServiceReadReferenceUriBatchRequestAndWriteResponse(requestPayload);
+            byte[] responsePayload = this.ServiceReadBatchRequestAndWriteResponse(requestPayload);
 
             this.ClientReadBatchResponse(responsePayload, atomicGroupIdFromRequest, null);
         }
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 out atomicGroupIdFromRequest,
                 out atomicGroupAIdFromRequest);
 
-            byte[] responsePayload = this.ServiceReadReferenceUriBatchRequestAndWriteResponse(requestPayload);
+            byte[] responsePayload = this.ServiceReadBatchRequestAndWriteResponse(requestPayload);
 
             this.ClientReadBatchResponse(responsePayload,
                 atomicGroupIdFromRequest,
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             }
         }
 
-        private byte[] ServiceReadReferenceUriBatchRequestAndWriteResponse(byte[] requestPayload)
+        private byte[] ServiceReadBatchRequestAndWriteResponse(byte[] requestPayload)
         {
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
             requestMessage.SetHeader("Content-Type", batchContentTypeApplicationJson);
