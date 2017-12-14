@@ -1118,6 +1118,8 @@ Content-Type: application/json;odata.metadata=none
                             if (operationMessage.Method == "PATCH")
                             {
                                 var response = batchWriter.CreateOperationResponseMessage(operationMessage.ContentId);
+                                Assert.NotNull(response.ContentId);
+                                Assert.NotNull(response.GroupId);
                                 response.StatusCode = 204;
                                 response.SetHeader("Content-Type", "application/json;odata.metadata=none");
                             }

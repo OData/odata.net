@@ -301,31 +301,5 @@ namespace Microsoft.OData
 
             return extendedMediaType.ToText(encoding);
         }
-
-        /// <summary>
-        /// Construct Url from string form with HTTP version validation.
-        /// </summary>
-        /// <param name="value">The Uri string.</param>
-        /// <returns>The Uri object.</returns>
-        public static Uri BuildRequestUri(string value)
-        {
-            string urlSegment = value;
-            int lastSpaceIndex = value.IndexOf(' ');
-            if (lastSpaceIndex != -1)
-            {
-                // Validate HTTP version
-                urlSegment = value.Substring(0, lastSpaceIndex);
-                string httpVersionSegment = value.Substring(lastSpaceIndex + 1);
-
-                if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
-                {
-                    throw new ODataException(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified(
-                        httpVersionSegment,
-                        ODataConstants.HttpVersionInBatching));
-                }
-            }
-
-            return new Uri(urlSegment, UriKind.RelativeOrAbsolute);
-        }
     }
 }

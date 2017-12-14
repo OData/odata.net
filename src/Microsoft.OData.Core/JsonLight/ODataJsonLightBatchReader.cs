@@ -167,7 +167,7 @@ namespace Microsoft.OData.JsonLight
             string url = (string)this.messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameUrl);
             ValidateRequiredProperty(url, ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameUrl);
-            Uri requestUri = ODataUtils.BuildRequestUri(url);
+            Uri requestUri = new Uri(url, UriKind.RelativeOrAbsolute);
 
             // Reset the request property cache since all data in cache has been processed.
             // So that new instance can be created during subsequent read in operation state.

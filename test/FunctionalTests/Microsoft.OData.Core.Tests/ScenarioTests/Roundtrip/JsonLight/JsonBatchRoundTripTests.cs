@@ -79,8 +79,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
                 batchWriter.WriteStartBatch();
 
-                ODataException ode = Assert.Throws<ODataException>(() => batchWriter.WriteStartChangeset(null));
-                Assert.Equal(ode.Message, Strings.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
+                ArgumentNullException ane = Assert.Throws<ArgumentNullException>(() => batchWriter.WriteStartChangeset(null));
+                Assert.True(ane.Message.Contains("groupOrChangesetId"));
             }
         }
 
