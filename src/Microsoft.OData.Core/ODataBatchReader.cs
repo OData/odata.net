@@ -332,7 +332,7 @@ namespace Microsoft.OData
             ODataBatchOperationHeaders headers,
             string contentId,
             string groupId,
-            IList<string> dependsOnRequestIds,
+            IEnumerable<string> dependsOnRequestIds,
             ODataFormat batchFormat)
         {
             if (dependsOnRequestIds != null)

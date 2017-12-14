@@ -32,15 +32,36 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Creates a new changeset boundary string based on a GUID.
+        /// Creates a new changeset boundary string based on an id.
         /// </summary>
         /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a response.</param>
-        /// <param name="changesetGuid">The value for construction of changeset boundary for multipart batch.</param>
+        /// <param name="changesetId">The value for construction of changeset boundary for multipart batch.</param>
         /// <returns>The newly created changeset boundary as string.</returns>
-        internal static string CreateChangeSetBoundary(bool isResponse, string changesetGuid)
+        internal static string CreateChangeSetBoundary(bool isResponse, string changesetId)
         {
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, changesetGuid);
+            return string.Format(CultureInfo.InvariantCulture, template, changesetId);
+        }
+
+        /// <summary>
+        /// Extract the changeset id from the change set boundary string.
+        /// This is the reversal method of <code>CreateChangeSetBoundary(bool, string)</code>.
+        /// </summary>
+        /// <param name="changesetBoundary">Change set boundary string previous constructed by <code>CreateChangeSetBoundary</code>.
+        /// Can be null.</param>
+        /// <returns>The change set id or null.</returns>
+        internal static string GetChangeSetIdFromBoundary(string changesetBoundary)
+        {
+            if (changesetBoundary == null)
+            {
+                return null;
+            }
+
+            // The changeset boundary can be for either request or response, which are both constructed from templates.
+            // Change set id is the remainder after first char of '_'.
+            int idx = changesetBoundary.IndexOf('_');
+            ExceptionUtils.CheckIntegerNotNegative(idx, "idxOfSeparator");
+            return changesetBoundary.Substring(idx + 1);
         }
 
         /// <summary>

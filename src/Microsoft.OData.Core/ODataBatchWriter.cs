@@ -220,10 +220,7 @@ namespace Microsoft.OData
         /// <exception cref="ODataException">Thrown if the <paramref name="groupOrChangesetId"/> is null.</exception>
         public void WriteStartChangeset(string groupOrChangesetId)
         {
-            if (groupOrChangesetId == null)
-            {
-                throw new ODataException(Strings.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
-            }
+            ExceptionUtils.CheckArgumentNotNull(groupOrChangesetId, "groupOrChangesetId");
 
             this.VerifyCanWriteStartChangeset(true);
             this.WriteStartChangesetImplementation(groupOrChangesetId);
@@ -250,10 +247,7 @@ namespace Microsoft.OData
         /// <exception cref="ODataException">Thrown if the <paramref name="groupOrChangesetId"/> is null.</exception>
         public Task WriteStartChangesetAsync(string groupOrChangesetId)
         {
-            if (groupOrChangesetId == null)
-            {
-                throw new ODataException(Strings.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
-            }
+            ExceptionUtils.CheckArgumentNotNull(groupOrChangesetId, "groupOrChangesetId");
 
             this.VerifyCanWriteStartChangeset(false);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartChangesetImplementation(groupOrChangesetId))
@@ -315,7 +309,7 @@ namespace Microsoft.OData
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage(string method, Uri uri, string contentId,
-            BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
+            BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
         {
             this.VerifyCanCreateOperationRequestMessage(true, method, uri, contentId);
             return CreateOperationRequestMessageInternal(method, uri, contentId, payloadUriOption, dependsOnIds);
@@ -376,8 +370,6 @@ namespace Microsoft.OData
         public ODataBatchOperationResponseMessage CreateOperationResponseMessage(string contentId)
         {
             this.VerifyCanCreateOperationResponseMessage(true);
-            Debug.Assert(this.currentOperationContentId == null, "The Content-ID header is only supported in request messages.");
-
             return this.CreateOperationResponseMessageImplementation(contentId);
         }
 
@@ -502,7 +494,7 @@ namespace Microsoft.OData
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri,
-            string contentId, BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds);
+            string contentId, BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds);
 
 
         /// <summary>
@@ -551,7 +543,7 @@ namespace Microsoft.OData
         /// <param name="batchFormat">Format of the batch.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
-            string contentId, string groupId, IList<string> dependsOnIds, ODataFormat batchFormat)
+            string contentId, string groupId, IEnumerable<string> dependsOnIds, ODataFormat batchFormat)
         {
             IEnumerable<string> flattenDependsOnIds = dependsOnIds == null
                 ? null
@@ -644,7 +636,7 @@ namespace Microsoft.OData
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         private ODataBatchOperationRequestMessage CreateOperationRequestMessageInternal(string method, Uri uri, string contentId,
-            BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
+            BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
         {
             if (!this.isInChangset)
             {

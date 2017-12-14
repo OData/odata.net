@@ -77,7 +77,7 @@ namespace Microsoft.OData
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,
             IServiceProvider container,
-            IList<string> dependsOnIds,
+            IEnumerable<string> dependsOnIds,
             string groupId)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");

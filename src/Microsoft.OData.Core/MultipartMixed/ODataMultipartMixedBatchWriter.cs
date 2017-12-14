@@ -177,17 +177,17 @@ namespace Microsoft.OData.MultipartMixed
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
         /// </summary>
-        /// <param name="changeSetGuid">The value for changeset boundary for multipart batch.</param>
-        protected override void WriteStartChangesetImplementation(string changeSetGuid)
+        /// <param name="changeSetId">The value for changeset boundary for multipart batch.</param>
+        protected override void WriteStartChangesetImplementation(string changeSetId)
         {
-            Debug.Assert(changeSetGuid != null, "changeSetGuid != null");
+            Debug.Assert(changeSetId != null, "changeSetId != null");
 
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
             this.SetState(BatchWriterState.ChangesetStarted);
             Debug.Assert(this.changeSetBoundary == null, "this.changeSetBoundary == null");
-            this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.RawOutputContext.WritingResponse, changeSetGuid);
+            this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.RawOutputContext.WritingResponse, changeSetId);
 
             // write the boundary string
             ODataMultipartMixedBatchWriterUtils.WriteStartBoundary(this.RawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
@@ -211,7 +211,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(
             string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption,
-            IList<string> dependsOnIds)
+            IEnumerable<string> dependsOnIds)
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
@@ -294,7 +294,8 @@ namespace Microsoft.OData.MultipartMixed
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
             this.CurrentOperationResponseMessage = BuildOperationResponseMessage(
-                this.RawOutputContext.OutputStream, /*contentId*/ null, /*groupId*/ null);
+                this.RawOutputContext.OutputStream, contentId,
+                ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.changeSetBoundary));
 
             this.SetState(BatchWriterState.OperationCreated);
 

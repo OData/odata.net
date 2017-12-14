@@ -38,8 +38,6 @@ namespace Microsoft.OData
         /// <summary>The result status code of the response message.</summary>
         private int statusCode;
 
-
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -99,8 +97,7 @@ namespace Microsoft.OData
         public IServiceProvider Container { get; private set; }
 
         /// <summary>
-        /// For Json batch, this is the atomic group id of the corresponding request (null for top level request).
-        /// For multipart batch, this is not used and the value should be null.
+        /// The id of the group or change set that this response message is part of.
         /// </summary>
         public string GroupId { get; }
 

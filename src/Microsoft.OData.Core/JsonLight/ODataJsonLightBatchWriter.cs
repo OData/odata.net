@@ -301,8 +301,6 @@ namespace Microsoft.OData.JsonLight
             // important to do this first since it will set up the change set boundary.
             this.SetState(BatchWriterState.ChangesetStarted);
 
-            // When the changeset start is created for request, the <paramref name="groupId"/> could be null
-            // and we will create an GUID here.
             this.atomicityGroupId = groupId;
         }
 
@@ -331,7 +329,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
-        Uri uri, string contentId, BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
+        Uri uri, string contentId, BatchPayloadUriOption payloadUriOption, IEnumerable<string> dependsOnIds)
         {
             // write pending message data (headers, request line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
