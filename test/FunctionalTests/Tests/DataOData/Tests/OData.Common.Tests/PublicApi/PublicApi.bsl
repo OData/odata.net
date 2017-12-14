@@ -4461,7 +4461,6 @@ public sealed class Microsoft.OData.ContainerBuilderExtensions {
 public sealed class Microsoft.OData.ODataConstants {
 	public static string ContentIdHeader = "Content-ID"
 	public static string ContentTypeHeader = "Content-Type"
-	public static string DependsOnIdsHeader = "DependsOn-IDs"
 	public static string MethodDelete = "DELETE"
 	public static string MethodGet = "GET"
 	public static string MethodPatch = "PATCH"

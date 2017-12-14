@@ -391,9 +391,8 @@ namespace Microsoft.OData.MultipartMixed
         /// Reads the headers of a part.
         /// </summary>
         /// <param name="contentId">Content-ID read from changeset header, null if changeset part detected</param>
-        /// <param name="dependsOnIds">DependsOn-IDs read from request header, null if the header is not present.</param>
         /// <returns>true if the start of a changeset part was detected; otherwise false.</returns>
-        internal bool ProcessPartHeader(out string contentId, out string dependsOnIds)
+        internal bool ProcessPartHeader(out string contentId)
         {
             Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
 
@@ -401,7 +400,6 @@ namespace Microsoft.OData.MultipartMixed
             ODataBatchOperationHeaders headers = this.ReadPartHeaders(out isChangeSetPart);
 
             contentId = null;
-            dependsOnIds = null;
 
             if (isChangeSetPart)
             {
@@ -424,7 +422,6 @@ namespace Microsoft.OData.MultipartMixed
             else if (this.ChangeSetBoundary != null)
             {
                 headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId);
-                headers.TryGetValue(ODataConstants.DependsOnIdsHeader, out dependsOnIds);
             }
 
             return isChangeSetPart;
