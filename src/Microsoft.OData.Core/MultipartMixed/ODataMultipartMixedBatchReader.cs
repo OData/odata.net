@@ -367,7 +367,7 @@ namespace Microsoft.OData.MultipartMixed
             else
             {
                 bool currentlyInChangeSet = this.batchStream.ChangeSetBoundary != null;
-                bool isChangeSetPart = this.batchStream.ProcessPartHeader(out this.currentContentId, out this.dependsOnIds);
+                bool isChangeSetPart = this.batchStream.ProcessPartHeader(out this.currentContentId);
 
                 // Compute the next reader state
                 if (currentlyInChangeSet)

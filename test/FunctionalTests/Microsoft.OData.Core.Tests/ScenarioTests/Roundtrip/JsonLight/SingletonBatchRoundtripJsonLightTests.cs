@@ -280,7 +280,6 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 3
-DependsOn-IDs: 2
 
 PATCH $2 HTTP/1.1
 OData-Version: 4.0
@@ -683,39 +682,39 @@ Content-Type: application/json;odata.metadata=none
             this.defaultContainer.AddElement(this.singleton);
         }
 
-        [Fact]
-        public void BatchJsonLightTestWithDependsOnIds()
-        {
-            // Verify reference of content id works when dependsOn Ids are correctly specified.
-            string contentIdRef = "2";
-            byte[] requestPayload = ClientWriteRequestForMultipartBatchWithDependsOnIds(
-                contentIdRef, new string[] { contentIdRef }, ODataVersion.V401);
-            VerifyPayloadForMultipartBatch(requestPayload, ExpectedRequestPayloadWithDependsOnIds);
-
-            var responsePayload = this.ServiceReadRequestAndWriterResponseForMultipartBatchWithDependsOnIds(requestPayload, true);
-            VerifyPayloadForMultipartBatch(responsePayload, ExpectedResponsePayloadWithoutDependsOnIds);
-
-            ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
-        }
-
-        [Fact]
-        public void BatchJsonLightTestNoDependsOnIds()
-        {
-            // Verify reference of content id should work without specifying dependsOn Ids.
-            foreach (ODataVersion version in new[] {ODataVersion.V4, ODataVersion.V401})
-            {
-                string contentIdRef = "2";
-                byte[] requestPayload = ClientWriteRequestForMultipartBatchWithDependsOnIds(
-                    contentIdRef, /*dependsOnIds*/null, version);
-                VerifyPayloadForMultipartBatch(requestPayload, ExpectedRequestPayloadWithoutDependsOnIds);
-
-                var responsePayload =
-                    this.ServiceReadRequestAndWriterResponseForMultipartBatchWithDependsOnIds(requestPayload, false);
-                VerifyPayloadForMultipartBatch(responsePayload, ExpectedResponsePayloadWithoutDependsOnIds);
-
-                ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
-            }
-        }
+//        [Fact]
+//        public void BatchJsonLightTestWithDependsOnIds()
+//        {
+//            // Verify reference of content id works when dependsOn Ids are correctly specified.
+//            string contentIdRef = "2";
+//            byte[] requestPayload = ClientWriteRequestForMultipartBatchWithDependsOnIds(
+//                contentIdRef, new string[] { contentIdRef }, ODataVersion.V401);
+//            VerifyPayloadForMultipartBatch(requestPayload, ExpectedRequestPayloadWithDependsOnIds);
+//
+//            var responsePayload = this.ServiceReadRequestAndWriterResponseForMultipartBatchWithDependsOnIds(requestPayload);
+//            VerifyPayloadForMultipartBatch(responsePayload, ExpectedResponsePayloadWithoutDependsOnIds);
+//
+//            ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
+//        }
+//
+//        [Fact]
+//        public void BatchJsonLightTestNoDependsOnIds()
+//        {
+//            // Verify reference of content id should work without specifying dependsOn Ids.
+//            foreach (ODataVersion version in new[] {ODataVersion.V4, ODataVersion.V401})
+//            {
+//                string contentIdRef = "2";
+//                byte[] requestPayload = ClientWriteRequestForMultipartBatchWithDependsOnIds(
+//                    contentIdRef, /*dependsOnIds*/null, version);
+//                VerifyPayloadForMultipartBatch(requestPayload, ExpectedRequestPayloadWithoutDependsOnIds);
+//
+//                var responsePayload =
+//                    this.ServiceReadRequestAndWriterResponseForMultipartBatchWithDependsOnIds(requestPayload);
+//                VerifyPayloadForMultipartBatch(responsePayload, ExpectedResponsePayloadWithoutDependsOnIds);
+//
+//                ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
+//            }
+//        }
 
         [Fact]
         public void BatchJsonLightTestWithIncorrectDependsOnIdShouldThrow()
@@ -1725,7 +1724,7 @@ Content-Type: application/json;odata.metadata=none
             }
         }
 
-        private byte[] ServiceReadRequestAndWriterResponseForMultipartBatchWithDependsOnIds(byte[] requestPayload, bool isDependsOnIdProvided)
+        private byte[] ServiceReadRequestAndWriterResponseForMultipartBatchWithDependsOnIds(byte[] requestPayload)
         {
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
             requestMessage.SetHeader("Content-Type", batchContentTypeMultipartMime);
@@ -1750,14 +1749,6 @@ Content-Type: application/json;odata.metadata=none
                         case ODataBatchReaderState.Operation:
                             // Encountered an operation (either top-level or in a change set)
                             ODataBatchOperationRequestMessage operationMessage = batchReader.CreateOperationRequestMessage();
-
-                            // Verify the optional dependsOnIds for the request with id of "3".
-                            if (operationMessage.ContentId != null && operationMessage.ContentId.Equals("3"))
-                            {
-                                Assert.NotNull(operationMessage.DependsOnIds);
-                                Assert.True((isDependsOnIdProvided && operationMessage.DependsOnIds.Count != 0)
-                                    || (!isDependsOnIdProvided && operationMessage.DependsOnIds.Count == 0));
-                            }
 
                             if (operationMessage.Method == "PATCH")
                             {
