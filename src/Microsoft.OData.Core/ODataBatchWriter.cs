@@ -213,17 +213,14 @@ namespace Microsoft.OData
         /// <summary>
         /// Starts a new atomic group or changeset with the specified group id or changeset GUID corresponding to change set boundary.
         /// This can only be called after WriteStartBatch and if no other active operation or changeset exists.</summary>
-        /// <param name="groupOrChangesetId">
-        /// The atomic group id (for Json batch) / changeset GUID (for Multipart/Mixed batch) of the batch request.
-        /// Cannot be null.
-        /// </param>
-        /// <exception cref="ODataException">Thrown if the <paramref name="groupOrChangesetId"/> is null.</exception>
-        public void WriteStartChangeset(string groupOrChangesetId)
+        /// <param name="changesetId"> The change set Id of the batch request. Cannot be null.</param>
+        /// <exception cref="ODataException">Thrown if the <paramref name="changesetId"/> is null.</exception>
+        public void WriteStartChangeset(string changesetId)
         {
-            ExceptionUtils.CheckArgumentNotNull(groupOrChangesetId, "groupOrChangesetId");
+            ExceptionUtils.CheckArgumentNotNull(changesetId, "changesetId");
 
             this.VerifyCanWriteStartChangeset(true);
-            this.WriteStartChangesetImplementation(groupOrChangesetId);
+            this.WriteStartChangesetImplementation(changesetId);
             this.FinishWriteStartChangeset();
         }
 
@@ -239,18 +236,15 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously starts a new change set; can only be called after WriteStartBatch and if no other active operation or change set exists.
         /// </summary>
-        /// <param name="groupOrChangesetId">
-        /// The atomic group id (for Json batch) / changeset GUID (for Multipart/Mixed batch) of the batch request.
-        /// Cannot be null.
-        /// </param>
+        /// <param name="changesetId"> The change set Id of the batch request. Cannot be null.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <exception cref="ODataException">Thrown if the <paramref name="groupOrChangesetId"/> is null.</exception>
-        public Task WriteStartChangesetAsync(string groupOrChangesetId)
+        /// <exception cref="ODataException">Thrown if the <paramref name="changesetId"/> is null.</exception>
+        public Task WriteStartChangesetAsync(string changesetId)
         {
-            ExceptionUtils.CheckArgumentNotNull(groupOrChangesetId, "groupOrChangesetId");
+            ExceptionUtils.CheckArgumentNotNull(changesetId, "changesetId");
 
             this.VerifyCanWriteStartChangeset(false);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartChangesetImplementation(groupOrChangesetId))
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartChangesetImplementation(changesetId))
                 .FollowOnSuccessWith(t => this.FinishWriteStartChangeset());
         }
 #endif
