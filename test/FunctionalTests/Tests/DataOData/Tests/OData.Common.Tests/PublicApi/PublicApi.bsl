@@ -4101,9 +4101,9 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	public System.Threading.Tasks.Task WriteStartBatchAsync ()
 	protected abstract void WriteStartBatchImplementation ()
 	public void WriteStartChangeset ()
-	public void WriteStartChangeset (string groupOrChangesetId)
+	public void WriteStartChangeset (string changesetId)
 	public System.Threading.Tasks.Task WriteStartChangesetAsync ()
-	public System.Threading.Tasks.Task WriteStartChangesetAsync (string groupOrChangesetId)
+	public System.Threading.Tasks.Task WriteStartChangesetAsync (string changesetId)
 	protected abstract void WriteStartChangesetImplementation (string groupOrChangesetId)
 }
 
