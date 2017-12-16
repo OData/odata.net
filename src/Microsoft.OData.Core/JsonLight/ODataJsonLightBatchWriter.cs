@@ -586,6 +586,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writing pending data for the current request message.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for header key")]
         private void WritePendingRequestMessageData()
         {
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
@@ -598,7 +599,7 @@ namespace Microsoft.OData.JsonLight
             {
                 foreach (KeyValuePair<string, string> headerPair in headers)
                 {
-                    this.jsonWriter.WriteName(headerPair.Key.ToLower());
+                    this.jsonWriter.WriteName(headerPair.Key.ToLowerInvariant());
                     this.jsonWriter.WriteValue(headerPair.Value);
                 }
             }
@@ -609,6 +610,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writing pending data for the current response message.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for header key")]
         private void WritePendingResponseMessageData()
         {
             Debug.Assert(this.JsonLightOutputContext.WritingResponse, "If the response message is available we must be writing response.");
@@ -637,7 +639,7 @@ namespace Microsoft.OData.JsonLight
             {
                 foreach (KeyValuePair<string, string> headerPair in headers)
                 {
-                    this.jsonWriter.WriteName(headerPair.Key.ToLower());
+                    this.jsonWriter.WriteName(headerPair.Key.ToLowerInvariant());
                     this.jsonWriter.WriteValue(headerPair.Value);
                 }
             }
