@@ -15,12 +15,12 @@ namespace Microsoft.OData.Tests
 {
     internal class TestJsonLightReaderEntryState : IODataJsonLightReaderResourceState
     {
-        private ODataResource entry = ReaderUtils.CreateNewResource();
+        private ODataResourceBase entry = ReaderUtils.CreateNewResource();
         private EdmStructuredType edmStructuredType = new EdmEntityType("TestNamespace", "EntityType");
         private SelectedPropertiesNode selectedProperties;
         private PropertyAndAnnotationCollector propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
-        public ODataResource Resource
+        public ODataResourceBase Resource
         {
             get { return this.entry; }
             set { this.entry = value; }

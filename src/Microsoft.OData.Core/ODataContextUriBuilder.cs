@@ -170,14 +170,29 @@ namespace Microsoft.OData
                         break;
                 }
             }
-            else if (!string.IsNullOrEmpty(info.TypeName))
-            {
-                // #TypeName
-                builder.Append(info.TypeName);
-            }
             else
             {
-                return null;
+                // No path information
+                switch (info.DeltaKind)
+                {
+                    case ODataDeltaKind.ResourceSet:
+                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaResourceSet, UriKind.Relative);
+                    case ODataDeltaKind.DeletedEntry:
+                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedEntry, UriKind.Relative);
+                    case ODataDeltaKind.Link:
+                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaLink, UriKind.Relative);
+                    case ODataDeltaKind.DeletedLink:
+                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedLink, UriKind.Relative);
+                }
+
+                if (!string.IsNullOrEmpty(info.TypeName))
+                {   // #TypeName
+                    builder.Append(info.TypeName);
+                }
+                else
+                {
+                    return null;
+                }
             }
 
             return new Uri(this.baseContextUrl, builder.ToString());

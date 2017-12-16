@@ -4,13 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-
 namespace Microsoft.OData
 {
+    #region Namespaces
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Linq;
+    using Microsoft.OData.Json;
+    #endregion Namespaces
+
     /// <summary>
     /// Class representing an error payload.
     /// </summary>
@@ -64,5 +69,35 @@ namespace Microsoft.OData
             get { return this.GetInstanceAnnotations(); }
             set { this.SetInstanceAnnotations(value); }
         }
-    }
+
+        /// <summary>
+        /// Serialization to Json format string representing the error object.
+        /// </summary>
+        /// <returns>The string in Json format.</returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{{\"error\":{{" +
+                "\"code\":\"{0}\"," +
+                "\"message\":\"{1}\"," +
+                "\"target\":\"{2}\"," +
+                "\"details\":{3}," +
+                "\"innererror\":{4}" +
+                " }}}}",
+                this.ErrorCode == null ? ""  : JsonValueUtils.GetEscapedJsonString(this.ErrorCode),
+                this.Message  == null ? ""  : JsonValueUtils.GetEscapedJsonString(this.Message),
+                this.Target == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Target),
+                this.Details == null ? "{}" : GetJsonStringForDetails(),
+                this.InnerError == null ? "{}" : this.InnerError.ToJson());
+        }
+
+        /// <summary>
+        /// Convert the Details property to Json format string.
+        /// </summary>
+        /// <returns>Json format string representing collection.</returns>
+        private string GetJsonStringForDetails()
+        {
+            return "[" + String.Join(",", this.Details.Select(i => i.ToJson()).ToArray()) + "]";
+        }
+}
 }

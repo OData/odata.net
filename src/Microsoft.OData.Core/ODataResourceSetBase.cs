@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
@@ -28,9 +29,39 @@ namespace Microsoft.OData
         /// </summary>
         private Uri deltaLink;
 
-        /// <summary>Gets or sets the number of items in the resource set.</summary>
-        /// <returns>The number of items in the resource set.</returns>
-        public long? Count
+        /// <summary>
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
+        /// </summary>
+        private ODataResourceSerializationInfo serializationInfo;
+
+        /// <summary>
+        /// The type name of the resource set.
+        /// </summary>
+        private string typeName;
+
+        /// <summary>Gets the resource set type name.</summary>
+        /// <returns>The resource set type name.</returns>
+        public string TypeName
+        {
+            get
+            {
+                if (typeName == null && this.SerializationInfo != null && this.SerializationInfo.ExpectedTypeName != null)
+                {
+                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.SerializationInfo.ExpectedTypeName);
+                }
+
+                return typeName;
+            }
+
+            set
+            {
+                this.typeName = value;
+            }
+        }
+
+    /// <summary>Gets or sets the number of items in the resource set.</summary>
+    /// <returns>The number of items in the resource set.</returns>
+    public long? Count
         {
             get;
             set;
@@ -93,6 +124,22 @@ namespace Microsoft.OData
         {
             get { return this.GetInstanceAnnotations(); }
             set { this.SetInstanceAnnotations(value); }
+        }
+
+        /// <summary>
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceSet"/>.
+        /// </summary>
+        internal ODataResourceSerializationInfo SerializationInfo
+        {
+            get
+            {
+                return this.serializationInfo;
+            }
+
+            set
+            {
+                this.serializationInfo = ODataResourceSerializationInfo.Validate(value);
+            }
         }
     }
 }

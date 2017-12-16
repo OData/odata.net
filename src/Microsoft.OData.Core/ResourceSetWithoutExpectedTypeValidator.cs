@@ -27,8 +27,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ResourceSetWithoutExpectedTypeValidator()
+        /// <param name="memberType">The type of the resource set, or null.</param>
+        public ResourceSetWithoutExpectedTypeValidator(IEdmStructuredType memberType)
         {
+            this.itemType = memberType;
         }
 
         /// <summary>
@@ -37,7 +39,10 @@ namespace Microsoft.OData
         /// <param name="resourceType">The type of the resource.</param>
         internal void ValidateResource(IEdmStructuredType resourceType)
         {
-            Debug.Assert(resourceType != null, "entityType != null");
+            if (resourceType == null)
+            {
+                return;
+            }
 
             // If we don't have a type, store the type of the first item.
             if (this.itemType == null)

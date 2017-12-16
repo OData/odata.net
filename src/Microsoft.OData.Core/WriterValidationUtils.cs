@@ -207,10 +207,30 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteStart call.
+        /// Validates an <see cref="ODataDeltaResourceSet"/> to ensure all required information is specified and valid on the WriteEnd call.
+        /// </summary>
+        /// <param name="resourceSet">The resource set to validate.</param>
+        /// <param name="writingRequest">Flag indicating whether the resource set is written as part of a request or a response.</param>
+        internal static void ValidateDeltaResourceSetAtEnd(ODataDeltaResourceSet resourceSet, bool writingRequest)
+        {
+            Debug.Assert(resourceSet != null, "resourceSet != null");
+
+            // Verify next link
+            if (resourceSet.NextPageLink != null)
+            {
+                // Check that NextPageLink is not set for requests
+                if (writingRequest)
+                {
+                    throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates an <see cref="ODataResourceBase"/> to ensure all required information is specified and valid on WriteStart call.
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
-        internal static void ValidateResourceAtStart(ODataResource resource)
+        internal static void ValidateResourceAtStart(ODataResourceBase resource)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -222,10 +242,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid on WriteEnd call.
+        /// Validates an <see cref="ODataResourceBase"/> to ensure all required information is specified and valid on WriteEnd call.
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
-        internal static void ValidateResourceAtEnd(ODataResource resource)
+        internal static void ValidateResourceAtEnd(ODataResourceBase resource)
         {
             Debug.Assert(resource != null, "resource != null");
 

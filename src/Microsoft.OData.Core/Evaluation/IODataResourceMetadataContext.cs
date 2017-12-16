@@ -20,7 +20,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// The resource instance.
         /// </summary>
-        ODataResource Resource { get; }
+        ODataResourceBase Resource { get; }
 
         /// <summary>
         /// The context object to answer basic questions regarding the type of the resource.

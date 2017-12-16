@@ -50,8 +50,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(message != null, "message != null");
 
-            string originalHeaderValue = message.GetHeader(ODataConstants.ODataVersionHeader);
-            string headerValue = originalHeaderValue;
+            string headerValue = message.GetHeader(ODataConstants.ODataVersionHeader);
 
             return string.IsNullOrEmpty(headerValue)
                 ? defaultVersion

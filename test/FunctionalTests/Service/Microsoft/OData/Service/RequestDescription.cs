@@ -608,7 +608,7 @@ namespace Microsoft.OData.Service
                         // valid version. At this point the final response version is not yet known.
                         this.InitializeVersion(service);
                         ODataVersion version = CommonUtil.ConvertToODataVersion(this.effectiveMaxResponseVersion);
-                        Debug.Assert(version <= ODataVersion.V4, "Unexpected version, is there a new one?");
+                        Debug.Assert(version <= ODataVersion.V401, "Unexpected version, is there a new one?");
 
                         // for legacy reasons, if we won't be writing a response then do not fail.
                         bool throwIfNoMatch = this.ShouldWriteResponseBody;

@@ -1249,8 +1249,9 @@ namespace Microsoft.OData.Service
             messageReaderSettings.EnableCharactersCheck = false;
 
             ODataProtocolVersion maxProtocolVersion = dataService.Configuration.DataServiceBehavior.MaxProtocolVersion;
-            messageReaderSettings.MaxProtocolVersion = maxProtocolVersion == ODataProtocolVersion.V4
-                ? ODataVersion.V4
+            messageReaderSettings.MaxProtocolVersion = 
+                maxProtocolVersion == ODataProtocolVersion.V4 ? ODataVersion.V4
+                : maxProtocolVersion == ODataProtocolVersion.V401 ? ODataVersion.V401 
                 : CommonUtil.ConvertToODataVersion(
                     dataService.Configuration.DataServiceBehavior.MaxProtocolVersion);
 

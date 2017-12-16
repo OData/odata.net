@@ -174,17 +174,6 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// The Context Url level used when writing.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get
-            {
-                return metadataLevel.ContextUrlLevel;
-            }
-        }
-
-        /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
@@ -195,7 +184,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertSynchronous();
 
-            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false);
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false);
         }
 
 #if PORTABLELIB
@@ -210,7 +199,38 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false));
+        }
+#endif
+
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override ODataWriter CreateODataDeltaResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write resources for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public override Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true));
         }
 #endif
 
@@ -309,7 +329,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertSynchronous();
 
-            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true);
+            return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false);
         }
 
 #if PORTABLELIB
@@ -325,7 +345,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false));
         }
 #endif
 
@@ -481,6 +501,74 @@ namespace Microsoft.OData.JsonLight
         }
 #endif
 
+         /// <summary>
+        /// Flushes all buffered data to the underlying stream synchronously.
+        /// </summary>
+        internal void FlushBuffers()
+        {
+            if (this.asynchronousOutputStream != null)
+            {
+                this.asynchronousOutputStream.FlushSync();
+            }
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Flushes all buffered data to the underlying stream asynchronously.
+        /// </summary>
+        /// <returns>Task which represents the pending operation.</returns>
+        internal Task FlushBuffersAsync()
+        {
+            if (this.asynchronousOutputStream != null)
+            {
+                return this.asynchronousOutputStream.FlushAsync();
+            }
+            else
+            {
+                return TaskUtils.CompletedTask;
+            }
+        }
+#endif
+
+        /// <summary>
+        /// The output stream to write the payload to.
+        /// </summary>
+        /// <returns>The output stream.</returns>
+        internal Stream GetOutputStream()
+        {
+            return this.Synchronous
+                ? this.messageOutputStream
+                : this.asynchronousOutputStream;
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses in Json.
+        /// </summary>
+        /// <returns>The created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override ODataBatchWriter CreateODataBatchWriter()
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataBatchWriterImplementation();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
+        /// </summary>
+        /// <returns>A running task for the created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync()
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
+        }
+#endif
+
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
@@ -569,7 +657,7 @@ namespace Microsoft.OData.JsonLight
         /// Writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
         /// </summary>
-        /// <param name="serviceDocument">The service dcument to write.</param>
+        /// <param name="serviceDocument">The service document to write.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
         internal override void WriteServiceDocument(ODataServiceDocument serviceDocument)
         {
@@ -688,7 +776,7 @@ namespace Microsoft.OData.JsonLight
                         this.asynchronousOutputStream.Dispose();
                     }
 
-                    // Dipose the message stream (note that we OWN this stream, so we always dispose it).
+                    // Dispose the message stream (note that we OWN this stream, so we always dispose it).
                     this.messageOutputStream.Dispose();
                 }
             }
@@ -723,10 +811,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingParameter">true means writing a resource set into a uri operation parameter, false writing a resource set in other payloads.</param>
+        /// <param name="writingDelta">true means writing a delta resource set.</param>
         /// <returns>The created writer.</returns>
-        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType, bool writingParameter)
+        private ODataWriter CreateODataResourceSetWriterImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType, bool writingParameter, bool writingDelta)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, resourceType, /*writingResourceSet*/true, writingParameter);
+            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, resourceType, /*writingResourceSet*/true, writingParameter, writingDelta);
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }
@@ -779,6 +868,17 @@ namespace Microsoft.OData.JsonLight
             ODataJsonLightParameterWriter jsonLightParameterWriter = new ODataJsonLightParameterWriter(this, operation);
             this.outputInStreamErrorListener = jsonLightParameterWriter;
             return jsonLightParameterWriter;
+        }
+
+        /// <summary>
+        /// Creates a concrete <see cref="ODataJsonLightBatchWriter" /> instance.
+        /// </summary>
+        /// <returns>The newly created batch writer.</returns>
+        private ODataBatchWriter CreateODataBatchWriterImplementation()
+        {
+            ODataBatchWriter batchWriter = new ODataJsonLightBatchWriter(this);
+            this.outputInStreamErrorListener = batchWriter;
+            return batchWriter;
         }
 
         /// <summary>

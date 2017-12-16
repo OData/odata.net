@@ -20,11 +20,6 @@ namespace Microsoft.OData.JsonLight
     internal abstract class JsonLightMetadataLevel
     {
         /// <summary>
-        /// Indicates which level of context Url should be used when writing payload.
-        /// </summary>
-        internal abstract ODataContextUrlLevel ContextUrlLevel { get; }
-
-        /// <summary>
         /// Creates the appropriate metadata level based on the media type being written.
         /// </summary>
         /// <param name="mediaType">The full media type being written. This media type must have a type/subtype of "application/json".</param>
@@ -97,7 +92,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal abstract ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
-            ODataResource resource,
+            ODataResourceBase resource,
             IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
             IEdmStructuredType actualResourceType,
@@ -111,7 +106,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resource">The resource to inject the builder.</param>
         /// <param name="builder">The metadata builder to inject.</param>
-        internal virtual void InjectMetadataBuilder(ODataResource resource, ODataResourceMetadataBuilder builder)
+        internal virtual void InjectMetadataBuilder(ODataResourceBase resource, ODataResourceMetadataBuilder builder)
         {
             resource.MetadataBuilder = builder;
         }

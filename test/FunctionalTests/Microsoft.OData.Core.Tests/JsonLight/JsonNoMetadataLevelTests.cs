@@ -23,12 +23,6 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void NoMetadataLevelShouldHaveContextUrlLevelNone()
-        {
-            testSubject.ContextUrlLevel.Should().Be(ODataContextUrlLevel.None);
-        }
-
-        [Fact]
         public void NoMetadataLevelShouldReturnNullMetadataBuilder()
         {
             testSubject.CreateResourceMetadataBuilder(

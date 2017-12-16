@@ -150,6 +150,12 @@ namespace Microsoft.OData.Tests.JsonLight
             this.UndeclaredPropertyShouldWriteTypeName((Int16)42, "Int16");
         }
 
+        [Fact]
+        public void UndeclaredUntypedShouldNotWriteTypeName()
+        {
+            this.UndeclaredPropertyShouldNotWriteTypeName(new ODataUntypedValue { RawValue = "\"rawValue\"" });
+        }
+
         private void UndeclaredPropertyShouldNotWriteTypeName(object value)
         {
             var property = new ODataProperty { Name = "UndeclaredProperty", Value = value };

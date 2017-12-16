@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Tests the ODataBatchReaderStream.ProcessPartHeader implementation.
+    /// Tests the ODataMultipartMixedBatchReaderStream.ProcessPartHeader implementation.
     /// </summary>
     [TestClass, TestCase]
     public class BatchReaderStreamProcessPartHeaderTests : ODataReaderTestCase
@@ -32,8 +32,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         public IDependencyInjector Injector { get; set; }
 
 #if !SILVERLIGHT && !WINDOWS_PHONE
-        // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.ProcessPartHeader method.")]
+        // Batch stream buffer tests use private reflection and thus cannot run on SilverLight or the phone.
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.ProcessPartHeader method.")]
         public void BatchReaderStreamProcessPartHeaderTest()
         {
             IEnumerable<PartHeaderTestCase> testCases = new PartHeaderTestCase[]
@@ -133,7 +133,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new PartHeaderTestCase
                 {
-                    DebugDescription = "Read a changeset part header with a line feed after the header and some content.",
+                    DebugDescription = "Read a change set part header with a line feed after the header and some content.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary=my_boundary")
                         .LineFeed()
@@ -147,7 +147,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new PartHeaderTestCase
                 {
-                    DebugDescription = "Read a changeset part header with no line feed after the header and some content; will fail.",
+                    DebugDescription = "Read a change set part header with no line feed after the header and some content; will fail.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary=my_boundary")
                         .String("Some payload")
@@ -157,7 +157,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new PartHeaderTestCase
                 {
-                    DebugDescription = "Read a changeset part header with multiple line feeds after the header and some content.",
+                    DebugDescription = "Read a change set part header with multiple line feeds after the header and some content.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary=my_boundary")
                         .LineFeed()
@@ -230,14 +230,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.ProcessPartHeader method.")]
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.ProcessPartHeader method.")]
         public void BatchReaderStreamBoundaryHeaderValidationTest()
         {
             IEnumerable<BoundaryHeaderValidationTestCase> testCases = new BoundaryHeaderValidationTestCase[]
             {
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part header with the boundary parameter missing.",
+                    DebugDescription = "Read a change set part header with the boundary parameter missing.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed")
                         .ResetMemoryStream(),
@@ -245,7 +245,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part header with an invalid boundary parameter name.",
+                    DebugDescription = "Read a change set part header with an invalid boundary parameter name.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary2=changeset_boundary")
                         .ResetMemoryStream(),
@@ -253,7 +253,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part header with two boundary parameters.",
+                    DebugDescription = "Read a change set part header with two boundary parameters.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary=changeset_boundary;boundary=another_boundary")
                         .ResetMemoryStream(),
@@ -261,7 +261,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part header with an empty boundary.",
+                    DebugDescription = "Read a change set part header with an empty boundary.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary=")
                         .ResetMemoryStream(),
@@ -269,7 +269,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part header with multiple parameters (incl. a boundary).",
+                    DebugDescription = "Read a change set part header with multiple parameters (incl. a boundary).",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;a=b;boundary=my_boundary;c=d")
                         .ResetMemoryStream(),
@@ -278,7 +278,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part header where the boundary parameter name has weird casing.",
+                    DebugDescription = "Read a change set part header where the boundary parameter name has weird casing.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;a=b;BoUnDaRY=my_boundary;c=d")
                         .ResetMemoryStream(),
@@ -287,7 +287,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part with multiple headers.",
+                    DebugDescription = "Read a change set part with multiple headers.",
                     PayloadFunc = builder => builder
                         .Header("a", "b")
                         .Header("Content-Type", "multipart/mixed;boundary=my_boundary")
@@ -301,7 +301,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part with an invalid header.",
+                    DebugDescription = "Read a change set part with an invalid header.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary=my_boundary")
                         .String("InvalidHeader Does not use a colon!")
@@ -312,7 +312,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new BoundaryHeaderValidationTestCase
                 {
-                    DebugDescription = "Read a changeset part with duplicate headers.",
+                    DebugDescription = "Read a change set part with duplicate headers.",
                     PayloadFunc = builder => builder
                         .Header("Content-Type", "multipart/mixed;boundary=my_boundary")
                         .Header("a", "b")
@@ -342,7 +342,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             {
                 new PartHeaderTestCase
                 {
-                    DebugDescription = "Read two content type headers with differnet casing.",
+                    DebugDescription = "Read two content type headers with different casing.",
                     PayloadFunc = builder => builder
                         .Header("cOnTenT-tYpE", "multipart/mixed;boundary=changeset_boundary")
                         .ResetMemoryStream(),
@@ -446,7 +446,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// </summary>
         private sealed class PartHeaderTestCase : BatchReaderStreamTestCase
         {
-            /// <summary>true if we expect a changeset part; otherwise false.</summary>
+            /// <summary>true if we expect a change set part; otherwise false.</summary>
             public bool? ExpectChangeSetPart { get; set; }
 
             /// <summary>The set of expected part headers.</summary>
@@ -458,7 +458,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             /// <param name="streamWrapper">The batch reader stream to test.</param>
             protected override void RunTestAction(BatchReaderStreamWrapper streamWrapper)
             {
-                // Set a batch encoding since we assert that it is set before callign ProcessPartHeader
+                // Set a batch encoding since we assert that it is set before calling ProcessPartHeader
                 streamWrapper.SetBatchEncoding(this.Encoding);
 
                 bool isChangeSetPart;
@@ -471,7 +471,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             /// </summary>
             /// <param name="streamWrapper">The stream buffer used to read the headers from.</param>
             /// <param name="headers">The headers read from the part.</param>
-            /// <param name="isChangeSetPart">true if we detected a changeset part; otherwise false.</param>
+            /// <param name="isChangeSetPart">true if we detected a change set part; otherwise false.</param>
             private void VerifyResult(BatchReaderStreamWrapper streamWrapper, BatchOperationHeadersWrapper headers, bool isChangeSetPart)
             {
                 base.VerifyResult(streamWrapper.BatchBuffer);
@@ -479,7 +479,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 if (this.ExpectChangeSetPart.HasValue)
                 {
                     this.Assert.AreEqual(this.ExpectChangeSetPart.Value, isChangeSetPart,
-                        string.Format("\r\n{0}:\r\nExpected changeset part is '{1}' but reported value is '{2}'.", this.DebugDescription, this.ExpectChangeSetPart.Value, isChangeSetPart));
+                        string.Format("\r\n{0}:\r\nExpected change set part is '{1}' but reported value is '{2}'.", this.DebugDescription, this.ExpectChangeSetPart.Value, isChangeSetPart));
                 }
 
                 if (this.ExpectedHeaders != null)
@@ -530,7 +530,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             /// <param name="streamWrapper">The batch reader stream to test.</param>
             protected override void RunTestAction(BatchReaderStreamWrapper streamWrapper)
             {
-                // Set a batch encoding since we assert that it is set before callign ProcessPartHeader
+                // Set a batch encoding since we assert that it is set before calling ProcessPartHeader
                 streamWrapper.SetBatchEncoding(this.Encoding);
 
                 bool isChangeSetPart = streamWrapper.ProcessPartHeader();
@@ -541,7 +541,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             /// Verifies the result of a boundary header validation test case.
             /// </summary>
             /// <param name="streamWrapper">The stream buffer used to read the headers from.</param>
-            /// <param name="isChangeSetPart">true if we detected a changeset part; otherwise false.</param>
+            /// <param name="isChangeSetPart">true if we detected a change set part; otherwise false.</param>
             private void VerifyResult(BatchReaderStreamWrapper streamWrapper, bool isChangeSetPart)
             {
                 base.VerifyResult(streamWrapper.BatchBuffer);
@@ -549,11 +549,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 if (this.ExpectChangeSetPart.HasValue)
                 {
                     this.Assert.AreEqual(this.ExpectChangeSetPart.Value, isChangeSetPart,
-                        string.Format("\r\n{0}:\r\nExpected changeset part is '{1}' but reported value is '{2}'.", this.DebugDescription, this.ExpectChangeSetPart.Value, isChangeSetPart));
+                        string.Format("\r\n{0}:\r\nExpected change set part is '{1}' but reported value is '{2}'.", this.DebugDescription, this.ExpectChangeSetPart.Value, isChangeSetPart));
                 }
 
                 this.Assert.AreEqual(this.ExpectedChangeSetBoundary, streamWrapper.ChangeSetBoundary,
-                    string.Format("\r\n{0}:\r\nExpected changeset boundary '{1}' but reported value is '{2}'.", this.DebugDescription, this.ExpectedChangeSetBoundary, streamWrapper.ChangeSetBoundary));
+                    string.Format("\r\n{0}:\r\nExpected change set boundary '{1}' but reported value is '{2}'.", this.DebugDescription, this.ExpectedChangeSetBoundary, streamWrapper.ChangeSetBoundary));
             }
         }
 #endif

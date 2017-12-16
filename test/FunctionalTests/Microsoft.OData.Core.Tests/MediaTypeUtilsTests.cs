@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightContentNegotiationTests.cs" company="Microsoft">
+// <copyright file="MediaTypeUtilsTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -287,6 +287,32 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void MediaTypeResolutionForJsonBatchShouldWork()
+        {
+            string[] contentTypes = new string[]
+            {
+                "application/json",
+                "application/json;odata.metadata=minimal",
+                "application/json;odata.metadata=minimal;odata.streaming=true",
+                "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false"
+            };
+            foreach (string contentType in contentTypes)
+            {
+                ODataMediaType mediaType;
+                Encoding encoding;
+                ODataPayloadKind payloadKind;
+
+                ODataFormat format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Batch },
+                    ODataMediaTypeResolver.GetMediaTypeResolver(null),
+                    out mediaType, out encoding, out payloadKind);
+                mediaType.Should().NotBeNull();
+                encoding.Should().NotBeNull();
+                payloadKind.Should().Be(ODataPayloadKind.Batch);
+                format.Should().Be(ODataFormat.Json);
+            }
+        }
+
+        [Fact]
         public void AlterContentTypeForJsonPaddingIfNeededShouldThrowIfAtom()
         {
             const string original = "application/atom+xml";
@@ -350,8 +376,7 @@ namespace Microsoft.OData.Tests
             ODataMediaType mediaType;
             Encoding encoding;
             ODataPayloadKind payloadKind;
-            string batchBoundary;
-            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Resource }, resolver ?? ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind, out batchBoundary);
+            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Resource }, resolver ?? ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind);
             mediaType.Should().NotBeNull();
             format.Should().NotBeNull();
             return new TestMediaTypeWithFormat { MediaType = mediaType, Format = format };

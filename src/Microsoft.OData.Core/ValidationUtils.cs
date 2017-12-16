@@ -249,7 +249,7 @@ namespace Microsoft.OData
         /// <param name="resource">The resource to validate.</param>
         /// <param name="resourceType">Optional entity type to validate the resource against.</param>
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
-        internal static void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType)
+        internal static void ValidateMediaResource(ODataResourceBase resource, IEdmEntityType resourceType)
         {
             Debug.Assert(resource != null, "resource != null");
 

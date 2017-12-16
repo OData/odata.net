@@ -9,7 +9,7 @@ using Microsoft.OData.Edm;
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
-    /// Node representing a type segment that casts an resource collection node.
+    /// Node representing a type segment that casts a resource collection node.
     /// </summary>
     public sealed class CollectionResourceCastNode : CollectionResourceNode
     {

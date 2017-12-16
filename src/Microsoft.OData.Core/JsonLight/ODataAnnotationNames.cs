@@ -40,7 +40,9 @@ namespace Microsoft.OData.JsonLight
                     ODataBind,
                     ODataAssociationLinkUrl,
                     ODataNavigationLinkUrl,
-                    ODataDeltaLink
+                    ODataDeltaLink,
+                    ODataRemoved,
+                    ODataDelta
                 },
                 StringComparer.Ordinal);
 
@@ -91,6 +93,12 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>The 'odata.deltaLink' annotation name.</summary>
         internal const string ODataDeltaLink = "odata.deltaLink";
+
+        /// <summary>The 'odata.removed' annotation name.</summary>
+        internal const string ODataRemoved = "odata.removed";
+
+        /// <summary>The 'odata.delta' annotation name.</summary>
+        internal const string ODataDelta = "odata.delta";
 
         /// <summary>
         /// Returns true if the <paramref name="annotationName"/> starts with "odata.", false otherwise.

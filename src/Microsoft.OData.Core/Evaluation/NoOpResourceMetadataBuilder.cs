@@ -18,13 +18,13 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// The resource whose payload metadata is being queried.
         /// </summary>
-        private readonly ODataResource resource;
+        private readonly ODataResourceBase resource;
 
         /// <summary>
         /// Creates a new no-op metadata builder.
         /// </summary>
         /// <param name="resource">The resource whose payload metadata is being queried.</param>
-        internal NoOpResourceMetadataBuilder(ODataResource resource)
+        internal NoOpResourceMetadataBuilder(ODataResourceBase resource)
         {
             Debug.Assert(resource != null, "resource != null");
 

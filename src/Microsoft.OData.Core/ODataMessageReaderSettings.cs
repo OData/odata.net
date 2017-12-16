@@ -42,6 +42,10 @@ namespace Microsoft.OData
             Validator = new ReaderValidator(this);
         }
 
+        /// <summary>Gets or sets the OData protocol version to be used for reading payloads. </summary>
+        /// <returns>The OData protocol version to be used for reading payloads.</returns>
+        public ODataVersion? Version { get; set; }
+
         /// <summary>
         /// Gets or sets validation settings.
         /// </summary>
@@ -235,6 +239,7 @@ namespace Microsoft.OData
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.Version = other.Version;
         }
     }
 }

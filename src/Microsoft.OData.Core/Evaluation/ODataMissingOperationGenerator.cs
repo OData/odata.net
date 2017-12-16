@@ -73,7 +73,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="model">The edm model to resolve operation imports.</param>
         /// <param name="metadataDocumentUri">The metadata document uri.</param>
         /// <returns>The hash set of operation imports (actions and functions) in the given resource.</returns>
-        private static HashSet<IEdmOperation> GetOperationsInEntry(ODataResource resource, IEdmModel model, Uri metadataDocumentUri)
+        private static HashSet<IEdmOperation> GetOperationsInEntry(ODataResourceBase resource, IEdmModel model, Uri metadataDocumentUri)
         {
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(model != null, "model != null");

@@ -31,7 +31,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resource">The ODataResource whose type is to be written.</param>
         /// <param name="isUndeclared">true if the resource is for some undeclared property.</param>
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
-        internal abstract string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource, bool isUndeclared);
+        internal abstract string GetResourceTypeNameForWriting(string expectedTypeName, ODataResourceBase resource, bool isUndeclared);
 
         /// <summary>
         /// Determines the type name to write to the payload.  Json Light type names are only written into the payload for open properties

@@ -186,7 +186,7 @@ namespace Microsoft.OData
         /// If the <paramref name="resourceType"/> is available, only resource-level tests are
         /// performed; properties and such are not validated.
         /// </remarks>
-        public virtual void ValidateMetadataResource(ODataResource resource, IEdmEntityType resourceType)
+        public virtual void ValidateMetadataResource(ODataResourceBase resource, IEdmEntityType resourceType)
         {
             ValidationUtils.ValidateMediaResource(resource, resourceType);
         }

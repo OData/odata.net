@@ -17,8 +17,25 @@ namespace Microsoft.OData
     /// <summary>
     /// Represents a single entity.
     /// </summary>
+    public sealed class ODataResource : ODataResourceBase
+    {
+       /// <summary>
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResource"/>.
+        /// </summary>
+        internal override ODataResourceSerializationInfo SerializationInfo
+        {
+            set
+            {
+                base.SerializationInfo = ODataResourceSerializationInfo.Validate(value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Base class for a resource or deleted resource.
+    /// </summary>
     [DebuggerDisplay("Id: {Id} TypeName: {TypeName}")]
-    public sealed class ODataResource : ODataItem
+    public abstract class ODataResourceBase : ODataItem
     {
         /// <summary>the metadata builder for this OData resource.</summary>
         private ODataResourceMetadataBuilder metadataBuilder;
@@ -60,7 +77,7 @@ namespace Microsoft.OData
         private List<ODataFunction> functions = new List<ODataFunction>();
 
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResource"/>.
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceBase"/>.
         /// </summary>
         private ODataResourceSerializationInfo serializationInfo;
 
@@ -333,11 +350,10 @@ namespace Microsoft.OData
             }
         }
 
-
         /// <summary>
-        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResource"/>.
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataResourceBase"/>.
         /// </summary>
-        internal ODataResourceSerializationInfo SerializationInfo
+        internal virtual ODataResourceSerializationInfo SerializationInfo
         {
             get
             {
@@ -346,7 +362,7 @@ namespace Microsoft.OData
 
             set
             {
-                this.serializationInfo = ODataResourceSerializationInfo.Validate(value);
+                this.serializationInfo = value;
             }
         }
 
