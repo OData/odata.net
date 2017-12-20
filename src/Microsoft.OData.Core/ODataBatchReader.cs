@@ -323,7 +323,8 @@ namespace Microsoft.OData
         /// some of these request Ids are resolved from prerequisite atomic groups that are
         /// specified in the dependsOn attribute of the request.
         /// </param>
-        /// <param name="batchFormat">Format of the batch.</param>
+        /// <param name="dependsOnIdsValidationRequired">
+        /// Whether the <code>dependsOnIds</code> value needs to be validated.</param>
         /// <returns>The <see cref="ODataBatchOperationRequestMessage"/> instance.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(
             Func<Stream> streamCreatorFunc,
@@ -333,9 +334,9 @@ namespace Microsoft.OData
             string contentId,
             string groupId,
             IEnumerable<string> dependsOnRequestIds,
-            ODataFormat batchFormat)
+            bool dependsOnIdsValidationRequired)
         {
-            if (dependsOnRequestIds != null)
+            if (dependsOnRequestIds != null && dependsOnIdsValidationRequired)
             {
                 foreach (string id in dependsOnRequestIds)
                 {
@@ -344,13 +345,13 @@ namespace Microsoft.OData
                         throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
                     }
                 }
-
-                ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
-                    this.inputContext.MessageReaderSettings.BaseUri, batchFormat);
             }
 
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
                 requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.payloadUriConverter);
+
+            ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
+                this.inputContext.MessageReaderSettings.BaseUri);
 
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
                 contentId, this.payloadUriConverter, /*writing*/ false, this.container, dependsOnRequestIds, groupId);

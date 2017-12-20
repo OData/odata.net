@@ -8,6 +8,7 @@ namespace Microsoft.OData.MultipartMixed
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -23,16 +24,16 @@ namespace Microsoft.OData.MultipartMixed
         private readonly ODataMultipartMixedBatchReaderStream batchStream;
 
         /// <summary>
+        /// The dependsOnIds tracker for reader processing.
+        /// </summary>
+        private readonly DependsOnIdsTracker dependsOnIdsTracker;
+
+        /// <summary>
         /// ContentId to apply to the next request.  For legacy reasons, this might appear in the mime part headers
         /// (which is why we have a property to remember it) but it should appear in the headers for the individual request (which will
         /// be read when the individual request is created).
         /// </summary>
         private string currentContentId;
-
-        /// <summary>
-        /// The DependsOn-IDs for the current request.
-        /// </summary>
-        private string dependsOnIds;
 
         /// <summary>
         /// Constructor.
@@ -48,6 +49,7 @@ namespace Microsoft.OData.MultipartMixed
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
             this.batchStream = new ODataMultipartMixedBatchReaderStream(this.MultipartMixedBatchInputContext, batchBoundary, batchEncoding);
+            this.dependsOnIdsTracker = new DependsOnIdsTracker();
         }
 
         /// <summary>
@@ -96,12 +98,16 @@ namespace Microsoft.OData.MultipartMixed
                 requestUri,
                 headers,
                 this.currentContentId,
-                /*groupId*/ null,
-                this.dependsOnIds == null ? null : this.dependsOnIds.Split(','),
-                ODataFormat.Batch);
+                ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.batchStream.ChangeSetBoundary),
+                this.dependsOnIdsTracker.GetDependsOnIds(), /*dependsOnIdsValidationRequired*/false);
+
+            if (this.currentContentId != null)
+            {
+                this.dependsOnIdsTracker.AddDependsOnId(this.currentContentId);
+            }
 
             this.currentContentId = null;
-            this.dependsOnIds = null;
+
             return requestMessage;
         }
 
@@ -171,6 +177,7 @@ namespace Microsoft.OData.MultipartMixed
                 ThrowODataException(Strings.ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull);
             }
 
+            this.dependsOnIdsTracker.ChangeSetStarted();
             return this.SkipToNextPartAndReadHeaders();
         }
 
@@ -181,6 +188,7 @@ namespace Microsoft.OData.MultipartMixed
         protected override ODataBatchReaderState ReadAtChangesetEndImplementation()
         {
             this.batchStream.ResetChangeSetBoundary();
+            this.dependsOnIdsTracker.ChangeSetEnded();
             return this.SkipToNextPartAndReadHeaders();
         }
 

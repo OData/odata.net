@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.MultipartMixed;
-
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -17,6 +15,7 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -534,17 +533,18 @@ namespace Microsoft.OData
         /// <param name="contentId">The contentId of this request message.</param>
         /// <param name="groupId">The group id that this request belongs to. Can be null.</param>
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
-        /// <param name="batchFormat">Format of the batch.</param>
+        /// <param name="dependsOnIdsValidationRequired">Whether the <code>dependsOnIds</code> value needs to be validated.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
-            string contentId, string groupId, IEnumerable<string> dependsOnIds, ODataFormat batchFormat)
+            string contentId, string groupId, IEnumerable<string> dependsOnIds, bool dependsOnIdsValidationRequired)
         {
             IEnumerable<string> flattenDependsOnIds = dependsOnIds == null
                 ? null
                 : GetDependsOnRequestIds(dependsOnIds);
 
-            if (flattenDependsOnIds != null)
+            if (flattenDependsOnIds != null && dependsOnIdsValidationRequired)
             {
+                // Validate dependsOn ids in Json batch.
                 foreach (string id in flattenDependsOnIds)
                 {
                     if (!this.payloadUriConverter.ContainsContentId(id))
@@ -554,8 +554,7 @@ namespace Microsoft.OData
                 }
             }
 
-            ODataBatchUtils.ValidateReferenceUri(uri, flattenDependsOnIds,
-                this.outputContext.MessageWriterSettings.BaseUri, batchFormat);
+            ODataBatchUtils.ValidateReferenceUri(uri, flattenDependsOnIds, this.outputContext.MessageWriterSettings.BaseUri);
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
             ODataBatchOperationRequestMessage requestMessage =
