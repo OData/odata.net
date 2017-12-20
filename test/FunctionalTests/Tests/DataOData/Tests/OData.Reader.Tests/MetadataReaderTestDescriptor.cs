@@ -257,7 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     IEnumerable<EdmError> errors;
 
-                    if (!CsdlWriter.TryWriteCsdl(this.PayloadEdmModel, xmlWriter, CsdlTarget.OData, out errors))
+                    if (!CsdlWriter.TryWriteCsdl(this.PayloadEdmModel, xmlWriter, CsdlTarget.OData, new Uri("http://www.test.com"), out errors))
                     {
                         var errorBuilder = new StringBuilder();
 

@@ -205,7 +205,7 @@ namespace EdmLibTests.FunctionalTests
 
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
-                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, new Uri("http://www.test.com"), out errors);
                 xw.Close();
 
                 parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -255,7 +255,7 @@ namespace EdmLibTests.FunctionalTests
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 model.SetEdmxVersion(CsdlConstants.EdmxVersionLatest);
-                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, new Uri("http://www.test.com"), out errors);
                 xw.Close();
 
                 parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -305,7 +305,7 @@ namespace EdmLibTests.FunctionalTests
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 model.SetEdmxVersion(CsdlConstants.EdmxVersionLatest);
-                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, new Uri("http://www.test.com"), out errors);
                 xw.Close();
 
                 parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -389,7 +389,7 @@ namespace EdmLibTests.FunctionalTests
                 model.SetEdmxVersion(new Version(1, 123));
                 try
                 {
-                    CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+                    CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, new Uri("http://www.test.com"), out errors);
                 }
                 catch (Exception e)
                 {

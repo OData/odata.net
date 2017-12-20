@@ -102,7 +102,7 @@ namespace Microsoft.OData
             this.AssertSynchronous();
 
             IEnumerable<EdmError> errors;
-            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, out errors))
+            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, MessageWriterSettings.MetadataDocumentUri, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 

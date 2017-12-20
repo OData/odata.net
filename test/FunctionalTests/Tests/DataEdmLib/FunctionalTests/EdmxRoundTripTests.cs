@@ -272,7 +272,7 @@ namespace EdmLibTests.FunctionalTests
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
                     IEnumerable<EdmError> errors;
-                    CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
+                    CsdlWriter.TryWriteCsdl(model, xw, target, new Uri("http://www.test.com"), out errors);
                     xw.Flush();
                 }
 
