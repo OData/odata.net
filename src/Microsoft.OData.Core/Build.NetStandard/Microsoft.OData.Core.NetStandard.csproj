@@ -980,6 +980,9 @@
     <Compile Include="..\TypeUtils.cs">
       <Link>TypeUtils.cs</Link>
     </Compile>
+    <Compile Include="..\DependsOnIdsTracker.cs">
+      <Link>DependsOnIdsTracker.cs</Link>
+    </Compile>    
     <Compile Include="..\UnknownEntitySet.cs">
       <Link>UnknownEntitySet.cs</Link>
     </Compile>

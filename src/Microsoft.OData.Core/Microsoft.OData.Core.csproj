@@ -45,6 +45,7 @@
     <Compile Include="AnnotationFilterPattern.cs" />
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
+    <Compile Include="DependsOnIdsTracker.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchAtomicGroupCache.cs" />

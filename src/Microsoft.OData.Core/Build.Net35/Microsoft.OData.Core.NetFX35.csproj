@@ -880,6 +880,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\TypeUtils.cs">
       <Link>Microsoft\OData\Core\TypeUtils.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\DependsOnIdsTracker.cs">
+      <Link>Microsoft\OData\Core\DependsOnIdsTracker.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\BinaryOperatorBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\BinaryOperatorBinder.cs</Link>
     </Compile>

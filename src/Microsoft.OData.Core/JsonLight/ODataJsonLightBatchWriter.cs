@@ -345,7 +345,7 @@ namespace Microsoft.OData.JsonLight
             // create the new request operation
             this.CurrentOperationRequestMessage = BuildOperationRequestMessage(
                 this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId,
-                this.atomicityGroupId, dependsOnIds, ODataFormat.Json);
+                this.atomicityGroupId, dependsOnIds, /*dependsOnIdsValidationRequired*/ true);
 
             this.SetState(BatchWriterState.OperationCreated);
 
