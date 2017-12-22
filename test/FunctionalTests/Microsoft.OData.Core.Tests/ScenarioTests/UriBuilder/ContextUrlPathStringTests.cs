@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri queryUri = new Uri("GetSomeAddress/City", UriKind.Relative);
             string res = this.GetContextUrlPathString(queryUri);
             Assert.Equal("City", res);
-        }
+        }       
 
         [Fact]
         public void ContextUrlPathWithEntityServiceOperationIsComposable()
@@ -51,6 +51,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri queryUri = new Uri("GetCoolestPerson/Fully.Qualified.Namespace.Employee", UriKind.Relative);
             string res = this.GetContextUrlPathString(queryUri);
             Assert.Equal("Fully.Qualified.Namespace.Employee", res);
+        }
+
+        [Theory]
+        [InlineData("People(1)/Fully.Qualified.Namespace.GetSomeAddressFromPerson()/Street")]
+        [InlineData("People(1)/Fully.Qualified.Namespace.GetSomeAddressFromPerson/Street")]
+        public void ContextUrlPathWithComplexPropertyAccessAfterOperationIsComposable(string uri)
+        {
+            Uri queryUri = new Uri(uri, UriKind.Relative);
+            string res = this.GetContextUrlPathString(queryUri);
+            Assert.Equal("People(1)/Fully.Qualified.Namespace.GetSomeAddressFromPerson/Street", res);
         }
 
         #region private methods
@@ -62,6 +72,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataPath odataPath = odataUri.Path;
            return odataPath.ToContextUrlPathString();
         }
-        #endregion  
+        #endregion
     }
 }

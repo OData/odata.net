@@ -215,7 +215,8 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            return null;
+                            // See github issue: https://github.com/OData/odata.net/issues/1022
+                            pathString.Append(segment.TranslateWith(pathTranslator));
                         }
                     }
                 }
