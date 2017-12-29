@@ -177,52 +177,72 @@ namespace Microsoft.OData.UriParser
             StringBuilder pathString = new StringBuilder();
             PathSegmentToContextUrlPathTranslator pathTranslator = PathSegmentToContextUrlPathTranslator.DefaultInstance;
             ODataPathSegment priorSegment = null;
+            bool findOperationWithoutPath = false;
             foreach (ODataPathSegment segment in path)
             {
                 OperationSegment operationSegment = segment as OperationSegment;
-                if (operationSegment != null)
+                OperationImportSegment operationImportSegment = segment as OperationImportSegment;
+                if (operationImportSegment != null)
                 {
-                    bool isBoundPath = false;
+                    IEdmOperationImport operationImport = operationImportSegment.OperationImports.FirstOrDefault();
+                    Debug.Assert(operationImport != null);
 
-                    if (priorSegment != null)
+                    EdmPathExpression pathExpression = operationImport.EntitySet as EdmPathExpression;
+                    if (pathExpression != null)
                     {
-                        foreach (IEdmOperation operation in operationSegment.Operations)
+                        Debug.Assert(priorSegment == null); // operation import is always the first segment?
+                        pathString.Append(pathExpression.Path);
+                    }
+                    else
+                    {
+                        pathString = operationImport.Operation.ReturnType != null ?
+                                new StringBuilder(operationImport.Operation.ReturnType.FullName()) :
+                                new StringBuilder("Edm.Untyped");
+
+                        findOperationWithoutPath = true;
+                    }
+                }
+                else if (operationSegment != null)
+                {
+                    IEdmOperation operation = operationSegment.Operations.FirstOrDefault();
+                    Debug.Assert(operation != null);
+
+                    if (operation.IsBound &&
+                        priorSegment != null &&
+                        operation.Parameters.First().Type.Definition == priorSegment.EdmType)
+                    {
+                        if (operation.EntitySetPath != null)
                         {
-                            if (operation.IsBound && operation.Parameters.First().Type.Definition == priorSegment.EdmType)
+                            foreach (string pathSegment in operation.EntitySetPath.PathSegments.Skip(1))
                             {
-                                if (operation.EntitySetPath != null)
-                                {
-                                    foreach (string pathSegment in operation.EntitySetPath.PathSegments.Skip(1))
-                                    {
-                                        pathString.Append('/');
-                                        pathString.Append(pathSegment);
-                                    }
-
-                                    isBoundPath = true;
-                                }
-
-                                break;
+                                pathString.Append('/');
+                                pathString.Append(pathSegment);
                             }
                         }
-                    }
-
-                    if (!isBoundPath)
-                    {
-                        if (operationSegment.EntitySet != null)
+                        else if (operationSegment.EntitySet != null) // Is it correct to check EntitySet?
                         {
-                            pathString = new StringBuilder();
-                            pathString.Append(operationSegment.EntitySet.Name);
+                            pathString = new StringBuilder(operationSegment.EntitySet.Name);
                         }
                         else
                         {
-                            // See github issue: https://github.com/OData/odata.net/issues/1022
-                            pathString.Append(segment.TranslateWith(pathTranslator));
+                            pathString = operation.ReturnType != null ?
+                                new StringBuilder(operation.ReturnType.FullName()) :
+                                new StringBuilder("Edm.Untyped");
+
+                            findOperationWithoutPath = true;
                         }
                     }
                 }
                 else
                 {
-                    pathString.Append(segment.TranslateWith(pathTranslator));
+                    if (findOperationWithoutPath)
+                    {
+                        pathString = new StringBuilder(segment.EdmType.FullTypeName());
+                    }
+                    else
+                    {
+                        pathString.Append(segment.TranslateWith(pathTranslator));
+                    }
                 }
 
                 priorSegment = segment;
