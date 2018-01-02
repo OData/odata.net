@@ -177,7 +177,7 @@ namespace Microsoft.OData.UriParser
             StringBuilder pathString = new StringBuilder();
             PathSegmentToContextUrlPathTranslator pathTranslator = PathSegmentToContextUrlPathTranslator.DefaultInstance;
             ODataPathSegment priorSegment = null;
-            bool findOperationWithoutPath = false;
+            bool foundOperationWithoutPath = false;
             foreach (ODataPathSegment segment in path)
             {
                 OperationSegment operationSegment = segment as OperationSegment;
@@ -199,7 +199,7 @@ namespace Microsoft.OData.UriParser
                                 new StringBuilder(operationImport.Operation.ReturnType.FullName()) :
                                 new StringBuilder("Edm.Untyped");
 
-                        findOperationWithoutPath = true;
+                        foundOperationWithoutPath = true;
                     }
                 }
                 else if (operationSegment != null)
@@ -229,15 +229,16 @@ namespace Microsoft.OData.UriParser
                                 new StringBuilder(operation.ReturnType.FullName()) :
                                 new StringBuilder("Edm.Untyped");
 
-                            findOperationWithoutPath = true;
+                            foundOperationWithoutPath = true;
                         }
                     }
                 }
                 else
                 {
-                    if (findOperationWithoutPath)
+                    if (foundOperationWithoutPath)
                     {
                         pathString = new StringBuilder(segment.EdmType.FullTypeName());
+                        foundOperationWithoutPath = false;
                     }
                     else
                     {
