@@ -87,15 +87,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal("NS.Address", res);
         }
 
-        [Fact(Skip = "Need to verify with Mike")]
-        public void ContextUrlPathWithOperationWithEntitySetPathAndComplexReturnType()
-        {
-            IEdmModel model = GetEdmModel();
-            Uri queryUri = new Uri("Customers(1)/NS.GetSomeAddressFromCustomer2", UriKind.Relative);
-            string res = this.GetContextUrlPathString(model, queryUri);
-            Assert.Equal("Customers(1)/HomeAddress", res);
-        }
-
         [Fact]
         public void ContextUrlPathWithPropertyAccessAfterOperationWithoutEntitySetPathAndComplexReturnType()
         {
@@ -105,13 +96,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal("Edm.String", res);
         }
 
-        [Fact(Skip = "Need to verify with Mike")]
-        public void ContextUrlPathWithPropertyAccessOperationWithEntitySetPathAndComplexReturnType()
+        [Fact]
+        public void ContextUrlPathWithPropertyAccessOperationWithEntitySetPathAndComplexReturnTypeThrows()
         {
             IEdmModel model = GetEdmModel();
             Uri queryUri = new Uri("Customers(1)/NS.GetSomeAddressFromCustomer4/City", UriKind.Relative);
-            string res = this.GetContextUrlPathString(model, queryUri);
-            Assert.Equal("Customers(1)/Orders/City", res);
+            Action test = () => GetContextUrlPathString(model, queryUri);
+            ODataException ode = Assert.Throws<ODataException>(test);
+            Assert.Equal("The return type from the operation is not possible with the given entity set.", ode.Message);
         }
 
         [Fact]
@@ -228,6 +220,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             function.AddParameter("binding", new EdmEntityTypeReference(customer, true));
             model.AddElement(function);
 
+            // We leave the "GetSomeAddressFromCustomer2" code here.
+            // However, the operation with the entity set path containing a complex type doesn't make sense.
             IEdmPathExpression complexPath = new EdmPathExpression("binding/HomeAddress");
             function = new EdmFunction("NS", "GetSomeAddressFromCustomer2", new EdmComplexTypeReference(address, true), true, complexPath, true /*isComposable*/);
             function.AddParameter("binding", new EdmEntityTypeReference(customer, true));
