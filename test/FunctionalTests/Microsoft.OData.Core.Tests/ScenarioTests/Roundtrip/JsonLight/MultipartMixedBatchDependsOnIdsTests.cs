@@ -20,16 +20,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class MultipartMixedBatchDependsOnIdsTests
     {
-        private enum BatchFormat
-        {
-            MultipartMIME,
-            ApplicationJson
-        };
-
         private const string batchContentTypeMultipartMime = "multipart/mixed; boundary=batch_cb48b61f-511b-48e6-b00a-77c847badfb9";
-        private const string serviceDocumentUri = "http://odata.org/test/";
-        private const string multipartMixedBatchRequestDependencyShouldBeNull =
-            "For Multipart/Mixed batch format, request dependency is implicit by the protocol and should be null.";
         private readonly EdmEntityContainer defaultContainer;
         private readonly EdmModel userModel;
         private readonly EdmSingleton singleton;
@@ -178,29 +169,6 @@ Content-Type: application/json;odata.metadata=none
             ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
         }
 
-        [Fact]
-        public void MultipartBatchWriterCreateOperationMessageWithNonNullDependsOnIdsShouldThrow()
-        {
-            MemoryStream stream = new MemoryStream();
-
-            IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
-            requestMessage.SetHeader("Content-Type", batchContentTypeMultipartMime);
-
-            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage,
-                new ODataMessageWriterSettings()))
-            {
-                ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
-
-                batchWriter.WriteStartBatch();
-
-                // Write a query operation.
-                ODataException ode = Assert.Throws<ODataException>( () => batchWriter.CreateOperationRequestMessage(
-                    "GET", new Uri(serviceDocumentUri + "MySingleton"), "1", BatchPayloadUriOption.AbsoluteUri, new[] {"cannotSpecifyId"}));
-
-                Assert.True(ode.Message.Equals(multipartMixedBatchRequestDependencyShouldBeNull));
-
-            }
-        }
         private void VerifyPayloadForMultipartBatch(byte[] payloadBytes, string expectedPayload)
         {
             using (MemoryStream stream = new MemoryStream(payloadBytes))

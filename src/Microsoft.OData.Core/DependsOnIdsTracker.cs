@@ -18,7 +18,7 @@ namespace Microsoft.OData
         /// <summary>
         /// List of top-level dependsOn ids seen so far.
         /// </summary>
-        private readonly IList<string> topLevelDepeondsOnIds;
+        private readonly IList<string> topLevelDependsOnIds;
 
         /// <summary>
         /// List of depeondsOn ids seen so far in current change set.
@@ -37,7 +37,7 @@ namespace Microsoft.OData
         /// </summary>
         internal DependsOnIdsTracker()
         {
-            this.topLevelDepeondsOnIds = new List<string>();
+            this.topLevelDependsOnIds = new List<string>();
             this.changeSetDependsOnIds = new List<string>();
             this.isInChangeSet = false;
         }
@@ -74,7 +74,7 @@ namespace Microsoft.OData
             }
             else
             {
-                this.topLevelDepeondsOnIds.Add(id);
+                this.topLevelDependsOnIds.Add(id);
             }
         }
 
@@ -84,7 +84,7 @@ namespace Microsoft.OData
         /// <returns>The read-only list of dependsOn ids for the current batch operation request.</returns>
         internal IEnumerable<string> GetDependsOnIds()
         {
-            return isInChangeSet ? this.changeSetDependsOnIds : this.topLevelDepeondsOnIds;
+            return isInChangeSet ? this.changeSetDependsOnIds : this.topLevelDependsOnIds;
         }
     }
 }
