@@ -216,31 +216,26 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <param name="payloadUriOption">
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
-        /// <param name="dependsOnIds">The prerequisite request ids of this request. It should be null for Multipart/Mixed format
-        /// and, therefore, validation will pass automatically.</param>
+        /// <param name="dependsOnIds">The prerequisite request ids of this request. By default its value should be null for Multipart/Mixed
+        /// format and the dependsOnIds implicitly derived per the protocol will be used; Otherwise, non-null will be used as override after
+        /// validation.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(
             string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption,
             IEnumerable<string> dependsOnIds)
         {
-            if (dependsOnIds != null)
-            {
-                throw new ODataException(
-                    "For Multipart/Mixed batch format, request dependency is implicit by the protocol and should be null.");
-            }
-
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
             // create the new request operation
-            // For Multipart batch format, dependsOnIds is implicitly derived from batch message itself and is not
-            // user input, therefore no validation is needed.
+            // For Multipart batch format, validate dependsOnIds if it is user explicit input, otherwise skip validation
+            // when it is implicitly derived per protocol.
             ODataBatchOperationRequestMessage operationRequestMessage = BuildOperationRequestMessage(
                 this.RawOutputContext.OutputStream,
                 method, uri, contentId,
                 ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.changeSetBoundary),
-                this.dependsOnIdsTracker.GetDependsOnIds(),
-                /*dependsOnIdsValidationRequired*/ false);
+                dependsOnIds?? this.dependsOnIdsTracker.GetDependsOnIds(),
+                /*dependsOnIdsValidationRequired*/ dependsOnIds != null);
 
             this.SetState(BatchWriterState.OperationCreated);
 
