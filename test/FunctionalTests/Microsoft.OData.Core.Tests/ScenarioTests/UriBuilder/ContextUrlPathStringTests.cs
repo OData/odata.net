@@ -97,16 +97,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
-        public void ContextUrlPathWithPropertyAccessOperationWithEntitySetPathAndComplexReturnTypeThrows()
-        {
-            IEdmModel model = GetEdmModel();
-            Uri queryUri = new Uri("Customers(1)/NS.GetSomeAddressFromCustomer4/City", UriKind.Relative);
-            Action test = () => GetContextUrlPathString(model, queryUri);
-            ODataException ode = Assert.Throws<ODataException>(test);
-            Assert.Equal("The return type from the operation is not possible with the given entity set.", ode.Message);
-        }
-
-        [Fact]
         public void ContextUrlPathWithOperationWithOutEntitySetPathWithoutReturnType()
         {
             IEdmModel model = GetEdmModel();
@@ -228,10 +218,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             model.AddElement(function);
 
             function = new EdmFunction("NS", "GetSomeAddressFromCustomer3", new EdmComplexTypeReference(address, true), true, null, true /*isComposable*/);
-            function.AddParameter("binding", new EdmEntityTypeReference(customer, true));
-            model.AddElement(function);
-
-            function = new EdmFunction("NS", "GetSomeAddressFromCustomer4", new EdmComplexTypeReference(address, true), true, path, true /*isComposable*/);
             function.AddParameter("binding", new EdmEntityTypeReference(customer, true));
             model.AddElement(function);
 
