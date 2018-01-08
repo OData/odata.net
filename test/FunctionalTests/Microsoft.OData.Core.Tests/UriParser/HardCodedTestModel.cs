@@ -592,9 +592,9 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespaceGetSomeAddressAction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeAddress", FullyQualifiedNamespaceAddressTypeReference, false, null, true /*isComposable*/);
             model.AddElement(FullyQualifiedNamespaceGetSomeAddressAction);
 
-            var FullyQualifiedNamespaceGetSomeAddressFromPersoFunction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeAddressFromPerson", FullyQualifiedNamespaceAddressTypeReference, true, null, true /*isComposable*/);
-            FullyQualifiedNamespaceGetSomeAddressFromPersoFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
-            model.AddElement(FullyQualifiedNamespaceGetSomeAddressFromPersoFunction);
+            var FullyQualifiedNamespaceGetSomeAddressFromPersonFunction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeAddressFromPerson", FullyQualifiedNamespaceAddressTypeReference, true, null, true /*isComposable*/);
+            FullyQualifiedNamespaceGetSomeAddressFromPersonFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            model.AddElement(FullyQualifiedNamespaceGetSomeAddressFromPersonFunction);
 
             var FullyQualifiedNamespaceGetSomeNumbersAction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeNumbers", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(true))), false, null, true /*isComposable*/);
             model.AddElement(FullyQualifiedNamespaceGetSomeNumbersAction);
