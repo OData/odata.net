@@ -463,6 +463,67 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                 });
         }
 
+        [Fact]
+        public void ValidationShouldFailIfEnumMemberIsSpecifiedButCannotBeFound()
+        {
+            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.UnknowColor/Blue</EnumMember>");
+            IEnumerable<EdmError> errors;
+            model.Validate(out errors).Should().BeFalse();
+            errors.Should().HaveCount(1);
+            errors.Should().Contain(e => e.ErrorCode == EdmErrorCode.BadUnresolvedEnumMember && e.ErrorMessage == ErrorStrings.Bad_UnresolvedEnumMember("Blue"));
+        }
+
+        [Fact]
+        public void ValidationShouldFailIfEnumMemberIsSpecifiedButCannotBeFoundTheMember()
+        {
+            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.Color/Yellow</EnumMember>");
+            IEnumerable<EdmError> errors;
+            model.Validate(out errors).Should().BeFalse();
+            errors.Should().HaveCount(2);
+            errors.Should().Contain(e => e.ErrorCode == EdmErrorCode.InvalidEnumMemberPath &&
+            e.ErrorMessage == ErrorStrings.CsdlParser_InvalidEnumMemberPath("TestNS2.Color/Yellow"));
+        }
+
+        [Fact]
+        public void ValidationShouldSuccessIfEnumMemberIsSpecifiedWithCorrectType()
+        {
+            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.Color/Blue</EnumMember>");
+            IEnumerable<EdmError> errors;
+            model.Validate(out errors).Should().BeTrue();
+        }
+
+        private IEdmModel GetEdmModel(string bindingText)
+        {
+            const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""Test"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""EntityType"">
+        <Key>
+          <PropertyRef Name=""ID""/>
+        </Key>
+        <Property Name=""ID"" Nullable=""false"" Type=""Edm.Int32""/>
+        <Annotation Term=""TestNS.OutColor"">
+          {0}
+        </Annotation>
+      </EntityType>
+      <Term Name=""OutColor"" Type=""TestNS2.Color"" />
+    </Schema>
+    <Schema Namespace=""TestNS2"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EnumType Name=""Color"" IsFlags=""true"">
+        <Member Name=""Cyan"" Value=""1"" />
+        <Member Name=""Blue"" Value=""2"" />
+      </EnumType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+            string modelText = string.Format(template, bindingText);
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            return model;
+        }
+
         private void ValidateBindingWithExpectedErrors(string bindingText, EdmErrorCode errorCode, params string[] messages)
         {
             const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
