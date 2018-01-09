@@ -255,7 +255,7 @@ UnknownEnumVal_SchemaElementKind=Invalid schema element kind: '{0}'
 UnknownEnumVal_TypeKind=Invalid type kind: '{0}'
 UnknownEnumVal_PrimitiveKind=Invalid primitive kind: '{0}'
 UnknownEnumVal_ContainerElementKind=Invalid container element kind: '{0}'
-UnknownEnumVal_EdmxTarget=Invalid edmx target: '{0}'
+UnknownEnumVal_CsdlTarget=Invalid CSDL target: '{0}'
 UnknownEnumVal_PropertyKind=Invalid property kind: '{0}'
 UnknownEnumVal_ExpressionKind=Invalid expression kind: '{0}'
 
