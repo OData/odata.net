@@ -1303,6 +1303,11 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// A required parameter followed an optional parameter.
         /// </summary>
-        RequiredParametersMustPrecedeOptional = 379
+        RequiredParametersMustPrecedeOptional = 379,
+
+        /// <summary>
+        /// The enum type is not valid for the requested type.
+        /// </summary>
+        ExpressionEnumKindNotValidForAssertedType = 380,
     }
 }

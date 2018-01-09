@@ -911,6 +911,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The enum expression is not compatible with the asserted type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType);
+            }
+        }
+
+        /// <summary>
         /// A string like "The value of the integer constant is out of range for the asserted type."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_IntegerConstantValueOutOfRange {
