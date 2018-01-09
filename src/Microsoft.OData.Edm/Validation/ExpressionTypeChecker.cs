@@ -488,7 +488,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool TryCastEnumConstantAsType(IEdmEnumMemberExpression expression, IEdmTypeReference type, bool matachExactly, out IEnumerable<EdmError> discoveredErrors)
+        private static bool TryCastEnumConstantAsType(IEdmEnumMemberExpression expression, IEdmTypeReference type, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
         {
             if (!type.IsEnum())
             {
@@ -503,7 +503,7 @@ namespace Microsoft.OData.Edm.Validation
 
             foreach (var member in expression.EnumMembers)
             {
-                if (!TestTypeMatch(member.DeclaringType, type.Definition, expression.Location(), matachExactly, out discoveredErrors))
+                if (!TestTypeMatch(member.DeclaringType, type.Definition, expression.Location(), matchExactly, out discoveredErrors))
                 {
                     return false;
                 }

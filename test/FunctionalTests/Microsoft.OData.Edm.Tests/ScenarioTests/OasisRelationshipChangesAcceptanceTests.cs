@@ -466,7 +466,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void ValidationShouldFailIfEnumMemberIsSpecifiedButCannotBeFound()
         {
-            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.UnknowColor/Blue</EnumMember>");
+            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.UnknownColor/Blue</EnumMember>");
             IEnumerable<EdmError> errors;
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(1);
@@ -476,12 +476,12 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void ValidationShouldFailIfEnumMemberIsSpecifiedButCannotBeFoundTheMember()
         {
-            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.Color/Yellow</EnumMember>");
+            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.Color/UnknownMember</EnumMember>");
             IEnumerable<EdmError> errors;
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(2);
             errors.Should().Contain(e => e.ErrorCode == EdmErrorCode.InvalidEnumMemberPath &&
-            e.ErrorMessage == ErrorStrings.CsdlParser_InvalidEnumMemberPath("TestNS2.Color/Yellow"));
+            e.ErrorMessage == ErrorStrings.CsdlParser_InvalidEnumMemberPath("TestNS2.Color/UnknownMember"));
         }
 
         [Fact]
