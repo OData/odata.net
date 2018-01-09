@@ -126,6 +126,7 @@ EdmModel_Validator_Semantic_DuplicateAnnotation=The annotated element '{0}' has 
 EdmModel_Validator_Semantic_IncorrectNumberOfArguments=The function application provides '{0}' arguments, but the function '{1}' expects '{2}' arguments.
 EdmModel_Validator_Semantic_DuplicateEntityContainerName=Each entity container name in a function must be unique. The name '{0}' is already defined.
 EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType=The primitive expression is not compatible with the asserted type.
+EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType=The enum expression is not compatible with the asserted type.
 EdmModel_Validator_Semantic_IntegerConstantValueOutOfRange=The value of the integer constant is out of range for the asserted type.
 EdmModel_Validator_Semantic_StringConstantLengthOutOfRange=The value of the string constant is '{0}' characters long, but the max length of its type is '{1}'.
 EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange=The value of the binary constant is '{0}' characters long, but the max length of its type is '{1}'.
