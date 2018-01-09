@@ -35,6 +35,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="resource"/>.
+        /// </summary>
+        /// <param name="resource">The instance to set the serialization info.</param>
+        /// <param name="serializationInfo">The serialization info to set.</param>
+        public static void SetSerializationInfo(this ODataResource resource, ODataResourceSerializationInfo serializationInfo)
+        {
+            ExceptionUtils.CheckArgumentNotNull(resource, "resource");
+            resource.SerializationInfo = serializationInfo;
+        }
+
+        /// <summary>
         /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="nestedResourceInfo"/>.
         /// </summary>
         /// <param name="nestedResourceInfo">The instance to set the serialization info.</param>
