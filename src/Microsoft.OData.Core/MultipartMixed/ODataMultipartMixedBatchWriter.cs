@@ -208,6 +208,18 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
+        /// Given an enumerable of dependsOnIds, return an enumeration of equivalent request ids.
+        /// </summary>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        /// <returns>If <code>dependsOnIds</code> is null, this is the implicit case therefore returns
+        /// an enumerable consists of request id from the <code>dependsOnIdsTracker</code>;
+        /// otherwise, this is explicit case therefore returns value passed in directly.</returns>
+        protected override IEnumerable<string> GetDependsOnRequestIds(IEnumerable<string> dependsOnIds)
+        {
+            return dependsOnIds ?? this.dependsOnIdsTracker.GetDependsOnIds();
+        }
+
+        /// <summary>
         /// Creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request
         /// - implementation of the actual functionality.
         /// </summary>
@@ -234,8 +246,7 @@ namespace Microsoft.OData.MultipartMixed
                 this.RawOutputContext.OutputStream,
                 method, uri, contentId,
                 ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.changeSetBoundary),
-                dependsOnIds?? this.dependsOnIdsTracker.GetDependsOnIds(),
-                /*dependsOnIdsValidationRequired*/ dependsOnIds != null);
+                dependsOnIds);
 
             this.SetState(BatchWriterState.OperationCreated);
 

@@ -512,16 +512,12 @@ namespace Microsoft.OData
         protected abstract void WriteStartBatchImplementation();
 
         /// <summary>
-        /// Given an enumerable of dependsOn ids containing request ids and group ids, convert the group ids
-        /// into associated request ids.
-        /// Base class implementation is provided here as default implementation for multipart batch writer.
+        /// Given an enumerable of dependsOn ids containing request ids and group ids, return an enumeration
+        /// of equivalent request ids.
         /// </summary>
         /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
         /// <returns>An enumerable consists of request ids.</returns>
-        protected virtual IEnumerable<string> GetDependsOnRequestIds(IEnumerable<string> dependsOnIds)
-        {
-            return dependsOnIds;
-        }
+        protected abstract IEnumerable<string> GetDependsOnRequestIds(IEnumerable<string> dependsOnIds);
 
         /// <summary>
         /// Wrapper method to create an operation request message that can be used to write the operation content to, utilizing
@@ -533,19 +529,18 @@ namespace Microsoft.OData
         /// <param name="contentId">The contentId of this request message.</param>
         /// <param name="groupId">The group id that this request belongs to. Can be null.</param>
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
-        /// <param name="dependsOnIdsValidationRequired">Whether the <code>dependsOnIds</code> value needs to be validated.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to write the request content to.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(Stream outputStream, string method, Uri uri,
-            string contentId, string groupId, IEnumerable<string> dependsOnIds, bool dependsOnIdsValidationRequired)
+            string contentId, string groupId, IEnumerable<string> dependsOnIds)
         {
-            IEnumerable<string> flattenDependsOnIds = dependsOnIds == null
-                ? null
-                : GetDependsOnRequestIds(dependsOnIds);
+            IEnumerable<string> convertedDependsOnIds = GetDependsOnRequestIds(dependsOnIds);
+            Debug.Assert(convertedDependsOnIds != null, "convertedDependsOnIds != null");
 
-            if (flattenDependsOnIds != null && dependsOnIdsValidationRequired)
+            if (dependsOnIds != null)
             {
-                // Validate dependsOn ids in Json batch.
-                foreach (string id in flattenDependsOnIds)
+                // Validate explicit dependsOnIds cases, which include all cases for JSON batch
+                // plus explicit dependsOnIds case for Multipart batch.
+                foreach (string id in convertedDependsOnIds)
                 {
                     if (!this.payloadUriConverter.ContainsContentId(id))
                     {
@@ -554,7 +549,7 @@ namespace Microsoft.OData
                 }
             }
 
-            ODataBatchUtils.ValidateReferenceUri(uri, flattenDependsOnIds, this.outputContext.MessageWriterSettings.BaseUri);
+            ODataBatchUtils.ValidateReferenceUri(uri, convertedDependsOnIds, this.outputContext.MessageWriterSettings.BaseUri);
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
             ODataBatchOperationRequestMessage requestMessage =
