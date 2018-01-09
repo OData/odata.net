@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.MultipartMixed;
-
 namespace Microsoft.OData
 {
     #region Namespaces
