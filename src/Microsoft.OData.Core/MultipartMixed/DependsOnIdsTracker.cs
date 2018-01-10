@@ -1,14 +1,14 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="DependsOnIdsTracker.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData
-{
-    using System.Collections.Generic;
-    using System.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics;
 
+namespace Microsoft.OData.MultipartMixed
+{
     /// <summary>
     /// This class is to keep track of dependsOn ids and associated change set state,
     /// and to return dependsOn ids pertaining to current state of the batch processing.

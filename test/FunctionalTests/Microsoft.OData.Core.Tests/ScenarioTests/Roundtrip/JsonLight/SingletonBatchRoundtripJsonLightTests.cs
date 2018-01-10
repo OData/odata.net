@@ -825,6 +825,31 @@ Content-Type: application/json;odata.metadata=none
         }
 
         [Fact]
+        public void MultipartBatchVerifyDependsOnIdsForTopLevelRequestV4()
+        {
+            // In V4, referencing preceding top-level request Id from another request
+            // after change set should throw.
+            string topLevelContentId = "1";
+
+            ODataException ode = Assert.Throws<ODataException>(
+                    () => ClientWriteRequestForMultipartBatchVerifyDependsOnIdsForTopLevelRequest(
+                        topLevelContentId, ODataVersion.V4));
+            Assert.True(ode.Message.Contains(referenceIdNotIncludedInDependsOn));
+        }
+
+        [Fact]
+        public void MultipartBatchVerifyDependsOnIdsForTopLevelRequestV401()
+        {
+            string topLevelContentId = "1";
+
+            byte[] requestBytes = ClientWriteRequestForMultipartBatchVerifyDependsOnIdsForTopLevelRequest(
+                topLevelContentId, ODataVersion.V401);
+
+            Assert.NotNull(requestBytes);
+            Assert.True(requestBytes.Length > 0);
+        }
+
+        [Fact]
         public void MultipartBatchImplicitTopLevelDependsOnIdsTest()
         {
             foreach (ODataVersion odataVersion in new[] {ODataVersion.V4, ODataVersion.V401 })
@@ -1015,6 +1040,22 @@ Content-Type: application/json;odata.metadata=none
             ODataException ode = Assert.Throws<ODataException>(
                 () => ClientWriteMuitipartChangesetsWithSameContentId(writerSettingsV401, batchContentTypeApplicationJson));
             Assert.Contains(expectedPartialErrorMesage, ode.Message);
+        }
+
+        private static void PopulateWebResourceId(ODataBatchOperationRequestMessage dataModificationRequestMessage, int webId)
+        {
+            // Use a new message writer to write the body of this operation.
+            using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(dataModificationRequestMessage))
+            {
+                ODataWriter entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                ODataResource entry = new ODataResource
+                {
+                    TypeName = "NS.Web",
+                    Properties = new[] { new ODataProperty { Name = "WebId", Value = webId } }
+                };
+                entryWriter.WriteStart(entry);
+                entryWriter.WriteEnd();
+            }
         }
 
         private void BatchJsonLightTestUsingBatchFormat(BatchFormat batchFormat, int idx)
@@ -1745,7 +1786,7 @@ Content-Type: application/json;odata.metadata=none
             }
         }
 
-        private byte[] ClientWriteRequestForMultipartBatchVerifyDependsOnIds(string contendIdRef, ODataVersion version)
+        private byte[] ClientWriteRequestForMultipartBatchVerifyDependsOnIds(string contentIdRef, ODataVersion version)
         {
             MemoryStream stream = new MemoryStream();
 
@@ -1808,7 +1849,7 @@ Content-Type: application/json;odata.metadata=none
                         entryWriter.WriteEnd();
                     }
 
-                    Uri referenceUri = new Uri("$" + contendIdRef, UriKind.Relative);
+                    Uri referenceUri = new Uri("$" + contentIdRef, UriKind.Relative);
                     updateOperationMessage = batchWriter.CreateOperationRequestMessage("PATCH", referenceUri, "2C",
                         BatchPayloadUriOption.RelativeUri);
 
@@ -1855,6 +1896,61 @@ Content-Type: application/json;odata.metadata=none
                 // Header modification on inner payload.
                 queryOperationMessage.SetHeader("Accept", "application/json;odata.metadata=full");
                 Assert.NotNull(queryOperationMessage.ContentId);
+
+                batchWriter.WriteEndBatch();
+
+                stream.Position = 0;
+                return stream.ToArray();
+            }
+        }
+
+        private byte[] ClientWriteRequestForMultipartBatchVerifyDependsOnIdsForTopLevelRequest(string contentIdRef, ODataVersion version)
+        {
+            // Batch consists of one top-level request, one change set, and one more top-level request referencing the first top-level request.
+            MemoryStream stream = new MemoryStream();
+
+            IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
+            requestMessage.SetHeader("Content-Type", batchContentTypeMultipartMime);
+
+            using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage,
+                new ODataMessageWriterSettings
+                {
+                    Version = version,
+                    BaseUri = new Uri(serviceDocumentUri)
+                }))
+            {
+                ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
+
+                batchWriter.WriteStartBatch();
+
+                // A create operation.
+                ODataBatchOperationRequestMessage createOperationMessage =
+                    batchWriter.CreateOperationRequestMessage("POST", new Uri(serviceDocumentUri + "MySingleton"), contentIdRef);
+                PopulateWebResourceId(createOperationMessage, 8);
+
+                // Header modification on inner payload.
+//                createOperationMessage.SetHeader("Accept", "application/json;odata.metadata=full");
+                Assert.NotNull(createOperationMessage.ContentId);
+
+                // A change set with multi update operation.
+                batchWriter.WriteStartChangeset();
+                {
+                    // Create a update operation in the change set.
+                    ODataBatchOperationRequestMessage updateOperationMessage =
+                        batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/MySingleton"), "2A" /*written*/);
+                    PopulateWebResourceId(updateOperationMessage, 9);
+                }
+                batchWriter.WriteEndChangeset();
+
+                // An update operation referencing the preceding create operation.
+                Uri referenceUri = new Uri("$" + contentIdRef, UriKind.Relative);
+                ODataBatchOperationRequestMessage topLevelOperationMessage =
+                    batchWriter.CreateOperationRequestMessage("PATCH", referenceUri, "3", BatchPayloadUriOption.AbsoluteUri );
+                PopulateWebResourceId(topLevelOperationMessage, 10);
+
+                // Header modification on inner payload.
+//                topLevelOperationMessage.SetHeader("Accept", "application/json;odata.metadata=full");
+                Assert.NotNull(topLevelOperationMessage.ContentId);
 
                 batchWriter.WriteEndBatch();
 

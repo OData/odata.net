@@ -509,6 +509,9 @@
     <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
       <Link>MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
     </Compile>    
+    <Compile Include="..\MultipartMixed\DependsOnIdsTracker.cs">
+      <Link>MultipartMixed\DependsOnIdsTracker.cs</Link>
+    </Compile>
     <Compile Include="..\NonDisposingStream.cs">
       <Link>NonDisposingStream.cs</Link>
     </Compile>
@@ -979,10 +982,7 @@
     </Compile>
     <Compile Include="..\TypeUtils.cs">
       <Link>TypeUtils.cs</Link>
-    </Compile>
-    <Compile Include="..\DependsOnIdsTracker.cs">
-      <Link>DependsOnIdsTracker.cs</Link>
-    </Compile>    
+    </Compile>  
     <Compile Include="..\UnknownEntitySet.cs">
       <Link>UnknownEntitySet.cs</Link>
     </Compile>

@@ -460,7 +460,7 @@ namespace Microsoft.OData
         /// Starts a new changeset.
         /// </summary>
         /// <param name="groupOrChangesetId">
-        /// The atomic group id (for Json batch) / changeset GUID (for Multipart/Mixed batch) of the batch request.
+        /// The atomic group id, aka changeset GUID of the batch request.
         /// </param>
         protected abstract void WriteStartChangesetImplementation(string groupOrChangesetId);
 
@@ -538,8 +538,7 @@ namespace Microsoft.OData
 
             if (dependsOnIds != null)
             {
-                // Validate explicit dependsOnIds cases, which include all cases for JSON batch
-                // plus explicit dependsOnIds case for Multipart batch.
+                // Validate explicit dependsOnIds cases.
                 foreach (string id in convertedDependsOnIds)
                 {
                     if (!this.payloadUriConverter.ContainsContentId(id))
@@ -549,7 +548,12 @@ namespace Microsoft.OData
                 }
             }
 
-            ODataBatchUtils.ValidateReferenceUri(uri, convertedDependsOnIds, this.outputContext.MessageWriterSettings.BaseUri);
+            // If dependsOnIds is not specified, use the <code>payloadUrlConverter</code>; otherwise use the dependOnIds converted
+            // from specified value.
+            IEnumerable<string> requestIdsForUrlReferenceValidation =
+                dependsOnIds == null ? this.payloadUriConverter.ContentIdCache : convertedDependsOnIds;
+
+            ODataBatchUtils.ValidateReferenceUri(uri, requestIdsForUrlReferenceValidation, this.outputContext.MessageWriterSettings.BaseUri);
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, this);
             ODataBatchOperationRequestMessage requestMessage =

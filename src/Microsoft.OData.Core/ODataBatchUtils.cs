@@ -211,7 +211,8 @@ namespace Microsoft.OData
                 if (dependsOnRequestIds == null || !dependsOnRequestIds.Contains(referenceId))
                 {
                     throw new ODataException(Strings.ODataBatchReader_ReferenceIdNotIncludedInDependsOn(
-                        referenceId, UriUtils.UriToString(uri), string.Join(",", dependsOnRequestIds.ToArray())));
+                        referenceId, UriUtils.UriToString(uri),
+                        dependsOnRequestIds != null ? string.Join(",", dependsOnRequestIds.ToArray()) : "null"));
                 }
             }
         }
