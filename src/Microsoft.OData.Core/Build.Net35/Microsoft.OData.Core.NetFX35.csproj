@@ -468,6 +468,9 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\DependsOnIdsTracker.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\DependsOnIdsTracker.cs</Link>
     </Compile>    
     <Compile Include="$(ODataCrossTargettingSourcePath)\NonDisposingStream.cs">
       <Link>Microsoft\OData\Core\NonDisposingStream.cs</Link>
@@ -879,9 +882,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\TypeUtils.cs">
       <Link>Microsoft\OData\Core\TypeUtils.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\DependsOnIdsTracker.cs">
-      <Link>Microsoft\OData\Core\DependsOnIdsTracker.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\BinaryOperatorBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\BinaryOperatorBinder.cs</Link>

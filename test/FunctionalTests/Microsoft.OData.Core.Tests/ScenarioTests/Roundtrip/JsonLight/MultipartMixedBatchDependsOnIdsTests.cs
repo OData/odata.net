@@ -150,7 +150,7 @@ Content-Type: application/json;odata.metadata=none
         }
 
         [Fact]
-        public void MultipartBatchTestWithTopLevelDependsOnIds()
+        public void MultipartBatchTestWithTopLevelDependsOnIdsV401()
         {
             string customizedValidRequest = Regex.Replace(RequestPayloadVerifyDependsOnIdsTemplate,
                 "__REF_URI_1__",
@@ -167,6 +167,27 @@ Content-Type: application/json;odata.metadata=none
             VerifyPayloadForMultipartBatch(responsePayload, ExpectedResponsePayloadVerifyDependsOnIds);
 
             ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
+        }
+
+        [Fact]
+        public void MultipartBatchTestWithTopLevelDependsOnIdsV4()
+        {
+            string customizedValidRequest = Regex.Replace(RequestPayloadVerifyDependsOnIdsTemplate,
+                "__REF_URI_1__",
+                "$2B",
+                RegexOptions.Multiline);
+
+            customizedValidRequest = Regex.Replace(customizedValidRequest,
+                "__REF_URI_2__",
+                "$1",
+                RegexOptions.Multiline);
+
+            // For V4 MultipartMixed batch, top-level request "3"'s url "/$1"(referencing a preceding top-level request "1")
+            // should trigger an exception because request reference scope is limited to change set in V4 implementation.
+            ODataException ode = Assert.Throws<ODataException>(
+                 () => this.ServiceReadRequestAndWriterResponseForMultipartBatchVerifyDependsOnIds(customizedValidRequest, ODataVersion.V4));
+            Assert.True(ode.Message.Contains(
+                 "When the relative URI is a reference to a content ID, the content ID does not exist in the current change set."));
         }
 
         private void VerifyPayloadForMultipartBatch(byte[] payloadBytes, string expectedPayload)
