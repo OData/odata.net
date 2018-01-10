@@ -2824,7 +2824,7 @@ namespace EdmLibTests.FunctionalTests
             edmModel.SetVocabularyAnnotation(annotation);
             var stream = new MemoryStream();
 
-            Assert.IsFalse(edmModel.Validate(out errors));
+            Assert.IsTrue(edmModel.Validate(out errors));
 
             using (var xw = XmlWriter.Create(stream, new XmlWriterSettings() { Indent = true }))
             {
@@ -2840,7 +2840,7 @@ namespace EdmLibTests.FunctionalTests
 
 
             Assert.IsTrue(CsdlReader.TryParse(XmlReader.Create(new StringReader(csdl)), out model, out errors), "parsed");
-            Assert.IsFalse(model.Validate(out validationErrors));
+            Assert.IsTrue(model.Validate(out validationErrors));
 
             TestEnumMember(model);
         }
@@ -2893,7 +2893,7 @@ namespace EdmLibTests.FunctionalTests
                     out model,
                     out errors),
                 "parsed");
-            Assert.IsFalse(model.Validate(out validationErrors));
+            Assert.IsTrue(model.Validate(out validationErrors));
 
             TestEnumMember(model);
         }
