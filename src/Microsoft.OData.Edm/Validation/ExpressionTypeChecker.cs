@@ -123,6 +123,8 @@ namespace Microsoft.OData.Edm.Validation
                     return TestTypeReferenceMatch(((IEdmCastExpression)expression).Type, type, expression.Location(), matchExactly, out discoveredErrors);
                 case EdmExpressionKind.LabeledExpressionReference:
                     return TryCast(((IEdmLabeledExpressionReferenceExpression)expression).ReferencedLabeledExpression, type, out discoveredErrors);
+                case EdmExpressionKind.EnumMember:
+                    return TryCastEnumConstantAsType((IEdmEnumMemberExpression)expression, type, matchExactly, out discoveredErrors);
                 default:
                     discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionNotValidForTheAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
                     return false;
@@ -480,6 +482,31 @@ namespace Microsoft.OData.Edm.Validation
             {
                 discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.BinaryConstantLengthOutOfRange, Edm.Strings.EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange(expression.Value.Length, binaryType.MaxLength.Value)) };
                 return false;
+            }
+
+            discoveredErrors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
+        private static bool TryCastEnumConstantAsType(IEdmEnumMemberExpression expression, IEdmTypeReference type, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        {
+            if (!type.IsEnum())
+            {
+                discoveredErrors = new EdmError[]
+                {
+                    new EdmError(expression.Location(),
+                    EdmErrorCode.ExpressionEnumKindNotValidForAssertedType,
+                    Edm.Strings.EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType)
+                };
+                return false;
+            }
+
+            foreach (var member in expression.EnumMembers)
+            {
+                if (!TestTypeMatch(member.DeclaringType, type.Definition, expression.Location(), matchExactly, out discoveredErrors))
+                {
+                    return false;
+                }
             }
 
             discoveredErrors = Enumerable.Empty<EdmError>();

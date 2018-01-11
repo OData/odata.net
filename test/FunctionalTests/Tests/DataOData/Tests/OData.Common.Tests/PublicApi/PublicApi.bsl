@@ -2861,6 +2861,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	EnumMemberMustHaveValue = 206
 	EnumMemberValueOutOfRange = 292
 	EnumMustHaveIntegerUnderlyingType = 351
+	ExpressionEnumKindNotValidForAssertedType = 380
 	ExpressionNotValidForTheAssertedType = 314
 	ExpressionPrimitiveKindNotValidForAssertedType = 312
 	FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = 373
@@ -4537,6 +4538,11 @@ public sealed class Microsoft.OData.ODataObjectModelExtensions {
 	ExtensionAttribute(),
 	]
 	public static void SetSerializationInfo (Microsoft.OData.ODataProperty property, Microsoft.OData.ODataPropertySerializationInfo serializationInfo)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static void SetSerializationInfo (Microsoft.OData.ODataResource resource, Microsoft.OData.ODataResourceSerializationInfo serializationInfo)
 
 	[
 	ExtensionAttribute(),
