@@ -246,12 +246,12 @@ Content-Type: application/json;odata.metadata=none
                                     batchReader.CreateOperationRequestMessage();
 
                                 // Verify DependsOnIds are set correctly
-                                List<string> dependsOnIds = operationMessage.DependsOnIds;
+                                IEnumerable<string> dependsOnIds = operationMessage.DependsOnIds;
                                 switch (operationMessage.ContentId)
                                 {
                                     case "1":
                                     case "2A":
-                                        Assert.True(dependsOnIds.Count == 0);
+                                        Assert.True(dependsOnIds.Count() == 0);
                                         break;
 
                                     case "2B":

@@ -4703,7 +4703,7 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContain
 	public const readonly string ContentId = 
 
 	System.IServiceProvider Container  { public virtual get; }
-	System.Collections.Generic.List`1[[System.String]] DependsOnIds  { public get; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] DependsOnIds  { public get; }
 	string GroupId  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
