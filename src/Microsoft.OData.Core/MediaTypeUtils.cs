@@ -150,7 +150,7 @@ namespace Microsoft.OData
                 // Starting in V3 we replace all occurrences of application/json with application/json;odata.metadata=minimal
                 // before handing the acceptable media types to the conneg code. This is necessary because for an accept
                 // header 'application/json, we want to the result to be 'application/json;odata.metadata=minimal'
-                ConvertApplicationJsonInAcceptableMediaTypes(specifiedTypes);
+                ConvertApplicationJsonInAcceptableMediaTypes(specifiedTypes, settings.Version ?? ODataVersion.V4);
 
                 ODataMediaTypeFormat selectedMediaTypeWithFormat;
                 string specifiedCharset = null;
@@ -293,7 +293,8 @@ namespace Microsoft.OData
         /// </returns>
         internal static bool HasStreamingSetToTrue(this ODataMediaType mediaType)
         {
-            return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeStreamingParameterName, MimeConstants.MimeParameterValueTrue);
+            return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeStreamingParameterName, MimeConstants.MimeParameterValueTrue)
+                || mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeShortStreamingParameterName, MimeConstants.MimeParameterValueTrue);
         }
 
         /// <summary>
@@ -533,7 +534,8 @@ namespace Microsoft.OData
         /// we want the result to be 'application/json;odata.metadata=minimal'
         /// </summary>
         /// <param name="specifiedTypes">The parsed acceptable media types.</param>
-        private static void ConvertApplicationJsonInAcceptableMediaTypes(IList<KeyValuePair<ODataMediaType, string>> specifiedTypes)
+        /// <param name="version">The ODataVersion for which to convert the 'application/json' media type</param>
+        private static void ConvertApplicationJsonInAcceptableMediaTypes(IList<KeyValuePair<ODataMediaType, string>> specifiedTypes, ODataVersion version)
         {
             if (specifiedTypes == null)
             {
@@ -547,13 +549,15 @@ namespace Microsoft.OData
                     HttpUtils.CompareMediaTypeNames(mediaType.Type, MimeConstants.MimeApplicationType))
                 {
                     if (mediaType.Parameters == null ||
-                        !mediaType.Parameters.Any(p => HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeMetadataParameterName)))
+                        !mediaType.Parameters.Any(p => HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeMetadataParameterName) || HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeShortMetadataParameterName)))
                     {
                         // application/json detected; convert it to Json Light
                         IList<KeyValuePair<string, string>> existingParams = mediaType.Parameters != null ? mediaType.Parameters.ToList() : null;
                         int newCount = existingParams == null ? 1 : existingParams.Count + 1;
                         List<KeyValuePair<string, string>> newParams = new List<KeyValuePair<string, string>>(newCount);
-                        newParams.Add(new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueMinimal));
+                        newParams.Add(new KeyValuePair<string, string>(
+                            version < ODataVersion.V401 ? MimeConstants.MimeMetadataParameterName : MimeConstants.MimeShortMetadataParameterName,
+                            MimeConstants.MimeMetadataParameterValueMinimal));
                         if (existingParams != null)
                         {
                             newParams.AddRange(existingParams);
