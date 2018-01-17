@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
-    using Microsoft.Data.Spatial;
+    using Microsoft.Spatial;
 
     /// <summary>
     /// Convert writer interface from IJsonWriter to IGeoJsonWriter.

@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -88,7 +88,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     ReadOperationReady = true
                 },
 
-                // ChangeSetStarted
+                // ChangesetStarted
                 new BatchWriterStatesTestDescriptor {
                     Setup = (w, s, tc) => {
                         w.WriteStartBatch();
@@ -270,7 +270,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     ReadOperationReady = false
                 },
 
-                // ChangeSetCompleted
+                // ChangesetCompleted
                 new BatchWriterStatesTestDescriptor {
                     Setup = (w, s, tc) => {
                         w.WriteStartBatch();
@@ -328,7 +328,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     ExpectedResults = new Dictionary<BatchWriterAction, ExpectedException> { 
                         { BatchWriterAction.StartBatch, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "BatchStarted") },
                         { BatchWriterAction.EndBatch, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "BatchCompleted") },
-                        { BatchWriterAction.StartChangeset, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "ChangeSetStarted") },
+                        { BatchWriterAction.StartChangeset, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "ChangesetStarted") },
                         { BatchWriterAction.EndChangeset, ODataExpectedExceptions.ODataException("ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet") },
                         { BatchWriterAction.Operation, ODataExpectedExceptions.ODataException("ODataWriterCore_InvalidTransitionFromError", "Error", "OperationCreated") },
                         { BatchWriterAction.GetOperationStream, null },

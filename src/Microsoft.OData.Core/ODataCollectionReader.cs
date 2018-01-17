@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core
         /// <returns>The most recent item that has been read.</returns>
         /// <remarks>
         /// This property returns an <see cref="ODataCollectionStart"/> when in state ODataCollectionReaderState.CollectionStart
-        /// or ODataCollectionReaderState.CollectionEnd. It returns either a primitive value, an <see cref="ODataComplexValue"/> or 'null' when
+        /// or ODataCollectionReaderState.CollectionEnd. It returns either a primitive value or 'null' when
         /// in state ODataCollectionReaderState.Value and 'null' in all other states.
         /// </remarks>
         public abstract object Item
@@ -41,10 +41,9 @@ namespace Microsoft.OData.Core
         /// <returns>True if more items were read; otherwise false.</returns>
         public abstract bool Read();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads the next item from the message payload.</summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         public abstract Task<bool> ReadAsync();
 #endif
     }

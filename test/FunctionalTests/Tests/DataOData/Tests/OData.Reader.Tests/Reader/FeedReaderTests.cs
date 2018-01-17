@@ -9,9 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -50,22 +49,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     testDescriptor.RunTest(testConfig);
                 });
-        }
-
-        [TestMethod, TestCategory("Reader.Feeds"), Variation(Description = "Test homogeneity of feed payloads.")]
-        public void FeedValidatorTests()
-        {
-            IEdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel();
-            var testDescriptors = this.CreateFeedValidatorDescriptors(model);
-
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-            this.CombinatorialEngineProvider.RunCombinations(
-               testDescriptors,
-               this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
-               (testDescriptor, testConfiguration) =>
-               {
-                   testDescriptor.RunTest(testConfiguration);
-               });
         }
 
         private IEnumerable<PayloadReaderTestDescriptor> CreateFeedValidatorDescriptors(IEdmModel model)
@@ -117,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 .PrimitiveProperty("Id", 1).WithTypeAnnotation(personType))
                             .Append(PayloadBuilder.Entity("TestModel.CityType")
                                 .PrimitiveProperty("Id", 2).WithTypeAnnotation(cityType)),
-                        ExpectedException = ODataExpectedExceptions.ODataException("FeedWithoutExpectedTypeValidator_IncompatibleTypes", "TestModel.CityType", "TestModel.Person"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes", "TestModel.CityType", "TestModel.Person"),
                         Model = model
                     },
                     new
@@ -147,5 +130,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedException = testCase.ExpectedException,
                 });
         }
-   }
+    }
 }

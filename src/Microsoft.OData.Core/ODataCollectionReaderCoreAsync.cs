@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -34,33 +34,29 @@ namespace Microsoft.OData.Core
         {
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the collection reader logic when in state 'Start'.
         /// </summary>
         /// <returns>Task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadAtStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionStart'.
         /// </summary>
         /// <returns>Task which returns true if more nodes can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadAtCollectionStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Value'.
         /// </summary>
         /// <returns>Task which returns true if more nodes can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadAtValueImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionEnd'.
         /// </summary>
         /// <returns>Task which should return false since no more nodes can be read from the reader after the collection ends.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadAtCollectionEndImplementationAsync();
 
         /// <summary>
@@ -69,7 +65,6 @@ namespace Microsoft.OData.Core
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         /// <remarks>The base class already implements this but only for fully synchronous readers, the implementation here
         /// allows fully asynchronous readers.</remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAsynchronously()
         {
             switch (this.State)
@@ -85,11 +80,6 @@ namespace Microsoft.OData.Core
 
                 case ODataCollectionReaderState.CollectionEnd:
                     return this.ReadAtCollectionEndImplementationAsync();
-
-                case ODataCollectionReaderState.Exception:    // fall through
-                case ODataCollectionReaderState.Completed:
-                    Debug.Assert(false, "This case should have been caught earlier.");
-                    return TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
 
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");

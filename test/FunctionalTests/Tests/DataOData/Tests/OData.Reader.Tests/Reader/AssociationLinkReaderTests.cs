@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Execution;
@@ -20,7 +20,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -83,16 +82,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 // Association link which is not declared on an open type
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
-                    PayloadElement = PayloadBuilder.Entity("TestModel.CityOpenType").Property(
-                        PayloadBuilder.NavigationProperty("Nonexistant", null, "http://odata.org/CityHallLink").IsCollection(true)),
+                    PayloadElement = PayloadBuilder.Entity("TestModel.CityOpenType")
+                        .PrimitiveProperty("Id", 1)
+                        .Property(
+                            PayloadBuilder.NavigationProperty("Nonexistant", null, "http://odata.org/CityHallLink").IsCollection(true)),
                     PayloadEdmModel = model,
                     ExpectedResultCallback = 
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = 
-                                        (tc.Format == ODataFormat.Json)
-                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue", "Nonexistant")
-                                        : ODataExpectedExceptions.ODataException("ValidationUtils_OpenNavigationProperty", "Nonexistant", "TestModel.CityOpenType"),
+                                    ExpectedException = null
                                 },
                 },
                 // Association link which is declared but of wrong kind
@@ -106,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = 
                                         (tc.Format == ODataFormat.Json)
-                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String")
+                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String")
                                         : ODataExpectedExceptions.ODataException("ValidationUtils_NavigationPropertyExpected", "Name", "TestModel.CityType", "Structural"),
                                 },
                 },

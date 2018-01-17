@@ -6,8 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
-    using System;
     using System.Diagnostics;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>
@@ -60,10 +60,24 @@ namespace Microsoft.OData.Client
             get { return this.mergeOption; }
         }
 
-        /// <summary>Whether to ignore extra properties in the response payload.</summary>
-        internal bool IgnoreMissingProperties
+        /// <summary>
+        /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.
+        /// </summary>
+        internal bool ThrowOnUndeclaredPropertyForNonOpenType
         {
-            get { return this.Context.IgnoreMissingProperties; }
+            get
+            {
+                if (this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
+                {
+                    return false;
+                }
+                else
+                {
+                    Debug.Assert(this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException,
+                        "this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException");
+                    return true;
+                }
+            }
         }
 
         /// <summary>Returns the instance of entity tracker class which tracks all the entities and links for the context.</summary>
@@ -143,9 +157,9 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptor">Entity whose property is being loaded.</param>
         /// <param name="property">Property which is being loaded.</param>
         internal LoadPropertyResponseInfo(
-            RequestInfo requestInfo, 
-            MergeOption mergeOption, 
-            EntityDescriptor entityDescriptor, 
+            RequestInfo requestInfo,
+            MergeOption mergeOption,
+            EntityDescriptor entityDescriptor,
             ClientPropertyAnnotation property)
             : base(requestInfo, mergeOption)
         {

@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.OData.Common;
@@ -26,10 +26,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
             if (format == ODataFormat.Json)
             {
                 return this.JsonFixup(payload);
-            }
-            else if (format == ODataFormat.Atom)
-            {
-                return this.AtomFixup(payload);
             }
             else if (format == null && (payload is BatchRequestPayload || payload is BatchResponsePayload))
             {

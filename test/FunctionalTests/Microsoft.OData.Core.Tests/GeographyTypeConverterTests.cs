@@ -8,11 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class GeographyTypeConverterTests
     {
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core.Tests
         {
             var stream = new MemoryStream();
             var textWriter = new StreamWriter(stream, Encoding.UTF8);
-            var jsonWriter = new JsonWriter(textWriter, false, ODataFormat.Json, false);
+            var jsonWriter = new JsonWriter(textWriter, false);
             var textReader = new StreamReader(stream, Encoding.UTF8);
 
             foreach (var instance in instances)

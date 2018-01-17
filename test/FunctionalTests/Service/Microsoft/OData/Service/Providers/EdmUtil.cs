@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_SERVER 
+#if ODATA_SERVICE 
 namespace Microsoft.OData.Service.Providers
 {
 #else

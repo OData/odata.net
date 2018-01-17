@@ -4,17 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 #endif
 {
     #region Namespaces
-    #if ASTORIA_SERVER
-    using Microsoft.OData.Core;
+    #if ODATA_SERVICE
+    using Microsoft.OData;
     #endif
     #endregion Namespaces
 
@@ -24,7 +22,7 @@ namespace Microsoft.OData.Core
     internal static class ODataValueUtils
     {
         /// <summary>
-        /// Converts an object to an ODataValue. If the given object is already an ODataValue (such as an ODataCompleValue, ODataCollectionValue, etc.), the original object will be returned.
+        /// Converts an object to an ODataValue. If the given object is already an ODataValue (such as an ODataCollectionValue, etc.), the original object will be returned.
         /// </summary>
         /// <param name="objectToConvert">The object to convert to an ODataValue</param>
         /// <returns>The given object as an ODataValue.</returns>
@@ -42,13 +40,18 @@ namespace Microsoft.OData.Core
                 return odataValue;
             }
 
+            if (objectToConvert.GetType().IsEnum())
+            {
+                return new ODataEnumValue(objectToConvert.ToString().Replace(", ", ","));
+            }
+
             // Otherwise treat it as a primitive and wrap in an ODataPrimitiveValue. This includes spatial types.
             return new ODataPrimitiveValue(objectToConvert);
         }
 
         /// <summary>
         /// Converts an ODataValue to the old style of representing values, where null values are null and primitive values are just the direct primitive (no longer wrapped by ODataPrimitiveValue).
-        /// All other value types, such as ODataComplexValue and ODataCollectionValue are returned unchanged.
+        /// All other value types, such as ODataCollectionValue are returned unchanged.
         /// </summary>
         /// <param name="odataValue">The value to convert.</param>
         /// <returns>The value behind the given ODataValue.</returns>
@@ -69,5 +72,3 @@ namespace Microsoft.OData.Core
         }
     }
 }
-
-#endif

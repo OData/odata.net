@@ -4,20 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 
@@ -29,7 +24,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// The set of key property names and the values to be used in searching for the given item.
         /// </summary>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Using key value pair is exactly what we want here.")]
         private readonly ReadOnlyCollection<KeyValuePair<string, object>> keys;
 
         /// <summary>
@@ -49,14 +43,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="edmType">The type of the item this key returns.</param>
         /// <param name="navigationSource">The navigation source that this key is used to search.</param>
         /// <exception cref="ODataException">Throws if the input entity set is not related to the input type.</exception>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Using key value pair is exactly what we want here.")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Using key value pair is exactly what we want here.")]
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public KeySegment(IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
         {
             this.keys = new ReadOnlyCollection<KeyValuePair<string, object>>(keys.ToList());
             this.edmType = edmType;
             this.navigationSource = navigationSource;
+            this.SingleResult = true;
 
             // Check that the type they gave us is related to the type of the set
             if (navigationSource != null)
@@ -66,12 +59,29 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
+        /// Construct a Segment that represents a key lookup.
+        /// </summary>
+        /// <param name="previous">The segment to apply the key to.</param>
+        /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
+        /// <param name="edmType">The type of the item this key returns.</param>
+        /// <param name="navigationSource">The navigation source that this key is used to search.</param>
+        /// <exception cref="ODataException">Throws if the input entity set is not related to the input type.</exception>
+        public KeySegment(ODataPathSegment previous, IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
+            : this(keys, edmType, navigationSource)
+        {
+            if (previous != null)
+            {
+                this.CopyValuesFrom(previous);
+                this.SingleResult = true;
+            }
+        }
+
+        /// <summary>
         /// Gets the set of key property names and the values to be used in searching for the given item.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Using key value pair is exactly what we want here.")]
         public IEnumerable<KeyValuePair<string, object>> Keys
         {
-            [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Using key value pair is exactly what we want here.")]
             get { return this.keys.AsEnumerable(); }
         }
 

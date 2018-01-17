@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Client.Metadata;
     using System.Diagnostics;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     #endregion Namespaces
 
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Materializer from which instances are read.</summary>
         /// <remarks>
-        /// The log for the materializer stores all changes for the 
+        /// The log for the materializer stores all changes for the
         /// associated data context.
         /// </remarks>
         private readonly ODataMaterializer materializer;
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Client
         /// <param name="entries">entries that needs to be materialized.</param>
         /// <param name="elementType">result type.</param>
         /// <param name="format">The format of the response being materialized from.</param>
-        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataEntry> entries, Type elementType, ODataFormat format)
+        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format)
         {
             this.responseInfo = responseInfo;
             this.elementType = elementType;
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Loosely typed current object property.</summary>
         /// <remarks>
-        /// For collection properties this property will be of AtomContentProperties to allow further materialization processing. 
+        /// For collection properties this property will be of AtomContentProperties to allow further materialization processing.
         /// Otherwise the value should be of the right type, as the materializer takes the expected type into account.
         /// </remarks>
         public object Current
@@ -238,9 +238,9 @@ namespace Microsoft.OData.Client
         /// <param name="implementationType">The actual type that implements ICollection&lt;&gt;</param>
         /// <returns>Type of the instances that will be returned by materializer.</returns>
         /// <remarks>
-        /// For collection navigation properties (i.e. ICollection&lt;T&gt; where T is an entity the method returns T. Materializer will 
+        /// For collection navigation properties (i.e. ICollection&lt;T&gt; where T is an entity the method returns T. Materializer will
         /// return single entity each time MoveNext() is called. However for collection properties we need the whole property instead of just a
-        /// single collection item. 
+        /// single collection item.
         /// </remarks>
         private static Type GetTypeForMaterializer(bool expectingPrimitiveValue, Type elementType, ClientEdmModel model, out Type implementationType)
         {
@@ -250,9 +250,9 @@ namespace Microsoft.OData.Client
                 if (implementationType != null)
                 {
                     Type expectedType = implementationType.GetGenericArguments()[0]; // already know its ICollection<>
-                    
+
                     // We should use the inner type only if this is a collection of entities (as opposed to a collection of primitive or complex types)
-                    if (ClientTypeUtil.TypeIsEntity(expectedType, model))
+                    if (ClientTypeUtil.TypeIsStructured(expectedType, model))
                     {
                         return expectedType;
                     }
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Client
                         {
                             entity.Context = this.responseInfo.Context;
                         }
-                        
+
                         this.current = this.materializer.CurrentValue;
                     }
 
@@ -438,7 +438,7 @@ namespace Microsoft.OData.Client
                 {
                     // DEVNOTE(pqian): The next link uri should never be edited by the client, and therefore it must be absolute
                     result = DataServiceQueryContinuation.Create(
-                        this.materializer.CurrentFeed.NextPageLink, 
+                        this.materializer.CurrentFeed.NextPageLink,
                         this.materializer.MaterializeEntryPlan);
                 }
             }
@@ -526,7 +526,7 @@ namespace Microsoft.OData.Client
 
             /// <summary>A continuation to the next page of results.</summary>
             private readonly DataServiceQueryContinuation continuation;
-            
+
             /// <summary>The data service context this result belongs to</summary>
             private readonly DataServiceContext context;
 

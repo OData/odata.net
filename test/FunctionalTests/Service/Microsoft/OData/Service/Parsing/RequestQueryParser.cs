@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service.Parsing
     using System;
     using System.Diagnostics;
     using System.Linq.Expressions;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service.Providers;
     using OpenTypeMethods = Microsoft.OData.Service.Providers.OpenTypeMethods;
     using Strings = Microsoft.OData.Service.Strings;

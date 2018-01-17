@@ -11,7 +11,7 @@ namespace EdmLibTests.FunctionalTests
 #endif
     using System.Runtime.CompilerServices;
     using EdmLibTests.FunctionalUtilities;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT

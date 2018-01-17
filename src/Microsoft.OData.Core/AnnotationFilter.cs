@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
-{
-    using System.Diagnostics;
-    using System.Linq;
+using System.Diagnostics;
+using System.Linq;
 
+namespace Microsoft.OData
+{
     /// <summary>
     /// Filter class to determine whether or not to read an annotation.
     /// </summary>
@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core
         /// Patterns to match, sorted in the order of higher to lower priorities to match.
         /// </summary>
         private readonly AnnotationFilterPattern[] prioritizedPatternsToMatch;
-        
+
         /// <summary>
         /// Private constructor to create a filter from comma delimited patterns to match to include or exclude annotations.
         /// </summary>
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Core
             {
                 return IncludeAll;
             }
-            
+
             if (prioritizedPatternsToMatch[0] == AnnotationFilterPattern.ExcludeAllPattern)
             {
                 return ExcludeAll;

@@ -14,7 +14,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
 
 
     #endregion Namespaces
@@ -88,9 +88,6 @@ namespace Microsoft.OData.Service
         internal void PopulateFromConfiguration(DataServiceConfiguration configuration)
         {
             Debug.Assert(configuration != null, "configuration != null");
-
-            // Add any annotations for the current URL convention.
-            this.AddAnnotations(UrlConvention.BuildMetadataAnnotations(configuration.DataServiceBehavior, this.primaryModel));
 
             IEnumerable<IEdmModel> annotatedModels = null;
             Func<IEdmModel, IEnumerable<IEdmModel>> annotationsBuilder = configuration.AnnotationsBuilder;
@@ -177,9 +174,9 @@ namespace Microsoft.OData.Service
                     return (x == null && y == null);
                 }
 
-                return x.Target == y.Target && 
-                        x.Term.Namespace == y.Term.Namespace && 
-                        x.Term.Name == y.Term.Name && 
+                return x.Target == y.Target &&
+                        x.Term.Namespace == y.Term.Namespace &&
+                        x.Term.Name == y.Term.Name &&
                         x.Qualifier == y.Qualifier;
             }
 

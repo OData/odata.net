@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         public override long Length
         {
-            get 
+            get
             {
                 Debug.Assert(false, "Should never get here.");
                 throw new NotSupportedException();
@@ -218,10 +218,10 @@ namespace Microsoft.OData.Core
             return Task.Factory.Iterate(bufferedReadStream.BufferInputStream())
                 .FollowAlwaysWith((task) => inputStream.Dispose())
                 .FollowOnSuccessWith(
-                    (task) => 
+                    (task) =>
                     {
                         bufferedReadStream.ResetForReading();
-                        return bufferedReadStream; 
+                        return bufferedReadStream;
                     });
         }
 
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Core
                     currentBuffer = this.AddNewBuffer();
                 }
 
-#if DNXCORE50
+#if PORTABLELIB
                 yield return inputStream.ReadAsync(currentBuffer.Buffer, currentBuffer.OffsetToWriteTo, currentBuffer.FreeBytes)
                     .ContinueWith(t =>
                     {

@@ -4,20 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Text;
     using System.Xml;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -48,13 +45,7 @@ namespace Microsoft.OData.Core
 
             // Metadata is not supported in requests!
             return messageInfo.IsResponse
-                ? DetectPayloadKindImplementation(
-                    messageInfo.GetMessageStream(),
-                    new ODataPayloadKindDetectionInfo(
-                        messageInfo.MediaType,
-                        messageInfo.Encoding,
-                        settings,
-                        messageInfo.Model))
+                ? DetectPayloadKindImplementation(messageInfo, settings)
                 : Enumerable.Empty<ODataPayloadKind>();
         }
 
@@ -71,15 +62,7 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataMetadataInputContext(
-                this,
-                messageInfo.GetMessageStream(),
-                messageInfo.Encoding,
-                messageReaderSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver);
+            return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
         }
 
         /// <summary>
@@ -95,24 +78,16 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return new ODataMetadataOutputContext(
-                this,
-                messageInfo.GetMessageStream(),
-                messageInfo.Encoding,
-                messageWriterSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver);
+            return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="settings">Configuration settings of the OData reader.</param>
-        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
+        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s
         /// that are supported with the specified payload.</returns>
         public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
             ODataMessageInfo messageInfo,
@@ -120,14 +95,7 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             return messageInfo.IsResponse
-                ? messageInfo.GetMessageStreamAsync()
-                    .FollowOnSuccessWith(streamTask => DetectPayloadKindImplementation(
-                            streamTask.Result,
-                            new ODataPayloadKindDetectionInfo(
-                                messageInfo.MediaType,
-                                messageInfo.Encoding,
-                                settings,
-                                messageInfo.Model)))
+                ? Task.FromResult(DetectPayloadKindImplementation(messageInfo, settings))
                 : TaskUtils.GetCompletedTask(Enumerable.Empty<ODataPayloadKind>());
         }
 
@@ -167,14 +135,18 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Detects the payload kind(s) from the message stream.
         /// </summary>
-        /// <param name="messageStream">The message stream to read from for payload kind detection.</param>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
+        /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>An enumerable of zero or one payload kinds depending on whether the metadata payload kind was detected or not.</returns>
-        private static IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(Stream messageStream, ODataPayloadKindDetectionInfo detectionInfo)
+        private static IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings settings)
         {
+            var detectionInfo = new ODataPayloadKindDetectionInfo(messageInfo, settings);
             try
             {
-                using (XmlReader reader = ODataAtomReaderUtils.CreateXmlReader(messageStream, detectionInfo.GetEncoding(), detectionInfo.MessageReaderSettings))
+                using (var reader = ODataMetadataReaderUtils.CreateXmlReader(
+                    messageInfo.MessageStream, detectionInfo.GetEncoding(), detectionInfo.MessageReaderSettings))
                 {
                     if (reader.TryReadToNextElement()
                         && string.CompareOrdinal(EdmConstants.EdmxName, reader.LocalName) == 0

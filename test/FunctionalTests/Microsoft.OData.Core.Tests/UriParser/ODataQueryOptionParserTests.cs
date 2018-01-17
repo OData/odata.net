@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Unit tests for ODataQueryOptionParser.
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         public void NullInputQueryOptionShouldThrow()
         {
             Action action = () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("Value cannot be null."));
         }
 
         [Fact]
@@ -43,6 +43,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             uriParser.ParseSkip().Should().Be(null);
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
+            uriParser.ParseCompute().Should().BeNull();
         }
 
         [Fact]
@@ -58,6 +59,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                 {"$skip"    , ""},
                 {"$count"   , ""},
                 {"$search"  , ""},
+                {"$compute" , ""},
                 {"$unknow"  , ""},
             });
 
@@ -66,6 +68,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             results.AllSelected.Should().BeTrue();
             results.SelectedItems.Should().HaveCount(0);
             uriParser.ParseOrderBy().Should().BeNull();
+            uriParser.ParseCompute().Should().BeNull();
             Action action = () => uriParser.ParseTop();
             action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
             action = () => uriParser.ParseSkip();
@@ -89,6 +92,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                 {"$skip"    , null},
                 {"$count"   , null},
                 {"$search"  , null},
+                {"$compute" , null},
                 {"$unknow"  , null},
             });
 
@@ -99,6 +103,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             uriParser.ParseSkip().Should().Be(null);
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
+            uriParser.ParseCompute().Should().BeNull();
         }
     }
 }

@@ -141,7 +141,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 
             public AsyncBufferedStreamTestWrapper(Stream stream)
             {
-                Type asyncBufferedStreamType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.AsyncBufferedStream");
+                Type asyncBufferedStreamType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.AsyncBufferedStream");
                 
                 this.asyncBufferedStream = (Stream)Activator.CreateInstance(
                     asyncBufferedStreamType,
@@ -166,7 +166,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
             public override void SetLength(long value) { this.asyncBufferedStream.SetLength(value); }
             public override void Write(byte[] buffer, int offset, int count) { this.asyncBufferedStream.Write(buffer, offset, count); }
 #if !SILVERLIGHT
-            public Task FlushAsync()
+            public new Task FlushAsync()
             {
                 return (Task)ReflectionUtils.InvokeMethod(this.asyncBufferedStream, "FlushAsync");
             }

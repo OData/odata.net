@@ -33,7 +33,7 @@ namespace Microsoft.OData.Client
         internal ProjectionPathSegment(ProjectionPath startPath, string member, Type projectionType)
         {
             Debug.Assert(startPath != null, "startPath != null");
-            
+
             this.Member = member;
             this.StartPath = startPath;
             this.ProjectionType = projectionType;
@@ -60,10 +60,10 @@ namespace Microsoft.OData.Client
         #region Internal properties
 
         /// <summary>Name of member to access when traversing a property; possibly null.</summary>
-        internal string Member 
-        { 
-            get; 
-            private set; 
+        internal string Member
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -71,22 +71,22 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <remarks>
         /// In particular, this type will be adjusted for nested narrowing entity types.
-        /// 
+        ///
         /// For example:
-        /// from c in ctx.Customers select new NarrowCustomer() { 
-        ///   ID = c.ID, 
+        /// from c in ctx.Customers select new NarrowCustomer() {
+        ///   ID = c.ID,
         ///   BestFriend = new NarrowCustomer() { ID = c.BestFriend.ID }
         /// }
-        /// 
+        ///
         /// In this case, ID will match types on both sides, but BestFriend
         /// will be of type Customer in the member access of the source tree
         /// and we want to project out a member-initialized NarrowCustomer
         /// in the target tree.
         /// </remarks>
-        internal Type ProjectionType 
-        { 
-            get; 
-            set; 
+        internal Type ProjectionType
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -100,10 +100,10 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Path on which this segment is located.</summary>
-        internal ProjectionPath StartPath 
-        { 
-            get; 
-            private set; 
+        internal ProjectionPath StartPath
+        {
+            get;
+            private set;
         }
 
         #endregion Internal properties

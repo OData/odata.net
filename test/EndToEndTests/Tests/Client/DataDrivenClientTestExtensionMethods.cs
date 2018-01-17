@@ -29,14 +29,11 @@ namespace Microsoft.Test.OData.Tests.Client
             Func<DataServiceContextWrapper<TContext>> createContext,
             Action<DataServiceContextWrapper<TContext>> test) where TContext : DataServiceContext
         {
-            //var atomContext = createContext();
-            //atomContext.ContextLabel = "Atom";
-
             var jsonContext = createContext();
             jsonContext.ContextLabel = "Json";
             jsonContext.Format.UseJson();
 
-            testBase.InvokeDataDrivenTest(test, DataDrivenTest.CreateData(/*atomContext,*/ jsonContext));
+            testBase.InvokeDataDrivenTest(test, DataDrivenTest.CreateData(jsonContext));
         }
     }
 }

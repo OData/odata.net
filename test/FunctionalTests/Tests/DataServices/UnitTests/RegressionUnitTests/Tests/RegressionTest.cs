@@ -33,7 +33,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.ModuleCore;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using edm = System.Data.Metadata.Edm;
@@ -45,6 +45,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class RegressionUnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/876
         /// <summary>This is a test class for adding regression tests.</summary>
         [DeploymentItem("Workspaces", "Workspaces")]
         [TestClass, TestCase]
@@ -70,7 +71,7 @@ namespace AstoriaUnitTests.Tests
                     UnitTestsUtil.DoInserts(payLoad, "/Customers",
                         new string[] { String.Format("/{0}[ID=125 and Name='Bar' and odata.type='#{1}']",
                                 JsonValidator.ObjectString,
-                                typeof(CustomerWithoutProperties).FullName) }, 
+                                typeof(CustomerWithoutProperties).FullName) },
                         typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType);
                 }
             }
@@ -140,7 +141,7 @@ namespace AstoriaUnitTests.Tests
                     using (Stream stream = request.GetResponseStream())
                     {
                         UnitTestsUtil.VerifyXPaths(stream, responseFormat,
-                            new string[] { String.Format("/{0}[ID=1 and Name='Foo']", 
+                            new string[] { String.Format("/{0}[ID=1 and Name='Foo']",
                                                     JsonValidator.ObjectString)
                                          });
                     }
@@ -151,18 +152,19 @@ namespace AstoriaUnitTests.Tests
                     request.SendRequest();
                     using (Stream stream = request.GetResponseStream())
                     {
-                        UnitTestsUtil.VerifyXPaths(stream, 
-                            responseFormat, 
+                        UnitTestsUtil.VerifyXPaths(stream,
+                            responseFormat,
                             new string[] {
-                                String.Format("/{0}[ID=0 and Name='Foo1']", 
-                                    JsonValidator.ObjectString, 
+                                String.Format("/{0}[ID=0 and Name='Foo1']",
+                                    JsonValidator.ObjectString,
                                     typeof(Customer).FullName)});
                     }
                 }
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
-            [TestMethod, Variation("PATCH with the same payload as returned by the GET method")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("PATCH with the same payload as returned by the GET method")]
             public void PatchPayloadReturnedByGet_ReflectionProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -188,10 +190,10 @@ namespace AstoriaUnitTests.Tests
                         TestUtil.AssertContainsFalse(payload, "NewName");
                         payload = payload.Replace("Customer 1", "NewName");
 
-                        var headerValues = new KeyValuePair<string, string>[] 
-                        { 
+                        var headerValues = new KeyValuePair<string, string>[]
+                        {
                             new KeyValuePair<string, string>("If-Match", etag),
-                            new KeyValuePair<string, string>("Prefer", "return=representation") 
+                            new KeyValuePair<string, string>("Prefer", "return=representation")
                         };
                         request = UnitTestsUtil.GetTestWebRequestInstance(responseFormat, uri, contextType, headerValues, "PATCH", payload);
                         payload = request.GetResponseStreamAsText();
@@ -203,7 +205,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
-            [TestMethod, Variation("PUT with the same payload as returned by the GET method")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("PUT with the same payload as returned by the GET method")]
             public void PutPayloadReturnedByGet_EdmProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -248,8 +251,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestMethod, Variation("xml base + href not forming proper uri's")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("xml base + href not forming proper uri's")]
             public void XmlBaseHRefShouldFormProperUri()
             {
                 string atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
@@ -278,8 +281,8 @@ namespace AstoriaUnitTests.Tests
                         typeof(ocs.CustomObjectContext), UnitTestsUtil.AtomFormat);
                 }
             }
-
-            [TestMethod, Variation("Assert when an invalid uri is specified for binding in Json")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Assert when an invalid uri is specified for binding in Json")]
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void ShouldThrowWhenBindingInvalidUriInJson()
             {
@@ -337,7 +340,8 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyInvalidRequestForVariousProviders(null, "/Customers(1)?$expand=Orders", UnitTestsUtil.MimeAny, "GET", 400, ifNoneMatch);
             }
 
-            [TestMethod, Variation("Should throw if the link type attribute has invalid value")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Should throw if the link type attribute has invalid value")]
             public void ShouldThrowIfLinkTypeAttributeIsInvalid()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -491,93 +495,6 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
-            [Ignore]
-            [TestMethod, Variation("Json Deserializer - all quoted values must work fine and any type requiring a quote should fail if the quote is not specified")]
-            public void TestQuotesInJsonDeserializer()
-            {
-                TypedCustomAllTypesDataContext.ClearHandlers();
-                TypedCustomAllTypesDataContext.ClearValues();
-                TypedCustomAllTypesDataContext.PreserveChanges = true;
-
-                // Get the metadata for the type
-                var model = UnitTestsUtil.LoadMetadataFromDataServiceType(typeof(TypedCustomAllTypesDataContext), null);
-                var entityType = model.FindType(typeof(AllTypes).FullName) as IEdmEntityType;
-
-                // create entity with all default values and insert it
-                AllTypes emptyAllTypes = new AllTypes();
-                emptyAllTypes.ID = 1;
-                string payload = UnitTestsUtil.GetPayload(emptyAllTypes, entityType, UnitTestsUtil.JsonLightMimeType);
-                UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values", new KeyValuePair<string, string[]>[0], typeof(TypedCustomAllTypesDataContext), UnitTestsUtil.JsonLightMimeType, "POST", null, false);
-
-                Dictionary<Type, TypeData> typeToDataMap = new Dictionary<Type, TypeData>();
-                foreach (TypeData typeData in TypeData.Values)
-                {
-                    typeToDataMap.Add(typeData.ClrType, typeData);
-                }
-
-                // build a dictionary for the type to properties
-                TestUtil.RunCombinations(typeof(AllTypes).GetProperties(BindingFlags.Public | BindingFlags.Instance),
-                    (property) =>
-                    {
-                        if (property.Name == "ID")
-                        {
-                            return;
-                        }
-
-                        Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        TypeData typeData = typeToDataMap[propertyType];
-                        string contentType = typeData.DefaultContentType;
-                        string uri = "/Values(1)/" + property.Name;
-                        CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                            new Dimension("SampleValue", typeData.SampleValues));
-                        TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
-                        {
-                            object value = values["SampleValue"];
-                            if (value == null)
-                            {
-                                return;
-                            }
-
-                            string propertyValue = JsonPrimitiveTypesUtil.PrimitiveToString(value, propertyType);
-
-                            // Quoted value for any type must pass.
-                            if (!JsonPrimitiveTypesUtil.IsTypeQuoted(propertyType) &&
-                                !((propertyType == typeof(Double) && (Double.IsInfinity((Double)value) || Double.IsNaN((Double)value))) ||
-                                  (propertyType == typeof(Single) && (Single.IsInfinity((Single)value) || Single.IsNaN((Single)value)))))
-                            {
-                                propertyValue = String.Format("\"{0}\"", propertyValue);
-                            }
-
-                            payload = "{" + String.Format("{0}: {1}", property.Name, propertyValue) + "}";
-                            Trace.WriteLine("Sending payload: " + payload);
-                            var uriAndXPathToVerify = new KeyValuePair<string, string[]>[0];
-                            UnitTestsUtil.SendRequestAndVerifyXPath(payload, uri, uriAndXPathToVerify, typeof(TypedCustomAllTypesDataContext), UnitTestsUtil.JsonLightMimeType, "PUT", null, false);
-
-                            TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, uri, typeof(TypedCustomAllTypesDataContext), null, "GET");
-                            Stream responseStream = request.GetResponseStream();
-                            UnitTestsUtil.ComparePropertyValue(JsonValidator.ConvertToXmlDocument(responseStream), property, UnitTestsUtil.JsonLightMimeType, value);
-
-                            // Unquoting a value that requires quotes should fail.
-                            if (JsonPrimitiveTypesUtil.IsTypeQuoted(propertyType) ||
-                                (propertyType == typeof(Double) && (Double.IsInfinity((Double)value) || Double.IsNaN((Double)value))) ||
-                                (propertyType == typeof(Single) && (Single.IsInfinity((Single)value) || Single.IsNaN((Single)value))))
-                            {
-                                payload = JsonPrimitiveTypesUtil.PrimitiveToString(value, propertyType);
-                                Assert.IsTrue(payload[0] == '"' && payload[payload.Length - 1] == '"', "the value must be quoted");
-                                payload = payload.Substring(1, payload.Length - 2);
-                                Exception exception = TestUtil.RunCatching(delegate()
-                                {
-                                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, uri, new KeyValuePair<string, string[]>[0], typeof(TypedCustomAllTypesDataContext), UnitTestsUtil.JsonLightMimeType, "PUT", null, false);
-                                });
-                                TestUtil.AssertExceptionExpected(exception, true);
-                            }
-                        });
-                    });
-
-                TypedCustomAllTypesDataContext.PreserveChanges = false;
-            }
-
             [TestMethod, Variation("Discovering types in EdmProvider, via the RegisterType mechanism")]
             public void UseRegisterTypeToDiscoverTypesInEdmProvider()
             {
@@ -644,35 +561,35 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Open types - unable to find the right parent entity for the given uri")]
-            public void ShouldFindRightParentEntityForOpenTypes()
-            {
-                CustomRowBasedOpenTypesContext.ClearData();
-                CustomRowBasedOpenTypesContext.PreserveChanges = true;
+            //[TestMethod, Variation("Open types - unable to find the right parent entity for the given uri")]
+            //public void ShouldFindRightParentEntityForOpenTypes()
+            //{
+            //    CustomRowBasedOpenTypesContext.ClearData();
+            //    CustomRowBasedOpenTypesContext.PreserveChanges = true;
 
-                try
-                {
-                    string payload = "{ value: 'Foo' }";
-                    var uriAndXPathToVerify = new KeyValuePair<string, string[]>[] {
-                    new KeyValuePair<string, string[]>("/Customers(1)/Address/StreetAddress",
-                        new string[] { String.Format("{0}[value='Foo']", JsonValidator.ObjectString) }) };
+            //    try
+            //    {
+            //        string payload = "{ value: 'Foo' }";
+            //        var uriAndXPathToVerify = new KeyValuePair<string, string[]>[] {
+            //        new KeyValuePair<string, string[]>("/Customers(1)/Address/StreetAddress",
+            //            new string[] { String.Format("{0}[value='Foo']", JsonValidator.ObjectString) }) };
 
-                    // Get the etag for Customer(1)
-                    string etag = UnitTestsUtil.GetETagFromResponse(typeof(CustomRowBasedOpenTypesContext), "/Customers(1)", UnitTestsUtil.JsonLightMimeType);
+            //        // Get the etag for Customer(1)
+            //        string etag = UnitTestsUtil.GetETagFromResponse(typeof(CustomRowBasedOpenTypesContext), "/Customers(1)", UnitTestsUtil.JsonLightMimeType);
 
-                    var headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
-                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)/Address/StreetAddress", uriAndXPathToVerify, typeof(CustomRowBasedOpenTypesContext), UnitTestsUtil.JsonLightMimeType, "PUT", headers, true);
-                }
-                finally
-                {
-                    CustomRowBasedOpenTypesContext.PreserveChanges = false;
-                }
-            }
+            //        var headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
+            //        UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)/Address/StreetAddress", uriAndXPathToVerify, typeof(CustomRowBasedOpenTypesContext), UnitTestsUtil.JsonLightMimeType, "PUT", headers, true);
+            //    }
+            //    finally
+            //    {
+            //        CustomRowBasedOpenTypesContext.PreserveChanges = false;
+            //    }
+            //}
 
             [TestMethod, Variation("$metadata should return edmx metadata document")]
             public void ShouldReturnEdmxMetadataDocument()
             {
-                var uriAndXPathsToVerify = new KeyValuePair<string, string[]>[] { 
+                var uriAndXPathsToVerify = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>("/$metadata",
                         new string[] { "/edmx:Edmx[@Version='4.0' and edmx:DataServices/csdl:Schema[@Namespace='AstoriaUnitTests.Stubs']]" }) };
                 UnitTestsUtil.SendRequestAndVerifyXPath(null, "/$metadata", uriAndXPathsToVerify, typeof(CustomDataContext), UnitTestsUtil.MimeApplicationXml, "GET", null, false);
@@ -730,8 +647,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
-            [TestMethod, Variation("making sure we discard the previous changes in case of error in batching")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("making sure we discard the previous changes in case of error in batching")]
             public void BatchErrorShouldDiscardPreviousChanges()
             {
                 string batchRequestFilePath = Path.Combine(TestUtil.ServerUnitTestSamples, @"tests\BatchRequests\TestBatchError.txt");
@@ -756,48 +673,41 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("mark etag properties with Concurrency attribute in csdl for reflection provider")]
-            public void TestConcurrencyAttributeOnEtagPropertiesInCsdl()
-            {
-                Stream responseStream = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.MimeApplicationXml, "/$metadata", typeof(CustomDataContext));
-                UnitTestsUtil.VerifyXPaths(responseStream, UnitTestsUtil.MimeApplicationXml, new string[] { "//csdl:Schema/csdl:EntityType[@Name='Customer' and csdl:Property[@Name='GuidValue' and @ConcurrencyMode='Fixed']]" });
-            }
+            //[TestMethod, Variation("Protocol: exception thrown in XML with filter=null")]
+            //public void ShouldThrowInXmlWithFilterNull()
+            //{
+            //    ServiceModelData.Northwind.EnsureDependenciesAvailable();
+            //    CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
+            //        new Dimension("ServiceModelData", ServiceModelData.ValidValues));
+            //    TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
+            //    {
+            //        ServiceModelData model = (ServiceModelData)values["ServiceModelData"];
+            //        if (!model.ContainerNames.Contains("Customers"))
+            //        {
+            //            return;
+            //        }
 
-            [TestMethod, Variation("Protocol: exception thrown in XML with filter=null")]
-            public void ShouldThrowInXmlWithFilterNull()
-            {
-                ServiceModelData.Northwind.EnsureDependenciesAvailable();
-                CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("ServiceModelData", ServiceModelData.ValidValues));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
-                {
-                    ServiceModelData model = (ServiceModelData)values["ServiceModelData"];
-                    if (!model.ContainerNames.Contains("Customers"))
-                    {
-                        return;
-                    }
+            //        string typeName = model.GetContainerRootTypeName("Customers");
+            //        string customerName = model.GetModelProperties(typeName).Any(p => p.Name == "CompanyName") ? "CompanyName" : "Name";
+            //        string[] uris = new string[]
+            //        {
+            //            "/Customers?$filter=null",
+            //            "/Customers?$filter=cast(null, 'Edm.Boolean')",
+            //            "/Customers?$filter=cast(null, 'Edm.Int32') add 10 lt length(" + customerName + ")",
+            //        };
+            //        using (TestWebRequest request = TestWebRequest.CreateForInProcess())
+            //        {
+            //            request.DataServiceType = model.ServiceModelType;
+            //            request.ForceVerboseErrors = true;
 
-                    string typeName = model.GetContainerRootTypeName("Customers");
-                    string customerName = model.GetModelProperties(typeName).Any(p => p.Name == "CompanyName") ? "CompanyName" : "Name";
-                    string[] uris = new string[] 
-                    { 
-                        "/Customers?$filter=null", 
-                        "/Customers?$filter=cast(null, 'Edm.Boolean')",
-                        "/Customers?$filter=cast(null, 'Edm.Int32') add 10 lt length(" + customerName + ")",
-                    };
-                    using (TestWebRequest request = TestWebRequest.CreateForInProcess())
-                    {
-                        request.DataServiceType = model.ServiceModelType;
-                        request.ForceVerboseErrors = true;
-
-                        foreach (string uri in uris)
-                        {
-                            request.RequestUriString = uri;
-                            request.SendRequest();
-                        }
-                    }
-                });
-            }
+            //            foreach (string uri in uris)
+            //            {
+            //                request.RequestUriString = uri;
+            //                request.SendRequest();
+            //            }
+            //        }
+            //    });
+            //}
 
             [TestMethod, Variation("Entity sets can be something that derives from IQueryable")]
             public void EntitySetCanDeriveFromIQueryable()
@@ -862,8 +772,8 @@ namespace AstoriaUnitTests.Tests
                 #endregion
             }
             #endregion
-
-            [TestMethod, Variation("negative case fires an assert -setting null value to top level resource")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("negative case fires an assert -setting null value to top level resource")]
             public void InvalidRequestIfSettingTopLevelResourceToNullValue()
             {
                 string jsonPayload = "null";
@@ -873,8 +783,8 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyInvalidRequest(jsonPayload, "/Customers(1)", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "PUT", 400);
                 UnitTestsUtil.VerifyInvalidRequest(atomPayload, "/Customers(1)", typeof(CustomDataContext), UnitTestsUtil.AtomFormat, "PUT", 400);
             }
-
-            [TestMethod, Variation("Throw BadGateway error on CUD operations on service uri")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Throw BadGateway error on CUD operations on service uri")]
             public void ShouldThrowOnCudOperationsOnServiceUri()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -904,8 +814,8 @@ namespace AstoriaUnitTests.Tests
                     UnitTestsUtil.VerifyInvalidRequest(null, "/", contextType, responseFormat, methodName, expectedErrorCode);
                 });
             }
-
-            [TestMethod, Variation("Assert fired for properties of type IList while serializing")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Assert fired for properties of type IList while serializing")]
             public void TestIListPropertiesWhenSerializing()
             {
                 TypedCustomDataContext<TestEntity3>.ValuesRequested += (x, y) =>
@@ -941,7 +851,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib was fixed and reports missing type name as an annotation.
-            [TestMethod, Variation("type information must be required for any type that takes part in inheritance")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("type information must be required for any type that takes part in inheritance")]
             public void ShouldRequireTypeInformationInInheritance()
             {
                 // This test also verifies that not able to load metadata for public nested derived types.
@@ -1017,8 +928,8 @@ namespace AstoriaUnitTests.Tests
                 public int ID { get; set; }
                 public string Name { get; set; }
             }
-
-            [TestMethod, Variation("allowing raw binary values in keys for datatypes other than byte[] and Binary")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("allowing raw binary values in keys for datatypes other than byte[] and Binary")]
             public void AllowRawBinaryInKeysIfDataTypeNotBinary()
             {
                 DateTime dateTime = DateTime.Now;
@@ -1028,7 +939,7 @@ namespace AstoriaUnitTests.Tests
                     new KeyValuePair<string, Type>("'abcde'", typeof(string)),
                     new KeyValuePair<string, Type>(String.Format("{0}", XmlConvert.ToString(TypeData.ConvertDateTimeToDateTimeOffset(dateTime))), typeof(DateTime)),
                     new KeyValuePair<string, Type>(String.Format("{0}", guid), typeof(Guid)),
-                    new KeyValuePair<string, Type>("1500.345", typeof(decimal)) 
+                    new KeyValuePair<string, Type>("1500.345", typeof(decimal))
                 };
 
                 foreach (KeyValuePair<string, Type> keyInfo in variousKeyInfos)
@@ -1047,7 +958,7 @@ namespace AstoriaUnitTests.Tests
                     Trace.WriteLine("Requesting " + uri);
                     TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.AtomFormat, uri, dataContextSetup.DataServiceType, null, "GET");
                     XmlDocument document = request.GetResponseStreamAsXmlDocument();
-                    
+
                     // In .NET 4.5, EscapeDataString will escape single quotes. However, our payload will still continue to leave them unescaped.
                     string key = Uri.EscapeDataString(keyInfo.Key).Replace("%27", "'");
                     UnitTestsUtil.VerifyXPaths(document, new string[] { String.Format("/atom:entry[atom:id=\"http://host/Values({0})\"]", key) });
@@ -1106,7 +1017,7 @@ namespace AstoriaUnitTests.Tests
 
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("ContextType", new Type[] { typeof(CustomDataContext), typeof(ocs.CustomObjectContext) }),
-                    new Dimension("UriAndMimeType", new object[] { 
+                    new Dimension("UriAndMimeType", new object[] {
                         new KeyValuePair<string[], string[]>(uriTargetingEntities, invalidMimeForEntityUri),
                         new KeyValuePair<string[], string[]>(uriTargetingNonEntities, invalidMimeForNonEntityResources)
                     }));
@@ -1130,16 +1041,16 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
-            [TestMethod, Variation("Make sure the uri in the deferred elements are valid")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Make sure the uri in the deferred elements are valid")]
             public void UriInDeferredElementsShouldBeValid()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("ResponseFormat", UnitTestsUtil.ResponseFormats),
                     new Dimension("WebServerLocation", new object[] { WebServerLocation.InProcess }),
-                    new Dimension("ContextType", new Type[] 
-                    { 
-                        typeof(CustomDataContext), 
+                    new Dimension("ContextType", new Type[]
+                    {
+                        typeof(CustomDataContext),
                         typeof(ocs.CustomObjectContext),
                         typeof(CustomRowBasedOpenTypesContext)
                     }),
@@ -1167,7 +1078,7 @@ namespace AstoriaUnitTests.Tests
                         });
 
                         XmlDocument document = request.GetResponseStreamAsXmlDocument(responseFormat);
-                  
+
                         XmlNodeList nodeList = document.SelectNodes("//atom:link[@href]", TestUtil.TestNamespaceManager);
                         string[] uriInPayload = new string[nodeList.Count];
                         for (int i = 0; i < nodeList.Count; i++)
@@ -1206,7 +1117,7 @@ namespace AstoriaUnitTests.Tests
 
             // EdmItemCollection cannot read Duration
             [Ignore]
-            [TestMethod, Variation("Updating $value uri should work")]
+            // [TestMethod, Variation("Updating $value uri should work")]
             public void UpdatingValueUriShouldWork()
             {
                 TypedCustomAllTypesDataContext.ClearHandlers();
@@ -1243,7 +1154,7 @@ namespace AstoriaUnitTests.Tests
                     string uri = "/Values(1)/" + property.Name + "/$value";
                     CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                         new Dimension("SampleValue", typeData.SampleValues));
-                    TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                    TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                     {
                         object value = values["SampleValue"];
                         if (value == null)
@@ -1293,7 +1204,7 @@ namespace AstoriaUnitTests.Tests
 
                 XmlDocument document = request.GetResponseStreamAsXmlDocument();
                 UnitTestsUtil.VerifyXPaths(document,
-                    new string[] { 
+                    new string[] {
                         "/edmx:Edmx/edmx:DataServices/csdl:Schema[@Namespace='AstoriaUnitTests']",
                         "count(/edmx:Edmx/edmx:DataServices/csdl:Schema)=1",
                         "//csdl:EntityType[@Name='NoNamespaceType']",
@@ -1358,7 +1269,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("If the double number has no period in it, json reader fails to read this")]
+            // [TestMethod, Variation("If the double number has no period in it, json reader fails to read this")]
             // Todo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             [Ignore]
             public void JsonShouldReadDoubleNumberWithoutPeriod()
@@ -1376,7 +1287,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values(7E-06)", null, contextType, UnitTestsUtil.JsonLightMimeType, "PATCH", null, false);
             }
 
-            [TestMethod, Variation("If the double number range is greater than int32 range, but fits within the double scale, json reader fails to read this")]
+            // [TestMethod, Variation("If the double number range is greater than int32 range, but fits within the double scale, json reader fails to read this")]
             [Ignore]
             // Todo:Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void JsonShouldReadDoubleNumberGreaterThanInt32Range()
@@ -1410,7 +1321,7 @@ namespace AstoriaUnitTests.Tests
                     "/Customers?$top=5",
                     "/Customers(1)?foo=bar and xyz=123" })
                     {
-                        OpenWebDataServiceHelper.ProcessRequestDelegate.Value = delegate(ProcessRequestArgs args)
+                        OpenWebDataServiceHelper.ProcessRequestDelegate.Value = delegate (ProcessRequestArgs args)
                         {
                             Assert.IsFalse(args.IsBatchOperation, "Must be false for single operation requests");
                             Assert.IsTrue(args.RequestUri.OriginalString.EndsWith(uri), "the uri must match");
@@ -1420,8 +1331,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
-            [TestMethod, Variation("Make sure the max object count is honoured")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Make sure the max object count is honoured")]
             public void VerifyMaxObjectCount()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -1613,7 +1524,7 @@ namespace AstoriaUnitTests.Tests
                 //    serviceOperationRights[i] = (ServiceOperationRights)i;
                 //}
 
-                string[] serviceOperationNames = new string[] 
+                string[] serviceOperationNames = new string[]
                 {
                     "SOpVoid",
                     "SOpDirectValue",
@@ -1671,7 +1582,7 @@ namespace AstoriaUnitTests.Tests
             [TestMethod, Variation("Null reference exception in CheckVersion() when POSTing to a void service op")]
             public void ShouldNotThrowInCheckVersionWhenPostVoidServiceOperation()
             {
-                string[] serviceOperationNames = new string[] 
+                string[] serviceOperationNames = new string[]
                 {
                     "SOpVoidPost",
                     "SOpDirectValuePost",
@@ -1803,14 +1714,14 @@ namespace AstoriaUnitTests.Tests
                     UnitTestsUtil.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "POST", 400);
                 }
             }
-
-            [TestMethod, Variation("filter on custom providers on strongly typed properties not working")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("filter on custom providers on strongly typed properties not working")]
             public void FilterOnCustomProvidersOnStrongTypePropertiesShouldWork()
             {
                 UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.AtomFormat, "/Customers?$filter=ID%20eq%201", typeof(CustomRowBasedContext), null, "GET");
             }
-
-            [TestMethod, Variation("check whether the conversion is not happening when the typeConversion is set to false")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("check whether the conversion is not happening when the typeConversion is set to false")]
             public void ConversionShouldNotHappenWhenTypeConversionSetToFale()
             {
                 foreach (TypeData typeData in TypeData.Values)
@@ -2112,9 +2023,9 @@ namespace AstoriaUnitTests.Tests
                     }
                     else
                         if (serviceType == typeof(Microsoft.OData.Service.Providers.IDataServiceUpdateProvider))
-                        {
-                            return this;
-                        }
+                    {
+                        return this;
+                    }
 
                     return null;
                 }
@@ -2131,19 +2042,6 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     return null;
-                }
-            }
-
-            [TestMethod, Variation("making sure that we detect new types when loading service operation metadata")]
-            public void ShouldDetectNewTypesWhenLoadingServiceOperationMetadata()
-            {
-                using (TestWebRequest request = TestWebRequest.CreateForInProcess())
-                {
-                    request.RequestUriString = "/MyServiceOperation";
-                    request.Accept = UnitTestsUtil.JsonMimeType;
-                    request.ServiceType = typeof(TestDataService8);
-                    request.HttpMethod = "GET";
-                    request.SendRequest();
                 }
             }
 
@@ -2187,8 +2085,8 @@ namespace AstoriaUnitTests.Tests
 
                 UnitTestsUtil.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "POST", 400);
             }
-
-            [TestMethod, Variation("xmlns on innererror tag is incorrectly declared")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("xmlns on innererror tag is incorrectly declared")]
             public void XmlNsOnInnerErrorTagShouldBeCorrect()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
@@ -2606,8 +2504,8 @@ namespace AstoriaUnitTests.Tests
                     typeof(T).GetMethod("InsertCustomer").Invoke(this.CurrentDataSource, new object[] { id, name });
                 }
             }
-
-            [TestMethod, Variation("Small number seen as zero")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Small number seen as zero")]
             public void SmallNumberShouldNotBeTreatedAsZero()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -2627,8 +2525,8 @@ namespace AstoriaUnitTests.Tests
                     TestUtil.AssertContains(s2, "entry");
                 }
             }
-
-            [TestMethod]
+            [Ignore] // Remove Atom
+            // [TestMethod]
             public void ALinqExceptionInSelectCast()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -2638,8 +2536,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     Microsoft.OData.Client.DataServiceContext ctx = new northwindClient.northwindContext(new Uri(request.BaseUri));
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
 
                     var q1 = ctx.CreateQuery<northwindClient.Customers>("Customers").Select(c => c as northwindClient.Customers);
@@ -2693,8 +2591,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
-            [TestMethod, Variation("Invoking Service Operation which is defined somewhere else other than data service in custom provider")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Invoking Service Operation which is defined somewhere else other than data service in custom provider")]
             public void TestServiceOperationDefinedInCustomProvider()
             {
                 string uri = "/IntServiceOperation";
@@ -2843,7 +2741,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Incorrect token error response should have correct serialization format")]
+            // [TestMethod, Variation("Incorrect token error response should have correct serialization format")]
             [Ignore]
             public void IncorrectTokenErrorResponseShouldHaveCorrectSerializationFormat()
             {
@@ -2869,8 +2767,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestMethod, Variation("Row Count query string should allow heading white spaces")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Row Count query string should allow heading white spaces")]
             public void RowCountQueryStringShouldAllowHeadingWhitespaces()
             {
                 TestUtil.ClearMetadataCache();
@@ -2878,7 +2776,7 @@ namespace AstoriaUnitTests.Tests
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("RequestUri", new string[] {
                             "/Customers?$count=%20true",
-                            "/Customers?$count=%20%20true"                        
+                            "/Customers?$count=%20%20true"
                     }));
 
                 TestUtil.RunCombinatorialEngineFail(engine, (values) =>
@@ -2896,8 +2794,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestMethod, Variation("Cannot invoke Service Op in Batch")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Cannot invoke Service Op in Batch")]
             public void CannotInvokeServiceOpInBatch()
             {
                 TestUtil.ClearMetadataCache();
@@ -2934,18 +2832,18 @@ Content-Length: 0
                     request.GetResponseStreamAsText();
                 }
             }
-
-            [TestMethod, Variation("ChangeInterceptor not fired on DELETE $ref")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("ChangeInterceptor not fired on DELETE $ref")]
             public void ChangeInterceptorShouldBeFiredOnDeleteRef()
             {
                 var testCases = new[] {
                     new {
-                        InvokeInterceptorsOnLinkDelete = false, 
+                        InvokeInterceptorsOnLinkDelete = false,
                         ExpectedCustomersInterceptorCount = 0,
                         ExpectedOrdersInterceptorCount = 0
                     },
                     new {
-                        InvokeInterceptorsOnLinkDelete = true, 
+                        InvokeInterceptorsOnLinkDelete = true,
                         ExpectedCustomersInterceptorCount = 1,
                         ExpectedOrdersInterceptorCount = 0
                     }
@@ -2991,7 +2889,7 @@ Content-Length: 0
 
             public class ServiceOpAndChangeInterceptorService : DataService<CustomDataContext>
             {
-                static Customer[] _custs = new Customer[3] { 
+                static Customer[] _custs = new Customer[3] {
                     new Customer() { ID=0, Name="Customer 0" },
                     new Customer() { ID=1, Name="Customer 1" },
                     new Customer() { ID=2, Name="Customer 2" }};
@@ -3128,8 +3026,8 @@ Content-Length: 0
 
                 TypedCustomDataContext<AllTypes>.PreserveChanges = false;
             }
-
-            [TestMethod, Variation("POST in batch operation returns incorrect Location")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("POST in batch operation returns incorrect Location")]
             public void PostInBatchOperationsShouldReturnCorrectLocation()
             {
                 TestUtil.ClearMetadataCache();
@@ -3273,8 +3171,8 @@ Content-Type: application/atom+xml;type=entry
                     public string Name { get; set; }
                 }
             }
-
-            [TestMethod, Variation("POST followed by PUT in a single changeset within a batch throws an exception with EF provider")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("POST followed by PUT in a single changeset within a batch throws an exception with EF provider")]
             public void PostFollowedByPutInSingleChangesetShouldThrow()
             {
                 Type contextType = typeof(ocs.CustomObjectContext);
@@ -3308,8 +3206,8 @@ Content-Type: application/atom+xml;type=entry
                     Assert.IsTrue(customer.Orders.Single().ID == 0, "The orders link must be present");
                 }
             }
-
-            [TestMethod, Variation("In $ref request, we used to force uri element in the metadata namespace, while in GET $ref requests, we wrote uri element in data namespace")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("In $ref request, we used to force uri element in the metadata namespace, while in GET $ref requests, we wrote uri element in data namespace")]
             public void ForceUriElementInVariousNamespaces()
             {
                 string atomPayload = "<ref xmlns='http://docs.oasis-open.org/odata/ns/metadata' id='/Orders(0)' />";
@@ -3319,14 +3217,14 @@ Content-Type: application/atom+xml;type=entry
                         new string[] { "/adsm:ref[@id='http://host/Orders(0)']" }),
                     new KeyValuePair<string, string[]>(
                         "/Customers(1)/Orders(0)",
-                        new string[] { "/atom:entry[atom:category/@term='#" + typeof(Order).FullName + 
+                        new string[] { "/atom:entry[atom:category/@term='#" + typeof(Order).FullName +
                             "' and atom:id='http://host/Orders(0)' and atom:content/adsm:properties[ads:ID='0' and ads:DollarAmount='20.1']]" })
                 };
 
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders/$ref", UnitTestsUtil.AtomFormat, atomPayload, atomUriAndXPaths, false /*verifyETag*/);
             }
-
-            [TestMethod, Variation("No etag in response payload when one does $expand")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("No etag in response payload when one does $expand")]
             public void VerifyEtagInExpandPayload()
             {
                 string requestUri = "/Customers(0)?$expand=Orders";
@@ -3412,7 +3310,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
 
-            [TestMethod, Variation("Making sure all the etag values are round-trippable")]
+            // [TestMethod, Variation("Making sure all the etag values are round-trippable")]
             [Ignore]
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void AllEtagValuesShouldRoundtrip()
@@ -3504,8 +3402,8 @@ Content-Type: application/atom+xml;type=entry
                     return 1;
                 }
             }
-
-            [TestMethod, Variation("Author required on feed where there are no entries")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Author required on feed where there are no entries")]
             public void AtomAuthor()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -3522,8 +3420,8 @@ Content-Type: application/atom+xml;type=entry
                     UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.AtomFormat, "count(atom:feed/atom:author)=0", "atom:feed/atom:entry/atom:author");
                 }
             }
-
-            [TestMethod, Variation("[Server]Server uses ETag value from payload on PUT response")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("[Server]Server uses ETag value from payload on PUT response")]
             public void ETagInPutResponse()
             {
                 using (var conn = ocs.PopulateData.CreateTableAndPopulateData())
@@ -4014,7 +3912,7 @@ Content-Type: application/atom+xml;type=entry
                     {
                         Name = "Customer 0",
                         ID = 0,
-                        EditTimeStamp = new byte[]{1,3}
+                        EditTimeStamp = new byte[] { 1, 3 }
                     });
                     custs[0].Orders.Add(new AstoriaUnitTests.ObjectContextStubs.Hidden.Order());
 
@@ -4107,9 +4005,8 @@ Content-Type: application/atom+xml;type=entry
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(BaseTestWebRequest), "HostInterfaceType"))
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(NorthwindDefaultStreamService), "GetServiceOverride"))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                    null,
                     "RegressionTest_StreamWithMissingInterface_EF"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                 {
@@ -4431,7 +4328,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
 
-            [TestMethod, Variation("Server IDSP: Trying to access a property on a wrong type")]
+            // [TestMethod, Variation("Server IDSP: Trying to access a property on a wrong type")]
             public void TestAs()
             {
                 var response = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.AtomFormat, "/Bset?$filter=ID eq A/ID", typeof(MyProvider));
@@ -4451,8 +4348,8 @@ Content-Type: application/atom+xml;type=entry
                     throw new DataServiceException(500, "QueryInterceptor shouldn't be called!");
                 }
             }
-
-            [TestMethod, Variation("Enforce EntitySetRights.")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Enforce EntitySetRights.")]
             public void EntitySetRightsForNestedQueries()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -4471,8 +4368,8 @@ Content-Type: application/atom+xml;type=entry
                     configuration.SetEntitySetAccessRule("Orders", EntitySetRights.None);
                 }
             }
-
-            [TestMethod, Variation("Hidden Nav props do not show error during expand in IDSP/Mest")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Hidden Nav props do not show error during expand in IDSP/Mest")]
             public void ExpandOnHiddenNavPropShouldThrow()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -4711,8 +4608,8 @@ Content-Type: application/atom+xml;type=entry
                     }
                 }
             }
-
-            [TestMethod, Variation("Call order: On insert, Query interceptors called twice for PUT to link")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Call order: On insert, Query interceptors called twice for PUT to link")]
             public void DoNotMakeUnnecessaryCallToQueryInterceptor()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(new Dimension("RequestType", new[] { "PUT", "PATCH" }));
@@ -4748,10 +4645,10 @@ Content-Type: application/atom+xml;type=entry
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(Queryable<SimpleEntity>), "OnGetEnumerator"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                 {
-                    string[] requestUris = new string[] 
+                    string[] requestUris = new string[]
                     {
-                        "/Entities(1)/Name", 
-                        "/Entities(1)/Name/$value" 
+                        "/Entities(1)/Name",
+                        "/Entities(1)/Name/$value"
                     };
 
                     byte createQueryCalls = 0;
@@ -5268,8 +5165,8 @@ Content-Type: application/atom+xml;type=entry
                     MethodInfo populateMemberMetadataMethod = objectContextServiceProviderType.GetMethod("PopulateMemberMetadata", BindingFlags.Static | BindingFlags.NonPublic);
 
                     Type resourceTypeCacheItemType = serverAssembly.GetType("Microsoft.OData.Service.Caching.ResourceTypeCacheItem");
-                    ConstructorInfo typeCacheItemConstructor = resourceTypeCacheItemType.GetConstructor(new Type[] {typeof (p.ResourceType)});
-                    object resourceTypeCacheItem = typeCacheItemConstructor.Invoke(new object[] {rt});
+                    ConstructorInfo typeCacheItemConstructor = resourceTypeCacheItemType.GetConstructor(new Type[] { typeof(p.ResourceType) });
+                    object resourceTypeCacheItem = typeCacheItemConstructor.Invoke(new object[] { rt });
                     try
                     {
                         populateMemberMetadataMethod.Invoke(null, new object[] { resourceTypeCacheItem, ocMetadata, null, typeMap });
@@ -5410,7 +5307,7 @@ Content-Type: application/atom+xml;type=entry
 
                 String[] callOrder = new String[] { 
                     // primitive or complex properties goes first, in the order which they are specified
-                    "ID", "City", "PostalCode", "State", "StreetAddress", "Address", "Name", 
+                    "ID", "Name", "City", "PostalCode", "State", "StreetAddress", "Address", 
                     // navigation properties goes last, in the order which they are specified
                     "ID", "DollarAmount", "Orders", "Orders", "ID", "DollarAmount", "Orders" };
 
@@ -5479,8 +5376,8 @@ Content-Type: application/atom+xml;type=entry
                 UnitTestsUtil.VerifyInvalidRequest(null, "/Customers(1)/Orders/$ref/$count?$select=ID", typeof(CustomDataContext), null, "GET", 404);
                 UnitTestsUtil.VerifyInvalidRequest(null, "/Customers(1)/Orders/$ref?$select=ID", typeof(CustomDataContext), null, "GET", 400);
             }
-
-            [TestMethod, Variation("DELETE request with $select causes null reference exception")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("DELETE request with $select causes null reference exception")]
             public void TestDeleteRequestWithSelect()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -5534,7 +5431,7 @@ Content-Type: application/atom+xml;type=entry
                         // PUT, PATCH DELETE uri's
                         foreach (string uri in uris)
                         {
-                            string uriWithQueryParameter = uri == deleteEntityRefUri 
+                            string uriWithQueryParameter = uri == deleteEntityRefUri
                                 ? String.Format("{0}&{1}", uri, queryParameter)
                                 : String.Format("{0}?{1}", uri, queryParameter);
 
@@ -5574,8 +5471,8 @@ Content-Type: application/atom+xml;type=entry
                 public AstoriaDataContext()
                 {
                     this.ctx = new DataServiceContext(AstoriaDataContext.ContextUri);
-                    ctx.EnableAtom = true;
-                    this.ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //this.ctx.Format.UseAtom();
                 }
 
                 public DataServiceQuery<Customer> Customers
@@ -5602,8 +5499,8 @@ Content-Type: application/atom+xml;type=entry
                     }
                 }
             }
-
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void TestSettingContextUriOnDataContext()
             {
                 using (CustomDataContext.CreateChangeScope())
@@ -5618,8 +5515,8 @@ Content-Type: application/atom+xml;type=entry
                         requestToAstoria.DataServiceType = typeof(AstoriaDataContext);
                         requestToAstoria.StartService();
                         DataServiceContext ctxToAstoria = new DataServiceContext(requestToAstoria.ServiceRoot);
-                        ctxToAstoria.EnableAtom = true;
-                        ctxToAstoria.Format.UseAtom();
+                        //ctxToAstoria.EnableAtom = true;
+                        //ctxToAstoria.Format.UseAtom();
                         foreach (Customer c in ctxToAstoria.CreateQuery<Customer>("Customers"))
                         {
                         }
@@ -5631,15 +5528,15 @@ Content-Type: application/atom+xml;type=entry
             public void ShouldThrowIfPropertyAccessSourceNotSingleValueIfRequired()
             {
                 TestUtil.RunCombinations(
-                    new Type[] { 
-                        typeof(AstoriaUnitTests.Stubs.CustomRowBasedOpenTypesContext), 
-                        typeof(AstoriaUnitTests.Stubs.CustomRowBasedContext), 
+                    new Type[] {
+                        typeof(AstoriaUnitTests.Stubs.CustomRowBasedOpenTypesContext),
+                        typeof(AstoriaUnitTests.Stubs.CustomRowBasedContext),
                         typeof(AstoriaUnitTests.Stubs.CustomDataContext)},
                     new string[] {
                         "/Customers?$filter=cast(BestFriend, 'AstoriaUnitTests.Stubs.CustomerWithBirthday')/Orders/ID gt 0",
                         "/Customers?$filter=cast('AstoriaUnitTests.Stubs.CustomerWithBirthday')/Orders/ID gt 0",
-                        "/Customers?$orderby=Orders/ID", 
-                        "/Customers?$orderby=cast('AstoriaUnitTests.Stubs.CustomerWithBirthday')/Orders/ID", 
+                        "/Customers?$orderby=Orders/ID",
+                        "/Customers?$orderby=cast('AstoriaUnitTests.Stubs.CustomerWithBirthday')/Orders/ID",
                         "/Customers?$filter=Orders/ID gt 0"},
                     (providerType, requestUri) =>
                     {
@@ -5658,8 +5555,8 @@ Content-Type: application/atom+xml;type=entry
                         }
                     });
             }
-
-            [TestMethod, Variation("Make sure the server can deserialize what it serializes - <m:properties> is not a required child of <atom:content> element")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Make sure the server can deserialize what it serializes - <m:properties> is not a required child of <atom:content> element")]
             public void ServerShouldRoundtripWhetherPropertiesPresentInContentElement()
             {
                 using (CustomDataContext.CreateChangeScope())
@@ -5691,8 +5588,8 @@ Content-Type: application/atom+xml;type=entry
                     request.SendRequest();
                 }
             }
-
-            [TestMethod, Variation("Accessing DataServiceHost.RequestHeaders/ResponseHeaders properties when host instance doesn't implement IDataServiceHost2 should throw exception")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Accessing DataServiceHost.RequestHeaders/ResponseHeaders properties when host instance doesn't implement IDataServiceHost2 should throw exception")]
             public void AccessingHeaderWhenHostInstanceNotImplementIDataServiceHost2ShouldThrow()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
@@ -5727,7 +5624,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
 
-            [TestMethod, Variation("Medium trust bug for filter scenarios")]
+            // [TestMethod, Variation("Medium trust bug for filter scenarios")]
             [Ignore]
             public void TestMediumTrustForFilterScenarios()
             {
@@ -6155,8 +6052,8 @@ Content-Type: application/atom+xml;type=entry
                     Assert.AreEqual(expectedErrorMsg, e.InnerException.Message);
                 }
             }
-
-            [TestMethod, Variation("IDSP: Spaces in a property name causes entity serialization to fail and not respond, but works fine in $metadata serialization")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("IDSP: Spaces in a property name causes entity serialization to fail and not respond, but works fine in $metadata serialization")]
             public void SpaceInPropertyNameShouldNotThrowDuringEntitySerialization()
             {
                 DSPMetadata metadata = new DSPMetadata("TestContainer", "TestNamespace");
@@ -6202,8 +6099,8 @@ Content-Type: application/atom+xml;type=entry
             }
 
             #region IDSMP: Server does not respond to service-document request if a type is not marked read-only
-
-            [TestMethod, Variation("IDSMP: Server does not respond to service-document request if a type is not marked read-only")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("IDSMP: Server does not respond to service-document request if a type is not marked read-only")]
             public void ServerShouldRespondToServiceDocRequestIfTypeNotMarkedReadOnly()
             {
                 foreach (string accept in new[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.MimeApplicationXml })
@@ -6462,8 +6359,8 @@ Content-Type: application/atom+xml;type=entry
                         }
                     });
             }
-
-            [TestMethod, Variation("For EF poco cases (no proxies), the update operation succeeds even if the etag specified is incorrect")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("For EF poco cases (no proxies), the update operation succeeds even if the etag specified is incorrect")]
             public void UpdateOperationShouldFailIfEtagIsIncorrect()
             {
                 Type contextType = typeof(AstoriaUnitTests.EFFK.CustomObjectContextPOCO);
@@ -6598,8 +6495,8 @@ Content-Type: application/atom+xml;type=entry
             {
                 public int ID { get; set; }
             }
-
-            [TestMethod, Variation("Check that the etag is cleared for named streams in the client when the provider doesn't specify an etag value.")]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Check that the etag is cleared for named streams in the client when the provider doesn't specify an etag value.")]
             public void EtagShouldBeClearedForNamedStreamsWhenNoEtagValuePresent()
             {
                 TestUtil.RunCombinations(new[] { MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges, MergeOption.NoTracking },
@@ -6642,8 +6539,8 @@ Content-Type: application/atom+xml;type=entry
                         {
                             request.StartService();
                             var ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                            ctx.EnableAtom = true;
-                            ctx.Format.UseAtom();
+                            //ctx.EnableAtom = true;
+                            //ctx.Format.UseAtom();
 
                             // Get the entity
                             var streamEntity = ctx.CreateQuery<StreamEntity>("StreamSet").Where(s => s.ID == 1).Single();

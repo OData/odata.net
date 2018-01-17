@@ -14,8 +14,8 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.Test.OData.Utils.Metadata;
+    using EdmProperty = System.Data.Metadata.Edm.EdmProperty;
 
     /// <summary>
     /// This factory class creates an IODataMetadataProvider given an Object context and its metadata workspace
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         {
             if (property.DeclaringType is EntityType && ((EntityType)property.DeclaringType).KeyMembers.Contains(property.Name))
             {
-                metadata.AddKeyProperty(structuredType, property.Name, type, IsETagProperty(property));
+                metadata.AddKeyProperty(structuredType, property.Name, type);
             }
             else if (type == typeof(Stream))
             {
@@ -97,7 +97,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
             }
             else
             {
-                metadata.AddPrimitiveProperty(structuredType, property.Name, type, IsETagProperty(property));
+                metadata.AddPrimitiveProperty(structuredType, property.Name, type);
             }
         }
 
@@ -133,17 +133,6 @@ namespace Microsoft.Test.Taupo.OData.WCFService
             {
                 AddProperty(metadata, property, structuredType);
             }
-        }
-
-        /// <summary>
-        /// Determines whether <paramref name="property"/> is part of an etag based on annotations
-        /// </summary>
-        /// <param name="property">Property to check for etag</param>
-        /// <returns>true if part of an etag otherwise false</returns>
-        private static bool IsETagProperty(EdmProperty property)
-        {
-            return false;
-            // return property.Annotations.OfType<ConcurrencyTokenAnnotation>().Any();
         }
 
         /// <summary>

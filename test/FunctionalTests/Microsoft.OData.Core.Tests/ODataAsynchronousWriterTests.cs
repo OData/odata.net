@@ -8,10 +8,9 @@ using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataAsynchronousWriterTests
     {
@@ -36,12 +35,12 @@ namespace Microsoft.OData.Core.Tests
 
             var settings = new ODataMessageWriterSettings();
             settings.SetServiceDocumentUri(new Uri(ServiceDocumentUri));
-            settings.DisableMessageStreamDisposal = true;
+            settings.EnableMessageStreamDisposal = false;
 
             using (var innerMessageWriter = new ODataMessageWriter(innerMessage, settings, this.userModel))
             {
-                var entryWriter = innerMessageWriter.CreateODataEntryWriter(singleton, testType);
-                var entry = new ODataEntry() {TypeName = "NS.Test", Properties = new[] {new ODataProperty() {Name = "Id", Value = 1}}};
+                var entryWriter = innerMessageWriter.CreateODataResourceWriter(singleton, testType);
+                var entry = new ODataResource() {TypeName = "NS.Test", Properties = new[] {new ODataProperty() {Name = "Id", Value = 1}}};
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
             }

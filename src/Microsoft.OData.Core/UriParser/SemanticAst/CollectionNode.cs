@@ -4,12 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    #region Namespaces    
+    #region Namespaces
 
-    using System;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -24,7 +22,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         public abstract IEdmTypeReference ItemType
         {
-            get; 
+            get;
         }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Gets the kind of this node.
         /// </summary>
         public override QueryNodeKind Kind
-        {  
+        {
             get { return (QueryNodeKind)this.InternalKind; }
         }
     }

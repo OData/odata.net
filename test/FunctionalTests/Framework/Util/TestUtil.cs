@@ -15,7 +15,6 @@ namespace System.Data.Test.Astoria
     using System.Data.Entity.Design;
     using System.Data.Metadata.Edm;
 #endif
-    using Microsoft.OData.Core.Atom;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -60,10 +59,6 @@ namespace System.Data.Test.Astoria
 
         /// <summary>Reusable name table for tests.</summary>
         private static XmlNameTable testNameTable;
-
-        /// <summary>SyndicationItemProperty enum values</summary>
-        private static List<AtomSyndicationItemProperty> syndicationItemList;
-
         #endregion Private fields.
 
         public static string ConnectionString
@@ -226,23 +221,6 @@ namespace System.Data.Test.Astoria
                 }
 
                 return testNameTable;
-            }
-        }
-
-        public static List<AtomSyndicationItemProperty> SyndicationItemList
-        {
-            get
-            {
-                if (syndicationItemList == null)
-                {
-                    //For now V2 SyndicatoinItemProperties only
-                    syndicationItemList = Enum.GetValues(typeof(AtomSyndicationItemProperty))
-                                              .Cast<AtomSyndicationItemProperty>()
-                                              .ToList();
-
-                }
-
-                return syndicationItemList;
             }
         }
 

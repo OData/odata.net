@@ -4,22 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
-    #region Namespaces
-    using System;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    #endregion Namespaces
-
     /// <summary>
     /// Lexical token representing a segment in a path.
     /// </summary>
-    /// 
-    internal abstract class PathToken : QueryToken
+    ///
+    public abstract class PathToken : QueryToken
     {
         /// <summary>
         /// The NextToken in the path(can either be the parent or the child depending on whether the tree has

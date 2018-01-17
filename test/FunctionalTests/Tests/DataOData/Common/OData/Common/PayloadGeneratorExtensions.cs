@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -18,7 +18,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.Test.Taupo.Contracts.DataGeneration;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 
@@ -43,7 +42,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             ODataPayloadKind payloadKind = payload.PayloadElement.GetPayloadKindFromPayloadElement();
             Debug.Assert(
-                payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed,
+                payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet,
                 "Expanded links can only contain entries and feeds.");
 
             if (payload.PayloadEdmModel != null)
@@ -92,7 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             ODataPayloadKind payloadKind = payload.PayloadElement.GetPayloadKindFromPayloadElement();
             Debug.Assert(
-                payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed,
+                payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet,
                 "Expanded links can only contain entries and feeds.");
 
             EdmEntityType entityType = null;
@@ -182,7 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             int elementsBefore = 0,
             int elementsAfter = 0) where T : PayloadTestDescriptor
         {
-            Debug.Assert(payload.PayloadElement.GetPayloadKindFromPayloadElement() == ODataPayloadKind.Entry, "only entries are supported.");
+            Debug.Assert(payload.PayloadElement.GetPayloadKindFromPayloadElement() == ODataPayloadKind.Resource, "only entries are supported.");
             EntityInstance payloadEntity = (EntityInstance)payload.PayloadElement;
 
             EntitySetInstance entitySetInstance = PayloadBuilder.EntitySet();

@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmElement
@@ -53,7 +53,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         /// <param name="term">The specified term</param>
         public void RemoveAnnotationsForTerm(IEdmTerm term)
         {
-            var found = this.vocabularyAnnotations.OfType<IEdmVocabularyAnnotation>().Where(a => a.Term.Equals(term)).ToArray();
+            var found = this.vocabularyAnnotations.Where(a => a.Term.Equals(term)).ToArray();
             foreach (var a in found)
             {
                 this.vocabularyAnnotations.Remove(a);

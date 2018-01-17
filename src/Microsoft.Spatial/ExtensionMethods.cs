@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Globalization;

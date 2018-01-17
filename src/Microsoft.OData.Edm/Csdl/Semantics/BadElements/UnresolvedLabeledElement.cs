@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
@@ -13,7 +12,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         public UnresolvedLabeledElement(string label, EdmLocation location)
             : base(label, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedLabeledElement, Edm.Strings.Bad_UnresolvedLabeledElement(label)) })
-        { 
+        {
         }
     }
 }

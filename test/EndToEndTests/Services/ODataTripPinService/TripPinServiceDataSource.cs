@@ -390,8 +390,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
                 new Airline()
                 {
-                    Name = "Hong Kong Airlines",
-                    AirlineCode = "HX"
+                    Name = "Cathay Pacific Airways",
+                    AirlineCode = "CX"
                 },
 
                 new Airline()

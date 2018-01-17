@@ -4,7 +4,7 @@ $filter = OpenNumbers/any(a: a eq '4258828080')
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Employees
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
@@ -18,7 +18,7 @@ FilterQueryOption
 				NonentityRangeVariableReferenceNode
 					Name = a
 					Range Variable = 
-					NonentityRangeVariable
+					NonResourceRangeVariable
 						Name = a
 						TypeReference = 
 					TypeReference = 
@@ -28,16 +28,16 @@ FilterQueryOption
 		CollectionOpenPropertyAccessNode
 			Name = OpenNumbers
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Employees
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		NonentityRangeVariable
+		NonResourceRangeVariable
 			Name = a
 			TypeReference = 
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = Employees
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

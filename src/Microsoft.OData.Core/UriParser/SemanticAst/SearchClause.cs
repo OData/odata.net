@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// The result of parsing a $search query option.

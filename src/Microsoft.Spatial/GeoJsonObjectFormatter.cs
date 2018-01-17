@@ -8,7 +8,6 @@ namespace Microsoft.Spatial
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.Data.Spatial;
 
     /// <summary>Represents a formatter for Json object.</summary>
     public abstract class GeoJsonObjectFormatter

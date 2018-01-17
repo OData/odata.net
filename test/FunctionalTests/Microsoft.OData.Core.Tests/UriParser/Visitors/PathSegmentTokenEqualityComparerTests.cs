@@ -5,12 +5,11 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.Visitors;
+using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Visitors
+namespace Microsoft.OData.Tests.UriParser.Visitors
 {
     public class PathSegmentTokenEqualityComparerTests
     {

@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
@@ -22,39 +22,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     {
         private const string ExpectedTypeName = "Fake.NS.Type";
         private readonly ClientEdmModel clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
-
-        [TestMethod]
-        public void ServerTypeNameShouldBeFromAnnotationInAtom()
-        {
-            var testSubject = this.CreateMaterializerEntry(
-                ODataFormat.Atom, 
-                e =>
-                {
-                    e.TypeName = "foo";
-                    e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = ExpectedTypeName });
-                });
-            testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
-        }
-
-        [TestMethod]
-        public void ServerTypeNameShouldBeFromAnnotationInAtomEvenIfItIsNull()
-        {
-            var testSubject = this.CreateMaterializerEntry(
-                ODataFormat.Atom, 
-                e =>
-                {
-                    e.TypeName = "foo";
-                    e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
-                });
-            testSubject.EntityDescriptor.ServerTypeName.Should().BeNull();
-        }
-
-        [TestMethod]
-        public void ServerTypeNameShouldBeFromEntryInAtomIfNoAnnotationIsPresent()
-        {
-            var testSubject = this.CreateMaterializerEntry(ODataFormat.Atom, e => e.TypeName = ExpectedTypeName);
-            testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
-        }
 
         [TestMethod]
         public void ServerTypeNameShouldFromEntryInJsonIfNoAnnotationIsPresent()
@@ -71,7 +38,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                e =>
                {
                    e.TypeName = ExpectedTypeName;
-                   e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+                   e.TypeAnnotation = new ODataTypeAnnotation();
                });
             testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
         }
@@ -84,15 +51,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                e =>
                {
                    e.TypeName = "foo";
-                   e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = ExpectedTypeName });
+                   e.TypeAnnotation = new ODataTypeAnnotation(ExpectedTypeName);
                });
             testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
         }
 
-        private MaterializerEntry CreateMaterializerEntry(ODataFormat format, Action<ODataEntry> modifyEntry = null)
+        private MaterializerEntry CreateMaterializerEntry(ODataFormat format, Action<ODataResource> modifyEntry = null)
         {
-            var entry = new ODataEntry();
-            if(modifyEntry != null)
+            var entry = new ODataResource();
+            if (modifyEntry != null)
             {
                 modifyEntry(entry);
             }

@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
         internal OrderByQueryOptionExpression(Type type, List<Selector> selectors)
             : base(type)
         {
-            this.selectors = selectors; 
+            this.selectors = selectors;
         }
 
         /// <summary>

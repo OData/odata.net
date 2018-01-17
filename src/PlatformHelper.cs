@@ -4,21 +4,24 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-#if ASTORIA_SERVER
+#if !SPATIAL
+using Microsoft.OData.Edm;
+#endif
+
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 #if SPATIAL
 namespace Microsoft.Spatial
 #else
-#if ODATALIB || ODATALIB_QUERY
-namespace Microsoft.OData.Core
+#if ODATA_CORE
+namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Edm
 #endif
@@ -28,122 +31,16 @@ namespace Microsoft.OData.Edm
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
 #if PORTABLELIB
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
 #endif
     using System.Reflection;
-#if DNXCORE50
-    using System.Threading;
+#if PORTABLELIB
 #endif
     using System.Xml;
-
 #if !SPATIAL
-    using Microsoft.OData.Edm.Library;
-#endif
 
-#if DNXCORE50
-
-    #region Missing enums
-
-    /// <summary>
-    /// Replacement for TypeCode enum.
-    /// </summary>
-    internal enum TypeCode
-    {
-        /// <summary>Indicates that no specific TypeCode exists for this type.</summary>
-        Object = 1,
-
-        /// <summary>Boolean</summary>
-        Boolean = 3,
-
-        /// <summary>Char</summary>
-        Char = 4,
-
-        /// <summary>Signed 8-bit integer</summary>
-        SByte = 5,
-
-        /// <summary>Unsigned 8-bit integer</summary>
-        Byte = 6,
-
-        /// <summary>Signed 16-bit integer</summary>
-        Int16 = 7,
-
-        /// <summary>Unsigned 16-bit integer</summary>
-        UInt16 = 8,
-
-        /// <summary>Signed 32-bit integer</summary>
-        Int32 = 9,
-
-        /// <summary>Unsigned 32-bit integer</summary>
-        UInt32 = 10,
-
-        /// <summary>Signed 64-bit integer</summary>
-        Int64 = 11,
-
-        /// <summary>Unsigned 64-bit integer</summary>
-        UInt64 = 12,
-
-        /// <summary>IEEE 32-bit float</summary>
-        Single = 13,
-
-        /// <summary>IEEE 64-bit double</summary>
-        Double = 14,
-
-        /// <summary>Decimal</summary>
-        Decimal = 15,
-
-        /// <summary>DateTime</summary>
-        DateTime = 16,
-
-        /// <summary>Unicode character string</summary>
-        String = 18,
-    }
-
-    [Flags]
-    internal enum BindingFlags
-    {
-        /// <summary>Specifies that the case of the member name should not be considered when binding.</summary>
-        IgnoreCase = 1,
-
-        /// <summary>Specifies that only members declared at the level of the supplied type's hierarchy should be
-        ///  considered. Inherited members are not considered.</summary>
-        DeclaredOnly = 2,
-
-        /// <summary>Specifies that instance members are to be included in the search.</summary>
-        Instance = 4,
-
-        /// <summary>Specifies that static members are to be included in the search.</summary>
-        Static = 8,
-
-        /// <summary>Specifies that public members are to be included in the search.</summary>
-        Public = 16,
-
-        /// <summary>Specifies that non-public members are to be included in the search.</summary>
-        NonPublic = 32,
-
-        /// <summary>Specifies that public and protected static members up the hierarchy should
-        /// be returned. Private static members in inherited classes are not returned.
-        /// Static members include fields, methods, events, and properties. Nested types are not returned.</summary>
-        FlattenHierarchy = 64,
-
-        /// <summary>Specifies that types of the supplied arguments must exactly match the types
-        /// of the corresponding formal parameters. Reflection throws an exception if
-        /// the caller supplies a non-null Binder object, since that implies that the
-        /// caller is supplying BindToXXX implementations that will pick the appropriate method.</summary>
-        ExactBinding = 65536,
-
-        /// <summary>Returns the set of members whose parameter count matches the number of supplied
-        /// arguments. This binding flag is used for methods with parameters that have
-        /// default values and methods with variable arguments (varargs). This flag should
-        /// only be used with System.Type.InvokeMember(System.String,System.Reflection.BindingFlags,System.Reflection.Binder,System.Object,System.Object[],System.Reflection.ParameterModifier[],System.Globalization.CultureInfo,System.String[]).
-        /// </summary>
-        OptionalParamBinding = 262144,
-    }
-
-    #endregion
 #endif
 
     /// <summary>
@@ -171,7 +68,7 @@ namespace Microsoft.OData.Edm
         /// This pattern eliminates whether a text is potentially DateTimeOffset but not others like GUID, digit .etc
         /// </summary>
         internal static readonly Regex PotentialDateTimeOffsetValidator = CreateCompiled(@"^(\d{2,4})-(\d{1,2})-(\d{1,2})(T|(\s+))(\d{1,2}):(\d{1,2})", RegexOptions.Singleline);
-        
+
 #if PORTABLELIB
         /// <summary>
         /// Replacement for Uri.UriSchemeHttp, which does not exist on.
@@ -196,13 +93,6 @@ namespace Microsoft.OData.Edm
         internal static readonly string UriSchemeHttps = Uri.UriSchemeHttps;
 #endif
 
-#if DNXCORE50
-        /// <summary>
-        /// Map of TypeCodes used with GetTypeCode method. Only initialized if that method is called.
-        /// </summary>
-        private static TypeCodeMap typeCodeMap;
-#endif
-
         #region Helper methods for properties
 
         /// <summary>
@@ -213,7 +103,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static Assembly GetAssembly(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().Assembly;
 #else
             return type.Assembly;
@@ -228,22 +118,11 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsValueType(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsValueType;
 #else
             return type.IsValueType;
 #endif
-        }
-
-        /// <summary>
-        /// Replacement for Type.IsGenericParameter.
-        /// </summary>
-        /// <param name="type">Type on which to call this helper method.</param>
-        /// <returns>See documentation for property being accessed in the body of the method.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsGenericParameter(this Type type)
-        {
-            return type.IsGenericParameter;
         }
 
         /// <summary>
@@ -254,7 +133,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsAbstract(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsAbstract;
 #else
             return type.IsAbstract;
@@ -269,7 +148,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsGenericType(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsGenericType;
 #else
             return type.IsGenericType;
@@ -284,7 +163,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsGenericTypeDefinition(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsGenericTypeDefinition;
 #else
             return type.IsGenericTypeDefinition;
@@ -299,7 +178,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsVisible(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsVisible;
 #else
             return type.IsVisible;
@@ -314,7 +193,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsInterface(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsInterface;
 #else
             return type.IsInterface;
@@ -329,7 +208,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsClass(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsClass;
 #else
             return type.IsClass;
@@ -344,7 +223,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsEnum(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsEnum;
 #else
             return type.IsEnum;
@@ -359,7 +238,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static Type GetBaseType(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().BaseType;
 #else
             return type.BaseType;
@@ -374,7 +253,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool ContainsGenericParameters(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().ContainsGenericParameters;
 #else
             return type.ContainsGenericParameters;
@@ -384,22 +263,6 @@ namespace Microsoft.OData.Edm
         #endregion
 
         #region Helper methods for static methods
-
-        /// <summary>
-        /// Replacement for Array.AsReadOnly(T[]).
-        /// </summary>
-        /// <typeparam name="T">Type of items in the array.</typeparam>
-        /// <param name="array">Array to use to create the ReadOnlyCollection.</param>
-        /// <returns>ReadOnlyCollection containing the specified array items.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static ReadOnlyCollection<T> AsReadOnly<T>(this T[] array)
-        {
-#if PORTABLELIB
-            return new ReadOnlyCollection<T>(array);
-#else
-            return Array.AsReadOnly(array);
-#endif
-        }
 
 #if !SPATIAL
         /// <summary>
@@ -488,7 +351,7 @@ namespace Microsoft.OData.Edm
             const int ColonBeforeSecondsOffset = 6;
             int indexOfColonBeforeSeconds = indexOfT + ColonBeforeSecondsOffset;
 
-            // check if the string is in the format of yyyy-mm-ddThh:mm or in the format of yyyy-mm-ddThh:mm[- or +]hh:mm 
+            // check if the string is in the format of yyyy-mm-ddThh:mm or in the format of yyyy-mm-ddThh:mm[- or +]hh:mm
             if (indexOfT > 0 &&
                 (text.Length == indexOfColonBeforeSeconds || text.Length > indexOfColonBeforeSeconds && text[indexOfColonBeforeSeconds] != ':'))
             {
@@ -508,31 +371,6 @@ namespace Microsoft.OData.Edm
         internal static Type GetTypeOrThrow(string typeName)
         {
             return Type.GetType(typeName, true);
-        }
-
-        /// <summary>
-        /// Gets the TypeCode for the specified type.
-        /// </summary>
-        /// <param name="type">Type on which to call this helper method.</param>
-        /// <returns>TypeCode representing the specified type.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static TypeCode GetTypeCode(Type type)
-        {
-#if DNXCORE50
-            if (typeCodeMap == null)
-            {
-                Interlocked.CompareExchange(ref typeCodeMap, new TypeCodeMap(), null);
-            }
-
-            if (type.IsEnum())
-            {
-                type = Enum.GetUnderlyingType(type);
-            }
-
-            return typeCodeMap.GetTypeCode(type);
-#else
-            return Type.GetTypeCode(type);
-#endif
         }
 
         #endregion
@@ -577,7 +415,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsPrimitive(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsPrimitive;
 #else
             return type.IsPrimitive;
@@ -592,7 +430,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsSealed(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().IsSealed;
 #else
             return type.IsSealed;
@@ -653,10 +491,10 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<PropertyInfo> GetPublicProperties(this Type type, bool instanceOnly, bool declaredOnly)
         {
-            // DNXCORE50: The BindingFlags enum and all related reflection method overloads have been removed from DNXCORE50. Instead of trying to provide
+            // PORTABLELIB: The BindingFlags enum and all related reflection method overloads have been removed from PORTABLELIB. Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
-#if DNXCORE50
+#if PORTABLELIB
             // TypeInfo.DeclaredProperties and Type.GetRuntimeProperties return both public and private properties, so need to filter out only public ones.
             IEnumerable<PropertyInfo> properties = declaredOnly ? type.GetTypeInfo().DeclaredProperties : type.GetRuntimeProperties();
             return properties.Where(p => IsPublic(p) && (!instanceOnly || IsInstance(p)));
@@ -685,10 +523,10 @@ namespace Microsoft.OData.Edm
         /// <returns>Enumerable of non public properties for the type.</returns>
         internal static IEnumerable<PropertyInfo> GetNonPublicProperties(this Type type, bool instanceOnly, bool declaredOnly)
         {
-            // DNXCORE50: The BindingFlags enum and all related reflection method overloads have been removed from DNXCORE50. Instead of trying to provide
+            // PORTABLELIB: The BindingFlags enum and all related reflection method overloads have been removed from PORTABLELIB. Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
-#if DNXCORE50
+#if PORTABLELIB
             // TypeInfo.DeclaredProperties and Type.GetRuntimeProperties return both public and private properties, so need to filter out only public ones.
             IEnumerable<PropertyInfo> properties = declaredOnly ? type.GetTypeInfo().DeclaredProperties : type.GetRuntimeProperties();
             return properties.Where(p => !IsPublic(p) && (!instanceOnly || IsInstance(p)));
@@ -717,7 +555,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<ConstructorInfo> GetInstanceConstructors(this Type type, bool isPublic)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().DeclaredConstructors.Where(c => !c.IsStatic && isPublic == c.IsPublic);
 #else
             BindingFlags bindingFlags = BindingFlags.Instance;
@@ -774,29 +612,12 @@ namespace Microsoft.OData.Edm
         /// <returns>Enumerable of all methods for the specified type.</returns>
         internal static IEnumerable<MethodInfo> GetMethods(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetRuntimeMethods();
 #else
             return type.GetMethods();
 #endif
         }
-
-#if DNXCORE50
-        internal static MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr)
-        {
-            var isPublic = bindingAttr.HasFlag(BindingFlags.Public);
-            var isStatic = bindingAttr.HasFlag(BindingFlags.Static);
-            return type.GetMethod(name, isPublic, isStatic);
-        }
-
-        internal static MethodInfo[] GetMethods(this Type type, BindingFlags bindingAttr)
-        {
-            var isPublic = bindingAttr.HasFlag(BindingFlags.Public);
-            var isStatic = bindingAttr.HasFlag(BindingFlags.Static);
-
-            return type.GetRuntimeMethods().Where(m => isPublic == m.IsPublic && isStatic == m.IsStatic).ToArray();
-        }
-#endif
 
         /// <summary>
         /// Gets a method on the specified type.
@@ -809,11 +630,10 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static MethodInfo GetMethod(this Type type, string name, bool isPublic, bool isStatic)
         {
-
             // WIN8: The BindingFlags enum and all related reflection method overloads have been removed from Win8. Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetRuntimeMethods()
                 .Where(
                     m =>
@@ -822,21 +642,10 @@ namespace Microsoft.OData.Edm
                         isStatic == m.IsStatic)
                 .SingleOrDefault();
 #else
-            // PortableLib: The BindingFlags enum and all related reflection method overloads have been removed from . Instead of trying to provide
-            // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
-            // still allow for the same functionality as needed by the calling code.
-
-#if PORTABLELIB
-            BindingFlags bindingFlags = isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
-            bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
-            return type.GetMethod(name, bindingFlags);
-#endif
-#if !PORTABLELIB
             BindingFlags bindingFlags = BindingFlags.Default;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
             return type.GetMethod(name, bindingFlags);
-#endif
 #endif
         }
 
@@ -860,8 +669,7 @@ namespace Microsoft.OData.Edm
             }
 
             return null;
-#endif
-#if !PORTABLELIB
+#else
             BindingFlags bindingFlags = BindingFlags.Default;
             bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
@@ -877,7 +685,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<MethodInfo> GetPublicStaticMethods(this Type type)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetRuntimeMethods().Where(m => m.IsPublic && m.IsStatic);
 #else
             return type.GetMethods(BindingFlags.Static | BindingFlags.Public);
@@ -892,8 +700,8 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<Type> GetNonPublicNestedTypes(this Type type)
         {
-#if DNXCORE50
-            return type.GetTypeInfo().DeclaredNestedTypes.Where(t => t.IsNotPublic).Select(t => t.AsType());
+#if PORTABLELIB
+            return type.GetTypeInfo().DeclaredNestedTypes.Where(t => !t.IsNestedPublic).Select(t => t.AsType());
 #else
             return type.GetNestedTypes(BindingFlags.NonPublic);
 #endif
@@ -927,10 +735,8 @@ namespace Microsoft.OData.Edm
 
             return true;
         }
-#endif
 
-#if DNXCORE50
-        #region Extension Methods to replace missing functionality (used for DNXCORE50 only, methods with these signatures already exist on other platforms)
+        #region Extension Methods to replace missing functionality (used for PORTABLELIB only, methods with these signatures already exist on other platforms)
         /// <summary>
         /// Replacement for Type.IsAssignableFrom(Type)
         /// </summary>
@@ -949,7 +755,7 @@ namespace Microsoft.OData.Edm
         /// <param name="otherType">Type to test if typeType is a subclass.</param>
         /// <returns>True if thisType is a subclass of otherType, otherwise false.</returns>
         /// <remarks>
-        /// TODO: Add this back to TypeInfo. This method will still be needed since it works on Type, but the 
+        /// TODO: Add this back to TypeInfo. This method will still be needed since it works on Type, but the
         ///       implementation should just be able to call the TypeInfo version directly instead of the full implementation here.
         /// </remarks>
         internal static bool IsSubclassOf(this Type thisType, Type otherType)
@@ -1176,18 +982,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Replacement for Stream.Close().
-        /// </summary>
-        /// <param name="stream">Stream on which to call this helper method.</param>
-        /// <remarks>
-        /// Many Close methods have been eliminated on Win8, the recommended pattern is to just use Dispose instead.
-        /// </remarks>
-        internal static void Close(this Stream stream)
-        {
-            stream.Dispose();
-        }
-
-        /// <summary>
         /// Replacement for Assembly.GetType(string, bool).
         /// </summary>
         /// <param name="assembly">Assembly on which to call this helper method.</param>
@@ -1250,54 +1044,6 @@ namespace Microsoft.OData.Edm
             return (propertyInfo.GetMethod != null && propertyInfo.GetMethod.IsPublic) || (propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic);
         }
         #endregion
-        /// <summary>
-        /// Manages the type code mapping used to provide the GetTypeCode functionality.
-        /// </summary>
-        private class TypeCodeMap
-        {
-            /// <summary>
-            /// Dictionary of types and their type codes.
-            /// </summary>
-            private Dictionary<Type, TypeCode> typeCodes = new Dictionary<Type, TypeCode>(EqualityComparer<Type>.Default);
-
-            /// <summary>
-            /// Constructor for the map.
-            /// </summary>
-            internal TypeCodeMap()
-            {
-                this.typeCodes.Add(typeof(bool), TypeCode.Boolean);
-                this.typeCodes.Add(typeof(char), TypeCode.Char);
-                this.typeCodes.Add(typeof(byte), TypeCode.Byte);
-                this.typeCodes.Add(typeof(DateTime), TypeCode.DateTime);
-                this.typeCodes.Add(typeof(decimal), TypeCode.Decimal);
-                this.typeCodes.Add(typeof(double), TypeCode.Double);
-                this.typeCodes.Add(typeof(Int16), TypeCode.Int16);
-                this.typeCodes.Add(typeof(UInt16), TypeCode.UInt16);
-                this.typeCodes.Add(typeof(Int32), TypeCode.Int32);
-                this.typeCodes.Add(typeof(UInt32), TypeCode.UInt32);
-                this.typeCodes.Add(typeof(Int64), TypeCode.Int64);
-                this.typeCodes.Add(typeof(UInt64), TypeCode.UInt64);
-                this.typeCodes.Add(typeof(sbyte), TypeCode.SByte);
-                this.typeCodes.Add(typeof(Single), TypeCode.Single);
-                this.typeCodes.Add(typeof(string), TypeCode.String);
-            }
-
-            /// <summary>
-            /// Method that does the lookup in the type map, given a type.
-            /// </summary>
-            /// <param name="type">Type for which to find the type code.</param>
-            /// <returns>TypeCode for the specified type if it's in the map, otherwise TypeCode.Object.</returns>
-            internal TypeCode GetTypeCode(Type type)
-            {
-                TypeCode typeCode;
-                if (this.typeCodes.TryGetValue(type, out typeCode))
-                {
-                    return typeCode;
-                }
-
-                return TypeCode.Object;
-            }
-        }
 #endif
 
         /// <summary>
@@ -1315,15 +1061,6 @@ namespace Microsoft.OData.Edm
             options = options | RegexOptions.Compiled;
 #endif
             return new Regex(pattern, options);
-        }
-
-        public static string[] GetSegments(this Uri uri)
-        {
-#if PORTABLELIB
-            return uri.AbsolutePath.Split('/');
-#else
-            return uri.Segments;
-#endif
         }
     }
 }

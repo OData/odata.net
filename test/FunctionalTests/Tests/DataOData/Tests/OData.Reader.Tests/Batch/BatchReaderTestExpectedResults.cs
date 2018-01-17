@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
 {
     #region Namespaces
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     #endregion Namespaces
@@ -32,11 +32,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             //[InjectDependency(IsRequired = true)]
             //public IODataPayloadElementComparer ODataPayloadElementComparer { get; set; }
 
-            [InjectDependency(IsRequired = true)]
-            public ReaderDefaultODataObjectModelValidator DefaultODataObjectModelValidator { get; set; }
+            //[InjectDependency(IsRequired = true)]
+            //public ReaderDefaultODataObjectModelValidator DefaultODataObjectModelValidator { get; set; }
 
-            [InjectDependency(IsRequired = true)]
-            public IBatchPayloadDeserializer BatchDeSerializer { get; set; }
+            //[InjectDependency(IsRequired = true)]
+            //public IBatchPayloadDeserializer BatchDeSerializer { get; set; }
 
             [InjectDependency(IsRequired = true)]
             public IBatchPayloadComparer BatchComparer { get; set; }
@@ -86,7 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 ODataPayloadKind.Batch,
                 this.PayloadModel,
                 PayloadReaderTestDescriptor.ReaderMetadata.None,
-                this.ExpectedBatchPayload, 
+                this.ExpectedBatchPayload,
                 testConfiguration);
 
             // only compare the payloads if the expected payload is not 'null'; null indicates to skip the comparison

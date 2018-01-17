@@ -6,13 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Parsers.Common;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class UriPrimitiveTypeParserTests
     {
@@ -61,7 +59,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             this.TryParseUriStringToPrimitiveType("duration'P1Y'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeFalse();
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void TryUriStringToPrimitiveWithOverflowingDurationLiteralShouldReturnFalse()
         {
             object output;

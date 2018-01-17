@@ -6,11 +6,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsNavigationProperty : CsdlSemanticsElement, IEdmNavigationProperty, IEdmCheckable
     {
         private readonly CsdlNavigationProperty navigationProperty;
-        private readonly CsdlSemanticsEntityTypeDefinition declaringType;
+        private readonly CsdlSemanticsStructuredTypeDefinition declaringType;
 
         private readonly Cache<CsdlSemanticsNavigationProperty, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsNavigationProperty, IEdmTypeReference>();
         private static readonly Func<CsdlSemanticsNavigationProperty, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
-        public CsdlSemanticsNavigationProperty(CsdlSemanticsEntityTypeDefinition declaringType, CsdlNavigationProperty navigationProperty)
+        public CsdlSemanticsNavigationProperty(CsdlSemanticsStructuredTypeDefinition declaringType, CsdlNavigationProperty navigationProperty)
             : base(navigationProperty)
         {
             this.declaringType = declaringType;
@@ -107,6 +107,49 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.targetEntityTypeCache.GetValue(this, ComputeTargetEntityTypeFunc, null); }
         }
 
+        internal static IEdmNavigationProperty ResolvePartnerPath(IEdmEntityType type, IEdmPathExpression path, IEdmModel model)
+        {
+            Debug.Assert(type != null);
+            Debug.Assert(path != null);
+            Debug.Assert(model != null);
+
+            IEdmStructuredType currentType = type;
+            IEdmProperty property = null;
+            foreach (var segment in path.PathSegments)
+            {
+                if (currentType == null)
+                {
+                    return null;
+                }
+
+                if (segment.IndexOf('.') < 0)
+                {
+                    property = currentType.FindProperty(segment);
+                    if (property == null)
+                    {
+                        return null;
+                    }
+
+                    currentType = property.Type.Definition.AsElementType() as IEdmStructuredType;
+                }
+                else
+                {
+                    var derivedType = model.FindDeclaredType(segment);
+                    if (derivedType == null || !derivedType.IsOrInheritsFrom(currentType))
+                    {
+                        return null;
+                    }
+
+                    currentType = derivedType as IEdmStructuredType;
+                    property = null;
+                }
+            }
+
+            return property != null
+                   ? property as IEdmNavigationProperty
+                   : null;
+        }
+
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {
             return this.Model.WrapInlineVocabularyAnnotations(this, this.declaringType.Context);
@@ -125,19 +168,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmNavigationProperty ComputePartner()
         {
-            string partnerPropertyName = this.navigationProperty.Partner;
-
+            var partnerPropertyPath = this.navigationProperty.PartnerPath;
             IEdmEntityType targetEntityType = this.TargetEntityType;
-            if (partnerPropertyName != null)
+
+            if (partnerPropertyPath != null)
             {
-                var partner = targetEntityType.FindProperty(partnerPropertyName) as IEdmNavigationProperty;
-
-                if (partner == null)
-                {
-                    partner = new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyName, this.Location);
-                }
-
-                return partner;
+                return ResolvePartnerPath(targetEntityType, partnerPropertyPath, Model)
+                       ?? new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, Location);
             }
 
             foreach (IEdmNavigationProperty potentialPartner in targetEntityType.NavigationProperties())

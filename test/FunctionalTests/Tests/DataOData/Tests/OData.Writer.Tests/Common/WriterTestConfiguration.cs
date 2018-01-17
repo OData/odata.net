@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
@@ -52,11 +52,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         public override string ToString()
         {
             return string.Format(
-                "Format: {0}, Version: {1}, WriterSettings.Indent: {2}, WriterSettings.DisableMessageStreamDisposal: {3}, IsRequest: {4}, Synchronous: {5}",
+                "Format: {0}, Version: {1}, WriterSettings.EnableMessageStreamDisposal: {2}, IsRequest: {3}, Synchronous: {4}",
                 this.Format,
                 this.Version.ToString(),
-                this.MessageWriterSettings.Indent.ToString(),
-                this.MessageWriterSettings.DisableMessageStreamDisposal.ToString(),
+                this.MessageWriterSettings.EnableMessageStreamDisposal.ToString(),
                 this.IsRequest,
                 this.Synchronous);
         }
@@ -84,10 +83,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 case TestODataBehaviorKind.Default:
                     break;
                 case TestODataBehaviorKind.WcfDataServicesClient:
-                    testConfiguration.MessageWriterSettings.EnableWcfDataServicesClientBehavior();
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
-                    testConfiguration.MessageWriterSettings.EnableODataServerBehavior(false);
+                    testConfiguration.MessageWriterSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
                     break;
             }
 

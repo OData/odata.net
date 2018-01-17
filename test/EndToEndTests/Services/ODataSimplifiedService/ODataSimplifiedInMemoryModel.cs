@@ -8,7 +8,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
 
     public static class ODataSimplifiedInMemoryModel

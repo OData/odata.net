@@ -25,8 +25,8 @@
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" />
     <Property Name="Name" Type="String" />
-    <Property Name="Concurrency" Type="String" ConcurrencyMode="Fixed" />
-    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" ConcurrencyMode="Fixed" annotations:StoreGeneratedPattern="Computed" />
+    <Property Name="Concurrency" Type="String" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" annotations:StoreGeneratedPattern="Computed" />
     <Property Name="GuidValue" Type="Guid" />
     <Property Name="Address" Type="ModelNamespace.Address" Nullable="false" />
     <Property Name="BestFriendId" Type="Int32" />

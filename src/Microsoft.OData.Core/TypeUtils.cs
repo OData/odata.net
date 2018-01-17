@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB_QUERY
-namespace Microsoft.OData.Query
-#else
-namespace Microsoft.OData.Core
-#endif
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -33,7 +29,7 @@ namespace Microsoft.OData.Core
         /// <summary>Gets a non-nullable version of the specified type.</summary>
         /// <param name="type">Type to get non-nullable version for.</param>
         /// <returns>
-        /// <paramref name="type"/> if type is a reference type or a 
+        /// <paramref name="type"/> if type is a reference type or a
         /// non-nullable type; otherwise, the underlying value type.
         /// </returns>
         internal static Type GetNonNullableType(Type type)
@@ -68,8 +64,6 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(type != null, "type != null");
 
-            //// This is a copy of WebUtil.TypeAllowsNull from the product.
-
             return !type.IsValueType() || IsNullableType(type);
         }
 
@@ -79,7 +73,7 @@ namespace Microsoft.OData.Core
         /// <param name="typeA">First type to compare.</param>
         /// <param name="typeB">Second type to compare.</param>
         /// <returns>true if the types are equivalent (they both represent the same type), or false otherwise.</returns>
-        /// <remarks>This method abstracts away the necessity to call Type.IsEquivalentTo method in .NET 4 and higher but 
+        /// <remarks>This method abstracts away the necessity to call Type.IsEquivalentTo method in .NET 4 and higher but
         /// use simple reference equality on platforms which don't have that method (like Silverlight).</remarks>
         internal static bool AreTypesEquivalent(Type typeA, Type typeB)
         {
@@ -91,6 +85,26 @@ namespace Microsoft.OData.Core
             {
                 return typeA == typeB;
             }
+        }
+
+        /// <summary>
+        /// Parses a qualified type name and returns the type namespace and type name
+        /// </summary>
+        /// <param name="qualifiedTypeName">The fully qualified type name.</param>
+        /// <param name="namespaceName">The returned namespace name.</param>
+        /// <param name="typeName">The returned type name.</param>
+        /// <param name="isCollection">Returns whether or not the returned type is a collection.</param>
+        internal static void ParseQualifiedTypeName(string qualifiedTypeName, out string namespaceName, out string typeName, out bool isCollection)
+        {
+            isCollection = qualifiedTypeName.StartsWith(ODataConstants.CollectionPrefix + "(", StringComparison.Ordinal);
+            if (isCollection)
+            {
+                qualifiedTypeName = qualifiedTypeName.Substring(ODataConstants.CollectionPrefix.Length + 1).TrimEnd(')');
+            }
+
+            int separator = qualifiedTypeName.LastIndexOf(".", StringComparison.Ordinal);
+            namespaceName = qualifiedTypeName.Substring(0, separator);
+            typeName = qualifiedTypeName.Substring(separator == 0 ? 0 : separator + 1);
         }
     }
 }

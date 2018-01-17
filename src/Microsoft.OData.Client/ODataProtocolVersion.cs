@@ -10,6 +10,9 @@ namespace Microsoft.OData.Client
     public enum ODataProtocolVersion
     {
         /// <summary>Version 4</summary>
-        V4
+        V4,
+
+        /// <summary>Version 4.01</summary>
+        V401
     }
 }

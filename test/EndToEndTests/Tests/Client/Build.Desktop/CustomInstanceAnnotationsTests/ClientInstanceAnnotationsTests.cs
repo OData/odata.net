@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
     using Microsoft.OData.Client;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
         public ClientInstanceAnnotationsTests()
             : base(ODataWriterServiceUtil.CreateODataWriterServiceDescriptor<CustomInstanceAnnotationsWriter>())
         {
-            
+
         }
 
         public override void CustomTestInitialize()
@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             var entityMaterialised = false;
             var feedMaterialised = false;
             context.Format.UseJson();
-            context.SendingRequest2 += delegate(Object sender, SendingRequest2EventArgs eventArgs)
+            context.SendingRequest2 += delegate (Object sender, SendingRequest2EventArgs eventArgs)
             {
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=\"*\"");
             };
@@ -90,7 +90,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.AreEqual(199, args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                    Assert.IsTrue(199 <= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                    Assert.IsTrue(200 >= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
                 })
                 .OnFeedEnded((args) =>
                 {
@@ -112,7 +113,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.Format.UseJson();
             var entityMaterialised = false;
             var feedMaterialised = false;
-            context.SendingRequest2 += delegate(Object sender, SendingRequest2EventArgs eventArgs)
+            context.SendingRequest2 += delegate (Object sender, SendingRequest2EventArgs eventArgs)
             {
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=AnnotationOnFeed.AddedBeforeWriteStart.index.0");
             };
@@ -120,7 +121,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() == 0, "No entity annotations were requested");
+                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
                 })
                 .OnFeedEnded((args) =>
                 {
@@ -128,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                     Assert.IsTrue(args.Feed.InstanceAnnotations.Count == 1, "Count was " + args.Feed.InstanceAnnotations.Count);
                     Assert.IsTrue(args.Feed.InstanceAnnotations.Single().Name == "AnnotationOnFeed.AddedBeforeWriteStart.index.0");
                 });
-                        
+
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
@@ -143,24 +144,24 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.Format.UseJson();
             var entityMaterialised = false;
             var feedMaterialised = false;
-            context.SendingRequest2 += delegate(Object sender, SendingRequest2EventArgs eventArgs)
+            context.SendingRequest2 += delegate (Object sender, SendingRequest2EventArgs eventArgs)
             {
-                ((HttpWebRequestMessage)eventArgs.RequestMessage).PreferHeader().AnnotationFilter =  "AnnotationOnFeed.AddedBeforeWriteStart.index.0";
+                ((HttpWebRequestMessage)eventArgs.RequestMessage).PreferHeader().AnnotationFilter = "AnnotationOnFeed.AddedBeforeWriteStart.index.0";
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).PreferHeader().ReturnContent = true;
             };
             context.Configurations.ResponsePipeline
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() == 0, "No entity annotations were requested");
+                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
                 })
                 .OnFeedEnded((args) =>
                 {
                     feedMaterialised = true;
                     Assert.IsTrue(args.Feed.InstanceAnnotations.Count() == 1);
                     Assert.IsTrue(args.Feed.InstanceAnnotations.Single().Name == "AnnotationOnFeed.AddedBeforeWriteStart.index.0");
-                });            
-            
+                });
+
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
@@ -174,7 +175,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             var context = this.CreateWrappedContext<DefaultContainer>();
             context.Format.UseJson();
 
-            context.SendingRequest2 += delegate(Object sender, SendingRequest2EventArgs eventArgs)
+            context.SendingRequest2 += delegate (Object sender, SendingRequest2EventArgs eventArgs)
             {
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).PreferHeader().AnnotationFilter = "AnnotationOnFeed.AddedBeforeWriteStart.index.0";
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).PreferHeader().ReturnContent = false;
@@ -196,23 +197,23 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.Format.UseJson();
             var entityMaterialised = false;
             var feedMaterialised = false;
-            context.SendingRequest2 += delegate(Object sender, SendingRequest2EventArgs eventArgs)
+            context.SendingRequest2 += delegate (Object sender, SendingRequest2EventArgs eventArgs)
             {
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=-AnnotationOnFeed.AddedBeforeWriteStart.*; odata.include-annotations=*");
-                
+
             };
             context.Configurations.ResponsePipeline
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count == 0, "negative filter should result in no annotations");
+                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
                 })
                 .OnFeedEnded((args) =>
                 {
                     feedMaterialised = true;
                     Assert.IsTrue(args.Feed.InstanceAnnotations.Count() == 0, "negative filter should result in no annotations");
                 });
-            
+
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
@@ -227,7 +228,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.Format.UseJson();
             var entityMaterialised = false;
             var feedMaterialised = false;
-            context.SendingRequest2 += delegate(Object sender, SendingRequest2EventArgs eventArgs)
+            context.SendingRequest2 += delegate (Object sender, SendingRequest2EventArgs eventArgs)
             {
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=\"*,-AnnotationOnFeed.AddedBeforeWriteStart.*\"");
 
@@ -235,7 +236,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.Configurations.ResponsePipeline.OnEntityMaterialized((args) =>
             {
                 entityMaterialised = true;
-                Assert.AreEqual(199, args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                Assert.IsTrue(199 <= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                Assert.IsTrue(200 >= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
             });
             context.Configurations.ResponsePipeline.OnFeedEnded((args) =>
             {

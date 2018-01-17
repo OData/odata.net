@@ -16,9 +16,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Net;
     using System.Text;
     using System.Web;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.UriHandlers;
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         // the $skiptoken contains TrackingChanges and SkipCount members
         private readonly dynamic skipToken;
 
-        public QueryContext(Uri rootUri, Uri requestUri, IEdmModel model)
+        public QueryContext(Uri rootUri, Uri requestUri, IEdmModel model, IServiceProvider container)
         {
             if (model == null)
             {
@@ -55,7 +54,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             this.Model = model;
             this.QueryUri = requestUri;
 
-            ODataUriParser uriParser = new ODataUriParser(this.Model, ServiceConstants.ServiceBaseUri, requestUri);
+            ODataUriParser uriParser = new ODataUriParser(this.Model, ServiceConstants.ServiceBaseUri, requestUri, container);
 
             // TODO: [Tiano]: Recover the following when using new delta framework
             // this.QueryPath = uriParser.ParsePath();

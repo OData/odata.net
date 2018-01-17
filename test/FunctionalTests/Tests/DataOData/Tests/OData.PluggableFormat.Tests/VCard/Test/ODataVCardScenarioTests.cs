@@ -4,12 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Text.RegularExpressions;
+
 namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
 {
     using System;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -22,10 +25,15 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
         private static readonly IEdmModel VCardModel;
         private static readonly IEdmComplexType VCardType;
 
+        private static IServiceProvider container;
+
         static ODataVCardScenarioTests()
         {
             VCardModel = TestHelper.GetModel(ResModel);
             VCardType = (IEdmComplexType)VCardModel.FindType("VCard21.VCard");
+
+            container = ContainerBuilderHelper.BuildContainer(builder =>
+                builder.AddService<ODataMediaTypeResolver, VCardMediaTypeResolver>(ServiceLifetime.Singleton));
         }
 
         [TestMethod]
@@ -38,14 +46,14 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
         {
             foreach (var async in new[] { false, true })
             {
-                var valueFromVcf = GetTopLevelProperty(resVcf, "text/x-vCard", VCardMediaTypeResolver.Instance, null, async);
+                var valueFromVcf = GetTopLevelProperty(resVcf, "text/x-vCard", null, async);
                 TestBaseLine(valueFromVcf, resVcf, resJson);
-                var valueFromJson = GetTopLevelProperty(resJson, "application/json", null, VCardModel, async);
+                var valueFromJson = GetTopLevelProperty(resJson, "application/json", VCardModel, async);
                 TestBaseLine(valueFromJson, resVcf, resJson);
             }
         }
 
-        private ODataComplexValue GetTopLevelProperty(string res, string contentType, ODataMediaTypeResolver resolver, IEdmModel model = null, bool async = false)
+        private ODataResource GetTopLevelProperty(string res, string contentType, IEdmModel model = null, bool async = false)
         {
             Stream stream = null;
 
@@ -53,25 +61,55 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
             try
             {
                 stream = TestHelper.GetResourceStream(res);
-                ODataComplexValue val = null;
-                object value = null;
+                ODataResource val = null;
 
-                using (var reader = TestHelper.CreateMessageReader(stream, contentType, resolver, model))
+                using (var reader = TestHelper.CreateMessageReader(stream, container, contentType, model))
                 {
                     stream = null;
                     if (async)
                     {
-                        var task = reader.ReadPropertyAsync();
+                        var task = reader.CreateODataResourceReaderAsync();
                         task.Wait();
-                        value = task.Result.Value;
+                        var odataReader = task.Result;
+                        while (true)
+                        {
+                            var readTask = odataReader.ReadAsync();
+                            readTask.Wait();
+                            if (!readTask.Result)
+                            {
+                                break;
+                            }
+
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                val = odataReader.Item as ODataResource;
+                                break;
+                            }
+                        }
                     }
                     else
                     {
-                        value = reader.ReadProperty().Value;
+                        var task = reader.CreateODataResourceReaderAsync();
+                        task.Wait();
+                        var odataReader = task.Result;
+                        while (true)
+                        {
+                            var readTask = odataReader.ReadAsync();
+                            readTask.Wait();
+                            if (!readTask.Result)
+                            {
+                                break;
+                            }
+
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                val = odataReader.Item as ODataResource;
+                                break;
+                            }
+                        }
                     }
                 }
 
-                val = value as ODataComplexValue;
                 Assert.IsNotNull(val);
                 return val;
             }
@@ -81,36 +119,19 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
             }
         }
 
-        private void TestBaseLine(ODataComplexValue val, string resVcf, string resJson)
+        private void TestBaseLine(ODataResource val, string resVcf, string resJson)
         {
             // Write json, compare with baseline
             Assert.AreEqual(
-                TestHelper.GetResourceString(resJson),
-                TestHelper.GetToplevelPropertyPayloadString(val),
+                Regex.Replace(TestHelper.GetResourceString(resJson), @"\r\n\s*([""{}\]])", "$1"),
+                TestHelper.GetToplevelPropertyPayloadString(val, container),
                 "Json baseline");
 
             // Write vcf, compare with baseline
             Assert.AreEqual(
                 TestHelper.GetResourceString(resVcf),
-                TestHelper.GetToplevelPropertyPayloadString(val, "text/x-vCard", VCardMediaTypeResolver.Instance),
+                TestHelper.GetToplevelPropertyPayloadString(val, container, "text/x-vCard"),
                 "Vcf baseline");
-        }
-
-        private static object String2Value(string payload)
-        {
-            var stream = new MemoryStream();
-            var sw = new StreamWriter(stream);
-            sw.Write(payload);
-            sw.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
-
-            var message = new InMemoryMessage()
-            {
-                Stream = stream
-            };
-
-            var omw = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings(), VCardModel);
-            return omw.ReadProperty().Value;
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
@@ -23,25 +24,23 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         /// <summary>
         /// The EDM model with Alternate Keys vocabularies.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmModel is immutable")]
         public static readonly IEdmModel Instance;
 
         /// <summary>
         /// The Alternate Keys term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm AlternateKeysTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm AlternateKeysTerm;
 
         /// <summary>
         /// The AlternateKey ComplexType.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         internal static readonly IEdmComplexType AlternateKeyType;
 
         /// <summary>
         /// The PropertyRef ComplexType.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         internal static readonly IEdmComplexType PropertyRefType;
 
         /// <summary>
@@ -51,14 +50,19 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         {
             Assembly assembly = typeof(AlternateKeysVocabularyModel).GetAssembly();
 
-            using (Stream stream = assembly.GetManifestResourceStream("AlternateKeysVocabularies.xml"))
+            // Resource name has leading namespace and folder in .NetStandard dll.
+            string[] allResources = assembly.GetManifestResourceNames();
+            string alternateKeysVocabularies = allResources.Where(x => x.Contains("AlternateKeysVocabularies.xml")).FirstOrDefault();
+            Debug.Assert(alternateKeysVocabularies != null, "AlternateKeysVocabularies.xml: not found.");
+
+            using (Stream stream = assembly.GetManifestResourceStream(alternateKeysVocabularies))
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "AlternateKeysVocabularies.xml: stream!=null");
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
-            AlternateKeysTerm = Instance.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys);
+            AlternateKeysTerm = Instance.FindDeclaredTerm(AlternateKeysVocabularyConstants.AlternateKeys);
             Debug.Assert(AlternateKeysTerm != null, "Expected Alternate Key term");
 
             AlternateKeyType = Instance.FindDeclaredType(AlternateKeysVocabularyConstants.AlternateKeyType) as IEdmComplexType;

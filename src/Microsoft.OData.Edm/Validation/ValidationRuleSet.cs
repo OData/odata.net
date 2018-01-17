@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Library;
 
 namespace Microsoft.OData.Edm.Validation
 {
@@ -18,7 +17,7 @@ namespace Microsoft.OData.Edm.Validation
     {
         private readonly Dictionary<Type, List<ValidationRule>> rules;
 
-        private static readonly ValidationRuleSet BaseRuleSet = 
+        private static readonly ValidationRuleSet BaseRuleSet =
             new ValidationRuleSet(new ValidationRule[]
             {
                 ValidationRules.EntityTypeKeyPropertyMustBelongToEntity,
@@ -55,10 +54,10 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.DecimalTypeReferenceScaleOutOfRange,
                 ValidationRules.BinaryTypeReferenceBinaryMaxLengthNegative,
                 ValidationRules.StringTypeReferenceStringMaxLengthNegative,
-                ValidationRules.StructuralPropertyInvalidPropertyTypeConcurrencyMode,
                 ValidationRules.EnumMemberValueMustHaveSameTypeAsUnderlyingType,
                 ValidationRules.EnumTypeEnumMemberNameAlreadyDefined,
                 ValidationRules.BoundOperationMustHaveParameters,
+                ValidationRules.OptionalParametersMustComeAfterRequiredParameters,
                 ValidationRules.OperationEntitySetPathMustBeValid,
                 ValidationRules.OperationReturnTypeEntityTypeMustBeValid,
                 ValidationRules.OperationImportEntitySetExpressionIsInvalid,
@@ -66,21 +65,23 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.BinaryTypeReferenceBinaryUnboundedNotValidForMaxLength,
                 ValidationRules.StringTypeReferenceStringUnboundedNotValidForMaxLength,
                 ValidationRules.ImmediateValueAnnotationElementAnnotationIsValid,
-                ValidationRules.ValueAnnotationAssertCorrectExpressionType,
+                ValidationRules.VocabularyAnnotationAssertCorrectExpressionType,
                 ValidationRules.IfExpressionAssertCorrectTestType,
                 ValidationRules.CollectionExpressionAllElementsCorrectType,
                 ValidationRules.RecordExpressionPropertiesMatchType,
                 ValidationRules.NavigationPropertyDependentPropertiesMustBelongToDependentEntity,
                 ValidationRules.NavigationPropertyInvalidOperationMultipleEndsInAssociatedNavigationProperties,
                 ValidationRules.NavigationPropertyEndWithManyMultiplicityCannotHaveOperationsSpecified,
+                ValidationRules.NavigationPropertyPartnerPathShouldBeResolvable,
                 ValidationRules.NavigationPropertyTypeMismatchRelationshipConstraint,
                 ValidationRules.NavigationPropertyDuplicateDependentProperty,
                 ValidationRules.NavigationPropertyPrincipalEndMultiplicity,
                 ValidationRules.NavigationPropertyDependentEndMultiplicity,
                 ValidationRules.NavigationPropertyCorrectType,
+                ValidationRules.NavigationPropertyBindingPathMustBeResolvable,
                 ValidationRules.ImmediateValueAnnotationElementAnnotationHasNameAndNamespace,
                 ValidationRules.OpenComplexTypeCannotHaveClosedDerivedComplexType,
-                ValidationRules.OperationApplicationExpressionParametersMatchAppliedOperation,
+                ValidationRules.FunctionApplicationExpressionParametersMatchAppliedFunction,
                 ValidationRules.VocabularyAnnotatableNoDuplicateAnnotations,
                 ValidationRules.TemporalTypeReferencePrecisionOutOfRange,
                 ValidationRules.DecimalTypeReferencePrecisionOutOfRange,
@@ -90,7 +91,6 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.TypeMustNotHaveKindOfNone,
                 ValidationRules.PrimitiveTypeMustNotHaveKindOfNone,
                 ValidationRules.PropertyMustNotHaveKindOfNone,
-                ValidationRules.TermMustNotHaveKindOfNone,
                 ValidationRules.SchemaElementMustNotHaveKindOfNone,
                 ValidationRules.EntityContainerElementMustNotHaveKindOfNone,
                 ValidationRules.PrimitiveValueValidForType,
@@ -110,9 +110,9 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.FunctionMustHaveReturnType,
             });
 
-        private static readonly ValidationRuleSet V4RuleSet = 
+        private static readonly ValidationRuleSet V4RuleSet =
             new ValidationRuleSet(
-                BaseRuleSet, 
+                BaseRuleSet,
                 new ValidationRule[]
                 {
                     ValidationRules.OperationUnsupportedReturnType,

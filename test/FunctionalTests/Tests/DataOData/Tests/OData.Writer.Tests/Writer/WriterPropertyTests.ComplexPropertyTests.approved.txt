@@ -1,0 +1,32 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.AddressType","@odata.type":"#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+
+Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.AddressType","@odata.type":"#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+
+Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}
+
+Combination: 6; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}
+
+Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}
+
+Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}
+

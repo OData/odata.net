@@ -7,7 +7,6 @@
 namespace Microsoft.Test.Taupo.OData.WCFService
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Core.Query.Metadata;
     using Microsoft.Test.OData.Utils.Metadata;
     using System;

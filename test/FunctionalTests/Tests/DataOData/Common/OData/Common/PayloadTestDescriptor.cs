@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Contracts;

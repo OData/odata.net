@@ -9,8 +9,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System;
     using System.Collections.Generic;
     using System.Net;
-    using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class StatusMonitorRequestHandler : RequestHandler
     {
@@ -54,8 +53,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings
             {
-                AutoComputePayloadMetadataInJson = true,
-                PayloadBaseUri = this.ServiceRootUri
+                BaseUri = this.ServiceRootUri
             };
 
             return settings;

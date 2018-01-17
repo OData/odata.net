@@ -7,7 +7,7 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     [Serializable]
     public abstract class InstanceAnnotationType

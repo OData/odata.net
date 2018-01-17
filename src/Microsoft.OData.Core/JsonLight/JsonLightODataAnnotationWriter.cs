@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -29,34 +29,42 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
-        /// Whether OData Simplified is enabled.
+        /// Whether write odata annotation without "odata." prefix in name.
         /// </summary>
-        private readonly bool odataSimplified;
+        private readonly bool enableWritingODataAnnotationWithoutPrefix;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonWriter">The underlying JSON writer.</param>
-        /// <param name="odataSimplified">Whether OData Simplified is enabled.</param>
-        public JsonLightODataAnnotationWriter(IJsonWriter jsonWriter, bool odataSimplified)
+        /// <param name="enableWritingODataAnnotationWithoutPrefix">Whether write odata annotation without "odata." prefix in name.</param>
+        public JsonLightODataAnnotationWriter(IJsonWriter jsonWriter, bool enableWritingODataAnnotationWithoutPrefix)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
 
             this.jsonWriter = jsonWriter;
-            this.odataSimplified = odataSimplified;
+            this.enableWritingODataAnnotationWithoutPrefix = enableWritingODataAnnotationWithoutPrefix;
         }
 
         /// <summary>
         /// Writes the odata.type instance annotation with the specified type name.
         /// </summary>
         /// <param name="typeName">The type name to write.</param>
-        public void WriteODataTypeInstanceAnnotation(string typeName)
+        /// <param name="writeRawValue">Whether to write the raw typeName without removing/adding prefix 'Edm.'/'#'.</param>
+        public void WriteODataTypeInstanceAnnotation(string typeName, bool writeRawValue = false)
         {
             Debug.Assert(typeName != null, "typeName != null");
 
             // "@odata.type": #"typename"
             WriteInstanceAnnotationName(ODataAnnotationNames.ODataType);
-            jsonWriter.WriteValue(PrefixTypeName(WriterUtils.RemoveEdmPrefixFromTypeName(typeName)));
+            if (writeRawValue)
+            {
+                jsonWriter.WriteValue(typeName);
+            }
+            else
+            {
+                jsonWriter.WriteValue(PrefixTypeName(WriterUtils.RemoveEdmPrefixFromTypeName(typeName)));
+            }
         }
 
         /// <summary>
@@ -124,7 +132,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The simplified annotation name.</returns>
         private string SimplifyODataAnnotationName(string annotationName)
         {
-            return odataSimplified ? annotationName.Substring(ODataAnnotationPrefixLength) : annotationName;
+            return enableWritingODataAnnotationWithoutPrefix ? annotationName.Substring(ODataAnnotationPrefixLength) : annotationName;
         }
     }
 }

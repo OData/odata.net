@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
 
     /// <summary>
-    /// Event args for the event fired before executing a web request. Gives a 
+    /// Event args for the event fired before executing a web request. Gives a
     /// chance to customize or replace the request object to be used.
     /// </summary>
     public class SendingRequestEventArgs : EventArgs

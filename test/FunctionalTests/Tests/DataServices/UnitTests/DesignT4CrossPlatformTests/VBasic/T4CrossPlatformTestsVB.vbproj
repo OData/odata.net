@@ -19,7 +19,7 @@
     <OptionInfer>On</OptionInfer>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <NoWarn>40000,40008</NoWarn>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
   </PropertyGroup>
   <Import Project="..\Build.props" />

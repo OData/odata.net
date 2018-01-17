@@ -9,11 +9,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
-    class ODataRequestMessage : IODataRequestMessage
+    class ODataRequestMessage : IODataRequestMessage, IContainerProvider
     {
         private Stream body;
         private Dictionary<string, string> headers;
@@ -76,5 +74,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public Uri Url { get; set; }
 
         public string Method { get; set; }
+
+        public IServiceProvider Container { get; set; }
     }
 }

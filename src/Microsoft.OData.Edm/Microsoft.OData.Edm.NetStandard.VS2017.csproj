@@ -1,0 +1,130 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Edm</AssemblyName>
+    <RootNamespace>Microsoft.OData.Edm</RootNamespace>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <TransparentAssembly>true</TransparentAssembly>
+    <SecurityMigration>false</SecurityMigration>
+    <DelaySign>True</DelaySign>
+    <SignAssembly>True</SignAssembly>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;SUPPRESS_SECURITY_RULES</DefineConstants>
+    <HasIntellisenseFile>true</HasIntellisenseFile>
+    <EnableLocalization>true</EnableLocalization>
+    <!-- from Build.Props... but can't reference it at this level -->
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Microsoft.OData.Edm.StyleCop</StyleCopOverrideSettingsFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Build.NetStandard\**" />
+    <Compile Remove="Build.NuGet\**" />
+    <EmbeddedResource Remove="Build.NetStandard\**" />
+    <EmbeddedResource Remove="Build.NuGet\**" />
+    <None Remove="Build.NetStandard\**" />
+    <None Remove="Build.NuGet\**" />
+    <None Remove="Microsoft.OData.Edm.tt" />
+    <None Remove="Microsoft.OData.Edm.txt" />
+    <None Remove="Parameterized.Microsoft.OData.Edm.tt" />
+    <None Remove="Vocabularies\AlternateKeysVocabularies.xml" />
+    <None Remove="Vocabularies\CapabilitiesVocabularies.xml" />
+    <None Remove="Vocabularies\CoreVocabularies.xml" />
+    <Compile Remove="Csdl\Parsing\CsdlDocumentParser.cs" />
+    <Compile Remove="Microsoft.OData.Edm.cs" />
+    <Compile Remove="Parameterized.Microsoft.OData.Edm.cs" />
+    <Compile Remove="ShippingAssemblyAttributes.cs" />
+  </ItemGroup>
+
+  <Import Project="..\Build.props" />
+
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Edm.txt">
+      <ResFile>Microsoft.OData.Edm</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Edm.EntityRes</FullClassName>
+      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
+      <SkipSRAttributes>true</SkipSRAttributes>
+    </TextStringResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Csdl\Parsing\CsdlDocumentParser.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="ShippingAssemblyAttributes.cs">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Microsoft.OData.Edm.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Edm.cs</LastGenOutput>
+    </None>
+    <Compile Include="Microsoft.OData.Edm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.OData.Edm.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <None Include="Parameterized.Microsoft.OData.Edm.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Edm.cs</LastGenOutput>
+    </None>
+    <Compile Include="Parameterized.Microsoft.OData.Edm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.OData.Edm.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Vocabularies\CapabilitiesVocabularies.xml">
+      <LogicalName>CapabilitiesVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\CoreVocabularies.xml">
+      <LogicalName>CoreVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\AlternateKeysVocabularies.xml">
+      <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Some of the test projects have a dependency on this ddl and just adding reference to this project from 
+          those test projects is not sufficient. We have to place the dll in the suitebin folder for those test
+          projects to be able to find the dll. (Note that we are not adding this dll to the GAC.)
+     -->
+    <SuiteBin Include="$(IntermediateOutputPath)$(AssemblyName).dll">
+      <Visible>false</Visible>
+    </SuiteBin>
+    <SuiteBin Include="$(IntermediateOutputPath)$(AssemblyName).pdb">
+      <Visible>false</Visible>
+    </SuiteBin>
+    <CopyFile Include="@(SuiteBin)">
+      <DestFolder>$(SuiteBinPath)</DestFolder>
+    </CopyFile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

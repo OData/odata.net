@@ -11,12 +11,7 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     class InterfaceCriticalModelBuilder
     {
@@ -37,7 +32,7 @@ namespace EdmLibTests.FunctionalUtilities
             var valueTerm = new EdmTerm("DefaultNamespace", "Note", EdmCoreModel.Instance.GetString(true));
             model.AddElement(valueTerm);
 
-            var valueAnnotation = new MutableValueAnnotation()
+            var valueAnnotation = new MutableVocabularyAnnotation()
             {
                 Target = valueTerm
             };
@@ -69,7 +64,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.None, EdmValueKind.String);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
@@ -86,7 +81,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.StringConstant, (EdmValueKind)123);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
@@ -113,7 +108,7 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(valueTerm);
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.StringConstant, EdmValueKind.Integer);
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
@@ -184,7 +179,7 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(valueTerm);
 
             var badValue = new CustomBinaryConstant(null);
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badValue);
@@ -257,7 +252,7 @@ namespace EdmLibTests.FunctionalUtilities
             var model = new EdmModel();
 
             var enumType = new EdmEnumType("NS", "Enum");
-            enumType.AddMember(new CustomEnumMember(null, "foo", new EdmIntegerConstant(5)));
+            enumType.AddMember(new CustomEnumMember(null, "foo", new EdmEnumMemberValue(5)));
             var enumTypeRef = new EdmEnumTypeReference(enumType, true);
             var valueTerm = new EdmTerm("NS", "Note", enumTypeRef);
             model.AddElement(valueTerm);
@@ -272,7 +267,7 @@ namespace EdmLibTests.FunctionalUtilities
             var enumType = new EdmEnumType("NS", "Enum");
             var enumMember = new CustomEnumMember(enumType, "foo", null);
             var enumTypeRef = new EdmEnumTypeReference(enumType, true);
-            enumType.AddMember(new EdmEnumMember(enumType, "bar", new EdmEnumValue(enumTypeRef, enumMember)));
+            enumType.AddMember(enumMember);
             var valueTerm = new EdmTerm("NS", "Note", enumTypeRef);
             model.AddElement(valueTerm);
 
@@ -299,7 +294,7 @@ namespace EdmLibTests.FunctionalUtilities
             var badTypeRef = new EdmCollectionTypeReference(badType);
             var valueTerm = new EdmTerm("NS", "Note", badTypeRef);
             model.AddElement(valueTerm);
-            
+
             return model;
         }
 
@@ -312,7 +307,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badSet = new CustomEntitySet(entityContainer, "Set", null);
             entityContainer.AddElement(badSet);
-            
+
             return model;
         }
 
@@ -350,7 +345,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var entityContainer = new EdmEntityContainer("NS", "Container");
             model.AddElement(entityContainer);
-            
+
             var badSet = new CustomEntitySet(entityContainer, "BadSet", entity);
             badSet.AddNavigationTarget(nav, null);
             entityContainer.AddElement(badSet);
@@ -391,7 +386,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             return model;
         }
-        
+
         public static IEdmModel AllInterfaceCriticalModel()
         {
             var model = new EdmModel();
@@ -400,19 +395,19 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.None, EdmValueKind.Integer);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
             model.AddVocabularyAnnotation(valueAnnotation);
 
-            var mutableValueAnnotationueAnnotation = new MutableValueAnnotation()
+            var mutableValueAnnotationueAnnotation = new MutableVocabularyAnnotation()
             {
                 Target = valueTerm
             };
 
             model.AddVocabularyAnnotation(mutableValueAnnotationueAnnotation);
-            
+
             var customEntity = new CustomEntityType(new List<IEdmProperty>() { null });
             model.AddElement(customEntity);
 
@@ -447,13 +442,13 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.None, EdmValueKind.String);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
             model.AddVocabularyAnnotation(valueAnnotation);
 
-            var valueAnnotation2 = new EdmAnnotation(
+            var valueAnnotation2 = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 new EdmStringConstant("foo"));
@@ -482,7 +477,8 @@ namespace EdmLibTests.FunctionalUtilities
 
             public EdmExpressionKind ExpressionKind { get; set; }
 
-            public override EdmValueKind ValueKind { 
+            public override EdmValueKind ValueKind
+            {
                 get { return this.valueKind; }
             }
         }
@@ -492,12 +488,12 @@ namespace EdmLibTests.FunctionalUtilities
             private EdmTypeKind typeKind;
             private List<IEdmProperty> declaredProperties;
 
-            public CustomEntityType(EdmTypeKind typeKind) : base("", "") 
+            public CustomEntityType(EdmTypeKind typeKind) : base("", "")
             {
                 this.typeKind = typeKind;
                 this.declaredProperties = new List<IEdmProperty>();
             }
-            
+
             public CustomEntityType(IEnumerable<IEdmProperty> properties) : base("", "")
             {
                 this.typeKind = EdmTypeKind.Entity;
@@ -661,9 +657,9 @@ namespace EdmLibTests.FunctionalUtilities
         private sealed class CustomEnumMember : EdmNamedElement, IEdmEnumMember
         {
             private readonly IEdmEnumType declaringType;
-            private IEdmPrimitiveValue value;
+            private IEdmEnumMemberValue value;
 
-            public CustomEnumMember(IEdmEnumType declaringType, string name, IEdmPrimitiveValue value)
+            public CustomEnumMember(IEdmEnumType declaringType, string name, IEdmEnumMemberValue value)
                 : base(name)
             {
                 this.declaringType = declaringType;
@@ -675,7 +671,7 @@ namespace EdmLibTests.FunctionalUtilities
                 get { return this.declaringType; }
             }
 
-            public IEdmPrimitiveValue Value
+            public IEdmEnumMemberValue Value
             {
                 get { return this.value; }
             }
@@ -710,6 +706,11 @@ namespace EdmLibTests.FunctionalUtilities
             private readonly List<IEdmNavigationPropertyBinding> navigationPropertyBindings = new List<IEdmNavigationPropertyBinding>();
 
             public CustomEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType)
+                 : this(container, name, elementType, false)
+            {
+            }
+
+            public CustomEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType, bool includeInServiceDocument)
                 : base(name)
             {
                 this.container = container;
@@ -717,6 +718,7 @@ namespace EdmLibTests.FunctionalUtilities
                 {
                     this.type = new EdmCollectionType(new EdmEntityTypeReference(elementType, false));
                 }
+                this.IncludeInServiceDocument = includeInServiceDocument;
             }
 
             public IEnumerable<IEdmNavigationPropertyBinding> NavigationPropertyBindings
@@ -731,7 +733,17 @@ namespace EdmLibTests.FunctionalUtilities
 
             public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
             {
-                throw new System.NotImplementedException();
+                return null;
+            }
+
+            public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            {
+                return null;
+            }
+
+            public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+            {
+                return null;
             }
 
             public EdmContainerElementKind ContainerElementKind
@@ -752,6 +764,11 @@ namespace EdmLibTests.FunctionalUtilities
             public IEdmType Type
             {
                 get { return type; }
+            }
+
+            public bool IncludeInServiceDocument
+            {
+                get; internal set;
             }
         }
 
@@ -792,7 +809,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
     }
 
-    internal sealed class MutableValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmValueAnnotation
+    internal sealed class MutableVocabularyAnnotation : IEdmVocabularyAnnotation
     {
         public IEdmExpression Value
         {

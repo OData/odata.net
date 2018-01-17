@@ -222,7 +222,7 @@ namespace Microsoft.OData.Client
         {
             // The '$' segment is used to escape known metadata segments in the key-as-segments mode to avoid ambiguity.
             // Because keys are not allowed inside filter or orderby expressions, we do not need to add it in those cases.
-            if (inPath && dataServiceContext.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
+            if (inPath && dataServiceContext.UrlKeyDelimiter == DataServiceUrlKeyDelimiter.Slash)
             {
                 stringBuilder.Append('$');
                 stringBuilder.Append(FORWARDSLASH);

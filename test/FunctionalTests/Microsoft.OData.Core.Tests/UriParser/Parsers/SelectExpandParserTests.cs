@@ -7,15 +7,12 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Short-span integration tests for the SelectExpandParser, which knows how to use a lexer to 
@@ -220,8 +217,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             var results = this.StarExpandTesting("*/$ref,CityHall", "Cities");
             results.ExpandTerms.Should().HaveCount(3);
-            results.ExpandTerms.First().PathToNavProp.Identifier.ShouldBeEquivalentTo("CityHall");
-            results.ExpandTerms.Last().PathToNavProp.Identifier.ShouldBeEquivalentTo("$ref");
+            results.ExpandTerms.First().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("CityHall");
+            results.ExpandTerms.Last().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("$ref");
         }
 
         [Fact]
@@ -229,8 +226,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             var results = this.StarExpandTesting("CityHall($levels=2),*/$ref,PoliceStation($select=Id, Address)", "Cities");
             results.ExpandTerms.Should().HaveCount(3);
-            results.ExpandTerms.First().PathToNavProp.Identifier.ShouldBeEquivalentTo("CityHall");
-            results.ExpandTerms.Last().PathToNavProp.Identifier.ShouldBeEquivalentTo("$ref");
+            results.ExpandTerms.First().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("CityHall");
+            results.ExpandTerms.Last().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("$ref");
         }
 
         [Fact]

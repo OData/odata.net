@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Collections.ObjectModel;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Helper methods for the geography type.

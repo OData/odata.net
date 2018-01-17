@@ -4,23 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
-    #region Namespaces
-    #endregion Namespaces
 
     /// <summary>
     /// Lexical token representing a literal value.
     /// </summary>
-    internal sealed class LiteralToken : QueryToken
+    public sealed class LiteralToken : QueryToken
     {
         /// <summary>
         /// The original text value of the literal.
@@ -96,7 +91,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// We should use this during type promotion when applying metadata.</remarks>
         internal string OriginalText
         {
-            get 
+            get
             {
                 return this.originalText;
             }

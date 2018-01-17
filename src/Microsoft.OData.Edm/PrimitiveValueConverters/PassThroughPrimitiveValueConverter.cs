@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.PrimitiveValueConverters
+namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// An implementation of primitive value converter that directly pass through the primitive value.

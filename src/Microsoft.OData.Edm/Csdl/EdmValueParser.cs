@@ -4,29 +4,25 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_SERVER
+using System;
+using System.Text.RegularExpressions;
+using System.Xml;
+using Microsoft.OData.Edm;
+
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ODATALIB || ODATALIB_QUERY
-namespace Microsoft.OData.Core
+#if ODATA_CORE
+namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 #endif
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-
     /// <summary>
     /// Contains xml parsing methods for Edm.
     /// </summary>

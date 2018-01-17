@@ -26,62 +26,6 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
         [TestMethod]
-        public void SetEtagValueAfterQueryUpdate()
-        {
-            var contextWrapper = this.CreateWrappedContext();
-            contextWrapper.MergeOption = MergeOption.PreserveChanges;
-
-            var productToModify = contextWrapper.Context.Product.First();
-            var productToDelete = contextWrapper.Context.Product.Skip(1).First();
-
-            //caching Etags
-            var productToModifyETag = contextWrapper.GetEntityDescriptor(productToModify).ETag;
-            var productToDeleteETag = contextWrapper.GetEntityDescriptor(productToDelete).ETag;
-
-            contextWrapper.UpdateObject(productToModify);
-            productToModify.Description = "Modified Description";
-
-            contextWrapper.DeleteObject(productToDelete);
-            // We currently do not allow setting state from Deleted to Modified and LS is fine with the extra step to change State to Unchanged first
-            contextWrapper.ChangeState(productToDelete, EntityStates.Unchanged);
-            contextWrapper.ChangeState(productToDelete, EntityStates.Modified);
-
-            //Updating entities in the store using a new Client context object
-            var contextWrapperToUpdate = this.CreateWrappedContext();
-
-            var product1 = contextWrapperToUpdate.Context.Product.First();
-            var product2 = contextWrapperToUpdate.Context.Product.Skip(1).First();
-
-            product1.Description = "New Description 1";
-            product1.BaseConcurrency = "New Concurrency 1";
-            product2.Description = "New Description 2";
-            product2.BaseConcurrency = "New Concurrency 2";
-
-            contextWrapperToUpdate.UpdateObject(product1);
-            contextWrapperToUpdate.UpdateObject(product2);
-
-            contextWrapperToUpdate.SaveChanges();
-
-            //Quering the attached entities to update them
-            contextWrapper.Context.Product.First();
-            contextWrapper.Context.Product.Skip(1).First();
-
-            Assert.AreEqual(contextWrapperToUpdate.GetEntityDescriptor(product1).ETag, contextWrapper.GetEntityDescriptor(productToModify).ETag, "ETag not updated by query");
-            Assert.AreEqual(contextWrapperToUpdate.GetEntityDescriptor(product2).ETag, contextWrapper.GetEntityDescriptor(productToDelete).ETag, "ETag not updated by query");
-            Assert.AreNotEqual(productToModify.Description, product1.Description, "Query updated entity in Modified State");
-            Assert.AreNotEqual(productToDelete.Description, product2.Description, "Query updated entity in Modified State");
-
-            contextWrapper.GetEntityDescriptor(productToModify).ETag = productToModifyETag;
-            contextWrapper.GetEntityDescriptor(productToDelete).ETag = productToDeleteETag;
-
-            Assert.AreEqual(productToModifyETag, contextWrapper.GetEntityDescriptor(productToModify).ETag, "Etag not updated");
-            Assert.AreEqual(productToDeleteETag, contextWrapper.GetEntityDescriptor(productToDelete).ETag, "Etag not updated");
-
-            contextWrapper.ChangeState(productToDelete, EntityStates.Deleted);
-            Assert.AreEqual(EntityStates.Deleted, contextWrapper.Context.GetEntityDescriptor(productToDelete).State, "ChangeState API did not change the entity State form Modified to Deleted");
-        }
-
-        [TestMethod]
         public void BatchTest()
         {
             var contextWrapper = this.CreateWrappedContext();

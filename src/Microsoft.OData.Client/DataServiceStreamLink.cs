@@ -136,6 +136,6 @@ namespace Microsoft.OData.Client
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
-        }    
+        }
     }
 }

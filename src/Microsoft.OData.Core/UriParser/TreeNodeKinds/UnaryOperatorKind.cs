@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     #endregion Namespaces

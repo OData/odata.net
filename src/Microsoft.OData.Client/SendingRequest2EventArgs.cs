@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary> Event args for the SendingRequest2 event. </summary>
     public class SendingRequest2EventArgs : EventArgs

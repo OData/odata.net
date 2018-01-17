@@ -191,6 +191,15 @@ namespace EdmLibTests.FunctionalTests
             this.SerializingValidator(model, csdls);
         }
 
+        [TestMethod]
+        public void SerializeMultiBindingForOneNavigationProperty()
+        {
+            var model = NavigationTestModelBuilder.MultiNavigationBindingModel();
+            var csdl = NavigationTestModelBuilder.MultiNavigationBindingModelCsdl();
+
+            this.SerializingValidator(model, csdl);
+        }
+
         private void SerializingValidator(IEdmModel expectedModel, IEnumerable<XElement> actualCsdls)
         {
             var expectedCsdls = this.GetSerializerResult(expectedModel).Select(n => XElement.Parse(n));

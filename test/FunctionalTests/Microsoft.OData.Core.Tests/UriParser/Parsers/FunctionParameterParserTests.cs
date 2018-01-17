@@ -8,17 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// TODO: cover everything in FunctionParameterParser once it replaces the code being added for filter/orderby.
@@ -76,7 +73,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             ICollection<OperationSegmentParameter> parsedParameters;
             TryParseFunctionParameters("CanMoveToAddress", "address={\'City\' : \'Seattle\'}", null, out parsedParameters).Should().BeTrue();
             parsedParameters.Should().HaveCount(1);
-            parsedParameters.Single().ShouldBeConstantParameterWithValueType<ODataComplexValue>("address");
+            var parameter = parsedParameters.Single();
+            parameter.Name.Should().Be("address");
+            parameter.Value.As<ConvertNode>().Source.As<ConstantNode>().Value.Should().Be("{\'City\' : \'Seattle\'}");
         }
 
         [Fact]
@@ -88,7 +87,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parameterNodes.Should().HaveCount(1);
             var parameter = parameterNodes.Single();
             parameter.Name.Should().Be("address");
-            parameter.Value.As<ConstantNode>().Value.Should().BeOfType<ODataComplexValue>();
+            parameter.Value.As<ConvertNode>().Source.As<ConstantNode>().Value.Should().Be("{\'City\' : \'Seattle\'}");
         }
 
         [Fact]

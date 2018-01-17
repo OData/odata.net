@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -35,11 +35,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
         /// <summary>Reusable constant of an entry detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> entryDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Entry);
+            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Resource);
 
         /// <summary>Reusable constant of a feed detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> feedDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Feed);
+            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.ResourceSet);
 
         /// <summary>Reusable constant of a service doc detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> serviceDocDetectionResult =
@@ -57,9 +57,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> propertyDetectionResult =
             testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Property);
 
+        private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> complexPropertyDetectionResult =
+            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Resource, ODataPayloadKind.Property);
+
         /// <summary>Reusable constant of a collection (and property) detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> collectionDetectionResult =
             testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Property, ODataPayloadKind.Collection);
+
+        /// <summary>Reusable constant of a collection (and property) detection result.</summary>
+        private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> complexCollectionDetectionResult =
+            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection);
 
         /// <summary>Reusable constant of an error detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> errorDetectionResult =
@@ -201,7 +208,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         Description = "Metadata document URI for complex type",
                         ContextUri = metadataDocumentUri + "#TestModel.Address",
-                        ExpectedDetectionResults = propertyDetectionResult,
+                        ExpectedDetectionResults = complexPropertyDetectionResult,
                     },
                     new 
                     {
@@ -213,7 +220,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         Description = "Metadata document URI for complex collection type",
                         ContextUri = metadataDocumentUri + "#Collection(TestModel.Address)",
-                        ExpectedDetectionResults = collectionDetectionResult,
+                        ExpectedDetectionResults = complexCollectionDetectionResult,
                     },
                     #endregion Property context URI
                     #region Collection context URI
@@ -227,7 +234,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         Description = "Metadata document URI for complex collection type",
                         ContextUri = metadataDocumentUri + "#Collection(TestModel.Address)",
-                        ExpectedDetectionResults = collectionDetectionResult,
+                        ExpectedDetectionResults = complexCollectionDetectionResult,
                     },
                     #endregion Collection context URI
                 };

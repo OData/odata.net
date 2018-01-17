@@ -9,7 +9,7 @@ using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     /// <summary>
-    /// Provides semantics for a CsdlAction
+    /// Provides semantics for a CsdlFunction
     /// </summary>
     internal class CsdlSemanticsFunction : CsdlSemanticsOperation, IEdmFunction
     {

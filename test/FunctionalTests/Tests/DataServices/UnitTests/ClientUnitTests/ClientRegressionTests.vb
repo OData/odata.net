@@ -31,13 +31,13 @@ Imports <xmlns:atom="http://www.w3.org/2005/Atom">
 Imports <xmlns:d="http://docs.oasis-open.org/odata/ns/data">
 Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
+' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
 <TestClass()> Public Class ClientRegressionTests
     Inherits AstoriaTestCase
 
     Private Shared web As TestWebRequest = Nothing
     Private Shared resolvedNames As Dictionary(Of String, Integer) = New Dictionary(Of String, Integer)()
     Private ctx As NorthwindSimpleModel.NorthwindContext = Nothing
-    Dim EmptyFeed As String = AtomParserTests.EmptyFeed
 
 #Region "Additional test attributes"
 
@@ -56,8 +56,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
     <TestInitialize()> Public Sub PerTestSetup()
         Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot, ODataProtocolVersion.V4)
-        Me.ctx.EnableAtom = True
-        Me.ctx.Format.UseAtom()
+        'Me.'ctx.EnableAtom = True
+        'Me.'ctx.Format.UseAtom()
     End Sub
 
     <TestCleanup()> Public Sub PerTestCleanup()
@@ -137,7 +137,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
     End Sub
 
-    <TestCategory("Partition1")> <TestMethod()> _
+    <TestCategory("Partition1")> <TestMethod()>
     Public Sub ContextIgnoreRNF_Async()
 
         For i As Integer = 0 To 1
@@ -156,8 +156,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             End Try
         Next
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Expanding with no links could result in ArgumentException thrown by LINQ Except method call")> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Expanding with no links could result in ArgumentException thrown by LINQ Except method call")>
     Public Sub ExpandWithOverwriteChanges()
         Me.ctx.MergeOption = MergeOption.OverwriteChanges
         Dim q = From c In ctx.CreateQuery(Of northwindClient.Employees)("Employees").Expand("Employees1") Select c
@@ -172,8 +172,9 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             Assert.Fail("Exception was thrown")
         End Try
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub TestBatchWithSingleChangeset()
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
+    Public Sub TestBatchWithSingleChangeset()
         Dim c1 = Me.ctx.Execute(Of northwindClient.Customers)(New Uri("Customers", UriKind.Relative)).First()
         Me.ctx.UpdateObject(c1)
 
@@ -190,7 +191,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
     End Sub
 
-    <TestCategory("Partition1")> <TestMethod(), Variation("Client fails with ArgumentNullException if the server responds with 204 and a Content-Type (using async API)")> _
+    <TestCategory("Partition1")> <TestMethod(), Variation("Client fails with ArgumentNullException if the server responds with 204 and a Content-Type (using async API)")>
     Public Sub ShouldAcceptResponse204()
         Using CustomDataContext.CreateChangeScope()
             Using request = TestWebRequest.CreateForInProcessWcf
@@ -206,19 +207,6 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 Assert.AreEqual(0, results.Count(), "Customer 0 doesn't have a best friend, so the result collection should be empty.")
             End Using
         End Using
-    End Sub
-
-    <Ignore()> _
-    <TestCategory("Partition2")> <TestMethod(), Variation("Check if TypeResolver is called for Expanded or Obtained through LoadProperty ResourceSets with and without Inheritance")> _
-    Public Sub TypeResolverWithExpandsOrLoadProperty()
-        TestUtil.RunCombinatorialEngineFail(CombinatorialEngine.FromDimensions( _
-                                            New Dimension("ExpandMethod", New Action(Of DataServiceContext)() { _
-                                                    AddressOf PerformExpand, _
-                                                    AddressOf PerformLoadProperty}), _
-                                            New Dimension("UseInheritance", New Boolean() { _
-                                                    True, _
-                                                    False})), _
-                                            AddressOf TestTypeResolverWithExpandOrLoadProperty)
     End Sub
 
     Public Class InheritedOrder
@@ -256,10 +244,10 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                         End If
                         Dim methodToCall = CType(values("ExpandMethod"), Action(Of DataServiceContext))
                         methodToCall(c)
-                        MatchDictionaryWithKeyValuePairs(resolvedNames, New KeyValuePair(Of String, Integer)() { _
-                                                         New KeyValuePair(Of String, Integer)("AstoriaUnitTests.Stubs.Customer", 2), _
-                                                         New KeyValuePair(Of String, Integer)("AstoriaUnitTests.Stubs.CustomerWithBirthday", 1), _
-                                                         New KeyValuePair(Of String, Integer)("AstoriaUnitTests.Stubs.Address", 3), _
+                        MatchDictionaryWithKeyValuePairs(resolvedNames, New KeyValuePair(Of String, Integer)() {
+                                                         New KeyValuePair(Of String, Integer)("AstoriaUnitTests.Stubs.Customer", 2),
+                                                         New KeyValuePair(Of String, Integer)("AstoriaUnitTests.Stubs.CustomerWithBirthday", 1),
+                                                         New KeyValuePair(Of String, Integer)("AstoriaUnitTests.Stubs.Address", 3),
                                                          New KeyValuePair(Of String, Integer)("AstoriaUnitTests.Stubs.Order", 6)})
                     End Using
                 End Using
@@ -300,7 +288,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Next
     End Sub
 
-    <TestCategory("Partition1")> <TestMethod(), Variation("Client InvalidOperationException on 204 No-Content response for Null reference properties in Async Code path")> _
+    <TestCategory("Partition1")> <TestMethod(), Variation("Client InvalidOperationException on 204 No-Content response for Null reference properties in Async Code path")>
     Public Sub ShouldAcceptResponse204InAsync()
         Using CustomDataContext.CreateChangeScope()
             Using request = TestWebRequest.CreateForLocal
@@ -321,8 +309,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 
 #Region "AssertWhenLoadNullProperty"
-
-    <TestCategory("Partition1")> <TestMethod()> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub AssertWhenLoadNullProperty()
         ' EF 
         Dim employee = (From e In ctx.Employees Where e.EmployeeID = 2).FirstOrDefault
@@ -347,7 +335,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Property
     End Class
 
-    <Global.Microsoft.OData.Client.Key("Id")> _
+    <Global.Microsoft.OData.Client.Key("Id")>
     Public Class TestEntity
 
         Private _id As Integer
@@ -412,15 +400,15 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4
         End Sub
     End Class
-
-    <TestCategory("Partition1")> <TestMethod()> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub TestDatetimeOffset()
         Using request = TestWebRequest.CreateForLocal
             request.DataServiceType = GetType(TestCtx)
             request.StartService()
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             Dim entity = ctx.CreateQuery(Of TestEntity)("Data").First
             Assert.AreEqual(1, entity.Id)
             Assert.AreEqual(Nothing, entity.StartDate.Day)
@@ -432,7 +420,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #Region "Content Feedback Service Tests"
 
-    <TestClass()> _
+    <TestClass()>
     Public Class ContentVerificationTests
         Inherits AstoriaTestCase
 
@@ -455,8 +443,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -466,8 +454,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 #End Region
 
         <TestCategory("Partition2")> <TestMethod()> Public Sub BatchVersioning()
-            Dim contentStream = FetchContentStream( _
-                    New Action(Function() ctx.ExecuteBatch(ctx.CreateQuery(Of northwindClient.Customers)("Customers").IncludeTotalCount(), _
+            Dim contentStream = FetchContentStream(
+                    New Action(Function() ctx.ExecuteBatch(ctx.CreateQuery(Of northwindClient.Customers)("Customers").IncludeTotalCount(),
                     ctx.CreateQuery(Of northwindClient.Customers)("Customers"))))
             Assert.IsNotNull(contentStream)
 
@@ -480,8 +468,9 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             Assert.IsFalse(s(1).Contains("$count=true"))
 
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub IncorrectLinkOnAdd_Existing()
+        'Remove Atom
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub IncorrectLinkOnAdd_Existing()
             Dim custs = New Customer() With {.ID = 0}
 
             ctx.AttachTo("Customers", custs)
@@ -527,12 +516,12 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             Return Nothing
         End Function
 
-        <System.ServiceModel.ServiceContract()> _
-        <System.ServiceModel.ServiceBehavior(InstanceContextMode:=ServiceModel.InstanceContextMode.PerCall)> _
-        <System.ServiceModel.Activation.AspNetCompatibilityRequirements(RequirementsMode:=System.ServiceModel.Activation.AspNetCompatibilityRequirementsMode.Allowed)> _
+        <System.ServiceModel.ServiceContract()>
+        <System.ServiceModel.ServiceBehavior(InstanceContextMode:=ServiceModel.InstanceContextMode.PerCall)>
+        <System.ServiceModel.Activation.AspNetCompatibilityRequirements(RequirementsMode:=System.ServiceModel.Activation.AspNetCompatibilityRequirementsMode.Allowed)>
         Public Class ContentFeedbackVerificationService
-            <System.ServiceModel.OperationContract()> _
-            <System.ServiceModel.Web.WebInvoke(UriTemplate:="*", Method:="*")> _
+            <System.ServiceModel.OperationContract()>
+            <System.ServiceModel.Web.WebInvoke(UriTemplate:="*", Method:="*")>
             Public Function ProcessRequestForMessage(ByVal messageBody As System.IO.Stream) As System.IO.Stream
                 Dim c = System.ServiceModel.Web.WebOperationContext.Current
                 c.OutgoingResponse.StatusCode = Net.HttpStatusCode.BadRequest
@@ -549,8 +538,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 #End Region
 
 #Region "Test DisposeAsyncWaitHandle"
-
-    <TestCategory("Partition1")> <TestMethod()> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub DisposeAsyncWaitHandle1()
         Using CustomDataContext.CreateChangeScope()
             Using request = TestWebRequest.CreateForLocal
@@ -559,8 +548,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
                 ' Make sure EndExecute disposes the wait handle
                 Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-                ctx.EnableAtom = True
-                ctx.Format.UseAtom()
+                'ctx.EnableAtom = True
+                'ctx.Format.UseAtom()
                 Dim asyncResult = ctx.BeginExecute(Of Customer)(New Uri(request.BaseUri + "/Customers"), Nothing, Nothing)
                 Using waitHandle = asyncResult.AsyncWaitHandle
                     ctx.EndExecute(Of Customer)(asyncResult)
@@ -574,8 +563,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             End Using
         End Using
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub DisposeAsyncWaitHandle2()
         Using CustomDataContext.CreateChangeScope()
             Using request = TestWebRequest.CreateForLocal
@@ -584,8 +573,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
                 ' Make sure EndLoadProperty disposes the wait handle
                 Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-                ctx.EnableAtom = True
-                ctx.Format.UseAtom()
+                'ctx.EnableAtom = True
+                'ctx.Format.UseAtom()
                 Dim customer = ctx.CreateQuery(Of Customer)("Customers").First()
                 Dim asyncResult = ctx.BeginLoadProperty(customer, "Orders", Nothing, Nothing)
                 Using waitHandle = asyncResult.AsyncWaitHandle
@@ -600,18 +589,18 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             End Using
         End Using
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub TestSelectSubQueryOfNavigationProperty()
         Using request = TestWebRequest.CreateForLocal
             request.DataServiceType = GetType(NorthwindContext)
             request.StartService()
 
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
-            Dim q = From c In ctx.CreateQuery(Of northwindClient.Categories)("Categories") _
+            Dim q = From c In ctx.CreateQuery(Of northwindClient.Categories)("Categories")
                     Select New With {.PN = (From p In c.Products Select p), .Cat = c}
 
             For Each c As Object In q
@@ -625,11 +614,11 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 #End Region
 
 #Region "Fuzzing: Response header OData-Version value validation issues"
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Fuzzing: Response header OData-Version value validation issues")> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Fuzzing: Response header OData-Version value validation issues")>
     Public Sub ValidateODataVersionResponseHeader()
 
-        Dim serviceVersions() As String = {Nothing, String.Empty, "abc;", "0.0;", "0.123456;", "1;", "1.0;", "1.2;", "1.5;", "2.0;", "2.5;", "4.0", _
+        Dim serviceVersions() As String = {Nothing, String.Empty, "abc;", "0.0;", "0.123456;", "1;", "1.0;", "1.2;", "1.5;", "2.0;", "2.5;", "4.0",
             ";", ";;", ";1.0", ";1.0;", "-1.0;", "1.0.0;", "2.0.0.0;", "1.0;2.0;", "1.2.3.4.5;", ".;", "1.;", ".1;"}
 
         ' For version parsing we ignore characters after the first ';' - hence "1.0;.*" is valid 
@@ -639,8 +628,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             request.DataServiceType = GetType(TestCtx1)
             request.StartService()
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri), ODataProtocolVersion.V4)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
             For Each dataServiceVersion As String In serviceVersions
                 TestCtx1.DataServiceResponseVersion = dataServiceVersion
                 Dim shouldThrow As Boolean = Not validServiceVersions.Contains(dataServiceVersion)
@@ -688,15 +677,15 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 #End Region
 
 #Region "client does not add If-Match header when the etag is only available from the response header."
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")>
     Public Sub NonBatchRequest()
         Using request = TestWebRequest.CreateForInProcessWcf
             Using PlaybackService.OverridingPlayback.Restore()
                 request.ServiceType = GetType(PlaybackService)
                 request.StartService()
                 Dim ctx = New DataServiceContext(request.ServiceRoot)
-                ctx.EnableAtom = True
+                'ctx.EnableAtom = True
 
                 Dim order As AstoriaUnitTests.Stubs.Order = New AstoriaUnitTests.Stubs.Order()
                 order.ID = 16584
@@ -704,32 +693,32 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 ctx.AddObject("Orders", order)
 
                 Dim headerEtag As String = "ETag-from-header"
-                PlaybackService.OverridingPlayback.Value = _
-    "HTTP/1.1 201 Created" & vbCrLf & _
-    "Content-Type: application/atom+xml" & vbCrLf & _
-    "Content-ID: 1" & vbCrLf & _
-    "ETag: " & headerEtag & vbCrLf & _
-    "Location: http://localhost:62614/TheTest/Orders(16584)" & vbCrLf & _
-    vbCrLf & _
-    "<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes""?>" & _
-    "<entry xml:base=""http://localhost:62614/TheTest/"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" xmlns=""http://www.w3.org/2005/Atom"">" & _
-    "  <id>http://localhost:62614/TheTest/Orders(16584)</id>" & _
-    "  <title type=""text""></title>" & _
-    "  <updated>2009-09-30T01:44:35Z</updated>" & _
-    "  <author>" & _
-    "    <name />" & _
-    "  </author>" & _
-    "  <link rel=""edit"" title=""Order"" href=""Orders(16584)"" />" & _
-    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/Customer"" type=""application/atom+xml;type=entry"" title=""Customer"" href=""Orders(16584)/Customer"" />" & _
-    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/OrderDetails"" type=""application/atom+xml;type=feed"" title=""OrderDetails"" href=""Orders(16584)/OrderDetails"" />" & _
-    "  <category term=""#AstoriaUnitTests.Stubs.Order"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />" & _
-    "  <content type=""application/xml"">" & _
-    "    <m:properties>" & _
-    "      <d:ID m:type=""Edm.Int32"">16584</d:ID>" & _
-    "      <d:DollarAmount m:type=""Edm.Double"">100</d:DollarAmount>" & _
-    "      <d:CurrencyAmount m:type=""AstoriaUnitTests.Stubs.CurrencyAmount"" m:null=""true"" />" & _
-    "    </m:properties>" & _
-    "  </content>" & _
+                PlaybackService.OverridingPlayback.Value =
+    "HTTP/1.1 201 Created" & vbCrLf &
+    "Content-Type: application/atom+xml" & vbCrLf &
+    "Content-ID: 1" & vbCrLf &
+    "ETag: " & headerEtag & vbCrLf &
+    "Location: http://localhost:62614/TheTest/Orders(16584)" & vbCrLf &
+    vbCrLf &
+    "<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes""?>" &
+    "<entry xml:base=""http://localhost:62614/TheTest/"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" xmlns=""http://www.w3.org/2005/Atom"">" &
+    "  <id>http://localhost:62614/TheTest/Orders(16584)</id>" &
+    "  <title type=""text""></title>" &
+    "  <updated>2009-09-30T01:44:35Z</updated>" &
+    "  <author>" &
+    "    <name />" &
+    "  </author>" &
+    "  <link rel=""edit"" title=""Order"" href=""Orders(16584)"" />" &
+    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/Customer"" type=""application/atom+xml;type=entry"" title=""Customer"" href=""Orders(16584)/Customer"" />" &
+    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/OrderDetails"" type=""application/atom+xml;type=feed"" title=""OrderDetails"" href=""Orders(16584)/OrderDetails"" />" &
+    "  <category term=""#AstoriaUnitTests.Stubs.Order"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />" &
+    "  <content type=""application/xml"">" &
+    "    <m:properties>" &
+    "      <d:ID m:type=""Edm.Int32"">16584</d:ID>" &
+    "      <d:DollarAmount m:type=""Edm.Double"">100</d:DollarAmount>" &
+    "      <d:CurrencyAmount m:type=""AstoriaUnitTests.Stubs.CurrencyAmount"" m:null=""true"" />" &
+    "    </m:properties>" &
+    "  </content>" &
     "</entry>"
 
                 ctx.SaveChanges()
@@ -738,8 +727,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             End Using
         End Using
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")>
     Public Sub BatchRequest()
         Using CustomDataContext.CreateChangeScope()
             Using PlaybackService.OverridingPlayback.Restore
@@ -747,7 +736,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                     request.ServiceType = GetType(PlaybackService)
                     request.StartService()
                     Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-                    ctx.EnableAtom = True
+                    'ctx.EnableAtom = True
 
                     Dim order As AstoriaUnitTests.Stubs.Order = New AstoriaUnitTests.Stubs.Order()
                     order.ID = 16584
@@ -755,47 +744,47 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                     ctx.AddObject("Orders", order)
 
                     Dim headerETag As String = "ETag-from-header"
-                    PlaybackService.OverridingPlayback.Value = _
-    "HTTP/1.1 200 OK" & vbCrLf & _
-    "OData-Version: 4.0;" & vbCrLf & _
-    "Content-Type: multipart/mixed; boundary=batchresponse_dd8688f0-40e6-4c6a-bf7b-de35d25d4583" & vbCrLf & _
-    vbCrLf & _
-    "--batchresponse_dd8688f0-40e6-4c6a-bf7b-de35d25d4583" & vbCrLf & _
-    "Content-Type: multipart/mixed; boundary=changesetresponse_10278993-a508-4f62-b31a-d2aa02e40ea1" & vbCrLf & _
-    vbCrLf & _
-    "--changesetresponse_10278993-a508-4f62-b31a-d2aa02e40ea1" & vbCrLf & _
-    "Content-Type: application/http" & vbCrLf & _
-    "Content-Transfer-Encoding: binary" & vbCrLf & _
-    vbCrLf & _
-    "HTTP/1.1 201 Created" & vbCrLf & _
-    "Content-ID: 1" & vbCrLf & _
-    "Cache-Control: no-cache" & vbCrLf & _
-    "OData-Version: 4.0;" & vbCrLf & _
-    "Content-Type: application/atom+xml;charset=utf-8" & vbCrLf & _
-    "ETag: " & headerETag & vbCrLf & _
-    "Location: http://localhost:59251/TheTest/Orders(16584)" & vbCrLf & _
-    vbCrLf & _
-    "<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes""?>" & vbCrLf & _
-    "<entry xml:base=""http://localhost:59251/TheTest/"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" xmlns=""http://www.w3.org/2005/Atom"">" & vbCrLf & _
-    "  <id>http://localhost:59251/TheTest/Orders(16584)</id>" & vbCrLf & _
-    "  <title type=""text""></title>" & vbCrLf & _
-    "  <updated>2009-10-12T22:38:44Z</updated>" & vbCrLf & _
-    "  <author>" & vbCrLf & _
-    "    <name />" & vbCrLf & _
-    "  </author>" & vbCrLf & _
-    "  <link rel=""edit"" title=""Order"" href=""Orders(16584)"" />" & vbCrLf & _
-    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/Customer"" type=""application/atom+xml;type=entry"" title=""Customer"" href=""Orders(16584)/Customer"" />" & vbCrLf & _
-    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/OrderDetails"" type=""application/atom+xml;type=feed"" title=""OrderDetails"" href=""Orders(16584)/OrderDetails"" />" & vbCrLf & _
-    "  <category term=""#AstoriaUnitTests.Stubs.Order"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />" & vbCrLf & _
-    "  <content type=""application/xml"">" & vbCrLf & _
-    "    <m:properties>" & vbCrLf & _
-    "      <d:ID m:type=""Edm.Int32"">16584</d:ID>" & vbCrLf & _
-    "      <d:DollarAmount m:type=""Edm.Double"">100</d:DollarAmount>" & vbCrLf & _
-    "      <d:CurrencyAmount m:type=""AstoriaUnitTests.Stubs.CurrencyAmount"" m:null=""true"" />" & vbCrLf & _
-    "    </m:properties>" & vbCrLf & _
-    "  </content>" & vbCrLf & _
-    "</entry>" & vbCrLf & _
-    "--changesetresponse_10278993-a508-4f62-b31a-d2aa02e40ea1--" & vbCrLf & _
+                    PlaybackService.OverridingPlayback.Value =
+    "HTTP/1.1 200 OK" & vbCrLf &
+    "OData-Version: 4.0;" & vbCrLf &
+    "Content-Type: multipart/mixed; boundary=batchresponse_dd8688f0-40e6-4c6a-bf7b-de35d25d4583" & vbCrLf &
+    vbCrLf &
+    "--batchresponse_dd8688f0-40e6-4c6a-bf7b-de35d25d4583" & vbCrLf &
+    "Content-Type: multipart/mixed; boundary=changesetresponse_10278993-a508-4f62-b31a-d2aa02e40ea1" & vbCrLf &
+    vbCrLf &
+    "--changesetresponse_10278993-a508-4f62-b31a-d2aa02e40ea1" & vbCrLf &
+    "Content-Type: application/http" & vbCrLf &
+    "Content-Transfer-Encoding: binary" & vbCrLf &
+    vbCrLf &
+    "HTTP/1.1 201 Created" & vbCrLf &
+    "Content-ID: 1" & vbCrLf &
+    "Cache-Control: no-cache" & vbCrLf &
+    "OData-Version: 4.0;" & vbCrLf &
+    "Content-Type: application/atom+xml;charset=utf-8" & vbCrLf &
+    "ETag: " & headerETag & vbCrLf &
+    "Location: http://localhost:59251/TheTest/Orders(16584)" & vbCrLf &
+    vbCrLf &
+    "<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes""?>" & vbCrLf &
+    "<entry xml:base=""http://localhost:59251/TheTest/"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" xmlns=""http://www.w3.org/2005/Atom"">" & vbCrLf &
+    "  <id>http://localhost:59251/TheTest/Orders(16584)</id>" & vbCrLf &
+    "  <title type=""text""></title>" & vbCrLf &
+    "  <updated>2009-10-12T22:38:44Z</updated>" & vbCrLf &
+    "  <author>" & vbCrLf &
+    "    <name />" & vbCrLf &
+    "  </author>" & vbCrLf &
+    "  <link rel=""edit"" title=""Order"" href=""Orders(16584)"" />" & vbCrLf &
+    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/Customer"" type=""application/atom+xml;type=entry"" title=""Customer"" href=""Orders(16584)/Customer"" />" & vbCrLf &
+    "  <link rel=""http://docs.oasis-open.org/odata/ns/related/OrderDetails"" type=""application/atom+xml;type=feed"" title=""OrderDetails"" href=""Orders(16584)/OrderDetails"" />" & vbCrLf &
+    "  <category term=""#AstoriaUnitTests.Stubs.Order"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />" & vbCrLf &
+    "  <content type=""application/xml"">" & vbCrLf &
+    "    <m:properties>" & vbCrLf &
+    "      <d:ID m:type=""Edm.Int32"">16584</d:ID>" & vbCrLf &
+    "      <d:DollarAmount m:type=""Edm.Double"">100</d:DollarAmount>" & vbCrLf &
+    "      <d:CurrencyAmount m:type=""AstoriaUnitTests.Stubs.CurrencyAmount"" m:null=""true"" />" & vbCrLf &
+    "    </m:properties>" & vbCrLf &
+    "  </content>" & vbCrLf &
+    "</entry>" & vbCrLf &
+    "--changesetresponse_10278993-a508-4f62-b31a-d2aa02e40ea1--" & vbCrLf &
     "--batchresponse_dd8688f0-40e6-4c6a-bf7b-de35d25d4583--"
 
                     Dim asyncResult = ctx.BeginSaveChanges(SaveChangesOptions.BatchWithSingleChangeset, Nothing, Nothing)
@@ -814,7 +803,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #Region "ExplicitExpansionWithProjection"
 
-    <EntityType()> _
+    <EntityType()>
     Public Class TestEntity2
         Private m_ID As String
         Public Property CustomerID() As String
@@ -873,490 +862,11 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Try
     End Sub
 
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ClientProjectionSelectManyLevelShouldWork()
-        ' Client Projections + VB : select many level gives error "expression $VB$It1.c  not supported"
-        Dim xml As String = _
-            "<feed xml:base='http://localhost/' xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>" & _
-            " <entry><id>http://localhost/e1</id><link rel='edit' href='e1'/><content type='application/xml'><m:properties><d:OrderID>1</d:OrderID></m:properties></content></entry></feed>"
-        ' The Key qualifier doesn't make a difference.
-        ' One less level does make a difference.
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim q = From c In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Where (c.CustomerID = "ALFKI") _
-                From o In c.Orders _
-                Where (o.OrderID = 10643) _
-                From od In o.Order_Details _
-                Where (od.OrderID = 10643 AndAlso od.ProductID = 28) _
-                Select New With {Key .OrderID = od.OrderID}
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-        Next
-
-        Dim xml2 As String = xml
-        Dim q2 = From c In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                 Where (c.CustomerID = "ALFKI") _
-                 From o In c.Orders _
-                 Where (o.OrderID = 10643) _
-                 From od In o.Order_Details _
-                 Where (od.OrderID = 10643 AndAlso od.ProductID = 28) _
-                 From od2 In od.Products.Order_Details() _
-                 Where (od2.OrderID = 10643 AndAlso od2.ProductID = 28) _
-                 Select New With {Key .OrderID = od2.OrderID}
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q2, xml2)
-            Assert.IsNotNull(item, "item")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub OnlyCheckNullAgainstNonEntityProperty()
-        ' Client LINQ: NullReferenceException preceded by an Assert: atomProperty.Entry != null -- otherwise a primitive property / complex type is being rewritte with a null check; this is only supported for entities and collection
-        ' repros when the IIF statement returns an entity type when the null check is false and the null check is against a non-entity property.
-        Dim ordersFeed = FeedStart & AnyEntry("Order1", "", "") & "</feed>"
-        Dim xml As String = FeedStart & AnyEntry("Customer1", "<d:CustomerID>Foo</d:CustomerID>", LinkFeed("Orders", ordersFeed)) & "</feed>"
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim q = From c In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-        Select New northwindClient.Customers() With { _
-            .CustomerID = c.CustomerID, _
-            .Orders = If(c.CustomerID Is Nothing, Nothing, c.Orders) _
-        }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub IIFOperatorShouldWorkInProjection_VB()
-        ' Client Projections + VB : IIF Operator does not work in a projection
-        Dim xml As String = _
-            "<feed xml:base='http://localhost/' xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>" & _
-            " <entry><id>http://localhost/e1</id><link rel='edit' href='e1'/><content type='application/xml'><m:properties><d:ID>1</d:ID><d:Member m:null='true' /></m:properties></content></entry></feed>"
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, Integer?))("t") _
-                Select New With {Key .v = IIf(t.Member.HasValue, t.Member.Value, 10)}
-        Try
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.IsNotNull(item, "item")
-                Assert.AreEqual(10, item.v, "item.v")
-            Next
-            Assert.Fail("Should have evaluated t.Member.Value and thrown an exception")
-        Catch e As InvalidOperationException
-        End Try
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub StringCompareShouldWorkInProjection_VB()
-        ' Client Projections : Assert when running String.Compare inside a projection
-        Dim xml As String = "<feed xml:base='http://localhost/' xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'><entry><id>http://localhost/e1</id><link rel='edit' href='e1'/><content type='application/xml'><m:properties><d:ID>1</d:ID><d:Member>test</d:Member></m:properties></content></entry></feed>"
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, String))("T") _
-                Select New With _
-                { _
-                    .a = String.CompareOrdinal(t.Member, "abc") > 0, _
-                    .b = String.Compare(t.Member, "test"), _
-                    .c = t.Member = "test", _
-                    .e = (t.Member.CompareTo("test") = 0), _
-                    .z = t.Member}
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual("test", item.z, "item.z")
-            Assert.IsTrue(item.a, "item.a")
-            Assert.AreEqual(0, item.b, "item.b")
-            Assert.AreEqual(True, item.c, "item.c")
-            Assert.IsTrue(item.e, "item.e")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub MultiLevelSelectShouldWork_VB()
-        ' Client Projections : Collection.Select(anonymous).Select(anonymous) throws NotSupportedException
-        Dim xml As String = _
-            "<feed xml:base='http://localhost/' xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>" & _
-            " <entry><id>http://localhost/e1</id><link rel='edit' href='e1'/><content type='application/xml'><m:properties><d:ID>1</d:ID><d:Member m:null='true' /></m:properties></content></entry></feed>"
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        Dim q = From entity In ctx.CreateQuery(Of northwindClient.Customers)("EntitySet") _
-                Select New With {Key .MyCollection = entity.Orders.Select(Function(nav) New With {Key .ID = nav.OrderID, Key .DataField = nav.OrderDate}).Select(Function(second) New With {Key .ID = second.ID})}
-        ' This should be enabled when the issue is fixed;
-        'For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        'Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ToListShouldWork()
-        ' Client Projections : Cannot Call ToList on entity(Key)/Collection(1)/Collection when  entity(Key)/Collection(1) is the Query root
-        Dim orderDetailsFeed = FeedStart & AnyEntry("od1", "", "") & "</feed>"
-        Dim xml As String = FeedStart & AnyEntry("order", "<m:OrderID>1</m:OrderID>", LinkFeed("Order_Details", orderDetailsFeed)) & "</feed>"
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim q = From entity In ctx.CreateQuery(Of northwindClient.Customers)("EntitySet") _
-                Where entity.CustomerID = "1" _
-                From nav In entity.Orders _
-                Select New With {.MyCollection = nav.Order_Details.ToList()}
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ProjectSubQueryInsideProjectionShouldWork()
-        ' Client Projections + VB : Cannot Project Sub Queries inside projection
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim xml = FeedStart & "</feed>"
-        Dim q = From entity In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, String))))("ProjectSet") _
-                Select New With { _
-                    Key .TheCollection = From navTestScenario In entity.Member _
-                    Select New With { _
-                        Key .Id = navTestScenario.ID, _
-                        Key .Name = navTestScenario.Member _
-                    } _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub CallCtorOfCollectionNavigationShouldWork()
-        ' Client Projections + SDP + VB : Cannot call new DSC(CollectionNavigation) inside a Projection into an Entity Type
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim xml = FeedStart & "</feed>"
-        Dim q = From entity In ctx.CreateQuery(Of TypedEntity(Of Integer, DataServiceCollection(Of TypedEntity(Of Integer, String))))("ProjectSet") _
-                Select New TypedEntity(Of Integer, DataServiceCollection(Of TypedEntity(Of Integer, String)))() With { _
-                    .Member = New DataServiceCollection(Of TypedEntity(Of Integer, String))(entity.Member) _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub SelectNewObjectsShouldWork()
-        ' Client Projections + VB : Customers.Where(CustomerID).SelectMany(Orders).Select(New Orders()) throws NotSupportedException
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim xml = FeedStart & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Where (customer.CustomerID = "ALFKI") _
-                From order In customer.Orders _
-                Select New northwindClient.Orders With {.OrderID = order.OrderID}
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub MutipleWhereShouldWork()
-        ' Client Projections + VB : Customers(CustomerID).Orders(OrderID).Order Throws NotSupportedException
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim xml = FeedStart & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Where (customer.CustomerID = "ALFKI") _
-                From order In customer.Orders _
-                Where (order.OrderID = 123) _
-                Select New northwindClient.Orders With { _
-                    .OrderID = order.OrderID, _
-                    .Customers = order.Customers, _
-                    .Employees = order.Employees _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub WithDSC()
-        ' Client Projections + VB : Customers(CustomerID).Orders(OrderID).Order Throws NotSupportedException
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim xml = FeedStart & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of TypedEntity(Of String, DataServiceCollection(Of TypedEntity(Of Integer, Integer))))("Customers") _
-                Where (customer.ID = "ALFKI") _
-                From order In customer.Member _
-                Where (order.ID = 123) _
-                Select New TypedEntity(Of Integer, Integer) With { _
-                    .ID = order.ID, _
-                    .Member = order.Member _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ShouldThrowWhenUnsupported()
-        ' Client Projections + VB: Unsupported cases in VB do not throw exceptions with valid error messages
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        Dim xml = FeedStart & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Where (customer.CustomerID = "ALFKI") _
-                From order In customer.Orders _
-                Where (order.OrderID = 123) _
-                Select New northwindClient.Customers With { _
-                        .CustomerID = customer.CustomerID _
-                }
-        Dim exceptionCaught As Exception = Nothing
-        Try
-            AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Catch e As Exception
-            exceptionCaught = e
-        End Try
-        TestUtil.AssertExceptionExpected(exceptionCaught, True)
-        TestUtil.AssertContains(exceptionCaught.ToString(), "Can only project the last entity type in the query being translated")
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub WithDSC_1()
-        ' Client Projections + VB: Unsupported cases in VB do not throw exceptions with valid error messages
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        Dim xml = FeedStart & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of TypedEntity(Of String, DataServiceCollection(Of TypedEntity(Of Integer, Integer))))("Customers") _
-                Where (customer.ID = "ALFKI") _
-                From order In customer.Member _
-                Where (order.ID = 123) _
-                Select New TypedEntity(Of String, DataServiceCollection(Of TypedEntity(Of Integer, Integer))) With { _
-                    .ID = customer.ID _
-                }
-        Dim exceptionCaught As Exception = Nothing
-        Try
-            AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Catch e As Exception
-            exceptionCaught = e
-        End Try
-        TestUtil.AssertExceptionExpected(exceptionCaught, True)
-        TestUtil.AssertContains(exceptionCaught.ToString(), "Can only project the last entity type in the query being translated")
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ProjectionCollectionFromNestedReferenceShouldMaterializeNextLinks()
-        ' Client Projections + SDP : Projecting a Collection from a nested reference does not materialize next Links on DSC<T>
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        Dim nestedFeed = FeedStart & AnyEntry("e1", "<d:EmployeeID>1</d:EmployeeID>", Nothing) & "</feed>"
-        Dim xml = FeedStart & AnyEntry("e1", "<d:EmployeeID>1</d:EmployeeID>", Nothing) & "</feed>"
-        Dim q = From e In ctx.CreateQuery(Of northwindClient.Employees)("Employees") _
-                Where (e.EmployeeID = 1) _
-                Select New northwindClient.Employees With { _
-                    .Employees2 = New northwindClient.Employees With { _
-                        .Employees1 = New DataServiceCollection(Of northwindClient.Employees)(e.Employees1) _
-                    } _
-                }
-
-        ' As described in the original repro, this query should fail, because
-        ' going inside-out, we see that the nested Employees correlated to 'e'
-        ' (the .Employees1 match), but then its parent doesn't correlate to
-        ' anything in scope.
-        Dim exceptionCaught As Exception = Nothing
-        Try
-            AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        Catch e As Exception
-            exceptionCaught = e
-        End Try
-        TestUtil.AssertExceptionExpected(exceptionCaught, True)
-        TestUtil.AssertContains(exceptionCaught.ToString(), "NotSupportedException")
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub InScope()
-        ' Client Projections + SDP : Projecting a Collection from a nested reference does not materialize next Links on DSC<T>
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim nestedFeed = FeedStart & AnyEntry("e1", "<d:EmployeeID>1</d:EmployeeID>", Nothing) & NextLink("http://next-link/") & "</feed>"
-        Dim xml = FeedStart & AnyEntry("e1", "<d:EmployeeID>1</d:EmployeeID>", LinkFeed("Employees1", nestedFeed)) & "</feed>"
-        Dim q = From e In ctx.CreateQuery(Of northwindClient.Employees)("Employees") _
-                Where (e.EmployeeID = 1) _
-                Select New northwindClient.Employees With { _
-                    .Employees1 = New DataServiceCollection(Of northwindClient.Employees)(e.Employees1, TrackingMode.None) _
-                }
-        Dim response = AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        For Each item In response
-            Assert.IsNotNull(item, "item")
-            Assert.IsNotNull(item.Employees1, "item.Employees1")
-
-            Assert.AreEqual(1, item.EmployeeID, "item.EmployeeID")
-            Assert.AreEqual(1, item.Employees1.Count, "item.Employees1.Count")
-            Assert.AreSame(item, item.Employees1.Single())
-            Assert.IsNotNull(response.GetContinuation(item.Employees1), "response.GetContinuation(item.Employees1)")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub WithCollection()
-        ' Client Projections + SDP : Projecting a Collection from a nested reference does not materialize next Links on DSC<T>
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim nestedFeed = FeedStart & AnyEntry("e1", "<d:ID>1</d:ID>", Nothing) & NextLink("http://next-link/") & "</feed>"
-        Dim xml = FeedStart & AnyEntry("e1", "<d:ID>1</d:ID>", LinkFeed("DSC", nestedFeed)) & "</feed>"
-        Dim q = From e In ctx.CreateQuery(Of SelfReferenceTypedEntity(Of Integer, Integer))("Employees") _
-                Select New SelfReferenceTypedEntity(Of Integer, Integer) With { _
-                    .ID = e.ID, _
-                    .DSC = New DataServiceCollection(Of SelfReferenceTypedEntity(Of Integer, Integer))(e.DSC, TrackingMode.None) _
-                }
-        Dim response = AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-        For Each item In response
-            Assert.IsNotNull(item, "item")
-            Assert.IsNotNull(item.DSC, "item.Employees1")
-
-            Assert.AreEqual(1, item.ID, "item.EmployeeID")
-            Assert.AreEqual(1, item.DSC.Count, "item.Employees1.Count")
-            Assert.AreSame(item, item.DSC.Single())
-            Assert.IsNotNull(response.GetContinuation(item.DSC), "response.GetContinuation(item.DSC)")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ToList_1()
-        ' Client Projections + VB : Cannot call ToList on Order_Details in projection of Customers('ALFKI')/Orders(10643)/Order_Details
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim detailsXml = FeedStart & AnyEntry("od2", "<d:OrderID>1</d:OrderID>", Nothing) & "</feed>"
-        Dim orderXml = AnyEntry("o1", "<d:OrderID>1</d:OrderID>", LinkFeed("Order_Details", detailsXml))
-        Dim topXml = AnyEntry("od1", "<d:OrderID>1</d:OrderID><d:ProductID>20</d:ProductID>", LinkEntry("Orders", orderXml))
-        Dim xml = FeedStart & topXml & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Where (customer.CustomerID = "ALFKI") _
-                From order In customer.Orders _
-                Where (order.OrderID = 123) _
-                From od In order.Order_Details _
-                Select New With { _
-                    Key .ProductID = od.ProductID, _
-                    Key .OrderID = od.OrderID, _
-                    Key .Details = od.Orders.Order_Details.ToList() _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual(1, item.OrderID, "item.OrderID")
-            Assert.AreEqual(20, item.ProductID, "item.ProductID")
-            Assert.IsNotNull(item.Details, "item.Details")
-            Assert.AreEqual(1, item.Details.Count, "item.Details.Count")
-            Assert.AreEqual(1, item.Details.Single().OrderID, "item.Details.Single().OrderID")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub WithoutToList()
-        ' Client Projections + VB : Cannot call ToList on Order_Details in projection of Customers('ALFKI')/Orders(10643)/Order_Details
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim detailsXml = FeedStart & AnyEntry("od2", "<d:OrderID>1</d:OrderID>", Nothing) & "</feed>"
-        Dim orderXml = AnyEntry("o1", "<d:OrderID>1</d:OrderID>", LinkFeed("Order_Details", detailsXml))
-        Dim topXml = AnyEntry("od1", "<d:OrderID>1</d:OrderID><d:ProductID>20</d:ProductID>", LinkEntry("Orders", orderXml))
-        Dim xml = FeedStart & topXml & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Where (customer.CustomerID = "ALFKI") _
-                From order In customer.Orders _
-                Where (order.OrderID = 123) _
-                From od In order.Order_Details _
-                Select New With { _
-                    Key .ProductID = od.ProductID, _
-                    Key .OrderID = od.OrderID, _
-                    Key .Details = od.Orders.Order_Details _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual(1, item.OrderID, "item.OrderID")
-            Assert.AreEqual(20, item.ProductID, "item.ProductID")
-            Assert.IsNotNull(item.Details, "item.Details")
-            Assert.AreEqual(1, item.Details.Count, "item.Details.Count")
-            Assert.AreEqual(1, item.Details.Single().OrderID, "item.Details.Single().OrderID")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub TrimStartTrimEndShouldNotThrow()
-        ' Client Projections + VB : Calling TrimEnd/TrimStart in a Projection throws VerificationException
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        ctx.MergeOption = MergeOption.NoTracking
-        Dim topXml = AnyEntry("od1", "<d:ContactName xml:space='preserve'> howdy </d:ContactName>", Nothing)
-        Dim xml = FeedStart & topXml & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-              Select New With { _
-                    .the_name = customer.ContactName.TrimEnd() _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual(" howdy", item.the_name, "item.the_name")
-        Next
-
-        Dim chars As Char() = New Char() {" "c, "y"c}
-        Dim q2 = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                 Select New With { _
-                    .the_name = customer.ContactName.TrimEnd(chars) _
-                 }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q2, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual(" howd", item.the_name, "item.the_name")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ChangeLevelOfKeyPredicateShouldNotThrow_VB()
-        ' Client Linq + VB : NotSupportedException thrown when Level of Key Predicate expression is changed
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        ctx.MergeOption = MergeOption.NoTracking
-
-        Dim xml = FeedStart & AnyEntry("od1", "<d:ProductID>123</d:ProductID>", Nothing) & "</feed>"
-
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Where customer.CustomerID = "ALFKI" _
-                From order In customer.Orders _
-                From detail In order.Order_Details _
-                Where order.OrderID = 10643 _
-                Select detail
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual(123, item.ProductID, "item.ProductID")
-        Next
-
-        Dim q2 = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                From order In customer.Orders _
-                From detail In order.Order_Details _
-                Where order.OrderID = 10643 _
-                Where customer.CustomerID = "ALFKI" _
-                Select detail
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q2, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual(123, item.ProductID, "item.ProductID")
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub CastingCollectionToIEnumerableShouldNotThrow()
-        ' Client Projections : ArgumentException on casting collection to IEnumerable inside a projection
-        ' NOTE: this fails if the cast is to IEnumerable, but succeeds when the cast is to IList
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim ordersXml = FeedStart & AnyEntry("od2", "<d:OrderID>1</d:OrderID>", Nothing) & "</feed>"
-        Dim topXml = AnyEntry("od1", "<d:CustomerID>10</d:CustomerID><d:ContactName>Customer</d:ContactName>", LinkFeed("Orders", ordersXml))
-        Dim xml = FeedStart & topXml & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Select New With { _
-                    .CustomerID = customer.CustomerID, _
-                    .ContactName = customer.ContactName, _
-                    .Orders = CType((From order In customer.Orders Select New With {.OrderID = order.OrderID}), IList) _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual("10", item.CustomerID, "item.CustomerID")
-            Assert.AreEqual("Customer", item.ContactName, "item.ContactName")
-            Assert.IsNotNull(item.Orders, "item.Orders")
-            For Each itemValue In item.Orders
-                Assert.IsNotNull(itemValue, "itemValue")
-            Next
-        Next
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub ProjectingSourceOfSubProjectionIntoAnonymousShouldNotThrow()
-        ' Client Projections : Projecting the source of a sub projection into an anonymous type throws NotSupportedException
-        ' This *does* fail if we add a .customer = customer initializer to the .Orders projection, but that's
-        ' currently by design, as it requires us to do a SelectMany at materialization time.
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        Dim ordersXml = FeedStart & AnyEntry("od2", "<d:OrderID>1</d:OrderID>", Nothing) & "</feed>"
-        Dim topXml = AnyEntry("od1", "<d:CustomerID>10</d:CustomerID><d:ContactName>Customer</d:ContactName>", LinkFeed("Orders", ordersXml))
-        Dim xml = FeedStart & topXml & "</feed>"
-        Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                Select New With { _
-                    .CustomerID = customer.CustomerID, _
-                    .ContactName = customer.ContactName, _
-                    .Orders = From order In customer.Orders Select New With {.OrderID = order.OrderID, .source = order} _
-                }
-        For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-            Assert.IsNotNull(item, "item")
-            Assert.AreEqual("10", item.CustomerID, "item.CustomerID")
-            Assert.AreEqual("Customer", item.ContactName, "item.ContactName")
-            Assert.IsNotNull(item.Orders, "item.Orders")
-            For Each itemValue In item.Orders
-                Assert.IsNotNull(itemValue, "itemValue")
-            Next
-        Next
-    End Sub
-
 #End Region
 
 #Region "Client Projections : AddQueryOption(""$select"") doesn't work"
-
-    <TestCategory("Partition1")> <TestMethod()> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub AddQueryOptionSelect()
         Dim q = From c In ctx.CreateQuery(Of northwindClient.Customers)("Customers").AddQueryOption("$select", "ContactName") Select c
         Assert.IsTrue(q.ToString().Contains("$select=ContactName"))
@@ -1384,8 +894,9 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Public Property Uri As Uri
         Public Property Related As TestEntity3
     End Class
-
-    <TestCategory("Partition1")> <TestMethod()> Public Sub TypeConvert()
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod()>
+    Public Sub TypeConvert()
         Dim entity = New TestEntity3() With {.ID = "0:0", .Uri = New System.Uri("http://uri/entities(escaped%3AID)")}
         Dim related = New TestEntity3() With {.ID = "1:1", .Uri = New System.Uri("http://uri/entities(escaped%3AID2)")}
 
@@ -1422,25 +933,6 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #End Region
 
-    Private Const FeedStart As String = AstoriaUnitTests.Tests.AtomParserTests.FeedStart
-
-    Private Function AnyEntry(ByVal id As String, ByVal properties As String, ByVal links As String) As String
-        Return AstoriaUnitTests.Tests.AtomParserTests.AnyEntry(id, properties, links)
-    End Function
-
-    Private Function LinkEntry(ByVal name As String, ByVal content As String) As String
-        Return AstoriaUnitTests.Tests.ProjectionTests.Link(True, name, content)
-    End Function
-
-    Private Function LinkFeed(ByVal name As String, ByVal content As String) As String
-        Return AstoriaUnitTests.Tests.ProjectionTests.Link(False, name, content)
-    End Function
-
-    Private Shared Function NextLink(ByVal url As String) As String
-        Return AstoriaUnitTests.Tests.AtomParserTests.NextLink(url)
-    End Function
-
-
 #Region "Projected collections of primitives."
 
     ' This is a simple scan of the following:
@@ -1456,674 +948,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
     ' ServerDrivenPaging:         true,false
     ' ServerResults:              Empty,EmptyAfterSDP,1,5
     ' NavigationBeforeSelect:     0,1,4
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub ProjectPrimitiveCollection_0_Negative()
-
-        ' ProjectedType	int?
-        ' ProjectedTypeSourceType	EntityType
-        ' CollectionType	ReadOnlyCollectionOfT
-        ' CollectionTypeCasts	SameType
-        ' CollectionTypeMethods	IntoDataServiceCollection
-        ' TargetType	IntoEntity
-        ' SameLevelProjectionCount	3
-        ' DepthLevelProjectionCount	1
-        ' ProjectionOrder	AfterEntity
-        ' ServerDrivenPaging	FALSE
-        ' ServerResults	1
-        ' NavigationBeforeSelect	1
-
-        Dim q As IQueryable(Of DoubleMemberTypedEntity(Of Integer, Integer, ReadOnlyCollection(Of Integer?)))
-
-        q = From t In Me.ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Integer, ReadOnlyCollection(Of Integer?)))("T") _
-            Select New DoubleMemberTypedEntity(Of Integer, Integer, ReadOnlyCollection(Of Integer?)) With { _
-                .ID = t.ID, _
-                .Member = t.Member, _
-                .Member2 = t.Member2 _
-            }
-        For Each Item In CreateTestMaterializeAtom(EmptyFeed, q)
-            Assert.IsNotNull(Item, "Item")
-        Next
-        Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>2</d:Member><d:Member2>3</d:Member2>", Nothing) + "</feed>"
-        TestUtil.AssertEnumerableExceptionMessage(CreateTestMaterializeAtom(xml, q), "InvalidOperationException")
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub ProjectPrimitiveCollection_0()
-
-        ' ProjectedType: int?
-        ' ProjectedTypeSourceType: Collection
-        ' CollectionType: ReadOnlyCollectionOfT
-        ' CollectionTypeCasts: SameType
-        ' CollectionTypeMethods: IntoDataServiceCollection
-        ' SameLevelProjectionCount: 3
-        ' DepthLevelProjectionCount: 1
-        ' ProjectionOrder: AfterEntity
-        ' ServerDrivenPaging: true
-        ' ServerResults: 1
-        ' NavigationBeforeSelect: 1
-        If True Then
-            ' The problem with this configuration is that the DoubleMemberTypedEntity does not support
-            ' a ReadOnlyCollection constructor, so we'll also try with ProjectionOrder: Single
-            Dim q = From t In ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, ReadOnlyCollection(Of TypedEntity(Of Integer, IEnumerable(Of Integer?)))))("T") _
-                Select New With { _
-                .id = t.ID, _
-                .e = t, _
-                .values = New DataServiceCollection(Of Integer?)(CType(t.Member2.Select(Function(e) e.Member), IEnumerable(Of Integer?))) _
-                }
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member>100</d:Member>", Nothing) + NextLink("http://next-link/") + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            TestUtil.AssertEnumerableExceptionMessage(CreateTestMaterializeAtom(xml, q), "InvalidOperationException")
-        End If
-
-        If True Then
-
-            'This variation still fails, because the IEnumerable in the top-level member is not recognized as
-            ' a collection type (it doesn't have add/set).
-            Dim q = From t In ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, IEnumerable(Of TypedEntity(Of Integer, Integer?))))("T") _
-                        Select New With { _
-                            .id = t.ID, _
-                            .e = t, _
-                            .values = New DataServiceCollection(Of Integer?)(CType(t.Member2.Select(Function(e) e.Member), IEnumerable(Of Integer?))) _
-                        }
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member>100</d:Member>", Nothing) + NextLink("http://next-link/") + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            TestUtil.AssertEnumerableExceptionMessage(CreateTestMaterializeAtom(xml, q), "InvalidOperationException")
-
-        End If
-        If True Then
-            'Almost there: this var1iation fails because TrackingMode defaults to Auto.
-            Dim q = From t In ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, Collection(Of TypedEntity(Of Integer, Integer?))))("T") _
-                       Select New With _
-                       { _
-                           .id = t.ID, _
-                           .e = t, _
-                           .values = New DataServiceCollection(Of Integer?)(CType(t.Member2.Select(Function(e) e.Member), IEnumerable(Of Integer?))) _
-                       }
-
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member>100</d:Member>", Nothing) + NextLink("http://next-link/") + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            TestUtil.AssertEnumerableExceptionMessage(CreateTestMaterializeAtom(xml, q), "The DataServiceCollection to be tracked must contain entity typed elements with at least one key property.")
-        End If
-        If True Then
-            Dim q = From t In Me.ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, Collection(Of TypedEntity(Of Integer, Integer?))))("T") _
-                        Select New With _
-                        { _
-                            .id = t.ID, _
-                            .e = New DoubleMemberTypedEntity(Of Integer, Double, Collection(Of TypedEntity(Of Integer, Integer?))) With _
-                                { _
-                                    .ID = t.ID, _
-                                    .Member = t.Member, _
-                                    .Member2 = t.Member2 _
-                                }, _
-                            .values = New DataServiceCollection(Of Integer?)(CType(t.Member2.Select(Function(e) e.Member), IEnumerable(Of Integer?)), TrackingMode.None) _
-                        }
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member>100</d:Member>", Nothing) + NextLink("http://next-link/") + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            Dim response = AtomParserTests.CreateQueryResponse(Me.ctx, AtomParserTests.EmptyHeaders, q, xml)
-
-            For Each item In response
-                Assert.IsNotNull(item, "item")
-
-                Assert.AreEqual(1, item.id, "item.id")
-                Assert.IsNotNull(item.e, "item.e")
-                Assert.IsNotNull(item.values, "item.values")
-
-                Assert.AreEqual(1, item.e.ID, "item.e.ID")
-                Assert.AreEqual(1.1, item.e.Member, "item.e.Member")
-                Assert.IsNotNull(item.e.Member2, "item.e.Member2")
-
-                Assert.AreNotSame(item.values, item.e.Member2)
-
-                Assert.AreEqual(1, item.e.Member2.Count, "item.e.Member2")
-                Assert.AreEqual(1, item.values.Count, "item.values.Count")
-
-                Assert.IsNotNull(response.GetContinuation(item.values), "queryResponse.GetContinuation(item.values)")
-                Assert.IsNotNull(item.values.Continuation, "item.values.Continuation")
-                Assert.AreEqual(item.values.Continuation.NextLinkUri, response.GetContinuation(item.values).NextLinkUri)
-                Assert.IsNotNull(response.GetContinuation(item.e.Member2), "queryResponse.GetContinuation(item.e.Member2)")
-                Assert.AreEqual(item.values.Continuation.NextLinkUri, response.GetContinuation(item.e.Member2).NextLinkUri)
-            Next
-            Assert.IsNull(response.GetContinuation())
-
-        End If
-
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub ProjectPrimitiveCollection_1()
-
-        ' ProjectedType: Integer
-        ' ProjectedTypeSourceType: EntityType
-        ' CollectionType: ArrayList
-        ' CollectionTypeCasts: Upcasts
-        ' CollectionTypeMethods: ToList
-        ' SameLevelProjectionCount: 1
-        ' DepthLevelProjectionCount: 3 -- actually done in _4.
-        ' ProjectionOrder: BeforeEntity
-        ' ServerDrivenPaging: false
-        ' ServerResults: Empty
-        ' NavigationBeforeSelect: 0
-        Dim q = From t In ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, List(Of TypedEntity(Of Integer, Integer))))("T") _
-                        Select New With _
-                        { _
-                            .id = t.ID, _
-                            .values = New ArrayList(CType(t.Member2.Select(Function(t2) t2.Member), ICollection)), _
-                            .e = New DoubleMemberTypedEntity(Of Integer, Double, List(Of TypedEntity(Of Integer, Integer))) With _
-                            { _
-                                .ID = t.ID, _
-                                .Member = t.Member, _
-                                .Member2 = t.Member2 _
-                            } _
-                        }
-
-        Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member>100</d:Member>", Nothing) + "</feed>"
-        Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-        Dim response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-
-        For Each item In response
-
-            Assert.IsNotNull(item, "item")
-
-            Assert.AreEqual(1, item.id, "item.id")
-            Assert.IsNotNull(item.values, "item.values")
-            Assert.IsNotNull(item.e, "item.e")
-            Assert.IsNull(response.GetContinuation(item.e.Member2), "response.GetContinuation(item.e.Member2)")
-
-            Assert.AreEqual(1, item.values.Count, "item.values.Count")
-            Dim currentItem = item
-            Dim accessException As Exception = TestUtil.RunCatching(Function() response.GetContinuation(currentItem.values))
-            TestUtil.AssertExceptionExpected(accessException, True)
-        Next
-
-        ' One more time, with really empty results like this iteration wants.
-        response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, EmptyFeed)
-        For Each Item As Object In response
-            Assert.Fail("should never get here")
-        Next
-
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub ProjectPrimitiveCollection_2()
-        ' ProjectedType: string
-        ' ProjectedTypeSourceType: ComplexType
-        ' CollectionType: IEnumerableOfT   -- IEnumerable<T> can't be used in the entity type
-        ' CollectionTypeCasts: SameType
-        ' CollectionTypeMethods: ToArray
-        ' SameLevelProjectionCount: 1
-        ' DepthLevelProjectionCount: 1
-        ' ProjectionOrder: BeforeEntity
-        ' ServerDrivenPaging: false
-        ' ServerResults: EmptyAfterSDP
-        ' NavigationBeforeSelect: 4
-
-        If True Then
-            ' This throws an exception early on in the normalizer, because
-            ' the upcast to IEnumerable(OF Address) is discarded and the member
-            ' no longer matches the argument.
-            ' Dev10 #791399 - Client Projections: removing Converts in normalizer breaks certain projections
-            Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of DoubleMemberTypedEntity(Of Integer, Double, List(Of TypedEntity(Of Integer, Address))))))))))("T") _
-                        From t2 In t.Member _
-                        From t3 In t2.Member _
-                        From t4 In t3.Member _
-                        Where t2.ID = 2 And t.ID = 1 And t3.ID = 3 _
-                        Select New With { _
-                            .id = t4.ID, _
-                            .values = CType(t4.Member2.Select(Function(t5) t5.Member).ToArray(), IEnumerable(Of Address)), _
-                            .e = New DoubleMemberTypedEntity(Of Integer, Double, List(Of TypedEntity(Of Integer, Address))) With { _
-                                .ID = t4.ID, _
-                                .Member = t4.Member, _
-                                .Member2 = t4.Member2 _
-                            } _
-                        }
-
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member><d:StreetAddress>street</d:StreetAddress></d:Member>", Nothing) + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            Dim response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-            For Each item In response
-                Assert.IsNotNull(item, "item")
-                Assert.AreEqual(1, item.id, "item.id")
-                Assert.IsNotNull(item.values, "item.values")
-                Assert.IsNotNull(item.e, "item.e")
-                Assert.IsNull(response.GetContinuation(item.e.Member2), "response.GetContinuation(item.e.Member2)")
-                Assert.AreEqual(1, item.values.Count(), "item.values.Count")
-                Assert.AreEqual("street", item.values.First().StreetAddress, "item.values.First().StreetAddress")
-                Dim currentItem = item
-                Dim accessException As Exception = TestUtil.RunCatching(Function() response.GetContinuation(currentItem.values))
-                TestUtil.AssertExceptionExpected(accessException, True)
-            Next
-            Assert.IsNull(response.GetContinuation())
-        End If
-
-        If True Then
-            'Same as above, without the upcast after .ToArray()
-            Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of DoubleMemberTypedEntity(Of Integer, Double, List(Of TypedEntity(Of Integer, Address))))))))))("T") _
-                        From t2 In t.Member _
-                        From t3 In t2.Member _
-                        From t4 In t3.Member _
-                        Where t2.ID = 2 And t.ID = 1 And t3.ID = 3 _
-                        Select New With { _
-                            .id = t4.ID, _
-                            .values = t4.Member2.Select(Function(t5) t5.Member).ToArray(), _
-                            .e = New DoubleMemberTypedEntity(Of Integer, Double, List(Of TypedEntity(Of Integer, Address))) With { _
-                                .ID = t4.ID, _
-                                .Member = t4.Member, _
-                                .Member2 = t4.Member2 _
-                            } _
-                        }
-
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member><d:StreetAddress>street</d:StreetAddress></d:Member>", Nothing) + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            Dim response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-            For Each item In response
-                Assert.IsNotNull(item, "item")
-                Assert.AreEqual(1, item.id, "item.id")
-                Assert.IsNotNull(item.values, "item.values")
-                Assert.IsNotNull(item.e, "item.e")
-                Assert.IsNull(response.GetContinuation(item.e.Member2), "response.GetContinuation(item.e.Member2)")
-                Assert.AreEqual(1, item.values.Count(), "item.values.Count")
-                Assert.AreEqual("street", item.values.First().StreetAddress, "item.values.First().StreetAddress")
-                Dim currentItem = item
-                Dim accessException As Exception = TestUtil.RunCatching(Function() response.GetContinuation(currentItem.values))
-                TestUtil.AssertExceptionExpected(accessException, True)
-            Next
-            Assert.IsNull(response.GetContinuation())
-        End If
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub ProjectPrimitiveCollection_3()
-
-        ' ProjectedType: Address
-        ' ProjectedTypeSourceType: EntityType
-        ' CollectionType: ListOfT
-        ' CollectionTypeCasts: SameType
-        ' CollectionTypeMethods: IntoDataServiceCollection
-        ' SameLevelProjectionCount: 1
-        ' DepthLevelProjectionCount: 3
-        ' ProjectionOrder: BeforeEntity
-        ' ServerDrivenPaging: false
-        ' ServerResults: 5
-        ' NavigationBeforeSelect: 4
-
-        Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of SelfReferenceTypedEntity(Of Integer, List(Of TypedEntity(Of Integer, Address))))))))))("T") _
-        From t2 In t.Member _
-        From t3 In t2.Member _
-        From t4 In t3.Member _
-        Where t2.ID = 2 And t.ID = 1 And t3.ID = 3 _
-        Select New With { _
-            .v = New DataServiceCollection(Of Address)(t4.Reference.Reference.Reference.Member.Select(Function(m) m.Member), TrackingMode.None) _
-        }
-
-        Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member><d:StreetAddress>street</d:StreetAddress></d:Member>", Nothing) + AnyEntry("e3", "<d:Member><d:StreetAddress>street2</d:StreetAddress></d:Member>", Nothing) + "</feed>"
-
-        ' Uncommenting the following line makes this test case a repro for:
-        ' Dev10 #791615 - Client Projection: Assert and NullReferenceException in deep projection
-        ' string ref1 = AnyEntry("ref1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", Link(false, "Member2", nestedFeed));
-
-        Dim ref1 As String = AnyEntry("ref1", "<d:ID>1</d:ID>", ProjectionTests.Link(False, "Member", nestedFeed))
-        Dim ref2 As String = AnyEntry("ref2", "<d:ID>2</d:ID>", ProjectionTests.Link(True, "Reference", ref1))
-        Dim ref3 As String = AnyEntry("ref3", "<d:ID>3</d:ID>", ProjectionTests.Link(True, "Reference", ref2))
-        Dim ref4 As String = AnyEntry("ref4", "<d:ID>3</d:ID>", ProjectionTests.Link(True, "Reference", ref3))
-        Dim xml As String = FeedStart + ref4 + "</feed>"
-        Dim response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-
-        For Each item In response
-            Assert.IsNotNull(item, "item")
-            Assert.IsNotNull(item.v, "item.v")
-            Assert.AreEqual(2, item.v.Count, "item.v.Count")
-            Assert.AreEqual("street", item.v.First().StreetAddress, "item.v.First().StreetAddress")
-            Assert.AreEqual("street2", item.v.Last().StreetAddress, "item.v.Last().StreetAddress")
-            Assert.IsNull(response.GetContinuation(item.v), "response.GetContinuation(item.v)")
-            Assert.IsNull(item.v.Continuation, "item.v.Continuation")
-        Next
-        Assert.IsNull(response.GetContinuation())
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub ProjectPrimitiveCollection_4()
-
-        ' ProjectedType: int
-        ' ProjectedTypeSourceType: ComplexType
-        ' CollectionType: DataServiceCollectionOfT
-        ' CollectionTypeCasts: SameType
-        ' CollectionTypeMethods: IntoDataServiceCollection
-        ' SameLevelProjectionCount: 3
-        ' DepthLevelProjectionCount: 1
-        ' ProjectionOrder: AfterEntity
-        ' ServerDrivenPaging: true
-        ' ServerResults: Empty
-        ' NavigationBeforeSelect: 4
-
-        If True Then
-
-            Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of SelfReferenceTypedEntity(Of Integer, List(Of TypedEntity(Of Integer, Address))))))))))("T") _
-            From t2 In t.Member _
-            From t3 In t2.Member _
-            From t4 In t3.Member _
-            Where (t2.ID = 2 And t.ID = 1 And t3.ID = 3) _
-                            Select New With _
-                            { _
-                                .e = t4, _
-                                .v = New DataServiceCollection(Of String)(t4.Reference.Reference.Reference.Member.Select(Function(m) m.Member.StreetAddress), TrackingMode.None) _
-                            }
-            Try
-                CreateTestMaterializeAtom(EmptyFeed, q).ToList()
-            Catch ex As Exception
-                Assert.Fail("Exception is not expected but thrown: " + ex.ToString())
-            End Try
-
-        End If
-        If False Then
-            Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of TypedEntity(Of Integer, List(Of SelfReferenceTypedEntity(Of Integer, List(Of TypedEntity(Of Integer, Address))))))))))("T") _
-            From t2 In t.Member _
-            From t3 In t2.Member _
-            From t4 In t3.Member _
-            Where (t2.ID = 2 And t.ID = 1 And t3.ID = 3) _
-                            Select New With _
-                            { _
-                                .e = t4, _
-                                .v = New DataServiceCollection(Of Integer)(t4.Reference.Reference.Reference.Member.Select(Function(m) m.ID), TrackingMode.None) _
-                            }
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:ID>1</d:ID><d:Member><d:StreetAddress>street</d:StreetAddress></d:Member>", Nothing) + NextLink("http://next-link/") + "</feed>"
-
-            Dim ref1 As String = AnyEntry("ref1", "<d:ID>1</d:ID>", ProjectionTests.Link(False, "Member", nestedFeed))
-            Dim ref2 As String = AnyEntry("ref2", "<d:ID>2</d:ID>", ProjectionTests.Link(True, "Reference", ref1))
-            Dim ref3 As String = AnyEntry("ref3", "<d:ID>3</d:ID>", ProjectionTests.Link(True, "Reference", ref2))
-            Dim ref4 As String = AnyEntry("ref4", "<d:ID>4</d:ID>", ProjectionTests.Link(True, "Reference", ref3))
-            Dim xml As String = FeedStart + ref4 + "</feed>"
-            Dim response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-            For Each Item In response
-                Assert.IsNotNull(Item, "item")
-                Assert.IsNotNull(Item.e, "item.e")
-                Assert.IsNotNull(Item.v, "item.v")
-
-                Assert.AreEqual(4, Item.e.ID, "item.e.ID")
-                Assert.IsNull(Item.e.Reference, "item.e.Reference")
-
-                Assert.AreEqual(1, Item.v.Count, "item.v.Count")
-                Assert.IsNotNull(response.GetContinuation(Item.v), "response.GetContinuation(item.v)")
-                Assert.IsNotNull(Item.v.Continuation, "item.v.Continuation")
-                Assert.AreEqual("http://next-link/", Item.v.Continuation.NextLinkUri.OriginalString, "item.v.Continuation.NextLinkUri.OriginalString")
-            Next
-            Assert.IsNull(response.GetContinuation())
-
-        End If
-    End Sub
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub ProjectPrimitiveCollection_5()
-        'Just finish adding coverage for .ToList() and other collection types:
-        'HashSetOfT, IEnumerable
-
-        If True Then
-            Dim q As IQueryable(Of DoubleMemberTypedEntity(Of Integer, Double, HashSet(Of TypedEntity(Of Integer, Integer?))))
-            q = From t In ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, HashSet(Of TypedEntity(Of Integer, Integer?))))("T") Select t
-
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member>100</d:Member>", Nothing) + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            Dim response As QueryOperationResponse(Of DoubleMemberTypedEntity(Of Integer, Double, HashSet(Of TypedEntity(Of Integer, Integer?)))) = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-            For Each item As DoubleMemberTypedEntity(Of Integer, Double, HashSet(Of TypedEntity(Of Integer, Integer?))) In response
-                Assert.IsNotNull(item, "item")
-                Assert.AreEqual(1, item.ID, "item.ID")
-                Assert.AreEqual(1.1, item.Member, "item.Member")
-                Assert.IsNotNull(item.Member2, "item.Member2")
-                Assert.AreEqual(1, item.Member2.Count, "item.Member2.Count")
-                Assert.AreEqual(100, item.Member2.Single().Member, "item.Member2.Single().Member")
-                Assert.IsNull(response.GetContinuation(item.Member2), "response.GetContinuation(item.Member2)")
-            Next
-
-        End If
-
-        DataServiceContextTests.ClearContext(ctx)
-
-        If True Then
-            Dim q = From t In ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, HashSet(Of TypedEntity(Of Integer, Integer?))))("T") _
-                        Select New With _
-                        { _
-                            .e = New DoubleMemberTypedEntity(Of Integer, Double, HashSet(Of TypedEntity(Of Integer, Integer?)))() With _
-                            { _
-                                .ID = t.ID, _
-                                .Member = t.Member, _
-                                .Member2 = t.Member2 _
-                            } _
-                        }
-            Dim nestedFeed As String = FeedStart + AnyEntry("e2", "<d:Member>100</d:Member>", Nothing) + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            Dim response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-            For Each Item In response
-                Assert.IsNotNull(Item, "item")
-
-                Assert.IsNotNull(Item.e, "item.e")
-
-                Assert.AreEqual(1, Item.e.ID, "item.e.ID")
-                Assert.AreEqual(1.1, Item.e.Member, "item.e.Member")
-                Assert.IsNotNull(Item.e.Member2, "item.e.Member2")
-
-                Assert.AreEqual(1, Item.e.Member2.Count, "item.e.Member2")
-                Assert.IsNull(response.GetContinuation(Item.e.Member2), "queryResponse.GetContinuation(item.e.Member2)")
-            Next
-        End If
-        DataServiceContextTests.ClearContext(ctx)
-
-        If True Then
-            Dim q = From t In ctx.CreateQuery(Of DoubleMemberTypedEntity(Of Integer, Double, HashSet(Of TypedEntity(Of Integer, Integer?))))("T") _
-                        Select New With _
-                        { _
-                            .id = t.ID, _
-                            .valuesAsList = t.Member2.Select(Function(m) m.Member).ToList() _
-                        }
-            Dim nestedFeed = FeedStart + AnyEntry("e2", "<d:Member m:null='true' />", Nothing) + NextLink("http://next-link/") + "</feed>"
-            Dim xml As String = FeedStart + AnyEntry("e1", "<d:ID>1</d:ID><d:Member>1.1</d:Member>", ProjectionTests.Link(False, "Member2", nestedFeed)) + "</feed>"
-            Dim response = AtomParserTests.CreateQueryResponse(ctx, AtomParserTests.EmptyHeaders, q, xml)
-            For Each item In response
-                Assert.IsNotNull(item, "item")
-
-                Assert.AreEqual(1, item.id, "item.id")
-                'Assert.IsNotNull(item.values, "item.values")
-
-                'Assert.AreEqual(1, item.values.Count, "item.values.Count")
-                Assert.AreEqual(1, item.valuesAsList.Count, "item.values.Count")
-
-                Assert.IsFalse(item.valuesAsList.Single().HasValue, "item.valuesAsList.Single().HasValue")
-
-                'Assert.IsNotNull(response.GetContinuation(item.values), "queryResponse.GetContinuation(item.values)")
-                Assert.IsNotNull(response.GetContinuation(item.valuesAsList), "queryResponse.GetContinuation(item.valuesAsList)")
-            Next
-            Assert.IsNull(response.GetContinuation())
-        End If
-    End Sub
 #End Region
-
-    <TestCategory("Partition1")> <TestMethod()> _
-    Public Sub InputBinderBindTest_VB()
-        ' See the InputBinderBindTest unit test in the C# project for details.
-        '
-        ' The expression trees are the same as for C# except in these cases:
-        ' - The transparent identifier type and param names are different.
-        ' - The collections in the SelectMany collectors have a Convert() around them.
-        ' - After "one-level compound transparent scope" and beyond, the construction
-        '   strategy changes in some cases to flattening rather than nesting.
-
-        Dim ctx As DataServiceContext = New DataServiceContext(New Uri("http://localhost/"))
-        ctx.EnableAtom = True
-        ctx.MergeOption = MergeOption.NoTracking
-
-        Dim orderDetailXml As String = AnyEntry("od1", "<d:OrderID>1</d:OrderID>", Nothing)
-        Dim orderXml As String = AnyEntry("o1", "<d:ID>1</d:ID>", LinkFeed("OrderDetails", FeedStart + orderDetailXml + "</feed>"))
-        Dim customerXml As String = AnyEntry("c1", "<d:ID>1</d:ID>", LinkFeed("Orders", FeedStart + orderXml + "</feed>"))
-
-        If True Then
-            Trace.WriteLine("Simple SelectMany, no transparent scope.")
-            ' [C].Where(c => (c.ID = 1)).SelectMany(c => c.Orders, (c, o) => o)
-            Dim q = From c In ctx.CreateQuery(Of Customer)("C") _
-                    Where c.ID = 1 _
-                    From o In c.Orders _
-                    Select o
-            Dim xml = FeedStart & orderXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.ID)
-            Next
-            Assert.AreEqual("http://localhost/C(1)/Orders", q.ToString())
-        End If
-
-        If True Then
-            Trace.WriteLine("SelectMany and OrderBy and ThenBy, with simple transparent scope (even though transparent scope isn't strictly necessary)")
-            ' [C].Where(c => (c.ID = 1)).SelectMany(c => c.Orders, (c, o) => new $0(c = c, o = o))
-            ' .OrderBy(p0 => p0.o.ID).ThenBy(p0 => p0.o.CurrencyAmount)
-            ' .Select(p0 => <>p0.o)
-            Dim q = From c In ctx.CreateQuery(Of Customer)("C") _
-                    Where c.ID = 1 _
-                    From o In c.Orders _
-                    Order By o.ID, o.CurrencyAmount _
-                    Select o
-            Dim xml = FeedStart & orderXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.ID)
-            Next
-            Assert.AreEqual("http://localhost/C(1)/Orders?$orderby=ID,CurrencyAmount", q.ToString())
-        End If
-
-        If True Then
-            Trace.WriteLine("Simple SelectMany, with simple transparent scope.")
-            ' [C].SelectMany(c => c.Orders, (c, o) => new $0(c = c, o = o)).Where(p0 => (p0.c.ID = 1)).Select(p0 => p0.o)
-            Dim q = From c In ctx.CreateQuery(Of Customer)("C") _
-                    From o In c.Orders _
-                    Where c.ID = 1 _
-                    Select o
-            Dim xml = FeedStart & orderXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.ID)
-            Next
-            Assert.AreEqual("http://localhost/C(1)/Orders", q.ToString())
-        End If
-
-        If True Then
-            Trace.WriteLine("SelectMany and OrderBy, with simple transparent scope.")
-            ' [C].SelectMany(c => c.Orders, (c, o) => new $0(c = c, o = o))
-            ' .OrderBy(p0 => p0.o.ID)
-            ' .Where(p0 => (p0.c.ID = 1)).Select(p0 => <>p0.o)
-            Dim q = From c In ctx.CreateQuery(Of Customer)("C") _
-                    From o In c.Orders _
-                    Where c.ID = 1 _
-                    Order By o.ID _
-                    Select o
-            Dim xml = FeedStart & orderXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.ID)
-            Next
-            Assert.AreEqual("http://localhost/C(1)/Orders?$orderby=ID", q.ToString())
-        End If
-
-
-        If True Then
-            Trace.WriteLine("SelectMany and OrderBy and ThenBy, with simple transparent scope.")
-            ' [C].SelectMany(c => c.Orders, (c, o) => new $0(c = c, o = o))
-            ' .OrderBy(p0 => p0.o.ID)
-            ' .ThenBy(p0 => p0.o.OrderDetails)
-            ' .Where(p0 => (p0.c.ID = 1)).Select(p0 => <>p0.o)
-            Dim q = From c In ctx.CreateQuery(Of Customer)("C") _
-                    From o In c.Orders _
-                    Where c.ID = 1 _
-                    Order By o.ID, o.CurrencyAmount _
-                    Select o
-            Dim xml = FeedStart & orderXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.ID)
-            Next
-            Assert.AreEqual("http://localhost/C(1)/Orders?$orderby=ID,CurrencyAmount", q.ToString())
-        End If
-
-        ' At this depth is when the expression tree starts to differ in meaningful ways from the C# trees.
-
-        If True Then
-            Trace.WriteLine("SelectMany, with one-level compound transparent scope.")
-            ' [C]
-            ' .SelectMany(c => c.Orders, (c, o) => new $0(c = c, o = o))
-            ' .SelectMany(p0 => p0.o.OrderDetails, (p0, od) => $1(c = p0.c, o = p0.o, od = od))
-            ' .Where(p1 => p1.c.ID = 1) && (p1.o.ID = 1)))
-            ' .Select(p1 => p1.od)
-            Dim q = From c In ctx.CreateQuery(Of Customer)("C") _
-                    From o In c.Orders _
-                    From od In o.OrderDetails _
-                    Where c.ID = 1 AndAlso o.ID = 2 _
-                    Select od
-            Dim xml = FeedStart & orderDetailXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.OrderID)
-            Next
-            Assert.AreEqual("http://localhost/C(1)/Orders(2)/OrderDetails", q.ToString())
-        End If
-
-        If True Then
-            Trace.WriteLine("SelectMany and OrderBy, with one-level compound transparent scope.")
-            ' [C]
-            ' .SelectMany(c => c.Orders, (c, o) => new $0(c = c, o = o))
-            ' .SelectMany(p0 => p0.o.OrderDetails, (p0, od) => $1(c = p0.c, o = p0.o, od = od))
-            ' .Where(p1 => p1.c.ID = 1) && (p1.o.ID = 1)))
-            ' .OrderBy(p1 => p1.od.Quantity)
-            ' .Select(p1 => p1.od)
-            Dim q = From c In ctx.CreateQuery(Of Customer)("C") _
-                    From o In c.Orders _
-                    From od In o.OrderDetails _
-                    Where c.ID = 1 AndAlso o.ID = 2 _
-                    Order By od.Quantity _
-                    Select od
-            Dim xml = FeedStart & orderDetailXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.OrderID)
-            Next
-            Assert.AreEqual("http://localhost/C(1)/Orders(2)/OrderDetails?$orderby=Quantity", q.ToString())
-        End If
-
-        ' Note that is is similar to C# nesting rather than the flattening approach for
-        ' the sequential .SelectMany()s, and flattens for the last one before the .Select().
-        If True Then
-            Trace.WriteLine("SelectMany, with two-level compound transparent scope.")
-            ' [T]
-            ' .SelectMany(t => t.Member, (t, c) => new $0(t = t, c = c))
-            ' .SelectMany(p0 => p0.c.Orders, (p0, o) => new $1(p0 = p0, o = o))
-            ' .SelectMany(p1 => p1.o.OrderDetails, (p1, od) => new $2(t = p1.p0.t, c = p1.p0.c, o = p1.o, od = od))
-            ' .Where(p2 => (((p2.c.ID = 1) && (p2.o.ID = 1)) && (p2.t.ID = 1)))
-            ' .Select(p2 => p2.od)
-            Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of Customer)))("T") _
-                    From c In t.Member _
-                    From o In c.Orders _
-                    From od In o.OrderDetails _
-                    Where c.ID = 1 AndAlso o.ID = 2 AndAlso t.ID = 3 _
-                    Select od
-            Dim xml = FeedStart & orderDetailXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.OrderID)
-            Next
-            Assert.AreEqual("http://localhost/T(3)/Member(1)/Orders(2)/OrderDetails", q.ToString())
-        End If
-
-        If True Then
-            Trace.WriteLine("SelectMany and OrderBy, with two-level compound transparent scope.")
-            ' [T]
-            ' .SelectMany(t => t.Member, (t, c) => new $0(t = t, c = c))
-            ' .SelectMany(p0 => p0.c.Orders, (p0, o) => new $1(p0 = p0, o = o))
-            ' .SelectMany(p1 => p1.o.OrderDetails, (p1, od) => new $2(t = p1.p0.t, c = p1.p0.c, o = p1.o, od = od))
-            ' .OrderBy(p2 => p2.od.UnitPrice)
-            ' .Where(p2 => (((p2.c.ID = 1) && (p2.o.ID = 1)) && (p2.t.ID = 1)))
-            ' .Select(p2 => p2.od)
-            Dim q = From t In ctx.CreateQuery(Of TypedEntity(Of Integer, List(Of Customer)))("T") _
-                    From c In t.Member _
-                    From o In c.Orders _
-                    From od In o.OrderDetails _
-                    Order By od.UnitPrice _
-                    Where c.ID = 1 AndAlso o.ID = 2 AndAlso t.ID = 3 _
-                    Select od
-            Dim xml = FeedStart & orderDetailXml & "</feed>"
-            For Each item In AstoriaUnitTests.Tests.AtomParserTests.CreateQueryResponse(ctx, AstoriaUnitTests.Tests.AtomParserTests.EmptyHeaders, q, xml)
-                Assert.AreEqual(1, item.OrderID)
-            Next
-            Assert.AreEqual("http://localhost/T(3)/Member(1)/Orders(2)/OrderDetails?$orderby=UnitPrice", q.ToString())
-        End If
-
-    End Sub
 
     <TestCategory("Partition1")> <TestMethod(), Variation("Projecting entity that is not in scope with self-referencing type (VB)")>
     Public Sub SelectManyInvalidProjectionWithSelfReferencingType_VB()
@@ -2242,8 +1067,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             Assert.AreEqual(DataServicesClientResourceUtil.GetString("ALinq_CanOnlyProjectTheLeaf"), nse.Message)
         End Try
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Type casting in LINQ queries")>
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Type casting in LINQ queries")>
     Public Sub SelectManyWithTypeCast()
 
         ' NOTE: This is the VB version of LinqTests.LinqCast
@@ -2256,8 +1081,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             request.StartService()
 
             Dim context As DataServiceContext = New DataServiceContext(request.ServiceRoot)
-            context.EnableAtom = True
-            context.Format.UseAtom()
+            ''context.EnableAtom = True
+            ''context.Format.UseAtom()
             context.MergeOption = MergeOption.NoTracking
 
             Dim baseLineContext As ReadOnlyTestContext = ReadOnlyTestContext.CreateBaseLineContext()
@@ -2304,7 +1129,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             ReadOnlyTestContext.AddBaselineIncludes(GetType(Table), "Rows")
 
             Dim query3 = From cr As CustomerRow In context.CreateQuery(Of Row)("Rows")
-                             Select cr
+                         Select cr
 
             Dim baseline3 = From cr In baseLineContext.Rows
                             Select CType(cr, CustomerRow)
@@ -2443,8 +1268,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             ReadOnlyTestContext.AddBaselineIncludes(GetType(Table), "Rows")
 
             Dim query8 = DirectCast((From t In context.CreateQuery(Of Table)("Tables")
-                                                   Where t.TableName = "Customers"
-                                                   Select t), DataServiceQuery(Of Table)).AddQueryOption("ghghgh", "xxx").Expand("Rows").Cast(Of MyTable)()
+                                     Where t.TableName = "Customers"
+                                     Select t), DataServiceQuery(Of Table)).AddQueryOption("ghghgh", "xxx").Expand("Rows").Cast(Of MyTable)()
 
             Dim baseline8 = From t As Table In baseLineContext.Tables
                             Where t.TableName = "Customers"
@@ -2472,7 +1297,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             Trace.WriteLine("Cast to narrow type")
             ReadOnlyTestContext.ClearBaselineIncludes()
             ReadOnlyTestContext.AddBaselineIncludes(GetType(Team), "HomeStadium")
-            context.IgnoreMissingProperties = True
+            context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
 
             Dim query10 = (From t As Team In context.CreateQuery(Of Team)("Teams")
                            Where t.TeamID = 1
@@ -2492,8 +1317,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Public Baseline As IQueryable
         Public TestQuery As IQueryable
     End Class
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that has tracking option set during construction")>
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that has tracking option set during construction")>
     Public Sub ItemsAddedToDataServiceCollectionAfterExceptionsOccurred_ImmediateTrackingDuringConstruction()
 
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
@@ -2569,7 +1394,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         TestUtil.RunCombinations(entityGetters,
                                  Sub(entityGetter)
                                      Dim context As DataServiceContext = New DataServiceContext(New Uri(contextUri))
-                                     context.EnableAtom = True
+                                     'context.EnableAtom = True
                                      Dim dataServiceCollection As DataServiceCollection(Of EntityType) = Nothing
 
                                      Try
@@ -2586,8 +1411,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                                  End Sub)
 
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that turns tracking on during Load")>
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that turns tracking on during Load")>
     Public Sub ItemsAddedToDataServiceCollectionAfterExceptionsOccurred_DeferringTrackingDuringLoad()
 
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
@@ -2626,7 +1451,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         TestUtil.RunCombinations(testCases,
                                  Sub(testCase As DeferredTrackingTestCase(Of EntityType))
                                      Dim context As DataServiceContext = New DataServiceContext(New Uri(contextUri))
-                                     context.EnableAtom = True
+                                     'context.EnableAtom = True
 
                                      ' Since tracking is deferred, constructing the collection should never fail
                                      Dim dataServiceCollection = New DataServiceCollection(Of EntityType)()
@@ -2717,7 +1542,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
         If GetType(EntityType) = GetType(INPCTypeWithoutID) Then
             ' Ignore missing properties here because we're reusing a test payload that has an ID but this type doesn't have a matching property
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
         End If
 
         dsc.Load(ctx.CreateQuery(Of EntityType)("Entities"))
@@ -2745,8 +1570,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Try
 
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Having a closing element for the nextpage link element causes all the rest of the elements below it at that level to be ignored")>
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Having a closing element for the nextpage link element causes all the rest of the elements below it at that level to be ignored")>
     Public Sub ShouldNotIgnoreElementsLeftIfHaveClosingElementForNextPageLink()
         OpenWebDataServiceHelper.ForceVerboseErrors = True
         Using request = TestWebRequest.CreateForInProcessWcf()
@@ -2755,75 +1580,75 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 request.ForceVerboseErrors = True
                 request.StartService()
 
-                PlaybackService.OverridingPlayback.Value = _
-        "HTTP/1.1 200 Ok" & vbCrLf & _
-        "Content-Type: application/atom+xml" & vbCrLf & _
-        "Content-ID: 1" & vbCrLf & _
-        vbCrLf & _
-        "<?xml version='1.0' encoding='utf-8' standalone='yes'?>" & _
-        "<feed xml:base='http://pratikp5-vm1:34466/TheTest/' xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>" & _
-          "<title type='text'>Customers</title>" & _
-          "<id>http://pratikp5-vm1:34466/TheTest/Customers</id>" & _
-          "<updated>2010-09-22T00:03:43Z</updated>" & _
-          "<link rel='self' title='Customers' href='Customers' />" & _
-          "<entry>" & _
-            "<id>http://pratikp5-vm1:34466/TheTest/Customers(0)</id>" & _
-            "<title type='text'></title>" & _
-            "<updated>2010-09-22T00:03:43Z</updated>" & _
-            "<author>" & _
-            "<name />" & _
-            "</author>" & _
-            "<link rel='edit' title='Customer' href='Customers(0)' />" & _
-            "<link rel='http://docs.oasis-open.org/odata/ns/related/BestFriend' type='application/atom+xml;type=entry' title='BestFriend' href='Customers(0)/BestFriend' />" & _
-            "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' type='application/atom+xml;type=feed' title='Orders' href='Customers(0)/Orders'>" & _
-              "<m:inline>" & _
-                "<feed>" & _
-                  "<title type='text'>Orders</title>" & _
-                  "<id>http://pratikp5-vm1:34466/TheTest/Customers(0)/Orders</id>" & _
-                  "<updated>2010-09-22T00:03:43Z</updated>" & _
-                  "<link rel='self' title='Orders' href='Customers(0)/Orders' />" & _
-                  "<link rel='next' href='http://pratikp5-vm1:34466/TheTest/Customers(0)/Orders?$skiptoken=400' ><something/></link>" & _
-                  "<entry>" & _
-                    "<id>http://pratikp5-vm1:34466/TheTest/Orders(0)</id>" & _
-                    "<title type='text'></title>" & _
-                    "<updated>2010-09-22T00:03:43Z</updated>" & _
-                    "<author>" & _
-                      "<name />" & _
-                    "</author>" & _
-                    "<link rel='edit' title='Order' href='Orders(0)' />" & _
-                    "<link rel='http://docs.oasis-open.org/odata/ns/related/Customer' type='application/atom+xml;type=entry' title='Customer' href='Orders(0)/Customer' />" & _
-                    "<link rel='http://docs.oasis-open.org/odata/ns/related/OrderDetails' type='application/atom+xml;type=feed' title='OrderDetails' href='Orders(0)/OrderDetails' />" & _
-                    "<category term='AstoriaUnitTests.Stubs.Order' scheme='http://docs.oasis-open.org/odata/ns/scheme' />" & _
-                    "<content type='application/xml'>" & _
-                      "<m:properties>" & _
-                        "<d:ID m:type='Edm.Int32'>0</d:ID>" & _
-                        "<d:DollarAmount m:type='Edm.Double'>20.1</d:DollarAmount>" & _
-                        "<d:CurrencyAmount m:type='AstoriaUnitTests.Stubs.CurrencyAmount' m:null='true' />" & _
-                      "</m:properties>" & _
-                    "</content>" & _
-                  "</entry>" & _
-                "</feed>" & _
-              "</m:inline>" & _
-            "</link>" & _
-            "<category term='AstoriaUnitTests.Stubs.Customer' scheme='http://docs.oasis-open.org/odata/ns/scheme' />" & _
-            "<content type='application/xml'>" & _
-            "<m:properties>" & _
-              "<d:GuidValue m:type='Edm.Guid'>e2760c2a-0629-4136-a43f-19a938087caa</d:GuidValue>" & _
-              "<d:ID m:type='Edm.Int32'>0</d:ID>" & _
-              "<d:Name>Customer 0</d:Name>" & _
-              "<d:Address m:type='AstoriaUnitTests.Stubs.Address'>" & _
-                "<d:StreetAddress>Line1</d:StreetAddress>" & _
-                "<d:City>Redmond</d:City>" & _
-                "<d:State>WA</d:State>" & _
-                "<d:PostalCode>98052</d:PostalCode>" & _
-              "</d:Address>" & _
-            "</m:properties>" & _
-          "</content>" & _
-        "</entry>" & _
+                PlaybackService.OverridingPlayback.Value =
+        "HTTP/1.1 200 Ok" & vbCrLf &
+        "Content-Type: application/atom+xml" & vbCrLf &
+        "Content-ID: 1" & vbCrLf &
+        vbCrLf &
+        "<?xml version='1.0' encoding='utf-8' standalone='yes'?>" &
+        "<feed xml:base='http://pratikp5-vm1:34466/TheTest/' xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>" &
+          "<title type='text'>Customers</title>" &
+          "<id>http://pratikp5-vm1:34466/TheTest/Customers</id>" &
+          "<updated>2010-09-22T00:03:43Z</updated>" &
+          "<link rel='self' title='Customers' href='Customers' />" &
+          "<entry>" &
+            "<id>http://pratikp5-vm1:34466/TheTest/Customers(0)</id>" &
+            "<title type='text'></title>" &
+            "<updated>2010-09-22T00:03:43Z</updated>" &
+            "<author>" &
+            "<name />" &
+            "</author>" &
+            "<link rel='edit' title='Customer' href='Customers(0)' />" &
+            "<link rel='http://docs.oasis-open.org/odata/ns/related/BestFriend' type='application/atom+xml;type=entry' title='BestFriend' href='Customers(0)/BestFriend' />" &
+            "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' type='application/atom+xml;type=feed' title='Orders' href='Customers(0)/Orders'>" &
+              "<m:inline>" &
+                "<feed>" &
+                  "<title type='text'>Orders</title>" &
+                  "<id>http://pratikp5-vm1:34466/TheTest/Customers(0)/Orders</id>" &
+                  "<updated>2010-09-22T00:03:43Z</updated>" &
+                  "<link rel='self' title='Orders' href='Customers(0)/Orders' />" &
+                  "<link rel='next' href='http://pratikp5-vm1:34466/TheTest/Customers(0)/Orders?$skiptoken=400' ><something/></link>" &
+                  "<entry>" &
+                    "<id>http://pratikp5-vm1:34466/TheTest/Orders(0)</id>" &
+                    "<title type='text'></title>" &
+                    "<updated>2010-09-22T00:03:43Z</updated>" &
+                    "<author>" &
+                      "<name />" &
+                    "</author>" &
+                    "<link rel='edit' title='Order' href='Orders(0)' />" &
+                    "<link rel='http://docs.oasis-open.org/odata/ns/related/Customer' type='application/atom+xml;type=entry' title='Customer' href='Orders(0)/Customer' />" &
+                    "<link rel='http://docs.oasis-open.org/odata/ns/related/OrderDetails' type='application/atom+xml;type=feed' title='OrderDetails' href='Orders(0)/OrderDetails' />" &
+                    "<category term='AstoriaUnitTests.Stubs.Order' scheme='http://docs.oasis-open.org/odata/ns/scheme' />" &
+                    "<content type='application/xml'>" &
+                      "<m:properties>" &
+                        "<d:ID m:type='Edm.Int32'>0</d:ID>" &
+                        "<d:DollarAmount m:type='Edm.Double'>20.1</d:DollarAmount>" &
+                        "<d:CurrencyAmount m:type='AstoriaUnitTests.Stubs.CurrencyAmount' m:null='true' />" &
+                      "</m:properties>" &
+                    "</content>" &
+                  "</entry>" &
+                "</feed>" &
+              "</m:inline>" &
+            "</link>" &
+            "<category term='AstoriaUnitTests.Stubs.Customer' scheme='http://docs.oasis-open.org/odata/ns/scheme' />" &
+            "<content type='application/xml'>" &
+            "<m:properties>" &
+              "<d:GuidValue m:type='Edm.Guid'>e2760c2a-0629-4136-a43f-19a938087caa</d:GuidValue>" &
+              "<d:ID m:type='Edm.Int32'>0</d:ID>" &
+              "<d:Name>Customer 0</d:Name>" &
+              "<d:Address m:type='AstoriaUnitTests.Stubs.Address'>" &
+                "<d:StreetAddress>Line1</d:StreetAddress>" &
+                "<d:City>Redmond</d:City>" &
+                "<d:State>WA</d:State>" &
+                "<d:PostalCode>98052</d:PostalCode>" &
+              "</d:Address>" &
+            "</m:properties>" &
+          "</content>" &
+        "</entry>" &
      "</feed>"
 
                 Dim context = New DataServiceContext(request.ServiceRoot)
-                context.EnableAtom = True
+                'context.EnableAtom = True
                 Dim query = context.CreateQuery(Of Customer)("Customers").Expand("Orders")
                 For Each c In query
                     Assert.IsTrue(c.Orders.Count > 0, "There must be orders populated")
@@ -2832,8 +1657,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             End Using
         End Using
     End Sub
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Null collection property in content and other value outside of content")>
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Null collection property in content and other value outside of content")>
     Public Sub AssertWithEPMCollectionNullInContent()
 
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
@@ -2871,7 +1696,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 PlaybackService.OverridingPlayback.Value = response
 
                 Dim context = New DataServiceContext(New Uri(host.BaseUri), ODataProtocolVersion.V4)
-                context.EnableAtom = True
+                'context.EnableAtom = True
                 Try
                     context.Execute(Of EntityWithCollection)(New Uri("/Entities", UriKind.Relative)).ToList()
                     Assert.Fail("Expected exception did not occur")
@@ -2895,9 +1720,9 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             End Set
         End Property
     End Class
-
-    <TestCategory("Partition1")>
-    <TestMethod()>
+    'Remove Atom
+    ' <TestCategory("Partition1")>
+    ' <TestMethod()>
     Public Sub NamedStream_DuplicatedEditLinkShouldFail()
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
             Using PlaybackService.OverridingPlayback.Restore()
@@ -2931,7 +1756,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 Dim response = headers & payload.ToString()
                 PlaybackService.OverridingPlayback.Value = response
                 Dim context = New DataServiceContext(New Uri(host.BaseUri), ODataProtocolVersion.V4)
-                context.EnableAtom = True
+                'context.EnableAtom = True
 
                 Try
                     context.Execute(Of NamedStreamEntity)(New Uri("/Entities", UriKind.Relative)).ToList()
@@ -2943,9 +1768,9 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Using
     End Sub
 
-
-    <TestCategory("Partition1")>
-    <TestMethod()>
+    'Remove Atom
+    ' <TestCategory("Partition1")>
+    ' <TestMethod()>
     Public Sub NamedStream_DuplicatedReadLinkShouldFail()
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
             Using PlaybackService.OverridingPlayback.Restore()
@@ -2979,7 +1804,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 Dim response = headers & payload.ToString()
                 PlaybackService.OverridingPlayback.Value = response
                 Dim context = New DataServiceContext(New Uri(host.BaseUri), ODataProtocolVersion.V4)
-                context.EnableAtom = True
+                'context.EnableAtom = True
 
                 Try
                     context.Execute(Of NamedStreamEntity)(New Uri("/Entities", UriKind.Relative)).ToList()
@@ -2995,31 +1820,25 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Property ID As Integer
         Property Tags As List(Of String)
     End Class
-
-#Region "Materialization API helpers"
-    Public Function CreateTestMaterializeAtom(Of T)(ByVal text As String, ByVal query As IQueryable(Of T)) As IEnumerable(Of T)
-        Return ProjectionTests.CreateTestMaterializeAtom(text, Me.ctx, query)
-    End Function
-#End Region
-
-    <TestCategory("Partition1")> <TestMethod(), Variation("Client Projections : ArgumentException on casting collection to IEnumerable inside a projection")> _
+    'Remove Atom
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Client Projections : ArgumentException on casting collection to IEnumerable inside a projection")>
     Public Sub CastingCollectionToIEnumerableShouldWork()
         Using request = TestWebRequest.CreateForLocal
             request.DataServiceType = GetType(NorthwindContext)
             request.StartService()
 
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
-            Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers") _
-                     Select New With { _
-                     .CustomerID = customer.CustomerID, _
-                     .ContactName = customer.ContactName, _
-                     .Orders = CType((From order In customer.Orders _
-                                             Select New With { _
-                                          .OrderID = order.OrderID _
-                                          }), IEnumerable)}
+            Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers")
+                    Select New With {
+                    .CustomerID = customer.CustomerID,
+                    .ContactName = customer.ContactName,
+                    .Orders = CType((From order In customer.Orders
+                                     Select New With {
+                                         .OrderID = order.OrderID
+                                         }), IEnumerable)}
 
 
             For Each c In q

@@ -4,19 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser.Aggregation
+{
     internal sealed class ApplyBinder
     {
         private MetadataBinder.QueryTokenVisitor bindMethod;
@@ -85,13 +80,13 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                 throw new ODataException(ODataErrorStrings.ApplyBinder_AggregateExpressionNotSingleValue(token.Expression));
             }
 
-            var typeReference = CreateAggregateExpressionTypeReference(expression, token.Method);
+            var typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
 
             // TODO: Determine source
-            return new AggregateExpression(expression, token.Method, token.Alias, typeReference);
+            return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
         }
 
-        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethod withVerb)
+        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethodDefinition method)
         {
             var expressionType = expression.TypeReference;
             if (expressionType == null && aggregateExpressionsCache != null)
@@ -103,7 +98,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                 }
             }
 
-            switch (withVerb)
+            switch (method.MethodKind)
             {
                 case AggregationMethod.Average:
                     var expressionPrimitiveKind = expressionType.PrimitiveKind();
@@ -115,26 +110,42 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                             return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);
                         case EdmPrimitiveTypeKind.Decimal:
                             return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Decimal, expressionType.IsNullable);
+                        case EdmPrimitiveTypeKind.None:
+                            return expressionType;
                         default:
                             throw new ODataException(
                                 ODataErrorStrings.ApplyBinder_AggregateExpressionIncompatibleTypeForMethod(expression,
                                     expressionPrimitiveKind));
                     }
 
+                case AggregationMethod.VirtualPropertyCount:
                 case AggregationMethod.CountDistinct:
+                    // Issue #758: CountDistinct and $Count should return type Edm.Decimal with Scale="0" and sufficient Precision.
                     return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int64, false);
                 case AggregationMethod.Max:
                 case AggregationMethod.Min:
                 case AggregationMethod.Sum:
                     return expressionType;
                 default:
-                    throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedAggregateMethod(withVerb));
+                    // Only the EdmModel knows which type the custom aggregation methods returns.
+                    // Since we do not have a reference for it, right now we are assuming that all custom aggregation methods returns Doubles
+                    // TODO: find a appropriate way of getting the return type.
+                    return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);
             }
         }
 
         private IEdmTypeReference GetTypeReferenceByPropertyName(string name)
         {
-            return aggregateExpressionsCache.First(statement => statement.Alias.Equals(name)).TypeReference;
+            if (aggregateExpressionsCache != null)
+            {
+                var expression = aggregateExpressionsCache.FirstOrDefault(statement => statement.Alias.Equals(name));
+                if (expression != null)
+                {
+                    return expression.TypeReference;
+                }
+            }
+
+            return null;
         }
 
         private GroupByTransformationNode BindGroupByToken(GroupByToken token)
@@ -145,10 +156,15 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
             {
                 var bindResult = this.bindMethod(propertyToken);
                 var property = bindResult as SingleValuePropertyAccessNode;
+                var complexProperty = bindResult as SingleComplexNode;
 
                 if (property != null)
                 {
                     RegisterProperty(properties, ReversePropertyPath(property));
+                }
+                else if (complexProperty != null)
+                {
+                    RegisterProperty(properties, ReversePropertyPath(complexProperty));
                 }
                 else
                 {
@@ -189,6 +205,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         private static bool IsPropertyNode(SingleValueNode node)
         {
             return node.Kind == QueryNodeKind.SingleValuePropertyAccess ||
+                   node.Kind == QueryNodeKind.SingleComplexNode ||
                    node.Kind == QueryNodeKind.SingleNavigationNode;
         }
 
@@ -202,11 +219,15 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                 {
                     node = ((SingleValuePropertyAccessNode)node).Source;
                 }
+                else if (node.Kind == QueryNodeKind.SingleComplexNode)
+                {
+                    node = (SingleValueNode)((SingleComplexNode)node).Source;
+                }
                 else if (node.Kind == QueryNodeKind.SingleNavigationNode)
                 {
                     node = ((SingleNavigationNode)node).NavigationSource as SingleValueNode;
                 }
-            } 
+            }
             while (node != null && IsPropertyNode(node));
 
             return result;
@@ -233,8 +254,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
             else
             {
                 // It's the leaf just add.
-                var accessNode = property as SingleValuePropertyAccessNode;
-                properties.Add(new GroupByPropertyNode(propertyName, property, accessNode.TypeReference));
+                properties.Add(new GroupByPropertyNode(propertyName, property, property.TypeReference));
             }
         }
 
@@ -243,6 +263,10 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
             if (property.Kind == QueryNodeKind.SingleValuePropertyAccess)
             {
                 return ((SingleValuePropertyAccessNode)property).Property.Name;
+            }
+            else if (property.Kind == QueryNodeKind.SingleComplexNode)
+            {
+                return ((SingleComplexNode)property).Property.Name;
             }
             else if (property.Kind == QueryNodeKind.SingleNavigationNode)
             {

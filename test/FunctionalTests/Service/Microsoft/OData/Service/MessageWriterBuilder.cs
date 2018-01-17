@@ -9,8 +9,8 @@ namespace Microsoft.OData.Service
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Internal;
 
@@ -132,8 +132,23 @@ namespace Microsoft.OData.Service
             MessageWriterBuilder messageWriterBuilder = new MessageWriterBuilder(serviceUri, responseVersion, dataService, dataService.OperationContext.ResponseMessage, null /*model*/);
 
             // Astoria does not do content negotiation for the top level batch payload at all in V1/V2
-            // Hence passing */* as the accept header value.
-            messageWriterBuilder.WriterSettings.SetContentType(XmlConstants.MimeAny, null /*acceptableCharSets*/);
+            // Hence passing */* as the accept header value by default.
+
+            string contentType = XmlConstants.MimeAny;
+            if (dataService.OperationContext.RequestMessage != null
+                && string.CompareOrdinal(
+                    XmlConstants.ODataVersion4Dot0,
+                    dataService.OperationContext.RequestMessage.GetHeader(XmlConstants.HttpODataVersion)) == 0)
+            {
+                // For V4, batch request & response payload can be in Json format
+                string accept = dataService.OperationContext.RequestMessage.GetHeader(XmlConstants.HttpAccept);
+
+                if (accept != null && accept.StartsWith(XmlConstants.MimeApplicationJson))
+                {
+                   contentType = accept;
+                }
+            }
+            messageWriterBuilder.WriterSettings.SetContentType(contentType, null /*acceptableCharSets*/);
 
             return messageWriterBuilder;
         }
@@ -168,11 +183,11 @@ namespace Microsoft.OData.Service
         internal static void ApplyCommonSettings(ODataMessageWriterSettings writerSettings, Uri serviceUri, Version responseVersion, IDataService dataService, IODataResponseMessage responseMessage)
         {
             writerSettings.Version = CommonUtil.ConvertToODataVersion(responseVersion);
-            writerSettings.PayloadBaseUri = serviceUri;
+            writerSettings.BaseUri = serviceUri;
 
-            writerSettings.EnableODataServerBehavior(
-                dataService.Configuration.DataServiceBehavior.AlwaysUseDefaultXmlNamespaceForRootElement);
-            writerSettings.DisableMessageStreamDisposal = responseMessage is AstoriaResponseMessage;
+            writerSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
+
+            writerSettings.EnableMessageStreamDisposal = !(responseMessage is AstoriaResponseMessage);
         }
 
         /// <summary>
@@ -181,8 +196,7 @@ namespace Microsoft.OData.Service
         /// <returns>A new settings instance.</returns>
         internal static ODataMessageWriterSettings CreateMessageWriterSettings()
         {
-            var writerSettings = new ODataMessageWriterSettings { Indent = false, CheckCharacters = false };
-            writerSettings.EnableAtomSupport();
+            var writerSettings = new ODataMessageWriterSettings { EnableCharactersCheck = false };
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
             return writerSettings;
         }

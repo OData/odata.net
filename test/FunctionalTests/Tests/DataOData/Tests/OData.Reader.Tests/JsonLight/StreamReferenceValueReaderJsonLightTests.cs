@@ -21,7 +21,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
     #endregion Namespaces
 
@@ -123,7 +122,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Stream\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation", "Skyline", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation", "Skyline", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new StreamPropertyTestCase
                 {
@@ -135,7 +134,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/streamproperty/navlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaContentTypeAnnotationName) + "\":\"streamproperty:contenttype\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaETagAnnotationName) + "\":\"streamproperty:etag\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation", "Skyline", JsonLightConstants.ODataNavigationLinkUrlAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation", "Skyline", JsonLightConstants.ODataNavigationLinkUrlAnnotationName)
                 },
                 new StreamPropertyTestCase
                 {
@@ -216,12 +215,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     OwningEntityType = model.FindDeclaredType("TestModel.CityOpenType").ToTypeReference(),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenSkyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue", "OpenSkyline"),
                     OnlyResponse = true
                 },
                 new StreamPropertyTestCase
                 {
-                    DebugDescription = "Undeclared stream property",
+                    DebugDescription = "Undeclared stream property (disallowed by default)",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("NewSkyline", null, "http://odata.org/streamproperty/editlink", null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("NewSkyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
@@ -234,7 +232,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Name", null, "http://odata.org/streamproperty/editlink", null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String"),
                     OnlyResponse = true
                 },
                 new StreamPropertyTestCase
@@ -244,7 +242,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"," +
                         "\"Skyline\":\"value\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue", "Skyline"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StreamPropertyWithValue", "Skyline"),
                     OnlyResponse = true
                 },
             };
@@ -322,7 +320,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         testDescriptor = new PayloadReaderTestDescriptor(testDescriptor)
                         {
-                            ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StreamPropertyInRequest")
+                            ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StreamPropertyInRequest")
                         };
                     }
 

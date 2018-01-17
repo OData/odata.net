@@ -11,7 +11,7 @@ SelectExpandQueryOption
 				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 				Direction = Ascending
 				Range Variable = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = CustomerForOrder
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -21,27 +21,27 @@ SelectExpandQueryOption
 						Return Type = [Edm.Boolean Nullable=True]
 						Function = 
 						Arguments = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = CustomerForOrder
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 							Microsoft.Test.Taupo.OData.WCFService.Customer(Type: [Edm.String Nullable=True Unicode=True])
 				And
 					ConvertNode
 						TypeReference = [Edm.Boolean Nullable=True]
 						Source = 
-							SingleEntityFunctionCallNode
+							SingleResourceFunctionCallNode
 								NavigationSource = CustomerForOrder
 								Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 								Name = cast
 								Function = 
 								Arguments = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = $it
 										NavigationSource = CustomerForOrder
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 									Microsoft.Test.Taupo.OData.WCFService.Customer(Type: [Edm.String Nullable=True Unicode=True])
 						NotEqual
 							ConvertNode

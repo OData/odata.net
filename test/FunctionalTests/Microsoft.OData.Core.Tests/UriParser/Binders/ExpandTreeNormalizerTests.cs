@@ -7,13 +7,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     public class ExpandTreeNormalizerTests
     {
@@ -40,7 +38,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
             ExpandToken normalizedExpand = expandTreeNormalizer.NormalizeExpandTree(expand);
             normalizedExpand.ExpandTerms.Single().ShouldBeExpandTermToken("1", true)
-                .And.PathToNavProp.As<NonSystemToken>().NamedValues.Single().ShouldBeNamedValue("name", "value");
+                .And.PathToNavigationProp.As<NonSystemToken>().NamedValues.Single().ShouldBeNamedValue("name", "value");
             normalizedExpand.ExpandTerms.Single().ExpandOption.Should().BeNull();
         }
 
@@ -67,8 +65,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
             ExpandToken combinedExpand = expandTreeNormalizer.CombineTerms(expand);
             combinedExpand.ExpandTerms.Single().ShouldBeExpandTermToken("1", true);
-            combinedExpand.ExpandTerms.ElementAt(0).ExpandOption.ExpandTerms.Should().Contain(t => t.PathToNavProp == token2);
-            combinedExpand.ExpandTerms.ElementAt(0).ExpandOption.ExpandTerms.Should().Contain(t => t.PathToNavProp == token3);
+            combinedExpand.ExpandTerms.ElementAt(0).ExpandOption.ExpandTerms.Should().Contain(t => t.PathToNavigationProp == token2);
+            combinedExpand.ExpandTerms.ElementAt(0).ExpandOption.ExpandTerms.Should().Contain(t => t.PathToNavigationProp == token3);
         }
 
         [Fact]
@@ -79,7 +77,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
             ExpandToken invertedPaths = expandTreeNormalizer.NormalizePaths(expand);
             invertedPaths.ExpandTerms.Single().ShouldBeExpandTermToken("1", false)
-                .And.PathToNavProp.NextToken.ShouldBeNonSystemToken("2");
+                .And.PathToNavigationProp.NextToken.ShouldBeNonSystemToken("2");
         }
 
         [Fact]
@@ -198,10 +196,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
             var addedToken = expandTreeNormalizer.CombineTerms(outerExpandTerm1, outerExpandTerm2);
             addedToken.ShouldBeExpandTermToken("1", true).And.ExpandOption.ExpandTerms.Should().Contain(innerExpandTerm2);
-            ExpandTermToken twoToken = addedToken.ExpandOption.ExpandTerms.FirstOrDefault(x => x.PathToNavProp.Identifier == "2");
+            ExpandTermToken twoToken = addedToken.ExpandOption.ExpandTerms.FirstOrDefault(x => x.PathToNavigationProp.Identifier == "2");
             twoToken.ShouldBeExpandTermToken("2", true);
-            ExpandTermToken fiveToken = twoToken.ExpandOption.ExpandTerms.FirstOrDefault(x => x.PathToNavProp.Identifier == "5");
-            ExpandTermToken zeroToken = twoToken.ExpandOption.ExpandTerms.FirstOrDefault(x => x.PathToNavProp.Identifier == "0");
+            ExpandTermToken fiveToken = twoToken.ExpandOption.ExpandTerms.FirstOrDefault(x => x.PathToNavigationProp.Identifier == "5");
+            ExpandTermToken zeroToken = twoToken.ExpandOption.ExpandTerms.FirstOrDefault(x => x.PathToNavigationProp.Identifier == "0");
             fiveToken.ShouldBeExpandTermToken("5", true);
             zeroToken.ShouldBeExpandTermToken("0", true);
         }

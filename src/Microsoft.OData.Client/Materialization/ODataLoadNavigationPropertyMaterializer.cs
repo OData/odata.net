@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
@@ -108,12 +108,7 @@ namespace Microsoft.OData.Client.Materialization
                     this.EntityTrackingAdapter.MaterializationLog.SetLink(entry, property.PropertyName, target);
 
                     // Singleton entity property
-#if ASTORIA_OPEN_OBJECT
-                    object openProperties = null;
-                    property.SetValue(entity, target, property.PropertyName, ref openProperties, false);
-#else
                     property.SetValue(entity, target, property.PropertyName, false);
-#endif
                 }
 
                 // Apply the materialization log.

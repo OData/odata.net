@@ -12,11 +12,8 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
@@ -34,21 +31,21 @@ namespace EdmLibTests.FunctionalTests
     public class ConstructibleVocabularyAnnotationsTests : EdmLibTestCaseBase
     {
         [TestMethod]
-        public void CreateSimpleValueTermAnnotation()
+        public void CreateSimpleTermAnnotation()
         {
             var model = new FunctionalUtilities.ModelWithRemovableElements<EdmModel>(CreateModel());
 
-            var term = model.FindValueTerm("NS1.Title");
+            var term = model.FindTerm("NS1.Title");
             var customer = model.FindEntityType("NS1.Customer");
 
-            var annotation = new EdmAnnotation(
+            var annotation = new EdmVocabularyAnnotation(
                 customer,
                 term,
                 "q1",
                 new EdmStringConstant("Hello world!"));
             model.WrappedModel.AddVocabularyAnnotation(annotation);
 
-            var annotation2 = new EdmAnnotation(
+            var annotation2 = new EdmVocabularyAnnotation(
                 customer,
                 term,
                 "q2",
@@ -65,7 +62,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -96,7 +93,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(model.Validate(out errors), "validate2");
             sw = new StringWriter();
             w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -124,31 +121,31 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void CreateSimpleValueTermAnnotationWithMultiPartNamespace()
+        public void CreateSimpleTermAnnotationWithMultiPartNamespace()
         {
             var model = new FunctionalUtilities.ModelWithRemovableElements<EdmModel>(CreateModelWithSillyNamespace());
 
-            var term = model.FindValueTerm("Really.Way.Too.Long.Namespace.With.Lots.Of.Dots.Title");
+            var term = model.FindTerm("Really.Way.Too.Long.Namespace.With.Lots.Of.Dots.Title");
             var customer = model.FindEntityType("Really.Way.Too.Long.Namespace.With.Lots.Of.Dots.Customer");
 
-            var annotation = new EdmAnnotation(
+            var annotation = new EdmVocabularyAnnotation(
                 customer,
                 term,
                 "q1",
                 new EdmStringConstant("Hello world!"));
             model.WrappedModel.AddVocabularyAnnotation(annotation);
 
-            var annotation2 = new EdmAnnotation(
+            var annotation2 = new EdmVocabularyAnnotation(
                 customer,
                 term,
                 "q2",
                 new EdmStringConstant("Hello world2!"));
             model.WrappedModel.AddVocabularyAnnotation(annotation2);
 
-            var secondterm = model.FindValueTerm("Really.Way.Too.Long.Namespace.With.Lots.Of.Dots.integerId");
+            var secondterm = model.FindTerm("Really.Way.Too.Long.Namespace.With.Lots.Of.Dots.integerId");
             var customerId = customer.FindProperty("CustomerID");
 
-            var annotation3 = new EdmAnnotation(
+            var annotation3 = new EdmVocabularyAnnotation(
                 customerId,
                 secondterm,
                 new EdmStringConstant("Hello world3!"));
@@ -167,7 +164,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -202,7 +199,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(model.Validate(out errors), "validate2");
             sw = new StringWriter();
             w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -243,15 +240,15 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(vocabulary.Validate(out errors), "validate vocabulary");
 
             var model = new FunctionalUtilities.ModelWithRemovableElements<EdmModel>(CreateModel());
-            model.RemoveElement(model.FindValueTerm("NS1.Title"));
+            model.RemoveElement(model.FindTerm("NS1.Title"));
             model.RemoveElement(model.FindEntityType("NS1.Person"));
             model.WrappedModel.AddReferencedModel(vocabulary);
 
-            var vterm = vocabulary.FindValueTerm("NS1.Title");
+            var vterm = vocabulary.FindTerm("NS1.Title");
             var tterm = vocabulary.FindEntityType("NS1.Person");
             var customer = model.FindEntityType("NS1.Customer");
 
-            var vannotation = new EdmAnnotation(
+            var vannotation = new EdmVocabularyAnnotation(
                 customer,
                 vterm,
                 "q1",
@@ -260,7 +257,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -288,7 +285,7 @@ namespace EdmLibTests.FunctionalTests
             vocabulary.RemoveElement(vocabulary.FindEntityType("NS1.Customer"));
 
             var model = new FunctionalUtilities.ModelWithRemovableElements<EdmModel>(CreateModel());
-            model.RemoveElement(model.FindValueTerm("NS1.Title"));
+            model.RemoveElement(model.FindTerm("NS1.Title"));
             model.RemoveElement(model.FindEntityType("NS1.Person"));
 
             vocabulary.WrappedModel.AddReferencedModel(model);
@@ -297,11 +294,11 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> errors;
             Assert.IsTrue(model.Validate(out errors), "validate model");
 
-            var vterm = vocabulary.FindValueTerm("NS1.Title");
+            var vterm = vocabulary.FindTerm("NS1.Title");
             var tterm = vocabulary.FindEntityType("NS1.Person");
             var customer = model.FindEntityType("NS1.Customer");
 
-            var vannotation = new EdmAnnotation(
+            var vannotation = new EdmVocabularyAnnotation(
                 customer,
                 vterm,
                 "q1",
@@ -316,7 +313,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -334,7 +331,7 @@ namespace EdmLibTests.FunctionalTests
 
             sw = new StringWriter();
             w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            vocabulary.TryWriteCsdl(w, out errors);
+            vocabulary.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>

@@ -8,9 +8,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
@@ -21,7 +20,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
     /// <summary>
     /// Tests for the lexical parsing of query options.
     /// </summary>
-    [Ignore]
     [TestClass, TestCase]
     public class QueryOptionQueryTokenTests : ODataTestCase
     {
@@ -144,7 +142,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
 
                             SyntacticTree expected = new SyntacticTree(
                                 null,
-                                new[] { "Feed" }, 
+                                new[] { "Root" },
                                 actual.Filter,
                                 actual.OrderByTokens,
                                 null,

@@ -13,7 +13,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -69,13 +68,13 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(readers, out model, out errors);
+            bool parsed = SchemaReader.TryParse(readers, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
             Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Version check");
 
             IEnumerator<XmlWriter> writerEnumerator = writers.GetEnumerator();
-            model.TryWriteCsdl(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
+            model.TryWriteSchema(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
 
             foreach (XmlWriter xw in writers)
             {
@@ -105,7 +104,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
             Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Version check");
@@ -120,12 +119,12 @@ namespace EdmLibTests.FunctionalTests
             model.SetEdmVersion(null);
             Assert.IsNull(model.GetEdmVersion(), "Version is null");
 
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();
 
-            parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out model, out errors);
+            parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed 2");
             Assert.IsTrue(errors.Count() == 0, "No errors 2");
             Assert.AreEqual(EdmConstants.EdmVersionLatest, model.GetEdmVersion(), "Version check 2");
@@ -156,13 +155,13 @@ namespace EdmLibTests.FunctionalTests
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
             IEnumerable<EdmError> errors;
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();
 
             IEdmModel iEdmModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out iEdmModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out iEdmModel, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
             Assert.AreEqual(EdmConstants.EdmVersionLatest, iEdmModel.GetEdmVersion(), "Version check");
@@ -193,7 +192,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No Errors");
             Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Model version check 1");
@@ -206,10 +205,10 @@ namespace EdmLibTests.FunctionalTests
 
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
-                EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
                 xw.Close();
 
-                parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
+                parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
                 Assert.IsTrue(parsed, "Model Parsed");
                 Assert.IsTrue(errors.Count() == 0, "No Errors");
                 Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Model version check 2");
@@ -242,7 +241,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No Errors");
             Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Model version check 1");
@@ -256,10 +255,10 @@ namespace EdmLibTests.FunctionalTests
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 model.SetEdmxVersion(CsdlConstants.EdmxVersionLatest);
-                EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
                 xw.Close();
 
-                parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
+                parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
                 Assert.IsTrue(parsed, "Model Parsed");
                 Assert.IsTrue(errors.Count() == 0, "No Errors");
                 Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Model version check 2");
@@ -292,7 +291,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No Errors");
             Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Model version check 1");
@@ -306,10 +305,10 @@ namespace EdmLibTests.FunctionalTests
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 model.SetEdmxVersion(CsdlConstants.EdmxVersionLatest);
-                EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
                 xw.Close();
 
-                parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
+                parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
                 Assert.IsTrue(parsed, "Model Parsed");
                 Assert.IsTrue(errors.Count() == 0, "No Errors");
                 Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Model version check 2");
@@ -343,7 +342,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(parsed, "Model failed to parse");
             Assert.IsTrue(errors.Count() == 1, "1 Error");
             Assert.AreEqual(EdmErrorCode.InvalidVersionNumber, errors.First().ErrorCode, "Error code check");
@@ -374,7 +373,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No Errors");
             Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Model version check 1");
@@ -390,7 +389,7 @@ namespace EdmLibTests.FunctionalTests
                 model.SetEdmxVersion(new Version(1, 123));
                 try
                 {
-                    EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                    CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
                 }
                 catch (Exception e)
                 {
@@ -403,7 +402,7 @@ namespace EdmLibTests.FunctionalTests
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
             Assert.AreEqual(expectedEdmVersion, model.GetEdmVersion(), "Version check");
@@ -413,7 +412,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();

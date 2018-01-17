@@ -8,12 +8,8 @@ namespace AstoriaUnitTests
 {
     using System;
     using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Providers;
-    using System.Diagnostics;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Xml;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
 
     /// <summary>

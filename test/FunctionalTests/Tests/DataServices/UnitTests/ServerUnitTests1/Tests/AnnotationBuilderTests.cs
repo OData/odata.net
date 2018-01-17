@@ -16,7 +16,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
@@ -93,14 +93,15 @@ namespace AstoriaUnitTests.Tests
                 request.RequestMaxVersion = "4.0";
                 request.SendRequest();
                 var results = request.GetResponseStreamAsText();
-                var returnedModel = EdmxReader.Parse(XmlTextReader.Create(new StringReader(results)));
+                var returnedModel = CsdlReader.Parse(XmlTextReader.Create(new StringReader(results)));
                 Assert.IsNotNull(returnedModel);
 
                 Assert.AreEqual(1, NumAnnotationBuilderCalls);
             }
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // github: https://github.com/OData/odata.net/issues/868, same for other comment out test cases in this file.
+        // [TestCategory("Partition2"), TestMethod]
         public void AnnotationBuilderShouldNotBeCalledOutsideMetadataUri()
         {
             NumAnnotationBuilderCalls = 0;

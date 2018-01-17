@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service.Serializers
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 #endif
 {
@@ -19,8 +19,8 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-#if !ODATALIB
-    using Microsoft.OData.Core;
+#if !ODATA_CORE
+    using Microsoft.OData;
 #endif
 
     /// <summary>
@@ -37,17 +37,11 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Creates a new key serializer.
         /// </summary>
-        /// <param name="urlConvention">The url convention to use.</param>
-        /// <returns>
-        /// A new key serializer.
-        /// </returns>
-        internal static KeySerializer Create(UrlConvention urlConvention)
+        /// <param name="enableKeyAsSegment">Whether enable key as segment.</param>
+        /// <returns>A new key serializer.</returns>
+        internal static KeySerializer Create(bool enableKeyAsSegment)
         {
-#if ODATALIB
-#endif
-            Debug.Assert(urlConvention != null, "UrlConvention != null");
-
-            if (urlConvention.GenerateKeyAsSegment)
+            if (enableKeyAsSegment)
             {
                 return SegmentInstance;
             }
@@ -121,7 +115,7 @@ namespace Microsoft.OData.Core.Evaluation
                     builder.Append(getPropertyName(property));
                     builder.Append('=');
                 }
-                
+
                 var keyValueText = GetKeyValueAsString(getPropertyValue, property, literalFormatter);
                 builder.Append(keyValueText);
             }
@@ -134,14 +128,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         private sealed class DefaultKeySerializer : KeySerializer
         {
-#if ODATALIB
-            /// <summary>
-            /// Creates a new instance of <see cref="DefaultKeySerializer"/>.
-            /// </summary>
-            internal DefaultKeySerializer()
-            {
-            }
-#endif
             /// <summary>
             /// Appends the key expression for an entity to the given <see cref="StringBuilder"/>
             /// </summary>
@@ -152,8 +138,6 @@ namespace Microsoft.OData.Core.Evaluation
             /// <param name="getPropertyValue">The callback to get each property's value.</param>
             internal override void AppendKeyExpression<TProperty>(StringBuilder builder, ICollection<TProperty> keyProperties, Func<TProperty, string> getPropertyName, Func<TProperty, object> getPropertyValue)
             {
-#if ODATALIB
-#endif
                 AppendKeyWithParentheses(builder, keyProperties, getPropertyName, getPropertyValue);
             }
         }
@@ -183,7 +167,7 @@ namespace Microsoft.OData.Core.Evaluation
                 Debug.Assert(builder != null, "builder != null");
                 Debug.Assert(keyProperties != null, "keyProperties != null");
 
-                // Keys-as-segments mode is only supported for non-composite keys, so if there is more than 1 key property, 
+                // Keys-as-segments mode is only supported for non-composite keys, so if there is more than 1 key property,
                 // then fall back to the default behavior for the edit link and identity.
                 if (keyProperties.Count > 1)
                 {
@@ -192,7 +176,7 @@ namespace Microsoft.OData.Core.Evaluation
                 else
                 {
                     AppendKeyWithSegments(builder, keyProperties, getPropertyValue);
-                }   
+                }
             }
 
             /// <summary>
@@ -206,7 +190,7 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 Debug.Assert(keyProperties != null, "keyProperties != null");
                 Debug.Assert(keyProperties.Count == 1, "Only supported for non-composite keys.");
-                
+
                 builder.Append('/');
                 builder.Append(GetKeyValueAsString(getPropertyValue, keyProperties.Single(), LiteralFormatter.ForKeys(true)));
             }

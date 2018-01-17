@@ -8,16 +8,7 @@ namespace Microsoft.OData.Service.Providers
 {
     #region Namespaces
 
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
-
 
     #endregion Namespaces
 

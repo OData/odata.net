@@ -51,11 +51,11 @@ namespace Microsoft.OData.SampleService.Models.ModelRefDemo
                 IEnumerable<EdmError> errors;
                 if (getReferencedSchemaFunc == null)
                 {
-                    parseResult = EdmxReader.TryParse(XmlReader.Create(csdlStream), out model, out errors);
+                    parseResult = CsdlReader.TryParse(XmlReader.Create(csdlStream), out model, out errors);
                 }
                 else
                 {
-                    parseResult = EdmxReader.TryParse(XmlReader.Create(csdlStream), getReferencedSchemaFunc, out model, out errors);
+                    parseResult = CsdlReader.TryParse(XmlReader.Create(csdlStream), getReferencedSchemaFunc, out model, out errors);
                 }
 
                 if (!parseResult)

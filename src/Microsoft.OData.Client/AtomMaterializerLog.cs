@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
 
@@ -35,10 +35,10 @@ namespace Microsoft.OData.Client
         private readonly EntityTrackerBase entityTracker;
 
         /// <summary>Dictionary of identity URI to instances created during previous AppendOnly moves.</summary>
-        private readonly Dictionary<Uri, ODataEntry> appendOnlyEntries;
+        private readonly Dictionary<Uri, ODataResource> appendOnlyEntries;
 
         /// <summary>Dictionary of identity URI to tracked entities.</summary>
-        private readonly Dictionary<Uri, ODataEntry> identityStack;
+        private readonly Dictionary<Uri, ODataResource> identityStack;
 
         /// <summary>List of link descriptors (data for links and state).</summary>
         private readonly List<LinkDescriptor> links;
@@ -64,11 +64,11 @@ namespace Microsoft.OData.Client
             Debug.Assert(model != null, "model != null");
             Debug.Assert(entityTracker != null, "entityTracker != null");
 
-            this.appendOnlyEntries = new Dictionary<Uri, ODataEntry>(EqualityComparer<Uri>.Default);
+            this.appendOnlyEntries = new Dictionary<Uri, ODataResource>(EqualityComparer<Uri>.Default);
             this.mergeOption = mergeOption;
             this.clientEdmModel = model;
             this.entityTracker = entityTracker;
-            this.identityStack = new Dictionary<Uri, ODataEntry>(EqualityComparer<Uri>.Default);
+            this.identityStack = new Dictionary<Uri, ODataResource>(EqualityComparer<Uri>.Default);
             this.links = new List<LinkDescriptor>();
         }
 
@@ -79,9 +79,9 @@ namespace Microsoft.OData.Client
         /// <summary>Whether changes are being tracked.</summary>
         internal bool Tracking
         {
-            get 
-            { 
-                return this.mergeOption != MergeOption.NoTracking; 
+            get
+            {
+                return this.mergeOption != MergeOption.NoTracking;
             }
         }
 
@@ -96,7 +96,6 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptorFromMaterializer">entityDescriptor that is returned by the materializer</param>
         /// <param name="mergeInfo">if true, we will need to merge all entity descriptor info, otherwise not.</param>
         /// <param name="mergeOption">merge option depending on which etag information needs to be merged.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0008", Justification = "This self link call is intentional")]
         internal static void MergeEntityDescriptorInfo(EntityDescriptor trackedEntityDescriptor, EntityDescriptor entityDescriptorFromMaterializer, bool mergeInfo, MergeOption mergeOption)
         {
             Debug.Assert(trackedEntityDescriptor != null, "trackedEntityDescriptor != null");
@@ -177,7 +176,7 @@ namespace Microsoft.OData.Client
                 return;
             }
 
-            foreach (KeyValuePair<Uri, ODataEntry> entity in this.identityStack)
+            foreach (KeyValuePair<Uri, ODataResource> entity in this.identityStack)
             {
                 // Try to attach the entity descriptor got from materializer, if one already exists, get the existing reference instead.
                 MaterializerEntry entry = MaterializerEntry.GetEntry(entity.Value);
@@ -197,7 +196,7 @@ namespace Microsoft.OData.Client
                     // set the entity state to Unchanged, hence need to workaround that one scenario
                     if (this.mergeOption != MergeOption.PreserveChanges || descriptor.State != EntityStates.Deleted)
                     {
-                        // we should always reset descriptor's state to Unchanged (old v1 behaviour)
+                        // we should always reset descriptor's state to Unchanged (old v1 behavior)
                         descriptor.State = EntityStates.Unchanged;
                         descriptor.PropertiesToSerialize.Clear();
                     }
@@ -272,7 +271,7 @@ namespace Microsoft.OData.Client
         /// The target instance is typically the object that we
         /// expect will get refreshed by the response from a POST
         /// method.
-        /// 
+        ///
         /// For example if a create a Customer and POST it to
         /// a service, the response of the POST will return the
         /// re-serialized instance, with (important!) server generated
@@ -282,10 +281,10 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(entry.Entry != null, "entry != null");
             Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise this is not a target");
-            
+
             if (IsEntity(entry))
             {
-                Debug.Assert(entry.IsAtomOrTracking, "entry.IsAtomOrTracking == true, otherwise we should not be tracking this entry with the context.");
+                Debug.Assert(entry.IsTracking, "entry.isTracking == true, otherwise we should not be tracking this entry with the context.");
 
                 this.entityTracker.AttachIdentity(entry.EntityDescriptor, this.mergeOption);
                 this.identityStack.Add(entry.Id, entry.Entry);
@@ -296,7 +295,7 @@ namespace Microsoft.OData.Client
         /// <summary>Attempts to resolve an entry from those tracked in the log.</summary>
         /// <param name="entry">Entry to resolve.</param>
         /// <param name="existingEntry">
-        /// After invocation, an existing entry with the same identity as 
+        /// After invocation, an existing entry with the same identity as
         /// <paramref name="entry"/>; possibly null.
         /// </param>
         /// <returns>true if an existing entry was found; false otherwise.</returns>
@@ -304,9 +303,9 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(entry.Entry != null, "entry != null");
             Debug.Assert(entry.Id != null, "entry.Id != null");
-            Debug.Assert(entry.IsAtomOrTracking, "Should not be trying to resolve the entry if entry.IsAtomOrTracking is false.");
+            Debug.Assert(entry.IsTracking, "Should not be trying to resolve the entry if entry.isTracking is false.");
 
-            ODataEntry existingODataEntry;
+            ODataResource existingODataEntry;
 
             if (this.identityStack.TryGetValue(entry.Id, out existingODataEntry))
             {
@@ -340,7 +339,7 @@ namespace Microsoft.OData.Client
         /// added to a collection.
         /// </summary>
         /// <param name="source">
-        /// Instance with the collection to which <paramref name="target"/> 
+        /// Instance with the collection to which <paramref name="target"/>
         /// was added.
         /// </param>
         /// <param name="propertyName">Property name for collection.</param>
@@ -373,7 +372,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise, what did we create?");
             Debug.Assert(entry.CreatedByMaterializer, "entry.CreatedByMaterializer -- otherwise we shouldn't be calling this");
 
-            if (IsEntity(entry) && entry.IsAtomOrTracking && !entry.Entry.IsTransient)
+            if (IsEntity(entry) && entry.IsTracking && !entry.Entry.IsTransient)
             {
                 this.identityStack.Add(entry.Id, entry.Entry);
                 if (this.mergeOption == MergeOption.AppendOnly)
@@ -384,11 +383,11 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Invoke this method to notify the log that a link was removed 
+        /// Invoke this method to notify the log that a link was removed
         /// from a collection.
         /// </summary>
         /// <param name="source">
-        /// Instance with the collection from which <paramref name="target"/> 
+        /// Instance with the collection from which <paramref name="target"/>
         /// was removed.
         /// </param>
         /// <param name="propertyName">Property name for collection.</param>

@@ -14,16 +14,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Linq;
     using System.Reflection;
     using System.Xml;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     /// <summary>
     /// Static methods for converting CLR objects from the data store into OData objects.
     /// </summary>
-    internal static class ODataObjectModelConverter
+    public static class ODataObjectModelConverter
     {
         /// <summary>
         /// Converts an item from the data store into an ODataEntry.
@@ -32,7 +31,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="navigationSource">The navigation source that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <returns>The converted ODataEntry.</returns>
-        public static ODataEntry ConvertToODataEntry(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
+        public static ODataResourceWrapper ConvertToODataEntry(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
         {
             IEdmStructuredType entityType = EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, element) as IEdmStructuredType;
 
@@ -41,9 +40,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 throw new InvalidOperationException("Can not create an entry for " + entitySource.Name);
             }
 
-            var entry = new ODataEntry
+            var propertiesOrNestedResourceInfos = GetPropertiesOrNestedResourceInfos(element, entityType);
+            var entry = new ODataResource
             {
-                Properties = GetProperties(element, entityType)
+                Properties = propertiesOrNestedResourceInfos.OfType<ODataProperty>(),
+            };
+
+            var resourceWrapper = new ODataResourceWrapper()
+            {
+                Resource = entry,
+                NestedResourceInfoWrappers = propertiesOrNestedResourceInfos.OfType<ODataNestedResourceInfoWrapper>().ToList(),
             };
 
             // Add Annotation in Entity Level
@@ -107,7 +113,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 };
             }
 
-            return entry;
+            return resourceWrapper;
         }
 
         /// <summary>
@@ -117,7 +123,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="navigationSource">The navigation source that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <returns>The converted ODataEntityReferenceLink represent with ODataEntry.</returns>
-        public static ODataEntry ConvertToODataEntityReferenceLink(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
+        public static ODataResource ConvertToODataEntityReferenceLink(object element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
         {
             IEdmStructuredType entityType = EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, element) as IEdmStructuredType;
 
@@ -126,7 +132,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 throw new InvalidOperationException("Can not create an entry for " + entitySource.Name);
             }
 
-            var link = new ODataEntry();
+            var link = new ODataResource();
             if (!string.IsNullOrEmpty(((ClrObject)element).EntitySetName) && entitySource is IEdmEntitySet && entityType is IEdmEntityType)
             {
                 entitySource = new EdmEntitySet(((IEdmEntitySet)entitySource).Container, ((ClrObject)element).EntitySetName, (IEdmEntityType)entityType);
@@ -158,21 +164,21 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="navigationSource">The navigation source that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <returns>The converted ODataEntityReferenceLinks represent with list of ODataEntry.</returns>
-        public static IEnumerable<ODataEntry> ConvertToODataEntityReferenceLinks(IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
+        public static IEnumerable<ODataResource> ConvertToODataEntityReferenceLinks(IEnumerable element, IEdmNavigationSource entitySource, ODataVersion targetVersion)
         {
-            List<ODataEntry> links = new List<ODataEntry>();
+            List<ODataResource> links = new List<ODataResource>();
             foreach (var each in element)
             {
-                ODataEntry link = ConvertToODataEntityReferenceLink(each, entitySource, targetVersion);
+                ODataResource link = ConvertToODataEntityReferenceLink(each, entitySource, targetVersion);
                 links.Add(link);
             }
 
             return links;
         }
 
-        public static IEnumerable<ODataProperty> GetProperties(object instance, IEdmStructuredType structuredType)
+        public static IEnumerable<object> GetPropertiesOrNestedResourceInfos(object instance, IEdmStructuredType structuredType)
         {
-            var nonOpenProperties = new List<ODataProperty>();
+            var nonOpenProperties = new List<object>();
             var structuralProperties = structuredType.StructuralProperties();
             foreach (var sp in structuralProperties)
             {
@@ -181,7 +187,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             if (structuredType.IsOpen)
             {
-                var openProperties = GetOpenProperties(instance);
+                var openProperties = GetOpenPropertiesOrNestedResourceInfos(instance);
                 return MergeOpenAndNonOpenProperties(nonOpenProperties, openProperties);
             }
             else
@@ -190,49 +196,67 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             }
         }
 
-        private static IEnumerable<ODataProperty> GetOpenProperties(object instance)
+        public static object ParseJsonToPrimitiveValue(string rawValue)
         {
-            List<ODataProperty> openProperties = new List<ODataProperty>();
+            Debug.Assert(rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0,
+                  "rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0");
+            ODataCollectionValue collectionValue = (ODataCollectionValue)
+                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format("[{0}]", rawValue), ODataVersion.V4);
+            foreach (object tmp in collectionValue.Items)
+            {
+                return tmp;
+            }
+
+            return null;
+        }
+
+        private static IEnumerable<object> GetOpenPropertiesOrNestedResourceInfos(object instance)
+        {
+            List<object> openProperties = new List<object>();
             var inst = instance as OpenClrObject;
             if (inst != null)
             {
                 Dictionary<string, object> openPropertiesInClr = inst.OpenProperties;
-                openProperties = new List<ODataProperty>();
                 if (openPropertiesInClr != null)
                 {
                     foreach (var p in openPropertiesInClr)
                     {
-                        openProperties.Add(CreateODataProperty(p.Value, p.Key));
+                        object primitiveVal = p.Value;
+                        if (p.Value is ODataUntypedValue)
+                        {
+                            openProperties.Add(new ODataProperty { Name = p.Key, Value = p.Value });
+                        }
+                        else
+                        {
+                            openProperties.Add(CreateODataPropertyOrNestedResourceInfo(primitiveVal, p.Key));
+                        }
                     }
                 }
             }
+
             return openProperties;
         }
 
-        private static IEnumerable<ODataProperty> MergeOpenAndNonOpenProperties(IEnumerable<ODataProperty> nonOpenProperties, IEnumerable<ODataProperty> openProperties)
+        private static IEnumerable<T> MergeOpenAndNonOpenProperties<T>(IEnumerable<T> nonOpenProperties, IEnumerable<T> openProperties)
         {
             return nonOpenProperties.Concat(openProperties);
         }
 
-        /// <summary>
-        /// Converts a value from the data store into an ODataProperty.
-        /// </summary>
-        /// <param name="instance">The item from the data store.</param>
-        /// <param name="propertyName">The name of the property to convert.</param>
-        /// <returns>The converted ODataProperty.</returns>
-        public static ODataProperty ConvertToODataProperty(object instance, string propertyName)
+        public static object ConvertToODataProperty(object instance, string propertyName)
         {
             object value = instance.GetType().GetProperty(propertyName).GetValue(instance, null);
-            ODataProperty property = CreateODataProperty(value, propertyName);
+            object property = CreateODataPropertyOrNestedResourceInfo(value, propertyName);
+
+            var odataProperty = property as ODataProperty;
 
             // Add Annotation in property level
-            if (((ClrObject)instance).Annotations != null)
+            if (odataProperty != null && ((ClrObject)instance).Annotations != null)
             {
                 foreach (InstanceAnnotationType annotation in ((ClrObject)instance).Annotations)
                 {
                     if (!string.IsNullOrEmpty(annotation.Target) && annotation.Target.Equals(propertyName))
                     {
-                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Name, annotation.ConvertValueToODataValue()));
+                        odataProperty.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Name, annotation.ConvertValueToODataValue()));
                     }
                 }
             }
@@ -249,6 +273,27 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public static ODataProperty CreateODataProperty(object value, string propertyName)
         {
             return new ODataProperty { Name = propertyName, Value = CreateODataValue(value) };
+        }
+
+        public static object CreateODataPropertyOrNestedResourceInfo(object value, string propertyName)
+        {
+            var cValue = CreateODataValue(value);
+
+            var nestedResourceOrResourceSet = cValue as ODataItemWrapper;
+            if (nestedResourceOrResourceSet != null)
+            {
+                return new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = propertyName,
+                        IsCollection = !(cValue is ODataResourceWrapper)
+                    },
+                    NestedResourceOrResourceSet = nestedResourceOrResourceSet,
+                };
+            }
+
+            return new ODataProperty { Name = propertyName, Value = cValue };
         }
 
         public static object CreateODataValue(object value)
@@ -280,9 +325,19 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     {
                         tmp.Add(CreateODataValue(o));
                     }
+
+                    if (tmp.Count > 0 && tmp.First() is ODataResourceWrapper)
+                    {
+                        return new ODataResourceSetWrapper()
+                        {
+                            ResourceSet = new ODataResourceSet(),
+                            Resources = new List<ODataResourceWrapper>(tmp.Select(obj => obj as ODataResourceWrapper))
+                        };
+                    }
+
                     return new ODataCollectionValue() { TypeName = genericTypeName, Items = tmp };
                 }
-                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Data.Spatial") && !t.Namespace.StartsWith("Microsoft.OData.Edm.Library"))
+                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial") && !t.Namespace.StartsWith("Microsoft.OData.Edm"))
                 {
                     if (t.IsEnum == true)
                     {
@@ -290,36 +345,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     }
                     else
                     {
-                        // Build a complex type property. We consider type t to be primitive if t.Namespace is  "System" or if t is spatial type.
-                        List<ODataProperty> properties = new List<ODataProperty>();
-                        IEdmStructuredType structuredType = (IEdmStructuredType)EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, value);
-                        foreach (var p in GetProperties(value, structuredType))
-                        {
-                            if (t.GetProperty(p.Name) != null)
-                            {
-                                properties.Add(p);
-                            }
-                            else if (structuredType.IsOpen)
-                            {
-                                var instance = value as OpenClrObject;
-                                properties.Add(CreateODataProperty(instance.OpenProperties[p.Name], p.Name));
-                            }
-                        }
-
-                        var complexValue = new ODataComplexValue() { TypeName = t.FullName, Properties = properties, };
-
-                        // Add Annotation in complex level
-                        if (((ClrObject)value).Annotations != null)
-                        {
-                            foreach (InstanceAnnotationType annotation in ((ClrObject)value).Annotations)
-                            {
-                                if (string.IsNullOrEmpty(annotation.Target))
-                                {
-                                    complexValue.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Name, annotation.ConvertValueToODataValue()));
-                                }
-                            }
-                        }
-                        return complexValue;
+                        return ConvertToODataEntry(value, null, ODataVersion.V4);
                     }
                 }
             }
@@ -363,6 +389,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 ODataEnumValue enumValue = (ODataEnumValue)propertyValue;
                 return Enum.Parse(propertyUnderlyingType, enumValue.Value);
             }
+            else if (propertyUnderlyingType.IsGenericType && propertyValue is IEnumerable)
+            {
+                var collection = Utility.QuickCreateInstance(propertyUnderlyingType);
+
+                foreach (var item in propertyValue as IEnumerable)
+                {
+                    var itemType = propertyUnderlyingType.GetGenericArguments().Single();
+                    var collectionItem = ODataObjectModelConverter.ConvertPropertyValue(item, itemType);
+
+                    propertyUnderlyingType.GetMethod("Add").Invoke(collection, new object[] { collectionItem });
+                }
+
+                return collection;
+            }
 
             return propertyValue;
         }
@@ -389,8 +429,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     var item = ConvertPropertyValue(odataItem);
                     if (collectionList == null)
                     {
-                        Type itemType = item.GetType();
-                        Type listType = typeof(List<>).MakeGenericType(new[] { itemType });
+                        Type listType = string.IsNullOrEmpty(collection.TypeName) ? null : EdmClrTypeUtils.GetInstanceType(collection.TypeName);
+                        if (listType == null)
+                        {
+                            Type itemType = item.GetType();
+                            listType = typeof(List<>).MakeGenericType(new[] { itemType });
+                        }
                         collectionList = (IList)Utility.QuickCreateInstance(listType);
                     }
 
@@ -399,23 +443,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 return collectionList;
             }
 
-            if (propertyValue is ODataComplexValue)
+            if (propertyValue is ODataResource)
             {
-                ODataComplexValue complexValue = (ODataComplexValue)propertyValue;
-                var type = EdmClrTypeUtils.GetInstanceType(complexValue.TypeName);
-                var newInstance = Utility.QuickCreateInstance(type);
-                foreach (var p in complexValue.Properties)
-                {
-                    PropertyInfo targetProperty = type.GetProperty(p.Name);
-                    targetProperty.SetValue(newInstance, ConvertPropertyValue(p.Value, targetProperty.PropertyType), new object[] { });
-                }
-
-                return newInstance;
-            }
-
-            if (propertyValue is ODataEntry)
-            {
-                ODataEntry entry = (ODataEntry)propertyValue;
+                ODataResource entry = (ODataResource)propertyValue;
                 var type = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
                 var newInstance = Utility.QuickCreateInstance(type);
                 foreach (var p in entry.Properties)
@@ -461,32 +491,157 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             return result;
         }
 
-        public static ODataEntry ReadEntryParameterValue(ODataReader entryReader)
+        public static ODataResource ReadEntryParameterValue(ODataReader entryReader)
         {
-            ODataEntry entry = null;
+            ODataResource entry = null;
             while (entryReader.Read())
             {
-                if (entryReader.State == ODataReaderState.EntryEnd)
+                if (entryReader.State == ODataReaderState.ResourceEnd)
                 {
-                    entry = entryReader.Item as ODataEntry;
+                    entry = entryReader.Item as ODataResource;
                 }
             }
 
             return entry;
         }
 
-        public static ODataFeed ReadFeedParameterValue(ODataReader feedReader)
+        public static ODataResourceSet ReadFeedParameterValue(ODataReader feedReader)
         {
-            ODataFeed entry = null;
+            ODataResourceSet entry = null;
             while (feedReader.Read())
             {
-                if (feedReader.State == ODataReaderState.FeedEnd)
+                if (feedReader.State == ODataReaderState.ResourceSetEnd)
                 {
-                    entry = feedReader.Item as ODataFeed;
+                    entry = feedReader.Item as ODataResourceSet;
                 }
             }
 
             return entry;
+        }
+
+        public static object ReadEntityOrEntityCollection(ODataReader reader, bool forFeed)
+        {
+            MethodInfo addMethod = null;
+
+            // Store the last entry of the top-level feed or the top-level entry;
+            ODataResource entry = null;
+
+            // Store entries at each level
+            Stack<ODataItem> items = new Stack<ODataItem>();
+
+            // Store the objects with its parent for current level.
+            // Example:
+            //    CompleCollection: [ complex1, complex2 ]
+            //    objects contains [{CompleCollection, complex1Obj}, {CompleCollection, complex2Obj}] when NestedResourceInfoEnd for CompleCollection
+            Stack<KeyValuePair<ODataItem, object>> objects = new Stack<KeyValuePair<ODataItem, object>>();
+
+            // Store the SetValue action for complex property.
+            Stack<KeyValuePair<ODataItem, Action<object>>> actions = new Stack<KeyValuePair<ODataItem, Action<object>>>();
+            while (reader.Read())
+            {
+                switch (reader.State)
+                {
+                    case ODataReaderState.ResourceStart:
+                    case ODataReaderState.NestedResourceInfoStart:
+                        {
+                            items.Push(reader.Item);
+                            break;
+                        }
+                    case ODataReaderState.NestedResourceInfoEnd:
+                        {
+                            items.Pop();
+                            // Create current complex property value.
+                            var currentProperty = reader.Item as ODataNestedResourceInfo;
+                            var parent = items.Peek() as ODataResource;
+                            var parentType = EdmClrTypeUtils.GetInstanceType(parent.TypeName);
+                            var propertyInfo = parentType.GetProperty(currentProperty.Name);
+                            if (propertyInfo != null)
+                            {
+                                var propertyType = propertyInfo.PropertyType;
+                                if (propertyType.IsGenericType)
+                                {
+                                    Type listType = typeof(List<>).MakeGenericType(propertyType.GetGenericArguments()[0]);
+                                    addMethod = listType.GetMethod("Add");
+                                    var currentList = Activator.CreateInstance(listType);
+                                    while (objects.Count > 0 && objects.Peek().Key == currentProperty)
+                                    {
+                                        addMethod.Invoke(currentList, new[] { objects.Pop().Value });
+                                    }
+
+                                    // Keep the order of all the items
+                                    MethodInfo reverseMethod = listType.GetMethod("Reverse", new Type[0]);
+                                    reverseMethod.Invoke(currentList, new object[0]);
+                                    actions.Push(new KeyValuePair<ODataItem, Action<object>>(parent, obj => propertyInfo.SetValue(obj, currentList)));
+                                }
+                                else
+                                {
+                                    var propertyValue = objects.Pop().Value;
+                                    actions.Push(new KeyValuePair<ODataItem, Action<object>>(parent, obj => propertyInfo.SetValue(obj, propertyValue)));
+                                }
+                            }
+
+                            break;
+                        }
+                    case ODataReaderState.ResourceEnd:
+                        {
+                            // Create object for current resource.
+                            entry = reader.Item as ODataResource;
+                            object item = ODataObjectModelConverter.ConvertPropertyValue(entry);
+                            while (actions.Count > 0 && actions.Peek().Key == entry)
+                            {
+                                actions.Pop().Value.Invoke(item);
+                            }
+
+                            items.Pop();
+                            var parent = items.Count > 0 ? items.Peek() : null;
+                            objects.Push(new KeyValuePair<ODataItem, object>(parent, item));
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+            if (forFeed)
+            {
+                // create the list. This would require the first type is not derived type.
+                List<object> topLeveObjects = new List<object>();
+                while (objects.Count > 0)
+                {
+                    topLeveObjects.Add(objects.Pop().Value);
+                }
+
+                Type type = null;
+                // Need to fix this if all items in the collection are null;
+                if (entry == null || string.IsNullOrEmpty(entry.TypeName))
+                {
+                    for (int i = 0; i < topLeveObjects.Count; i++)
+                    {
+                        if (topLeveObjects[i] != null)
+                        {
+                            type = topLeveObjects[i].GetType();
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    type = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
+                }
+
+                Type listType = typeof(List<>).MakeGenericType(type);
+                addMethod = listType.GetMethod("Add");
+                var list = Activator.CreateInstance(listType);
+                for (int i = topLeveObjects.Count - 1; i >= 0; i--)
+                {
+                    addMethod.Invoke(list, new[] { topLeveObjects[i] });
+                }
+
+                return list;
+            }
+            else
+            {
+                return objects.Pop().Value;
+            }
         }
 
         /// <summary>

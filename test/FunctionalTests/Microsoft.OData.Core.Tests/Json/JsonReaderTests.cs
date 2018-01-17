@@ -7,10 +7,10 @@
 using System;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     public class JsonReaderTests
     {
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
         private JsonReader CreateJsonLightReader(string jsonValue)
         {
-            JsonReader reader = new JsonReader(new StringReader(String.Format("{{ \"data\" : {0} }}", jsonValue)), ODataFormat.Json, isIeee754Compatible: false);
+            JsonReader reader = new JsonReader(new StringReader(String.Format("{{ \"data\" : {0} }}", jsonValue)), isIeee754Compatible: false);
             reader.Read();
             reader.ReadStartObject();
             reader.ReadPropertyName();

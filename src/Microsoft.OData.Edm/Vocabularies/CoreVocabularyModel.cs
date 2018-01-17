@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
@@ -24,98 +25,104 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// The EDM model with core vocabularies.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmModel is immutable")]
         public static readonly IEdmModel Instance;
 
         /// <summary>
         /// The concurrency term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm ConcurrencyTerm;
-
-        /// <summary>
-        /// The concurrency control term.
-        /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm ConcurrencyControlTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm ConcurrencyTerm;
 
         /// <summary>
         /// The description term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm DescriptionTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm DescriptionTerm;
 
         /// <summary>
         /// The description term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm LongDescriptionTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm LongDescriptionTerm;
 
         /// <summary>
         /// The IsLanguageDependent term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm IsLanguageDependentTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm IsLanguageDependentTerm;
 
         /// <summary>
         /// The RequiresType term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm RequiresTypeTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm RequiresTypeTerm;
 
         /// <summary>
         /// The ResourcePath term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm ResourcePathTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm ResourcePathTerm;
 
         /// <summary>
         /// The DereferenceableIDs term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm DereferenceableIDsTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm DereferenceableIDsTerm;
 
         /// <summary>
         /// The ConventionalIDs term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm ConventionalIDsTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm ConventionalIDsTerm;
 
         /// <summary>
         /// The Immutable term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm ImmutableTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm ImmutableTerm;
 
         /// <summary>
         /// The Computed term.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm ComputedTerm;
+
+        /// <summary>
+        /// The Optional Parameter term.
+        /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm ComputedTerm;
+        public static readonly IEdmTerm OptionalParameterTerm;
 
         /// <summary>
         /// The IsURL term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm IsURLTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm IsURLTerm;
 
         /// <summary>
         /// The AcceptableMediaTypes term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm AcceptableMediaTypesTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm AcceptableMediaTypesTerm;
 
         /// <summary>
         /// The MediaType term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm MediaTypeTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm MediaTypeTerm;
 
         /// <summary>
         /// The IsMediaType term.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm IsMediaTypeTerm;
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm IsMediaTypeTerm;
+
+        /// <summary>
+        /// The Permissions Term.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm PermissionsTerm;
 
         internal static bool IsInitializing;
 
@@ -127,29 +134,35 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             IsInitializing = true;
             Assembly assembly = typeof(CoreVocabularyModel).GetAssembly();
 
-            using (Stream stream = assembly.GetManifestResourceStream("CoreVocabularies.xml"))
+            // Resource name has leading namespace and folder in .NetStandard dll.
+            string[] allResources = assembly.GetManifestResourceNames();
+            string coreVocabularies = allResources.Where(x => x.Contains("CoreVocabularies.xml")).FirstOrDefault();
+            Debug.Assert(coreVocabularies != null, "CoreVocabularies.xml: not found.");
+
+            using (Stream stream = assembly.GetManifestResourceStream(coreVocabularies))
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "CoreVocabularies.xml: stream!=null");
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
                 IsInitializing = false;
             }
 
-            AcceptableMediaTypesTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.AcceptableMediaTypes);
-            ComputedTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.Computed);
-            ConcurrencyControlTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl);
-            ConcurrencyTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrency);
-            ConventionalIDsTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.ConventionalIDs);
-            DereferenceableIDsTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.DereferenceableIDs);
-            DescriptionTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.Description);
-            ImmutableTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.Immutable);
-            IsLanguageDependentTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.IsLanguageDependent);
-            IsMediaTypeTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.IsMediaType);
-            IsURLTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.IsURL);
-            LongDescriptionTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.LongDescription);
-            MediaTypeTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.MediaType);
-            RequiresTypeTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.RequiresType);
-            ResourcePathTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.ResourcePath);
+            AcceptableMediaTypesTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.AcceptableMediaTypes);
+            ComputedTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Computed);
+            ConcurrencyTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency);
+            ConventionalIDsTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.ConventionalIDs);
+            DereferenceableIDsTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.DereferenceableIDs);
+            DescriptionTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Description);
+            ImmutableTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Immutable);
+            IsLanguageDependentTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.IsLanguageDependent);
+            IsMediaTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.IsMediaType);
+            IsURLTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.IsURL);
+            LongDescriptionTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.LongDescription);
+            MediaTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.MediaType);
+            OptionalParameterTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.OptionalParameter);
+            RequiresTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.RequiresType);
+            ResourcePathTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.ResourcePath);
+            PermissionsTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Permissions);
         }
     }
 }

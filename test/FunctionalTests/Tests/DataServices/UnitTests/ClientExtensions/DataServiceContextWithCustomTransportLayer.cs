@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.ClientExtensions
     using Microsoft.OData.Client;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     #endregion Namespaces
 

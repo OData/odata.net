@@ -18,10 +18,10 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Threading;
-#if DNXCORE50
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces
@@ -232,7 +232,6 @@ namespace Microsoft.OData.Client
         /// <param name="statusCode">status code</param>
         /// <returns>text</returns>
         [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Cache exception so user can examine it later")]
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "underlying stream is disposed so wrapping StreamReader doesn't need to be disposed")]
         internal static DataServiceClientException GetResponseText(Func<Stream> getResponseStream, HttpStatusCode statusCode)
         {
             string message = null;
@@ -431,7 +430,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle request.BeginGetResponse with request.EndGetResponse and then copy response stream</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected override void AsyncEndGetResponse(IAsyncResult asyncResult)
         {
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
@@ -474,7 +472,7 @@ namespace Microsoft.OData.Client
                     do
                     {
                         Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeBeginRead");
-#if DNXCORE50
+#if PORTABLELIB
                         asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
 #else
                         asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
@@ -748,7 +746,7 @@ namespace Microsoft.OData.Client
                         // note: SaveChanges operates with two passes
                         //      a) first send the request and then attach identity and append the result into a batch response  (Example: BeginSaveChanges)
                         //      b) process the batch response (shared code with SaveChanges(BatchWithSingleChangeset))  (Example: EndSaveChanges)
-                        // note: SaveResultWasProcessed is set when to the pre-save state when the save result is sucessfully processed
+                        // note: SaveResultWasProcessed is set when to the pre-save state when the save result is successfully processed
 
                         // scenario #1 when target entity started in modified or unchanged state
                         // 1) the link target entity was modified and now implicitly assumed to be unchanged (this is true in second pass)
@@ -1056,8 +1054,6 @@ namespace Microsoft.OData.Client
         /// <param name="binding">The binding.</param>
         /// <param name="targetResource">The target's entity descriptor.</param>
         /// <returns>The original link uri or one with the target entity key appended.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0011:EntityDescriptorPublicPropertiesRule",
-             Justification = "This property has been limited by get/set")]
         private static Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
         {
             // To delete from a collection, we need to append the key.
@@ -1170,7 +1166,7 @@ namespace Microsoft.OData.Client
                     // For MR - entityDescriptor.State is merged, we don't need to do link folding since MR will never fold links.
                     foreach (LinkDescriptor end in this.RelatedLinks(entityDescriptor))
                     {
-                        Debug.Assert(0 != end.SaveResultWasProcessed, "link should have been saved with the enty");
+                        Debug.Assert(0 != end.SaveResultWasProcessed, "link should have been saved with the entity");
 
                         // Since we allow link folding on collection properties also, we need to check if the link
                         // was in added state also, and make sure we put that link in unchanged state.
@@ -1201,7 +1197,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="descriptor">descriptor, whose response is getting handled.</param>
         /// <param name="responseHeaders">response headers.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "instance is used in Assert")]
         private void HandleResponsePut(Descriptor descriptor, HeaderCollection responseHeaders)
         {
             Debug.Assert(descriptor != null, "descriptor != null");
@@ -1285,7 +1280,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <summary>Handle responseStream.ReadAsync and complete the read operation.</summary>
         /// <param name="task">Task that has completed.</param>
         /// <param name="asyncState">State associated with the Task.</param>
@@ -1296,15 +1291,14 @@ namespace Microsoft.OData.Client
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndRead(IAsyncResult asyncResult)
 #endif
         {
-#if DNXCORE50
+#if PORTABLELIB
             IAsyncResult asyncResult = (IAsyncResult)task;
 #endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if DNXCORE50
+#if PORTABLELIB
             AsyncReadState state = (AsyncReadState)asyncState;
 #else
             AsyncReadState state = (AsyncReadState)asyncResult.AsyncState;
@@ -1320,7 +1314,7 @@ namespace Microsoft.OData.Client
                 Stream httpResponseStream = Util.NullCheck(pereq.ResponseStream, InternalError.InvalidEndReadStream);
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndRead_BeforeEndRead");
-#if DNXCORE50
+#if PORTABLELIB
                 count = ((Task<int>)task).Result;
 #else
                 count = httpResponseStream.EndRead(asyncResult);
@@ -1336,8 +1330,8 @@ namespace Microsoft.OData.Client
                         // if CompletedSynchronously then caller will call and we reduce risk of stack overflow
                         do
                         {
-#if DNXCORE50
-                            asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));                            
+#if PORTABLELIB
+                            asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
 #else
                             asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, state);
 #endif

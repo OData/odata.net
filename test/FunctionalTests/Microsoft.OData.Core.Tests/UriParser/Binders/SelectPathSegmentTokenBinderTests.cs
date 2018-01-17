@@ -7,65 +7,64 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     public class SelectPathSegmentTokenBinderTests
     {
+        private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
+
         // Bind a EndPathToken
         [Fact]
         public void PropertyNameResultsInStructuralPropertySelectionItem()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Shoe", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Shoe", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
             segment.ShouldBePropertySegment(HardCodedTestModel.GetPersonShoeProp());
         }
 
         [Fact]
         public void NavPropNameResultsInNavigationPropertyLinkSelectionItem()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("MyDog", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("MyDog", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
             segment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp());
         }
 
         [Fact]
         public void ActionNameResultsInOperationSelectionItem()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Walk", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Walk", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType(), DefaultUriResolver);
             segment.ShouldBeOperationSegment(HardCodedTestModel.GetDogWalkAction());
         }
 
         [Fact]
         public void FunctionNameResultsInOperationSelectionItemWithAllMatchingOverloads()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.HasDog", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.HasDog", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
             segment.ShouldBeOperationSegment(HardCodedTestModel.GetAllHasDogFunctionOverloadsForPeople() /* TODO: parameters */);
         }
 
         [Fact]
         public void FunctionNameResultsInOperationSelectionItemWithOnlyOverloadsBoundToTheGivenType()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.HasDog", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetEmployeeType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.HasDog", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetEmployeeType(), DefaultUriResolver);
             segment.ShouldBeOperationSegment(HardCodedTestModel.GetHasDogOverloadForEmployee());
         }
 
         [Fact]
         public void ActionNameResultsInOperationSelectionForDerivedBindingTypeItemWithAllMatchingOverloads()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Move", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetEmployeeType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Move", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetEmployeeType(), DefaultUriResolver);
             segment.ShouldBeOperationSegment(HardCodedTestModel.GetMoveOverloadForEmployee() /* TODO: parameters */);
         }
 
         [Fact]
         public void ActionNameResultsInOperationSelectionItemWithAllMatchingOverloadsMatchingBindingType()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Move", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Move", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
             segment.ShouldBeOperationSegment(HardCodedTestModel.GetMoveOverloadForPerson());
         }
 
@@ -90,63 +89,63 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         [Fact]
         public void OperationWithParenthesesShouldNotWork()
         {
-            Action action = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Move()", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType()).Should();
+            Action action = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Move()", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver).Should();
             action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Move()"));
         }
 
         [Fact]
         public void UnboundOperationShouldIgnore()
         {
-            var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.GetPet1", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.GetPet1", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
             segment.Should().BeNull();
         }
 
         [Fact]
         public void QualifiedNameShouldTreatAsDynamicPropertyInOpenType()
         {
-            var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("A.B", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetOpenEmployeeType());
-            segment.ShouldBeOpenPropertySegment("A.B");
+            var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("A.B", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetOpenEmployeeType(), DefaultUriResolver);
+            segment.ShouldBeDynamicPathSegment("A.B");
         }
 
         [Fact]
         public void OperationWithQualifiedParameterTypeNamesShouldIgnore()
         {
-            var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Move2(Fully.Qualified.Namespace.Person,Edm.String)", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            var segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Move2(Fully.Qualified.Namespace.Person,Edm.String)", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
             segment.Should().BeNull();
         }
 
         [Fact]
         public void UnqualifiedActionNameOnOpenTypeShouldBeInterpretedAsAnOpenProperty()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Restore", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
-            segment.ShouldBeOpenPropertySegment("Restore");
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Restore", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), DefaultUriResolver);
+            segment.ShouldBeDynamicPathSegment("Restore");
         }
 
         [Fact]
         public void QualifiedActionNameOnOpenTypeShouldBeInterpretedAsAnOperation()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Restore", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Restore", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), DefaultUriResolver);
             segment.ShouldBeOperationSegment(HardCodedTestModel.GetRestoreAction());
         }
 
         [Fact]
         public void UnfoundProperyOnOpenTypeResultsInOpenPropertySelectionItem()
         {
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Effervescence", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
-            segment.ShouldBeOpenPropertySegment("Fully.Qualified.Namespace.Effervescence");
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Fully.Qualified.Namespace.Effervescence", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), DefaultUriResolver);
+            segment.ShouldBeDynamicPathSegment("Fully.Qualified.Namespace.Effervescence");
         }
 
         [Fact]
         public void UnfoundProperyOnClosedTypeThrows()
         {
-            Action visit = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Missing", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            Action visit = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Missing", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
             visit.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType(), "Missing"));
         }
 
         [Fact]
         public void UnQualifiedActionNameShouldThrow()
         {
-            Action visit = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Walk", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType());
+            Action visit = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Walk", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType(), DefaultUriResolver);
             visit.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetDogType(), "Walk"));
         }
 
@@ -160,14 +159,22 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("foo", null), model, entityType, out foundPathSegment).Should().BeFalse();
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
+        public void BindAsOperationWithWildcardInPathTokenAndBindingParameterTypeThrows()
+        {
+            var model = new FindOperationsByBindingParameterTypeHierarchyThrowingCatchableExceptionEdmModel();
+            IEdmEntityType entityType = new EdmEntityType("n", "EntityType");
+            ODataPathSegment foundPathSegment = null;
+            SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("f*oo", null), model, entityType, out foundPathSegment).Should().BeFalse();
+        }
+
         public void ValidateNonCatchableExceptionsThrowInFindOperationsByBindingParameterTypeHierarchyExceptionAndSurfaces()
         {
-            var model = new FindOperationsByBindingParameterTypeHierarchyThrowingStackOverflowEdmModel();
+            var model = new FindOperationsByBindingParameterTypeHierarchyThrowingNonCatchableExceptionEdmModel();
             IEdmEntityType entityType = new EdmEntityType("n", "EntityType");
             ODataPathSegment foundPathSegment = null;
             Action test = () => SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("foo", null), model, entityType, out foundPathSegment);
-            test.ShouldThrow<StackOverflowException>();
+            test.ShouldThrow<OutOfMemoryException>();
         }
 
         [Fact]
@@ -189,7 +196,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                             return dummyOperations;
                         }
                 };
-            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Name.Space.FakeFunction1", null, null), resolver, dummyBindingType);
+            ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Name.Space.FakeFunction1", null, null), resolver, dummyBindingType, DefaultUriResolver);
             segment.ShouldBeOperationSegment(dummyOperations /* TODO: parameters */);
         }
 
@@ -198,7 +205,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             ODataPathSegment segment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(
                 new NonSystemToken(identifier, null, null), 
                 HardCodedTestModel.TestModel,
-                HardCodedTestModel.GetPersonType());
+                HardCodedTestModel.GetPersonType(),
+                DefaultUriResolver);
             return segment;
         }
 
@@ -230,11 +238,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             }
         }
 
-        private class FindOperationsByBindingParameterTypeHierarchyThrowingStackOverflowEdmModel : EdmModel
+        private class FindOperationsByBindingParameterTypeHierarchyThrowingNonCatchableExceptionEdmModel : EdmModel
         {
             public override IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType)
             {
-                throw new StackOverflowException( "Oh no!");
+                throw new OutOfMemoryException("OutOfMemoryException");
             }
         }
     }

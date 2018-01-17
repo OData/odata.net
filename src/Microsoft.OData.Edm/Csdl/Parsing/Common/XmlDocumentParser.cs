@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         private StringBuilder currentText;
         private CsdlLocation currentTextLocation;
         private ElementScope currentScope;
-        
+
         protected XmlDocumentParser(XmlReader underlyingReader, string documentPath)
         {
             this.reader = underlyingReader;
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         {
             return XmlElementParser.Create(elementName, parserFunc, childParsers, null);
         }
-                
+
         private void Parse()
         {
             Debug.Assert(this.DocumentNamespace != null && !this.HasErrors, "Calling Parse when MoveToDocumentElement failed?");
@@ -232,7 +232,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
             foreach (var unused in scope.Element.Attributes.Unused)
             {
-                // there's no handler for (namespace,name) and there wasn't a validation error. 
+                // there's no handler for (namespace,name) and there wasn't a validation error.
                 // Report an error of our own if the node is in no namespace or if it is in one of our xml schemas target namespace.
                 this.ReportUnexpectedAttribute(unused.Location, unused.Name);
             }
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             //     <Dependent>... </Dependent>
             //     <Principal>... </Principal>
             // </ReferentialConstraint>
-            // 
+            //
             // The second occurrence of 'Principal' will be successfully parsed, but the element parser for ReferentialConstraint will not use its value because only the first occurence is expected.
             // This will also catch if only a single type reference (Collection, EntityReference) element was expected but multiple are provided
             foreach (var unusedChildValue in scope.ChildValues.Where(v => !v.IsText && !v.IsUsed))
@@ -365,14 +365,19 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
                 if (!this.currentScope.Parser.TryGetChildElementParser(elementName, out newParser))
                 {
-                    this.ReportUnexpectedElement(this.Location, this.reader.Name);
+                    // Don't error on unexpected annotations, just ignore
+                    if (elementName != CsdlConstants.Element_Annotation)
+                    {
+                        this.ReportUnexpectedElement(this.Location, this.reader.Name);
+                    }
+
                     if (!emptyElement)
                     {
                         int depth = reader.Depth;
                         do
                         {
                             reader.Read();
-                        } 
+                        }
                         while (reader.Depth > depth);
                     }
 
@@ -388,12 +393,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
             else
             {
-                // This element is not in the expected XML namespace for this artifact. 
+                // This element is not in the expected XML namespace for this artifact.
                 // we need to report an error if the namespace for this element is a target namespace for the xml schemas we are parsing against.
-                // otherwise we assume that this is either a valid 'any' element or that the xsd validator has generated an error    
+                // otherwise we assume that this is either a valid 'any' element or that the xsd validator has generated an error
                 if (string.IsNullOrEmpty(elementNamespace) || this.IsOwnedNamespace(elementNamespace))
                 {
-                    this.ReportUnexpectedElement(this.Location, this.reader.Name);
+                    // Don't error on unexpected annotations, just ignore
+                    if (elementName != CsdlConstants.Element_Annotation)
+                    {
+                        this.ReportUnexpectedElement(this.Location, this.reader.Name);
+                    }
+
                     this.reader.Skip();
                 }
                 else
@@ -447,7 +457,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
 
             return new XmlElementInfo(elementName, elementLocation, ownedAttributes, annotationAttributes);
-        }       
+        }
 
         #region Errors
 
@@ -458,7 +468,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 Edm.Strings.XmlParser_EmptyFile(this.DocumentPath);
 
             this.ReportError(
-                this.Location, 
+                this.Location,
                 EdmErrorCode.EmptyFile,
                 errorMessage);
         }
@@ -470,7 +480,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     ? Edm.Strings.XmlParser_UnexpectedRootElementNoNamespace(expectedNamespacesString)
                     : Edm.Strings.XmlParser_UnexpectedRootElementWrongNamespace(namespaceUri, expectedNamespacesString);
             this.ReportError(
-                this.Location, 
+                this.Location,
                 EdmErrorCode.UnexpectedXmlElement,
                 errorMessage);
         }
@@ -507,7 +517,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         }
 
         #endregion
-                
+
         #region Scope Management
 
         private class ElementScope

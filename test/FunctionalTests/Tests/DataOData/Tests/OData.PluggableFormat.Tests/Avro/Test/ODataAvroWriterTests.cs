@@ -13,9 +13,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
     using System.Text;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Container;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.PluggableFormat.Avro;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,10 +23,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
     {
         private static IEdmEntityType TestEntityType;
         private static IEdmComplexType TestComplexType;
-        private static ODataComplexValue complexValue0;
-        private static ODataEntry entry0;
+        private static ODataResource complex0;
+        private static ODataResource entry0;
+        private static ODataNestedResourceInfo nestedResource0;
         private static byte[] binary0;
-        private static long[] longCollection0;
+        private static object[] longCollection0;
 
         static ODataAvroWriterTests()
         {
@@ -42,7 +42,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             TestEntityType = type;
 
             binary0 = new byte[] { 4, 7 };
-            complexValue0 = new ODataComplexValue()
+            complex0 = new ODataResource()
             {
                 Properties = new[]
                 {
@@ -52,20 +52,21 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 TypeName = "NS.SimpleComplex"
             };
 
-            longCollection0 = new[] {7L, 9L};
+            longCollection0 = new object[] {7L, 9L};
             var collectionValue0 = new ODataCollectionValue { Items = longCollection0 };
 
-            entry0 = new ODataEntry
+            entry0 = new ODataResource
             {
                 Properties = new[]
                 {
                     new ODataProperty {Name = "TBoolean", Value = true,},
                     new ODataProperty {Name = "TInt32", Value = 32,},
-                    new ODataProperty {Name = "TComplex", Value = complexValue0,},
                     new ODataProperty {Name = "TCollection", Value = collectionValue0 },
                 },
                 TypeName = "NS.SimpleEntry"
             };
+
+            nestedResource0 = new ODataNestedResourceInfo() { Name = "TComplex", IsCollection = false };
         }
 
         [TestMethod]
@@ -75,6 +76,10 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             var ctx = this.CreateOutputContext(ms);
             ODataAvroWriter aw = new ODataAvroWriter(ctx, value => ctx.AvroWriter.Write(value), ctx.AvroWriter.UpdateSchema(null, TestEntityType), false);
             aw.WriteStart(entry0);
+            aw.WriteStart(nestedResource0);
+            aw.WriteStart(complex0);
+            aw.WriteEnd();
+            aw.WriteEnd();
             aw.WriteEnd();
             aw.Flush();
             ms.Seek(0, SeekOrigin.Begin);
@@ -101,7 +106,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             Assert.AreEqual(32, record.TInt32);
             var col = record.TCollection as object[];
             Assert.IsNotNull(col);
-            Assert.IsTrue(longCollection0.SequenceEqual(col.Cast<long>()));
+            Assert.IsTrue(longCollection0.SequenceEqual(col));
             dynamic cpx = record.TComplex as AvroRecord;
             Assert.IsNotNull(cpx);
             Assert.IsTrue(binary0.SequenceEqual((byte[])cpx.TBinary));
@@ -111,7 +116,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         [TestMethod]
         public void WriteFeedAsAvroTest()
         {
-            ODataEntry entry1 = new ODataEntry
+            ODataResource entry1 = new ODataResource
             {
                 Properties = new[]
                 {
@@ -121,7 +126,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 TypeName = "NS.SimpleEntry"
             };
 
-            ODataEntry entry2 = new ODataEntry
+            ODataResource entry2 = new ODataResource
             {
                 Properties = new[]
                 {
@@ -134,7 +139,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             MemoryStream ms = new MemoryStream();
             var ctx = this.CreateOutputContext(ms);
             ODataAvroWriter aw = new ODataAvroWriter(ctx, value => ctx.AvroWriter.Write(value), null, true);
-            aw.WriteStart(new ODataFeed());
+            aw.WriteStart(new ODataResourceSet());
             aw.WriteStart(entry1);
             aw.WriteEnd();
             aw.WriteStart(entry2);
@@ -231,7 +236,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         [TestMethod]
         public void WritePrimitiveCollectionPropertyAsAvroTest()
         {
-            var expected = new[] { 3, 4 };
+            var expected = new object[] { 3, 4 };
             var value = new ODataCollectionValue { Items = expected };
 
             ODataProperty prop = new ODataProperty
@@ -255,7 +260,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             var records = results.Cast<object[]>().ToList();
             Assert.AreEqual(1, records.Count());
-            Assert.IsTrue(expected.SequenceEqual(records[0].Cast<int>()));
+            Assert.IsTrue(expected.SequenceEqual(records[0]));
         }
 
         [TestMethod]
@@ -298,8 +303,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 opw.WriteStart();
                 opw.WriteValue("p1", "dat");
                 {
-                    var ew = opw.CreateEntryWriter("p2");
+                    var ew = opw.CreateResourceWriter("p2");
                     ew.WriteStart(entry0);
+                    ew.WriteStart(nestedResource0);
+                    ew.WriteStart(complex0);
+                    ew.WriteEnd();
+                    ew.WriteEnd();
                     ew.WriteEnd();
                     ew.Flush();
                 }
@@ -326,7 +335,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             Assert.AreEqual(32, p2.TInt32);
             var col = p2.TCollection as object[];
             Assert.IsNotNull(col);
-            Assert.IsTrue(longCollection0.SequenceEqual(col.Cast<long>()));
+            Assert.IsTrue(longCollection0.SequenceEqual(col));
             dynamic cpx = p2.TComplex as AvroRecord;
             Assert.IsNotNull(cpx);
             Assert.IsTrue(binary0.SequenceEqual((byte[])cpx.TBinary));
@@ -364,15 +373,18 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
         private ODataAvroOutputContext CreateOutputContext(Stream stream)
         {
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = stream,
+                Encoding = Encoding.UTF8,
+                IsAsync = false,
+                IsResponse = true,
+            };
+
             return new ODataAvroOutputContext(
-              AvroFormat.Avro,
-              stream,
-              Encoding.UTF8,
-              new ODataMessageWriterSettings(),
-              true,
-                /*synchronous*/ true,
-                /* model */ null,
-                /*urlResolver*/ null);
+                AvroFormat.Avro,
+                messageInfo,
+                new ODataMessageWriterSettings());
         }
     }
 }

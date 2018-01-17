@@ -36,14 +36,5 @@ namespace AstoriaUnitTests.Tests.Server
             Assert.AreEqual("'a%2520bc' eq%20'a%20bc'", DataStringEscapeBuilder.EscapeDataString("'a%20bc' eq%20'a bc'"));
             Assert.AreEqual("\"a%2520bc\" eq%20\"a%20bc\"", DataStringEscapeBuilder.EscapeDataString("\"a%20bc\" eq%20\"a bc\""));
         }
-
-        [Ignore]
-        [TestMethod]
-        public void DoubleSingleMix()
-        {
-            Assert.AreEqual("\"f'o'o\"", DataStringEscapeBuilder.EscapeDataString("\"f'o'o\""));
-            Assert.AreEqual("'f%22o%22o'", DataStringEscapeBuilder.EscapeDataString("'f\"o\"o'"));
-            Assert.AreEqual("'f%22o'\"o'\"", DataStringEscapeBuilder.EscapeDataString("'f\"o'\"o'\""));
-        }
     }
 }

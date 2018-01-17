@@ -5,10 +5,10 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     public class ExceptionUtilTests
     {
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         {
             ExceptionUtil.CreateSyntaxError().Message.Should().Be(Strings.RequestUriProcessor_SyntaxError);
 
-            string  a =  Strings.General_InternalError(Microsoft.OData.Core.UriParser.InternalErrorCodes.UriQueryExpressionParser_ParseComparison);
+            string  a =  Strings.General_InternalError(Microsoft.OData.UriParser.InternalErrorCodes.UriQueryExpressionParser_ParseComparison);
         }
     }
 }

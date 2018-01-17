@@ -61,7 +61,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal string ElementName
         {
-            get; 
+            get;
             private set;
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         #endregion
 
         internal abstract XmlElementValue Parse(XmlElementInfo element, IList<XmlElementValue> children);
-        
+
         internal bool TryGetChildElementParser(string elementName, out XmlElementParser elementParser)
         {
             elementParser = null;
@@ -150,6 +150,16 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return this.values.GetEnumerator();
         }
 
+        internal bool Remove(XmlElementValue value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            return this.values.Remove(value);
+        }
+
         internal static XmlElementValueCollection FromList(IList<XmlElementValue> values)
         {
             if (values == null || values.Count == 0)
@@ -207,13 +217,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal string Name
         {
-            get; 
+            get;
             private set;
         }
 
         internal CsdlLocation Location
         {
-            get; 
+            get;
             private set;
         }
 
@@ -240,7 +250,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         internal virtual TValue ValueAs<TValue>() where TValue : class
         {
             return this.UntypedValue as TValue;
-        } 
+        }
     }
 
     internal class XmlElementValue<TValue> : XmlElementValue
@@ -271,10 +281,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal TValue Value
         {
-            get 
-            { 
-                this.isUsed = true; 
-                return this.value; 
+            get
+            {
+                this.isUsed = true;
+                return this.value;
             }
         }
 

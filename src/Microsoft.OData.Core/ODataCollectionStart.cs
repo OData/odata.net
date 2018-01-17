@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
 
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Core
             set;
         }
 
-        /// <summary>Gets or sets the number of items in the collection.</summary>
+        /// <summary>Gets the number of items in the collection.</summary>
         /// <returns>The number of items in the collection.</returns>
         public long? Count
         {
@@ -34,14 +34,14 @@ namespace Microsoft.OData.Core
             set;
         }
 
-        /// <summary>Gets or sets the URI representing the next page link.</summary>
+        /// <summary>Gets the URI representing the next page link.</summary>
         /// <returns>The URI representing the next page link.</returns>
         public Uri NextPageLink
         {
             get;
             set;
         }
-        
+
         /// <summary>
         /// Provides additional serialization information to the <see cref="ODataCollectionWriter"/> for this <see cref="ODataCollectionStart"/>.
         /// </summary>

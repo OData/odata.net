@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     /// <summary>
     /// Defines the members that may be found in a GeoJSON object.

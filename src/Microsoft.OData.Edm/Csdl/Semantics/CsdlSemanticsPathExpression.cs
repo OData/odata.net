@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -41,9 +40,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return EdmExpressionKind.Path; }
         }
 
-        public IEnumerable<string> Path
+        public IEnumerable<string> PathSegments
         {
             get { return this.PathCache.GetValue(this, ComputePathFunc, null); }
+        }
+
+        public string Path
+        {
+            get { return this.Expression.Path; }
         }
 
         private IEnumerable<string> ComputePath()

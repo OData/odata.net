@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class CustomInstanceAnnotationsDescriptor
     {
@@ -16,5 +16,6 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
         public CustomInstanceAnnotationsDescriptor Parent { get; set; }
         public ICollection<ODataInstanceAnnotation> AnnotationsOnStart { get; set; }
         public ICollection<ODataInstanceAnnotation> AnnotationsOnEnd { get; set; }
+        public bool hasNestedResourceInfo { get; set; }
     }
 }

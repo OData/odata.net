@@ -307,9 +307,8 @@ namespace System.Data.Test.Astoria
 
                 object[] theProcessToRun = { BrowserPath };
                 ConnectionOptions theConnection = new ConnectionOptions();
-
-                theConnection.Username = "user1";
-                theConnection.Password = "fakepwd";
+                //theConnection.Username = string.Emtpy;
+                //theConnection.Password = string.Emtpy;
 
                 ManagementScope theScope = new ManagementScope("\\\\" + browserConfig.MachineInfo.IP + "\\root\\cimv2", theConnection);
                 theScope.Connect();

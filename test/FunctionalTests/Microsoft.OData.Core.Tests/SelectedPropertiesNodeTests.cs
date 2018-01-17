@@ -9,11 +9,10 @@ using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Primitives;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class SelectedPropertiesNodeTests
     {
@@ -178,7 +177,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 .HaveOnlyNavigations(this.cityType, "Districts")
                 .And.HaveChild(
                     this.cityType,
-                    "Districts", 
+                    "Districts",
                     c => c.Should()
                         .HaveStreams(this.districtType, "Thumbnail")
                         .And.HaveChild(this.districtType, "City", c2 => c2.Should().BeSameAsEntireSubtree()));
@@ -191,7 +190,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 .HaveOnlyNavigations(this.cityType, "Districts")
                 .And.HaveChild(
                     this.cityType,
-                    "Districts", 
+                    "Districts",
                     c => c.Should()
                         .HaveStreams(this.districtType, "Thumbnail")
                         .And.HaveNavigations(this.districtType, "City"));
@@ -273,8 +272,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                     this.cityType,
                     "Districts",
                     c => c.Should().HaveChild(
-                        this.districtType, 
-                        "City", 
+                        this.districtType,
+                        "City",
                         c2 => c2.Should().HaveStreams(this.metropolisType, "MetropolisStream")));
         }
 
@@ -314,7 +313,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public void CombiningEntireSubtreeWithAnythingShouldReturnEntireSubtree()
         {
             SelectedPropertiesNode.CombineNodes(EntireSubtreeNode, EntireSubtreeNode).Should().BeSameAsEntireSubtree();
-            
+
             this.VerifyCombination(EmptyNode, EntireSubtreeNode, n => n.Should().BeSameAsEntireSubtree());
             this.VerifyCombination(SelectedPropertiesNode.Create("*"), EntireSubtreeNode, n => n.Should().BeSameAsEntireSubtree());
         }
@@ -346,7 +345,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
                 .HaveStreams(this.cityType, "Photo")
                 .And.HaveNavigations(this.cityType, "Districts")
                 .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveOnlyStreams(this.districtType, "Thumbnail"));
-            
+
             this.VerifyCombination(left, right, verify);
         }
 
@@ -492,30 +491,30 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void GetSelectedPropertiesForNavigationPropertyForEmptyNodeShouldReturnEmptyNodeWhenEntityTypeIsNull()
         {
-            EmptyNode.GetSelectedPropertiesForNavigationProperty(entityType: null, navigationPropertyName: "foo").Should().BeSameAs(EmptyNode);
+            EmptyNode.GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EmptyNode);
         }
 
         [Fact]
         public void GetSelectedPropertiesForNavigationPropertyForNonEmptyNodeShouldAlwaysReturnEntireSubtreeWhenEntityTypeIsNull()
         {
-            EntireSubtreeNode.GetSelectedPropertiesForNavigationProperty(entityType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
-            SelectedPropertiesNode.Create("bar").GetSelectedPropertiesForNavigationProperty(entityType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
+            EntireSubtreeNode.GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
+            SelectedPropertiesNode.Create("bar").GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
         }
 
         [Fact]
         public void GetSelectedNavigationPropertiesShouldAlwaysReturnEmptyEnumerationWhenEntityTypeIsNull()
         {
-            EntireSubtreeNode.GetSelectedNavigationProperties(entityType: null).Should().BeEmpty();
-            EmptyNode.GetSelectedNavigationProperties(entityType: null).Should().BeEmpty();
-            SelectedPropertiesNode.Create("bar").GetSelectedNavigationProperties(entityType: null).Should().BeEmpty();
+            EntireSubtreeNode.GetSelectedNavigationProperties(null).Should().BeEmpty();
+            EmptyNode.GetSelectedNavigationProperties(null).Should().BeEmpty();
+            SelectedPropertiesNode.Create("bar").GetSelectedNavigationProperties(null).Should().BeEmpty();
         }
 
         [Fact]
         public void GetSelectedStreamPropertiesShouldAlwaysReturnEmptyEnumerationWhenEntityTypeIsNull()
         {
-            EntireSubtreeNode.GetSelectedStreamProperties(entityType: null).Should().BeEmpty();
-            EmptyNode.GetSelectedStreamProperties(entityType: null).Should().BeEmpty();
-            SelectedPropertiesNode.Create("bar").GetSelectedStreamProperties(entityType: null).Should().BeEmpty();
+            EntireSubtreeNode.GetSelectedStreamProperties(null).Should().BeEmpty();
+            EmptyNode.GetSelectedStreamProperties(null).Should().BeEmpty();
+            SelectedPropertiesNode.Create("bar").GetSelectedStreamProperties(null).Should().BeEmpty();
         }
 
         private void VerifyCombination(SelectedPropertiesNode left, SelectedPropertiesNode right, Action<SelectedPropertiesNode> verify)

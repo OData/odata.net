@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -70,27 +69,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
         protected override CsdlStructuredType MyStructured
         {
             get { return this.entity; }
         }
 
-        protected override List<IEdmProperty> ComputeDeclaredProperties()
-        {
-            List<IEdmProperty> properties = base.ComputeDeclaredProperties();
-            foreach (CsdlNavigationProperty navigationProperty in this.entity.NavigationProperties)
-            {
-                properties.Add(new CsdlSemanticsNavigationProperty(this, navigationProperty));
-            }
-
-            return properties;
-        }
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "baseType2",
+            Justification = "Value assignment is required by compiler.")]
         private IEdmEntityType ComputeBaseType()
         {
             if (this.entity.BaseTypeName != null)
@@ -98,7 +83,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 IEdmEntityType baseType = this.Context.FindType(this.entity.BaseTypeName) as IEdmEntityType;
                 if (baseType != null)
                 {
-                    IEdmStructuredType baseType2 = baseType.BaseType; // Evaluate the inductive step to detect cycles.
+                    // Evaluate the inductive step to detect cycles.
+                    // Overriding BaseType getter from concrete type implementing IEdmComplexType will be invoked to
+                    // detect cycles. The object assignment is required by compiler only.
+                    IEdmStructuredType baseType2 = baseType.BaseType;
                 }
 
                 return baseType ?? new UnresolvedEntityType(this.Context.UnresolvedName(this.entity.BaseTypeName), this.Location);

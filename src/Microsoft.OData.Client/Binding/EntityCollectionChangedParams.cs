@@ -9,14 +9,14 @@ namespace Microsoft.OData.Client
 #region Namespaces
     using System.Collections;
     using System.Collections.Specialized;
-#endregion    
+#endregion
 
     /// <summary>Encapsulates the arguments of a <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged" /> delegate.</summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704", Justification = "Name gets too long with Parameters")]
     public sealed class EntityCollectionChangedParams
     {
         #region Fields
-        
+
         /// <summary>Context associated with the BindingObserver.</summary>
         private readonly DataServiceContext context;
 
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         #region Constructor
-        
+
         /// <summary>
         /// Construct an EntityCollectionChangedParams object.
         /// </summary>
@@ -79,11 +79,11 @@ namespace Microsoft.OData.Client
             this.targetEntitySet = targetEntitySet;
             this.action = action;
         }
-        
+
         #endregion
 
         #region Properties
-        
+
         /// <summary>The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> associated with the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> that has changed.</summary>
         /// <returns>The context associated with the collection that has changed</returns>
         public DataServiceContext Context
@@ -140,6 +140,6 @@ namespace Microsoft.OData.Client
             get { return this.action; }
         }
 
-        #endregion    
+        #endregion
     }
 }

@@ -6,30 +6,33 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser;
 using Xunit;
-using mbh = Microsoft.OData.Core.Tests.UriParser.ModelBuildingHelpers;
+using mbh = Microsoft.OData.Tests.UriParser.ModelBuildingHelpers;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class ODataPathExtensionsTests
     {
         private readonly Uri testBaseUri = new Uri("http://odatatest/");
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void TypeComputedForEntitySetSegment()
         {
-            var entitySet = mbh.BuildValidEntitySet();
+            IEdmEntitySet entitySet = mbh.BuildValidEntitySet();
             var path = new ODataPath(new ODataPathSegment[]
             {
                 new EntitySetSegment(entitySet)
             });
 
-            path.EdmType().Should().BeSameAs(entitySet);
+            IEdmType entitySetCollection = new EdmCollectionType(new EdmEntityTypeReference(entitySet.EntityType(), false));
+            path.EdmType().ShouldBeEquivalentTo(entitySetCollection.ToTypeReference());
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void EntitySetComputedForEntitySetSegment()
         {
             var entitySet = mbh.BuildValidEntitySet();
@@ -39,6 +42,62 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             });
 
             path.NavigationSource().Should().BeSameAs(entitySet);
+        }
+
+        [Fact]
+        public void PathExtensionsIsCollectionWithEntitySetReturnsTrue()
+        {
+            var entitySet = mbh.BuildValidEntitySet();
+            var path = new ODataPath(new ODataPathSegment[]
+            {
+                new EntitySetSegment(entitySet)
+            });
+
+            path.IsCollection().Should().BeTrue();
+        }
+
+        [Fact]
+        public void PathExtensionsIsCollectionWithPropertyReturnsFalse()
+        {
+            var property = mbh.BuildValidPrimitiveProperty();
+            var path = new ODataPath(new ODataPathSegment[]
+            {
+                new PropertySegment(property)
+            });
+
+            path.IsCollection().Should().BeFalse();
+        }
+
+        [Fact]
+        public void PathExtensionsToExpandPathWithNonNavigationPropertyThrows()
+        {
+            var property = mbh.BuildValidPrimitiveProperty();
+            ODataSelectPath path = new ODataSelectPath(
+                new ODataPathSegment[]
+                {
+                    new PropertySegment(HardCodedTestModel.GetPersonNameProp())
+                }
+            );
+
+            Action expandPathAction = () => path.ToExpandPath();
+            expandPathAction.ShouldThrow<ODataException>().WithMessage(
+                ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+        }
+
+        [Fact]
+        public void PathExtensionsToExpandPathWithNavigationPropertyReturnsExpandedPath()
+        {
+            var property = mbh.BuildValidPrimitiveProperty();
+            ODataSelectPath path = new ODataSelectPath(
+                new ODataPathSegment[]
+                {
+                    new NavigationPropertySegment(
+                        HardCodedTestModel.GetPersonMyDogNavProp(), HardCodedTestModel.GetDogsSet())
+                }
+            );
+
+            path.ToExpandPath().Count.Should().Be(1);
+            path.ToExpandPath().FirstSegment.Identifier.Should().Be("MyDog");
         }
 
         [Fact]
@@ -91,7 +150,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             {
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, testCase));
                 ODataPath path = parser.ParsePath();
-                string result = path.ToResourcePathString(ODataUrlConventions.Default);
+                string result = path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
                 result.Should().Be(testCase);
             }
         }
@@ -125,10 +184,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             {
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, testCase.Query));
                 ODataPath path = parser.ParsePath();
-                string originalPath = path.ToResourcePathString(ODataUrlConventions.Default);
-                string result = path.TrimEndingKeySegment().ToResourcePathString(ODataUrlConventions.Default);
+                string originalPath = path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
+                string result = path.TrimEndingKeySegment().ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
                 result.Should().Be(testCase.Result);
-                path.ToResourcePathString(ODataUrlConventions.Default).Should().Be(originalPath);
+                path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses).Should().Be(originalPath);
             }
         }
 
@@ -187,10 +246,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             {
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, testCase.Query + "/" + testCase.TypeCast));
                 ODataPath path = parser.ParsePath();
-                string originalPath = path.ToResourcePathString(ODataUrlConventions.Default);
-                string result = path.TrimEndingTypeSegment().ToResourcePathString(ODataUrlConventions.Default);
+                string originalPath = path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
+                string result = path.TrimEndingTypeSegment().ToResourcePathString(ODataUrlKeyDelimiter.Parentheses);
                 result.Should().Be(testCase.Query);
-                path.ToResourcePathString(ODataUrlConventions.Default).Should().Be(originalPath);
+                path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses).Should().Be(originalPath);
             }
         }
 

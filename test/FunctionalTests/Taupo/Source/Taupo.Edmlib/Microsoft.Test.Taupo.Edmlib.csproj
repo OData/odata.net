@@ -6,12 +6,11 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Test.Taupo.Edmlib</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.Edmlib</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TransparentAssembly>true</TransparentAssembly>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <EnableStyleCop>true</EnableStyleCop>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
@@ -35,7 +34,6 @@
     <Compile Include="StubEdm\StubEdmElement.cs" />
     <Compile Include="StubEdm\StubEdmEntityContainer.cs" />
     <Compile Include="StubEdm\StubEdmEntitySet.cs" />
-    <Compile Include="StubEdm\StubEdmEntitySetReferenceExpression.cs" />
     <Compile Include="StubEdm\StubEdmEntityType.cs" />
     <Compile Include="StubEdm\StubEdmEnumMember.cs" />
     <Compile Include="StubEdm\StubEdmEnumType.cs" />
@@ -61,9 +59,6 @@
       <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
       <Name>Microsoft.Test.Taupo</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Microsoft.Test.Taupo.Edmlib.layering.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,16 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#TestModel.AddressType","@odata.type":"#TestModel.AddressType"}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#TestModel.AddressType"}
+
+Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#TestModel.AddressType","@odata.type":"#TestModel.AddressType"}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#TestModel.AddressType"}
+

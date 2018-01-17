@@ -4,10 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
+    using System;
+
     /// <summary>
-    /// The reason of deleted entry in delta response.
+    /// The reason of deleted resource in delta response.
     /// </summary>
     public enum DeltaDeletedEntryReason
     {
@@ -25,6 +27,39 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Represents a deleted entity in delta response.
     /// </summary>
+    public sealed class ODataDeletedResource : ODataResourceBase
+    {
+        /// <summary>
+        /// Initializes a new <see cref="ODataDeletedResource"/>.
+        /// </summary>
+        public ODataDeletedResource()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new <see cref="ODataDeletedResource"/>.
+        /// </summary>
+        /// <param name="id">The id of the deleted entity, which may be absolute or relative.</param>
+        /// <param name="reason">The reason of deleted resource.</param>
+        public ODataDeletedResource(System.Uri id, DeltaDeletedEntryReason reason)
+        {
+            if (id != null)
+            {
+                this.Id = id;
+            }
+
+            this.Reason = reason;
+        }
+
+        /// <summary>
+        /// Optional. Either deleted, if the entity was deleted (destroyed), or changed if the entity was removed from membership in the result (i.e., due to a data change).
+        /// </summary>
+        public DeltaDeletedEntryReason? Reason { get; set; }
+    }
+
+    /// <summary>
+    /// Represents a deleted entity in delta response.
+    /// </summary>
     public sealed class ODataDeltaDeletedEntry : ODataItem
     {
         /// <summary>
@@ -36,7 +71,7 @@ namespace Microsoft.OData.Core
         /// Initializes a new <see cref="ODataDeltaDeletedEntry"/>.
         /// </summary>
         /// <param name="id">The id of the deleted entity, which may be absolute or relative.</param>
-        /// <param name="reason">The reason of deleted entry.</param>
+        /// <param name="reason">The reason of deleted resource.</param>
         public ODataDeltaDeletedEntry(string id, DeltaDeletedEntryReason reason)
         {
             this.Id = id;
@@ -67,6 +102,43 @@ namespace Microsoft.OData.Core
             {
                 this.serializationInfo = ODataDeltaSerializationInfo.Validate(value);
             }
+        }
+
+        /// <summary>Gets an ODataDeltaDeletedEntry representation of the ODataDeletedResource</summary>
+        /// <param name="entry">The ODataDeletedResource.</param>
+        /// <returns>A returned ODataDeltaDeletedEntry to write.</returns>
+        internal static ODataDeltaDeletedEntry GetDeltaDeletedEntry(ODataDeletedResource entry)
+        {
+            ODataDeltaDeletedEntry deletedEntry = new ODataDeltaDeletedEntry(entry.Id.OriginalString, entry.Reason ?? DeltaDeletedEntryReason.Deleted);
+            if (entry.SerializationInfo != null)
+            {
+                deletedEntry.SetSerializationInfo(entry.SerializationInfo);
+            }
+
+            return deletedEntry;
+        }
+
+        /// <summary>Gets an ODataDeletedResource representation of the ODataDeltaDeletedEntry</summary>
+        /// <param name="entry">The ODataDeltaDeletedEntry.</param>
+        /// <returns>A returned ODataDeletedResource to write.</returns>
+        internal static ODataDeletedResource GetDeletedResource(ODataDeltaDeletedEntry entry)
+        {
+            Uri id = UriUtils.StringToUri(entry.Id);
+            ODataDeletedResource deletedResource = new ODataDeletedResource()
+            {
+                Id = id,
+                Reason = entry.Reason,
+            };
+
+            if (entry.SerializationInfo != null)
+            {
+                deletedResource.SerializationInfo = new ODataResourceSerializationInfo()
+                {
+                    NavigationSourceName = entry.SerializationInfo == null ? null : entry.SerializationInfo.NavigationSourceName
+                };
+            }
+
+            return deletedResource;
         }
     }
 }

@@ -9,6 +9,7 @@
 
   <PropertyGroup>
     <!-- default to the same code analysis settings as Taupo -->    
+    <CodeAnalysisRuleSetDirectories Condition="'$(CodeAnalysisRuleSet)' == ''">$(CodeAnalysisRuleSetDirectories);$(MSBuildThisFileDirectory)</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleSet Condition=" '$(CodeAnalysisRuleSet)' == '' ">Taupo.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis Condition=" '$(RunCodeAnalysis)' == '' ">true</RunCodeAnalysis>
   </PropertyGroup>

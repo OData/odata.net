@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #endif
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #endif
-#if !ASTORIA_CLIENT && !ASTORIA_SERVER
-namespace Microsoft.OData.Core
+#if !ODATA_CLIENT && !ODATA_SERVICE
+namespace Microsoft.OData
 #endif
 {
     using System;
@@ -50,8 +50,6 @@ namespace Microsoft.OData.Core
         internal SimpleLazy(Func<T> factory)
             : this(factory, false)
         {
-#if ODATALIB
-#endif
         }
 
         /// <summary>
@@ -61,8 +59,6 @@ namespace Microsoft.OData.Core
         /// <param name="isThreadSafe">true if the value will be created in a thread safety, false assume single thread access to Value.</param>
         internal SimpleLazy(Func<T> factory, bool isThreadSafe)
         {
-#if ODATALIB
-#endif
             Debug.Assert(factory != null, "factory != null");
             this.factory = factory;
             this.valueCreated = false;
@@ -79,8 +75,6 @@ namespace Microsoft.OData.Core
         {
             get
             {
-#if ODATALIB
-#endif
                 if (!this.valueCreated)
                 {
                     if (this.mutex != null)

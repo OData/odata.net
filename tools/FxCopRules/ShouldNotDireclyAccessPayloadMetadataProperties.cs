@@ -67,11 +67,11 @@ namespace DataWebRules
                         disallowedPropertyNames = Enum.GetNames(typeof(PayloadMetadataKind.Entry));
                         break;
 
-                    case "Microsoft.OData.Core.ODataFeed":
+                    case "Microsoft.OData.Core.ODataResourceSet":
                         disallowedPropertyNames = Enum.GetNames(typeof(PayloadMetadataKind.Feed));
                         break;
 
-                    case "Microsoft.OData.Core.ODataNavigationLink":
+                    case "Microsoft.OData.Core.ODataNestedResourceInfo":
                         disallowedPropertyNames = Enum.GetNames(typeof(PayloadMetadataKind.Navigation));
                         break;
 

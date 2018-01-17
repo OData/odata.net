@@ -5,10 +5,10 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Contains fluent assertion APIs for testing Selection objects.

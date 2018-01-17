@@ -14,11 +14,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
 
     public static class DefaultInMemoryModel
     {
@@ -47,28 +44,32 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             cityInformationType.AddProperty(new EdmStructuralProperty(cityInformationType, "CountryRegion", EdmCoreModel.Instance.GetString(false)));
             cityInformationType.AddProperty(new EdmStructuralProperty(cityInformationType, "IsCapital", EdmCoreModel.Instance.GetBoolean(false)));
             model.AddElement(cityInformationType);
+
+            var infoFromCustomerType = new EdmComplexType(ns, "InfoFromCustomer");
+            infoFromCustomerType.AddProperty(new EdmStructuralProperty(infoFromCustomerType, "CustomerMessage", EdmCoreModel.Instance.GetString(true)));
+            model.AddElement(infoFromCustomerType);
             #endregion
 
             #region EnumType
             var accessLevelType = new EdmEnumType(ns, "AccessLevel", isFlags: true);
-            accessLevelType.AddMember("None", new EdmIntegerConstant(0));
-            accessLevelType.AddMember("Read", new EdmIntegerConstant(1));
-            accessLevelType.AddMember("Write", new EdmIntegerConstant(2));
-            accessLevelType.AddMember("Execute", new EdmIntegerConstant(4));
-            accessLevelType.AddMember("ReadWrite", new EdmIntegerConstant(3));
+            accessLevelType.AddMember("None", new EdmEnumMemberValue(0));
+            accessLevelType.AddMember("Read", new EdmEnumMemberValue(1));
+            accessLevelType.AddMember("Write", new EdmEnumMemberValue(2));
+            accessLevelType.AddMember("Execute", new EdmEnumMemberValue(4));
+            accessLevelType.AddMember("ReadWrite", new EdmEnumMemberValue(3));
             model.AddElement(accessLevelType);
 
             var colorType = new EdmEnumType(ns, "Color", isFlags: false);
-            colorType.AddMember("Red", new EdmIntegerConstant(1));
-            colorType.AddMember("Green", new EdmIntegerConstant(2));
-            colorType.AddMember("Blue", new EdmIntegerConstant(4));
+            colorType.AddMember("Red", new EdmEnumMemberValue(1));
+            colorType.AddMember("Green", new EdmEnumMemberValue(2));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(4));
             model.AddElement(colorType);
 
             var companyCategory = new EdmEnumType(ns, "CompanyCategory", isFlags: false);
-            companyCategory.AddMember("IT", new EdmIntegerConstant(0));
-            companyCategory.AddMember("Communication", new EdmIntegerConstant(1));
-            companyCategory.AddMember("Electronics", new EdmIntegerConstant(2));
-            companyCategory.AddMember("Others", new EdmIntegerConstant(4));
+            companyCategory.AddMember("IT", new EdmEnumMemberValue(0));
+            companyCategory.AddMember("Communication", new EdmEnumMemberValue(1));
+            companyCategory.AddMember("Electronics", new EdmEnumMemberValue(2));
+            companyCategory.AddMember("Others", new EdmEnumMemberValue(4));
             model.AddElement(companyCategory);
             #endregion
 
@@ -176,7 +177,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             orderType.AddProperty(new EdmStructuralProperty(orderType, "OrderShelfLifes", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDuration(true)))));
             orderType.AddProperty(new EdmStructuralProperty(orderType, "ShipDate", EdmCoreModel.Instance.GetDate(false)));
             orderType.AddProperty(new EdmStructuralProperty(orderType, "ShipTime", EdmCoreModel.Instance.GetTimeOfDay(false)));
-
+            orderType.AddProperty(new EdmStructuralProperty(orderType, "InfoFromCustomer", new EdmComplexTypeReference(infoFromCustomerType, true)));
             model.AddElement(orderType);
             var orderSet = new EdmEntitySet(defaultContainer, "Orders", orderType);
             defaultContainer.AddElement(orderSet);
@@ -582,7 +583,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 false, null, true);
             getPersonFunction.AddParameter("address", new EdmComplexTypeReference(addressType, false));
             model.AddElement(getPersonFunction);
-            defaultContainer.AddFunctionImport("GetPerson", getPersonFunction, new EdmEntitySetReferenceExpression(personSet), true);
+            defaultContainer.AddFunctionImport("GetPerson", getPersonFunction, new EdmPathExpression("People"), true);
 
             //UnBound Function : Primtive Parameter, Return Entity
             var getPersonFunction2 = new EdmFunction(ns, "GetPerson2",
@@ -590,14 +591,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 false, null, true);
             getPersonFunction2.AddParameter("city", EdmCoreModel.Instance.GetString(false));
             model.AddElement(getPersonFunction2);
-            defaultContainer.AddFunctionImport("GetPerson2", getPersonFunction2, new EdmEntitySetReferenceExpression(personSet), true);
+            defaultContainer.AddFunctionImport("GetPerson2", getPersonFunction2, new EdmPathExpression("People"), true);
 
             //UnBound Function : Return CollectionOfEntity
             var getAllProductsFunction = new EdmFunction(ns, "GetAllProducts",
                 new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(productType, false))),
                 false, null, true);
             model.AddElement(getAllProductsFunction);
-            defaultContainer.AddFunctionImport("GetAllProducts", getAllProductsFunction, new EdmEntitySetReferenceExpression(productSet), true);
+            defaultContainer.AddFunctionImport("GetAllProducts", getAllProductsFunction, new EdmPathExpression("Products"), true);
 
             //UnBound Function : Multi ParameterS Return Collection Of ComplexType
             var getBossEmailsFunction = new EdmFunction(ns, "GetBossEmails",
@@ -803,9 +804,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             var defaultStoredPI = new EdmSingleton(defaultContainer, "DefaultStoredPI", storedPIType);
             defaultContainer.AddElement(defaultStoredPI);
 
-            ((EdmEntitySet)accountSet).AddNavigationTarget(piStoredNavigation, storedPISet);
+            ((EdmEntitySet)accountSet).AddNavigationTarget(piStoredNavigation, storedPISet, new EdmPathExpression("MyPaymentInstruments/TheStoredPI"));
             ((EdmEntitySet)accountSet).AddNavigationTarget(accountAvailableSubsTemplatesNavigation, subscriptionTemplatesSet);
-            ((EdmEntitySet)accountSet).AddNavigationTarget(piBackupStoredPINavigation, defaultStoredPI);
+            ((EdmEntitySet)accountSet).AddNavigationTarget(piBackupStoredPINavigation, defaultStoredPI, new EdmPathExpression("MyPaymentInstruments/BackupStoredPI"));
 
             #endregion
 
@@ -819,14 +820,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         private static void SetCoreChangeTrackingAnnotation(this EdmModel model, EdmEntitySet entitySet, IEdmStructuralProperty[] filterableProperties, IEdmNavigationProperty[] expandableProperties)
         {
             IEdmModel termModel = ReadTermModel("CoreCapabilities.csdl");
-            IEdmValueTerm changeTracking = termModel.FindDeclaredValueTerm("Core.ChangeTracking");
+            IEdmTerm changeTracking = termModel.FindDeclaredTerm("Core.ChangeTracking");
             var exp = new EdmRecordExpression(
                 new EdmPropertyConstructor("Supported", new EdmBooleanConstant(true)),
 
                 new EdmPropertyConstructor("FilterableProperties", new EdmCollectionExpression(filterableProperties.Select(p => new EdmPropertyPathExpression(p.Name)))),
                 new EdmPropertyConstructor("ExpandableProperties", new EdmCollectionExpression(expandableProperties.Select(p => new EdmPropertyPathExpression(p.Name)))));
 
-            EdmAnnotation annotation = new EdmAnnotation(entitySet, changeTracking, exp);
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(entitySet, changeTracking, exp);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(annotation);
         }
@@ -838,7 +839,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             using (Stream stream = ReadResourceFromAssembly(fileName))
             {
                 IEnumerable<EdmError> errors;
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out instance, out errors);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out instance, out errors);
             }
             return instance;
         }

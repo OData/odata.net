@@ -4,17 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Linq;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Test.OData.Utils.Common;
+using Microsoft.Test.OData.Utils.Metadata;
+
 namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
-    using System;
-    using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.Test.OData.Utils.Common;
-    using Microsoft.Test.OData.Utils.Metadata;
-    using Microsoft.Test.OData.Utils.ODataLibOM;
-
     /// <summary>
     /// A helper class to dynamically build models.
     /// </summary>
@@ -130,22 +128,19 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
         /// <param name="entityType">The <see cref="EntityType"/> to add the new property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="type">The data type of the property.</param>
-        /// <param name="concurrencyMode">A flag indicating whether the property is an ETag property (default = false).</param>
         /// <returns>The <paramref name="entityType"/> instance after adding the property to it.</returns>
-        public static EdmEntityType KeyProperty(this EdmEntityType entityType, string propertyName, IEdmTypeReference type, EdmConcurrencyMode concurrencyMode = EdmConcurrencyMode.None)
+        public static EdmEntityType KeyProperty(this EdmEntityType entityType, string propertyName, IEdmTypeReference type)
         {
             ExceptionUtilities.CheckArgumentNotNull(entityType, "entityType");
             ExceptionUtilities.CheckArgumentNotNull(propertyName, "propertyName");
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
 
-            var property = entityType.AddStructuralProperty(propertyName, type, string.Empty, concurrencyMode);
+            var property = entityType.AddStructuralProperty(propertyName, type, string.Empty);
             entityType.AddKeys(property);
 
             return entityType;
         }
 
-
-        /// <summary>
         /// <summary>
         /// Adds a new property to the <paramref name="entityType"/>.
         /// </summary>
@@ -163,12 +158,6 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             if (primitiveValue != null)
             {
                 entityType.AddStructuralProperty(propertyName, MetadataUtils.GetPrimitiveTypeReference(primitiveValue.Value.GetType()));
-            }
-
-            var complexValue = propertyValue as ODataComplexValue;
-            if (complexValue != null)
-            {
-                entityType.AddStructuralProperty(propertyName, model.FindDeclaredType(complexValue.TypeName).ToTypeReference());
             }
 
             var collectionValue = propertyValue as ODataCollectionValue;
@@ -270,16 +259,15 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
         /// <param name="structuralType">The structural type to add the new property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="type">The data type of the property.</param>
-        /// <param name="isETagProperty">true if the property is an ETag property; otherwise false (default).</param>
         /// <returns>The <paramref name="structuralType"/> instance after adding the property to it.</returns>
-        public static T Property<T>(this T structuralType, string propertyName, IEdmTypeReference type, EdmConcurrencyMode isETagProperty = EdmConcurrencyMode.None)
+        public static T Property<T>(this T structuralType, string propertyName, IEdmTypeReference type)
             where T : EdmStructuredType
         {
             ExceptionUtilities.CheckArgumentNotNull(structuralType, "structuralType");
             ExceptionUtilities.CheckArgumentNotNull(propertyName, "propertyName");
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
 
-            structuralType.AddStructuralProperty(propertyName, type, string.Empty, isETagProperty);
+            structuralType.AddStructuralProperty(propertyName, type, string.Empty);
             return structuralType;
         }
 
@@ -411,23 +399,10 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             ExceptionUtilities.CheckArgumentNotNull(model, "model");
 
             ExceptionUtilities.Assert(
-                payloadElement is ODataEntry || payloadElement is ODataFeed,
+                payloadElement is ODataResource || payloadElement is ODataResourceSet,
                 "Can only determine entity type for entry or feed payloads.");
 
-            ODataFeed feed = payloadElement as ODataFeed;
-            if (feed != null)
-            {
-                // A feed doesn't know it's type. If it doesn't have any entries we can't determine the type.
-                var feedentry = feed.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>().FirstOrDefault();
-                if (feedentry != null)
-                {
-                    return model.FindDeclaredType(feedentry.TypeName) as IEdmEntityType;
-                }
-
-                return null;
-            }
-
-            ODataEntry entry = payloadElement as ODataEntry;
+            ODataResource entry = payloadElement as ODataResource;
             if (entry != null)
             {
                 return model.FindDeclaredType(entry.TypeName) as IEdmEntityType;
@@ -524,7 +499,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             // create NavigationPropertyBinding
             foreach (EdmNavigationProperty property in model.SchemaElements.OfType<IEdmEntityType>().SelectMany(entityType => entityType.DeclaredNavigationProperties()))
             {
-                var sourceEntitySet = findEntitySet(property.DeclaringEntityType) as EdmEntitySet;
+                var sourceEntitySet = findEntitySet(property.DeclaringType as IEdmEntityType) as EdmEntitySet;
                 ExceptionUtilities.CheckArgumentNotNull(sourceEntitySet, "SourceEntitySet");
 
                 var targetEntityType = (property.Type.Definition.TypeKind == EdmTypeKind.Collection)

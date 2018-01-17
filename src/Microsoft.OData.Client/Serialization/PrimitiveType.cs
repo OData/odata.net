@@ -12,7 +12,6 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Represent a Primitive Type on the client
@@ -22,17 +21,17 @@ namespace Microsoft.OData.Client
     /// For performance reasons we use several dictionaries here:
     /// - clrMapping contains well known primitive types. Initialized in the static constructor and never changed
     ///   after initialization. Therefore it is safe to read without locks. Also see comment about Binary type below
-    /// - derivedPrimitiveTypeMapping - a map for custom primitive types derived from well known primitive types -  
+    /// - derivedPrimitiveTypeMapping - a map for custom primitive types derived from well known primitive types -
     ///   especially spatial types. New items may be added at runtime so reads and writes must be locked
     /// - knownNonPrimitiveTypes - a HashSet of types we have seen and determined they are not primitive. Used
     ///   to shortcircuit logic for finding derived primitive types for types we know are not primitive.
     /// To get a primitive type one *MUST NOT* clrMapping since clrMapping will not contain custom primitive types
-    /// but call TryGetPrimitiveType method that knows how to handle multiple dictionaries. 
+    /// but call TryGetPrimitiveType method that knows how to handle multiple dictionaries.
     /// 2) System.Data.Linq.Binary
-    /// We want to avoid static dependency on System.Data.Linq.dll. On the other hand System.Data.Linq.Binary is 
+    /// We want to avoid static dependency on System.Data.Linq.dll. On the other hand System.Data.Linq.Binary is
     /// a well known primitive type. For performance reasons and to avoid locking the clrMapping is only initialized
-    /// in the static ctor when we don't have System.Data.Linq.Binary type handy. Therefore we use the dummy BinaryTypeSub 
-    /// type during initialization. As a result to get a well known primitive type one *MUST NOT* use the clrMapping 
+    /// in the static ctor when we don't have System.Data.Linq.Binary type handy. Therefore we use the dummy BinaryTypeSub
+    /// type during initialization. As a result to get a well known primitive type one *MUST NOT* use the clrMapping
     /// dictionary directly but call TryGetWellKnownPrimitiveType() method which knows how to handle BinaryType.
     /// </remarks>
     internal sealed class PrimitiveType
@@ -42,7 +41,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <remarks>
         /// It is being initialized in the static constructor and must not change
-        /// later. This way we can avoid locking it. 
+        /// later. This way we can avoid locking it.
         /// </remarks>
         private static readonly Dictionary<Type, PrimitiveType> clrMapping;
 
@@ -119,7 +118,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// A PrimitiveXmlConverter that provides convertion between 
+        /// A PrimitiveXmlConverter that provides convertion between
         /// instances of this type to its Xml representation and back
         /// </summary>
         internal PrimitiveTypeConverter TypeConverter
@@ -157,7 +156,7 @@ namespace Microsoft.OData.Client
         /// <param name="ptype">The returning primitive type</param>
         /// <returns>True if the type is found</returns>
         /// <remarks>
-        /// See remarks for the class. 
+        /// See remarks for the class.
         /// </remarks>
         internal static bool TryGetPrimitiveType(Type clrType, out PrimitiveType ptype)
         {
@@ -210,10 +209,10 @@ namespace Microsoft.OData.Client
 
                 if (bestMatch.Value == null)
                 {
-                    // this is not a primitive type - update the hashset accordingly. 
+                    // this is not a primitive type - update the hashset accordingly.
                     lock (knownNonPrimitiveTypes)
                     {
-                        // Note that this is hashset so it is OK if we try adding the same type more than once. 
+                        // Note that this is hashset so it is OK if we try adding the same type more than once.
                         knownNonPrimitiveTypes.Add(clrType);
                     }
 
@@ -269,10 +268,9 @@ namespace Microsoft.OData.Client
         /// <param name="clrType">The clr type</param>
         /// <param name="edmTypeName">The edm type name to remove, or null</param>
         /// <remarks>This is a test clean up hook. MUST NOT BE CALLED FROM PRODUCT CODE.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Test hook")]
         internal static void DeleteKnownType(Type clrType, String edmTypeName)
         {
-            // This is not thread safe. Product code should never modify clrMapping dictionary after initialization. 
+            // This is not thread safe. Product code should never modify clrMapping dictionary after initialization.
             // This allows for reads without locks.
             clrMapping.Remove(clrType);
 
@@ -291,7 +289,7 @@ namespace Microsoft.OData.Client
         /// <param name="converter">The Type Converter</param>
         /// <param name="twoWay">Whether this mapping should have a reverse mapping from Edm</param>
         /// <remarks>
-        /// This method is internal only for testing purposes. 
+        /// This method is internal only for testing purposes.
         /// IN PRODUCT MUST BE CALLED ONLY FROM THE STATIC CTOR OF THE PrimitiveType CLASS.
         /// </remarks>
         internal static void RegisterKnownType(Type clrType, string edmTypeName, EdmPrimitiveTypeKind primitiveKind, PrimitiveTypeConverter converter, bool twoWay)
@@ -330,7 +328,7 @@ namespace Microsoft.OData.Client
         /// Populate the mapping table
         /// </summary>
         /// <remarks>
-        /// MUST NOT BE CALLED FROM PRODUCT CODE OTHER THAN STATIC CTOR OF PrimitiveType class. 
+        /// MUST NOT BE CALLED FROM PRODUCT CODE OTHER THAN STATIC CTOR OF PrimitiveType class.
         /// </remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Coupling necessary for type table")]
         private static void InitializeTypes()
@@ -416,7 +414,7 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB// System.Data.Linq not available
         /// <summary>
-        /// Whether the <paramref name="type"/> is System.Data.Linq.Binary. 
+        /// Whether the <paramref name="type"/> is System.Data.Linq.Binary.
         /// </summary>
         /// <param name="type">Type to check.</param>
         /// <returns><c>true</c> if <paramref name="type"/> is System.Data.Linq.Binary. Otherwise <c>false</c>.</returns>
@@ -438,7 +436,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// There is no static dependency on System.Data.Linq where Binary type lives. We 
+        /// There is no static dependency on System.Data.Linq where Binary type lives. We
         /// will use this type to Substitute for the missing Binary type.
         /// </summary>
         private sealed class BinaryTypeSub

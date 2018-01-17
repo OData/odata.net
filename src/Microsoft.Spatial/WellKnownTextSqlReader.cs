@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
@@ -12,7 +12,6 @@ namespace Microsoft.Data.Spatial
     using System.IO;
     using System.Text;
     using System.Xml;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Reader for Extended Well Known Text, Case sensitive
@@ -101,7 +100,6 @@ namespace Microsoft.Data.Spatial
             /// <summary>
             /// Read WellKnownText into an instance of Geography
             /// </summary>
-            [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Literals should not be localized")]
             public void Read()
             {
                 this.ParseSRID();
@@ -291,12 +289,12 @@ namespace Microsoft.Data.Spatial
             /// </summary>
             private void ParseTaggedText()
             {
-                // <geometry tagged text> ::= <point tagged text> | 
-                //                            <linestring tagged text> | 
+                // <geometry tagged text> ::= <point tagged text> |
+                //                            <linestring tagged text> |
                 //                            <polygon tagged text> |
                 //                            <multipoint tagged text> |
-                //                            <multilinestring tagged text> | 
-                //                            <multipolygon tagged text> | 
+                //                            <multilinestring tagged text> |
+                //                            <multipolygon tagged text> |
                 //                            <geometrycollection tagged text>
                 // <point tagged text> ::= point <point text>
                 // <linestring tagged text> ::= linestring <linestring text>
@@ -309,7 +307,7 @@ namespace Microsoft.Data.Spatial
                 {
                     throw new FormatException(Strings.WellKnownText_UnknownTaggedText(String.Empty));
                 }
-                
+
                 switch (this.lexer.CurrentToken.Text.ToUpperInvariant())
                 {
                     case WellKnownTextConstants.WktPoint:

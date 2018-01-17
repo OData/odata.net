@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service.Serializers
 #else
 namespace Microsoft.OData.Client.Serializers
@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client.Serializers
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Service.Common;
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using System.Reflection;
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client.Serializers
         /// </summary>
         private readonly ClientTypeOrResourceType_Alias actualPropertyType;
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
 
         /// <summary>
         /// Private field backing IsEFProvider property
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Client.Serializers
         /// </summary>
         private bool isSyndicationMapping;
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Creates instance of EntityPropertyMappingInfo class.
         /// </summary>
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client.Serializers
             }
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>Is the current data source an EF provider</summary>
         public bool IsEFProvider
         {

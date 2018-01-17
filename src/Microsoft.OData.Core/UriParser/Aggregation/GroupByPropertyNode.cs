@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// A node representing a grouping property.
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         /// <summary>
         /// Gets the <see cref="IEdmTypeReference"/> of this node.
         /// </summary>
-        public IEdmTypeReference TypeReference 
+        public IEdmTypeReference TypeReference
         {
             get
             {
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
                 {
                     return typeReference;
                 }
-            } 
+            }
         }
 
         /// <summary>

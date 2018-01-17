@@ -4,21 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.IO;
-#if DNXCORE50
+#if PORTABLELIB
     using System.Threading;
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
 
     /// <summary>
-    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync. 
-    /// This stream communicates status changes to the owning batch writer (via IODataBatchOperationListener) 
+    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
+    /// This stream communicates status changes to the owning batch writer (via IODataBatchOperationListener)
     /// to properly flush buffered data and move the batch writer's state machine forward.
     /// </summary>
     internal sealed class ODataBatchOperationWriteStream : ODataBatchOperationStream
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Core
             this.batchStream.Write(buffer, offset, count);
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <inheritdoc />
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {

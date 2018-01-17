@@ -38,6 +38,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         /// <summary>This is a test class for querying functionality.</summary>
         [TestClass, TestCase]
         public class QueryTest : AstoriaTestCase
@@ -47,7 +48,7 @@ namespace AstoriaUnitTests.Tests
             public void ExpandSegmentCtor()
             {
                 // Null name.
-                Exception exception = TestUtil.RunCatching(delegate() { new ExpandSegment(null, null); });
+                Exception exception = TestUtil.RunCatching(delegate () { new ExpandSegment(null, null); });
                 TestUtil.AssertExceptionExpected(exception, true);
 
                 // Name with null filter is OK.
@@ -62,7 +63,7 @@ namespace AstoriaUnitTests.Tests
                 };
                 foreach (Expression f in incorrectFilters)
                 {
-                    exception = TestUtil.RunCatching(delegate() { new ExpandSegment("foo", f); });
+                    exception = TestUtil.RunCatching(delegate () { new ExpandSegment("foo", f); });
                     TestUtil.AssertExceptionExpected(exception, true);
                 }
 
@@ -76,7 +77,7 @@ namespace AstoriaUnitTests.Tests
             public void ExpandSegmentPathHasFilter()
             {
                 // Null argument.
-                Exception exception = TestUtil.RunCatching(delegate() { ExpandSegment.PathHasFilter(null); });
+                Exception exception = TestUtil.RunCatching(delegate () { ExpandSegment.PathHasFilter(null); });
                 TestUtil.AssertExceptionExpected(exception, true);
 
                 // Single segment with no filter.
@@ -95,7 +96,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             /// <summary>Checks that arguments can take whitespace before and after with no problems.</summary>
-            [TestMethod]
+            [Ignore] // Remove Atom
+            // [TestMethod]
             public void QueryTestBasicArguments()
             {
                 // DEVNOTE(pqian):
@@ -131,7 +133,7 @@ namespace AstoriaUnitTests.Tests
                     new Dimension("FormatString", FormatStringData.Values),
                     new Dimension("UseTop", new object[] { true, false }),
                     new Dimension("SkipCount", new object[] { -1, 0, 1, 1000 }));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     bool hasOrder = (bool)values["HasOrder"];
                     bool hasWhitespace = (bool)values["HasWhitespace"];
@@ -164,7 +166,7 @@ namespace AstoriaUnitTests.Tests
                             }
 
                             Trace.WriteLine("Running query: [" + request.RequestUriString + "]");
-                            Exception exception = TestUtil.RunCatching(delegate() { request.SendRequest(); });
+                            Exception exception = TestUtil.RunCatching(delegate () { request.SendRequest(); });
                             TestUtil.AssertExceptionExpected(exception,
                                 formatString != FormatStringData.General &&
                                 formatString != FormatStringData.Decimal &&
@@ -176,7 +178,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestDeepExpand()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForLocal())
@@ -246,13 +249,14 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestBasicExpand()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                 new Dimension("ServiceModel", ServiceModelData.Values),
                 new Dimension("SerializationFormatData", SerializationFormatData.StructuredValues));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                     SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -304,7 +308,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // TODO : Need to Fix Astoria Service
+            // [TestMethod, Variation]
             public void QueryTestExpandOpenResource()
             {
                 string[] requestStrings = new string[]
@@ -316,7 +321,7 @@ namespace AstoriaUnitTests.Tests
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("Uris", requestStrings));
 
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                     {
@@ -330,7 +335,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // TODO : Need to Fix Astoria Service
+            // [TestMethod, Variation]
             public void QueryTestOpenResourceProperty()
             {
                 string[] requestStrings = new string[]
@@ -342,7 +348,7 @@ namespace AstoriaUnitTests.Tests
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("Uris", requestStrings));
 
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                     {
@@ -356,7 +362,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // TODO : Need to Fix Astoria Service
+            // [TestMethod, Variation]
             public void QueryTestFilterOpenResourceProperty()
             {
                 string[] requestStrings = new string[]
@@ -368,7 +375,7 @@ namespace AstoriaUnitTests.Tests
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("Uris", requestStrings));
 
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                     {
@@ -380,7 +387,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestExpandCustom()
             {
                 foreach (SerializationFormatData d in SerializationFormatData.StructuredValues)
@@ -416,7 +424,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // TODO : Need to Fix Astoria Service
+            // [TestMethod, Variation]
             public void QueryTestFilterWithCastAndTypeIsForIDSP()
             {
                 string[] requestStrings = new string[]
@@ -436,7 +445,7 @@ namespace AstoriaUnitTests.Tests
                 ocs.PopulateData.EntityConnection = null;
                 using (System.Data.EntityClient.EntityConnection connection = ocs.PopulateData.CreateTableAndPopulateData())
                 {
-                    TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                    TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                     {
                         using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                         {
@@ -473,7 +482,7 @@ namespace AstoriaUnitTests.Tests
                     new Dimension("dataContextType", dataContextTypes),
                     new Dimension("maxExpandCount", new int[] { 0, 1, -1 }),
                     new Dimension("maxExpandDepth", new int[] { 0, 1, -1 }));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     TestUtil.ClearConfiguration();
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -522,7 +531,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestExpandReflection()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -616,7 +626,7 @@ namespace AstoriaUnitTests.Tests
                     CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                         new Dimension("AllowBuchanan", allowedValues),
                         new Dimension("Atom", allowedValues));
-                    TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                    TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                     {
                         bool allowed = (bool)values["AllowBuchanan"];
                         bool atom = (bool)values["Atom"];
@@ -874,7 +884,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestFilterComplexType()
             {
                 // Repro for Protocol: Internal Server Error using filter with a Complex Type.
@@ -912,7 +923,7 @@ namespace AstoriaUnitTests.Tests
 
             public class BoolGuidDataContext
             {
-                private static BoolGuidEntity[] _data = new BoolGuidEntity[] { 
+                private static BoolGuidEntity[] _data = new BoolGuidEntity[] {
                                     new BoolGuidEntity { ID = 1, NonNullBool = true, NullBool = false, NonNullGuid = new Guid("12345678-1234-1234-1234-1334567890AB"), NullGuid = null },
                                     new BoolGuidEntity { ID = 2, NonNullBool = false, NullBool = null, NonNullGuid = new Guid("12345678-1234-1234-1234-1234567890AB"), NullGuid = new Guid("12345678-1234-1234-1234-1134567890AB") }
                                     };
@@ -926,22 +937,23 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestFilterWithBoolGuid()
             {
-                var testData = new[] { new { Input = "/Data?$filter=NonNullBool gt false", Count = 1, Index = 1 }, 
+                var testData = new[] { new { Input = "/Data?$filter=NonNullBool gt false", Count = 1, Index = 1 },
                                         new { Input = "/Data?$filter=NonNullBool le false", Count = 1, Index = 2 },
                                         new { Input = "/Data?$filter=NonNullBool ge false", Count = 2, Index = 0 },
                                         new { Input = "/Data?$filter=NonNullBool lt true", Count = 1, Index = 2 },
-                                        new { Input = "/Data?$filter=NonNullBool gt NullBool", Count = 2, Index = 0 }, 
+                                        new { Input = "/Data?$filter=NonNullBool gt NullBool", Count = 2, Index = 0 },
                                         new { Input = "/Data?$filter=NullBool le true", Count = 2, Index = 0 },
                                         new { Input = "/Data?$filter=NullBool ge true", Count = 0, Index = 0 },
-                                        new { Input = "/Data?$filter=NullBool eq null", Count = 1, Index = 2 }, 
-                                        new { Input = "/Data?$filter=NonNullGuid gt 12345678-1234-1234-1234-0034567890AB", Count = 2, Index = 0 }, 
+                                        new { Input = "/Data?$filter=NullBool eq null", Count = 1, Index = 2 },
+                                        new { Input = "/Data?$filter=NonNullGuid gt 12345678-1234-1234-1234-0034567890AB", Count = 2, Index = 0 },
                                         new { Input = "/Data?$filter=NonNullGuid le 12345678-1234-1234-1234-1234567890AB", Count = 1, Index = 2 },
                                         new { Input = "/Data?$filter=NonNullGuid ge 00000000-0000-0000-0000-000000000000", Count = 2, Index = 0 },
                                         new { Input = "/Data?$filter=NonNullGuid lt 12345678-1234-1234-1234-1235567890AB", Count = 1, Index = 2 },
-                                        new { Input = "/Data?$filter=NullGuid gt NonNullGuid", Count = 0, Index = 0 }, 
+                                        new { Input = "/Data?$filter=NullGuid gt NonNullGuid", Count = 0, Index = 0 },
                                         new { Input = "/Data?$filter=NullGuid le NonNullGuid", Count = 2, Index = 0 },
                                         new { Input = "/Data?$filter=NullGuid ge 00000000-0000-0000-0000-000000000000", Count = 1, Index = 2 },
                                         new { Input = "/Data?$filter=NullGuid lt 00000000-0000-0000-0000-000000000000", Count = 1, Index = 1 },
@@ -1047,13 +1059,14 @@ namespace AstoriaUnitTests.Tests
             }
 
             /// <summary>Checks that filtering can be invoked correctly.</summary>
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestBasicFilter()
             {
                 // Very simple test at this level: simply check that we can get an entity by its ID.
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("ServiceModel", ServiceModelData.Values));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                     if (!model.IsValid)
@@ -1142,7 +1155,7 @@ namespace AstoriaUnitTests.Tests
                     new Dimension("Ascending", new string[] { "asc", "desc", "", "not" }),
                     new Dimension("Whitespace", new string[] { "", " " }),
                     new Dimension("ServiceModel", new ServiceModelData[] { ServiceModelData.ValidValues[0], ServiceModelData.ValidValues[1] }));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                     bool isolated = (bool)values["Isolated"];
@@ -1238,10 +1251,10 @@ namespace AstoriaUnitTests.Tests
                 // else is expected to fail.
                 string[] targetUris = new string[]
                 {
-                    "fail:/", 
-                    "fail:/$metadata", 
-                    "fail:/Customers(1)/Name", 
-                    "fail:/Customers(1)/Name/$value", 
+                    "fail:/",
+                    "fail:/$metadata",
+                    "fail:/Customers(1)/Name",
+                    "fail:/Customers(1)/Name/$value",
                     "pass:/Customers(1)/Address",
                     "pass:/Customers(1)/BestFriend"
                 };
@@ -1253,7 +1266,7 @@ namespace AstoriaUnitTests.Tests
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                 {
                     request.DataServiceType = typeof(CustomDataContext);
-                    TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                    TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                     {
                         string targetUri = (string)values["TargetUri"];
                         string option = (string)values["Option"];
@@ -1267,7 +1280,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryLinksUri()
             {
                 var urisToVerify = new KeyValuePair<string, string[]>[] {
@@ -1284,10 +1298,10 @@ namespace AstoriaUnitTests.Tests
 
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                    new Dimension("ResponseFormat", new string[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.AtomFormat }),
-                   new Dimension("ContextType", new Type[] 
-                    { 
-                        typeof(CustomDataContext), 
-                        typeof(ocs.CustomObjectContext), 
+                   new Dimension("ContextType", new Type[]
+                    {
+                        typeof(CustomDataContext),
+                        typeof(ocs.CustomObjectContext),
                         typeof(CustomRowBasedOpenTypesContext)
                     })
                );
@@ -1398,7 +1412,7 @@ namespace AstoriaUnitTests.Tests
 
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("RequestUri", new string[] {        
+                    new Dimension("RequestUri", new string[] {
                             "404 /$count",                                          // $count on root
                             "404 /Customers('ALFKI')/CompanyName/$count",           // $count on primitive type
                             "404 /Customers('ALFKI')/CompanyName/$value/$count",    // $count on primitive value
@@ -1440,9 +1454,9 @@ namespace AstoriaUnitTests.Tests
                             "/Orders(1)/DollarAmount/$count"
                         }),
 
-                    new Dimension("ContextType", new Type[] 
-                        { 
-                            typeof(CustomRowBasedOpenTypesContext) 
+                    new Dimension("ContextType", new Type[]
+                        {
+                            typeof(CustomRowBasedOpenTypesContext)
                         }));
 
                 ocs.PopulateData.EntityConnection = null;
@@ -1464,7 +1478,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestRowCountProviders()
             {
                 TestUtil.ClearMetadataCache();
@@ -1475,10 +1490,10 @@ namespace AstoriaUnitTests.Tests
                         "/Customers/$count"}),
                     //"/Customers?$top=2&$skip=1&count=true",
                     //"/Customers/$count?$top=2&$skip=1"}),
-                    new Dimension("ContextType", new Type[] 
-                        { 
-                            typeof(CustomDataContext), 
-                            typeof(ocs.CustomObjectContext), 
+                    new Dimension("ContextType", new Type[]
+                        {
+                            typeof(CustomDataContext),
+                            typeof(ocs.CustomObjectContext),
                             typeof( CustomRowBasedContext),
                             typeof( CustomRowBasedOpenTypesContext)
                         }));
@@ -1520,10 +1535,10 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.ClearMetadataCache();
 
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("Accept", new string[] { 
-                            UnitTestsUtil.AtomFormat, 
-                            UnitTestsUtil.JsonLightMimeType, 
-                            UnitTestsUtil.MimeTextPlain, 
+                    new Dimension("Accept", new string[] {
+                            UnitTestsUtil.AtomFormat,
+                            UnitTestsUtil.JsonLightMimeType,
+                            UnitTestsUtil.MimeTextPlain,
                             ""
                     }));
 
@@ -1541,7 +1556,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestRowCountLinkEnd()
             {
                 TestUtil.ClearMetadataCache();
@@ -1586,7 +1602,7 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.ClearMetadataCache();
 
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("RequestUri", new string[] { 
+                    new Dimension("RequestUri", new string[] {
                         "/Orders/$count?$count=true",  // count with $count
                         "/$count=true",           // $count on root
                         "?$count=true",           // $count on root
@@ -1615,7 +1631,7 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.ClearMetadataCache();
 
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("RequestUri", new string[] { 
+                    new Dimension("RequestUri", new string[] {
                         "/Customers?$count=true",
                         "/Customers/$count"
                     }));
@@ -1637,7 +1653,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestRowCountFiltered()
             {
                 TestUtil.ClearMetadataCache();
@@ -1645,7 +1662,7 @@ namespace AstoriaUnitTests.Tests
 
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("RequestUri", new string[] { 
+                    new Dimension("RequestUri", new string[] {
                         "/Orders?$filter=ShipCity%20eq%20'Berlin'&$count=true&$top=10&skip=1" ,
                         "/Orders?$filter=ShipCity%20eq%20'Berlin'&$count=true&$top=1",
                         "/Orders?$filter=ShipCity%20eq%20'Berlin'&$count=true&$top=5&$expand=Shippers,Customers",
@@ -1709,7 +1726,7 @@ namespace AstoriaUnitTests.Tests
             {
                 TestUtil.ClearMetadataCache();
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("RequestUri", new string[] { 
+                    new Dimension("RequestUri", new string[] {
                         "/Customers?$count=true",
                         "/Customers?$top=1&$count=true",
                         "/Customers?$filter=false&$count=true",
@@ -1752,7 +1769,8 @@ namespace AstoriaUnitTests.Tests
                 public static int CurrentItemIndex;
             }
 
-            [TestMethod]
+            [Ignore] // Remove Atom
+            // [TestMethod]
             public void QueryTestOnStartProcessingRequest()
             {
                 TestUtil.ClearMetadataCache();
@@ -1811,7 +1829,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod]
+            [Ignore] // Remove Atom
+            // [TestMethod]
             public void QueryTestRowCountBatching()
             {
                 TestUtil.ClearMetadataCache();
@@ -1853,7 +1872,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void QueryTestRowCountServiceOp()
             {
                 TestUtil.ClearMetadataCache();
@@ -1893,7 +1913,7 @@ OData-Version: 4.0
                     TestUtil.AssertContains(ex.InnerException.Message, DataServicesResourceUtil.GetString("RequestQueryProcessor_QuerySetOptionsNotApplicable"));
 
                     request.RequestUriString = "/Orders/$count";
-                     request.Accept = UnitTestsUtil.MimeTextPlain;
+                    request.Accept = UnitTestsUtil.MimeTextPlain;
                     request.SendRequest();
                     responseText = request.GetResponseStreamAsText();
                     Assert.AreEqual("3", responseText);
@@ -2012,7 +2032,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void BasicCustomAndOpenTypes()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2020,16 +2041,16 @@ OData-Version: 4.0
                 {
                     OpenWebDataServiceHelper.PageSizeCustomizer.Value = this.PageSizeCustomizer;
                     CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                        new Dimension("ServiceModel", new ServiceModelData[] { 
-                                                                ServiceModelData.CustomData, 
-                                                                ServiceModelData.CustomRowBased, 
-                                                                ServiceModelData.CustomRowBasedOpenType 
+                        new Dimension("ServiceModel", new ServiceModelData[] {
+                                                                ServiceModelData.CustomData,
+                                                                ServiceModelData.CustomRowBased,
+                                                                ServiceModelData.CustomRowBasedOpenType
                                                                 }),
                         new Dimension("SerializationFormatData", SerializationFormatData.StructuredValues));
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2040,7 +2061,7 @@ OData-Version: 4.0
 
                                 var querycountpairs = new[] { new { query = "/Customers", count = 1, result = "http://host/Customers?$skiptoken=1", idcount = 2 },
                                                               new { query = "/Customers?$orderby=Address/City,ID asc", count = 1 , result = "http://host/Customers?$orderby=Address/City,ID%20asc&$skiptoken='Redmond',1" , idcount = 2},
-                                                              new { query = "/Orders", count = 1 , result = "http://host/Orders?$skiptoken=0" , idcount = 1} 
+                                                              new { query = "/Orders", count = 1 , result = "http://host/Orders?$skiptoken=0" , idcount = 1}
                                                             };
 
                                 foreach (var querycount in querycountpairs)
@@ -2081,7 +2102,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void ExpandEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2090,7 +2112,7 @@ OData-Version: 4.0
                     OpenWebDataServiceHelper.PageSizeCustomizer.Value = this.PageSizeCustomizer;
 
                     CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                        new Dimension("ServiceModel", new ServiceModelData[] { 
+                        new Dimension("ServiceModel", new ServiceModelData[] {
                             ServiceModelData.Northwind }),
                         // Linq to SQL disabled due to problems with null checks and orderbys
                         //, ServiceModelData.SqlNorthwindData }),
@@ -2098,7 +2120,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2107,9 +2129,9 @@ OData-Version: 4.0
                             {
                                 request.DataServiceType = model.ServiceModelType;
 
-                                var querycountpairs = new[] { new { query = "/Employees?$expand=Orders($expand=Customers),Territories&$orderby=EmployeeID add 1", count = 5 },  
+                                var querycountpairs = new[] { new { query = "/Employees?$expand=Orders($expand=Customers),Territories&$orderby=EmployeeID add 1", count = 5 },
                                                               new { query = "/Employees(1)?$expand=Orders($expand=Customers),Territories", count = 2 },
-                                                              new { query = "/Employees?$expand=Orders($expand=Customers),Territories&$orderby=EmployeeID add 1", count = 5 },  
+                                                              new { query = "/Employees?$expand=Orders($expand=Customers),Territories&$orderby=EmployeeID add 1", count = 5 },
                                                               new { query = "/Customers?$expand=Orders,CustomerDemographics&$orderby=substring(CompanyName, 1)", count = 11 },
                                                               new { query = "/Customers?$expand=Orders,CustomerDemographics&$orderby=substring(CompanyName, 1), CustomerID asc&$skiptoken='a maison d''Asie','LAMAI'", count = 10 },
                                                               new { query = "/Customers?$expand=Orders&$top=10", count = 10 }, // 10 orders and no customer 
@@ -2128,9 +2150,9 @@ OData-Version: 4.0
                                         }
                                         else
                                             if (i == 4 || i == 5)
-                                            {
-                                                uri = uri.Replace("CustomerDemographics", "CustomerCustomerDemo");
-                                            }
+                                        {
+                                            uri = uri.Replace("CustomerDemographics", "CustomerCustomerDemo");
+                                        }
                                     }
 
                                     request.Accept = format.MimeTypes[0];
@@ -2162,7 +2184,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void ExpandCustomAndOpenTypes()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2170,8 +2193,8 @@ OData-Version: 4.0
                 {
                     OpenWebDataServiceHelper.PageSizeCustomizer.Value = this.PageSizeCustomizer;
                     CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                        new Dimension("ServiceModel", new ServiceModelData[] { 
-                                                                ServiceModelData.CustomData, 
+                        new Dimension("ServiceModel", new ServiceModelData[] {
+                                                                ServiceModelData.CustomData,
                                                                 ServiceModelData.CustomRowBased,
                                                                 ServiceModelData.CustomRowBasedOpenType,
                                                                 }),
@@ -2179,7 +2202,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2188,7 +2211,7 @@ OData-Version: 4.0
                             {
                                 request.DataServiceType = model.ServiceModelType;
 
-                                var querycountpairs = new[] { 
+                                var querycountpairs = new[] {
                                                               new { query = "/Customers?$expand=Orders&$orderby=nonexistent", count = 3 },
                                                               new { query = "/Customers?$expand=Orders/OrderDetails&$orderby=ID add 1", count = 3 },
                                                               new { query = "/Orders?$expand=OrderDetails&$orderby=DollarAmount", count = 1 }
@@ -2205,13 +2228,13 @@ OData-Version: 4.0
                                     }
                                     else
                                         if (i == 2)
+                                    {
+                                        if (model.ServiceModelType == typeof(CustomRowBasedOpenTypesContext))
                                         {
-                                            if (model.ServiceModelType == typeof(CustomRowBasedOpenTypesContext))
-                                            {
-                                                i++;
-                                                continue;
-                                            }
+                                            i++;
+                                            continue;
                                         }
+                                    }
 
 
                                     request.RequestUriString = uri;
@@ -2254,7 +2277,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void LinksEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2268,7 +2292,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2326,7 +2350,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void LinksCustomAndOpenTypes()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2334,16 +2359,16 @@ OData-Version: 4.0
                 {
                     OpenWebDataServiceHelper.PageSizeCustomizer.Value = this.PageSizeCustomizer;
                     CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                        new Dimension("ServiceModel", new ServiceModelData[] { 
-                                                                ServiceModelData.CustomData, 
-                                                                ServiceModelData.CustomRowBased, 
-                                                                ServiceModelData.CustomRowBasedOpenType 
+                        new Dimension("ServiceModel", new ServiceModelData[] {
+                                                                ServiceModelData.CustomData,
+                                                                ServiceModelData.CustomRowBased,
+                                                                ServiceModelData.CustomRowBasedOpenType
                                                                 }),
                         new Dimension("SerializationFormatData", SerializationFormatData.StructuredValues));
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2385,7 +2410,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod]
+            [Ignore] // Remove Atom
+            // [TestMethod]
             public void QueryRowCountWithSDP()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2434,7 +2460,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void IgnoreMaxIntPageSize()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2448,7 +2475,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2483,7 +2510,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void BasicEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2497,7 +2525,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2508,8 +2536,8 @@ OData-Version: 4.0
 
                                 var querycountpairs = new[] { new { query = "/Customers?$top=20&$skip=5", count = 1, result = "http://host/Customers?$top=10&$skiptoken='COMMI'", idcount = 10 },
                                                               new { query = "/Customers", count = 1, result = "http://host/Customers?$skiptoken='BOTTM'", idcount = 10 },
-                                                              new { query = "/Orders", count = 1, result = "http://host/Orders?$skiptoken=10249", idcount = 2 }, 
-                                                              new { query = "/Orders?$orderby=OrderID add 1 desc, OrderID asc", count = 1, result = "http://host/Orders?$orderby=OrderID%20add%201%20desc,%20OrderID%20asc&$skiptoken=11077,11076", idcount = 2 }, 
+                                                              new { query = "/Orders", count = 1, result = "http://host/Orders?$skiptoken=10249", idcount = 2 },
+                                                              new { query = "/Orders?$orderby=OrderID add 1 desc, OrderID asc", count = 1, result = "http://host/Orders?$orderby=OrderID%20add%201%20desc,%20OrderID%20asc&$skiptoken=11077,11076", idcount = 2 },
                                                             };
 
                                 foreach (var querycount in querycountpairs)
@@ -2550,7 +2578,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void FullTraversalEFAndLinq2Sql()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2564,7 +2593,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2574,9 +2603,9 @@ OData-Version: 4.0
                                 request.DataServiceType = model.ServiceModelType;
 
                                 var querycountpairs = new[] { new { query = "/Customers?$orderby=CompanyName", expectedcount = 91 },
-                                                              new { query = "/Orders(11077)/Order_Details?$orderby=OrderID add 1 desc,OrderID asc,ProductID asc", expectedcount = 25 }, 
-                                                              new { query = "/Invoices?$orderby=Region&$top=30", expectedcount = 30 }, 
-                                                              new { query = "/Invoices?$orderby=Region desc&$top=15", expectedcount = 15 }, 
+                                                              new { query = "/Orders(11077)/Order_Details?$orderby=OrderID add 1 desc,OrderID asc,ProductID asc", expectedcount = 25 },
+                                                              new { query = "/Invoices?$orderby=Region&$top=30", expectedcount = 30 },
+                                                              new { query = "/Invoices?$orderby=Region desc&$top=15", expectedcount = 15 },
                                                             };
 
                                 foreach (var querycount in querycountpairs)
@@ -2640,7 +2669,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void TestQueryResultOrdering()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2650,7 +2680,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = ServiceModelData.Northwind;
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2704,7 +2734,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void TestPagingQueryResultCount()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2718,7 +2749,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2728,8 +2759,8 @@ OData-Version: 4.0
                                 request.DataServiceType = model.ServiceModelType;
 
                                 var querycountpairs = new[] { new { query = "/Alphabetical_list_of_products", expectedcount = 69, lookupNode = "ProductID" },
-                                                              new { query = "/Invoices?$filter=CustomerID eq 'SAVEA'", expectedcount = 116 , lookupNode = "CustomerID" }, 
-                                                              new { query = "/Products_by_Category", expectedcount = 69 , lookupNode = "ProductName" }, 
+                                                              new { query = "/Invoices?$filter=CustomerID eq 'SAVEA'", expectedcount = 116 , lookupNode = "CustomerID" },
+                                                              new { query = "/Products_by_Category", expectedcount = 69 , lookupNode = "ProductName" },
                                                             };
 
                                 foreach (var querycount in querycountpairs)
@@ -2784,7 +2815,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void Linq2SqlBooleanOrdering()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2798,7 +2830,7 @@ OData-Version: 4.0
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             ServiceModelData model = (ServiceModelData)values["ServiceModel"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
@@ -2845,7 +2877,7 @@ OData-Version: 4.0
                                         if (list.Count == 1)
                                         {
                                             uri = GetNextLink(list[0], format, request.ServiceRoot);
-                                            
+
                                             // veify that boolean in $skiptoken is serialized into true or false, not 1 or 0.
                                             Assert.IsTrue(uri.StartsWith(request.BaseUri + "Products?$orderby=Discontinued,ProductID%20asc&$skiptoken=false", StringComparison.Ordinal)
                                                 || uri.StartsWith(request.BaseUri + "Products?$orderby=Discontinued,ProductID%20asc&$skiptoken=true", StringComparison.Ordinal));
@@ -2867,7 +2899,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void VersioningUsingEF()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2916,7 +2949,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod]
+            [Ignore] // Remove Atom
+            // [TestMethod]
             public void VerifyServiceDocumentEndPoint()
             {
                 string[] entitySetNames = new string[] { "Customers", "EmptySet", "Orders", "Regions", "Products", "OrderDetails" };
@@ -2988,7 +3022,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void ServiceOperationsCustom()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -2996,10 +3031,10 @@ OData-Version: 4.0
                 {
                     OpenWebDataServiceHelper.PageSizeCustomizer.Value = this.PageSizeCustomizer;
 
-                    var queryresults = new[] { 
-                        new { query = "/CustomersByCity?city='Redmond'", result = "http://host/CustomersByCity?city='Redmond'&$skiptoken=1", nextlinkcount = 1 }, 
-                        new { query = "/CustomersByCity(1)/Orders?city='Redmond'", result = "http://host/CustomersByCity(1)/Orders?city='Redmond'&$skiptoken=1" , nextlinkcount = 1}, 
-                        new { query = "/CustomersByCity()?city='Redmond'&$top=3&$expand=Orders", result = "http://host/CustomersByCity?city='Redmond'&$expand=Orders&$top=1&$skiptoken=1" , nextlinkcount = 3}, 
+                    var queryresults = new[] {
+                        new { query = "/CustomersByCity?city='Redmond'", result = "http://host/CustomersByCity?city='Redmond'&$skiptoken=1", nextlinkcount = 1 },
+                        new { query = "/CustomersByCity(1)/Orders?city='Redmond'", result = "http://host/CustomersByCity(1)/Orders?city='Redmond'&$skiptoken=1" , nextlinkcount = 1},
+                        new { query = "/CustomersByCity()?city='Redmond'&$top=3&$expand=Orders", result = "http://host/CustomersByCity?city='Redmond'&$expand=Orders&$top=1&$skiptoken=1" , nextlinkcount = 3},
                         };
 
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -3023,7 +3058,8 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void VersioningWithPost()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -3031,9 +3067,9 @@ OData-Version: 4.0
                 {
                     OpenWebDataServiceHelper.PageSizeCustomizer.Value = this.PageSizeCustomizer;
 
-                    var queryresults = new[] { 
-                        new { query = "/Customers", hascontent = true, nextlinkcount = 0 }, 
-                        new { query = "/GetCustomersByID()?id=1&$expand=Orders", hascontent = false, nextlinkcount = 1 }, 
+                    var queryresults = new[] {
+                        new { query = "/Customers", hascontent = true, nextlinkcount = 0 },
+                        new { query = "/GetCustomersByID()?id=1&$expand=Orders", hascontent = false, nextlinkcount = 1 },
                         };
 
                     string postedContent = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
@@ -3121,12 +3157,13 @@ OData-Version: 4.0
                 #endregion
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void InvalidExpandQuery()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("DataSourceType", new Type[] { 
-                        typeof(OldExpandCustomDataContext), 
+                    new Dimension("DataSourceType", new Type[] {
+                        typeof(OldExpandCustomDataContext),
                         typeof(OldExpandCustomObjectContext) }));
 
                 using (TestUtil.MetadataCacheCleaner())
@@ -3150,13 +3187,14 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void SkipTokenAppliedToSetsWithoutPageSize()
             {
                 // regression test: Server ignores $skiptoken in query string if preceded by $orderby option and the set doesnt have page size limits.
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("DataSourceType", new Type[] { 
-                        typeof(OldExpandCustomDataContext), 
+                    new Dimension("DataSourceType", new Type[] {
+                        typeof(OldExpandCustomDataContext),
                         typeof(OldExpandCustomObjectContext) }));
 
                 using (TestUtil.MetadataCacheCleaner())
@@ -3183,18 +3221,19 @@ OData-Version: 4.0
                 }
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void CustomPagingWithExpand()
             {
                 CustomRowBasedContext.ClearData();
 
-                var querycountpairs = new[] { 
+                var querycountpairs = new[] {
                                 new { query = "/Customers?$select=ID,Orders", count = 3 /* 3 customers with no orders */, maxcount = 1 },
                                 new { query = "/Customers(0)?$select=ID,Orders", count = 1 /* 1 customers with no orders */, maxcount = 1 },
                                 new { query = "/Customers(0)?$expand=Orders", count = 1 * (2 + 1) /* 1 customer with 2 orders */, maxcount = 1 },
-                                new { query = "/Customers(0)?$expand=Orders&?select=ID,Orders/ID", count = 1 * (2 + 1) /* 1 customer with 2 orders. */, maxcount = 1 }, 
-                                new { query = "/Customers?$expand=Orders", count = 3 * (2 + 1) /* 3 customers with 2 orders each. */, maxcount = 2 }, 
-                                new { query = "/Customers?$expand=Orders&?select=ID,Orders/ID", count = 3 * (2 + 1) /* 3 customers with 2 orders each. */, maxcount = 2 }, 
+                                new { query = "/Customers(0)?$expand=Orders&?select=ID,Orders/ID", count = 1 * (2 + 1) /* 1 customer with 2 orders. */, maxcount = 1 },
+                                new { query = "/Customers?$expand=Orders", count = 3 * (2 + 1) /* 3 customers with 2 orders each. */, maxcount = 2 },
+                                new { query = "/Customers?$expand=Orders&?select=ID,Orders/ID", count = 3 * (2 + 1) /* 3 customers with 2 orders each. */, maxcount = 2 },
                                 };
                 try
                 {
@@ -3277,7 +3316,8 @@ OData-Version: 4.0
             /// <summary>
             /// Server driven paging doesn't work when the skip token value should contain NULL
             /// </summary>
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void PagingWithNullSkipTokens()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -3287,19 +3327,19 @@ OData-Version: 4.0
                     OpenWebDataServiceHelper.PageSizeCustomizer.Value = this.PageSizeCustomizer;
 
                     CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                        new Dimension("ContextType", new Type[] { 
-                            typeof(DataTypesContext.SqlDataTypesContext), 
+                        new Dimension("ContextType", new Type[] {
+                            typeof(DataTypesContext.SqlDataTypesContext),
                             typeof(DataTypesContext.EdmDataTypesContext) }),
                         new Dimension("SerializationFormatData", SerializationFormatData.StructuredValues));
 
                     TestUtil.RunCombinatorialEngineFail(
                         engine,
-                        delegate(Hashtable values)
+                        delegate (Hashtable values)
                         {
                             Type contextType = (Type)values["ContextType"];
                             SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
 
-                            var querycountpairs = new[] { 
+                            var querycountpairs = new[] {
                                 new { query = "/DataTypes?$orderby=ID", expectedcount = 3 },
                                 new { query = "/DataTypes?$orderby=ID desc", expectedcount = 3 },
                                 new { query = "/DataTypes?$orderby=String", expectedcount = 3 },
@@ -3376,7 +3416,8 @@ OData-Version: 4.0
             /// <summary>
             /// Regression test: Custom IDataServicePagingProvider does not update the $top value in the next link uri correctly
             /// </summary>
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void CustomPagingWithTopQueryParameter()
             {
                 CustomRowBasedContext.ClearData();
@@ -3515,17 +3556,17 @@ OData-Version: 4.0
             };
 
             public static GuidData[] Guids = new GuidData[] {
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
-            new GuidData { ID = System.Guid.NewGuid() }, 
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
+            new GuidData { ID = System.Guid.NewGuid() },
             };
 
             public static DoubleData[] Doubles = new DoubleData[] {
@@ -3574,12 +3615,13 @@ OData-Version: 4.0
                     }
                 }
             }
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void CustomPagingWithDifferentIdType()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("DataSourceType", new Type[] { 
-                        typeof(StringContext), 
+                    new Dimension("DataSourceType", new Type[] {
+                        typeof(StringContext),
                         typeof(GuidContext),
                         typeof(DoubleContext)})
                         );
@@ -3635,13 +3677,13 @@ OData-Version: 4.0
                             }
                             else
                                 if (dataSourceType == typeof(GuidContext))
-                                {
-                                    expected = Guids.OrderBy(s => s.ID).Select(s => s.ID.ToString());
-                                }
-                                else
-                                {
-                                    expected = Doubles.OrderBy(d => d.ID).Select(d => XmlConvert.ToString(d.ID));
-                                }
+                            {
+                                expected = Guids.OrderBy(s => s.ID).Select(s => s.ID.ToString());
+                            }
+                            else
+                            {
+                                expected = Doubles.OrderBy(d => d.ID).Select(d => XmlConvert.ToString(d.ID));
+                            }
 
                             Assert.IsTrue(CompareEnums(actual, expected));
                         }
@@ -3704,20 +3746,20 @@ OData-Version: 4.0
                         MetadataKeyOrderEnabled = true
                     },
                     new ResourceSetMetadataKeyOrderEnabler{  // Set custom state to dictionary with true value (and something else) -> true
-                        EnableOnResourceSet = (rs) => { var d = new Dictionary<string, object>(); 
+                        EnableOnResourceSet = (rs) => { var d = new Dictionary<string, object>();
                             d["UseMetadataKeyOrder"] = true; d["MyCustomValue"] = 42;
                             rs.CustomState = d; },
                         MetadataKeyOrderEnabled = true
                     },
                     new ResourceSetMetadataKeyOrderEnabler{  // Set custom state to dictionary with true value and set the public property to false explicitely -> true (QFE way wins)
-                        EnableOnResourceSet = (rs) => { var d = new Dictionary<string, object>(); 
-                            d["UseMetadataKeyOrder"] = true; rs.CustomState = d; 
+                        EnableOnResourceSet = (rs) => { var d = new Dictionary<string, object>();
+                            d["UseMetadataKeyOrder"] = true; rs.CustomState = d;
                             rs.UseMetadataKeyOrder = false; },
                         MetadataKeyOrderEnabled = true
                     },
                     new ResourceSetMetadataKeyOrderEnabler{  // Set custom state to dictionary with false value and public property to true -> true (the dictionary is ignored)
-                        EnableOnResourceSet = (rs) => { var d = new Dictionary<string, object>(); 
-                            d["UseMetadataKeyOrder"] = false; rs.CustomState = d; 
+                        EnableOnResourceSet = (rs) => { var d = new Dictionary<string, object>();
+                            d["UseMetadataKeyOrder"] = false; rs.CustomState = d;
                             rs.UseMetadataKeyOrder = true; },
                         MetadataKeyOrderEnabled = true
                     },
@@ -3787,8 +3829,8 @@ OData-Version: 4.0
                 using (CompoundKeyContext.CompoundKeyContext.CreateTableAndPopulateData())
                 {
                     TestUtil.RunCombinations(
-                        new Type[] { 
-                            typeof(CompoundKeyContext.EdmCompoundKeyContext.EdmCompoundKeyContext), 
+                        new Type[] {
+                            typeof(CompoundKeyContext.EdmCompoundKeyContext.EdmCompoundKeyContext),
                             typeof(CompoundKeyContext.ReflectionCompoundKeyContext.ReflectionCompoundKeyContext) },
                         UnitTestsUtil.BooleanValues,
                         UnitTestsUtil.BooleanValues,

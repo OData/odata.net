@@ -7,15 +7,12 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
+namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
 {
     public class ApplyBinderTests
     {
@@ -27,7 +24,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
 
         public ApplyBinderTests()
         {
-            var implicitRangeVariable = new EntityRangeVariable(ExpressionConstants.It,
+            var implicitRangeVariable = new ResourceRangeVariable(ExpressionConstants.It,
                 HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
             this._bindingState = new BindingState(_configuration) { ImplicitRangeVariable = implicitRangeVariable };
             this._bindingState.RangeVariables.Push(
@@ -37,7 +34,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWithNullShouldThrow()
         {
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             Action bind = () => binder.BindApply(null);
             bind.ShouldThrow<ArgumentNullException>();
         }
@@ -47,7 +44,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         {
             var tokens = _parser.ParseApply("aggregate(UnitPrice with sum as TotalPrice)");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             var actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
@@ -66,6 +63,32 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
             VerifyIsFakeSingleValueNode(statement.Expression);
             statement.Method.Should().Be(AggregationMethod.Sum);
             statement.Alias.Should().Be("TotalPrice");
+        }
+
+        [Fact]
+        public void BindApplyWithCountInAggregateShouldReturnApplyClause()
+        {
+            var tokens = _parser.ParseApply("aggregate($count as TotalCount)");
+
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            var actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            var transformations = actual.Transformations.ToList();
+            var aggregate = transformations[0] as AggregateTransformationNode;
+
+            aggregate.Should().NotBeNull();
+            aggregate.Kind.Should().Be(TransformationNodeKind.Aggregate);
+            aggregate.Expressions.Should().NotBeNull();
+            aggregate.Expressions.Should().HaveCount(1);
+
+            var statements = aggregate.Expressions.ToList();
+            var statement = statements[0];
+
+            statement.Method.Should().Be(AggregationMethod.VirtualPropertyCount);
+            statement.Alias.Should().Be("TotalCount");
         }
 
         [Fact]
@@ -101,7 +124,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         {
             var tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             var actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
@@ -161,7 +184,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         {
             var tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice), aggregate(UnitPrice with sum as TotalPrice))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             var actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
@@ -231,7 +254,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         public static void VerifyIsFakeSingleValueNode(QueryNode node)
         {
             node.Should().NotBeNull();
-            node.Should().BeSameAs(FakeBindMethods.FakeSingleValueProperty);
+            node.Should().BeSameAs(FakeBindMethods.FakeSingleComplexProperty);
         }
     }
 }

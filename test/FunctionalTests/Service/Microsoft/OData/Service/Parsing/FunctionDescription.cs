@@ -353,7 +353,7 @@ namespace Microsoft.OData.Service.Parsing
             #region Spatial Functions
             // geo.distance()
             var geoDistanceSignatures = new List<FunctionDescription>()
-            { 
+            {
                 CreateFunctionDescription(typeof(GeographyOperationsExtensions), false /* instance */, true /* method */, "Distance", typeof(GeographyPoint), typeof(GeographyPoint)),
                 CreateFunctionDescription(typeof(GeometryOperationsExtensions), false /* instance */, true /* method */, "Distance", typeof(GeometryPoint), typeof(GeometryPoint)),
             };
@@ -364,14 +364,11 @@ namespace Microsoft.OData.Service.Parsing
                 geoDistanceSignature.RequiresNullPropagation = false;
             }
 
-#if !INTERNAL_DROP && !EFRTM
-            geoDistanceSignatures.AddRange(ObjectContextSpatialUtil.GeoDistanceSignatures);
-#endif
             result.Add("geo.distance", geoDistanceSignatures.ToArray());
 
             // geo.length()
             var geoLengthSignatures = new List<FunctionDescription>()
-            { 
+            {
                 CreateFunctionDescription(typeof(GeographyOperationsExtensions), false /* instance */, true /* method */, "Length", typeof(GeographyLineString)),
                 CreateFunctionDescription(typeof(GeometryOperationsExtensions), false /* instance */, true /* method */, "Length", typeof(GeometryLineString)),
             };
@@ -386,7 +383,7 @@ namespace Microsoft.OData.Service.Parsing
 
             // geo.intersects()
             var geoIntersectsSignatures = new List<FunctionDescription>()
-            { 
+            {
                 CreateFunctionDescription(typeof(GeographyOperationsExtensions), false /* instance */, true /* method */, "Intersects", typeof(GeographyPoint), typeof(GeographyPolygon)),
                 CreateFunctionDescription(typeof(GeometryOperationsExtensions), false /* instance */, true /* method */, "Intersects", typeof(GeometryPoint), typeof(GeometryPolygon)),
             };

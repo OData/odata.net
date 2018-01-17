@@ -19,6 +19,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [TestClass]
     public class DataServiceContextTests
     {
@@ -28,13 +29,6 @@ namespace AstoriaUnitTests.Tests
         private DataServiceContext context;
         private List<IDisposable> cleanups;
 
-        internal const string FeedStart = AtomParserTests.FeedStart;
-
-        internal static Dictionary<string, string> EmptyHeaders
-        {
-            [DebuggerStepThrough]
-            get { return AtomParserTests.EmptyHeaders; }
-        }
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -54,8 +48,8 @@ namespace AstoriaUnitTests.Tests
             OpenWebDataServiceHelper.PageSizeCustomizer.Value = (config, type) => { config.SetEntitySetPageSize("Orders", 1); };
             this.callbackFlag = false;
             this.context = new DataServiceContext(serviceRoot);
-            this.context.EnableAtom = true;
-            this.context.Format.UseAtom();
+            //this.context.EnableAtom = true;
+            //this.context.Format.UseAtom();
         }
 
         [TestCleanup]
@@ -80,7 +74,8 @@ namespace AstoriaUnitTests.Tests
             TestUtil.ClearConfiguration();
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void BeginLoadPropertyTest()
         {
             // Remove the sleeps to count reliably on callback being called
@@ -90,9 +85,9 @@ namespace AstoriaUnitTests.Tests
 
                 var q = this.context.CreateQuery<Customer>("Customers");
                 var customer = q.First();
-                
+
                 Assert.IsNotNull(customer, "customer");
-                
+
                 AssertEntityCount(1, "One customer");
                 AssertLinkCount(0, "No links");
 
@@ -156,7 +151,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void LoadPropertyRemoveElementUnChangedSource()
         {
             MergeOption original = this.context.MergeOption;
@@ -254,7 +250,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void LoadPropertyRemoveElementDeletedSource()
         {
             MergeOption original = this.context.MergeOption;
@@ -319,7 +316,8 @@ namespace AstoriaUnitTests.Tests
             public NarrowCustomer Customer { get; set; }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void ExerciseApplyItemsToCollectionViaMergeLists()
         {
             MergeOption original = this.context.MergeOption;
@@ -340,15 +338,15 @@ namespace AstoriaUnitTests.Tests
 
                         var customers = this.context.CreateQuery<NarrowCustomer>("Customers")
                             .Where(c => c.ID == 0)
-                            .Select(c => new NarrowCustomer() {ID= c.ID, Orders = c.Orders.Select(o => new NarrowOrder() { DollarAmount = o.DollarAmount }).ToList() });
-                            
+                            .Select(c => new NarrowCustomer() { ID = c.ID, Orders = c.Orders.Select(o => new NarrowOrder() { DollarAmount = o.DollarAmount }).ToList() });
+
                         foreach (var dummy in customers)
                         {
                         }
 
                         var customers2 = this.context.CreateQuery<NarrowCustomer>("Customers")
                             .Where(c => c.ID == 0)
-                            .Select(c => new NarrowCustomer() {ID=c.ID, Orders = c.Orders.Select(o => new NarrowOrder() { DollarAmount = o.DollarAmount }).ToList() });
+                            .Select(c => new NarrowCustomer() { ID = c.ID, Orders = c.Orders.Select(o => new NarrowOrder() { DollarAmount = o.DollarAmount }).ToList() });
 
                         foreach (var dummy in customers2)
                         {
@@ -368,7 +366,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void WritingEntityWithControlChars()
         {
             this.context.ResolveName = t => typeof(Customer).FullName;
@@ -385,7 +384,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        public  static void ClearContext(DataServiceContext context)
+        public static void ClearContext(DataServiceContext context)
         {
             Debug.Assert(context != null, "context != null");
             foreach (var link in context.Links)
@@ -408,14 +407,45 @@ namespace AstoriaUnitTests.Tests
 
         internal void AssertEntityCount(int expectedCount, string description)
         {
-            ProjectionTests.AssertEntityCountForContext(expectedCount, description, this.context);
+            AssertEntityCountForContext(expectedCount, description, this.context);
         }
 
         internal void AssertLinkCount(int expectedCount, string description)
         {
-            ProjectionTests.AssertLinkCountForContext(expectedCount, description, this.context);
+            AssertLinkCountForContext(expectedCount, description, this.context);
         }
 
+        internal static void AssertLinkCountForContext(int expectedCount, string description, DataServiceContext context)
+        {
+            int actualCount = context.Links.Count;
+            if (expectedCount != actualCount)
+            {
+                string message = "Expected " + expectedCount + " link counts for " + description +
+                    " but found " + actualCount;
+                foreach (var l in context.Links)
+                {
+                    message += "\r\n" + l.Source + "." + l.SourceProperty + " = " + l.Target + " [" + l.State + "]";
+                }
+
+                Assert.Fail(message);
+            }
+        }
+
+        internal static void AssertEntityCountForContext(int expectedCount, string description, DataServiceContext context)
+        {
+            int actualCount = context.Entities.Count;
+            if (expectedCount != actualCount)
+            {
+                string message = "Expected " + expectedCount + " entity counts for " + description +
+                    " but found " + actualCount;
+                foreach (var e in context.Entities)
+                {
+                    message += "\r\n" + e.Entity.ToString() + " [" + e.State + "]";
+                }
+
+                Assert.Fail(message);
+            }
+        }
         #endregion Assert helpers.
     }
 }

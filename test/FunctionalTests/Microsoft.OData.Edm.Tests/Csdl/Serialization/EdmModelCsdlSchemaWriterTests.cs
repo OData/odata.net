@@ -10,9 +10,7 @@ using System.Xml;
 using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.Serialization;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Expressions;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
@@ -73,7 +71,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         [Fact]
         public void ValidateEntitySetAtttributeCorrectlyWritesOutEntitySet()
         {
-            EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Customers", new EdmEntityType("DefaultNamespace", "Customer"))));
+            EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Customers"));
             TestWriteActionImportElementHeaderMethod(actionImport, @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Customers""");
         }
 

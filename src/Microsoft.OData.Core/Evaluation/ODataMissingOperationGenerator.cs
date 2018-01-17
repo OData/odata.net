@@ -4,27 +4,27 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
 
     /// <summary>
     /// Generates operations which were omitted by the service because they fully match conventions/templates and are always available.
     /// </summary>
     internal sealed class ODataMissingOperationGenerator
     {
-        /// <summary>The current entry metadata context.</summary>
+        /// <summary>The current resource metadata context.</summary>
         private readonly IODataMetadataContext metadataContext;
 
-        /// <summary>The metadata context of the entry to generate the missing operations for.</summary>
-        private readonly IODataEntryMetadataContext entryMetadataContext;
+        /// <summary>The metadata context of the resource to generate the missing operations for.</summary>
+        private readonly IODataResourceMetadataContext resourceMetadataContext;
 
         /// <summary>The list of computed actions.</summary>
         private List<ODataAction> computedActions;
@@ -35,14 +35,14 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataMissingOperationGenerator"/> class.
         /// </summary>
-        /// <param name="entryMetadataContext">The metadata context of the entry to generate the missing operations for.</param>
-        /// <param name="metadataContext">The current entry metadata context.</param>
-        internal ODataMissingOperationGenerator(IODataEntryMetadataContext entryMetadataContext, IODataMetadataContext metadataContext)
+        /// <param name="resourceMetadataContext">The metadata context of the resource to generate the missing operations for.</param>
+        /// <param name="metadataContext">The current resource metadata context.</param>
+        internal ODataMissingOperationGenerator(IODataResourceMetadataContext resourceMetadataContext, IODataMetadataContext metadataContext)
         {
-            Debug.Assert(entryMetadataContext != null, "entryMetadataCotext != null");
+            Debug.Assert(resourceMetadataContext != null, "resourceMetadataCotext != null");
             Debug.Assert(metadataContext != null, "metadataContext != null");
 
-            this.entryMetadataContext = entryMetadataContext;
+            this.resourceMetadataContext = resourceMetadataContext;
             this.metadataContext = metadataContext;
         }
 
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The computed missing Actions.</returns>
         internal IEnumerable<ODataAction> GetComputedActions()
         {
-            this.ComputeMissingOperationsToEntry();
+            this.ComputeMissingOperationsToResource();
             return this.computedActions;
         }
 
@@ -62,25 +62,25 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The computed missing Functions.</returns>
         internal IEnumerable<ODataFunction> GetComputedFunctions()
         {
-            this.ComputeMissingOperationsToEntry();
+            this.ComputeMissingOperationsToResource();
             return this.computedFunctions;
         }
 
         /// <summary>
-        /// Returns a hash set of operation imports (actions and functions) in the given entry.
+        /// Returns a hash set of operation imports (actions and functions) in the given resource.
         /// </summary>
-        /// <param name="entry">The entry in question.</param>
+        /// <param name="resource">The resource in question.</param>
         /// <param name="model">The edm model to resolve operation imports.</param>
         /// <param name="metadataDocumentUri">The metadata document uri.</param>
-        /// <returns>The hash set of operation imports (actions and functions) in the given entry.</returns>
-        private static HashSet<IEdmOperation> GetOperationsInEntry(ODataEntry entry, IEdmModel model, Uri metadataDocumentUri)
+        /// <returns>The hash set of operation imports (actions and functions) in the given resource.</returns>
+        private static HashSet<IEdmOperation> GetOperationsInEntry(ODataResourceBase resource, IEdmModel model, Uri metadataDocumentUri)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
             Debug.Assert(model != null, "model != null");
             Debug.Assert(metadataDocumentUri != null && metadataDocumentUri.IsAbsoluteUri, "metadataDocumentUri != null && metadataDocumentUri.IsAbsoluteUri");
 
             HashSet<IEdmOperation> edmOperationImportsInEntry = new HashSet<IEdmOperation>(EqualityComparer<IEdmOperation>.Default);
-            IEnumerable<ODataOperation> operations = ODataUtilsInternal.ConcatEnumerables((IEnumerable<ODataOperation>)entry.NonComputedActions, (IEnumerable<ODataOperation>)entry.NonComputedFunctions);
+            IEnumerable<ODataOperation> operations = ODataUtilsInternal.ConcatEnumerables((IEnumerable<ODataOperation>)resource.NonComputedActions, (IEnumerable<ODataOperation>)resource.NonComputedFunctions);
             if (operations != null)
             {
                 foreach (ODataOperation operation in operations)
@@ -110,12 +110,11 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// Computes the operations that are missing from the payload but should be added by conventions onto the entry.
+        /// Computes the operations that are missing from the payload but should be added by conventions onto the resource.
         /// </summary>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Parameter type is needed to get binding type.")]
-        private void ComputeMissingOperationsToEntry()
+        private void ComputeMissingOperationsToResource()
         {
-            Debug.Assert(this.entryMetadataContext != null, "this.entryMetadataContext != null");
+            Debug.Assert(this.resourceMetadataContext != null, "this.resourceMetadataContext != null");
             Debug.Assert(this.metadataContext != null, "this.metadataContext != null");
 
             if (this.computedActions == null)
@@ -124,8 +123,8 @@ namespace Microsoft.OData.Core.Evaluation
 
                 this.computedActions = new List<ODataAction>();
                 this.computedFunctions = new List<ODataFunction>();
-                HashSet<IEdmOperation> edmOperations = GetOperationsInEntry(this.entryMetadataContext.Entry, this.metadataContext.Model, this.metadataContext.MetadataDocumentUri);
-                foreach (IEdmOperation bindableOperation in this.entryMetadataContext.SelectedBindableOperations)
+                HashSet<IEdmOperation> edmOperations = GetOperationsInEntry(this.resourceMetadataContext.Resource, this.metadataContext.Model, this.metadataContext.MetadataDocumentUri);
+                foreach (IEdmOperation bindableOperation in this.resourceMetadataContext.SelectedBindableOperations)
                 {
                     // if this operation appears in the payload, skip it.
                     if (edmOperations.Contains(bindableOperation))
@@ -134,15 +133,15 @@ namespace Microsoft.OData.Core.Evaluation
                     }
 
                     string metadataReferencePropertyName = ODataConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetMetadataReferenceName(this.metadataContext.Model, bindableOperation);
-                    
+
                     bool isAction;
                     ODataOperation operation = ODataJsonLightUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, bindableOperation, out isAction);
-                    if (bindableOperation.Parameters.Any() && this.entryMetadataContext.ActualEntityTypeName != bindableOperation.Parameters.First().Type.FullName())
+                    if (bindableOperation.Parameters.Any() && this.resourceMetadataContext.ActualResourceTypeName != bindableOperation.Parameters.First().Type.FullName())
                     {
                         operation.BindingParameterTypeName = bindableOperation.Parameters.First().Type.FullName();
                     }
 
-                    operation.SetMetadataBuilder(this.entryMetadataContext.Entry.MetadataBuilder, this.metadataContext.MetadataDocumentUri);
+                    operation.SetMetadataBuilder(this.resourceMetadataContext.Resource.MetadataBuilder, this.metadataContext.MetadataDocumentUri);
                     if (isAction)
                     {
                         this.computedActions.Add((ODataAction)operation);

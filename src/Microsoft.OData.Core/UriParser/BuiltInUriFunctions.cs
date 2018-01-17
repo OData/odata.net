@@ -4,19 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
+
     #endregion Namespaces
 
     /// <summary>
@@ -53,7 +49,7 @@ namespace Microsoft.OData.Core.UriParser
             FunctionSignatureWithReturnType[] signatures = new FunctionSignatureWithReturnType[]
             {
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetDouble(true), 
+                    EdmCoreModel.Instance.GetDouble(true),
                     EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true),
                     EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true)),
                 new FunctionSignatureWithReturnType(
@@ -97,7 +93,7 @@ namespace Microsoft.OData.Core.UriParser
                     EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryLineString, true)),
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetDouble(true),
-                    EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyLineString, true)), 
+                    EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyLineString, true)),
             };
             functions.Add("geo.length", signatures);
         }
@@ -172,47 +168,47 @@ namespace Microsoft.OData.Core.UriParser
                 EdmCoreModel.Instance.GetString(true));
             functions.Add("trim", new FunctionSignatureWithReturnType[] { signature });
 
-            signatures = new FunctionSignatureWithReturnType[] 
+            signatures = new FunctionSignatureWithReturnType[]
             {
                 // string substring(string, int)
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetString(true),
-                    EdmCoreModel.Instance.GetInt32(false)), 
+                    EdmCoreModel.Instance.GetInt32(false)),
 
                 // string substring(string, int?)
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetString(true),
-                    EdmCoreModel.Instance.GetInt32(true)), 
+                    EdmCoreModel.Instance.GetInt32(true)),
 
                 // string substring(string, int, int)
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetInt32(false),
-                    EdmCoreModel.Instance.GetInt32(false)), 
+                    EdmCoreModel.Instance.GetInt32(false)),
 
                 // string substring(string, int?, int)
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetInt32(true),
-                    EdmCoreModel.Instance.GetInt32(false)), 
+                    EdmCoreModel.Instance.GetInt32(false)),
 
                 // string substring(string, int, int?)
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetInt32(false),
-                    EdmCoreModel.Instance.GetInt32(true)), 
+                    EdmCoreModel.Instance.GetInt32(true)),
 
                 // string substring(string, int?, int?)
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetString(true),
                     EdmCoreModel.Instance.GetInt32(true),
-                    EdmCoreModel.Instance.GetInt32(true)), 
+                    EdmCoreModel.Instance.GetInt32(true)),
             };
             functions.Add("substring", signatures);
 
@@ -451,10 +447,10 @@ namespace Microsoft.OData.Core.UriParser
             return new[]
             {
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetInt32(false), 
-                    EdmCoreModel.Instance.GetDate(false)), 
+                    EdmCoreModel.Instance.GetInt32(false),
+                    EdmCoreModel.Instance.GetDate(false)),
                  new FunctionSignatureWithReturnType(
-                     EdmCoreModel.Instance.GetInt32(false), 
+                     EdmCoreModel.Instance.GetInt32(false),
                      EdmCoreModel.Instance.GetDate(true)),
             };
         }
@@ -468,10 +464,10 @@ namespace Microsoft.OData.Core.UriParser
             return new[]
             {
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetInt32(false), 
+                    EdmCoreModel.Instance.GetInt32(false),
                     EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false)),
                  new FunctionSignatureWithReturnType(
-                     EdmCoreModel.Instance.GetInt32(false), 
+                     EdmCoreModel.Instance.GetInt32(false),
                      EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true)),
             };
         }
@@ -485,10 +481,10 @@ namespace Microsoft.OData.Core.UriParser
             return new[]
             {
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetDecimal(false), 
+                    EdmCoreModel.Instance.GetDecimal(false),
                     EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false)),
                  new FunctionSignatureWithReturnType(
-                     EdmCoreModel.Instance.GetDecimal(false), 
+                     EdmCoreModel.Instance.GetDecimal(false),
                      EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true)),
             };
         }

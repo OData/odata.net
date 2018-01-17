@@ -6,6 +6,9 @@
 
 namespace EdmLibTests.FunctionalTests
 {
+    #if SILVERLIGHT
+    using Microsoft.Silverlight.Testing;
+#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -16,20 +19,11 @@ namespace EdmLibTests.FunctionalTests
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    
+
     [TestClass]
     public class EvaluationTests : EdmLibTestCaseBase
     {
@@ -159,8 +153,8 @@ namespace EdmLibTests.FunctionalTests
 </Schema>";
 
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(baseModelCsdl)) }, out this.baseModel, out errors);
-            CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(builtinFunctionsCsdl)) }, out this.builtInFunctionsModel, out errors);
+            SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(baseModelCsdl)) }, out this.baseModel, out errors);
+            SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(builtinFunctionsCsdl)) }, out this.builtInFunctionsModel, out errors);
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
             IEdmEntityType address = (IEdmEntityType)this.baseModel.FindType("foo.Address");
@@ -203,11 +197,11 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
-            IEdmValueTerm distantAge = this.baseModel.FindValueTerm("foo.DistantAge");
+            IEdmTerm distantAge = this.baseModel.FindTerm("foo.DistantAge");
 
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
@@ -329,11 +323,11 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
-            IEdmValueTerm distantAge = this.baseModel.FindValueTerm("foo.DistantAge");
+            IEdmTerm distantAge = this.baseModel.FindTerm("foo.DistantAge");
 
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
@@ -384,7 +378,7 @@ namespace EdmLibTests.FunctionalTests
 
             Action<IEdmModel> validateAnnotationQualifier = m =>
             {
-                var note = m.FindValueTerm("foo.Note");
+                var note = m.FindTerm("foo.Note");
 
                 IEdmValue noteValue = m.GetTermValue(this.personValue, note, qualifier3, expressionEvaluator);
                 Assert.AreEqual(99, ((IEdmIntegerValue)noteValue).Value, "Term annotation value");
@@ -437,7 +431,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -452,7 +446,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmStructuredValue thingValue = new EdmStructuredValue(new EdmEntityTypeReference(derivedThing, false), thingProperties);
 
             IEdmEntityType anotherThing = (IEdmEntityType)this.baseModel.FindType("foo.AnotherThing");
-            IEdmValueTerm distantAge = this.baseModel.FindValueTerm("foo.DistantAge");
+            IEdmTerm distantAge = this.baseModel.FindTerm("foo.DistantAge");
 
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
@@ -500,14 +494,14 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
 
             IEdmEntityType coolPerson = (IEdmEntityType)this.baseModel.FindType("foo.CoolPerson");
-            IEdmValueTerm coolPersonTerm = this.baseModel.FindValueTerm("foo.CoolPersonTerm");
+            IEdmTerm coolPersonTerm = this.baseModel.FindTerm("foo.CoolPersonTerm");
             IEdmProperty coolStreet = coolPerson.FindProperty("Street");
 
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
@@ -575,14 +569,14 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
 
             IEdmEntityType coolPerson = (IEdmEntityType)this.baseModel.FindType("foo.CoolPerson");
-            IEdmValueTerm coolPersonTerm = this.baseModel.FindValueTerm("foo.CoolPersonTerm");
+            IEdmTerm coolPersonTerm = this.baseModel.FindTerm("foo.CoolPersonTerm");
             IEdmProperty coolStreet = coolPerson.FindProperty("Street");
 
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions, MagicEvaluator);
@@ -618,14 +612,14 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] {  this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] {  this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
 
-            IEdmValueTerm distantAge = this.baseModel.FindValueTerm("foo.DistantAge");
-            IEdmValueTerm newAge = this.baseModel.FindValueTerm("foo.NewAge");
+            IEdmTerm distantAge = this.baseModel.FindTerm("foo.DistantAge");
+            IEdmTerm newAge = this.baseModel.FindTerm("foo.NewAge");
 
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
@@ -806,27 +800,27 @@ namespace EdmLibTests.FunctionalTests
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
 
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Punning0"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool1"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool2"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool3"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool4"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool5"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool6"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool7"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool8"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool9"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.PunningBool11"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Punning0"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool1"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool2"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool3"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool4"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool5"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool6"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool7"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool8"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool9"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(false, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.PunningBool11"), clrEvaluator), "Term annotation value");
           
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool0"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool1"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool2"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool3"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool4"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool6"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool7"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool8"), clrEvaluator), "Term annotation value");
-            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.ClearBool11"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool0"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool1"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool2"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool3"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool4"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool6"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool7"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool8"), clrEvaluator), "Term annotation value");
+            Assert.AreEqual(true, annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.ClearBool11"), clrEvaluator), "Term annotation value");
         }
 
         [TestMethod]
@@ -909,17 +903,17 @@ namespace EdmLibTests.FunctionalTests
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
 
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Punning0"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Punning0"), clrEvaluator));
 
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear0"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear1"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear2"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear3"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear4"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear6"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear7"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear8"), clrEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindValueTerm("foo.Clear11"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear0"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear1"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear2"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear3"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear4"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear6"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear7"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear8"), clrEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue<bool>(this.personValue, this.baseModel.FindTerm("foo.Clear11"), clrEvaluator));
         }
 
         [TestMethod]
@@ -1109,13 +1103,13 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
 
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning0"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning1"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning2"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning3"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning4"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning0"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning1"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning2"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning3"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning4"), expressionEvaluator));
             
-            IEdmValue personPunning = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning5"), expressionEvaluator);
+            IEdmValue personPunning = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning5"), expressionEvaluator);
             Assert.AreEqual(EdmValueKind.Collection, personPunning.ValueKind, "Cast succeeds");
             bool odd = true;
             int count = 0;
@@ -1138,45 +1132,45 @@ namespace EdmLibTests.FunctionalTests
                 odd = !odd;
             }
 
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning6"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning7"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning8"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning9"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning10"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Punning11"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning6"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning7"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning8"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning9"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning10"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Punning11"), expressionEvaluator));
 
-            IEdmValue personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear0"), expressionEvaluator);
+            IEdmValue personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear0"), expressionEvaluator);
             Assert.AreEqual("Joey Ramone Place", ((IEdmStringValue)((IEdmStructuredValue)personClear).FindPropertyValue("Street").Value).Value, "Cast succeeds");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear1"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear1"), expressionEvaluator);
             Assert.AreEqual(255, ((IEdmIntegerValue)personClear).Value, "Cast succeeds");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear2"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear2"), expressionEvaluator);
             Assert.AreEqual(-128, ((IEdmIntegerValue)personClear).Value, "Cast succeeds");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear3"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear3"), expressionEvaluator);
             Assert.AreEqual(32767, ((IEdmIntegerValue)personClear).Value, "Cast succeeds");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear4"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear4"), expressionEvaluator);
             Assert.AreEqual(32768, ((IEdmIntegerValue)personClear).Value, "Cast succeeds");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear6"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear6"), expressionEvaluator);
             Assert.AreEqual("12345", ((IEdmStringValue)personClear).Value, "Cast succeeds");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear7"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear7"), expressionEvaluator);
             Assert.AreEqual(EdmValueKind.Null, personClear.ValueKind, "Cast succeeds");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear8"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear8"), expressionEvaluator);
             Assert.AreEqual(EdmValueKind.Structured, personClear.ValueKind, "Cast succeeds");
             Assert.AreEqual("Rick Dastardly", ((IEdmStringValue)((IEdmStructuredValue)personClear).FindPropertyValue("Lead").Value).Value, "Property value");
             Assert.AreEqual("Muttley", ((IEdmStringValue)((IEdmStructuredValue)personClear).FindPropertyValue("Sidekick").Value).Value, "Property value");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear10"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear10"), expressionEvaluator);
             Assert.AreEqual(EdmValueKind.Structured, personClear.ValueKind, "Cast succeeds");
             Assert.AreEqual("Nomad", ((IEdmStringValue)((IEdmStructuredValue)personClear).FindPropertyValue("Name").Value).Value, "Property value");
             Assert.AreEqual("Ariel", ((IEdmStringValue)((IEdmStructuredValue)personClear).FindPropertyValue("Secret").Value).Value, "Property value");
 
-            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear11"), expressionEvaluator);
+            personClear = annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear11"), expressionEvaluator);
             Assert.AreEqual(EdmValueKind.Structured, personClear.ValueKind, "Cast succeeds");
             Assert.AreEqual("foo", ((IEdmStringValue)((IEdmStructuredValue)personClear).FindPropertyValue("Name").Value).Value, "Property value");
             Assert.AreEqual(EdmValueKind.Null, ((IEdmStructuredValue)personClear).FindPropertyValue("Age").Value.ValueKind, "Invalid Value Kind");
@@ -1272,16 +1266,16 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
 
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear0"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear1"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear2"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear3"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear4"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear6"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear7"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear8"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear10"), expressionEvaluator));
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindValueTerm("foo.Clear11"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear0"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear1"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear2"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear3"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear4"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear6"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear7"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear8"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear10"), expressionEvaluator));
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => annotatingModel.GetTermValue(this.personValue, this.baseModel.FindTerm("foo.Clear11"), expressionEvaluator));
         }
 
         [TestMethod]
@@ -1307,7 +1301,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1315,7 +1309,7 @@ namespace EdmLibTests.FunctionalTests
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
 
-            IEdmValueTerm undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
+            IEdmTerm undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
             IEdmStructuredValue record = (IEdmStructuredValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
             fooUndefined1 fooUndefined1 = annotatingModel.GetTermValue<fooUndefined1>(this.personValue, undefined, clrEvaluator);
 
@@ -1326,7 +1320,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(144, fooUndefined1.X, "Term annotation value fooUndefined1.X");
             Assert.AreEqual(266, fooUndefined1.Y, "Term annotation value fooUndefined1.Y");
 
-            undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(1).Term;
+            undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(1).Term;
             record = (IEdmStructuredValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
             fooUndefined2 fooUndefined2 = annotatingModel.GetTermValue<fooUndefined2>(this.personValue, undefined, clrEvaluator);
 
@@ -1370,7 +1364,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1378,7 +1372,7 @@ namespace EdmLibTests.FunctionalTests
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
 
-            IEdmValueTerm undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
+            IEdmTerm undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
             IEdmCollectionValue collection = (IEdmCollectionValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
             IEnumerable<int> clrCollection = annotatingModel.GetTermValue<IEnumerable<int>>(this.personValue, undefined, clrEvaluator);
 
@@ -1389,7 +1383,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(144, clrCollection.ElementAt(0), "Term annotation value clrCollection.ElementAt(0)");
             Assert.AreEqual(266, clrCollection.ElementAt(1), "Term annotation value clrCollection.ElementAt(1)");
 
-            undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(1).Term;
+            undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(1).Term;
             collection = (IEdmCollectionValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
             clrCollection = annotatingModel.GetTermValue<IEnumerable<int>>(this.personValue, undefined, clrEvaluator);
 
@@ -1397,7 +1391,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(377, ((IEdmIntegerValue)collection.Elements.ElementAt(0).Value).Value, "Term annotation value");
             Assert.AreEqual(377, clrCollection.ElementAt(0), "Term annotation value clrCollection.ElementAt(0)");
 
-            undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(2).Term;
+            undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(2).Term;
             collection = (IEdmCollectionValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
             clrCollection = annotatingModel.GetTermValue<IEnumerable<int>>(this.personValue, undefined, clrEvaluator);
 
@@ -1457,15 +1451,15 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
-            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter(
-                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
+            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.Vocabularies.EdmToClrConverter(
+                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.Vocabularies.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
                 {
                     objectInstance = null;
                     objectInstanceInitialized = false;
@@ -1503,7 +1497,7 @@ namespace EdmLibTests.FunctionalTests
                     return objectInstance != null;
                 });
 
-            IEdmValueTerm undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
+            IEdmTerm undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
             IEdmCollectionValue flintstones = (IEdmCollectionValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
             IEnumerable<Person> clrFlintstones = annotatingModel.GetTermValue<IEnumerable<Person>>(this.personValue, undefined, clrEvaluator);
 
@@ -1589,14 +1583,14 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
-            
-            IEdmValueTerm undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
+
+            IEdmTerm undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
             IEdmStructuredValue fred = (IEdmStructuredValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
 
             IEdmStructuredValue wilma = (IEdmStructuredValue)fred.FindPropertyValue("Partner").Value;
@@ -1702,7 +1696,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1711,8 +1705,8 @@ namespace EdmLibTests.FunctionalTests
             EdmToClrEvaluator clrEvaluator = new EdmToClrEvaluator(this.builtInFunctions);
 
             // And finally make sure we can handle nulls for bad graph references.
-            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter(
-                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.EdmToClrConversion.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
+            clrEvaluator.EdmToClrConverter = new Microsoft.OData.Edm.Vocabularies.EdmToClrConverter(
+                (IEdmStructuredValue edmValue, Type clrType, Microsoft.OData.Edm.Vocabularies.EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
                 {
                     objectInstance = null;
                     objectInstanceInitialized = false;
@@ -1751,7 +1745,7 @@ namespace EdmLibTests.FunctionalTests
                 });
 
 
-            IEdmValueTerm undefined = (IEdmValueTerm)person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
+            IEdmTerm undefined = person.VocabularyAnnotations(annotatingModel).ElementAt(0).Term;
             IEdmCollectionValue flintstones = (IEdmCollectionValue)annotatingModel.GetTermValue(this.personValue, undefined, expressionEvaluator);
 
             IEnumerable<Person> clrFlintstones = annotatingModel.GetTermValue<IEnumerable<Person>>(this.personValue, undefined, clrEvaluator);
@@ -1792,13 +1786,13 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
 
-            IEdmValueTerm coolPersonTerm = this.baseModel.FindValueTerm("foo.CoolPersonTerm");
+            IEdmTerm coolPersonTerm = this.baseModel.FindTerm("foo.CoolPersonTerm");
             IEdmEntityType coolPerson = (IEdmEntityType)this.baseModel.FindType("foo.CoolPerson");
             IEdmProperty coolSobriquet = coolPerson.FindProperty("Sobriquet");
             IEdmProperty coolAssessment = coolPerson.FindProperty("Assessment");
@@ -1920,34 +1914,34 @@ namespace EdmLibTests.FunctionalTests
         public void EvaluateEnumExpressionOfSingleValue()
         {
             var color = new EdmEnumType("Ns", "Color");
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(0));
-            color.AddMember("White", new EdmIntegerConstant(1));
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(0));
+            color.AddMember("White", new EdmEnumMemberValue(1));
             var enumExpression = new EdmEnumMemberExpression(blue);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             var value = evaluator.Evaluate(enumExpression) as IEdmEnumValue;
             value.Type.Definition.Should().Be(color);
-            (value.Value as EdmIntegerConstant).Value.Should().Be(0);
+            value.Value.Value.Should().Be(0);
         }
 
         [TestMethod]
         public void EvaluateEnumExpressionOfMultiValues()
         {
             var color = new EdmEnumType("Ns", "Color", true);
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(1));
-            var white = color.AddMember("White", new EdmIntegerConstant(2));
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
+            var white = color.AddMember("White", new EdmEnumMemberValue(2));
             var enumExpression = new EdmEnumMemberExpression(blue, white);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             var value = evaluator.Evaluate(enumExpression) as IEdmEnumValue;
             value.Type.Definition.Should().Be(color);
-            (value.Value as EdmIntegerConstant).Value.Should().Be(3);
+            value.Value.Value.Should().Be(3);
         }
 
         [TestMethod]
         public void EvaluateEnumExpressionOfMultiValuesWithoutFlagsShouldThrow()
         {
             var color = new EdmEnumType("Ns", "Color");
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(1));
-            var white = color.AddMember("White", new EdmIntegerConstant(2));
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
+            var white = color.AddMember("White", new EdmEnumMemberValue(2));
             var enumExpression = new EdmEnumMemberExpression(blue, white);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             Action action = () => evaluator.Evaluate(enumExpression);
@@ -1955,28 +1949,16 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void EvaluateEnumExpressionOfMultiValuesWithStringUnderlyingTypeShouldThrow()
-        {
-            var color = new EdmEnumType("Ns", "Color", EdmPrimitiveTypeKind.String, true);
-            var blue = color.AddMember("Blue", new EdmStringConstant("1"));
-            var white = color.AddMember("White", new EdmStringConstant("2"));
-            var enumExpression = new EdmEnumMemberExpression(blue, white);
-            EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
-            Action action = () => evaluator.Evaluate(enumExpression);
-            action.ShouldThrow<InvalidOperationException>().WithMessage("Type Ns.Color cannot be assigned with multi-values.");
-        }
-
-        [TestMethod]
-        public void EvaluateEnumReferenceExpression()
+        public void EvaluateEnumExpression()
         {
             var color = new EdmEnumType("Ns", "Color", true);
-            var blue = color.AddMember("Blue", new EdmIntegerConstant(1));
-            color.AddMember("White", new EdmIntegerConstant(2));
-            var enumReferenceExpression = new EdmEnumMemberReferenceExpression(blue);
+            var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
+            color.AddMember("White", new EdmEnumMemberValue(2));
+            var enumReferenceExpression = new EdmEnumMemberExpression(blue);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             var value = evaluator.Evaluate(enumReferenceExpression) as IEdmEnumValue;
             value.Type.Definition.Should().Be(color);
-            value.Value.As<EdmIntegerConstant>().Value.Should().Be(1);
+            value.Value.Value.Should().Be(1);
         }
 
         private sealed class MutableStructuredValue : IEdmStructuredValue

@@ -4,14 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Encapsulates the state of metadata binding.
@@ -30,7 +28,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private readonly Stack<RangeVariable> rangeVariables = new Stack<RangeVariable>();
 
         /// <summary>
-        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the 
+        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the
         /// implicit parameter ($it) for all expressions.
         /// </summary>
         private RangeVariable implicitRangeVariable;
@@ -47,6 +45,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private List<CustomQueryOptionToken> queryOptions;
 
         /// <summary>
+        /// The parsed segments in path and query option.
+        /// </summary>
+        private List<ODataPathSegment> parsedSegments = new List<ODataPathSegment>();
+
+        /// <summary>
         /// Constructs a <see cref="BindingState"/> with the given <paramref name="configuration"/>.
         /// </summary>
         /// <param name="configuration">The configuration used for binding.</param>
@@ -55,6 +58,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             this.configuration = configuration;
             this.BindingRecursionDepth = 0;
+        }
+
+        internal BindingState(ODataUriParserConfiguration configuration, List<ODataPathSegment> parsedSegments)
+        {
+            ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
+            this.configuration = configuration;
+            this.BindingRecursionDepth = 0;
+            this.parsedSegments = parsedSegments;
         }
 
         /// <summary>
@@ -80,7 +91,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the 
+        /// If there is a  $filter or $orderby, then this member holds the reference to the parameter node for the
         /// implicit parameter ($it) for all expressions.
         /// </summary>
         internal RangeVariable ImplicitRangeVariable
@@ -129,6 +140,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Collection of aggregated property names after applying an aggregate transformation.
         /// </summary>
         internal List<string> AggregatedPropertyNames { get; set; }
+
+        /// <summary>
+        /// The parsed segments in path and query option.
+        /// </summary>
+        internal List<ODataPathSegment> ParsedSegments
+        {
+            get { return parsedSegments; }
+        }
 
         /// <summary>
         /// Marks the fact that a recursive method was entered, and checks that the depth is allowed.

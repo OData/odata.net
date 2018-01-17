@@ -10,13 +10,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
     using System.Collections.Generic;
     using ApprovalTests;
     using ApprovalTests.Reporters;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Metadata;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core;
 
     [UseReporter(typeof(LoggingReporter))]
     [TestClass]
@@ -28,6 +27,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
     [DeploymentItem("UriParser\\SelectTests")]
     [DeploymentItem("UriParser\\SingletonTests")]
     [DeploymentItem("UriParser\\Search")]
+    [DeploymentItem("UriParser\\MultiBindingTests")]
     public class UriParserTestsBase
     {
         protected IEdmModel model;
@@ -141,19 +141,20 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             return new ODataUriParser(this.model, this.serviceRoot, new Uri(resourceBase, "?$select=" + queryOption));
         }
 
-        protected ODataUriParser CreateExpandUriParser(Uri resourceRoot, string queryOption)
+        protected ODataUriParser CreateExpandUriParser(Uri resourceRoot, string queryOption, IEdmModel model = null)
         {
-            return new ODataUriParser(this.model, this.serviceRoot, new Uri(resourceRoot, "?$expand=" + queryOption));
+            return new ODataUriParser(model ?? this.model, this.serviceRoot, new Uri(resourceRoot, "?$expand=" + queryOption));
         }
 
-        protected void ApprovalVerifyExpandParser(Uri resourceRoot, string queryOption)
+        protected void ApprovalVerifyExpandParser(Uri resourceRoot, string queryOption, IEdmModel model = null)
         {
-            ODataUriParser parser = this.CreateExpandUriParser(resourceRoot, queryOption);
+            ODataUriParser parser = this.CreateExpandUriParser(resourceRoot, queryOption, model);
             var result = parser.ParseSelectAndExpand();
             ApprovalVerify(QueryNodeToStringVisitor.GetTestCaseAndResultString(result, null, queryOption));
         }
 
-        protected ODataUriParser CreateSelectAndExpandUriParser(Uri resourceRoot, string selectQueryOption, string expandQueryOption)
+        protected ODataUriParser CreateSelectAndExpandUriParser(Uri resourceRoot, string selectQueryOption,
+            string expandQueryOption, IEdmModel model = null)
         {
             string queryOption = string.Empty;
             if (selectQueryOption != null && expandQueryOption != null)
@@ -169,7 +170,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                 queryOption = "?$expand=" + expandQueryOption;
             }
 
-            return new ODataUriParser(this.model, this.serviceRoot, new Uri(resourceRoot, new Uri(resourceRoot, queryOption)));
+            return new ODataUriParser(model ?? this.model, this.serviceRoot, new Uri(resourceRoot, new Uri(resourceRoot, queryOption)));
         }
 
         protected void ApprovalVerifySelectAndExpandParser(Uri resourceRoot, string selectQueryOption, string expandQueryOption)
@@ -179,9 +180,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             ApprovalVerify(QueryNodeToStringVisitor.GetTestCaseAndResultString(result, selectQueryOption, expandQueryOption));
         }
 
-        protected ODataUriParser CreateFilterUriParser(Uri resourceRoot, string queryOption)
+        protected ODataUriParser CreateFilterUriParser(Uri resourceRoot, string queryOption, IEdmModel model = null)
         {
-            return new ODataUriParser(this.model, this.serviceRoot, new Uri(resourceRoot, "?$filter=" + queryOption));
+            return new ODataUriParser(model ?? this.model, this.serviceRoot, new Uri(resourceRoot, "?$filter=" + queryOption));
         }
 
         protected ODataUriParser CreateSearchUriParser(Uri resourceRoot, string queryOption)
@@ -189,21 +190,21 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             return new ODataUriParser(this.model, this.serviceRoot, new Uri(resourceRoot, "?$search=" + queryOption));
         }
 
-        protected void ApprovalVerifyFilterParser(Uri resourceRoot, string queryOption)
+        protected void ApprovalVerifyFilterParser(Uri resourceRoot, string queryOption, IEdmModel model = null)
         {
-            ODataUriParser parser = this.CreateFilterUriParser(resourceRoot, queryOption);
+            ODataUriParser parser = this.CreateFilterUriParser(resourceRoot, queryOption, model);
             var result = parser.ParseFilter();
             ApprovalVerify(QueryNodeToStringVisitor.GetTestCaseAndResultString(result, queryOption));
         }
 
-        protected ODataUriParser CreateOrderByUriParser(Uri resourceRoot, string queryOption)
+        protected ODataUriParser CreateOrderByUriParser(Uri resourceRoot, string queryOption, IEdmModel model = null)
         {
-            return new ODataUriParser(this.model, this.serviceRoot, new Uri(resourceRoot, "?$orderby=" + queryOption));
+            return new ODataUriParser(model ?? this.model, this.serviceRoot, new Uri(resourceRoot, "?$orderby=" + queryOption));
         }
 
-        protected void ApprovalVerifyOrderByParser(Uri resourceRoot, string queryOption)
+        protected void ApprovalVerifyOrderByParser(Uri resourceRoot, string queryOption, IEdmModel model = null)
         {
-            ODataUriParser parser = this.CreateOrderByUriParser(resourceRoot, queryOption);
+            ODataUriParser parser = this.CreateOrderByUriParser(resourceRoot, queryOption, model);
             var result = parser.ParseOrderBy();
             ApprovalVerify(QueryNodeToStringVisitor.GetTestCaseAndResultString(result, queryOption));
         }
@@ -215,19 +216,39 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             ApprovalVerify(QueryNodeToStringVisitor.GetTestCaseAndResultString(result, queryOption));
         }
 
-        protected void TestAllInOneExtensionSelectExpand(Uri baseUri, string select, string expand, string origSelect, string origExpand)
+        protected void TestAllInOneExtensionSelectExpand(Uri baseUri, string select, string expand, string origSelect, string origExpand, IEdmModel model = null)
         {
             this.TestExtension(
-                this.CreateSelectAndExpandUriParser(baseUri, select, expand),
+                this.CreateSelectAndExpandUriParser(baseUri, select, expand, model),
                 new AllInOneResolver() { EnableCaseInsensitive = true },
                 parser => parser.ParseSelectAndExpand(),
                 clause => QueryNodeToStringVisitor.GetTestCaseAndResultString(clause, origSelect, origExpand),
                 this.ApprovalVerify);
         }
 
-        protected void TestAllInOneExtensionExpand(Uri baseUri, string expand, string origExpand)
+        protected void TestAllInOneExtensionExpand(Uri baseUri, string expand, string origExpand, IEdmModel model = null)
         {
-            this.TestAllInOneExtensionSelectExpand(baseUri, null, expand, null, origExpand);
+            this.TestAllInOneExtensionSelectExpand(baseUri, null, expand, null, origExpand, model);
+        }
+
+        protected void TestAllInOneExtensionOrderBy(Uri baseUri, string orderby, string origOrderby, IEdmModel model = null)
+        {
+            this.TestExtension(
+                this.CreateOrderByUriParser(baseUri, orderby, model),
+                new AllInOneResolver() { EnableCaseInsensitive = true },
+                parser => parser.ParseOrderBy(),
+                clause => QueryNodeToStringVisitor.GetTestCaseAndResultString(clause, origOrderby),
+                this.ApprovalVerify);
+        }
+
+        protected void TestAllInOneExtensionFilter(Uri baseUri, string filter, string origFilter, IEdmModel model = null)
+        {
+            this.TestExtension(
+                this.CreateFilterUriParser(baseUri, filter, model),
+                new AllInOneResolver() { EnableCaseInsensitive = true },
+                parser => parser.ParseFilter(),
+                clause => QueryNodeToStringVisitor.GetTestCaseAndResultString(clause, origFilter),
+                this.ApprovalVerify);
         }
 
         protected void TestExtension<TResult>(ODataUriParser parser, ODataUriResolver resolver, Func<ODataUriParser, TResult> parse, Func<TResult, string> convert, Action<string> verify)
@@ -294,9 +315,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             }
 
             public override void PromoteBinaryOperandTypes(
-                Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind binaryOperatorKind,
-                ref Microsoft.OData.Core.UriParser.Semantic.SingleValueNode leftNode,
-                ref Microsoft.OData.Core.UriParser.Semantic.SingleValueNode rightNode,
+                BinaryOperatorKind binaryOperatorKind,
+                ref SingleValueNode leftNode,
+                ref SingleValueNode rightNode,
                 out IEdmTypeReference typeReference)
             {
                 sae.PromoteBinaryOperandTypes(binaryOperatorKind, ref leftNode, ref rightNode, out typeReference);

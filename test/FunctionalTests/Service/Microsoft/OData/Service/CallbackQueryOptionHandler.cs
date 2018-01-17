@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Service
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Handles $callback query parameter.

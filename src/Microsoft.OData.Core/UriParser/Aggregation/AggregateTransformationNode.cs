@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     using System.Collections.Generic;
 
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         /// </summary>
         public IEnumerable<AggregateExpression> Expressions
         {
-            get 
+            get
             {
                 return expressions;
             }

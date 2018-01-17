@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
     using efpoco = AstoriaUnitTests.EFFK;
     using ocs = AstoriaUnitTests.ObjectContextStubs;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     /// <summary>This class contains inner classes that can run as LTM tests.</summary>
     [TestModule]
     public partial class UnitTestModule1
@@ -31,11 +32,7 @@ namespace AstoriaUnitTests.Tests
             {
                 string jsonPayload = "{ value : 'Foo' }";
 
-                string xmlPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
-                    "<ads:Name xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\">Foo</ads:Name>";
-
                 UpdateTests.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(-1)/Name", UnitTestsUtil.JsonLightMimeType, "PUT", 404);
-                UpdateTests.VerifyInvalidRequestForVariousProviders(xmlPayload, "/Customers(-1)/Name", UnitTestsUtil.MimeApplicationXml, "PUT", 404);
             }
 
             private class UpdatePutPropertyTestCase
@@ -69,11 +66,11 @@ namespace AstoriaUnitTests.Tests
                     target.Properties[propertyName] = propertyValue;
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutPrimitiveProperty()
             {
-                var testCases = new []
+                var testCases = new[]
                 {
                     // Valid property payload in JSON
                     new UpdatePutPropertyTestCase
@@ -123,12 +120,6 @@ namespace AstoriaUnitTests.Tests
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ @odata.type: 'Edm.String', value : 'Foo' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
-                    },
-                    //// Correct null value annotation in JSON Light
-                    new UpdatePutPropertyTestCase
-                    {
-                        Payload = "{ @odata.null : true }",
                         ContentType = UnitTestsUtil.JsonLightMimeType,
                     },
                     // JSON Missing '
@@ -265,12 +256,12 @@ namespace AstoriaUnitTests.Tests
                         RunUpdatePutPropertyTestCase(testCase, openProperty, method, "/Customers(1)/Name");
                     });
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutNonStringPrimitiveProperty()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder() { IsComplex = true }.AddProperty("DollarAmount", 9.95);
-            
+
                 string[] atomXPath = new string[] { "/adsm:value[number(text()) = 9.95]" };
 
                 string[] jsonLiteXPath = new string[] {
@@ -288,8 +279,8 @@ namespace AstoriaUnitTests.Tests
                 UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), "/Orders(100)/DollarAmount", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PUT", false);
                 UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), "/Orders(100)/DollarAmount", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PATCH", false);
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutComplexProperty()
             {
                 var testCases = new[]
@@ -431,8 +422,8 @@ namespace AstoriaUnitTests.Tests
                         RunUpdatePutPropertyTestCase(testCase, openProperty, method, "/Customers(1)/Address");
                     });
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutOpenCollectionProperty()
             {
                 var testCases = new[]
@@ -477,8 +468,8 @@ namespace AstoriaUnitTests.Tests
                     base.SetValue(targetResource, propertyName, propertyValue);
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateComplexPropertyCallOrderTest()
             {
                 var testCases = new[]
@@ -562,7 +553,7 @@ namespace AstoriaUnitTests.Tests
                             if (inEntity)
                             {
                                 requestUri = "/Customers";
-                                headers = new KeyValuePair<string,string>[0];
+                                headers = new KeyValuePair<string, string>[0];
 
                                 if (contentType == UnitTestsUtil.JsonLightMimeType)
                                 {
@@ -595,7 +586,7 @@ namespace AstoriaUnitTests.Tests
                                     // Add it as a property into an entity
                                     payload = "{  @odata.type: '" + typeof(Address).FullName + "'," + payload + " }";
                                 }
-                                
+
                                 requestUri = "/Customers(0)/Address";
                                 string etag = UnitTestsUtil.GetETagFromResponse(typeof(UpdateComplexPropertyCallOrderTestContext), requestUri, testCase.ContentType);
                                 headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
@@ -623,12 +614,12 @@ namespace AstoriaUnitTests.Tests
                         }
                     });
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateMergeComplexProperty()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder() { IsComplex = true }
-                    .AddComplexProperty("Address", new PayloadBuilder () { TypeName = typeof(Address).FullName }
+                    .AddComplexProperty("Address", new PayloadBuilder() { TypeName = typeof(Address).FullName }
                         .AddProperty("StreetAddress", "new street address")
                         .AddProperty("City", "Redmond")
                         .AddProperty("State", "Washington"));
@@ -638,14 +629,14 @@ namespace AstoriaUnitTests.Tests
                     "and ads:State='Washington']" };
 
                 string[] jsonLiteXPaths = new string[] {
-                    String.Format("{0}[StreetAddress='new street address' and City='Redmond' and State='Washington']", 
+                    String.Format("{0}[StreetAddress='new street address' and City='Redmond' and State='Washington']",
                         JsonValidator.ObjectString) };
 
                 UpdateTests.DoUpdatesForVariousProviders("PATCH", "/Customers(1)/Address", UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomXPaths, true);
                 UpdateTests.DoUpdatesForVariousProviders("PATCH", "/Customers(1)/Address", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPaths, true);
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateReplaceComplexProperty()
             {
                 string uri = "/Customers(1)/Address";
@@ -667,13 +658,13 @@ namespace AstoriaUnitTests.Tests
 
                 var jsonLiteXPaths = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>(uri,
-                        new string[] { 
+                        new string[] {
                             String.Format("{0}[StreetAddress='' and City='Charlotte' and State='North Carolina' and PostalCode='']", JsonValidator.ObjectString)
                         })};
 
                 var jsonLiteOpenTypesXPath = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>(uri,
-                        new string[] { 
+                        new string[] {
                             String.Format("{0}[City='Charlotte' and State='North Carolina']", JsonValidator.ObjectString),
                             String.Format("count(/{0}/*)=5", JsonValidator.ObjectString) // counting odata.metadata element
                         })};
@@ -684,13 +675,13 @@ namespace AstoriaUnitTests.Tests
                 UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), uri, UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomOpenTypesXPath, "PUT", true);
                 UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), uri, UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PUT", true);
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutComplexPropertyToNull()
             {
                 string jsonPayload1 = "{ \"@odata.type\":\"#AstoriaUnitTests.Stubs.CustomerWithBirthday\", \"Address\": null }";
-               // string jsonPayload2 = "{ \"@odata.type\":\"#AstoriaUnitTests.Stubs.Hidden.Customer\", \"Address\": null }";
-                
+                // string jsonPayload2 = "{ \"@odata.type\":\"#AstoriaUnitTests.Stubs.Hidden.Customer\", \"Address\": null }";
+
                 string[] jsonXPath = new string[] {
                     String.Format("{0}/Address[@IsNull='true']", JsonValidator.ObjectString) };
 
@@ -717,19 +708,25 @@ namespace AstoriaUnitTests.Tests
                     });
             }
 
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore]
+            // TODO: Change the payload of null top-level properties #645
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateMergePrimitivePropertyToNull()
             {
-                var payloadBuilder = new PayloadBuilder() { IsComplex = true }
-                    .AddProperty("Name", null);
+                var payloadBuilder = new PayloadBuilder() { IsComplex = false }
+                    .AddProperty("value", null);
 
-                string[] atomXPath = new string[] { "/adsm:value[@adsm:null='true']" };
+                string[] jsonLiteXPath = new string[] { String.Format("{0}", JsonValidator.ValueString) };
 
-                string[] jsonLiteXPath = new string[] { String.Format("{0}[odata.null='true']", JsonValidator.ObjectString) };
-
-                // For open types, setting to null should produce null instead.
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Customers(1)/Name", UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomXPath, true);
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Customers(1)/Name", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, true);
+                UpdateTests.DoUpdatesForVariousProviders(
+                    UnitTestsUtil.ProviderTypes.Where(providerType => providerType != typeof(EFFK.CustomObjectContextPOCO)
+                        && providerType != typeof(EFFK.CustomObjectContextPOCOProxy)),
+                    "PATCH",
+                    "/Customers(1)/Name",
+                    UnitTestsUtil.JsonLightMimeType,
+                    payloadBuilder,
+                    new KeyValuePair<string, string[]>[] { new KeyValuePair<string, string[]>("/Customers(1)/Name", jsonLiteXPath) },
+                    true);
             }
 
             #region PrimitiveDataTypesContext
@@ -859,8 +856,8 @@ namespace AstoriaUnitTests.Tests
                         UpdateTests.DoPrimitiveValueUpdates(testCase.Payload, "/Entities(1)/" + testCase.PropertyName + "/$value", null, typeof(PrimitiveDataTypesContext), testCase.ContentType, 0);
                     });
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutPrimitivePropertyDataTypes()
             {
                 var testCases = new[]
@@ -961,7 +958,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     string payload = "12345";
                     UpdateTests.DoPrimitiveValueUpdates(payload, "/Values(1)/BinaryType/$value",
-                        new string[] { String.Format("{0}[text()='Foo']", 
+                        new string[] { String.Format("{0}[text()='Foo']",
                                         JsonValidator.ValueString)
                                  },
                        typeof(TypedCustomDataContext<AllTypes>), UnitTestsUtil.MimeApplicationOctetStream, 0);
@@ -997,7 +994,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     string payLoad = "12345";
                     UpdateTests.DoPrimitiveValueUpdates(payLoad, "/Values(1)/BinaryType/$value",
-                        new string[] { String.Format("{0}[text()='Foo']", 
+                        new string[] { String.Format("{0}[text()='Foo']",
                                         JsonValidator.ValueString)
                                  },
                        typeof(TypedCustomDataContext<AllTypes>), UnitTestsUtil.MimeApplicationOctetStream, 5);
@@ -1090,7 +1087,7 @@ namespace AstoriaUnitTests.Tests
                         string etag = UnitTestsUtil.GetETagFromResponse(contextType, newUri, newFormat);
                         if (etag != null)
                         {
-                            requestHeaders = new [] { new KeyValuePair<string, string>("If-Match", etag) };
+                            requestHeaders = new[] { new KeyValuePair<string, string>("If-Match", etag) };
                         }
                     }
 

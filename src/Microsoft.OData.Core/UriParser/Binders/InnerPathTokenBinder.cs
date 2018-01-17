@@ -4,19 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Binders;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Class responsible for binding a InnerPathToken into:
     /// 1. SingleNavigationNode
@@ -25,7 +21,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     /// 4. CollectionPropertyAccessNode (primitive | complex)
     /// 5. KeyLookupNode
     /// 6. SingleValueFunctionCallNode
-    /// 7. SingleEntityFunctionCallNode
+    /// 7. SingleResourceFunctionCallNode
     /// </summary>
     /// <remarks>
     /// TODO: The binder does support key lookup on collection navigation properties, however at this time
@@ -44,36 +40,35 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Ensures that the parent node is of entity type, throwing if it is not.
+        /// Ensures that the parent node is of structured type, throwing if it is not.
         /// </summary>
         /// <param name="parent">Parent node to a navigation property.</param>
-        /// <returns>The given parent node as a SingleEntityNode.</returns>
-        internal static SingleEntityNode EnsureParentIsEntityForNavProp(SingleValueNode parent)
+        /// <returns>The given parent node as a SingleResourceNode.</returns>
+        internal static SingleResourceNode EnsureParentIsResourceForNavProp(SingleValueNode parent)
         {
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
-            SingleEntityNode parentEntity = parent as SingleEntityNode;
-            if (parentEntity == null)
+
+            SingleResourceNode parentResource = parent as SingleResourceNode;
+            if (parentResource == null)
             {
+                // TODO: update error message #644
                 throw new ODataException(ODataErrorStrings.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
             }
 
-            return parentEntity;
+            return parentResource;
         }
 
         /// <summary>
-        /// Given a property name, if the associated type reference is strucutred, then this returns  
+        /// Given a property name, if the associated type reference is structured, then this returns
         /// the property of the structured type. Otherwise, it returns null.
         /// </summary>
         /// <param name="parentReference">The parent type to be used to find binding options.</param>
         /// <param name="propertyName">The string designated the property name to be bound.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <returns>The property associated with string and parent type.</returns>
-        internal static IEdmProperty BindProperty(IEdmTypeReference parentReference, string propertyName, ODataUriResolver resolver = null)
+        internal static IEdmProperty BindProperty(IEdmTypeReference parentReference, string propertyName, ODataUriResolver resolver)
         {
-            if (resolver == null)
-            {
-                resolver = ODataUriResolver.Default;
-            }
+            ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
             IEdmStructuredTypeReference structuredParentType =
                 parentReference == null ? null : parentReference.AsStructuredOrNull();
@@ -88,8 +83,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="namedValues">Named values (key values) that were included in the node we are binding, if any.</param>
         /// <param name="state">State of binding.</param>
         /// <param name="keyBinder">Object to perform binding on any key values that are present.</param>
-        /// <returns>A new CollectionNavigationNode or SingleNavigationNode to capture the navigation propety access.</returns>
-        internal static QueryNode GetNavigationNode(IEdmNavigationProperty property, SingleEntityNode parent, IEnumerable<NamedValue> namedValues, BindingState state, KeyBinder keyBinder)
+        /// <param name="navigationSource">The navigation source of the navigation node.</param>
+        /// <returns>A new CollectionNavigationNode or SingleNavigationNode to capture the navigation property access.</returns>
+        internal static QueryNode GetNavigationNode(IEdmNavigationProperty property, SingleResourceNode parent, IEnumerable<NamedValue> namedValues, BindingState state, KeyBinder keyBinder, out IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(property, "property");
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
@@ -99,7 +95,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Handle collection navigation property
             if (property.TargetMultiplicity() == EdmMultiplicity.Many)
             {
-                CollectionNavigationNode collectionNavigationNode = new CollectionNavigationNode(property, parent);
+                CollectionNavigationNode collectionNavigationNode = new CollectionNavigationNode(parent, property, state.ParsedSegments);
+                navigationSource = collectionNavigationNode.NavigationSource;
 
                 // Doing key lookup on the collection navigation property
                 if (namedValues != null)
@@ -111,10 +108,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return collectionNavigationNode;
             }
 
-            Debug.Assert(namedValues == null || !namedValues.Any(), "namedValues should not exist if it isn't a colleciton");
+            Debug.Assert(namedValues == null || !namedValues.Any(), "namedValues should not exist if it isn't a collection");
 
             // Otherwise it's a single navigation property
-            return new SingleNavigationNode(property, parent);
+            SingleNavigationNode singleNavigationNode = new SingleNavigationNode(parent, property, state.ParsedSegments);
+            navigationSource = singleNavigationNode.NavigationSource;
+            return singleNavigationNode;
         }
 
         /// <summary>
@@ -132,6 +131,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(parent != null, "parent should never be null");
 
             SingleValueNode singleValueParent = parent as SingleValueNode;
+
             if (singleValueParent == null)
             {
                 QueryNode boundFunction;
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return boundFunction;
                 }
 
-                if (singleValueParent.TypeReference != null && !singleValueParent.TypeReference.Definition.IsOpenType())
+                if (singleValueParent.TypeReference != null && !singleValueParent.TypeReference.Definition.IsOpen())
                 {
                     throw new ODataException(
                         ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
@@ -164,7 +164,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return new SingleValueOpenPropertyAccessNode(singleValueParent, segmentToken.Identifier);
             }
 
-            if (property.Type.IsODataComplexTypeKind())
+            IEdmStructuralProperty structuralProperty = property as IEdmStructuralProperty;
+            if (property.Type.IsComplex())
+            {
+                // Generate a segment to parsed segments for the parsed token
+                state.ParsedSegments.Add(new PropertySegment(structuralProperty));
+                return new SingleComplexNode(singleValueParent as SingleResourceNode, property);
+            }
+            else if (property.Type.IsPrimitive())
             {
                 return new SingleValuePropertyAccessNode(singleValueParent, property);
             }
@@ -172,6 +179,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Note - this means nonentity collection (primitive or complex)
             if (property.Type.IsNonEntityCollectionType())
             {
+                if (property.Type.IsStructuredCollectionType())
+                {
+                    // Generate a segment to parsed segments for the parsed token
+                    state.ParsedSegments.Add(new PropertySegment(structuralProperty));
+                    return new CollectionComplexNode(singleValueParent as SingleResourceNode, property);
+                }
+
                 return new CollectionPropertyAccessNode(singleValueParent, property);
             }
 
@@ -181,13 +195,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 throw new ODataException(ODataErrorStrings.MetadataBinder_IllegalSegmentType(property.Name));
             }
 
-            SingleEntityNode parentEntity = EnsureParentIsEntityForNavProp(singleValueParent);
+            SingleResourceNode parentResource = EnsureParentIsResourceForNavProp(singleValueParent);
 
-            return GetNavigationNode(navigationProperty, parentEntity, segmentToken.NamedValues, state, new KeyBinder(this.bindMethod));
+            IEdmNavigationSource navigationSource;
+            QueryNode node = GetNavigationNode(navigationProperty, parentResource, segmentToken.NamedValues, state,
+                new KeyBinder(this.bindMethod), out navigationSource);
+
+            // Generate a segment to parsed segments for the parsed token
+            state.ParsedSegments.Add(new NavigationPropertySegment(navigationProperty, navigationSource));
+
+            return node;
         }
 
         /// <summary>
-        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we 
+        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we
         /// use the implicit parameter from the BindingState as the parent node.
         /// </summary>
         /// <param name="segmentToken">Token to determine the parent node for.</param>

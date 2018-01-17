@@ -12,8 +12,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Globalization;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
@@ -66,7 +66,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
         private static void SnapResult(List<DeltaSnapshotEntry> results, object entry, IEdmNavigationSource entitySource, SelectExpandClause selectExpandClause, string parentId, string relationShip)
         {
-            var oDataEntry = ODataObjectModelConverter.ConvertToODataEntry(entry, entitySource, ODataVersion.V4);
+            var oDataEntry = ODataObjectModelConverter.ConvertToODataEntry(entry, entitySource, ODataVersion.V4).Resource;
             results.Add(new DeltaSnapshotEntry(oDataEntry.Id.AbsoluteUri, parentId, relationShip));
             var expandedNavigationItems = selectExpandClause == null ? null : selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>();
             SnapExpandedEntry(results, entry, entitySource, expandedNavigationItems, oDataEntry.Id.AbsoluteUri);

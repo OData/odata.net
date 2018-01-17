@@ -4,25 +4,22 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
     #region Namespaces
 
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
 
     #endregion Namespaces
 
     /// <summary>
     /// Lexical token representing a single nonroot segment in the query path.
     /// </summary>
-    internal sealed class InnerPathToken : PathToken
+    public sealed class InnerPathToken : PathToken
     {
         /// <summary>
         /// The Identifier of the segment.

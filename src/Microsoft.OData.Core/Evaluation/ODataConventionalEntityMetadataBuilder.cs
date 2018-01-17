@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 {
     #region Namespaces
     using System;
@@ -13,36 +13,23 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     #endregion
 
     /// <summary>
     /// Implementation of OData entity metadata builder based on OData protocol conventions.
     /// </summary>
-    internal sealed class ODataConventionalEntityMetadataBuilder : ODataEntityMetadataBuilder
+    internal sealed class ODataConventionalEntityMetadataBuilder : ODataConventionalResourceMetadataBuilder
     {
-        /// <summary>The URI builder to use.</summary>
-        private readonly ODataUriBuilder uriBuilder;
-
-        /// <summary>The context to answer basic metadata questions about the entry.</summary>
-        private readonly IODataEntryMetadataContext entryMetadataContext;
-
-        /// <summary>The metadata context.</summary>
-        private readonly IODataMetadataContext metadataContext;
-
-        /// <summary>The list of navigation links that have been processed.</summary>
-        private readonly HashSet<string> processedNavigationLinks;
-
         /// <summary>The edit link.</summary>
-        /// <remarks>This is lazily evaluated. It may be retrieved from the entry or computed.</remarks>
+        /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
         private Uri computedEditLink;
 
         /// <summary>The read link.</summary>
-        /// <remarks>This is lazily evaluated. It may be retrieved from the entry or computed.</remarks>
+        /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
         private Uri computedReadLink;
 
         /// <summary>The computed ETag.</summary>
@@ -53,7 +40,7 @@ namespace Microsoft.OData.Core.Evaluation
 
         /// <summary>The computed ID of this entity instance.</summary>
         /// <remarks>
-        /// This is always built from the key properties, and never comes from the entry.
+        /// This is always built from the key properties, and never comes from the resource.
         /// </remarks>
         private Uri computedId;
 
@@ -63,40 +50,34 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>The list of computed stream properties.</summary>
         private List<ODataProperty> computedStreamProperties;
 
-        /// <summary>The enumerator for unprocessed navigation links.</summary>
-        private IEnumerator<ODataJsonLightReaderNavigationLinkInfo> unprocessedNavigationLinks;
+        /// <summary>
+        /// Mark if we are at state of ResourceEnd, if it is true, GetProperties would concat computed stream properties.
+        /// </summary>
+        private bool isResourceEnd;
 
-        /// <summary>The missing operation generator for the current entry.</summary>
+        /// <summary>The enumerator for unprocessed navigation links.</summary>
+        private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNestedResourceInfos;
+
+        /// <summary>The missing operation generator for the current resource.</summary>
         private ODataMissingOperationGenerator missingOperationGenerator;
 
-        /// <summary>The computed key property name and value pairs of the entry.</summary>
+        /// <summary>The computed key property name and value pairs of the resource.</summary>
         private ICollection<KeyValuePair<string, object>> computedKeyProperties;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="entryMetadataContext">The context to answer basic metadata questions about the entry.</param>
+        /// <param name="resourceMetadataContext">The context to answer basic metadata questions about the resource.</param>
         /// <param name="metadataContext">The metadata context.</param>
         /// <param name="uriBuilder">The uri builder to use.</param>
-        internal ODataConventionalEntityMetadataBuilder(IODataEntryMetadataContext entryMetadataContext, IODataMetadataContext metadataContext, ODataUriBuilder uriBuilder)
+        internal ODataConventionalEntityMetadataBuilder(IODataResourceMetadataContext resourceMetadataContext, IODataMetadataContext metadataContext, ODataUriBuilder uriBuilder)
+            : base(resourceMetadataContext, metadataContext, uriBuilder)
         {
-            Debug.Assert(entryMetadataContext != null, "entryMetadataContext != null");
-            Debug.Assert(metadataContext != null, "metadataContext != null");
-            Debug.Assert(uriBuilder != null, "uriBuilder != null");
-
-            this.entryMetadataContext = entryMetadataContext;
-            this.uriBuilder = uriBuilder;
-            this.metadataContext = metadataContext;
-            this.processedNavigationLinks = new HashSet<string>(StringComparer.Ordinal);
+            this.isResourceEnd = true;  // Keep default behavior
         }
 
         /// <summary>
-        /// OData uri that parsed based on the context url
-        /// </summary>
-        internal ODataUri ODataUri { get; set; }
-
-        /// <summary>
-        /// Lazy evaluated computed entity Id. This is always a computed value and never comes from the entry.
+        /// Lazy evaluated computed entity Id. This is always a computed value and never comes from the resource.
         /// </summary>
         private Uri ComputedId
         {
@@ -108,15 +89,15 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// The missig operation generator for the current entry.
+        /// The missing operation generator for the current resource.
         /// </summary>
         private ODataMissingOperationGenerator MissingOperationGenerator
         {
-            get { return this.missingOperationGenerator ?? (this.missingOperationGenerator = new ODataMissingOperationGenerator(this.entryMetadataContext, this.metadataContext)); }
+            get { return this.missingOperationGenerator ?? (this.missingOperationGenerator = new ODataMissingOperationGenerator(this.ResourceMetadataContext, this.MetadataContext)); }
         }
 
         /// <summary>
-        /// The computed key property name and value pairs of the entry.
+        /// The computed key property name and value pairs of the resource.
         /// If a value is unsigned integer, it will be automatically converted to its underlying type.
         /// </summary>
         private ICollection<KeyValuePair<string, object>> ComputedKeyProperties
@@ -127,15 +108,42 @@ namespace Microsoft.OData.Core.Evaluation
                 {
                     computedKeyProperties = new List<KeyValuePair<string, object>>();
 
-                    foreach (var originalKeyProperty in this.entryMetadataContext.KeyProperties)
+                    foreach (var originalKeyProperty in this.ResourceMetadataContext.KeyProperties)
                     {
-                        object newValue = this.metadataContext.Model.ConvertToUnderlyingTypeIfUIntValue(originalKeyProperty.Value);
+                        object newValue = this.MetadataContext.Model.ConvertToUnderlyingTypeIfUIntValue(originalKeyProperty.Value);
                         computedKeyProperties.Add(new KeyValuePair<string, object>(originalKeyProperty.Key, newValue));
                     }
                 }
 
                 return computedKeyProperties;
             }
+        }
+
+        /// <summary>
+        /// Gets canonical url of current resource.
+        /// </summary>
+        /// <returns>The canonical url of current resource.</returns>
+        public override Uri GetCanonicalUrl()
+        {
+            return this.GetId();
+        }
+
+        /// <summary>
+        /// Gets the edit url of current entity.
+        /// </summary>
+        /// <returns>The edit url of current entity.</returns>
+        public override Uri GetEditUrl()
+        {
+            return this.GetEditLink();
+        }
+
+        /// <summary>
+        /// Gets the read url of current entity.
+        /// </summary>
+        /// <returns>The read url of current entity.</returns>
+        public override Uri GetReadUrl()
+        {
+            return this.GetReadLink();
         }
 
         /// <summary>
@@ -148,14 +156,14 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal override Uri GetEditLink()
         {
-            if (this.entryMetadataContext.Entry.HasNonComputedEditLink)
+            if (this.ResourceMetadataContext.Resource.HasNonComputedEditLink)
             {
-                return this.entryMetadataContext.Entry.NonComputedEditLink;
+                return this.ResourceMetadataContext.Resource.NonComputedEditLink;
             }
             else
             {
                 // For readonly entity if ReadLink is there and EditLink is null, we should not calculate the EditLink in both serializer and deserializer.
-                if (this.entryMetadataContext.Entry.IsTransient || this.entryMetadataContext.Entry.HasNonComputedReadLink)
+                if (this.ResourceMetadataContext.Resource.IsTransient || this.ResourceMetadataContext.Resource.HasNonComputedReadLink)
                 {
                     return null;
                 }
@@ -183,9 +191,9 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal override Uri GetReadLink()
         {
-            if (this.entryMetadataContext.Entry.HasNonComputedReadLink)
+            if (this.ResourceMetadataContext.Resource.HasNonComputedReadLink)
             {
-                return this.entryMetadataContext.Entry.NonComputedReadLink;
+                return this.ResourceMetadataContext.Resource.NonComputedReadLink;
             }
             else
             {
@@ -211,9 +219,9 @@ namespace Microsoft.OData.Core.Evaluation
         internal override Uri GetId()
         {
             // If the Id were on the wire, use that wire value for the Id.
-            // If the entry was transient entry, return null for Id
+            // If the resource was transient resource, return null for Id
             // Otherwise compute it based on the key values.
-            return this.entryMetadataContext.Entry.HasNonComputedId ? this.entryMetadataContext.Entry.NonComputedId : (this.entryMetadataContext.Entry.IsTransient ? null : this.ComputedId);
+            return this.ResourceMetadataContext.Resource.HasNonComputedId ? this.ResourceMetadataContext.Resource.NonComputedId : (this.ResourceMetadataContext.Resource.IsTransient ? null : this.ComputedId);
         }
 
         /// <summary>
@@ -226,15 +234,15 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal override string GetETag()
         {
-            if (this.entryMetadataContext.Entry.HasNonComputedETag)
+            if (this.ResourceMetadataContext.Resource.HasNonComputedETag)
             {
-                return this.entryMetadataContext.Entry.NonComputedETag;
+                return this.ResourceMetadataContext.Resource.NonComputedETag;
             }
 
             if (!this.etagComputed)
             {
                 StringBuilder resultBuilder = new StringBuilder();
-                foreach (KeyValuePair<string, object> etagProperty in this.entryMetadataContext.ETagProperties)
+                foreach (KeyValuePair<string, object> etagProperty in this.ResourceMetadataContext.ETagProperties)
                 {
                     if (resultBuilder.Length > 0)
                     {
@@ -280,12 +288,12 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal override ODataStreamReferenceValue GetMediaResource()
         {
-            if (this.entryMetadataContext.Entry.NonComputedMediaResource != null)
+            if (this.ResourceMetadataContext.Resource.NonComputedMediaResource != null)
             {
-                return this.entryMetadataContext.Entry.NonComputedMediaResource;
+                return this.ResourceMetadataContext.Resource.NonComputedMediaResource;
             }
 
-            if (this.computedMediaResource == null && this.entryMetadataContext.TypeContext.IsMediaLinkEntry)
+            if (this.computedMediaResource == null && this.ResourceMetadataContext.TypeContext.IsMediaLinkEntry)
             {
                 this.computedMediaResource = new ODataStreamReferenceValue();
                 this.computedMediaResource.SetMetadataBuilder(this, /*propertyName*/ null);
@@ -301,7 +309,30 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The the computed and non-computed entity properties.</returns>
         internal override IEnumerable<ODataProperty> GetProperties(IEnumerable<ODataProperty> nonComputedProperties)
         {
-            return ODataUtilsInternal.ConcatEnumerables(nonComputedProperties, this.GetComputedStreamProperties(nonComputedProperties));
+            if (!isResourceEnd)
+            {
+                return nonComputedProperties;
+            }
+            else
+            {
+                return ODataUtilsInternal.ConcatEnumerables(nonComputedProperties, this.GetComputedStreamProperties(nonComputedProperties));
+            }
+        }
+
+        /// <summary>
+        /// Mark the resource is just started to process.
+        /// </summary>
+        internal override void StartResource()
+        {
+            this.isResourceEnd = false;
+        }
+
+        /// <summary>
+        /// Mark the resource has finished the processing. So GetProperties() need append ComputedStreamProperties for entity.
+        /// </summary>
+        internal override void EndResource()
+        {
+            this.isResourceEnd = true;
         }
 
         /// <summary>
@@ -311,7 +342,7 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal override IEnumerable<ODataAction> GetActions()
         {
-            return ODataUtilsInternal.ConcatEnumerables(this.entryMetadataContext.Entry.NonComputedActions, this.MissingOperationGenerator.GetComputedActions());
+            return ODataUtilsInternal.ConcatEnumerables(this.ResourceMetadataContext.Resource.NonComputedActions, this.MissingOperationGenerator.GetComputedActions());
         }
 
         /// <summary>
@@ -321,18 +352,18 @@ namespace Microsoft.OData.Core.Evaluation
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
         internal override IEnumerable<ODataFunction> GetFunctions()
         {
-            return ODataUtilsInternal.ConcatEnumerables(this.entryMetadataContext.Entry.NonComputedFunctions, this.MissingOperationGenerator.GetComputedFunctions());
+            return ODataUtilsInternal.ConcatEnumerables(this.ResourceMetadataContext.Resource.NonComputedFunctions, this.MissingOperationGenerator.GetComputedFunctions());
         }
 
         /// <summary>
-        /// Marks the given navigation link as processed.
+        /// Marks the given nested resource info as processed.
         /// </summary>
-        /// <param name="navigationPropertyName">The navigation link we've already processed.</param>
-        internal override void MarkNavigationLinkProcessed(string navigationPropertyName)
+        /// <param name="navigationPropertyName">The nested resource info we've already processed.</param>
+        internal override void MarkNestedResourceInfoProcessed(string navigationPropertyName)
         {
             Debug.Assert(!string.IsNullOrEmpty(navigationPropertyName), "!string.IsNullOrEmpty(navigationPropertyName)");
-            Debug.Assert(this.processedNavigationLinks != null, "this.processedNavigationLinks != null");
-            this.processedNavigationLinks.Add(navigationPropertyName);
+            Debug.Assert(this.ProcessedNestedResourceInfos != null, "this.processedNestedResourceInfos != null");
+            this.ProcessedNestedResourceInfos.Add(navigationPropertyName);
         }
 
         /// <summary>
@@ -340,20 +371,20 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <returns>Returns the next unprocessed navigation link or null if there's no more navigation links to process.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal override ODataJsonLightReaderNavigationLinkInfo GetNextUnprocessedNavigationLink()
+        internal override ODataJsonLightReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
         {
-            if (this.unprocessedNavigationLinks == null)
+            if (this.unprocessedNestedResourceInfos == null)
             {
-                Debug.Assert(this.entryMetadataContext != null, "this.entryMetadataContext != null");
-                this.unprocessedNavigationLinks = this.entryMetadataContext.SelectedNavigationProperties
-                    .Where(p => !this.processedNavigationLinks.Contains(p.Name))
-                    .Select(ODataJsonLightReaderNavigationLinkInfo.CreateProjectedNavigationLinkInfo)
+                Debug.Assert(this.ResourceMetadataContext != null, "this.resourceMetadataContext != null");
+                this.unprocessedNestedResourceInfos = this.ResourceMetadataContext.SelectedNavigationProperties
+                    .Where(p => !this.ProcessedNestedResourceInfos.Contains(p.Name))
+                    .Select(ODataJsonLightReaderNestedResourceInfo.CreateProjectedNestedResourceInfo)
                     .GetEnumerator();
             }
 
-            if (this.unprocessedNavigationLinks.MoveNext())
+            if (this.unprocessedNestedResourceInfos.MoveNext())
             {
-                return this.unprocessedNavigationLinks.Current;
+                return this.unprocessedNestedResourceInfos.Current;
             }
 
             return null;
@@ -362,7 +393,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>
         /// Gets the edit link of a stream value.
         /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for; 
+        /// <param name="streamPropertyName">The name of the stream property the edit link is computed for;
         /// or null for the default media resource.</param>
         /// <returns>
         /// The absolute URI of the edit link for the specified stream property or the default media resource.
@@ -372,13 +403,13 @@ namespace Microsoft.OData.Core.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 
-            return this.uriBuilder.BuildStreamEditLinkUri(this.GetEditLink(), streamPropertyName);
+            return this.UriBuilder.BuildStreamEditLinkUri(this.GetEditLink(), streamPropertyName);
         }
 
         /// <summary>
         /// Gets the read link of a stream value.
         /// </summary>
-        /// <param name="streamPropertyName">The name of the stream property the read link is computed for; 
+        /// <param name="streamPropertyName">The name of the stream property the read link is computed for;
         /// or null for the default media resource.</param>
         /// <returns>
         /// The absolute URI of the read link for the specified stream property or the default media resource.
@@ -388,7 +419,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
 
-            return this.uriBuilder.BuildStreamReadLinkUri(this.GetReadLink(), streamPropertyName);
+            return this.UriBuilder.BuildStreamReadLinkUri(this.GetReadLink(), streamPropertyName);
         }
 
         //// Stream content type and ETag can't be computed from conventions.
@@ -398,17 +429,17 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="navigationPropertyName">The name of the navigation property to get the navigation link URI for.</param>
         /// <param name="navigationLinkUrl">The value of the link URI as seen on the wire or provided explicitly by the user or previously returned by the metadata builder, which may be null.</param>
-        /// <param name="hasNavigationLinkUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
+        /// <param name="hasNestedResourceInfoUrl">true if the value of the <paramref name="navigationLinkUrl"/> was seen on the wire or provided explicitly by the user or previously returned by
         /// the metadata builder, false otherwise. This flag allows the metadata builder to determine whether a null navigation link url is an uninitialized value or a value that was set explicitly.</param>
         /// <returns>
         /// The navigation link URI for the navigation property.
         /// null if its not possible to determine the navigation link for the specified navigation property.
         /// </returns>
-        internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNavigationLinkUrl)
+        internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNestedResourceInfoUrl)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
-            return hasNavigationLinkUrl ? navigationLinkUrl : this.uriBuilder.BuildNavigationLinkUri(this.GetReadLink(), navigationPropertyName);
+            return hasNestedResourceInfoUrl ? navigationLinkUrl : this.UriBuilder.BuildNavigationLinkUri(this.GetReadLink(), navigationPropertyName);
         }
 
         /// <summary>
@@ -426,7 +457,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
-            return hasAssociationLinkUrl ? associationLinkUrl : this.uriBuilder.BuildAssociationLinkUri(this.GetReadLink(), navigationPropertyName);
+            return hasAssociationLinkUrl ? associationLinkUrl : this.UriBuilder.BuildAssociationLinkUri(this.GetReadLink(), navigationPropertyName);
         }
 
         /// <summary>
@@ -444,7 +475,7 @@ namespace Microsoft.OData.Core.Evaluation
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
 
             Uri baseUri;
-            if (string.IsNullOrEmpty(bindingParameterTypeName) || this.entryMetadataContext.Entry.NonComputedEditLink != null)
+            if (string.IsNullOrEmpty(bindingParameterTypeName) || this.ResourceMetadataContext.Resource.NonComputedEditLink != null)
             {
                 // if there is no parameter type name to append, or the edit-link is an opaque non-computed value, then use the edit-link as normal.
                 baseUri = this.GetEditLink();
@@ -455,7 +486,7 @@ namespace Microsoft.OData.Core.Evaluation
                 baseUri = this.GetId();
             }
 
-            return this.uriBuilder.BuildOperationTargetUri(baseUri, operationName, bindingParameterTypeName, parameterNames);
+            return this.UriBuilder.BuildOperationTargetUri(baseUri, operationName, bindingParameterTypeName, parameterNames);
         }
 
         /// <summary>
@@ -483,7 +514,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal override bool TryGetIdForSerialization(out Uri id)
         {
-            id = this.entryMetadataContext.Entry.IsTransient ? null : this.GetId();
+            id = this.ResourceMetadataContext.Resource.IsTransient ? null : this.GetId();
             return true;
         }
 
@@ -493,12 +524,12 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>Uri that was computed based on the computed Id and possible type segment.</returns>
         private Uri ComputeEditLink()
         {
-            Uri uri = this.entryMetadataContext.Entry.HasNonComputedId ? this.entryMetadataContext.Entry.NonComputedId : this.ComputedId;
+            Uri uri = this.ResourceMetadataContext.Resource.HasNonComputedId ? this.ResourceMetadataContext.Resource.NonComputedId : this.ComputedId;
 
-            Debug.Assert(this.entryMetadataContext != null && this.entryMetadataContext.TypeContext != null, "this.entryMetadataContext != null && this.entryMetadataContext.TypeContext != null");
-            if (this.entryMetadataContext.ActualEntityTypeName != this.entryMetadataContext.TypeContext.NavigationSourceEntityTypeName)
+            Debug.Assert(this.ResourceMetadataContext != null && this.ResourceMetadataContext.TypeContext != null, "this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null");
+            if (this.ResourceMetadataContext.ActualResourceTypeName != this.ResourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
             {
-                uri = this.uriBuilder.AppendTypeSegment(uri, this.entryMetadataContext.ActualEntityTypeName);
+                uri = this.UriBuilder.AppendTypeSegment(uri, this.ResourceMetadataContext.ActualResourceTypeName);
             }
 
             return uri;
@@ -515,7 +546,7 @@ namespace Microsoft.OData.Core.Evaluation
             }
 
             Uri uri;
-            switch (this.entryMetadataContext.TypeContext.NavigationSourceKind)
+            switch (this.ResourceMetadataContext.TypeContext.NavigationSourceKind)
             {
                 case EdmNavigationSourceKind.Singleton:
                     uri = this.ComputeIdForSingleton();
@@ -524,7 +555,7 @@ namespace Microsoft.OData.Core.Evaluation
                     uri = this.ComputeIdForContainment();
                     break;
                 case EdmNavigationSourceKind.UnknownEntitySet:
-                    throw new ODataException(OData.Core.Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+                    throw new ODataException(Strings.ODataMetadataBuilder_UnknownEntitySet(this.ResourceMetadataContext.TypeContext.NavigationSourceName));
                 default:
                     uri = this.ComputeId();
                     break;
@@ -541,9 +572,9 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         private Uri ComputeId()
         {
-            Uri uri = this.uriBuilder.BuildBaseUri();
-            uri = this.uriBuilder.BuildEntitySetUri(uri, this.entryMetadataContext.TypeContext.NavigationSourceName);
-            uri = this.uriBuilder.BuildEntityInstanceUri(uri, this.ComputedKeyProperties, this.entryMetadataContext.ActualEntityTypeName);
+            Uri uri = this.UriBuilder.BuildBaseUri();
+            uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);
+            uri = this.UriBuilder.BuildEntityInstanceUri(uri, this.ComputedKeyProperties, this.ResourceMetadataContext.ActualResourceTypeName);
             return uri;
         }
 
@@ -557,47 +588,74 @@ namespace Microsoft.OData.Core.Evaluation
         {
             Uri uri;
 
-            // check if has parent
-            ODataConventionalEntityMetadataBuilder parent = this.ParentMetadataBuilder as ODataConventionalEntityMetadataBuilder;
-            if (parent != null)
+            if (!TryComputeIdFromParent(out uri))
             {
-                // $expand scenario.  Get the parent id
-                uri = parent.GetId();
+                // Compute ID from context URL rather than from parent.
+                uri = this.UriBuilder.BuildBaseUri();
+                ODataUri odataUri = this.ODataUri ?? this.MetadataContext.ODataUri;
 
-                // And append cast (if needed).
-                // A cast segment if the navigation property is defined on a type derived from the entity
-                // type declared for the entity set
-                IODataFeedAndEntryTypeContext typeContext = parent.entryMetadataContext.TypeContext;
-                if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedEntityTypeName)
+                if (odataUri == null || odataUri.Path == null || odataUri.Path.Count == 0)
                 {
-                    // Do not append type cast if we know that the navigation property is in base type, not in derived type.
-                    ODataFeedAndEntryTypeContext.ODataFeedAndEntryTypeContextWithModel typeContextWithModel = typeContext as ODataFeedAndEntryTypeContext.ODataFeedAndEntryTypeContextWithModel;
-                    if (typeContextWithModel == null || typeContextWithModel.NavigationSourceEntityType.FindProperty(this.entryMetadataContext.TypeContext.NavigationSourceName) == null)
-                    {
-                        uri = new Uri(Core.UriUtils.EnsureTaillingSlash(uri), parent.entryMetadataContext.ActualEntityTypeName);    
-                    }
+                    throw new ODataException(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
                 }
-            }
-            else
-            {
-                // direct access scenario.
-                uri = this.uriBuilder.BuildBaseUri();
-                ODataUri odataUri = this.ODataUri ?? this.metadataContext.ODataUri;
+
                 uri = this.GetContainingEntitySetUri(uri, odataUri);
             }
 
             // A path segment for the containment navigation property
-            uri = this.uriBuilder.BuildEntitySetUri(uri, this.entryMetadataContext.TypeContext.NavigationSourceName);
+            uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);
 
-            if (this.entryMetadataContext.TypeContext.IsFromCollection)
+            if (this.ResourceMetadataContext.TypeContext.IsFromCollection)
             {
-                uri = this.uriBuilder.BuildEntityInstanceUri(
+                uri = this.UriBuilder.BuildEntityInstanceUri(
                     uri,
                     this.ComputedKeyProperties,
-                    this.entryMetadataContext.ActualEntityTypeName);
+                    this.ResourceMetadataContext.ActualResourceTypeName);
             }
 
             return uri;
+        }
+
+        private bool TryComputeIdFromParent(out Uri uri)
+        {
+            try
+            {
+                ODataConventionalResourceMetadataBuilder parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
+                if (parent != null && parent != this)
+                {
+                    // Get the parent canonical url
+                    uri = parent.GetCanonicalUrl();
+
+                    if (uri != null)
+                    {
+                        // And append cast (if needed).
+                        // A cast segment if the navigation property is defined on a type derived from the type expected.
+                        IODataResourceTypeContext typeContext = parent.ResourceMetadataContext.TypeContext;
+
+                        if (parent.ResourceMetadataContext.ActualResourceTypeName != typeContext.ExpectedResourceTypeName)
+                        {
+                            // Do not append type cast if we know that the navigation property is in base type, not in derived type.
+                            ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel =
+                                typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
+                            if (typeContextWithModel == null ||
+                                typeContextWithModel.ExpectedResourceType.FindProperty(
+                                    this.ResourceMetadataContext.TypeContext.NavigationSourceName) == null)
+                            {
+                                uri = new Uri(UriUtils.EnsureTaillingSlash(uri),
+                                    parent.ResourceMetadataContext.ActualResourceTypeName);
+                            }
+                        }
+
+                        return true;
+                    }
+                }
+            }
+            catch (ODataException)
+            {
+            }
+
+            uri = null;
+            return false;
         }
 
         /// <summary>
@@ -609,8 +667,8 @@ namespace Microsoft.OData.Core.Evaluation
         private Uri ComputeIdForSingleton()
         {
             // Do not append key for singleton.
-            Uri uri = this.uriBuilder.BuildBaseUri();
-            uri = this.uriBuilder.BuildEntitySetUri(uri, this.entryMetadataContext.TypeContext.NavigationSourceName);
+            Uri uri = this.UriBuilder.BuildBaseUri();
+            uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);
             return uri;
         }
 
@@ -618,13 +676,13 @@ namespace Microsoft.OData.Core.Evaluation
         /// Computes all projected or missing stream properties.
         /// </summary>
         /// <param name="nonComputedProperties">Non-computed properties from the entity.</param>
-        /// <returns>The the computed stream properties for the entry.</returns>
+        /// <returns>The the computed stream properties for the resource.</returns>
         private IEnumerable<ODataProperty> GetComputedStreamProperties(IEnumerable<ODataProperty> nonComputedProperties)
         {
             if (this.computedStreamProperties == null)
             {
                 // Remove all the projected properties that were already read from the payload
-                IDictionary<string, IEdmStructuralProperty> projectedStreamProperties = this.entryMetadataContext.SelectedStreamProperties;
+                IDictionary<string, IEdmStructuralProperty> projectedStreamProperties = this.ResourceMetadataContext.SelectedStreamProperties;
                 if (nonComputedProperties != null)
                 {
                     foreach (ODataProperty payloadProperty in nonComputedProperties)
@@ -657,15 +715,10 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The resource path.</returns>
         private Uri GetContainingEntitySetUri(Uri baseUri, ODataUri odataUri)
         {
-            if (odataUri == null || odataUri.Path == null)
-            {
-                throw new ODataException(OData.Core.Strings.ODataMetadataBuilder_MissingODataUri);
-            }
-
             ODataPath path = odataUri.Path;
             List<ODataPathSegment> segments = path.ToList();
             ODataPathSegment lastSegment = segments.Last();
-            while (!(lastSegment is NavigationPropertySegment))
+            while (!(lastSegment is NavigationPropertySegment) && !(lastSegment is OperationSegment))
             {
                 segments.Remove(lastSegment);
                 lastSegment = segments.Last();
@@ -679,8 +732,8 @@ namespace Microsoft.OData.Core.Evaluation
             while (nextToLastSegment is TypeSegment)
             {
                 ODataPathSegment previousSegment = segments[segments.Count - 2];
-                IEdmEntityType ownerType = previousSegment.TargetEdmType as IEdmEntityType;
-                if (ownerType != null && ownerType.FindProperty(lastSegment.Identifier) != null)
+                IEdmStructuredType owningType = previousSegment.TargetEdmType as IEdmStructuredType;
+                if (owningType != null && owningType.FindProperty(lastSegment.Identifier) != null)
                 {
                     segments.Remove(nextToLastSegment);
                     nextToLastSegment = segments.Last();
@@ -698,11 +751,11 @@ namespace Microsoft.OData.Core.Evaluation
                 var keySegment = segment as KeySegment;
                 if (keySegment == null)
                 {
-                    uri = this.uriBuilder.BuildEntitySetUri(uri, segment.Identifier);
+                    uri = this.UriBuilder.BuildEntitySetUri(uri, segment.Identifier);
                 }
                 else
                 {
-                    uri = this.uriBuilder.BuildEntityInstanceUri(
+                    uri = this.UriBuilder.BuildEntityInstanceUri(
                         uri,
                         keySegment.Keys.ToList(),
                         keySegment.EdmType.FullTypeName());

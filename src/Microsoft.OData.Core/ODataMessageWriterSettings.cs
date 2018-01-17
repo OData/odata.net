@@ -4,21 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using System.Diagnostics;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
     #endregion Namespaces
 
     /// <summary>
     /// Configuration settings for OData message writers.
     /// </summary>
-    public sealed class ODataMessageWriterSettings : ODataMessageWriterSettingsBase
+    public sealed class ODataMessageWriterSettings
     {
         /// <summary>
         /// The acceptable charsets used to the determine the encoding of the message.
@@ -33,36 +29,19 @@ namespace Microsoft.OData.Core
         private string acceptMediaTypes;
 
         /// <summary>
-        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader' 
+        /// The base uri used in payload.
+        /// </summary>
+        private Uri baseUri;
+
+        /// <summary>
+        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader'
         /// fields and uses the default values for the respective format. If null is specified
         /// the default format and the default media type will be picked depending on the writer these settings are used with.
         /// </summary>
         private ODataFormat format;
 
-        /// <summary>
-        /// true if the Format property should be used to compute the media type; 
-        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
-        /// null if neither the format nor the acceptable media types/charsets have been set.
-        /// </summary>
-        private bool? useFormat;
-
-        /// <summary>
-        /// An instance representing any knobs that control the behavior of the writers
-        /// inside and outside of WCF Data Services.
-        /// </summary>
-        private ODataWriterBehavior writerBehavior;
-
-        /// <summary>
-        /// Func to evaluate whether an annotation should be writen by the writer. The func should return true if the annotation should
-        /// be writen and false if the annotation should be skipped.
-        /// </summary>
-        private Func<string, bool> shouldIncludeAnnotation;
-
-        /// <summary>
-        /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 
-        /// All other elements in the same namespace will also not have prefixes.
-        /// </summary>
-        private bool alwaysUseDefaultXmlNamespaceForRootElement;
+        /// <summary>Quotas to use for limiting resource consumption when writing an OData message.</summary>
+        private ODataMessageQuotas messageQuotas;
 
         /// <summary>
         /// The parse result of request Uri
@@ -70,72 +49,102 @@ namespace Microsoft.OData.Core
         private ODataUri odataUri;
 
         /// <summary>
-        /// The base uri used in payload.
+        /// Func to evaluate whether an annotation should be written by the writer. The func should return true if the annotation should
+        /// be written and false if the annotation should be skipped.
         /// </summary>
-        private Uri payloadBaseUri;
+        private Func<string, bool> shouldIncludeAnnotation;
 
         /// <summary>
-        /// Media type resolver used for this writer.
+        /// true if the Format property should be used to compute the media type;
+        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
+        /// null if neither the format nor the acceptable media types/charsets have been set.
         /// </summary>
-        private ODataMediaTypeResolver mediaTypeResolver;
+        private bool? useFormat;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with default settings. </summary>
+        /// <summary>
+        /// Validation settings.
+        /// </summary>
+        private ValidationKinds validations;
+
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
-            // Create the default writer behavior
-            this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
-            this.EnableFullValidation = true;
+            this.EnableMessageStreamDisposal = true;
+            this.EnableCharactersCheck = false;
+            this.Validations = ValidationKinds.All;
+            this.Validator = new WriterValidator(this);
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> class with specified settings.</summary>
-        /// <param name="other">The specified settings.</param>
-        public ODataMessageWriterSettings(ODataMessageWriterSettings other)
-            : base(other)
-        {
-            ExceptionUtils.CheckArgumentNotNull(other, "other");
-
-            this.acceptCharSets = other.acceptCharSets;
-            this.acceptMediaTypes = other.acceptMediaTypes;
-            this.PayloadBaseUri = other.PayloadBaseUri;
-            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
-            this.format = other.format;
-            this.useFormat = other.useFormat;
-            this.Version = other.Version;
-            this.JsonPCallback = other.JsonPCallback;
-            this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
-            this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
-            this.UseKeyAsSegment = other.UseKeyAsSegment;
-            this.alwaysUseDefaultXmlNamespaceForRootElement = other.alwaysUseDefaultXmlNamespaceForRootElement;
-            this.ODataUri = other.ODataUri;
-
-            // NOTE: writer behavior is immutable; copy by reference is ok.
-            this.writerBehavior = other.writerBehavior;
-            this.EnableAtom = other.EnableAtom;
-            this.EnableFullValidation = other.EnableFullValidation;
-            this.mediaTypeResolver = other.mediaTypeResolver;
-            this.ODataSimplified = other.ODataSimplified;
-        }
-
-        /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
-        /// <returns>The OData protocol version to be used for writing payloads.</returns>
-        public ODataVersion? Version { get; set; }
-
-        /// <summary>Gets or sets the document base URI which is used as base for all relative URIs. </summary>
-        /// <returns>The document base URI which is used as base for all relative URIs.</returns>
-        /// <remarks>
-        /// This URI will be used in ATOM format only, it would be shown in &lt;xml:base /&gt; element, for JSON payload, base URI is context URI
-        /// If the URI does not end with a slash, a slash would be appended automatically.
-        /// </remarks>
-        public Uri PayloadBaseUri
+        /// <summary>
+        /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.Validations.FullValidation"/>,
+        /// </summary>
+        public ValidationKinds Validations
         {
             get
             {
-                return this.payloadBaseUri;
+                return validations;
             }
 
             set
             {
-                this.payloadBaseUri = UriUtils.EnsureTaillingSlash(value);
+                validations = value;
+                ThrowIfTypeConflictsWithMetadata = (validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0;
+                ThrowOnDuplicatePropertyNames = (validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0;
+                ThrowOnUndeclaredPropertyForNonOpenType = (validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
+            }
+        }
+
+        /// <summary>Gets or sets the document base URI which is used as base for all relative URIs. </summary>
+        /// <returns>The document base URI which is used as base for all relative URIs.</returns>
+        /// <remarks>
+        /// Base URI is context URI; if the URI does not end with a slash, a slash would be appended automatically.
+        /// </remarks>
+        public Uri BaseUri
+        {
+            get
+            {
+                return this.baseUri;
+            }
+
+            set
+            {
+                this.baseUri = UriUtils.EnsureTaillingSlash(value);
+            }
+        }
+
+        /// <summary>Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.</summary>
+        /// <returns>true if the message stream will be disposed after finishing writing with the message; otherwise false. The default value is true.</returns>
+        public bool EnableMessageStreamDisposal { get; set; }
+
+        /// <summary>
+        /// Flag to control whether the writer should check for valid Xml characters or not.
+        /// </summary>
+        public bool EnableCharactersCheck { get; set; }
+
+        /// <summary>Gets or sets a callback function use to wrap the response from server.</summary>
+        /// <returns>The callback function used to wrap the response from server.</returns>
+        /// <remarks>If it has a value and we are writing a JSON response, then we will wrap the entirety of the response in
+        /// the provided function name and parenthesis for JSONP. Otherwise this value is ignored.</remarks>
+        public string JsonPCallback { get; set; }
+
+        /// <summary>
+        /// Quotas to use for limiting resource consumption when writing an OData message.
+        /// </summary>
+        public ODataMessageQuotas MessageQuotas
+        {
+            get
+            {
+                if (this.messageQuotas == null)
+                {
+                    this.messageQuotas = new ODataMessageQuotas();
+                }
+
+                return this.messageQuotas;
+            }
+
+            set
+            {
+                this.messageQuotas = value;
             }
         }
 
@@ -149,80 +158,29 @@ namespace Microsoft.OData.Core
             set { this.odataUri = value; }
         }
 
-        /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
-        /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
-        public bool DisableMessageStreamDisposal { get; set; }
-
-        /// <summary>Gets or sets a callback function use to wrap the response from server.</summary>
-        /// <returns>The callback function used to wrap the response from server.</returns>
-        /// <remarks>If it has a value and we are writing a JSON response, then we will wrap the entirety of the response in
-        /// the provided function name and parenthesis for JSONP. Otherwise this value is ignored.</remarks>
-        public string JsonPCallback { get; set; }
+        /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
+        /// <returns>The OData protocol version to be used for writing payloads.</returns>
+        public ODataVersion? Version { get; set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the writer should automatically generate or omit metadata in JSON payloads based on the metadata level.
+        /// Gets the validator corresponding to the validation settings.
         /// </summary>
-        /// <remarks>
-        /// Payload metadata includes the type names of entries and property values as well as any information that may be computed automatically, such as edit links.
-        /// If, for example, ODataEntry.EditLink is not specified, then it will be automatically computed and written out in full metadata mode.
-        /// If ODataEntry.EditLink is specified, then that value will be considered an "override" of the default computed edit link, and will be written out in full and minimal metadata modes. It will not be written in no metadata mode.
-        /// </remarks>
-        public bool AutoComputePayloadMetadataInJson { get; set; }
+        internal IWriterValidator Validator { get; private set; }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the writer should put key values in their own URI segment when automatically building URIs.
-        /// If this value is false, automatically-generated URLs will take the form "../EntitySet('KeyValue')/..".
-        /// If this value is true, automatically-generated URLs will take the form "../EntitySet/KeyValue/..".
-        /// If this value is not set (null), decision will be made based on the "Com.Microsoft.OData.Service.Conventions.V1.UrlConventions" vocabulary
-        /// annotation on the IEdmEntityContainer, if available. The default behavior is to put key values inside parentheses and not a distinct URL segments.
-        /// This setting only applies to URLs that are automatically generated by the <see cref="ODataMessageWriter" /> and does not modify URLs explicitly provided by the user.
+        /// Returns whether ThrowIfTypeConflictsWithMetadata validation should be performed.
         /// </summary>
-        public bool? UseKeyAsSegment { get; set; }
+        internal bool ThrowIfTypeConflictsWithMetadata { get; private set; }
 
         /// <summary>
-        /// If set to true, all the validation would be enabled. Else some validation will be skipped.
-        /// Default to true.
+        /// Returns whether ThrowOnDuplicatePropertyNames validation setting is enabled.
         /// </summary>
-        public bool EnableFullValidation { get; set; }
+        internal bool ThrowOnDuplicatePropertyNames { get; private set; }
 
         /// <summary>
-        /// The media type resolver to use when interpreting the content type.
+        /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.
         /// </summary>
-        public ODataMediaTypeResolver MediaTypeResolver
-        {
-            get
-            {
-                if (this.mediaTypeResolver == null)
-                {
-                    this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.EnableAtom);
-                }
-
-                return this.mediaTypeResolver;
-            }
-
-            set
-            {
-                ExceptionUtils.CheckArgumentNotNull(value, "MediaTypeResolver");
-                this.mediaTypeResolver = value;
-            }
-        }
-
-        /// <summary>
-        /// Whether OData Simplified is enabled.
-        /// </summary>
-        public bool ODataSimplified { get; set; }
-
-        /// <summary>
-        /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 
-        /// All other elements in the same namespace will also not have prefixes.
-        /// </summary>
-        internal bool AlwaysUseDefaultXmlNamespaceForRootElement
-        {
-            get
-            {
-                return this.alwaysUseDefaultXmlNamespaceForRootElement;
-            }
-        }
+        internal bool ThrowOnUndeclaredPropertyForNonOpenType { get; private set; }
 
         /// <summary>
         /// The acceptable media types used to determine the content type of the message.
@@ -253,19 +211,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The writer behavior that holds all the knobs needed to make the writer
-        /// behave differently inside and outside of WCF Data Services.
-        /// </summary>
-        internal ODataWriterBehavior WriterBehavior
-        {
-            get
-            {
-                return this.writerBehavior;
-            }
-        }
-
-        /// <summary>
-        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader' 
+        /// The format to use when writing the payload; this replaces the 'AcceptHeader' and 'AcceptCharSetHeader'
         /// properties and uses the default values for the respective format. If null is specified
         /// the default format and the default media type will be picked depending on the writer these settings are used with.
         /// </summary>
@@ -278,15 +224,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// true if the Format property should be used to compute the media type; 
-        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
-        /// null if neither the format nor the acceptable media types/charsets have been set.
+        /// Gets the value indicating whether the payload represents an individual property
         /// </summary>
-        internal bool? UseFormat
+        internal bool IsIndividualProperty
         {
             get
             {
-                return this.useFormat;
+                return this.ODataUri.Path != null && this.ODataUri.Path.IsIndividualProperty();
             }
         }
 
@@ -298,6 +242,19 @@ namespace Microsoft.OData.Core
             get
             {
                 return this.ODataUri.MetadataDocumentUri;
+            }
+        }
+
+        /// <summary>
+        /// true if the Format property should be used to compute the media type;
+        /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
+        /// null if neither the format nor the acceptable media types/charsets have been set.
+        /// </summary>
+        internal bool? UseFormat
+        {
+            get
+            {
+                return this.useFormat;
             }
         }
 
@@ -326,19 +283,8 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Gets the value indicating whether the payload represents an individual property
-        /// </summary>
-        internal bool IsIndividualProperty
-        {
-            get
-            {
-                return this.ODataUri.Path != null && this.ODataUri.Path.IsIndividualProperty();
-            }
-        }
-
-        /// <summary>
-        /// Func to evaluate whether an annotation should be writen by the writer. The func should return true if the annotation should
-        /// be writen and false if the annotation should be skipped.
+        /// Func to evaluate whether an annotation should be written by the writer. The func should return true if the annotation should
+        /// be written and false if the annotation should be skipped.
         /// </summary>
         internal Func<string, bool> ShouldIncludeAnnotation
         {
@@ -354,9 +300,15 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Whether ATOM support is enabled.
+        /// Creates a shallow copy of this <see cref="ODataMessageWriterSettings"/>.
         /// </summary>
-        internal bool EnableAtom { get; set; }
+        /// <returns>A shallow copy of this <see cref="ODataMessageWriterSettings"/>.</returns>
+        public ODataMessageWriterSettings Clone()
+        {
+            var copy = new ODataMessageWriterSettings();
+            copy.CopyFrom(this);
+            return copy;
+        }
 
         /// <summary>Sets the acceptable media types and character sets from which the content type will be computed when writing the payload.</summary>
         /// <param name="acceptableMediaTypes">The acceptable media types used to determine the content type of the message. This is a comma separated list of content types as specified in RFC 2616, Section 14.1.</param>
@@ -382,31 +334,26 @@ namespace Microsoft.OData.Core
             this.useFormat = true;
         }
 
-        /// <summary>Enables the <see cref="T:Microsoft.OData.Core.ODataMessageWriterSettings" /> default behavior.</summary>
-        public void EnableDefaultBehavior()
+        internal static ODataMessageWriterSettings CreateWriterSettings(
+            IServiceProvider container,
+            ODataMessageWriterSettings other)
         {
-            this.writerBehavior = ODataWriterBehavior.DefaultBehavior;
-        }
+            ODataMessageWriterSettings writerSettings;
+            if (container == null)
+            {
+                writerSettings = new ODataMessageWriterSettings();
+            }
+            else
+            {
+                writerSettings = container.GetRequiredService<ODataMessageWriterSettings>();
+            }
 
-        /// <summary>Specifies whether the WCF data services server behavior is enabled.</summary>
-        public void EnableODataServerBehavior()
-        {
-            // We have to reset the ATOM entry XML customization since in the server behavior no atom entry customization is used.
-            this.writerBehavior = ODataWriterBehavior.CreateODataServerBehavior();
-        }
+            if (other != null)
+            {
+                writerSettings.CopyFrom(other);
+            }
 
-        /// <summary>Specifies whether the OData services server behavior is enabled.</summary>
-        /// <param name="alwaysUseDefaultXmlNamespaceForRootElement">true if the server is configured to leave prefixes off all root elements and anything else in the same namespace, otherwise, false.</param>
-        public void EnableODataServerBehavior(bool alwaysUseDefaultXmlNamespaceForRootElement)
-        {
-            this.EnableODataServerBehavior();
-            this.alwaysUseDefaultXmlNamespaceForRootElement = alwaysUseDefaultXmlNamespaceForRootElement;
-        }
-
-        /// <summary>Enables the WCF data services client behavior.</summary>
-        public void EnableWcfDataServicesClientBehavior()
-        {
-            this.writerBehavior = ODataWriterBehavior.CreateWcfDataServicesClientBehavior();
+            return writerSettings;
         }
 
         /// <summary>Sets the URI of the metadata document.</summary>
@@ -419,20 +366,43 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Determines if there is a JSON padding function defined.
         /// </summary>
-        /// <returns>True if the JsonPCallback property is not null or emtpy.</returns>
+        /// <returns>True if the JsonPCallback property is not null or empty.</returns>
         internal bool HasJsonPaddingFunction()
         {
             return !string.IsNullOrEmpty(this.JsonPCallback);
         }
 
         /// <summary>
-        /// Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be writen, false otherwise.
+        /// Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be written, false otherwise.
         /// </summary>
         /// <param name="annotationName">The name of the annotation in question.</param>
-        /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be writen, false otherwise.</returns>
+        /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be written, false otherwise.</returns>
         internal bool ShouldSkipAnnotation(string annotationName)
         {
             return this.ShouldIncludeAnnotation == null || !this.ShouldIncludeAnnotation(annotationName);
+        }
+
+        private void CopyFrom(ODataMessageWriterSettings other)
+        {
+            ExceptionUtils.CheckArgumentNotNull(other, "other");
+
+            this.acceptCharSets = other.acceptCharSets;
+            this.acceptMediaTypes = other.acceptMediaTypes;
+            this.BaseUri = other.BaseUri;
+            this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
+            this.EnableCharactersCheck = other.EnableCharactersCheck;
+            this.format = other.format;
+            this.JsonPCallback = other.JsonPCallback;
+            this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
+            this.ODataUri = other.ODataUri.Clone();
+            this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
+            this.useFormat = other.useFormat;
+            this.Version = other.Version;
+
+            this.validations = other.validations;
+            this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
+            this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
+            this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
         }
     }
 }

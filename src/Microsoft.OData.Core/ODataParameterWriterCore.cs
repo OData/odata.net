@@ -4,22 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.IO;
-    using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -40,7 +38,7 @@ namespace Microsoft.OData.Core
         private HashSet<string> parameterNamesWritten = new HashSet<string>(StringComparer.Ordinal);
 
         /// <summary>Checker to detect duplicate property names on complex parameter values.</summary>
-        private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
+        private IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
 
         /// <summary>
         /// Constructor.
@@ -76,16 +74,19 @@ namespace Microsoft.OData.Core
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
 
-            /// <summary>An error had occured while writing the payload; nothing can be written anymore.</summary>
+            /// <summary>An error had occurred while writing the payload; nothing can be written anymore.</summary>
             Error
         }
 
         /// <summary>Checker to detect duplicate property names on complex parameter values.</summary>
-        protected DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        protected IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
         {
             get
             {
-                return this.duplicatePropertyNamesChecker ?? (this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false /*allowDuplicateProperties*/, false /*isResponse*/, !this.outputContext.MessageWriterSettings.EnableFullValidation));
+                return this.duplicatePropertyNameChecker ??
+                       (this.duplicatePropertyNameChecker =
+                           outputContext.MessageWriterSettings.Validator
+                           .CreateDuplicatePropertyNameChecker());
             }
         }
 
@@ -108,7 +109,7 @@ namespace Microsoft.OData.Core
             this.InterceptException(this.FlushSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -131,7 +132,7 @@ namespace Microsoft.OData.Core
             this.InterceptException(() => this.WriteStartImplementation());
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a parameter payload.
         /// </summary>
@@ -147,7 +148,7 @@ namespace Microsoft.OData.Core
         /// Start writing a value parameter.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
+        /// <param name="parameterValue">The value of the parameter to write (null/ODataEnumValue/primitiveClrValue).</param>
         public sealed override void WriteValue(string parameterName, object parameterValue)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
@@ -155,7 +156,7 @@ namespace Microsoft.OData.Core
             this.InterceptException(() => this.WriteValueImplementation(parameterName, parameterValue, expectedTypeReference));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a value parameter.
         /// </summary>
@@ -182,7 +183,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException(() => this.CreateCollectionWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
         /// </summary>
@@ -197,49 +198,49 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write an entry. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
-        public sealed override ODataWriter CreateEntryWriter(string parameterName)
+        public sealed override ODataWriter CreateResourceWriter(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
-            IEdmTypeReference itemTypeReference = this.VerifyCanCreateEntryWriter(true /*synchronousCall*/, parameterName);
-            return this.InterceptException(() => this.CreateEntryWriterImplementation(parameterName, itemTypeReference));
+            IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(true /*synchronousCall*/, parameterName);
+            return this.InterceptException(() => this.CreateResourceWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write an entry.</summary>
+#if PORTABLELIB
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
-        public sealed override Task<ODataWriter> CreateEntryWriterAsync(string parameterName)
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
+        public sealed override Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
-            IEdmTypeReference itemTypeReference = this.VerifyCanCreateEntryWriter(false /*synchronousCall*/, parameterName);
+            IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(false /*synchronousCall*/, parameterName);
             return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.InterceptException(() => this.CreateEntryWriterImplementation(parameterName, itemTypeReference)));
+                () => this.InterceptException(() => this.CreateResourceWriterImplementation(parameterName, itemTypeReference)));
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
-        public sealed override ODataWriter CreateFeedWriter(string parameterName)
+        public sealed override ODataWriter CreateResourceSetWriter(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
-            IEdmTypeReference itemTypeReference = this.VerifyCanCreateFeedWriter(true /*synchronousCall*/, parameterName);
-            return this.InterceptException(() => this.CreateFeedWriterImplementation(parameterName, itemTypeReference));
+            IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(true /*synchronousCall*/, parameterName);
+            return this.InterceptException(() => this.CreateResourceSetWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to  write a feed.</summary>
+#if PORTABLELIB
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.Core.ODataWriter" />.</returns>
-        public sealed override Task<ODataWriter> CreateFeedWriterAsync(string parameterName)
+        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
+        public sealed override Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
-            IEdmTypeReference itemTypeReference = this.VerifyCanCreateFeedWriter(false /*synchronousCall*/, parameterName);
+            IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(false /*synchronousCall*/, parameterName);
             return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.InterceptException(() => this.CreateFeedWriterImplementation(parameterName, itemTypeReference)));
+                () => this.InterceptException(() => this.CreateResourceSetWriterImplementation(parameterName, itemTypeReference)));
         }
 #endif
 
@@ -257,7 +258,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a parameter payload.
         /// </summary>
@@ -325,7 +326,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         protected abstract void FlushSynchronously();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -354,17 +355,17 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created <see cref="ODataCollectionWriter"/>.</returns>
         protected abstract ODataCollectionWriter CreateFormatCollectionWriter(string parameterName, IEdmTypeReference expectedItemType);
 
-        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write an entry.</summary>
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected abstract ODataWriter CreateFormatEntryWriter(string parameterName, IEdmTypeReference expectedItemType);
+        protected abstract ODataWriter CreateFormatResourceWriter(string parameterName, IEdmTypeReference expectedItemType);
 
-        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a feed.</summary>
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected abstract ODataWriter CreateFormatFeedWriter(string parameterName, IEdmTypeReference expectedItemType);
+        protected abstract ODataWriter CreateFormatResourceSetWriter(string parameterName, IEdmTypeReference expectedItemType);
 
         /// <summary>
         /// Finish writing an OData payload.
@@ -433,12 +434,12 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataComplexTypeKind() && !parameterTypeReference.IsODataEnumTypeKind() && !parameterTypeReference.IsODataTypeDefinitionTypeKind())
+            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataEnumTypeKind() && !parameterTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }
 
-            if (parameterValue != null && (!EdmLibraryExtensions.IsPrimitiveType(parameterValue.GetType()) || parameterValue is Stream) && !(parameterValue is ODataComplexValue) && !(parameterValue is ODataEnumValue))
+            if (parameterValue != null && (!EdmLibraryExtensions.IsPrimitiveType(parameterValue.GetType()) || parameterValue is Stream) && !(parameterValue is ODataEnumValue))
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType(parameterName, parameterValue.GetType()));
             }
@@ -456,6 +457,8 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
+
+            // TODO : Change to structureds Collection check
             if (parameterTypeReference != null && !parameterTypeReference.IsNonEntityCollectionType())
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind(parameterName, parameterTypeReference.TypeKind()));
@@ -465,36 +468,36 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verify that calling CreateEntryWriter is valid.
+        /// Verify that calling CreateResourceWriter is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="parameterName">The name of the parameter to be written.</param>
-        /// <returns>The expected item type of the entry or null.</returns>
-        private IEdmTypeReference VerifyCanCreateEntryWriter(bool synchronousCall, string parameterName)
+        /// <returns>The expected item type of the resource or null.</returns>
+        private IEdmTypeReference VerifyCanCreateResourceWriter(bool synchronousCall, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsODataEntityTypeKind())
+            if (parameterTypeReference != null && !parameterTypeReference.IsStructured())
             {
-                throw new ODataException(String.Format(CultureInfo.InvariantCulture, "The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateEntryWriter on a parameter that is not of Edm type kind 'Entity'.", parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }
 
             return parameterTypeReference;
         }
 
         /// <summary>
-        /// Verify that calling CreateFeedWriter is valid.
+        /// Verify that calling CreateResourceSetWriter is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="parameterName">The name of the parameter to be written.</param>
-        /// <returns>The expected item type of the item in feed or null.</returns>
-        private IEdmTypeReference VerifyCanCreateFeedWriter(bool synchronousCall, string parameterName)
+        /// <returns>The expected item type of the item in resource set or null.</returns>
+        private IEdmTypeReference VerifyCanCreateResourceSetWriter(bool synchronousCall, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsEntityCollectionType())
+            if (parameterTypeReference != null && !parameterTypeReference.IsStructuredCollectionType())
             {
-                throw new ODataException(String.Format(CultureInfo.InvariantCulture, "The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateFeedWriter on a parameter that is not of Edm type kind 'Collection(Entity)'.", parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }
 
             return parameterTypeReference;
@@ -525,7 +528,7 @@ namespace Microsoft.OData.Core
         /// Write a value parameter - implementation of the actual functionality.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
+        /// <param name="parameterValue">The value of the parameter to write (null/ODataEnumValue/primitiveClrValue).</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
         private void WriteValueImplementation(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
         {
@@ -548,31 +551,31 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter"/> to write an entry parameter.
+        /// Creates an <see cref="ODataWriter"/> to write a resource parameter.
         /// </summary>
         /// <param name="parameterName">The name of the  parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        private ODataWriter CreateEntryWriterImplementation(string parameterName, IEdmTypeReference expectedItemType)
+        private ODataWriter CreateResourceWriterImplementation(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
-            ODataWriter entryWriter = this.CreateFormatEntryWriter(parameterName, expectedItemType);
+            ODataWriter resourceWriter = this.CreateFormatResourceWriter(parameterName, expectedItemType);
             this.ReplaceScope(ParameterWriterState.ActiveSubWriter);
-            return entryWriter;
+            return resourceWriter;
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter"/> to write a feed parameter.
+        /// Creates an <see cref="ODataWriter"/> to write a resource set parameter.
         /// </summary>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataCollectionWriter"/>.</returns>
-        private ODataWriter CreateFeedWriterImplementation(string parameterName, IEdmTypeReference expectedItemType)
+        private ODataWriter CreateResourceSetWriterImplementation(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
-            ODataWriter feedWriter = this.CreateFormatFeedWriter(parameterName, expectedItemType);
+            ODataWriter resourceSetWriter = this.CreateFormatResourceSetWriter(parameterName, expectedItemType);
             this.ReplaceScope(ParameterWriterState.ActiveSubWriter);
-            return feedWriter;
+            return resourceSetWriter;
         }
 
         /// <summary>
@@ -593,7 +596,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// If an <see cref="IEdmOperationImport"/> is specified, then this method ensures that all parameters present in the 
+        /// If an <see cref="IEdmOperationImport"/> is specified, then this method ensures that all parameters present in the
         /// operation import are written to the payload.
         /// </summary>
         /// <remarks>The binding parameter is optional in the payload. Hence this method will not check for missing binding parameter.</remarks>
@@ -670,7 +673,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataParameterWriterCore_AsyncCallOnSyncWriter);
@@ -741,7 +744,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Leave the current writer scope and return to the previous scope. 
+        /// Leave the current writer scope and return to the previous scope.
         /// When reaching the top-level replace the 'Start' scope with a 'Completed' scope.
         /// </summary>
         /// <remarks>Note that this method is never called once the writer is in 'Error' state.</remarks>

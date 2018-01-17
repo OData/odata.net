@@ -4,7 +4,7 @@ $filter = geo.distance(Home, Office) lt 0.5
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Boss
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
@@ -18,19 +18,19 @@ FilterQueryOption
 					Property = Home
 					TypeReference = [Edm.GeographyPoint Nullable=True SRID=4326]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = Boss
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				SingleValuePropertyAccessNode
 					Property = Office
 					TypeReference = [Edm.GeographyPoint Nullable=True SRID=4326]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = Boss
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	LessThan
 		0.5(Type: [Edm.Double Nullable=False])

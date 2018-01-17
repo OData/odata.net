@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Tests.Server;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
     [TestClass]
     public class CallbackQueryOptionFunctionalTests
     {
@@ -140,7 +141,8 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verify that we support callback option for inner GET request in Batch but not the batch request itself.
         /// </summary>
-        [TestMethod, TestCategory("Partition1")]
+        [Ignore] // Remove Atom
+        // [TestMethod, TestCategory("Partition1")]
         public void CallBackInBatchRequestTest()
         {
             StringBuilder batchQueryOperation = new StringBuilder(); 
@@ -203,7 +205,8 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// We throw on $callback if we content negotiation does not result in us writing JSON.
         /// </summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void CallbackFailOnAtomXml()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())

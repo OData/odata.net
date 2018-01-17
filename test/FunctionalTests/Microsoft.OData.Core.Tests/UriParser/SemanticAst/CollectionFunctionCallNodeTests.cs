@@ -8,15 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
     /// Unit tests for the CollectionFunctionCallNode class
@@ -36,14 +34,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         public void NameCannotBeNull()
         {
             Action createWithNullName = () => new CollectionFunctionCallNode(null, null, new QueryNode[] { }, collectionTypeReference, null);
-            createWithNullName.ShouldThrow<ArgumentNullException>().WithMessage("name", ComparisonMode.EquivalentSubstring);
+            createWithNullName.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("name"));
         }
 
         [Fact]
         public void CollectionTypeReferenceCannotBeNull()
         {
             Action createWithNullType = () => new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { }, null, null);
-            createWithNullType.ShouldThrow<ArgumentNullException>().WithMessage("collectionType", ComparisonMode.EquivalentSubstring);
+            createWithNullType.ShouldThrow<ArgumentNullException>().Where(e => e.Message.IndexOf("collectionType", StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         [Fact]

@@ -9,13 +9,13 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
     /// <summary>
-    /// Tests for the ODataEntry object model type.
+    /// Tests for the ODataResource object model type.
     /// </summary>
     [TestClass, TestCase]
     public class ODataEntryTests : ODataTestCase
@@ -23,7 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [TestMethod, Variation(Description = "Test the default values of an entry.")]
         public void DefaultValuesTest()
         {
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
             this.Assert.IsNull(entry.ETag, "Expected null default value for property 'ETag'.");
             this.Assert.IsNull(entry.Id, "Expected null default value for property 'Id'.");
             this.Assert.IsNull(entry.EditLink, "Expected null default value for property 'EditLink'.");
@@ -56,7 +56,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             string typeName = "ODataLibSample.DummyType";
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 ETag = etag,
                 Id = id,
@@ -82,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [TestMethod, Variation(Description = "Test the property setters and getters of an entry.")]
         public void PropertySettersNullTest()
         {
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 ETag = null,
                 Id = null,

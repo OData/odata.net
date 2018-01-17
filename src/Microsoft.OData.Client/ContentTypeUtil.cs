@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Service
@@ -15,51 +15,51 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using System.Net;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>Provides helper methods for processing HTTP requests.</summary>
     internal static class ContentTypeUtil
     {
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
-        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not 
+        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not
         /// process the payload correctly when included.
-        /// 
+        ///
         /// Because the data service should include the encoding as part of the Content-Type in the response,
         /// there should be no ambiguity as to what encoding is being used.
-        /// 
+        ///
         /// For further information, see http://www.unicode.org/faq/utf_bom.html#BOM.
         /// </remarks>
         internal static readonly UTF8Encoding EncodingUtf8NoPreamble = new UTF8Encoding(false, true);
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Allowable Media Types for an Entity or Feed in V2.
         /// </summary>
         private static readonly string[] MediaTypesForEntityOrFeedV2 = new string[]
-            { 
+            {
                 XmlConstants.MimeApplicationJson,
-                XmlConstants.MimeApplicationAtom, 
+                XmlConstants.MimeApplicationAtom,
             };
 
         /// <summary>
         /// Allowable Media Types for something besides an Entity or Feed in V2.
         /// </summary>
         private static readonly string[] MediaTypesForOtherV2 = new string[]
-            { 
+            {
                 XmlConstants.MimeApplicationJson,
-                XmlConstants.MimeApplicationXml, 
-                XmlConstants.MimeTextXml, 
+                XmlConstants.MimeApplicationXml,
+                XmlConstants.MimeTextXml,
             };
 
         /// <summary>
         /// Allowable Media Types for Entities or Feeds in V3.
         /// </summary>
         private static readonly string[] MediaTypesForEntityOrFeedV3 = new string[]
-            { 
+            {
                 XmlConstants.MimeApplicationJson,
                 XmlConstants.MimeApplicationAtom,
                 XmlConstants.MimeApplicationJsonODataMinimalMetadata,
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Service
         /// Allowable Media Types for something other than Entities or Feeds in V3.
         /// </summary>
         private static readonly string[] MediaTypesForOtherV3 = new string[]
-            { 
+            {
                 XmlConstants.MimeApplicationJson,
                 XmlConstants.MimeApplicationXml,
                 XmlConstants.MimeTextXml,
@@ -104,12 +104,12 @@ namespace Microsoft.OData.Service
             }
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
 
         /// <summary>Selects an acceptable MIME type that satisfies the Accepts header.</summary>
         /// <param name="acceptTypesText">Text for Accepts header.</param>
         /// <param name="availableTypes">
-        /// Types that the server is willing to return, in descending order 
+        /// Types that the server is willing to return, in descending order
         /// of preference.
         /// </param>
         /// <returns>The best MIME type for the client</returns>
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Service
         }
 #endif
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>Reads a Content-Type header and extracts the MIME type/subtype.</summary>
         /// <param name="contentType">The Content-Type header.</param>
         /// <param name="mime">The MIME type in standard type/subtype form, without parameters.</param>
@@ -465,7 +465,7 @@ namespace Microsoft.OData.Service
         /// <summary>Gets the named encoding if specified.</summary>
         /// <param name="name">Name (possibly null or empty).</param>
         /// <returns>
-        /// The named encoding if specified; the encoding for HTTP missing 
+        /// The named encoding if specified; the encoding for HTTP missing
         /// charset specification otherwise.
         /// </returns>
         /// <remarks>
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Service
             }
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>Creates a new exception for parsing errors.</summary>
         /// <param name="message">Message for error.</param>
         /// <returns>A new exception that can be thrown for a parsing error.</returns>
@@ -599,7 +599,7 @@ namespace Microsoft.OData.Service
                     textIndex++;
                     if (SkipWhitespace(text, ref textIndex))
                     {
-                        // ';' should be a leading separator, but we choose to be a 
+                        // ';' should be a leading separator, but we choose to be a
                         // bit permissive and allow it as a final delimiter as well.
                         break;
                     }
@@ -825,7 +825,7 @@ namespace Microsoft.OData.Service
                 textIndex++;
                 if (SkipWhitespace(text, ref textIndex))
                 {
-                    // ';' should be a leading separator, but we choose to be a 
+                    // ';' should be a leading separator, but we choose to be a
                     // bit permissive and allow it as a final delimiter as well.
                     break;
                 }
@@ -959,7 +959,7 @@ namespace Microsoft.OData.Service
                         throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_EscapeCharAtEnd(parameterName));
                     }
 
-                    currentChar = headerText[textIndex];        
+                    currentChar = headerText[textIndex];
                 }
                 else
                 if (!IsHttpToken(currentChar))
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData.Service
             return c < '\x7F' && c > '\x1F' && !IsHttpSeparator(c);
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>Provides a struct to encapsulate a charset name and its relative desirability.</summary>
         private struct CharsetPart
         {
@@ -1112,7 +1112,7 @@ namespace Microsoft.OData.Service
                 get { return this.parameters; }
             }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
             /// <summary>Gets a number of non-* matching types, or -1 if not matching at all.</summary>
             /// <param name="candidate">Candidate MIME type to match.</param>
             /// <returns>The number of non-* matching types, or -1 if not matching at all.</returns>
@@ -1222,7 +1222,7 @@ namespace Microsoft.OData.Service
             /// the default encoding for well-known media types.
             /// </returns>
             /// <remarks>
-            /// As per http://tools.ietf.org/html/rfc2616#section-3.7, the type, 
+            /// As per http://tools.ietf.org/html/rfc2616#section-3.7, the type,
             /// subtype and parameter name attributes are case-insensitive.
             /// </remarks>
             internal Encoding SelectEncoding()

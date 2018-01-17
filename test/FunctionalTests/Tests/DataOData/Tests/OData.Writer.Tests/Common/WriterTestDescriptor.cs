@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
@@ -120,9 +120,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         public string ContentType { get; set; }
 
         /// <summary>
-        /// If set, this resolver will be used in the message used durign writing. And that message will implement the IODataUrlResolver interface.
+        /// If set, this resolver will be used in the message used durign writing. And that message will implement the IODataPayloadUriConverter interface.
         /// </summary>
-        public IODataUrlResolver UrlResolver { get; set; }
+        public IODataPayloadUriConverter UrlResolver { get; set; }
 
         /// <summary>
         /// Runs the test specified by this test descriptor.

@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,9 +30,9 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
         #region Help function
 
-        public List<ODataEntry> QueryFeed(string requestUri, string mimeType)
+        public List<ODataResource> QueryFeed(string requestUri, string mimeType)
         {
-            List<ODataEntry> entries = new List<ODataEntry>();
+            List<ODataResource> entries = new List<ODataResource>();
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = baseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(baseUri.AbsoluteUri + requestUri, UriKind.Absolute));
@@ -44,18 +44,18 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, model))
                 {
-                    var reader = messageReader.CreateODataFeedReader();
+                    var reader = messageReader.CreateODataResourceSetReader();
 
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            ODataEntry entry = reader.Item as ODataEntry;
+                            ODataResource entry = reader.Item as ODataResource;
                             entries.Add(entry);
                         }
-                        else if (reader.State == ODataReaderState.FeedEnd)
+                        else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            Assert.IsNotNull(reader.Item as ODataFeed);
+                            Assert.IsNotNull(reader.Item as ODataResourceSet);
                         }
                     }
 
@@ -71,9 +71,9 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
         /// <param name="requestUri"></param>
         /// <param name="mimeType"></param>
         /// <returns></returns>
-        public List<ODataEntry> QueryEntries(string requestUri, string mimeType)
+        public List<ODataResource> QueryEntries(string requestUri, string mimeType)
         {
-            List<ODataEntry> entries = new List<ODataEntry>();
+            List<ODataResource> entries = new List<ODataResource>();
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = baseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(baseUri.AbsoluteUri + requestUri, UriKind.Absolute));
@@ -86,13 +86,13 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
 
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            entries.Add(reader.Item as ODataEntry);
+                            entries.Add(reader.Item as ODataResource);
                         }
                     }
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -101,7 +101,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             return entries;
         }
 
-        public ODataFeed QueryInnerFeed(string requestUri, string mimeType)
+        public ODataResourceSet QueryInnerFeed(string requestUri, string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = baseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(baseUri.AbsoluteUri + requestUri, UriKind.Absolute));
@@ -113,13 +113,13 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
 
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.FeedEnd)
+                        if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            return (reader.Item as ODataFeed);
+                            return (reader.Item as ODataResourceSet);
                         }
                     }
 

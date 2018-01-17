@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     public static class ODataValueAssertions
     {
@@ -24,12 +24,6 @@ namespace Microsoft.OData.Core.Tests.UriParser
             return new AndConstraint<IEnumerable<TValue>>(value.Items.Cast<TValue>());
         }
 
-        public static AndConstraint<ODataComplexValue> ShouldBeODataComplexValue(this object value)
-        {
-            value.Should().BeAssignableTo<ODataComplexValue>();
-            return new AndConstraint<ODataComplexValue>(value.As<ODataComplexValue>());
-        }
-
         public static AndConstraint<ODataEnumValue> ShouldBeODataEnumValue(this object value, string typeName, string val)
         {
             value.Should().BeAssignableTo<ODataEnumValue>();
@@ -37,12 +31,6 @@ namespace Microsoft.OData.Core.Tests.UriParser
             enumVal.TypeName.Should().Be(typeName);
             enumVal.Value.Should().Be(val);
             return new AndConstraint<ODataEnumValue>(enumVal);
-        }
-
-        public static AndConstraint<ODataComplexValue> WithTypeName(this AndConstraint<ODataComplexValue> value, string expectedTypeName)
-        {
-            value.And.TypeName.Should().BeEquivalentTo(expectedTypeName);
-            return new AndConstraint<ODataComplexValue>(value.And);
         }
     }
 }

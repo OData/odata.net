@@ -4,7 +4,7 @@ $filter = replace(FirstName, 'd', 'n') eq 'bran'
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Customers
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -18,11 +18,11 @@ FilterQueryOption
 					Property = FirstName
 					TypeReference = [Edm.String Nullable=True Unicode=True]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = Customers
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				d(Type: [Edm.String Nullable=True Unicode=True])
 				n(Type: [Edm.String Nullable=True Unicode=True])
 	Equal

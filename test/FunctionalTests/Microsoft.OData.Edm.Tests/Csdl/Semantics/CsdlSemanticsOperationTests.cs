@@ -9,8 +9,8 @@ using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
@@ -69,8 +69,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             semanticAction.Name.Should().Be("Checkout");
             semanticAction.Namespace.Should().Be("FQ.NS");
             semanticAction.ReturnType.Definition.Should().Be(EdmCoreModel.Instance.GetString(true).Definition);
-            semanticAction.EntitySetPath.Path.ToList()[0].Should().Be("entity");
-            semanticAction.EntitySetPath.Path.ToList()[1].Should().Be("FakePath");
+            semanticAction.EntitySetPath.PathSegments.ToList()[0].Should().Be("entity");
+            semanticAction.EntitySetPath.PathSegments.ToList()[1].Should().Be("FakePath");
             semanticAction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Action);
         }
     }

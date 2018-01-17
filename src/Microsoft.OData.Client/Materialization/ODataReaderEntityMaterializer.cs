@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client.Materialization
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Feed being materialized; possibly null.
         /// </summary>
-        internal override ODataFeed CurrentFeed
+        internal override ODataResourceSet CurrentFeed
         {
             get { return this.feedEntryAdapter.CurrentFeed; }
         }
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Entry being materialized; possibly null.
         /// </summary>
-        internal override ODataEntry CurrentEntry
+        internal override ODataResource CurrentEntry
         {
             get { return this.feedEntryAdapter.CurrentEntry; }
         }
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>the MaterializerEntry that was read</returns>
         internal static MaterializerEntry ParseSingleEntityPayload(IODataResponseMessage message, ResponseInfo responseInfo, Type expectedType)
         {
-            ODataPayloadKind messageType = ODataPayloadKind.Entry;
+            ODataPayloadKind messageType = ODataPayloadKind.Resource;
             using (ODataMessageReader messageReader = CreateODataMessageReader(message, responseInfo, ref messageType))
             {
                 IEdmType edmType = responseInfo.TypeResolver.ResolveExpectedTypeForReading(expectedType);
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 FeedAndEntryMaterializerAdapter parser = new FeedAndEntryMaterializerAdapter(messageReader, reader, responseInfo.Model, responseInfo.MergeOption);
 
-                ODataEntry entry = null;
+                ODataResource entry = null;
                 bool readFeed = false;
                 while (parser.Read())
                 {

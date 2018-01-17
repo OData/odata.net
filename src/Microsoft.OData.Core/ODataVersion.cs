@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Enumeration representing the OData protocol version.
@@ -13,5 +13,8 @@ namespace Microsoft.OData.Core
     {
         /// <summary>Version 4.0.</summary>
         V4,
+
+        /// <summary>Version 4.01.</summary>
+        V401
     }
 }

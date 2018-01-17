@@ -8,10 +8,10 @@ namespace Microsoft.OData.Service
 {
     using System.Collections;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
-    /// Class that keeps track of the ODataFeed, collection instance and other information
+    /// Class that keeps track of the ODataResourceSet, collection instance and other information
     /// that we need to provide to the service author when they choose to provide their own
     /// instance of ODataWriter.
     /// </summary>
@@ -20,23 +20,23 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Creates a new instance of DataServiceODataWriterFeedArgs
         /// </summary>
-        /// <param name="feed">ODataFeed instance.</param>
+        /// <param name="feed">ODataResourceSet instance.</param>
         /// <param name="results">IEnumerable instance that is getting serialized.</param>
         /// <param name="operationContext">DataServiceOperationContext instance.</param>
-        public DataServiceODataWriterFeedArgs(ODataFeed feed, IEnumerable results, DataServiceOperationContext operationContext)
+        public DataServiceODataWriterFeedArgs(ODataResourceSet resourceCollection, IEnumerable results, DataServiceOperationContext operationContext)
         {
-            WebUtil.CheckArgumentNull(feed, "feed");
+            WebUtil.CheckArgumentNull(resourceCollection, "feed");
             Debug.Assert(results != null, "results != null");
             Debug.Assert(operationContext != null, "operationContext != null");
-            this.Feed = feed;
+            this.Feed = resourceCollection;
             this.Results = results;
             this.OperationContext = operationContext;
         }
 
         /// <summary>
-        /// Gets the instance of ODataFeed that is going to get serialized.
+        /// Gets the instance of ODataResourceSet that is going to get serialized.
         /// </summary>
-        public ODataFeed Feed
+        public ODataResourceSet Feed
         {
             get;
             private set;

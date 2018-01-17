@@ -9,52 +9,51 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client.Materialization;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using System.Xml;
     using System.Xml.Linq;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class PrimitivePropertyConverterTests
     {
-        private readonly PrimitivePropertyConverter atomConverter = new PrimitivePropertyConverter(ODataFormat.Atom);
-        private readonly PrimitivePropertyConverter jsonConverter = new PrimitivePropertyConverter(ODataFormat.Json);
+        private readonly PrimitivePropertyConverter jsonConverter = new PrimitivePropertyConverter();
 
         private readonly Dictionary<object, object> basicConversionsList = new Dictionary<object, object>
         {
             // from string to all types
-            {"true", true}, 
-            {"1", 1}, 
+            {"true", true},
+            {"1", 1},
             {"2", (byte)2},
             {"-1", (sbyte)-1},
             {"3", (short)3},
             {XmlConvert.ToString(long.MaxValue), long.MaxValue},
-            {XmlConvert.ToString(float.MaxValue), float.MaxValue}, 
-            {XmlConvert.ToString(double.MinValue), double.MinValue}, 
-            {XmlConvert.ToString(decimal.MaxValue), decimal.MaxValue}, 
-            {XmlConvert.ToString(DateTimeOffset.MinValue), DateTimeOffset.MinValue}, 
-            {XmlConvert.ToString(TimeSpan.MaxValue), TimeSpan.MaxValue}, 
-            {XmlConvert.ToString(Guid.Empty), Guid.Empty}, 
+            {XmlConvert.ToString(float.MaxValue), float.MaxValue},
+            {XmlConvert.ToString(double.MinValue), double.MinValue},
+            {XmlConvert.ToString(decimal.MaxValue), decimal.MaxValue},
+            {XmlConvert.ToString(DateTimeOffset.MinValue), DateTimeOffset.MinValue},
+            {XmlConvert.ToString(TimeSpan.MaxValue), TimeSpan.MaxValue},
+            {XmlConvert.ToString(Guid.Empty), Guid.Empty},
             {Convert.ToBase64String(new byte[] {0, 1, 2}), new byte[] {0, 1, 2}},
             {Date.MinValue.ToString(), Date.MinValue},
             {TimeOfDay.MinValue.ToString(), TimeOfDay.MinValue},
 
             // from all types to string
-            {true, "true"}, 
-            {1, "1"}, 
+            {true, "true"},
+            {1, "1"},
             {(byte)2, "2"},
             {(sbyte)-1, "-1"},
             {(short)3, "3"},
             {long.MaxValue, XmlConvert.ToString(long.MaxValue)},
-            {float.MaxValue, XmlConvert.ToString(float.MaxValue)}, 
-            {double.MinValue, XmlConvert.ToString(double.MinValue)}, 
-            {decimal.MaxValue, XmlConvert.ToString(decimal.MaxValue)}, 
-            {DateTimeOffset.MinValue, XmlConvert.ToString(DateTimeOffset.MinValue)}, 
-            {TimeSpan.MaxValue, XmlConvert.ToString(TimeSpan.MaxValue)}, 
-            {Guid.Empty, XmlConvert.ToString(Guid.Empty)}, 
+            {float.MaxValue, XmlConvert.ToString(float.MaxValue)},
+            {double.MinValue, XmlConvert.ToString(double.MinValue)},
+            {decimal.MaxValue, XmlConvert.ToString(decimal.MaxValue)},
+            {DateTimeOffset.MinValue, XmlConvert.ToString(DateTimeOffset.MinValue)},
+            {TimeSpan.MaxValue, XmlConvert.ToString(TimeSpan.MaxValue)},
+            {Guid.Empty, XmlConvert.ToString(Guid.Empty)},
             {new byte[] {0, 1, 2, }, Convert.ToBase64String(new byte[] {0, 1, 2})},
             {Date.MaxValue, Date.MaxValue.ToString()},
             {TimeOfDay.MaxValue, TimeOfDay.MaxValue.ToString()},
@@ -153,30 +152,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         }
 
         [TestMethod]
-        public void GeometryToGeographyInAtom()
-        {
-            var point = GeometryPoint.Create(1, 2);
-            var result = this.atomConverter.ConvertPrimitiveValue(point, typeof(Geography));
-            result.Should().BeAssignableTo<GeographyPoint>();
-            result.As<GeographyPoint>().Latitude.Should().BeInRange(1, 1);
-            result.As<GeographyPoint>().Longitude.Should().BeInRange(2, 2);
-        }
-
-        [TestMethod]
-        public void GeographyToGeometryInAtom()
-        {
-            var point = GeographyPoint.Create(1, 2);
-            var result = this.atomConverter.ConvertPrimitiveValue(point, typeof(GeometryPoint));
-            result.Should().BeAssignableTo<GeometryPoint>();
-            result.As<GeometryPoint>().X.Should().BeInRange(1, 1);
-            result.As<GeometryPoint>().Y.Should().BeInRange(2, 2);
-        }
-
-        [TestMethod]
         public void GeographyPointToGeographyShouldNotDoAnything()
         {
             var point = GeographyPoint.Create(1, 2);
-            var result = this.atomConverter.ConvertPrimitiveValue(point, typeof(Geography));
+            var result = this.jsonConverter.ConvertPrimitiveValue(point, typeof(Geography));
             result.Should().BeSameAs(point);
         }
 
@@ -184,51 +163,51 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         public void GeometryPointToGeometryShouldNotDoAnything()
         {
             var point = GeometryPoint.Create(1, 2);
-            var result = this.atomConverter.ConvertPrimitiveValue(point, typeof(Geometry));
+            var result = this.jsonConverter.ConvertPrimitiveValue(point, typeof(Geometry));
             result.Should().BeSameAs(point);
         }
 
         [TestMethod]
         public void FloatShouldConvertToDoubleWithoutLossOfPrecision()
         {
-            this.atomConverter.ConvertPrimitiveValue(45.1f, typeof(double)).Should().Be(45.1d);
+            this.jsonConverter.ConvertPrimitiveValue(45.1f, typeof(double)).Should().Be(45.1d);
         }
 
         [TestMethod]
         public void StringShouldBeSameReferenceAfterConversion()
         {
             const string test = "temp";
-            this.atomConverter.ConvertPrimitiveValue(test, typeof(string)).Should().BeSameAs(test);
+            this.jsonConverter.ConvertPrimitiveValue(test, typeof(string)).Should().BeSameAs(test);
         }
 
         [TestMethod]
         public void StringShouldConvertToUri()
         {
-            this.atomConverter.ConvertPrimitiveValue("http://temp.org", typeof(Uri)).Should().Be(new Uri("http://temp.org"));
+            this.jsonConverter.ConvertPrimitiveValue("http://temp.org", typeof(Uri)).Should().Be(new Uri("http://temp.org"));
         }
 
         [TestMethod]
         public void StringShouldConvertToXElement()
         {
-            this.atomConverter.ConvertPrimitiveValue("<Fake/>", typeof(XElement)).As<XElement>().Should().Be(XElement.Parse("<Fake/>"));
+            this.jsonConverter.ConvertPrimitiveValue("<Fake/>", typeof(XElement)).As<XElement>().Should().Be(XElement.Parse("<Fake/>"));
         }
 
         [TestMethod]
         public void InfinityShouldConvertFromFloatToDouble()
         {
-            this.atomConverter.ConvertPrimitiveValue(float.PositiveInfinity, typeof(double)).Should().Be(double.PositiveInfinity);
+            this.jsonConverter.ConvertPrimitiveValue(float.PositiveInfinity, typeof(double)).Should().Be(double.PositiveInfinity);
         }
 
         [TestMethod]
         public void NegativeInfinityShouldConvertFromDoubleToFloat()
         {
-            this.atomConverter.ConvertPrimitiveValue(double.NegativeInfinity, typeof(float)).Should().Be(float.NegativeInfinity);
+            this.jsonConverter.ConvertPrimitiveValue(double.NegativeInfinity, typeof(float)).Should().Be(float.NegativeInfinity);
         }
 
         [TestMethod]
         public void NaNShouldConvertFromStringToFloat()
         {
-            float.IsNaN(this.atomConverter.ConvertPrimitiveValue("NaN", typeof(float)).As<float>()).Should().BeTrue();
+            float.IsNaN(this.jsonConverter.ConvertPrimitiveValue("NaN", typeof(float)).As<float>()).Should().BeTrue();
         }
 
         [TestMethod]
@@ -237,7 +216,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             foreach (var conversion in this.basicConversionsList)
             {
                 Type targetType = conversion.Value.GetType();
-                object result = this.atomConverter.ConvertPrimitiveValue(conversion.Key, targetType);
+                object result = this.jsonConverter.ConvertPrimitiveValue(conversion.Key, targetType);
 
                 if (targetType != typeof(byte[]))
                 {
@@ -251,11 +230,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         }
 
         [TestMethod]
-        public void AtomConversionForDateTimeShouldThrow()
+        public void EnumCouldBeConvertedToString()
         {
-            Type dateTimeType = typeof(DateTime);
-            Action test = () => this.atomConverter.ConvertPrimitiveValue(DateTimeOffset.UtcNow, dateTimeType);
-            test.ShouldThrow<InvalidOperationException>(Microsoft.OData.Client.Strings.ClientType_UnsupportedType(dateTimeType.FullName));
+            this.jsonConverter.ConvertPrimitiveValue(new ODataEnumValue("Yellow"), typeof(string)).Should().Be("Yellow");
         }
 
         [TestMethod]

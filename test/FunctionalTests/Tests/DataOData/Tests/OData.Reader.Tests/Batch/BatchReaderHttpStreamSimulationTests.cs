@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
@@ -42,7 +42,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 batchRequestDescriptors.Select(bd => (PayloadReaderTestDescriptor) new BatchMessageHttpSimulationTestDescriptor(this.PayloadReaderSettings)
                 {
                     PayloadDescriptor = bd,
-                    SkipTestConfiguration = tc => !tc.IsRequest || (tc.Format != ODataFormat.Atom && tc.Format != ODataFormat.Json)
+                    SkipTestConfiguration = tc => !tc.IsRequest || (tc.Format != ODataFormat.Json)
                 });
 
             IEnumerable<PayloadTestDescriptor> batchResponseDescriptors =
@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 batchResponseDescriptors.Select(bd => (PayloadReaderTestDescriptor) new BatchMessageHttpSimulationTestDescriptor(this.PayloadReaderSettings)
                 {
                     PayloadDescriptor = bd,
-                    SkipTestConfiguration = tc => tc.IsRequest || (tc.Format != ODataFormat.Atom && tc.Format != ODataFormat.Json)
+                    SkipTestConfiguration = tc => tc.IsRequest || (tc.Format != ODataFormat.Json)
                 });
 
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = requestTestDescriptors.Concat(responseTestDescriptors);

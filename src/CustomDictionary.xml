@@ -23,6 +23,7 @@
       <Word>Pos</Word>
       <Word>groupby</Word>
       <Word>Untyped</Word>
+      <Word>Ieee</Word>
     </Recognized>
     <DiscreteExceptions>
       <Term>OData</Term>

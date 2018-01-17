@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     {
         private readonly string type;
         private readonly bool? nullable;
-        private readonly string partner;
+        private readonly IEdmPathExpression partnerPath;
         private readonly bool containsTarget;
         private readonly CsdlOnDelete onDelete;
         private readonly IEnumerable<CsdlReferentialConstraint> referentialConstraints;
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             this.type = type;
             this.nullable = nullable;
-            this.partner = partner;
+            this.partnerPath = partner == null ? null : new EdmPathExpression(partner);
             this.containsTarget = containsTarget;
             this.onDelete = onDelete;
             this.referentialConstraints = referentialConstraints;
@@ -41,9 +41,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.nullable;  }
         }
 
-        public string Partner
+        public IEdmPathExpression PartnerPath
         {
-            get { return this.partner; }
+            get { return this.partnerPath; }
         }
 
         public bool ContainsTarget

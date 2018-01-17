@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     using System.Collections.Generic;
     using System.Globalization;
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         }
 
         private string CreatePropertiesUriSegment(
-            IEnumerable<GroupByPropertyNode> groupByPropertyNodes, 
+            IEnumerable<GroupByPropertyNode> groupByPropertyNodes,
             IEnumerable<AggregateExpression> aggregateExpressions)
         {
             string result = string.Empty;

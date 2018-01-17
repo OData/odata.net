@@ -20,9 +20,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.arguments = new List<CsdlExpressionBase>(arguments);
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.OperationApplication; }
+            get { return EdmExpressionKind.FunctionApplication; }
         }
 
         public string Function

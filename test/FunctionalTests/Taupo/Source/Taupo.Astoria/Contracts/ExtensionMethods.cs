@@ -14,18 +14,14 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
     using System.Net;
     using System.Text;
     using System.Xml.Linq;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.CodeDomExtensions;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Query.Contracts;
     using Microsoft.Test.Taupo.Query.Contracts.CommonExpressions;
-    using Microsoft.Test.Taupo.Query.Contracts.Linq.Expressions;
 
     /// <summary>
     /// Extension methods that make writing astoria tests easier, mostly pieces that connect various 
@@ -191,26 +187,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
                     r => (TResponseType)request.EndGetResponse(r),
                     onResponse),
                 (WebException webException) => onResponse((TResponseType)webException.Response));
-        }
-
-        /// <summary>
-        /// Converts test enum SyndicationItemProperty to product enum.
-        /// </summary>
-        /// <param name="item">test enum value</param>
-        /// <returns>product enum</returns>
-        public static AtomSyndicationItemProperty ToProductEnum(this SyndicationItemProperty item)
-        {
-            return ConvertEnum<SyndicationItemProperty, AtomSyndicationItemProperty>(item);
-        }
-
-        /// <summary>
-        /// Converts test enum SyndicationTextContentKind to product enum.
-        /// </summary>
-        /// <param name="contentKind">test enum value</param>
-        /// <returns>product enum</returns>
-        public static AtomSyndicationTextContentKind ToProductEnum(this SyndicationTextContentKind contentKind)
-        {
-            return ConvertEnum<SyndicationTextContentKind, AtomSyndicationTextContentKind>(contentKind);
         }
 
         /// <summary>

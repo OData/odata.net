@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.Edmlib.StubEdm
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmEnumMember
@@ -31,7 +31,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         /// <summary>
         /// Gets or sets the value
         /// </summary>
-        public IEdmPrimitiveValue Value { get; set; }
+        public IEdmEnumMemberValue Value { get; set; }
 
         /// <summary>
         /// Gets or sets the declaring type

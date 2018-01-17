@@ -115,13 +115,13 @@ namespace Microsoft.Spatial {
         ResourceManager resources;
 
         internal TextRes() {
-#if !DNXCORE50
+#if !PORTABLELIB
             resources = new System.Resources.ResourceManager("Microsoft.Spatial", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.Spatial", this.GetType().GetTypeInfo().Assembly);
 #endif
         }
-        
+
         private static TextRes GetLoader() {
             if (loader == null) {
                 TextRes sr = new TextRes();
@@ -133,13 +133,13 @@ namespace Microsoft.Spatial {
         private static CultureInfo Culture {
             get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources {
             get {
                 return GetLoader().resources;
             }
         }
-        
+
         public static string GetString(string name, params object[] args) {
             TextRes sys = GetLoader();
             if (sys == null)
@@ -166,7 +166,7 @@ namespace Microsoft.Spatial {
                 return null;
             return sys.resources.GetString(name, TextRes.Culture);
         }
-        
+
         public static string GetString(string name, out bool usedFallback) {
             // always false for this version of gensr
             usedFallback = false;

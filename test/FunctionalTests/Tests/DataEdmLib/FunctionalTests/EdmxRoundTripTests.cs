@@ -16,7 +16,6 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -95,7 +94,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void EdmxRoundTripTestsEmptyConceptualModelsEdmx()
         {
-            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyConceptualModelsEdmx(), EdmxTarget.EntityFramework);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyConceptualModelsEdmx(), CsdlTarget.EntityFramework);
         }
 
         [TestMethod]
@@ -103,26 +102,26 @@ namespace EdmLibTests.FunctionalTests
         {
             var model = new EdmModel();
             model.SetEdmxVersion(EdmConstants.EdmVersion4);
-            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyConceptualModelsEdmx(), EdmxTarget.EntityFramework, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyConceptualModelsEdmx(), CsdlTarget.EntityFramework, model);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsSimpleConceptualModelsEdmx()
         {
-            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), EdmxTarget.EntityFramework);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), CsdlTarget.EntityFramework);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsSimpleConceptualoMdelsModel()
         {
             var model = EdmxModelBuilder.SimpleEdmx();
-            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), EdmxTarget.EntityFramework, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), CsdlTarget.EntityFramework, model);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsEmptyDataServicesEdmx()
         {
-            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyDataServicesEdmx(), EdmxTarget.OData);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyDataServicesEdmx(), CsdlTarget.OData);
         }
 
         [TestMethod]
@@ -130,54 +129,54 @@ namespace EdmLibTests.FunctionalTests
         {
             var model = new EdmModel();
             model.SetEdmxVersion(EdmConstants.EdmVersion4);
-            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyDataServicesEdmx(), EdmxTarget.OData, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyDataServicesEdmx(), CsdlTarget.OData, model);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsEmptyDataServicesWithOtherAttributesEdmx()
         {
-            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyDataServicesEdmx(), EdmxTarget.OData, this.GetEdmxParserResult(EdmxModelBuilder.EmptyDataServicesWithOtherAttributesEdmx()));
+            this.EdmxRoundTripCheck(EdmxModelBuilder.EmptyDataServicesEdmx(), CsdlTarget.OData, this.GetEdmxParserResult(EdmxModelBuilder.EmptyDataServicesWithOtherAttributesEdmx()));
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsSimpleDataServicesEdmx()
         {
-            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleDataServicesEdmx(), EdmxTarget.OData);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleDataServicesEdmx(), CsdlTarget.OData);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsSimpleDataServicesModel()
         {
             var model = EdmxModelBuilder.SimpleEdmx();
-            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleDataServicesEdmx(), EdmxTarget.OData, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleDataServicesEdmx(), CsdlTarget.OData, model);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsSimpleDataServicesWithVersionAttributesModelToConceptualModels()
         {
             var model = EdmxModelBuilder.SimpleEdmx();
-            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), EdmxTarget.EntityFramework, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), CsdlTarget.EntityFramework, model);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsConceptualModelsToDataServices()
         {
             var model = this.GetEdmxParserResult(EdmxModelBuilder.SimpleConceptualModelsEdmx());
-            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleDataServicesEdmx(), EdmxTarget.OData, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleDataServicesEdmx(), CsdlTarget.OData, model);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsDataServicesToConceptualModels()
         {
             var model = this.GetEdmxParserResult(EdmxModelBuilder.SimpleDataServicesEdmx());
-            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), EdmxTarget.EntityFramework, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.SimpleConceptualModelsEdmx(), CsdlTarget.EntityFramework, model);
         }
 
         [TestMethod]
         public void EdmxRoundTripTestsUsingAliasEdmx()
         {
             var model = this.GetEdmxParserResult(EdmxModelBuilder.UsingAliasEdmx());
-            this.EdmxRoundTripCheck(EdmxModelBuilder.UsingAliasEdmx(), EdmxTarget.EntityFramework, model);
+            this.EdmxRoundTripCheck(EdmxModelBuilder.UsingAliasEdmx(), CsdlTarget.EntityFramework, model);
         }
 
         #region referenced model - Include, IncludeAnnotations
@@ -193,7 +192,7 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> errors;
             bool valid = mainModel.Validate(out errors);
             Assert.IsTrue(valid);
-            string actualEdmx = GetEdmx(mainModel, EdmxTarget.OData);
+            string actualEdmx = GetEdmx(mainModel, CsdlTarget.OData);
 
             // after deserialization & serialization, the alias'ed 'CT.Customer' becomes qualified name 'NS1.Customer',
             // so make some adjustments for verification: 
@@ -222,15 +221,19 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("VPCT", references[0].Includes.First().Alias);
             Assert.AreEqual("NS.Ref1", references[0].Includes.First().Namespace);
 
+            // verify Uri in EdmReference
+            string uriString = "http://addedUrl/addedEdm.xml";
+            EdmReference newReference = new EdmReference(new Uri(uriString));
+            Assert.AreEqual(uriString, EdmValueWriter.UriAsXml(newReference.Uri));
+
             // verify writing edmx:Reference
             // add a new <edmx:reference>
-            EdmReference newReference = new EdmReference("http://addedUrl/addedEdm.xml");
             newReference.AddInclude(new EdmInclude("adhoc_Alias", "adhoc_Namespace"));
             List<IEdmReference> newReferences = new List<IEdmReference>();
             newReferences.AddRange(references);
             newReferences.Add(newReference);
             mainModel.SetEdmReferences(newReferences);
-            string actualEdmx = GetEdmx(mainModel, EdmxTarget.OData);
+            string actualEdmx = GetEdmx(mainModel, CsdlTarget.OData);
 
             // add new Include to verify: Namespace=""adhoc_Namespace"" Alias=""adhoc_Alias""
             mainEdmx = mainEdmx.Replace("  <edmx:DataServices>",
@@ -249,14 +252,14 @@ namespace EdmLibTests.FunctionalTests
         }
         #endregion
 
-        private void EdmxRoundTripCheck(string edmx, EdmxTarget target)
+        private void EdmxRoundTripCheck(string edmx, CsdlTarget target)
         {
             IEdmModel model = this.GetEdmxParserResult(edmx);
 
             this.EdmxRoundTripCheck(edmx, target, model);
         }
 
-        private string GetEdmx(IEdmModel model, EdmxTarget target)
+        private string GetEdmx(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;
 
@@ -269,7 +272,7 @@ namespace EdmLibTests.FunctionalTests
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
                     IEnumerable<EdmError> errors;
-                    EdmxWriter.TryWriteEdmx(model, xw, target, out errors);
+                    CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
                     xw.Flush();
                 }
 
@@ -283,13 +286,13 @@ namespace EdmLibTests.FunctionalTests
         {
             IEnumerable<EdmError> actualErrors;
             IEdmModel model;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out actualErrors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out actualErrors);
 
             Assert.IsFalse(parsed, "Invalid edmx parsing.");
             ValidationVerificationHelper.Verify(expectedErrors, actualErrors);
         }
 
-        private void EdmxRoundTripCheck(string expectedEdmx, EdmxTarget target, IEdmModel model)
+        private void EdmxRoundTripCheck(string expectedEdmx, CsdlTarget target, IEdmModel model)
         {
             var errors = new EdmLibTestErrors();
             this.VerifySemanticValidation(model, Microsoft.Test.OData.Utils.Metadata.EdmVersion.V40, errors);

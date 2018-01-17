@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -59,10 +58,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -145,11 +140,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testDescriptor.PayloadNormalizers.Add((tc) => tc.Format == ODataFormat.Json ? ReplaceExpectedTypeWithContextUriVisitor.VisitPayload : (Func<ODataPayloadElement, ODataPayloadElement>)null);
 
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
-                    
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -178,14 +168,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     if (testConfiguration.Format == ODataFormat.Json && testConfiguration.MessageReaderSettings.BaseUri == null)
                     {
-                        testConfiguration.MessageReaderSettings.BaseUri = new Uri("http://odata.org/");   
+                        testConfiguration.MessageReaderSettings.BaseUri = new Uri("http://odata.org/");
                     }
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
-
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -194,7 +179,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public void CollectionWithHeterogenousItemsErrorTest()
         {
             EdmModel model = new EdmModel();
-            
+
             var complexType1 = model.ComplexType("ComplexTypeWithStringAndInteger32")
                 .Property("Property1", EdmCoreModel.Instance.GetString(true) as EdmTypeReference)
                 .Property("Property2", EdmCoreModel.Instance.GetInt32(false) as EdmTypeReference);
@@ -214,9 +199,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadEdmModel = model,
                     ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                     {
-                        ExpectedException = tc.Format == ODataFormat.Atom ?
-                            ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", "Edm.Boolean", "Edm.Int32") :
-                            ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "True", "Edm.Int32")
+                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "True", "Edm.Int32")
                     }
                 },
                 // Complex collection containing items of different complex type (correct type attribute value)
@@ -239,169 +222,26 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadEdmModel = model,
                     ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                     {
-                        ExpectedException = tc.Format == ODataFormat.Atom ?
-                            ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", "Edm.Int32", "Edm.DateTimeOffset") :
-                            ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-1", "Edm.DateTimeOffset")
+                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-1", "Edm.DateTimeOffset")
                     }
                 },
             };
-
-           this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
-                (testDescriptor, testConfiguration) =>
-                {
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        testDescriptor = testDescriptor.InProperty();
-                    }
-                    else
-                    {
-                        testDescriptor = testDescriptor.InProperty("RootProperty");
-                    }
-
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
-
-        [TestMethod, TestCategory("Reader.Collections"), Variation(Description = "Verifies correct handling of collections without expected type and without metadata.")]
-        public void CollectionWithoutExpectedTypeAndWithoutMetadataTest()
-        {
-            const string complexType1Name = "TestModel.TestComplexType1";
-            const string complexType2Name = "TestModel.TestComplexType2";
-
-            #region Test cases where the collection does not specify a type name
-            IEnumerable<PayloadReaderTestDescriptor> noCollectionTypeNameTestDescriptors = new[]
-            {
-                // Primitive collection containing items of the same primitive type
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue().Item(1).Item(2).Item(3)
-                },
-                // Primitive collection containing string items where some don't specify the type name
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue().Item("One").Item(new PrimitiveValue(/*fullTypeName*/null, "Two")).Item("Three")
-                },
-                // Primitive collection containing string items where the first doesn't specify the type name
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue().Item(new PrimitiveValue(/*fullTypeName*/null, "One")).Item("Two").Item("Three")
-                },
-
-                // Primitive collection containing items of different primitive types
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue().Item(1).Item(true).Item(2),
-                    ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
-                    {
-                        ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.Boolean", "Edm.Int32")
-                    }
-                },
-                // Complex collection containing items of different complex type (correct type attribute value)
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.ComplexMultiValue()
-                        .Item(PayloadBuilder.ComplexValue(complexType1Name).PrimitiveProperty("Property1", "Foo"))
-                        .Item(PayloadBuilder.ComplexValue(complexType2Name).PrimitiveProperty("Property1", "Foo")),
-                    ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", complexType2Name, complexType1Name),
-                },
-                // Primitive collection containing items of different primitive types (including one not specifying the type name)
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue().Item(new PrimitiveValue(/*fullTypeName*/null, "One")).Item("Two").Item(3),
-                    ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
-                    {
-                        ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.Int32", "Edm.String")
-                    }
-                },
-                // Complex collection containing complex items without type names
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.ComplexMultiValue()
-                        .Item(PayloadBuilder.ComplexValue().PrimitiveProperty("Property1", "Foo"))
-                        .Item(PayloadBuilder.ComplexValue().PrimitiveProperty("Property2", "Bar")),
-                },
-            };
-            #endregion Test cases where the collection does not specify a type name
-
-            #region Test cases where the collection does specify a type name
-            IEnumerable<PayloadReaderTestDescriptor> collectionTypeNameTestDescriptors = new[]
-            {
-                // Primitive collection containing items of the same primitive type and the items have type names as well
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.Int32")).Item(1).Item(2).Item(3)
-                },
-                // Primitive collection containing string items where some don't specify the type name
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.String")).Item("One").Item(new PrimitiveValue(/*fullTypeName*/null, "Two")).Item("Three")
-                },
-                // Primitive collection containing string items where the first doesn't specify the type name
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.String")).Item(new PrimitiveValue(/*fullTypeName*/null, "One")).Item("Two").Item("Three")
-                },
-
-                // Primitive collection containing some items of a different primitive type
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.String")).Item(new PrimitiveValue(/*fullTypeName*/null, "One")).Item("Two").Item(3),
-                    ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
-                    {
-                        ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.Int32", "Edm.String")
-                    }
-                },
-                // Primitive collection containing items of the same primitive type where some specify type names
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.Int32")).Item(1).Item(new PrimitiveValue(/*fullTypeName*/null, 2)).Item(3),
-                },
-                // Primitive collection containing items of different primitive types
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.String")).Item(1).Item(true).Item(2),
-                    ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
-                    {
-                        ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.Int32", "Edm.String")
-                    }
-                },
-                // Complex collection containing items of different complex type
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.ComplexMultiValue(EntityModelUtils.GetCollectionTypeName(complexType1Name))
-                        .Item(PayloadBuilder.ComplexValue(complexType2Name).PrimitiveProperty("Property1", "Foo")),
-                    ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", complexType2Name, complexType1Name),
-                },
-                // Complex collection containing items of different complex type
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.ComplexMultiValue(EntityModelUtils.GetCollectionTypeName(complexType1Name))
-                        .Item(PayloadBuilder.ComplexValue(complexType1Name).PrimitiveProperty("Property1", "Foo"))
-                        .Item(PayloadBuilder.ComplexValue(complexType2Name).PrimitiveProperty("Property1", "Foo")),
-                    ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", complexType2Name, complexType1Name),
-                },
-            };
-            #endregion
-
-            noCollectionTypeNameTestDescriptors = noCollectionTypeNameTestDescriptors.Select(td => td.InProperty());
-            collectionTypeNameTestDescriptors = collectionTypeNameTestDescriptors.Select(td => td.InProperty());
 
             this.CombinatorialEngineProvider.RunCombinations(
-                noCollectionTypeNameTestDescriptors.Concat(collectionTypeNameTestDescriptors),
-                this.ReaderTestConfigurationProvider.AtomFormatConfigurations,  // only in ATOM since we don't support reading JSON without metadata yet
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
-                });
+                 testDescriptors,
+                 this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
+                 (testDescriptor, testConfiguration) =>
+                 {
+                     testDescriptor = testDescriptor.InProperty("RootProperty");
+                     testDescriptor.RunTest(testConfiguration);
+                 });
         }
 
         private IEnumerable<PayloadReaderTestDescriptor> CreateCollectionPayloadsWithMetadata(bool withTypeNames)
         {
             // Start with the standard set of collections
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = PayloadReaderTestDescriptorGenerator.CreateCollectionTestDescriptors(this.Settings, withTypeNames);
-            
+
             // Add collections with all of the primitive values (except null)
             testDescriptors = testDescriptors.Concat(PayloadReaderTestDescriptorGenerator.CreatePrimitiveValueTestDescriptors(this.Settings, false)
                 .Where(primitivePayload => ((PrimitiveValue)primitivePayload.PayloadElement).ClrValue != null)
@@ -503,9 +343,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedResultCallback = tc =>
                         new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                         {
-                            ExpectedException = tc.Format == ODataFormat.Atom ?
-                                ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", "Edm.Int32", "Edm.String") :
-                                ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-42", "Edm.String")
+                            ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-42", "Edm.String")
                         },
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
@@ -550,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     /// </summary>
     internal class ReplaceExpectedTypeWithContextUriVisitor : ODataPayloadElementVisitorBase
     {
-        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>(); 
+        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>();
 
         public static ODataPayloadElement VisitPayload(ODataPayloadElement payloadElement)
         {
@@ -616,7 +454,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     /// </summary>
     public class AddJsonLightTypeAnnotationToCollectionsVisitor : ODataPayloadElementVisitorBase
     {
-        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>(); 
+        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>();
 
         public static ODataPayloadElement Normalize(ODataPayloadElement payloadElement)
         {
@@ -645,7 +483,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             }
             finally
             {
-                this.payloadElementStack.Pop(); 
+                this.payloadElementStack.Pop();
             }
         }
 

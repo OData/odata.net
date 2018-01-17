@@ -4,7 +4,7 @@ $filter = UnitPrice le 200 and UnitPrice gt 3.5
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = SpecialProduct
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -13,11 +13,11 @@ FilterQueryOption
 				Property = UnitPrice
 				TypeReference = [Edm.Single Nullable=False]
 				Source = 
-				EntityRangeVariableReferenceNode
+				ResourceRangeVariableReferenceNode
 					Name = $it
 					NavigationSource = SpecialProduct
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		LessThanOrEqual
 			200(Type: [Edm.Single Nullable=False])
 	And
@@ -25,10 +25,10 @@ FilterQueryOption
 				Property = UnitPrice
 				TypeReference = [Edm.Single Nullable=False]
 				Source = 
-				EntityRangeVariableReferenceNode
+				ResourceRangeVariableReferenceNode
 					Name = $it
 					NavigationSource = SpecialProduct
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		GreaterThan
 			3.5(Type: [Edm.Single Nullable=False])

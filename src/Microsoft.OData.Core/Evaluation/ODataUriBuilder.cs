@@ -4,19 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+using System;
+using System.Collections.Generic;
+
+#if ODATA_CLIENT
+using Microsoft.OData.Edm.Vocabularies;
+#endif
+
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
-    #endregion
-
     /// <summary>
     /// Extensibility point for customizing how OData uri's are built.
     /// </summary>
@@ -33,8 +33,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </returns>
         internal virtual Uri BuildBaseUri()
         {
-#if !ASTORIA_CLIENT
-#endif
             return null;
         }
 
@@ -46,7 +44,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The entity set URI.</returns>
         internal virtual Uri BuildEntitySetUri(Uri baseUri, string entitySetName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(entitySetName, "entitySetName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(entitySetName, "entitySetName");
@@ -54,7 +52,7 @@ namespace Microsoft.OData.Core.Evaluation
             return null;
         }
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>
         /// Appends to create the entity instance URI for the specified <paramref name="entityInstance"/>.
         /// </summary>
@@ -75,7 +73,7 @@ namespace Microsoft.OData.Core.Evaluation
         internal virtual Uri BuildEntityInstanceUri(Uri baseUri, ICollection<KeyValuePair<string, object>> keyProperties, string entityTypeName)
 #endif
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNull(entityInstance, "entityInstance");
 #else
             ExceptionUtils.CheckArgumentNotNull(keyProperties, "keyProperties");
@@ -89,13 +87,13 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="streamPropertyName">
-        /// The name of the stream property the link is computed for; 
+        /// The name of the stream property the link is computed for;
         /// or null for the default media resource.
         /// </param>
         /// <returns>The edit link for the stream.</returns>
         internal virtual Uri BuildStreamEditLinkUri(Uri baseUri, string streamPropertyName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
@@ -108,13 +106,13 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="streamPropertyName">
-        /// The name of the stream property the link is computed for; 
+        /// The name of the stream property the link is computed for;
         /// or null for the default media resource.
         /// </param>
         /// <returns>The read link for the stream.</returns>
         internal virtual Uri BuildStreamReadLinkUri(Uri baseUri, string streamPropertyName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNotEmpty(streamPropertyName, "streamPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotEmpty(streamPropertyName, "streamPropertyName");
@@ -130,7 +128,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The navigation link URI for the navigation property.</returns>
         internal virtual Uri BuildNavigationLinkUri(Uri baseUri, string navigationPropertyName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
@@ -146,7 +144,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The association link URI for the navigation property.</returns>
         internal virtual Uri BuildAssociationLinkUri(Uri baseUri, string navigationPropertyName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(navigationPropertyName, "navigationPropertyName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
@@ -164,7 +162,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The target URI for the operation.</returns>
         internal virtual Uri BuildOperationTargetUri(Uri baseUri, string operationName, string bindingParameterTypeName, string parameterNames)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(operationName, "operationName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(operationName, "operationName");
@@ -180,7 +178,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <returns>The URI with the type segment appended.</returns>
         internal virtual Uri AppendTypeSegment(Uri baseUri, string typeName)
         {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
             Util.CheckArgumentNullAndEmpty(typeName, "typeName");
 #else
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(typeName, "typeName");

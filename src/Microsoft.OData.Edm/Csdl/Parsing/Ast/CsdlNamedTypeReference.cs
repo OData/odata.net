@@ -11,17 +11,44 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlNamedTypeReference : CsdlTypeReference
     {
-        private readonly string fullName;
-
         public CsdlNamedTypeReference(string fullName, bool isNullable, CsdlLocation location)
+            : this(false, null, null, null, null, null, fullName, isNullable, location)
+        {
+        }
+
+        public CsdlNamedTypeReference(
+            bool isUnbounded,
+            int? maxLength,
+            bool? isUnicode,
+            int? precision,
+            int? scale,
+            int? spatialReferenceIdentifier,
+            string fullName,
+            bool isNullable,
+            CsdlLocation location)
             : base(isNullable, location)
         {
-            this.fullName = fullName;
+            this.IsUnbounded = isUnbounded;
+            this.MaxLength = maxLength;
+            this.IsUnicode = isUnicode;
+            this.Precision = precision;
+            this.Scale = scale;
+            this.SpatialReferenceIdentifier = spatialReferenceIdentifier;
+            this.FullName = fullName;
         }
 
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public bool IsUnbounded { get; protected set; }
+
+        public int? MaxLength { get; protected set; }
+
+        public bool? IsUnicode { get; protected set; }
+
+        public int? Precision { get; protected set; }
+
+        public int? Scale { get; protected set; }
+
+        public int? SpatialReferenceIdentifier { get; protected set; }
+
+        public string FullName { get; protected set; }
     }
 }

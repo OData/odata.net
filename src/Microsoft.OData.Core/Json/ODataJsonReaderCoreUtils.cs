@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core.Json
         /// Try and parse spatial type from the json payload.
         /// </summary>
         /// <param name="jsonReader">The JSON reader to read from.</param>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object 
+        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
         ///     (or the second property if the first one was odata.type).</param>
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="expectedValueTypeReference">Expected edm property type.</param>
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>An instance of the spatial type.</returns>
         internal static ISpatial ReadSpatialValue(
-            BufferingJsonReader jsonReader,
+            IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
             IEdmPrimitiveTypeReference expectedValueTypeReference,
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Core.Json
                 IDictionary<string, object> jsonObject = ReadObjectValue(jsonReader, insideJsonObjectValue, inputContext, recursionDepth);
                 Microsoft.Spatial.GeoJsonObjectFormatter jsonObjectFormatter =
                     Microsoft.Spatial.SpatialImplementation.CurrentImplementation.CreateGeoJsonObjectFormatter();
-                if (EdmLibraryExtensions.IsGeographyType(expectedValueTypeReference))
+                if (expectedValueTypeReference.IsGeography())
                 {
                     spatialValue = jsonObjectFormatter.Read<Microsoft.Spatial.Geography>(jsonObject);
                 }
@@ -90,13 +90,13 @@ namespace Microsoft.OData.Core.Json
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         /// <returns>true if a null value could be read from the JSON reader; otherwise false.</returns>
-        /// <remarks>If the method detects a null value it will read it (position the reader after the null value); 
+        /// <remarks>If the method detects a null value it will read it (position the reader after the null value);
         /// otherwise the reader does not move.</remarks>
         internal static bool TryReadNullValue(
-            BufferingJsonReader jsonReader, 
+            IJsonReader jsonReader,
             ODataInputContext inputContext,
-            IEdmTypeReference expectedTypeReference, 
-            bool validateNullValue, 
+            IEdmTypeReference expectedTypeReference,
+            bool validateNullValue,
             string propertyName,
             bool? isDynamicProperty = null)
         {
@@ -109,10 +109,8 @@ namespace Microsoft.OData.Core.Json
 
                 // NOTE: when reading a null value we will never ask the type resolver (if present) to resolve the
                 //       type; we always fall back to the expected type.
-                ReaderValidationUtils.ValidateNullValue(
-                    inputContext.Model, 
+                inputContext.MessageReaderSettings.Validator.ValidateNullValue(
                     expectedTypeReference,
-                    inputContext.MessageReaderSettings,
                     validateNullValue,
                     propertyName,
                     isDynamicProperty);
@@ -132,7 +130,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <returns>an instance of IDictionary containing the spatial value.</returns>
-        private static IDictionary<string, object> ReadObjectValue(JsonReader jsonReader, bool insideJsonObjectValue, ODataInputContext inputContext, int recursionDepth)
+        private static IDictionary<string, object> ReadObjectValue(IJsonReader jsonReader, bool insideJsonObjectValue, ODataInputContext inputContext, int recursionDepth)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject, "insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject");
@@ -189,7 +187,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <returns>a list of json objects.</returns>
-        private static IEnumerable<object> ReadArrayValue(JsonReader jsonReader, ODataInputContext inputContext, int recursionDepth)
+        private static IEnumerable<object> ReadArrayValue(IJsonReader jsonReader, ODataInputContext inputContext, int recursionDepth)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.StartArray, "jsonReader.NodeType == JsonNodeType.StartArray");

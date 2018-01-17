@@ -4,21 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     using Microsoft.OData.Edm;
 
     /// <summary>
     /// Represents an aliased parameter in a function call that has not yet been resolved to a specific value.
     /// </summary>
-    public class ODataUnresolvedFunctionParameterAlias : ODataValue
+    public class ODataUnresolvedFunctionParameterAlias
     {
         /// <summary>
         /// Initializes a new instance of <see cref="ODataUnresolvedFunctionParameterAlias"/>.
         /// </summary>
         /// <param name="alias">The alias provided as the parameter value.</param>
         /// <param name="type">The EDM type of the parameter represented by this alias.</param>
-        public ODataUnresolvedFunctionParameterAlias(string alias, IEdmTypeReference type) 
+        public ODataUnresolvedFunctionParameterAlias(string alias, IEdmTypeReference type)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(alias, "alias");
             this.Alias = alias;

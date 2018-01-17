@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.JsonLight
         private void WriteServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, string kind)
         {
             // validate that the resource has a non-null url.
-            this.WriterValidator.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Json);
+            ValidationUtils.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Json);
 
             // "{"
             this.JsonWriter.StartObjectScope();

@@ -4,15 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    using System;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class responsible for binding a syntactic filter expression into a bound tree of semantic nodes.

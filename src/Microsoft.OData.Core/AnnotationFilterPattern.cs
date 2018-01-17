@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
 
     /// <summary>
     /// Filter pattern class to determine whether an annotation name matches the pattern.
@@ -101,7 +100,7 @@ namespace Microsoft.OData.Core
 
             return priority;
         }
-        
+
         /// <summary>
         /// Creates a pattern instance to determine whether an annotation name matches the pattern.
         /// </summary>
@@ -141,7 +140,7 @@ namespace Microsoft.OData.Core
         /// <param name="annotationName">Annotation name in question.</param>
         /// <returns>Returns true if the given annotation name matches the pattern, false otherwise.</returns>
         internal abstract bool Matches(string annotationName);
-        
+
         /// <summary>
         /// Compares the priority of <paramref name="pattern1"/> with <paramref name="pattern2"/>.
         /// </summary>
@@ -172,7 +171,7 @@ namespace Microsoft.OData.Core
             {
                 return 0;
             }
-            
+
             // WildCard is the least specific pattern and thus has the lowest priority.
             if (pattern1 == WildCard)
             {
@@ -196,7 +195,7 @@ namespace Microsoft.OData.Core
             {
                 return -1;
             }
-            
+
             if (pattern2.StartsWith(pattern1, StringComparison.Ordinal))
             {
                 return 1;
@@ -322,7 +321,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Pattern class to match a annotation name that is exactly the same as this pattern.
+        /// Pattern class to match an annotation name that is exactly the same as this pattern.
         /// </summary>
         private sealed class ExactMatchPattern : AnnotationFilterPattern
         {

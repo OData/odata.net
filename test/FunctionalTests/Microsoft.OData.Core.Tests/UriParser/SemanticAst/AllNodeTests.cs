@@ -6,14 +6,11 @@
 
 using System.Collections.ObjectModel;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
     /// Unit tests for the AllNode class
@@ -23,7 +20,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         [Fact]
         public void RangeVariablesShouldBeSetCorrectly()
         {
-            EntityRangeVariable rangeVariable = (EntityRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            ResourceRangeVariable rangeVariable = (ResourceRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
                     rangeVariable
@@ -31,29 +28,29 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             AllNode allNode = new AllNode(rangeVariables, rangeVariable);
             allNode.RangeVariables.Count.Should().Be(1);
             allNode.RangeVariables[0].Name.Should().Be(ExpressionConstants.It);
-            allNode.RangeVariables[0].Kind.Should().Be(RangeVariableKind.Entity);
-            EntityRangeVariable returnedRangeVariable = (EntityRangeVariable)allNode.RangeVariables[0];
+            allNode.RangeVariables[0].Kind.Should().Be(RangeVariableKind.Resource);
+            ResourceRangeVariable returnedRangeVariable = (ResourceRangeVariable)allNode.RangeVariables[0];
             returnedRangeVariable.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
         public void RangeVariableShouldBeSetCorrectly()
         {
-            EntityRangeVariable rangeVariable = (EntityRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            ResourceRangeVariable rangeVariable = (ResourceRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
                     rangeVariable
                 };
             AllNode allNode = new AllNode(rangeVariables, rangeVariable);
             allNode.CurrentRangeVariable.Name.Should().Be(ExpressionConstants.It);
-            allNode.CurrentRangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
+            allNode.CurrentRangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
             allNode.CurrentRangeVariable.TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
         }
 
         [Fact]
         public void TypeReferenceShouldBeBoolean()
         {
-            EntityRangeVariable rangeVariable = (EntityRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            ResourceRangeVariable rangeVariable = (ResourceRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
                     rangeVariable
@@ -65,7 +62,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         [Fact]
         public void KindShouldBeAllNode()
         {
-            EntityRangeVariable rangeVariable = (EntityRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            ResourceRangeVariable rangeVariable = (ResourceRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
                     rangeVariable

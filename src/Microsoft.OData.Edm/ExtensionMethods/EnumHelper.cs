@@ -7,13 +7,10 @@
 namespace Microsoft.OData.Edm
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Text;
-
-    using Microsoft.OData.Edm.Library.Values;
 
     /// <summary>
     /// Enum helper
@@ -267,7 +264,7 @@ namespace Microsoft.OData.Edm
             Dictionary<string, ulong> dict = new Dictionary<string, ulong>();
             foreach (var member in enumType.Members)
             {
-                EdmIntegerConstant intValue = member.Value as EdmIntegerConstant;
+                IEdmEnumMemberValue intValue = member.Value;
                 if (intValue != null)
                 {
                     dict.Add(member.Name, (ulong)intValue.Value);

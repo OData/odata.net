@@ -8,8 +8,9 @@ namespace Microsoft.Test.Taupo.OData.Common
 {
     #region Namespaces
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Microsoft.Spatial;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common.Batch;
     #endregion Namespaces
@@ -19,20 +20,33 @@ namespace Microsoft.Test.Taupo.OData.Common
     /// </summary>
     public class ODataObjectModelVisitor
     {
+        public static object ParseJsonToPrimitiveValue(string rawValue)
+        {
+            Debug.Assert(rawValue != null && rawValue.Length > 0, "");
+            ODataCollectionValue collectionValue = (ODataCollectionValue)
+                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format("[{0}]", rawValue), ODataVersion.V4);
+            foreach (object item in collectionValue.Items)
+            {
+                return item;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Visits an item in the object model.
         /// </summary>
         /// <param name="objectModelItem">The item to visit.</param>
         public virtual void Visit(object objectModelItem)
         {
-            ODataFeed feed = objectModelItem as ODataFeed;
-            if (feed != null)
+            ODataResourceSet resourceCollection = objectModelItem as ODataResourceSet;
+            if (resourceCollection != null)
             {
-                this.VisitFeed(feed);
+                this.VisitFeed(resourceCollection);
                 return;
             }
 
-            ODataEntry entry = objectModelItem as ODataEntry;
+            ODataResource entry = objectModelItem as ODataResource;
             if (entry != null)
             {
                 this.VisitEntry(entry);
@@ -46,17 +60,10 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return;
             }
 
-            ODataNavigationLink navigationLink = objectModelItem as ODataNavigationLink;
+            ODataNestedResourceInfo navigationLink = objectModelItem as ODataNestedResourceInfo;
             if (navigationLink != null)
             {
                 this.VisitNavigationLink(navigationLink);
-                return;
-            }
-
-            ODataComplexValue complexValue = objectModelItem as ODataComplexValue;
-            if (complexValue != null)
-            {
-                this.VisitComplexValue(complexValue);
                 return;
             }
 
@@ -179,6 +186,12 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return;
             }
 
+            if (objectModelItem is ODataUntypedValue)
+            {
+                this.VisitPrimitiveValue(ParseJsonToPrimitiveValue((objectModelItem as ODataUntypedValue).RawValue));
+                return;
+            }
+
             this.VisitUnsupportedValue(objectModelItem);
         }
 
@@ -186,7 +199,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits a feed item.
         /// </summary>
         /// <param name="feed">The feed to visit.</param>
-        protected virtual void VisitFeed(ODataFeed feed)
+        protected virtual void VisitFeed(ODataResourceSet feed)
         {
             var entries = feed.Entries();
             if (entries != null)
@@ -202,7 +215,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits an entry item.
         /// </summary>
         /// <param name="entry">The entry to visit.</param>
-        protected virtual void VisitEntry(ODataEntry entry)
+        protected virtual void VisitEntry(ODataResource entry)
         {
             if (entry.MediaResource != null)
             {
@@ -243,7 +256,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits a navigation link item.
         /// </summary>
         /// <param name="navigationLink">The navigation link to visit.</param>
-        protected virtual void VisitNavigationLink(ODataNavigationLink navigationLink)
+        protected virtual void VisitNavigationLink(ODataNestedResourceInfo navigationLink)
         {
             object expandedContent;
             if (navigationLink.TryGetExpandedContent(out expandedContent) && expandedContent != null)
@@ -269,22 +282,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="operation">The operation to visit.</param>
         protected virtual void VisitODataOperation(ODataOperation operation)
         {
-        }
-
-        /// <summary>
-        /// Visits a complex value item.
-        /// </summary>
-        /// <param name="complexValue">The complex value to visit.</param>
-        protected virtual void VisitComplexValue(ODataComplexValue complexValue)
-        {
-            var properties = complexValue.Properties;
-            if (properties != null)
-            {
-                foreach (var property in properties)
-                {
-                    this.Visit(property);
-                }
-            }
         }
 
         /// <summary>
@@ -380,7 +377,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         protected virtual void VisitEntitySet(ODataEntitySetInfo entitySetInfo)
         {
         }
-        
+
         /// <summary>
         /// Visits an entity reference link collection.
         /// </summary>
@@ -404,7 +401,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         protected virtual void VisitEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
         {
         }
-        
+
         /// <summary>
         /// Visits a stream reference value (named stream).
         /// </summary>

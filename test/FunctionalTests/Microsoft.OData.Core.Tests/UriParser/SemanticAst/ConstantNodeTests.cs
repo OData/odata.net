@@ -6,12 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
     /// Unit tests for the ConstantNode class
@@ -50,7 +49,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         public void NullLiteralTextShouldThrow()
         {
             Action target = () => new ConstantNode(null, null);
-            target.ShouldThrow<ArgumentNullException>().WithMessage("literalText", ComparisonMode.EquivalentSubstring);
+            target.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("literalText"));
         }
 
         [Fact]

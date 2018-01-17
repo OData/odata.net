@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.Spatial;
 
 namespace Microsoft.Spatial.Tests
 {

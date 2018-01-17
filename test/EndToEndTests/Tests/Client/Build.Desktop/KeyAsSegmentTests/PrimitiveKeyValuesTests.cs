@@ -23,7 +23,8 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         {
         }
 
-        [TestMethod, Ignore /*Inconsistent reading and writing of key values*/]
+        // github issuse: #896
+        // [TestMethod /*Inconsistent reading and writing of key values*/]
         public void BinaryTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -143,13 +144,14 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             }
         }
 
-        [TestMethod, Ignore /* Incorrect parsing of url with single quote in key literal with KeyAsSegment url conventions */]
+        // github issuse: #896
+        // [TestMethod /* Incorrect parsing of url with single quote in key literal with KeyAsSegment url conventions */]
         public void StringTest_KeyWithSingleQuotes()
         {
             var entitySetName = "EdmStringSet";
 
             var context = this.CreateWrappedContext();
-            context.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             var query = context.CreateQuery<EdmString>(entitySetName).Where(e => e.Id == "'Hello'");
             Assert.AreEqual(this.ServiceUri.AbsoluteUri + entitySetName + "/''Hello''", query.ToString());
         }
@@ -168,7 +170,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         private DataServiceContextWrapper<Services.TestServices.PrimitiveKeysServiceReference.TestContext> CreateWrappedContext()
         {
             var contextWrapper = base.CreateWrappedContext<Services.TestServices.PrimitiveKeysServiceReference.TestContext>();
-            contextWrapper.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             return contextWrapper;
         }
 

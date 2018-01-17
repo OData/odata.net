@@ -5,15 +5,15 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 {
     public class ODataJsonLightReaderEnumIntegrationTests
     {
@@ -43,17 +43,17 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             // enum without flags
             var enumType = new EdmEnumType("NS", "Color");
-            var red = new EdmEnumMember(enumType, "Red", new EdmIntegerConstant(1));
+            var red = new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1));
             enumType.AddMember(red);
-            enumType.AddMember("Green", new EdmIntegerConstant(2));
-            enumType.AddMember("Blue", new EdmIntegerConstant(3));
+            enumType.AddMember("Green", new EdmEnumMemberValue(2));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(3));
             tmpModel.AddElement(enumType);
 
             // enum with flags
             var enumFlagsType = new EdmEnumType("NS", "ColorFlags", isFlags: true);
-            enumFlagsType.AddMember("Red", new EdmIntegerConstant(1));
-            enumFlagsType.AddMember("Green", new EdmIntegerConstant(2));
-            enumFlagsType.AddMember("Blue", new EdmIntegerConstant(4));
+            enumFlagsType.AddMember("Red", new EdmEnumMemberValue(1));
+            enumFlagsType.AddMember("Green", new EdmEnumMemberValue(2));
+            enumFlagsType.AddMember("Blue", new EdmEnumMemberValue(4));
             tmpModel.AddElement(enumFlagsType);
 
             this.entityType = new EdmEntityType("NS", "MyEntityType", isAbstract: false, isOpen: true, baseType: null);
@@ -96,62 +96,53 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsComplexProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"@odata.type\":\"#NS.MyEntityType\",\"@odata.id\":\"http://odata.org/test/MySet(12.3)\",\"@odata.editLink\":\"http://odata.org/test/MySet(12.3)\",\"@odata.readLink\":\"http://odata.org/test/MySet(12.3)\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags@odata.type\":\"#NS.ColorFlags\",\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource[] expectedEntries = new[]
             {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
+                new ODataResource()
+                {
+                    TypeName = "NS.MyEntityType",
+                    Properties = new[]
                     {
-                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},       
+                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},
                         new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { TypeName ="NS.MyComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }} }
-                        }
                     }
+                },
+                new ODataResource()
+                {
+                    TypeName ="NS.MyComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }}
+                }
             };
-            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=full", expectedEntry);
+            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=full", expectedEntries);
         }
 
         [Fact]
         public void FlagsEnumAsComplexProperty_StrAsValue_NoTypeName_MinimalMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource[] expectedEntries = new[]
             {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
+                new ODataResource()
+                {
+                    TypeName = "NS.MyEntityType",
+                    Properties = new[]
                     {
                         new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},       
-                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { TypeName ="NS.MyComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }} }
-                        }
+                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")}
                     }
+                },
+                new ODataResource()
+                {
+                    TypeName ="NS.MyComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }}
+                }
             };
-            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
+            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntries);
         }
 
         [Fact]
         public void FlagsEnumAsComplexProperty_NullValue_MinimalMetadata_Error()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":null,\"Height\":98.6}}";
-            ODataEntry expectedEntry = new ODataEntry
-            {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},       
-                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { TypeName ="NS.MyComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = null }, new ODataProperty { Name = "Height", Value = 98.6 }} }
-                        }
-                    }
-            };
+            ODataResource expectedEntry = new ODataResource();
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
@@ -162,62 +153,52 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsDerivedComplexProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"@odata.type\":\"#NS.MyEntityType\",\"@odata.id\":\"http://odata.org/test/MySet(12.3)\",\"@odata.editLink\":\"http://odata.org/test/MySet(12.3)\",\"@odata.readLink\":\"http://odata.org/test/MySet(12.3)\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags@odata.type\":\"#NS.ColorFlags\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags@odata.type\":\"#NS.ColorFlags\",\"MyDerivedColorFlags\":\"Red\"}}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource[] expectedEntries = new ODataResource[]
             {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
+                new ODataResource()
+                {
+                    TypeName = "NS.MyEntityType",
+                    Properties = new[]
                     {
-                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},       
-                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { TypeName ="NS.MyDerivedComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }} }
-                        }
+                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},
+                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")}
                     }
+                },
+                new ODataResource()
+                {
+                    TypeName ="NS.MyDerivedComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }}
+                }
             };
-            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=full", expectedEntry);
+            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=full", expectedEntries);
         }
 
         [Fact]
         public void FlagsEnumAsDerivedComplexProperty_StrAsValue_NoTypeName_MinimalMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags\":\"Red\"}}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource[] expectedEntries = new ODataResource[]
             {
+                new ODataResource()
+                {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
                     {
                         new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},       
-                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { TypeName ="NS.MyDerivedComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }} }
-                        }
+                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")}
                     }
+                },
+                new ODataResource()
+                { TypeName ="NS.MyDerivedComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }} 
+                }
             };
-            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
+            this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntries);
         }
 
         [Fact]
         public void FlagsEnumAsDerivedComplexProperty_NullValue_MinimalMetadata_Error()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags\":null,\"Height\":98.6,\"MyDerivedColorFlags\":null}}";
-            ODataEntry expectedEntry = new ODataEntry
-            {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3F)},       
-                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString(), /*reader will get TypeName from model*/ "NS.Color")},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { TypeName ="NS.MyDerivedComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = null }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(),"NS.ColorFlags") }} }
-                        }
-                    }
-            };
+            ODataResource expectedEntry = new ODataResource();
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
@@ -228,7 +209,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsCollectionElement_StrAsValue_NoTypeName_FullMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"@odata.type\":\"#NS.MyEntityType\",\"@odata.id\":\"http://odata.org/test/MySet(12.3)\",\"@odata.editLink\":\"http://odata.org/test/MySet(12.3)\",\"@odata.readLink\":\"http://odata.org/test/MySet(12.3)\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyCollectionType\":[\"Red\",\"Green\"]}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -249,7 +230,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsCollectionElement_StrAsValue_NoTypeName_MinimalMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyCollectionType\":[\"Red\",\"Green\"]}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -270,7 +251,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsCollectionElement_EmptyStrAsValue_NoTypeName_MinimalMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyCollectionType\":[\"\",\"\"]}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -294,7 +275,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsEntityProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.DefaultContainer.MySet/$entity\",\"@odata.type\":\"#NS.MyEntityType\",\"@odata.id\":\"http://odata.org/test/MySet(12.3)\",\"@odata.editLink\":\"http://odata.org/test/MySet(12.3)\",\"@odata.readLink\":\"http://odata.org/test/MySet(12.3)\",\"FloatId\":12.3,\"ColorFlags@odata.type\":\"NS.ColorFlags\",\"ColorFlags\":\"Green_undefined\"}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -310,7 +291,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsEntityProperty_StrAsValue_NullAsTypeName_MinimalMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":\"Green_undefined\"}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -326,7 +307,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsEntityProperty_StrAsValue_NullAsTypeName_NoMetadata()
         {
             const string payload = "{\"FloatId\":12.3,\"ColorFlags\":\"Green_undefined\"}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -337,8 +318,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             };
 
             // test payload as request
-            ODataEntry entry = null;
-            ReadReqeustEntryPayload(this.userModel, payload, "application/json;odata.metadata=none", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            ReadRequestEntryPayload(this.userModel, payload, "application/json;odata.metadata=none", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             entry.TypeName.Should().Be(expectedEntry.TypeName);
             TestUtils.AssertODataPropertiesAreEqual(expectedEntry.Properties, entry.Properties);
 
@@ -352,7 +333,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsEntityProperty_NullAsValue_NoNullable_MinimalMetadata_Error()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":null}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -371,7 +352,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsEntityProperty_EmptyStrAsValue_NullAsTypeName_MinimalMetadata()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":''}";
-            ODataEntry expectedEntry = new ODataEntry
+            ODataResource expectedEntry = new ODataResource
             {
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
@@ -387,9 +368,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         public void FlagsEnumAsEntityProperty_IntAsValue_NullAsTypeName_MinimalMetadata_Error()
         {
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":2}";
-            ODataEntry entry = null;
-            Action parse = () => ReadReqeustEntryPayload(this.userModel, payload, "application/json;odata.metadata=minimal", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
-            parse.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
+            ODataResource entry = null;
+            Action parse = () => ReadRequestEntryPayload(this.userModel, payload, "application/json;odata.metadata=minimal", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
+            parse.ShouldThrow<ODataException>().WithMessage(Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
         }
         #endregion
 
@@ -435,75 +416,89 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         [Fact]
         public void FlagsEnumAsComplexPropertyAsTopLevelValue_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            ReadFromMessageReaderAndVerifyPayload(
+            ODataResource expectedComplex = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") },
+                    new ODataProperty { Name = "Height", Value = 98.6 }
+                },
+                TypeName = "NS.MyComplexType"
+            };
+
+            ReadComplexPropertyAndVerify(
                 payload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyComplexType\",\"@odata.type\":\"#NS.MyComplexType\",\"MyColorFlags@odata.type\":\"#NS.ColorFlags\",\"MyColorFlags\":\"Red\",\"Height\":98.6}",
                 contentType: "application/json;odata.metadata=full;",
-                readerAction: (reader) =>
-                {
-                    ODataProperty expectedProperty = new ODataProperty
-                    {
-                        Name = null,
-                        Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 } }, TypeName = "NS.MyComplexType" }
-                    };
-                    ODataProperty property = reader.ReadProperty();
-                    TestUtils.AssertODataPropertyAreEqual(expectedProperty, property);
-                }
-            );
+                expectedProperty:expectedComplex);
         }
 
         [Fact]
         public void FlagsEnumAsComplexPropertyAsTopLevelValue_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            ReadFromMessageReaderAndVerifyPayload(
+            ODataResource expectedProperty = new ODataResource
+            {
+                Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 } },
+                TypeName = "NS.MyComplexType"
+            };
+
+            ReadComplexPropertyAndVerify(
                 payload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyComplexType\",\"MyColorFlags\":\"Red\",\"Height\":98.6}",
                 contentType: "application/json;odata.metadata=minimal;",
-                readerAction: (reader) =>
-                {
-                    ODataProperty expectedProperty = new ODataProperty
-                    {
-                        Name = null,
-                        Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 } }, TypeName = "NS.MyComplexType" }
-                    };
-                    ODataProperty property = reader.ReadProperty();
-                    TestUtils.AssertODataPropertyAreEqual(expectedProperty, property);
-                }
-            );
+                expectedProperty: expectedProperty);
         }
 
         [Fact]
         public void FlagsEnumAsDerivedComplexPropertyAsTopLevelValue_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            ReadFromMessageReaderAndVerifyPayload(
+            ODataResource expectedProperty = new ODataResource
+            {
+                Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") } },
+                TypeName = "NS.MyDerivedComplexType"
+            };
+
+            ReadComplexPropertyAndVerify(
                 payload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyComplexType\",\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags@odata.type\":\"#NS.ColorFlags\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags@odata.type\":\"#NS.ColorFlags\",\"MyDerivedColorFlags\":\"Red\"}",
                 contentType: "application/json;odata.metadata=full;",
-                readerAction: (reader) =>
-                {
-                    ODataProperty expectedProperty = new ODataProperty
-                    {
-                        Name = null,
-                        Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") } }, TypeName = "NS.MyDerivedComplexType" }
-                    };
-                    ODataProperty property = reader.ReadProperty();
-                    TestUtils.AssertODataPropertyAreEqual(expectedProperty, property);
-                }
-            );
+                expectedProperty: expectedProperty);
         }
 
         [Fact]
         public void FlagsEnumAsDerivedComplexPropertyAsTopLevelValue_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            ReadFromMessageReaderAndVerifyPayload(
+            ODataResource expectedProperty = new ODataResource
+            {
+                Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") } },
+                TypeName = "NS.MyDerivedComplexType"
+            };
+
+            ReadComplexPropertyAndVerify(
                 payload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyComplexType\",\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags\":\"Red\"}",
                 contentType: "application/json;odata.metadata=minimal;",
+                expectedProperty: expectedProperty);
+        }
+
+
+        private void ReadComplexPropertyAndVerify(string payload, string contentType, ODataResource expectedProperty)
+        {
+            ReadFromMessageReaderAndVerifyPayload(
+                payload,
+                contentType,
                 readerAction: (reader) =>
                 {
-                    ODataProperty expectedProperty = new ODataProperty
+                    ODataResource property = null;
+                    var entryReader = reader.CreateODataResourceReader();
+                    while (entryReader.Read())
                     {
-                        Name = null,
-                        Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags") } }, TypeName = "NS.MyDerivedComplexType" }
-                    };
-                    ODataProperty property = reader.ReadProperty();
-                    TestUtils.AssertODataPropertyAreEqual(expectedProperty, property);
+                        switch (entryReader.State)
+                        {
+                            case ODataReaderState.ResourceStart:
+                                property = entryReader.Item as ODataResource;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    TestUtils.AssertODataPropertiesAreEqual(expectedProperty.Properties, property.Properties);
                 }
             );
         }
@@ -551,7 +546,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         #region private methods
         public void ReadFromMessageReaderAndVerifyPayload(string payload, string contentType, Action<ODataMessageReader> readerAction)
         {
-            var settings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var settings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             // with model
             {
                 IODataResponseMessage message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
@@ -576,29 +571,61 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             action.ShouldThrow<ODataException>();
         }
 
-        private void ReadEntryPayloadAndVerify(string payload, string contentType, ODataEntry expectedEntry)
+        private void ReadEntryPayloadAndVerify(string payload, string contentType, params ODataResource[] expectedEntries)
+        {
+            ReadRequestEntryPayload(payload, contentType, expectedEntries);
+            ReadResponseEntryPayload(payload, contentType, expectedEntries);
+        }
+
+        private void ReadRequestEntryPayload(string payload, string contentType, params ODataResource[] expectedEntries)
+        {
+            List<ODataResource> entries = new List<ODataResource>();
+            ReadRequestEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => ReadEntry(reader, ref entries));
+            ValidateTwoResourceCollection(expectedEntries, entries.ToArray());
+        }
+
+        private void ReadResponseEntryPayload(string payload, string contentType, params ODataResource[] expectedEntries)
+        {
+            List<ODataResource> entries = new List<ODataResource>();
+            ReadResponseEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => ReadEntry(reader, ref entries));
+            ValidateTwoResourceCollection(expectedEntries, entries.ToArray());
+        }
+
+        private void ReadEntry(ODataReader reader, ref List<ODataResource> entries)
+        {
+            switch (reader.State)
+            {
+                case ODataReaderState.ResourceStart:
+                    entries.Add(reader.Item as ODataResource);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ReadEntryPayloadAndVerify(string payload, string contentType, ODataResource expectedEntry)
         {
             // test payload as request
-            ODataEntry entry = null;
-            ReadReqeustEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ODataResource entry = null;
+            ReadRequestEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             entry.TypeName.Should().Be(expectedEntry.TypeName);
             TestUtils.AssertODataPropertiesAreEqual(expectedEntry.Properties, entry.Properties);
 
             // test payload as response
             entry = null;
-            ReadResponseEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+            ReadResponseEntryPayload(this.userModel, payload, contentType, this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             entry.TypeName.Should().Be(expectedEntry.TypeName);
             TestUtils.AssertODataPropertiesAreEqual(expectedEntry.Properties, entry.Properties);
         }
 
-        private static void ReadReqeustEntryPayload(IEdmModel userModel, string payload, string contentType, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action)
+        private static void ReadRequestEntryPayload(IEdmModel userModel, string payload, string contentType, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", contentType);
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             using (var msgReader = new ODataMessageReader((IODataRequestMessage)message, readerSettings, userModel))
             {
-                var reader = msgReader.CreateODataEntryReader(entitySet, entityType);
+                var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())
                 {
                     action(reader);
@@ -610,16 +637,30 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", contentType);
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
-                var reader = msgReader.CreateODataEntryReader(entitySet, entityType);
+                var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())
                 {
                     action(reader);
                 }
             }
         }
+
+        private static void ValidateTwoResourceCollection(ODataResource[] expectedResoures, ODataResource[] actualResoures)
+        {
+            Assert.Equal(expectedResoures.Length, actualResoures.Length);
+            for (int i = 0; i < expectedResoures.Length; i++)
+            {
+                var expected = expectedResoures[i];
+                var actual = actualResoures[i];
+                actual.TypeName.Should().Be(expected.TypeName);
+
+                TestUtils.AssertODataPropertiesAreEqual(expected.Properties, actual.Properties);
+            }
+        }
+
         #endregion
     }
 }

@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
-    using System;
-    using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
+
     #endregion Namespaces
 
     /// <summary>
@@ -20,30 +18,6 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal static class WriterUtils
     {
-        /// <summary>
-        /// Determines if a property should be written or skipped.
-        /// </summary>
-        /// <param name="projectedProperties">The projected properties annotation to use (can be null).</param>
-        /// <param name="propertyName">The name of the property to check.</param>
-        /// <returns>true if the property should be skipped, false to write the property.</returns>
-        internal static bool ShouldSkipProperty(this ProjectedPropertiesAnnotation projectedProperties, string propertyName)
-        {
-            if (projectedProperties == null)
-            {
-                return false;
-            }
-            else if (object.ReferenceEquals(ProjectedPropertiesAnnotation.EmptyProjectedPropertiesInstance, projectedProperties))
-            {
-                return true;
-            }
-            else if (object.ReferenceEquals(ProjectedPropertiesAnnotation.AllProjectedPropertiesInstance, projectedProperties))
-            {
-                return false;
-            }
-
-            return !projectedProperties.IsPropertyProjected(propertyName);
-        }
-
         /// <summary>
         /// Remove the Edm. prefix from the type name if it is primitive type.
         /// </summary>

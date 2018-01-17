@@ -6,6 +6,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.OData.Utils</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Utils</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ErrorReport>prompt</ErrorReport>
@@ -73,8 +74,6 @@
     <Compile Include="Metadata\MetadataUtils.cs" />
     <Compile Include="Metadata\PayloadGenerator.cs" />
     <Compile Include="Metadata\TestModels.cs" />
-    <Compile Include="ODataLibOM\InheritODataAnnotationsUtils.cs" />
-    <Compile Include="ODataLibOM\ODataFeedEntriesObjectModelAnnotation.cs" />
     <Compile Include="ODataLibOM\ODataPropertyMetadataAnnotation.cs" />
     <Compile Include="Common\ExceptionUtilities.cs" />
     <Compile Include="Common\TestAtomConstants.cs" />

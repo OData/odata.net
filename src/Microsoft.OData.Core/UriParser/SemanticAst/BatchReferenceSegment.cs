@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -45,7 +42,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="entitySet">The resulting entity set</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input edmType of contentID is null.</exception>
         /// <exception cref="ODataException">Throws if the contentID is not in the right format.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public BatchReferenceSegment(string contentId, IEdmType edmType, IEdmEntitySetBase entitySet)
         {
             ExceptionUtils.CheckArgumentNotNull(edmType, "resultingType");
@@ -127,7 +123,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         internal override bool Equals(ODataPathSegment other)
         {
             BatchReferenceSegment otherBatchReferenceSegment = other as BatchReferenceSegment;
-            return otherBatchReferenceSegment != null && 
+            return otherBatchReferenceSegment != null &&
                 otherBatchReferenceSegment.EdmType == this.edmType &&
                 otherBatchReferenceSegment.EntitySet == this.entitySet &&
                 otherBatchReferenceSegment.ContentId == this.contentId;

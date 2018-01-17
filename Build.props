@@ -45,7 +45,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == '.NETPortable'">
-    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_SECURITY_RULES;SUPPRESS_COM_VISIBLE_ATTRIBUTE;</DefineConstants>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v3.5'">

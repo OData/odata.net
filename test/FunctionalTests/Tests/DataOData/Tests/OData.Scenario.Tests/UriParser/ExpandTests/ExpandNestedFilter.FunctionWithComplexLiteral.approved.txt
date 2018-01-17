@@ -10,7 +10,7 @@ SelectExpandQueryOption
 			FilterQueryOption
 				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 				Parameter = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = CustomerForOrder
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -24,7 +24,7 @@ SelectExpandQueryOption
 						NamedFunctionParameterNode
 							Parameter Name = Location
 							Value = 
-							Microsoft.OData.Core.ODataComplexValue(Type: )
+							{ Street:'1 Microsoft Way', City:'Redmond', PostalCode:'98052' }(Type: [Edm.String Nullable=True Unicode=True])
 						NamedFunctionParameterNode
 							Parameter Name = Distance
 							Value = 

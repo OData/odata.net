@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
@@ -32,43 +32,45 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
-        [TestMethod, Variation(Description = "Test that we cannot write an expanded link with incorrect multiplicity or content (entry vs. feed).")]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test that we cannot write an expanded link with incorrect multiplicity or content (entry vs. feed).")]
         public void ExpandedLinkWithMultiplicityTests()
         {
-            ODataNavigationLink expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedEntryLink.IsCollection = false;
 
-            ODataNavigationLink expandedFeedLink = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedFeedLink = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedFeedLink.IsCollection = true;
 
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
             ODataEntityReferenceLink defaultEntityReferenceLink = ObjectModelUtils.CreateDefaultEntityReferenceLink();
 
-            ODataEntry officeEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeType");
-            ODataEntry officeWithNumberEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeWithNumberType");
-            ODataEntry cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
+            ODataResource officeEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeType");
+            ODataResource officeWithNumberEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.OfficeWithNumberType");
+            ODataResource cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
 
             // CityHall is a nav prop with multiplicity '*' of type 'TestModel.OfficeType'
-            ODataNavigationLink cityHallLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ null);
-            ODataNavigationLink cityHallLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ true);
-            ODataNavigationLink cityHallLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ false);
+            ODataNestedResourceInfo cityHallLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ null);
+            ODataNestedResourceInfo cityHallLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ true);
+            ODataNestedResourceInfo cityHallLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ false);
 
             // PoliceStation is a nav prop with multiplicity '1' of type 'TestModel.OfficeType'
-            ODataNavigationLink policeStationLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ null);
-            ODataNavigationLink policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
-            ODataNavigationLink policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
+            ODataNestedResourceInfo policeStationLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ null);
+            ODataNestedResourceInfo policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
+            ODataNestedResourceInfo policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
 
-            ExpectedException expandedEntryLinkWithFeedContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/link");
-            ExpectedException expandedFeedLinkWithEntryContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/link");
-            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkWithFeedContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent", "http://odata.org/link");
+            ExpectedException expandedFeedLinkWithEntryContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/link");
+            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata", "http://odata.org/link");
 
-            ExpectedException expandedEntryLinkWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata", "http://odata.org/link");
-            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorRequest = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata", "http://odata.org/link");
-            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata", "http://odata.org/link");
-            ExpectedException expandedEntryLinkPayloadWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata", "http://odata.org/link");
-            ExpectedException expandedEntryLinkPayloadWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata", "http://odata.org/link");
-            ExpectedException multipleItemsInExpandedLinkError = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent", "http://odata.org/link");
+            ExpectedException expandedEntryLinkWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata", "http://odata.org/link");
+            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorRequest = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata", "http://odata.org/link");
+            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkPayloadWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkPayloadWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata", "http://odata.org/link");
+            ExpectedException multipleItemsInExpandedLinkError = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent", "http://odata.org/link");
             ExpectedException entityReferenceLinkInResponseError = ODataExpectedExceptions.ODataException("ODataWriterCore_EntityReferenceLinkInResponse");
 
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -94,50 +96,50 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Expanded link of singleton type without IsCollection value and an entry of a non-matching entity type;
                         Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull, cityEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Atom || !tc.IsRequest
-                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType", "TestModel.CityType", "TestModel.OfficeType")
-                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation"),
+                        ExpectedError = tc => !tc.IsRequest
+                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType", "TestModel.CityType", "TestModel.OfficeType")
+                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "PoliceStation"),
                         Model = model,
                     },
                     new ExpandedLinkMultiplicityTestCase
                     {
                         // Expanded link of singleton type without IsCollection value and an entry of a matching entity type; no error expected.
                         Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull, officeEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest ? null : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation"),
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest ? null : ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "PoliceStation"),
                         Model = model,
                     },
                     new ExpandedLinkMultiplicityTestCase
                     {
                         // Expanded link of singleton type without IsCollection and an entry of a derived entity type; no error expected.
                         Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull, officeWithNumberEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest ? null : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation"),
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest ? null : ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "PoliceStation"),
                         Model = model,
                     },
                     new ExpandedLinkMultiplicityTestCase
                     {
                         // Expanded link of collection type without IsCollection value and an entry of a non-matching entity type;
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, cityEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest 
-                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType", "TestModel.CityType", "TestModel.OfficeType")
-                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall"),
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest
+                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType", "TestModel.CityType", "TestModel.OfficeType")
+                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "CityHall"),
                         Model = model,
                     },
                     new ExpandedLinkMultiplicityTestCase
                     {
                         // Expanded link of collection type without IsCollection value and an entry of a matching entity type; no error expected.
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, officeEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest 
-                            ? null 
-                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall"),
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest
+                            ? null
+                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "CityHall"),
                         Model = model,
                     },
                     new ExpandedLinkMultiplicityTestCase
                     {
                         // Expanded link of collection type without IsCollection and an entry of a derived entity type; no error expected.
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, officeWithNumberEntry },
-                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest 
-                            ? null 
-                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall"),
+                        ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest
+                            ? null
+                            : ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "CityHall"),
                         Model = model,
                     },
                     #endregion IsCollection == null; check compatibility of entity types of navigation property and entity in expanded link
@@ -171,8 +173,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Entry content, IsCollection == null, singleton nav prop; should not fail.
                         Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull, officeEntry },
-                        ExpectedError = tc => tc.IsRequest || tc.Format == ODataFormat.Atom
-                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation")
+                        ExpectedError = tc => tc.IsRequest
+                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "PoliceStation")
                             : null,
                         Model = model,
                     },
@@ -222,8 +224,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         // Feed content, IsCollection == null, collection nav prop; should not fail.
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, officeEntry },
-                        ExpectedError = tc => tc.IsRequest || tc.Format == ODataFormat.Atom
-                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall")
+                        ExpectedError = tc => tc.IsRequest
+                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "CityHall")
                             : null,
                         Model = model,
                     },
@@ -292,7 +294,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testCase, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -311,59 +313,44 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Test that we can write an expanded link with a null navigation entry.")]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test that we can write an expanded link with a null navigation entry.")]
         public void ExpandedLinkWithNullNavigationTests()
         {
-            ODataNavigationLink expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedEntryLink.IsCollection = false;
 
-            ODataNavigationLink expandedEntryLink2 = ObjectModelUtils.CreateDefaultCollectionLink();
+            ODataNestedResourceInfo expandedEntryLink2 = ObjectModelUtils.CreateDefaultCollectionLink();
             expandedEntryLink2.IsCollection = false;
             expandedEntryLink2.Name = expandedEntryLink2.Name + "2";
 
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
-            ODataEntry nullEntry = ObjectModelUtils.ODataNullEntry;
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource nullEntry = ObjectModelUtils.ODataNullEntry;
 
             PayloadWriterTestDescriptor.WriterTestExpectedResultCallback successCallback = (testConfiguration) =>
             {
-                if (testConfiguration.Format == ODataFormat.Atom)
+                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                 {
-                    return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                    Json = "null", //new JsonPrimitiveValue(null).ToText(testConfiguration.MessageWriterSettings.Indent),
+                    FragmentExtractor = (result) =>
                     {
-                        Xml = new XElement(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName).ToString(),
-                        FragmentExtractor = (result) =>
-                            {
-                                return result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomLinkElementName)
-                                             .First(e => e.Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName) != null)
-                                             .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName);
-                            }
-                    };
-                }
-                else
-                {
-                    return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    {
-                        Json = "null", //new JsonPrimitiveValue(null).ToText(testConfiguration.MessageWriterSettings.Indent),
-                        FragmentExtractor = (result) =>
-                        {
-                            return JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Properties.First(p => p.Name == ObjectModelUtils.DefaultLinkName).Value;
-                        }
-                    };
-                }
-
+                        return JsonUtils.UnwrapTopLevelValue(testConfiguration, result).Object().Properties.First(p => p.Name == ObjectModelUtils.DefaultLinkName).Value;
+                    }
+                };
             };
 
-            Func<ExpectedException,PayloadWriterTestDescriptor.WriterTestExpectedResultCallback> errorCallback = (expectedException) =>
-                {
-                    return (testConfiguration) =>
-                        {
-                            return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                ExpectedException2 = expectedException,
-                            };
-                        };
-                };
+            Func<ExpectedException, PayloadWriterTestDescriptor.WriterTestExpectedResultCallback> errorCallback = (expectedException) =>
+                 {
+                     return (testConfiguration) =>
+                         {
+                             return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                             {
+                                 ExpectedException2 = expectedException,
+                             };
+                         };
+                 };
 
             var testCases = new PayloadWriterTestDescriptor<ODataItem>[]
                 {
@@ -404,7 +391,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCase, testConfig) =>
                 {
                     testConfig = testConfig.Clone();

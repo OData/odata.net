@@ -8,10 +8,12 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
+using Microsoft.OData.MultipartMixed;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
+using System.Collections.Generic;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataBatchReaderStreamTests
     {
@@ -61,20 +63,22 @@ Second line";
             CreateBatchReaderStream(input).ReadFirstNonEmptyLine().Should().Be("First non-empty line");
         }
 
-        private static ODataBatchReaderStream CreateBatchReaderStream(string inputString)
+        private static ODataMultipartMixedBatchReaderStream CreateBatchReaderStream(string inputString)
         {
-            var underlyingStream = new MemoryStream(Encoding.UTF8.GetBytes(inputString));
-            var inputContext = new ODataRawInputContext(
-                ODataFormat.Batch, 
-                underlyingStream, 
-                Encoding.UTF8, 
-                new ODataMessageReaderSettings(),
-                false, 
-                true, 
-                null, 
-                null, 
-                ODataPayloadKind.Batch);
-            var batchStream = new ODataBatchReaderStream(inputContext, "batch_862fb28e-dc50-4af1-aad5-9608647761d1", Encoding.UTF8);
+            string boundary = "batch_862fb28e-dc50-4af1-aad5-9608647761d1";
+            var messageInfo = new ODataMessageInfo
+            {
+                Encoding = Encoding.UTF8,
+                IsResponse = false,
+                IsAsync = false,
+                MessageStream = new MemoryStream(Encoding.UTF8.GetBytes(inputString)),
+                MediaType = new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType, new KeyValuePair<string,string>(ODataConstants.HttpMultipartBoundary, boundary))
+            };
+            var inputContext = new ODataMultipartMixedBatchInputContext(
+                ODataFormat.Batch,
+                messageInfo,
+                new ODataMessageReaderSettings());
+            var batchStream = new ODataMultipartMixedBatchReaderStream(inputContext, boundary, Encoding.UTF8);
             return batchStream;
         }
     }

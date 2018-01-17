@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -44,7 +44,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         using (ODataMessageReaderTestWrapper messageReaderWrapper = TestReaderUtils.CreateMessageReader(message, model, testConfiguration))
                         {
-                            var feedReader = messageReaderWrapper.MessageReader.CreateODataFeedReader(model.EntityContainer.FindEntitySet("MyBaseType"), model.EntityTypes().FirstOrDefault());
+                            var feedReader = messageReaderWrapper.MessageReader.CreateODataResourceSetReader(model.EntityContainer.FindEntitySet("MyBaseType"), model.EntityTypes().FirstOrDefault());
                             if (testConfiguration.Synchronous)
                             {
                                 feedReader.Read();

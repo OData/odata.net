@@ -1075,7 +1075,7 @@ Namespace Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceRe
             Private Shared Function LoadModelFromString() As Global.Microsoft.OData.Edm.IEdmModel
                 Dim reader As Global.System.Xml.XmlReader = CreateXmlReader(Edmx)
                 Try
-                    Return Global.Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader)
+                    Return Global.Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader)
                 Finally
                     CType(reader,Global.System.IDisposable).Dispose
                 End Try

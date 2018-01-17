@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.OData.Services.PluggableFormat
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.PluggableFormat;
 
@@ -19,10 +19,13 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
         protected override IEdmModel CreateModel()
         {
-            var model = TestHelper.GetModel("Microsoft.Test.OData.Services.PluggableFormat.Csdl.PluggableFormat.xml");
-            model.SetPayloadValueConverter(new BinaryPayloadConverter());
+            return TestHelper.GetModel("Microsoft.Test.OData.Services.PluggableFormat.Csdl.PluggableFormat.xml");
+        }
 
-            return model;
+        protected override void ConfigureContainer(IContainerBuilder builder)
+        {
+            base.ConfigureContainer(builder);
+            builder.AddService<ODataPayloadValueConverter, BinaryPayloadConverter>(ServiceLifetime.Singleton);
         }
     }
 }

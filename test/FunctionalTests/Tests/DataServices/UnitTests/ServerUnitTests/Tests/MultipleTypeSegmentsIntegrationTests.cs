@@ -16,6 +16,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
     [TestClass]
     public class MultipleTypeSegmentsIntegrationTests
     {
@@ -25,8 +26,9 @@ namespace AstoriaUnitTests.Tests
         private static readonly string VeryDerivedTypeName = typeof(MultipleTypeSegmentsIntegrationTests).FullName + "_VeryDerivedType";
         private static readonly string UnrelatedVeryDerivedTypeName = typeof(MultipleTypeSegmentsIntegrationTests).FullName + "_UnrelatedVeryDerivedType";
 
-        [TestCategory("Partition1")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1")]
+        // [TestMethod]
         public void FilteringPathToMostDerivedTypeThenToBase()
         {
             string requestUriString = "/Entities/" + VeryDerivedTypeName + "/" + MostBaseTypeName;
@@ -34,8 +36,9 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldContainEntities(requestUriString, expectedEditLink);
         }
 
-        [TestCategory("Partition1")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1")]
+        // [TestMethod]
         public void LotsOfTypeSegments()
         {
             string requestUriString = string.Join("/", "/Entities", VeryDerivedTypeName, MostBaseTypeName, MostBaseTypeName, EntitySetBaseTypeName, DerivedTypeName, VeryDerivedTypeName, MostBaseTypeName, EntitySetBaseTypeName);
@@ -43,8 +46,9 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldContainEntities(requestUriString, expectedEditLink);
         }
 
-        [TestCategory("Partition1")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1")]
+        // [TestMethod]
         public void FilteringPathWithBaseTypeShouldIncludeAll()
         {
             string requestUriString = "/Entities/" + MostBaseTypeName;
@@ -56,8 +60,9 @@ namespace AstoriaUnitTests.Tests
                 "Entities('EntitySetBase')");
         }
 
-        [TestCategory("Partition1")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1")]
+        // [TestMethod]
         public void AddressingNavigationShouldAllowMultipleTypeSegments()
         {
             string requestUriString = "/Entities('Derived')/" + DerivedTypeName + "/Reference/" + EntitySetBaseTypeName + "/" + MostBaseTypeName;
@@ -80,8 +85,9 @@ namespace AstoriaUnitTests.Tests
             RunGetRequest(requestUriString, request => Assert.AreEqual(400, request.ResponseStatusCode));
         }
 
-        [TestCategory("Partition1")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1")]
+        // [TestMethod]
         public void FilteringPathWithDerivedProperty()
         {
             string requestUriString = "/Entities/" + MostBaseTypeName + "('VeryDerived')/" + DerivedTypeName + "/" + VeryDerivedTypeName + "/VeryDerivedTypeProperty";

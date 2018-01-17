@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
     using System.IO;
     using System.Xml;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion
 
     /// <summary>
@@ -18,13 +18,6 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal interface IPrimitiveTypeConverter
     {
-        /// <summary>
-        /// Create an instance of a primitive type from the value in an Xml reader.
-        /// </summary>
-        /// <param name="reader">The Xml reader to use to read the value.</param>
-        /// <returns>An instance of the primitive type.</returns>
-        object TokenizeFromXml(XmlReader reader);
-
         /// <summary>
         /// Write the Atom representation of an instance of a primitive type to an XmlWriter.
         /// </summary>

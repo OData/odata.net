@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.Xml;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
 
     /// <summary>
     /// Represents an instance annotation.
@@ -21,11 +21,29 @@ namespace Microsoft.OData.Core
         /// <param name="name">The name of the instance annotation.</param>
         /// <param name="value">The value of the instance annotation.</param>
         public ODataInstanceAnnotation(string name, ODataValue value)
+            : this(name, value, false)
         {
-            ValidateName(name);
-            ValidateValue(value);
-            this.Name = name;
-            this.Value = value;
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="ODataInstanceAnnotation"/> instance.
+        /// </summary>
+        /// <param name="annotationName">The name of the instance annotation.</param>
+        /// <param name="annotationValue">The value of the instance annotation.</param>
+        /// <param name="isCustomAnnotation">If the name is not for built-in OData annotation.</param>
+        internal ODataInstanceAnnotation(string annotationName, ODataValue annotationValue, bool isCustomAnnotation)
+        {
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(annotationName, "annotationName");
+            if (!isCustomAnnotation && ODataAnnotationNames.IsODataAnnotationName(annotationName))
+            {
+                // isCustomAnnotation==true includes '@odata.<unknown name>', which won't cause the below exception.
+                throw new ArgumentException(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, JsonLightConstants.ODataAnnotationNamespacePrefix));
+            }
+
+            ValidateName(annotationName);
+            ValidateValue(annotationValue);
+            this.Name = annotationName;
+            this.Value = annotationValue;
         }
 
         /// <summary>
@@ -44,16 +62,9 @@ namespace Microsoft.OData.Core
         /// <param name="name">Name to validate.</param>
         internal static void ValidateName(string name)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(name, "name");
-
             if (name.IndexOf('.') < 0 || name[0] == '.' || name[name.Length - 1] == '.')
             {
                 throw new ArgumentException(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
-            }
-
-            if (ODataAnnotationNames.IsODataAnnotationName(name))
-            {
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(name, JsonLightConstants.ODataAnnotationNamespacePrefix));
             }
 
             try

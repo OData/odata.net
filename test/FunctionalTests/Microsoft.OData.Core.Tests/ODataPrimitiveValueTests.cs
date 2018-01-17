@@ -7,9 +7,9 @@
 using System;
 using FluentAssertions;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataPrimitiveValueTests
     {
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core.Tests
         {
             ODataPrimitiveValue innerPrimitiveValue = new ODataPrimitiveValue(42);
             Action testSubject = () => new ODataPrimitiveValue(innerPrimitiveValue);
-            testSubject.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType("Microsoft.OData.Core.ODataPrimitiveValue"));
+            testSubject.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType("Microsoft.OData.ODataPrimitiveValue"));
         }
     }
 }

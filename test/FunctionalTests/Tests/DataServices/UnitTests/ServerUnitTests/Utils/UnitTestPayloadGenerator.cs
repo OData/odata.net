@@ -11,7 +11,7 @@ namespace AstoriaUnitTests.Tests
     using System.IO;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using System.Collections;
     using System.Linq;
 
@@ -19,7 +19,7 @@ namespace AstoriaUnitTests.Tests
     {
         private static readonly Uri MetadataDocumentUri = new Uri("http://http://temp.org/$metadata");
         private static readonly ODataMessageWriterSettings Settings = new ODataMessageWriterSettings();
-        private static readonly ODataFeedAndEntrySerializationInfo MySerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
             NavigationSourceEntityTypeName = "Null",
             NavigationSourceName = "MySet",
@@ -29,7 +29,7 @@ namespace AstoriaUnitTests.Tests
         static UnitTestPayloadGenerator()
         {
             Settings.SetServiceDocumentUri(MetadataDocumentUri);
-            Settings.EnableAtom = true;
+            // Settings.EnableAtom = true;
         }
         
         public UnitTestPayloadGenerator(HttpStatusCode statusCode, string contentType)
@@ -58,7 +58,7 @@ namespace AstoriaUnitTests.Tests
             var message = new SimpleResponseMessage(this.StatusCode, this.ContentType);
             using (var writer = new ODataMessageWriter(message, Settings))
             {
-                WriteEntry(writer.CreateODataEntryWriter(), entity, projectedProperties);
+                WriteEntry(writer.CreateODataResourceWriter(), entity, projectedProperties);
             }
 
             return message.GetMessageString();
@@ -69,8 +69,8 @@ namespace AstoriaUnitTests.Tests
             var message = new SimpleResponseMessage(this.StatusCode, this.ContentType);
             using (var writer = new ODataMessageWriter(message, Settings))
             {
-                var feedWriter = writer.CreateODataFeedWriter();
-                feedWriter.WriteStart(new ODataFeed() { Id = new Uri("http://temp.org/feed"), SerializationInfo = MySerializationInfo });
+                var feedWriter = writer.CreateODataResourceSetWriter();
+                feedWriter.WriteStart(new ODataResourceSet() { Id = new Uri("http://temp.org/feed"), SerializationInfo = MySerializationInfo });
                 foreach (var entity in entities)
                 {
                     WriteEntry(feedWriter, entity, projectedProperties);
@@ -84,17 +84,12 @@ namespace AstoriaUnitTests.Tests
 
         private static void WriteEntry(ODataWriter writer, object entity, IEnumerable<string> projectedProperties)
         {
-            var entry = new ODataEntry()
+            var entry = new ODataResource()
             {
                 Id = new Uri("http://temp.org/" + Guid.NewGuid()),
                 SerializationInfo = MySerializationInfo
             };
 
-            if (projectedProperties != null)
-            {
-                entry.SetAnnotation<ProjectedPropertiesAnnotation>(new ProjectedPropertiesAnnotation(projectedProperties));
-            }
-            
             entry.Properties = entity.GetType().GetProperties().Select(p => new ODataProperty() { Name = p.Name, Value = p.GetValue(entity, null) });
 
             writer.WriteStart(entry);

@@ -6,22 +6,23 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AstoriaUnitTests</RootNamespace>
     <AssemblyName>Microsoft.Data.MetadataObjectModel.UnitTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <DefineConstants>ASTORIA_OPEN_OBJECT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>
+    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="$(NugetPack)\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj">
@@ -72,6 +73,10 @@
     <Compile Include="Tests\ResourceTypeUtils.cs" />
     <Compile Include="Tests\OperationParameterTests.cs" />
     <Compile Include="Tests\ServiceOperationTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,15 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// Use a Select syntactic tree to populate the correct values for Selection in an already parsed
@@ -34,10 +29,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="maxDepth">the maximum recursive depth.</param>
         /// <param name="expandClauseToDecorate">The already built expand clause to decorate</param>
        /// <param name="resolver">Resolver for uri parser.</param>
-        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver = null)
+        public SelectBinder(IEdmModel model, IEdmStructuredType edmType, int maxDepth, SelectExpandClause expandClauseToDecorate, ODataUriResolver resolver)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "tokenIn");
             ExceptionUtils.CheckArgumentNotNull(edmType, "entityType");
+            ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
             this.visitor = new SelectPropertyVisitor(model, edmType, maxDepth, expandClauseToDecorate, resolver);
         }

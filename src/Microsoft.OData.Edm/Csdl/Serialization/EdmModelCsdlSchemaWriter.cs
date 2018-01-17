@@ -10,12 +10,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -45,7 +43,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             // e.g. <edmx:Reference Uri="http://host/schema/VipCustomer.xml">
             this.xmlWriter.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Reference, this.edmxNamespace);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Uri, reference.Uri, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Uri, reference.Uri, EdmValueWriter.UriAsXml);
         }
 
         internal void WriteIncludeElement(IEdmInclude include)
@@ -67,7 +65,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteEndElement();
         }
 
-        internal void WriteValueTermElementHeader(IEdmValueTerm term, bool inlineType)
+        internal void WriteTermElementHeader(IEdmTerm term, bool inlineType)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Term);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, term.Name, EdmValueWriter.StringAsXml);
@@ -129,7 +127,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal void WriteNavigationPropertyBinding(IEdmNavigationSource navigationSource, IEdmNavigationPropertyBinding binding)
         {
-            this.WriteNavigationPropertyBinding(binding, navigationSource.EntityType());
+            this.WriteNavigationPropertyBinding(binding);
         }
 
         internal void WriteEntityTypeElementHeader(IEdmEntityType entityType)
@@ -170,7 +168,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (member.Partner != null)
             {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Partner, member.Partner.Name, EdmValueWriter.StringAsXml);
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Partner, member.GetPartnerPath().Path, EdmValueWriter.StringAsXml);
             }
 
             this.WriteOptionalAttribute(CsdlConstants.Attribute_ContainsTarget, member.ContainsTarget, CsdlConstants.Default_ContainsTarget, EdmValueWriter.BooleanAsXml);
@@ -213,7 +211,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, property.Type, this.TypeReferenceAsXml);
             }
 
-            this.WriteOptionalAttribute(CsdlConstants.Attribute_ConcurrencyMode, property.ConcurrencyMode, CsdlConstants.Default_ConcurrencyMode, ConcurrencyModeAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_DefaultValue, property.DefaultValueString, EdmValueWriter.StringAsXml);
         }
 
@@ -224,13 +221,39 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             bool? isExplicit = member.IsValueExplicit(this.model);
             if (!isExplicit.HasValue || isExplicit.Value)
             {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Value, member.Value, EdmValueWriter.PrimitiveValueAsXml);
+                this.xmlWriter.WriteAttributeString(CsdlConstants.Attribute_Value, EdmValueWriter.LongAsXml(member.Value.Value));
             }
         }
 
         internal void WriteNullableAttribute(IEdmTypeReference reference)
         {
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
+        }
+
+        internal void WriteTypeDefinitionAttributes(IEdmTypeDefinitionReference reference)
+        {
+            IEdmTypeReference actualTypeReference = reference.AsActualTypeReference();
+
+            if (actualTypeReference.IsBinary())
+            {
+                this.WriteBinaryTypeAttributes(actualTypeReference.AsBinary());
+            }
+            else if (actualTypeReference.IsString())
+            {
+                this.WriteStringTypeAttributes(actualTypeReference.AsString());
+            }
+            else if (actualTypeReference.IsTemporal())
+            {
+                this.WriteTemporalTypeAttributes(actualTypeReference.AsTemporal());
+            }
+            else if (actualTypeReference.IsDecimal())
+            {
+                this.WriteDecimalTypeAttributes(actualTypeReference.AsDecimal());
+            }
+            else if (actualTypeReference.IsSpatial())
+            {
+                this.WriteSpatialTypeAttributes(actualTypeReference.AsSpatial());
+            }
         }
 
         internal void WriteBinaryTypeAttributes(IEdmBinaryTypeReference reference)
@@ -253,7 +276,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal void WriteSpatialTypeAttributes(IEdmSpatialTypeReference reference)
         {
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, SridAsXml);
+            if (reference.IsGeography())
+            {
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, CsdlConstants.Default_SpatialGeographySrid, SridAsXml);
+            }
+            else if (reference.IsGeometry())
+            {
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, CsdlConstants.Default_SpatialGeometrySrid, SridAsXml);
+            }
         }
 
         internal void WriteStringTypeAttributes(IEdmStringTypeReference reference)
@@ -371,6 +401,30 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        internal void WriteOperationParameterEndElement(IEdmOperationParameter parameter)
+        {
+            IEdmOptionalParameter optionalParameter = parameter as IEdmOptionalParameter;
+            if (optionalParameter != null && !(optionalParameter.VocabularyAnnotations(this.model).Any(a => a.Term == CoreVocabularyModel.OptionalParameterTerm)))
+            {
+                string defaultValue = optionalParameter.DefaultValueString;
+                EdmRecordExpression optionalValue = new EdmRecordExpression();
+
+                this.WriteVocabularyAnnotationElementHeader(new EdmVocabularyAnnotation(parameter, CoreVocabularyModel.OptionalParameterTerm, optionalValue), false);
+                if (!String.IsNullOrEmpty(defaultValue))
+                {
+                    EdmPropertyConstructor property = new EdmPropertyConstructor(CsdlConstants.Attribute_DefaultValue, new EdmStringConstant(defaultValue));
+                    this.WriteRecordExpressionElementHeader(optionalValue);
+                    this.WritePropertyValueElementHeader(property, true);
+                    this.WriteEndElement();
+                    this.WriteEndElement();
+                }
+
+                this.WriteEndElement();
+            }
+
+            this.WriteEndElement();
+        }
+
         internal void WriteCollectionTypeElementHeader(IEdmCollectionType collectionType, bool inlineType)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_CollectionType);
@@ -406,13 +460,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_Int, ((IEdmIntegerConstantExpression)expression).Value, EdmValueWriter.LongAsXml);
                     break;
                 case EdmExpressionKind.Path:
-                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, ((IEdmPathExpression)expression).Path, PathAsXml);
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
                     break;
                 case EdmExpressionKind.PropertyPath:
-                    this.WriteRequiredAttribute(CsdlConstants.Attribute_PropertyPath, ((IEdmPathExpression)expression).Path, PathAsXml);
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_PropertyPath, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
                     break;
                 case EdmExpressionKind.NavigationPropertyPath:
-                    this.WriteRequiredAttribute(CsdlConstants.Attribute_NavigationPropertyPath, ((IEdmPathExpression)expression).Path, PathAsXml);
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_NavigationPropertyPath, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
                     break;
                 case EdmExpressionKind.StringConstant:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_String, ((IEdmStringConstantExpression)expression).Value, EdmValueWriter.StringAsXml);
@@ -432,7 +486,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal void WriteValueAnnotationElementHeader(IEdmValueAnnotation annotation, bool isInline)
+        internal void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Annotation);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Term, annotation.Term, this.TermAsXml);
@@ -443,10 +497,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal void WritePropertyValueElementHeader(IEdmPropertyValueBinding value, bool isInline)
+        internal void WritePropertyValueElementHeader(IEdmPropertyConstructor value, bool isInline)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyValue);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Property, value.BoundProperty.Name, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Property, value.Name, EdmValueWriter.StringAsXml);
             if (isInline)
             {
                 this.WriteInlineExpression(value.Value);
@@ -532,13 +586,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteEndElement();
         }
 
-        internal void WriteFunctionApplicationElementHeader(IEdmApplyExpression expression, bool isFunction)
+        internal void WriteFunctionApplicationElementHeader(IEdmApplyExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Apply);
-            if (isFunction)
-            {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Function, ((IEdmOperationReferenceExpression)expression.AppliedOperation).ReferencedOperation, this.FunctionAsXml);
-            }
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Function, expression.AppliedFunction, this.FunctionAsXml);
         }
 
         internal void WriteGuidConstantExpressionElement(IEdmGuidConstantExpression expression)
@@ -558,21 +609,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal void WritePathExpressionElement(IEdmPathExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Path);
-            this.xmlWriter.WriteString(PathAsXml(expression.Path));
+            this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
             this.WriteEndElement();
         }
 
         internal void WritePropertyPathExpressionElement(IEdmPathExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyPath);
-            this.xmlWriter.WriteString(PathAsXml(expression.Path));
+            this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
             this.WriteEndElement();
         }
 
         internal void WriteNavigationPropertyPathExpressionElement(IEdmPathExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyPath);
-            this.xmlWriter.WriteString(PathAsXml(expression.Path));
+            this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
             this.WriteEndElement();
         }
 
@@ -617,45 +668,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal void WriteEntitySetReferenceExpressionElement(IEdmEntitySetReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_EntitySetReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedEntitySet, EntitySetAsXml);
-            this.WriteEndElement();
-        }
-
-        internal void WriteParameterReferenceExpressionElement(IEdmParameterReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_ParameterReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedParameter, ParameterAsXml);
-            this.WriteEndElement();
-        }
-
-        internal void WriteOperationReferenceExpressionElement(IEdmOperationReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_FunctionReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedOperation, this.FunctionAsXml);
-            this.WriteEndElement();
-        }
-
         internal void WriteEnumMemberExpressionElement(IEdmEnumMemberExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_EnumMember);
             this.xmlWriter.WriteString(EnumMemberAsXml(expression.EnumMembers));
             this.WriteEndElement();
-        }
-
-        internal void WriteEnumMemberReferenceExpressionElement(IEdmEnumMemberReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_EnumMember);
-            this.xmlWriter.WriteString(EnumMemberAsXml(expression.ReferencedEnumMember));
-            this.WriteEndElement();
-        }
-
-        internal void WritePropertyReferenceExpressionElementHeader(IEdmPropertyReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedProperty, PropertyAsXml);
         }
 
         internal void WriteTypeDefinitionElementHeader(IEdmTypeDefinition typeDefinition)
@@ -702,54 +719,20 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (operation.EntitySetPath != null)
             {
-                this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySetPath, operation.EntitySetPath.Path, PathAsXml);
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySetPath, operation.EntitySetPath.PathSegments, PathAsXml);
             }
         }
 
-        private void WriteNavigationPropertyBinding(IEdmNavigationPropertyBinding binding, IEdmEntityType entityType)
+        private void WriteNavigationPropertyBinding(IEdmNavigationPropertyBinding binding)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyBinding);
 
-            string path = binding.NavigationProperty.Name;
-            if (!entityType.IsOrInheritsFrom(binding.NavigationProperty.DeclaringType))
-            {
-                path = binding.NavigationProperty.DeclaringEntityType().FullName() + '/' + path;
-            }
-
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, path, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, binding.Path.Path, EdmValueWriter.StringAsXml);
 
             // TODO: handle container names, etc.
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
 
             this.xmlWriter.WriteEndElement();
-        }
-
-        private static string ConcurrencyModeAsXml(EdmConcurrencyMode mode)
-        {
-            switch (mode)
-            {
-                case EdmConcurrencyMode.Fixed:
-                    return CsdlConstants.Value_Fixed;
-                case EdmConcurrencyMode.None:
-                    return CsdlConstants.Value_None;
-                default:
-                    throw new InvalidOperationException(Strings.UnknownEnumVal_ConcurrencyMode(mode.ToString()));
-            }
-        }
-
-        private static string ParameterAsXml(IEdmOperationParameter parameter)
-        {
-            return parameter.Name;
-        }
-
-        private static string PropertyAsXml(IEdmProperty property)
-        {
-            return property.Name;
-        }
-
-        private static string EnumMemberAsXml(IEdmEnumMember member)
-        {
-            return member.DeclaringType.FullName() + "/" + member.Name;
         }
 
         private static string EnumMemberAsXml(IEnumerable<IEdmEnumMember> members)
@@ -762,11 +745,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
 
             return string.Join(" ", memberList.ToArray());
-        }
-
-        private static string EntitySetAsXml(IEdmEntitySet set)
-        {
-            return set.Container.FullName() + "/" + set.Name;
         }
 
         private static string SridAsXml(int? i)
@@ -797,22 +775,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (operationImport.EntitySet != null)
             {
-                var entitySetReference = operationImport.EntitySet as IEdmEntitySetReferenceExpression;
-                if (entitySetReference != null)
+                var pathExpression = operationImport.EntitySet as IEdmPathExpression;
+                if (pathExpression != null)
                 {
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySet, entitySetReference.ReferencedEntitySet.Name, EdmValueWriter.StringAsXml);
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySet, pathExpression.PathSegments, PathAsXml);
                 }
                 else
                 {
-                    var pathExpression = operationImport.EntitySet as IEdmPathExpression;
-                    if (pathExpression != null)
-                    {
-                        this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySet, pathExpression.Path, PathAsXml);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
-                    }
+                    throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
                 }
             }
         }

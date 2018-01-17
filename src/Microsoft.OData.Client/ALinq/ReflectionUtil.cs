@@ -19,7 +19,7 @@ namespace Microsoft.OData.Client
 
     /// <summary>
     /// Static utility class for identifying methods in Queryable, Sequence, and IEnumerable
-    /// and 
+    /// and
     /// </summary>
     internal static class ReflectionUtil
     {
@@ -428,7 +428,7 @@ namespace Microsoft.OData.Client
         ///     Identified sequence operator
         /// </param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="expression"/> is a <see cref="MethodCallExpression"/> 
+        ///     <c>true</c> if <paramref name="expression"/> is a <see cref="MethodCallExpression"/>
         ///     and its target method is known; <c>false</c> otherwise
         /// </returns>
         internal static bool TryIdentifySequenceMethod(Expression expression, bool unwrapLambda, out SequenceMethod sequenceMethod)
@@ -471,7 +471,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="method">Method to identify.</param>
         /// <returns>Canonical description of method (suitable for lookup)</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies")]
         internal static string GetCanonicalMethodDescription(MethodInfo method)
         {
             // retrieve all generic type arguments and assign them numbers based on order

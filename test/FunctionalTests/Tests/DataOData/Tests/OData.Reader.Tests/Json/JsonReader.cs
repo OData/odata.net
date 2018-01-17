@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
     #region Namespaces
     using System;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
@@ -33,22 +33,21 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
         /// <summary>
         /// The type of the JsonReader from the product.
         /// </summary>
-        private static readonly Type JsonReaderType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.Json.JsonReader");
+        private static readonly Type JsonReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.JsonReader");
 
         /// <summary>
         /// Creates new instance of the JsonReader.
         /// </summary>
         /// <param name="textReader">The text reader to read the input from.</param>
         /// <param name="assert">Optional assertion handler to use to verify the behavior of the reader.</param>
-        /// <param name="jsonFormat">The json-based format to expect for this reader.</param>
         /// <param name="isIeee754Compatible">If it is IEEE754Compatible</param>
-        public JsonReader(TextReader textReader, AssertionHandler assert, ODataFormat jsonFormat, bool isIeee754Compatible)
-            : this(ReflectionUtils.CreateInstance(JsonReaderType, textReader, jsonFormat, isIeee754Compatible), assert)
+        public JsonReader(TextReader textReader, AssertionHandler assert, bool isIeee754Compatible)
+            : this(ReflectionUtils.CreateInstance(JsonReaderType, textReader, isIeee754Compatible), assert)
         {
         }
 
         /// <summary>
-        /// Creates a new JsonReader wrapper with a given Microsoft.OData.Core.Json.JsonReader instance.
+        /// Creates a new JsonReader wrapper with a given Microsoft.OData.Json.JsonReader instance.
         /// </summary>
         /// <param name="instance">The JsonReader instance to use.</param>
         /// <param name="assert">Optional assertion handler to use to verify the behavior of the reader.</param>

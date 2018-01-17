@@ -6,12 +6,12 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Query
+namespace Microsoft.OData.Tests.Query
 {
     public class ODataUriUtilsTests
     {
@@ -195,10 +195,10 @@ namespace Microsoft.OData.Core.Tests.Query
             dateValue.Should().Be(new Date(1997, 7, 1));
 
             DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateTimeOffset(false));
-            dtoValue1.Should().Be(new DateTimeOffset(new DateTime(1997, 7, 1)));
+            dtoValue1.Should().Be(new DateTimeOffset(1997, 7, 1, 0, 0, 0, new TimeSpan(0)));
 
-            DateTimeOffset dtoValue2 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4);
-            dtoValue2.Should().Be(new DateTimeOffset(new DateTime(1997, 7, 1)));
+            var dtoValue2 = ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4);
+            dtoValue2.Should().Be(new Date(1997, 7, 1));
         }
 
         [Fact]
@@ -214,8 +214,8 @@ namespace Microsoft.OData.Core.Tests.Query
 
             // Date and Time separator is incorrect
             // Call from DataUriUtils, it will parse till blank space which is a correct Date
-            DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01 12:12:02-11:00", ODataVersion.V4);
-            dtoValue1.Should().Be(new DateTimeOffset(new DateTime(1997, 7, 1)));
+            var dtoValue1 = ODataUriUtils.ConvertFromUriLiteral("1997-07-01 12:12:02-11:00", ODataVersion.V4);
+            dtoValue1.Should().Be(new Date(1997, 7, 1));
 
             // Date is not with limit
             Action action4 = () => ODataUriUtils.ConvertFromUriLiteral("1997-13-01T12:12:12-11:00", ODataVersion.V4);
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Core.Tests.Query
             Action action8 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02", ODataVersion.V4);
             action8.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:02"));
         }
-        
+
         [Fact]
         public void TesTimeOfDayConvertFromUriLiteral()
         {

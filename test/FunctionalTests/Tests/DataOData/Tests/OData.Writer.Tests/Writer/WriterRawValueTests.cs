@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -70,25 +70,22 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Error tests for writing primitive values in raw format.")]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Error tests for writing primitive values in raw format.")]
         public void RawValueErrorTests()
         {
             var primitiveValueCases = new[]
             {
                 new
                 {   // invalid value (non-primitive)
-                    Value = (object)new ODataComplexValue(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataComplexValue' could not be converted to a raw string.",
-                },
-                new
-                {   // invalid value (non-primitive)
                     Value = (object)new ODataCollectionValue(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataCollectionValue' could not be converted to a raw string."
+                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.ODataCollectionValue' could not be converted to a raw string."
                 },
                 new
                 {   // invalid value (entry)
-                    Value = (object)new ODataEntry(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.Core.ODataEntry' could not be converted to a raw string."
+                    Value = (object)new ODataResource(),
+                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.ODataResource' could not be converted to a raw string."
                 },
                 new
                 {   // null value

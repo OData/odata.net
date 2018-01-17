@@ -6,14 +6,14 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     /// <summary>
     /// Extensions methods for building OData Entries
     /// </summary>
     public static class ODataEntryBuilderExtensions
     {
-        public static void Property(this ODataEntry entry, string propertyName, object value)
+        public static void Property(this ODataResource entry, string propertyName, object value)
         {
             List<ODataProperty> properties = entry.Properties as List<ODataProperty>;
             if (properties == null)

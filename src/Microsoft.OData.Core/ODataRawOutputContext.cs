@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -12,21 +12,22 @@ namespace Microsoft.OData.Core
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
     /// RAW format output context. Used by RAW values and batch.
     /// </summary>
-    internal sealed class ODataRawOutputContext : ODataOutputContext
+    internal class ODataRawOutputContext : ODataOutputContext
     {
         /// <summary>The encoding to use for the output.</summary>
-        private Encoding encoding;
+        protected Encoding encoding;
+
+        /// <summary>Listener to notify when writing in-stream errors.</summary>
+        protected IODataOutputInStreamErrorListener outputInStreamErrorListener;
 
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
@@ -37,9 +38,6 @@ namespace Microsoft.OData.Core
         /// <summary>The output stream to write to (both sync and async cases).</summary>
         private Stream outputStream;
 
-        /// <summary>Listener to notify when writing in-stream errors.</summary>
-        private IODataOutputInStreamErrorListener outputInStreamErrorListener;
-
         /// <summary>RawValueWriter used to write actual values to the stream.</summary>
         private RawValueWriter rawValueWriter;
 
@@ -47,44 +45,34 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="format">The format for this output context.</param>
-        /// <param name="messageStream">The message stream to write the payload to.</param>
-        /// <param name="encoding">The encoding to use for the payload.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        /// <param name="writingResponse">true if writing a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the output should be written synchronously; false if it should be written asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
         internal ODataRawOutputContext(
             ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
+            : base(format, messageInfo, messageWriterSettings)
         {
-            Debug.Assert(messageStream != null, "messageStream != null");
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
 
             try
             {
-                this.messageOutputStream = messageStream;
-                this.encoding = encoding;
+                this.messageOutputStream = messageInfo.MessageStream;
+                this.encoding = messageInfo.Encoding;
 
-                if (synchronous)
+                if (this.Synchronous)
                 {
-                    this.outputStream = messageStream;
+                    this.outputStream = this.messageOutputStream;
                 }
                 else
                 {
-                    this.asynchronousOutputStream = new AsyncBufferedStream(messageStream);
+                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
                     this.outputStream = this.asynchronousOutputStream;
                 }
             }
             catch
             {
-                messageStream.Dispose();
+                this.messageOutputStream.Dispose();
                 throw;
             }
         }
@@ -105,7 +93,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <remarks>
         /// InitializeRawValueWriter must be called before this is used.
-        /// 
+        ///
         /// Also, within this class we should be using RawValueWriter for everything. Ideally we wouldn't leak the TextWriter out, but
         /// the Batch writer needs it at the moment.
         /// </remarks>
@@ -130,7 +118,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flush the writer.
         /// </summary>
@@ -160,7 +148,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>
@@ -180,13 +168,13 @@ namespace Microsoft.OData.Core
             throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>Task which represents the pending write operation.</returns>
@@ -211,36 +199,6 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
-        /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        /// <returns>The created batch writer.</returns>
-        /// <remarks>We don't plan to make this public!</remarks>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
-        {
-            this.AssertSynchronous();
-
-            return this.CreateODataBatchWriterImplementation(batchBoundary);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
-        /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        /// <returns>A running task for the created batch writer.</returns>
-        /// <remarks>We don't plan to make this public!</remarks>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation(batchBoundary));
-        }
-#endif
-
-        /// <summary>
         /// Creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
         /// </summary>
         /// <returns>The created writer.</returns>
@@ -252,7 +210,7 @@ namespace Microsoft.OData.Core
             return this.CreateODataAsynchronousWriterImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
         /// </summary>
@@ -279,7 +237,7 @@ namespace Microsoft.OData.Core
             this.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a single value as the message body.
         /// </summary>
@@ -304,7 +262,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <remarks>This can only be called if the text writer was not yet initialized or it has been closed.
         /// It can be called several times with CloseWriter calls in between though.</remarks>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We create a NonDisposingStream which doesn't need to be disposed, even though it's IDisposable.")]
         internal void InitializeRawValueWriter()
         {
             Debug.Assert(this.rawValueWriter == null, "The rawValueWriter has already been initialized.");
@@ -345,7 +302,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flushes all buffered data to the underlying stream asynchronously.
         /// </summary>
@@ -379,14 +336,14 @@ namespace Microsoft.OData.Core
                         this.rawValueWriter.Flush();
                     }
 
-                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitely.
+                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
                         this.asynchronousOutputStream.FlushSync();
                         this.asynchronousOutputStream.Dispose();
                     }
 
-                    // Dipose the message stream (note that we OWN this stream, so we always dispose it).
+                    // Dispose the message stream (note that we OWN this stream, so we always dispose it).
                     this.messageOutputStream.Dispose();
                 }
             }
@@ -424,20 +381,6 @@ namespace Microsoft.OData.Core
                 this.rawValueWriter.WriteRawValue(value);
                 this.rawValueWriter.End();
             }
-        }
-
-        /// <summary>
-        /// Creates a batch writer.
-        /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        /// <returns>The newly created batch writer.</returns>
-        private ODataBatchWriter CreateODataBatchWriterImplementation(string batchBoundary)
-        {
-            // Batch writer needs the default encoding to not use the preamble.
-            this.encoding = this.encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
-            ODataBatchWriter batchWriter = new ODataBatchWriter(this, batchBoundary);
-            this.outputInStreamErrorListener = batchWriter;
-            return batchWriter;
         }
 
         /// <summary>

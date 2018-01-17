@@ -27,21 +27,6 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "Edm", Scope = "resource", Target = "Microsoft.OData.Service.resources")]
 [module: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "Advertisable", Scope = "resource", Target = "Microsoft.OData.Service.resources")]
 
-#if !ASTORIA_OPEN_OBJECT
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#BadRequest_ValuesCanBeReturnedForPrimitiveTypesOnly")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#DataService_InvalidResourceType(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#DataService_TypeNotValidForDeleteOperation(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#InvalidUri_OpenCollectionPropertiesMustHaveParenthesis(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#LateBoundMethods_ExpressionTypeNotApplicableToNull(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#LateBoundMethods_ExpressionTypeNotApplicableToNulls(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#LateBoundMethods_GetSequenceValueNull(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#LateBoundMethods_KeyTypeHasNoKeys(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#OpenTypeAttribute_PropertyNameCannotBeNull")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#OpenTypeAttribute_PropertyNameIsNotValidIdentifier(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#RequestQueryParser_BooleanExpressionsExpectedFor(System.Object)")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.Strings.#ResourceType_IncorrectOpenProperty(System.Object)")]
-#endif
-
 // Violations in the generated Resource file; can't prevent these from being generated...
 [module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.TextRes.#GetObject(System.String)")]
 [module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Service.TextRes.#GetString(System.String,[out]System.Boolean)")]

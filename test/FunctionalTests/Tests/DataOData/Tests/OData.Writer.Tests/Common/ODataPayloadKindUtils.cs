@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 {
     #region Namespaces
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     public static class ODataPayloadKindUtils

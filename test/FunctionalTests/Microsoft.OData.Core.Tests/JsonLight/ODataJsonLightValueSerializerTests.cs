@@ -10,12 +10,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     /// <summary>
     /// Unit tests and short-span integration tests for ODataJsonLightValueSerializer.
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             model = new EdmModel();
             stream = new MemoryStream();
-            settings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, Version = ODataVersion.V4 };
+            settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             var collectionValue = new ODataCollectionValue()
                 {
-                    Items = new int?[] { null },
+                    Items = new object[] { null },
                     TypeName = "Collection(Edm.Int32)"
                 };
 
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             var collectionValue = new ODataCollectionValue()
             {
-                Items = new int?[] { null },
+                Items = new object[] { null },
                 TypeName = "Collection(Edm.Int32)"
             };
 
@@ -118,92 +118,39 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
         [Fact]
-        public void WritingInstanceAnnotationInComplexValueShouldWrite()
-        {
-            var complexType = new EdmComplexType("TestNamespace", "Address");
-            model.AddElement(complexType);
-            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
-            var result = this.SetupSerializerAndRunTest(serializer =>
-            {
-                var complexValue = new ODataComplexValue { TypeName = "TestNamespace.Address", InstanceAnnotations = new Collection<ODataInstanceAnnotation> { new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true)) } };
-
-                var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNamesChecker(false, true));
-            });
-
-            result.Should().Contain("\"@Is.ReadOnly\":true");
-        }
-
-        [Fact]
-        public void WritingMultipleInstanceAnnotationInComplexValueShouldWrite()
-        {
-            var complexType = new EdmComplexType("TestNamespace", "Address");
-            model.AddElement(complexType);
-            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
-            var result = this.SetupSerializerAndRunTest(serializer =>
-            {
-                var complexValue = new ODataComplexValue
-                {
-                    TypeName = "TestNamespace.Address",
-                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
-                    {
-                        new ODataInstanceAnnotation("Annotation.1", new ODataPrimitiveValue(true)),
-                        new ODataInstanceAnnotation("Annotation.2", new ODataPrimitiveValue(123)),
-                        new ODataInstanceAnnotation("Annotation.3", new ODataPrimitiveValue("annotation"))
-                    }
-                };
-
-                var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNamesChecker(false, true));
-            });
-
-            result.Should().Contain("\"@Annotation.1\":true,\"@Annotation.2\":123,\"@Annotation.3\":\"annotation\"");
-        }
-
-        [Fact]
-        public void WritingMultipleInstanceAnnotationInComplexValueShouldSkipBaseOnSettings()
-        {
-            var complexType = new EdmComplexType("TestNamespace", "Address");
-            model.AddElement(complexType);
-            var result = this.SetupSerializerAndRunTest(serializer =>
-            {
-                var complexValue = new ODataComplexValue
-                {
-                    TypeName = "TestNamespace.Address",
-                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
-                    {
-                        new ODataInstanceAnnotation("Annotation.1", new ODataPrimitiveValue(true)),
-                        new ODataInstanceAnnotation("Annotation.2", new ODataPrimitiveValue(123)),
-                        new ODataInstanceAnnotation("Annotation.3", new ODataPrimitiveValue("annotation"))
-                    }
-                };
-
-                var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNamesChecker(false, true));
-            });
-
-            result.Should().NotContain("\"@Annotation.1\":true,\"@Annotation.2\":123,\"@Annotation.3\":\"annotation\"");
-        }
-
-        [Fact]
         public void WritingDateTimeOffsetWithCustomFormat()
         {
             var df = EdmCoreModel.Instance.GetDateTimeOffset(false);
-            model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadValueConverter());
-            
+
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var value = new DateTimeOffset(2012, 4, 13, 2, 43, 10, TimeSpan.FromHours(8));
                 serializer.WritePrimitiveValue(value, df);
-            });
+            },
+            ContainerBuilderHelper.BuildContainer(
+                builder => builder.AddService<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>(ServiceLifetime.Singleton)));
 
             result.Should().Be("\"Thu, 12 Apr 2012 18:43:10 GMT\"");
         }
 
 
-        private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse)
+        private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse, IServiceProvider container = null)
         {
-            var context = new ODataJsonLightOutputContext(ODataFormat.Json, stream, new ODataMediaType("application", "json"), Encoding.Default, settings, writingResponse, true, model, null);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = stream,
+                MediaType = new ODataMediaType("application", "json"),
+#if NETCOREAPP1_0
+                Encoding = Encoding.GetEncoding(0),
+#else
+                Encoding = Encoding.Default,
+#endif
+                IsResponse = writingResponse,
+                IsAsync = false,
+                Model = model,
+                Container = container
+            };
+            var context = new ODataJsonLightOutputContext(messageInfo, settings);
             var serializer = new ODataJsonLightValueSerializer(context);
             return serializer;
         }
@@ -212,9 +159,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         /// Sets up a ODataJsonLightSerializer, runs the given test code, and then flushes and reads the stream back as a string for
         /// customized verification.
         /// </summary>
-        private string SetupSerializerAndRunTest(Action<ODataJsonLightValueSerializer> action)
+        private string SetupSerializerAndRunTest(Action<ODataJsonLightValueSerializer> action, IServiceProvider container = null)
         {
-            var serializer = CreateODataJsonLightValueSerializer(true);
+            var serializer = CreateODataJsonLightValueSerializer(true, container);
             action(serializer);
             serializer.JsonWriter.Flush();
             stream.Position = 0;

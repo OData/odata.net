@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.Providers
 #else
 namespace Microsoft.OData.Service.Providers
@@ -16,7 +16,6 @@ namespace Microsoft.OData.Service.Providers
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -41,10 +40,10 @@ namespace Microsoft.OData.Service.Providers
         /// <param name="hasStream">Denotes if the type is a media entity.</param>
         /// <param name="propertyLoadAction">An action that is used to create the properties for this type.</param>
         internal EdmEntityTypeWithDelayLoadedProperties(
-            string namespaceName, 
+            string namespaceName,
             string name,
-            IEdmEntityType baseType, 
-            bool isAbstract, 
+            IEdmEntityType baseType,
+            bool isAbstract,
             bool isOpen,
             bool hasStream,
             Action<EdmEntityTypeWithDelayLoadedProperties> propertyLoadAction)

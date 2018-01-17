@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-namespace Microsoft.OData.Core.Evaluation
+namespace Microsoft.OData.Evaluation
 #endif
 #endif
 {
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
     using System.Data.Linq;
 #endif
     using System;
@@ -24,14 +24,14 @@ namespace Microsoft.OData.Core.Evaluation
     using System.Text;
     using System.Linq;
     using System.Xml;
-#if ODATALIB
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Edm.Library;
+#if ODATA_CORE
+    using Microsoft.OData.UriParser;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
 #else
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using ExpressionConstants = XmlConstants;
 #endif
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>Default singleton instance for parenthetical keys, etags, or skiptokens.</summary>
         private static readonly LiteralFormatter DefaultInstance = new DefaultLiteralFormatter();
 
-#if ODATALIB
+#if ODATA_CORE
         /// <summary>Default singleton instance which does not URL-encode the resulting string.</summary>
         private static readonly LiteralFormatter DefaultInstanceWithoutEncoding = new DefaultLiteralFormatter(/*disableUrlEncoding*/ true);
 #endif
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>Default singleton instance for keys formatted as segments.</summary>
         private static readonly LiteralFormatter KeyAsSegmentInstance = new KeysAsSegmentsLiteralFormatter();
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
         /// <summary>
         /// Gets the literal formatter for ETags.
         /// </summary>
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Core.Evaluation
         }
 #endif
 
-#if ODATALIB
+#if ODATA_CORE
         /// <summary>
         /// Gets the literal formatter for URL constants which does not URL-encode the string.
         /// </summary>
@@ -115,7 +115,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="result">The result to escape.</param>
         /// <returns>The escaped string.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values are correctly being escaped before the literal delimiters are added.")]
         protected virtual string EscapeResultForUri(string result)
         {
             // required for strings as data, DateTime for ':', numbers for '+'
@@ -126,7 +125,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>Converts the given byte[] into string.</summary>
         /// <param name="byteArray">byte[] that needs to be converted.</param>
         /// <returns>String containing hex values representing the byte[].</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Usage is in Debug.Assert only")]
         private static string ConvertByteArrayToKeyString(byte[] byteArray)
         {
             Debug.Assert(byteArray != null, "byteArray != null");
@@ -158,7 +156,7 @@ namespace Microsoft.OData.Core.Evaluation
                 return XmlConvert.ToString((byte)value);
             }
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
             if (value is DateTime)
             {
                 // Since the server/client supports DateTime values, convert the DateTime value
@@ -248,6 +246,12 @@ namespace Microsoft.OData.Core.Evaluation
                 return WellKnownTextSqlFormatter.Create(true).Write(geometry);
             }
 
+            ODataEnumValue enumValue = value as ODataEnumValue;
+            if (enumValue != null)
+            {
+                return enumValue.Value;
+            }
+
             throw SharedUtils.CreateExceptionForUnconvertableType(value);
         }
 
@@ -284,14 +288,14 @@ namespace Microsoft.OData.Core.Evaluation
             /// <returns>The exception that should be thrown.</returns>
             internal static InvalidOperationException CreateExceptionForUnconvertableType(object value)
             {
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
                 return new InvalidOperationException(Microsoft.OData.Service.Strings.Serializer_CannotConvertValue(value));
 #endif
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
                 return Error.InvalidOperation(Client.Strings.Context_CannotConvertKey(value));
 #endif
-#if ODATALIB
-                return new ODataException(OData.Core.Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
+#if ODATA_CORE
+                return new ODataException(Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
 #endif
             }
 
@@ -310,7 +314,7 @@ namespace Microsoft.OData.Core.Evaluation
                     return true;
                 }
 
-#if !ODATALIB
+#if !ODATA_CORE
                 XElement xml = value as XElement;
                 if (xml != null)
                 {
@@ -332,10 +336,10 @@ namespace Microsoft.OData.Core.Evaluation
             {
                 // DEVNOTE: for some reason, the client adds .0 to doubles where the server does not.
                 // Unfortunately, it would be a breaking change to alter this behavior now.
-#if ASTORIA_CLIENT || ODATALIB
+#if ODATA_CLIENT || ODATA_CORE
                 IEnumerable<char> characters = input.ToCharArray();
 
-#if ODATALIB
+#if ODATA_CORE
                 // negative numbers can also be 'whole', but the client did not take that into account.
                 if (input[0] == '-')
                 {
@@ -363,8 +367,8 @@ namespace Microsoft.OData.Core.Evaluation
             private static bool TryGetByteArrayFromBinary(object value, out byte[] array)
             {
                 // DEVNOTE: the client does not have a reference to System.Data.Linq, but the server does.
-                // So we need to interact with Binary differently.            
-#if ASTORIA_SERVER
+                // So we need to interact with Binary differently.
+#if ODATA_SERVICE
                 Binary binary = value as Binary;
                 if (binary != null)
                 {
@@ -372,7 +376,7 @@ namespace Microsoft.OData.Core.Evaluation
                     return true;
                 }
 #endif
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
                 return ClientConvert.TryConvertBinaryToByteArray(value, out array);
 #else
                 array = null;
@@ -397,7 +401,7 @@ namespace Microsoft.OData.Core.Evaluation
             {
             }
 
-#if ODATALIB
+#if ODATA_CORE
             /// <summary>
             /// Creates a new instance of <see cref="DefaultLiteralFormatter"/>.
             /// </summary>
@@ -435,7 +439,7 @@ namespace Microsoft.OData.Core.Evaluation
             /// <returns>The escaped string.</returns>
             protected override string EscapeResultForUri(string result)
             {
-#if !ODATALIB
+#if !ODATA_CORE
                 Debug.Assert(!this.disableUrlEncoding, "Only supported for ODataLib for backwards compatibility reasons.");
 #endif
                 if (!this.disableUrlEncoding)
@@ -454,6 +458,18 @@ namespace Microsoft.OData.Core.Evaluation
             private string FormatLiteralWithTypePrefix(object value)
             {
                 Debug.Assert(value != null, "value != null. Null values need to be handled differently in some cases.");
+
+                var enumValue = value as ODataEnumValue;
+                if (enumValue != null)
+                {
+                    if (string.IsNullOrEmpty(enumValue.TypeName))
+                    {
+                        // TODO: [Sizhong Du] Replace with error string #647.
+                        throw new ODataException("Type name should not be null or empty when serializing an Enum value for URI key.");
+                    }
+
+                    return enumValue.TypeName + "'" + this.FormatAndEscapeLiteral(enumValue.Value) + "'";
+                }
 
                 string result = this.FormatAndEscapeLiteral(value);
 
@@ -488,7 +504,7 @@ namespace Microsoft.OData.Core.Evaluation
         }
 
         /// <summary>
-        /// Literal formatter for keys which are written as URI segments. 
+        /// Literal formatter for keys which are written as URI segments.
         /// Very similar to the default, but it never puts the type markers or single quotes around the value.
         /// </summary>
         private sealed class KeysAsSegmentsLiteralFormatter : LiteralFormatter
@@ -506,6 +522,12 @@ namespace Microsoft.OData.Core.Evaluation
             internal override string Format(object value)
             {
                 Debug.Assert(value != null, "value != null");
+
+                ODataEnumValue enumValue = value as ODataEnumValue;
+                if (enumValue != null)
+                {
+                    value = enumValue.Value;
+                }
 
                 object converted;
                 if (SharedUtils.TryConvertToStandardType(value, out converted))

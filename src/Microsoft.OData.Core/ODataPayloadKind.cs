@@ -4,18 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Enumeration representing the different kinds of payloads ODatLib can write.
     /// </summary>
     public enum ODataPayloadKind
     {
-        /// <summary>Payload kind for a feed.</summary>
-        Feed = 0,
+        /// <summary>Payload kind for a resource set.</summary>
+        ResourceSet = 0,
 
-        /// <summary>Payload kind for an entry.</summary>
-        Entry = 1,
+        /// <summary>Payload kind for a resource.</summary>
+        Resource = 1,
 
         /// <summary>Payload kind for a property.</summary>
         Property = 2,

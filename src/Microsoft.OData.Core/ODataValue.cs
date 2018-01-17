@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Represents the value of a property.
     /// </summary>
-    public abstract class ODataValue : ODataAnnotatable
+    public abstract class ODataValue : ODataItem
     {
         /// <summary>
         /// Indicates whether the given value is a null value.

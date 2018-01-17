@@ -8,10 +8,9 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataUtilsTests
     {
@@ -160,23 +159,23 @@ namespace Microsoft.OData.Core.Tests
         {
             var serviceDocument = this.CreateTestModel().GenerateServiceDocument();
             var entitySets = serviceDocument.EntitySets.ToList();
-            Assert.Equal(entitySets.Count, 2);
-            Assert.Equal(entitySets[0].Name, "Products");
-            Assert.Equal(entitySets[0].Url.ToString(), "Products");
-            Assert.Equal(entitySets[1].Name, "Customers");
-            Assert.Equal(entitySets[1].Url.ToString(), "Customers");
+            Assert.Equal(2, entitySets.Count);
+            Assert.Equal("Products", entitySets[0].Name);
+            Assert.Equal("Products", entitySets[0].Url.ToString());
+            Assert.Equal("Customers", entitySets[1].Name);
+            Assert.Equal("Customers", entitySets[1].Url.ToString());
 
             var singletons = serviceDocument.Singletons.ToList();
-            Assert.Equal(singletons.Count, 2);
-            Assert.Equal(singletons[0].Name, "SingleProduct");
-            Assert.Equal(singletons[0].Url.ToString(), "SingleProduct");
-            Assert.Equal(singletons[1].Name, "SingleCustomer");
-            Assert.Equal(singletons[1].Url.ToString(), "SingleCustomer");
+            Assert.Equal(2, singletons.Count);
+            Assert.Equal("SingleProduct", singletons[0].Name);
+            Assert.Equal("SingleProduct", singletons[0].Url.ToString());
+            Assert.Equal("SingleCustomer", singletons[1].Name);
+            Assert.Equal("SingleCustomer", singletons[1].Url.ToString());
 
             var functionImports = serviceDocument.FunctionImports.ToList();
-            Assert.Equal(functionImports.Count, 1);
-            Assert.Equal(functionImports[0].Name, "SimpleFunctionImport2");
-            Assert.Equal(functionImports[0].Url.ToString(), "SimpleFunctionImport2");
+            Assert.Equal(1, functionImports.Count);
+            Assert.Equal("SimpleFunctionImport3", functionImports[0].Name);
+            Assert.Equal("SimpleFunctionImport3", functionImports[0].Url.ToString());
         }
 
         [Fact]
@@ -221,11 +220,65 @@ namespace Microsoft.OData.Core.Tests
 
             EdmFunction function2 = new EdmFunction("TestModel", "SimpleFunction2", EdmCoreModel.Instance.GetInt32(false), false /*isbound*/, null, true);
             function2.AddParameter("p1", EdmCoreModel.Instance.GetInt32(false));
-            defaultContainer.AddFunctionImport("SimpleFunctionImport2", function1, null, true /*IncludeInServiceDocument*/);
+            defaultContainer.AddFunctionImport("SimpleFunctionImport2", function2, null, true /*IncludeInServiceDocument*/);
+
+            // Parameterless unbound function.
+            EdmFunction function3 = new EdmFunction("TestModel", "SimpleFunction3", EdmCoreModel.Instance.GetInt32(false), false /*isbound*/, null, true);
+            defaultContainer.AddFunctionImport("SimpleFunctionImport3", function3, null, true /*IncludeInServiceDocument*/);
 
             return model;
         }
 
         #endregion
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_RelativeSecondUrlIsNotAllowed()
+        {
+            Action method = () => UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("/One/Two", UriKind.Relative));
+            method.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_RelativeFirstUrlIsNotAllowed()
+        {
+            Action method = () => UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("/One/", UriKind.Relative), new Uri("http://www.example.com/One/Two"));
+            method.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_SameBaseShouldReturnTrue()
+        {
+            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("http://www.example.com/One/Two")).Should().BeTrue();
+        }
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_IdenticalUrisShouldReturnTrue()
+        {
+            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/One/"), new Uri("http://www.example.com/One/")).Should().BeTrue();
+        }
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_ShouldBeCaseInsensitive()
+        {
+            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("HTTP://WwW.ExAmPlE.cOm/OnE/"), new Uri("http://www.example.com/One/")).Should().BeTrue();
+        }
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_ShouldIgnoreHostAndSchemeAndPort()
+        {
+            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("https://different.org:1234/One/"), new Uri("http://www.example.com:4567/One/Two")).Should().BeTrue();
+        }
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_ShouldIgnoreStuffAfterFinalSlash()
+        {
+            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/OData.svc"), new Uri("http://www.example.com/One/Two")).Should().BeTrue();
+        }
+
+        [Fact]
+        public void UriInvariantInsensitiveIsBaseOf_DifferentBaseShouldReturnFalse()
+        {
+            UriUtils.UriInvariantInsensitiveIsBaseOf(new Uri("http://www.example.com/OData.svc/"), new Uri("http://www.example.com/One/Two")).Should().BeFalse();
+        }
     }
 }

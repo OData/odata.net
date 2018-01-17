@@ -6,6 +6,9 @@
 
 namespace EdmLibTests.FunctionalTests
 {
+    #if SILVERLIGHT
+    using Microsoft.Silverlight.Testing;
+#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -14,16 +17,10 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -63,7 +60,7 @@ namespace EdmLibTests.FunctionalTests
             customer.AddKeys(customerId);
             stockModel.AddElement(customer);
 
-            var annotation = new MutableValueAnnotation()
+            var annotation = new MutableVocabularyAnnotation()
             {
                 Target = customer,
                 Value = new EdmStringConstant("Hello world2!"),
@@ -73,15 +70,15 @@ namespace EdmLibTests.FunctionalTests
             var stringWriter = new StringWriter();
             var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Indent = true });
             IEnumerable<EdmError> serializationErrors;
-            stockModel.TryWriteCsdl(xmlWriter, out serializationErrors);
+            stockModel.TryWriteSchema(xmlWriter, out serializationErrors);
             xmlWriter.Close();
 
             Assert.AreEqual(1, serializationErrors.Count(), "Error on serialization");
         }
 
-        private sealed class MutableValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmValueAnnotation
+        private sealed class MutableVocabularyAnnotation : Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation
         {
-            public Microsoft.OData.Edm.Expressions.IEdmExpression Value
+            public IEdmExpression Value
             {
                 get;
                 set;
@@ -107,7 +104,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularySimpleValueAnnotationOnContainerAndEntitySet()
+        public void ConstructibleVocabularySimpleVocabularyAnnotationOnContainerAndEntitySet()
         {
             var csdl = XElement.Parse(
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -121,22 +118,22 @@ namespace EdmLibTests.FunctionalTests
             var annotations = model.FindVocabularyAnnotations(model.FindEntityContainer("NS1.Container"));
             Assert.AreEqual
                             (
-                                ((IEdmStringConstantExpression)annotations.OfType<IEdmValueAnnotation>().Single().Value).Value,
+                                ((IEdmStringConstantExpression)annotations.Single().Value).Value,
                                 "Sir",
                                 "FindVocabularyAnnotations should be able to find annotations on entity containers."
                             );
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyValueAnnotationWithRecord()
+        public void ConstructibleVocabularyVocabularyAnnotationWithRecord()
         {
-            VerifyVocabulary(new EdmToStockModelConverter().ConvertToStockModel(VocabularyTestModelBuilder.ValueAnnotationWithRecord()));
+            VerifyVocabulary(new EdmToStockModelConverter().ConvertToStockModel(VocabularyTestModelBuilder.VocabularyAnnotationWithRecord()));
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyStructuredValueAnnotation()
+        public void ConstructibleVocabularyStructuredVocabularyAnnotation()
         {
-            VerifyVocabulary(new EdmToStockModelConverter().ConvertToStockModel(VocabularyTestModelBuilder.StructuredValueAnnotation()));
+            VerifyVocabulary(new EdmToStockModelConverter().ConvertToStockModel(VocabularyTestModelBuilder.StructuredVocabularyAnnotation()));
         }
 
         private IEnumerable<XElement> GetVocabularyCsdls(IEdmModel edmModel)

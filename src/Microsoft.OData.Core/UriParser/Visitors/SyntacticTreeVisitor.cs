@@ -4,11 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+#if ODATA_CLIENT
+namespace Microsoft.OData.Client.ALinq.UriParser
+#else
+namespace Microsoft.OData.UriParser
+#endif
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.UriParser.Aggregation;
 
     /// <summary>
     /// Visitor interface for walking the Syntactic Tree.
@@ -50,7 +53,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>
-        /// <returns>Either a SingleEntityCastNode, or EntityCollectionCastNode bound to this DottedIdentifierToken</returns>
+        /// <returns>Either a SingleResourceCastNode, or CollectionResourceCastNode bound to this DottedIdentifierToken</returns>
         public virtual T Visit(DottedIdentifierToken tokenIn)
         {
             throw new NotImplementedException();
@@ -180,7 +183,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Visits a RangeVariableToken
         /// </summary>
         /// <param name="tokenIn">The RangeVariableToken to bind</param>
-        /// <returns>An Entity or NonEntity RangeVariableReferenceNode bound to this RangeVariableToken</returns>
+        /// <returns>A Resource or NonResource RangeVariableReferenceNode bound to this RangeVariableToken</returns>
         public virtual T Visit(RangeVariableToken tokenIn)
         {
             throw new NotImplementedException();
@@ -222,6 +225,26 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="tokenIn">The FunctionParameterToken to bind</param>
         /// <returns>A user defined value</returns>
         public virtual T Visit(FunctionParameterToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits a ComputeToken
+        /// </summary>
+        /// <param name="tokenIn">The ComputeToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(ComputeToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits a ComputeExpressionToken
+        /// </summary>
+        /// <param name="tokenIn">The ComputeExpressionToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(ComputeExpressionToken tokenIn)
         {
             throw new NotImplementedException();
         }

@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Collections.Generic;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// This is a just a pass through implementation of IODataRequestMessage. This class is used
@@ -33,7 +33,7 @@ namespace Microsoft.OData.Client
         private readonly bool allowGetStream;
 
         /// <summary>
-        /// request stream 
+        /// request stream
         /// </summary>
         private Stream cachedRequestStream;
 
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the
-        ///  Internet resource. 
+        ///  Internet resource.
         /// </summary>
         public override bool SendChunked
         {

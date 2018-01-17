@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core
         {
             return EmptyInstance.Value;
         }
-        
+
         /// <summary>
         /// This internal method adds <paramref name="itemToAdd"/> to the wrapped source list. From the public's perspective, this enumerable is still readonly.
         /// </summary>

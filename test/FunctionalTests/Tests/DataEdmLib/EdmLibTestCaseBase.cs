@@ -20,7 +20,6 @@ namespace EdmLibTests
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Framework.Common;
     using Microsoft.Test.OData.Framework.Verification;
@@ -46,11 +45,11 @@ namespace EdmLibTests
     {
         protected Dictionary<EdmVersion, Version> toProductVersionlookup = new Dictionary<EdmVersion, Version>()
         {
-            { EdmVersion.V40, Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4 }
+            { EdmVersion.V40, Microsoft.OData.Edm.EdmConstants.EdmVersion4 }
         };
-        
+
         private EdmVersion v;
-        public EdmVersion EdmVersion { 
+        public EdmVersion EdmVersion {
             get { return this.v; }
             set { this.v = value; }
         }
@@ -71,9 +70,9 @@ namespace EdmLibTests
         {
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdlElements.Select(e => e.CreateReader()), referencedModels, out edmModel, out errors);
-            Assert.IsTrue(isParsed, "CsdlReader.TryParse failed");
-            Assert.IsTrue(!errors.Any(), "CsdlReader.TryParse returned errors");
+            var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), referencedModels, out edmModel, out errors);
+            Assert.IsTrue(isParsed, "SchemaReader.TryParse failed");
+            Assert.IsTrue(!errors.Any(), "SchemaReader.TryParse returned errors");
             return edmModel;
         }
 
@@ -81,7 +80,7 @@ namespace EdmLibTests
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
 
             Assert.IsTrue(parsed, "Invalid edmx parsing.");
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
@@ -104,7 +103,7 @@ namespace EdmLibTests
             CsdlToEdmModelComparer.Compare(csdlElements.Select(XElement.Parse), resultEdmModel);
         }
 
-        protected void BasicRoundtripTest(IEnumerable<XElement> csdlElements) 
+        protected void BasicRoundtripTest(IEnumerable<XElement> csdlElements)
         {
             IEdmModel resultEdmModel = this.GetParserResult(csdlElements);
             CsdlToEdmModelComparer.Compare(csdlElements, resultEdmModel);
@@ -124,7 +123,7 @@ namespace EdmLibTests
             List<StringBuilder> stringBuilders = new List<StringBuilder>();
             List<XmlWriter> xmlWriters = new List<XmlWriter>();
             edmModel.SetEdmVersion(this.toProductVersionlookup[edmVersion]);
-            edmModel.TryWriteCsdl(
+            edmModel.TryWriteSchema(
                 s =>
                 {
                     stringBuilders.Add(new StringBuilder());
@@ -252,7 +251,7 @@ namespace EdmLibTests
                 {
                     var expectedResults = EdmLibCsdlContentGenerator.GetDerivedTypes(sourceCsdls, structuralTypeElementName, getFullName(structuredType));
                     var actualResults = testModel.FindAllDerivedTypes(structuredType).Select(n => getFullName(n));
-                    Assert.IsTrue(expectedResults.Count() == actualResults.Count() && !expectedResults.Except(actualResults).Any(), 
+                    Assert.IsTrue(expectedResults.Count() == actualResults.Count() && !expectedResults.Except(actualResults).Any(),
                                   "FindAllDerivedTypes returns unexpected results.");
                 };
 
@@ -261,7 +260,7 @@ namespace EdmLibTests
                     var expectedResults = EdmLibCsdlContentGenerator.GetDirectlyDerivedTypes(sourceCsdls, structuralTypeElementName, getFullName(structuredType));
                     var actualResults = testModel.FindDirectlyDerivedTypes(structuredType).Select(n => getFullName(n));
 
-                    Assert.IsTrue(expectedResults.Count() == actualResults.Count() && !expectedResults.Except(actualResults).Any(), 
+                    Assert.IsTrue(expectedResults.Count() == actualResults.Count() && !expectedResults.Except(actualResults).Any(),
                                   "FindDirectlyDerivedTypes returns unexpected results.");
                 };
 
@@ -347,7 +346,7 @@ namespace EdmLibTests
                         // TODO: Make VerifyFindPropertyMethod support properties defined in RowType of CollectionType.
                         throw new NotImplementedException("VerifyFindPropertyMethod does not support properties defined in RowType of CollectionType.");
                     }
-                   
+
                     Assert.IsNotNull(foundProperty, "Failed to FindProperty for the property : {0}", propertyElement.Attribute("Name").Value);
                     Assert.AreEqual(foundProperty.Name, propertyElement.Attribute("Name").Value, "FindProperty returns a wrong property for {0}", propertyElement.Attribute("Name").Value);
                 }
@@ -456,8 +455,8 @@ namespace EdmLibTests
                     var operationGroup = testModel.FindOperations(elementNameExpected);
                     Assert.IsTrue(operationGroup.Count() == testModel.FindDeclaredOperations(elementNameExpected).Count() && !operationGroup.Except(testModel.FindDeclaredOperations(elementNameExpected)).Any(), "The results between FindMethod and its declared version should be same.");
 
-                    var valueTermFound = testModel.FindValueTerm(elementNameExpected);
-                    Assert.AreEqual(valueTermFound, testModel.FindDeclaredValueTerm(elementNameExpected), "The results between FindMethod and its declared version should be same.");
+                    var valueTermFound = testModel.FindTerm(elementNameExpected);
+                    Assert.AreEqual(valueTermFound, testModel.FindDeclaredTerm(elementNameExpected), "The results between FindMethod and its declared version should be same.");
 
                     Assert.IsFalse((typeFound == null) && (operationGroup == null) && (valueTermFound == null), "Failed to FindSchemaType for {0}", elementNameExpected);
 
@@ -575,13 +574,13 @@ namespace EdmLibTests
 
         protected void VerifySemanticValidation(IEdmModel testModel, ValidationRuleSet ruleset, IEnumerable<EdmError> expectedErrors)
         {
-            // Compare the actual errors of the test models to the expected errors. 
+            // Compare the actual errors of the test models to the expected errors.
             IEnumerable<EdmError> actualErrors = null;
             var validationResult = testModel.Validate(ruleset, out actualErrors);
             Assert.IsTrue(actualErrors.Any() ? !validationResult : validationResult, "The return value of the Validate method does not match the reported validation errors.");
             this.CompareErrors(actualErrors, expectedErrors);
 
-            // Compare the round-tripped immutable model through the CSDL serialized from the original test model against the expected errors. 
+            // Compare the round-tripped immutable model through the CSDL serialized from the original test model against the expected errors.
             Func<EdmVersion> GetEdmVersionFromRuleSet = () =>
             {
                 EdmVersion result = EdmVersion.Latest;
@@ -607,10 +606,10 @@ namespace EdmLibTests
 
             if (!actualErrors.Any())
             {
-                // if the original test model is valid, the round-tripped model should be well-formed and valid. 
+                // if the original test model is valid, the round-tripped model should be well-formed and valid.
                 IEnumerable<EdmError> parserErrors = null;
                 IEdmModel roundtrippedModel = null;
-                var isWellformed = CsdlReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
+                var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
                 Assert.IsTrue(isWellformed && !parserErrors.Any(), "The model from valid CSDLs should be generated back to well-formed CSDLs.");
 
                 IEnumerable<EdmError> validationErrors = null;
@@ -619,10 +618,10 @@ namespace EdmLibTests
             }
             else
             {
-                // if the originl test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guarantted. 
+                // if the originl test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guarantted.
                 IEnumerable<EdmError> parserErrors = null;
                 IEdmModel roundtrippedModel = null;
-                var isWellformed = CsdlReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
+                var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
                 Assert.IsTrue(isWellformed, "The parser cannot handle the CSDL that the serializer generated:" + Environment.NewLine + String.Join(Environment.NewLine, parserErrors));
             }
         }

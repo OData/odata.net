@@ -11,8 +11,8 @@ namespace Microsoft.OData.Service.Serializers
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData;
+    using Microsoft.OData.Json;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Providers;
 

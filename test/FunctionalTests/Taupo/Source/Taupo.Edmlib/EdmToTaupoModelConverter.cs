@@ -10,8 +10,7 @@ namespace Microsoft.Test.Taupo.Edmlib
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts.Types;
@@ -150,11 +149,6 @@ namespace Microsoft.Test.Taupo.Edmlib
             var taupoProperty = new MemberProperty(edmProperty.Name);
             taupoProperty.PropertyType = this.ConvertToTaupoDataType(edmProperty.Type);
 
-            if (edmProperty.ConcurrencyMode == EdmConcurrencyMode.Fixed)
-            {
-                taupoProperty.Add(new ConcurrencyTokenAnnotation());
-            }
-
             if (!string.IsNullOrEmpty(edmProperty.DefaultValueString))
             {
                 taupoProperty.DefaultValue = edmProperty.DefaultValueString;
@@ -253,8 +247,8 @@ namespace Microsoft.Test.Taupo.Edmlib
             var addReturnType = false;
             if (edmFunctionImport.EntitySet != null)
             {
-                IEdmEntitySet entitySet;
-                if (edmFunctionImport.TryGetStaticEntitySet(out entitySet))
+                IEdmEntitySetBase entitySet;
+                if (edmFunctionImport.TryGetStaticEntitySet(this.edmModel, out entitySet))
                 {
                     functionImportReturnType.EntitySet = new EntitySetReference(entitySet.Name);
                     addReturnType = true;
@@ -337,24 +331,13 @@ namespace Microsoft.Test.Taupo.Edmlib
 
                 if (edmEnumMember.Value != null)
                 {
-                    taupoEnumMember.Value = this.ConvertToClrObject(edmEnumMember.Value);
+                    taupoEnumMember.Value = edmEnumMember.Value.Value;
                 }
 
                 taupoEnumType.Add(taupoEnumMember);
             }
 
             return taupoEnumType;
-        }
-
-        private object ConvertToClrObject(IEdmPrimitiveValue edmPrimitiveValue)
-        {
-            IEdmIntegerValue integralValue = edmPrimitiveValue as IEdmIntegerValue;
-            if (integralValue != null)
-            {
-                return integralValue.Value; 
-            }
-
-            throw new NotSupportedException("This method supports only integral types.");
         }
 
         private Type ConvertToClrType(IEdmPrimitiveType edmPrimitiveType)

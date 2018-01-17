@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB_ASYNC || ASTORIA_CLIENT
-#if ODATALIB
-namespace Microsoft.OData.Core
+#if PORTABLELIB || ODATA_CLIENT
+#if ODATA_CORE
+namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Client
 #endif
@@ -17,11 +17,11 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using ExceptionUtils = CommonUtil;
 #endif
     #endregion Namespaces
-    
+
     /// <summary>
     /// Class with utility methods for working with and implementing Task based APIs
     /// </summary>
@@ -40,10 +40,8 @@ namespace Microsoft.OData.Client
         {
             get
             {
-#if ODATALIB
-#endif
-                // Note that in case of two threads competing here we would create two completed tasks, but only one 
-                // will be stored in the static variable. In any case, they are identical for all other purposes, 
+                // Note that in case of two threads competing here we would create two completed tasks, but only one
+                // will be stored in the static variable. In any case, they are identical for all other purposes,
                 // so it doesn't matter which one wins
                 if (completedTask == null)
                 {
@@ -66,9 +64,6 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified result.</returns>
         internal static Task<T> GetCompletedTask<T>(T value)
         {
-#if ODATALIB
-#endif
-
             TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
             taskCompletionSource.SetResult(value);
             return taskCompletionSource.Task;
@@ -83,9 +78,6 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified exception.</returns>
         internal static Task GetFaultedTask(Exception exception)
         {
-#if ODATALIB
-#endif
-
             // Since there's no non-generic version use a dummy object return value and cast to non-generic version.
             return GetFaultedTask<object>(exception);
         }
@@ -98,8 +90,6 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified exception.</returns>
         internal static Task<T> GetFaultedTask<T>(Exception exception)
         {
-#if ODATALIB
-#endif
             TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
             taskCompletionSource.SetException(exception);
             return taskCompletionSource.Task;
@@ -115,11 +105,8 @@ namespace Microsoft.OData.Client
         /// otherwise it will be a faulted task holding the exception thrown.</returns>
         /// <remarks>The advantage of this method over CompletedTask property is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task GetTaskForSynchronousOperation(Action synchronousOperation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
 
             try
@@ -147,11 +134,8 @@ namespace Microsoft.OData.Client
         /// otherwise it will be a faulted task holding the exception thrown.</returns>
         /// <remarks>The advantage of this method over GetCompletedTask property is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task<T> GetTaskForSynchronousOperation<T>(Func<T> synchronousOperation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
             Debug.Assert(!(typeof(Task).IsAssignableFrom(typeof(T))), "This method doesn't support operations returning Task instances.");
 
@@ -178,12 +162,8 @@ namespace Microsoft.OData.Client
         /// <returns>The task returned by the <paramref name="synchronousOperation"/> or a faulted task if the operation failed.</returns>
         /// <remarks>The advantage of this method over direct call is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task GetTaskForSynchronousOperationReturningTask(Func<Task> synchronousOperation)
         {
-#if ODATALIB
-#endif
-
             try
             {
                 return synchronousOperation();
@@ -207,12 +187,8 @@ namespace Microsoft.OData.Client
         /// <returns>The task returned by the <paramref name="synchronousOperation"/> or a faulted task if the operation failed.</returns>
         /// <remarks>The advantage of this method over direct call is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task<TResult> GetTaskForSynchronousOperationReturningTask<TResult>(Func<Task<TResult>> synchronousOperation)
         {
-#if ODATALIB
-#endif
-
             try
             {
                 return synchronousOperation();
@@ -240,8 +216,6 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task FollowOnSuccessWith(this Task antecedentTask, Action<Task> operation)
         {
-#if ODATALIB
-#endif			
             return FollowOnSuccessWithImplementation<object>(antecedentTask, t => { operation(t); return null; });
         }
 
@@ -259,8 +233,6 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task<TFollowupTaskResult> FollowOnSuccessWith<TFollowupTaskResult>(this Task antecedentTask, Func<Task, TFollowupTaskResult> operation)
         {
-#if ODATALIB
-#endif			
             return FollowOnSuccessWithImplementation(antecedentTask, operation);
         }
 
@@ -275,8 +247,6 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task FollowOnSuccessWith<TAntecedentTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Action<Task<TAntecedentTaskResult>> operation)
         {
-#if ODATALIB
-#endif			
             return FollowOnSuccessWithImplementation<object>(antecedentTask, t => { operation((Task<TAntecedentTaskResult>)t); return null; });
         }
 
@@ -295,8 +265,6 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task<TFollowupTaskResult> FollowOnSuccessWith<TAntecedentTaskResult, TFollowupTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Func<Task<TAntecedentTaskResult>, TFollowupTaskResult> operation)
         {
-#if ODATALIB
-#endif			
             return FollowOnSuccessWithImplementation(antecedentTask, t => operation((Task<TAntecedentTaskResult>)t));
         }
         #endregion
@@ -316,8 +284,6 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task FollowOnSuccessWithTask(this Task antecedentTask, Func<Task, Task> operation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
 
@@ -343,8 +309,6 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task<TFollowupTaskResult> FollowOnSuccessWithTask<TFollowupTaskResult>(this Task antecedentTask, Func<Task, Task<TFollowupTaskResult>> operation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
 
@@ -370,8 +334,6 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task FollowOnSuccessWithTask<TAntecedentTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Func<Task<TAntecedentTaskResult>, Task> operation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
 
@@ -398,8 +360,6 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal static Task<TFollowupTaskResult> FollowOnSuccessWithTask<TAntecedentTaskResult, TFollowupTaskResult>(this Task<TAntecedentTaskResult> antecedentTask, Func<Task<TAntecedentTaskResult>, Task<TFollowupTaskResult>> operation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
 
@@ -422,8 +382,6 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task FollowOnFaultWith(this Task antecedentTask, Action<Task> operation)
         {
-#if ODATALIB
-#endif			
             return FollowOnFaultWithImplementation<object>(antecedentTask, t => null, operation);
         }
 
@@ -438,8 +396,6 @@ namespace Microsoft.OData.Client
         /// <remarks>This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.</remarks>
         internal static Task<TResult> FollowOnFaultWith<TResult>(this Task<TResult> antecedentTask, Action<Task<TResult>> operation)
         {
-#if ODATALIB
-#endif			
             return FollowOnFaultWithImplementation(antecedentTask, t => ((Task<TResult>)t).Result, t => operation((Task<TResult>)t));
         }
         #endregion
@@ -461,8 +417,6 @@ namespace Microsoft.OData.Client
             Func<TExceptionType, TResult> catchBlock)
             where TExceptionType : Exception
         {
-#if ODATALIB
-#endif			
             return FollowOnFaultAndCatchExceptionWithImplementation<TResult, TExceptionType>(antecedentTask, t => ((Task<TResult>)t).Result, catchBlock);
         }
         #endregion
@@ -481,8 +435,6 @@ namespace Microsoft.OData.Client
         /// Also if the operation fails, the resulting task fails. If both tasks fail, the antecedent task failure is reported only.</remarks>
         internal static Task FollowAlwaysWith(this Task antecedentTask, Action<Task> operation)
         {
-#if ODATALIB
-#endif			
             return FollowAlwaysWithImplementation<object>(antecedentTask, t => null, operation);
         }
 
@@ -500,8 +452,6 @@ namespace Microsoft.OData.Client
         /// Also if the operation fails, the resulting task fails. If both tasks fail, the antecedent task failure is reported only.</remarks>
         internal static Task<TResult> FollowAlwaysWith<TResult>(this Task<TResult> antecedentTask, Action<Task<TResult>> operation)
         {
-#if ODATALIB
-#endif			
             return FollowAlwaysWithImplementation(antecedentTask, t => ((Task<TResult>)t).Result, t => operation((Task<TResult>)t));
         }
         #endregion
@@ -513,9 +463,6 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", Justification = "Need to access t.Exception to invoke the getter which will mark the Task to not throw the exception.")]
         internal static Task IgnoreExceptions(this Task task)
         {
-#if ODATALIB
-#endif
-
             task.ContinueWith(
                 t => { var ignored = t.Exception; },
                 CancellationToken.None,
@@ -531,8 +478,6 @@ namespace Microsoft.OData.Client
         /// <returns>The scheduler for the specified factory.</returns>
         internal static TaskScheduler GetTargetScheduler(this TaskFactory factory)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(factory != null, "factory != null");
             return factory.Scheduler ?? TaskScheduler.Current;
         }
@@ -547,14 +492,10 @@ namespace Microsoft.OData.Client
         /// <param name="source">The enumerable containing the tasks to be iterated through.</param>
         /// <returns>A Task that represents the complete asynchronous operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Stores the exception so that it doesn't bring down the process but isntead rethrows on the task calling thread.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task Iterate(
             this TaskFactory factory,
             IEnumerable<Task> source)
         {
-#if ODATALIB
-#endif
-
             // Validate/update parameters
             Debug.Assert(factory != null, "factory != null");
             Debug.Assert(source != null, "source != null");
@@ -574,7 +515,7 @@ namespace Microsoft.OData.Client
             {
                 try
                 {
-                    // If the previous task completed with any exceptions, bail 
+                    // If the previous task completed with any exceptions, bail
                     if (antecedent != null && antecedent.IsFaulted)
                     {
                         trc.TrySetException(antecedent.Exception);
@@ -642,7 +583,6 @@ namespace Microsoft.OData.Client
         /// <param name="antecedentTask">The task which just finished.</param>
         /// <param name="taskCompletionSource">The task completion source to apply the result to.</param>
         /// <param name="operation">The func to execute as the follow up action in case of success of the <paramref name="antecedentTask"/>.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static void FollowOnSuccessWithContinuation<TResult>(Task antecedentTask, TaskCompletionSource<TResult> taskCompletionSource, Func<Task, TResult> operation)
         {
             switch (antecedentTask.Status)
@@ -681,8 +621,6 @@ namespace Microsoft.OData.Client
         /// <returns>A new Task which wraps both the <paramref name="antecedentTask"/> and the conditional execution of <paramref name="operation"/>.</returns>
         private static Task<TResult> FollowOnSuccessWithImplementation<TResult>(Task antecedentTask, Func<Task, TResult> operation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
             Debug.Assert(
@@ -709,7 +647,6 @@ namespace Microsoft.OData.Client
         /// <param name="getTaskResult">Func which gets a task result value.</param>
         /// <param name="operation">The operation to follow up with.</param>
         /// <returns>A new Task which wraps both the <paramref name="antecedentTask"/> and the conditional execution of <paramref name="operation"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static Task<TResult> FollowOnFaultWithImplementation<TResult>(Task antecedentTask, Func<Task, TResult> getTaskResult, Action<Task> operation)
         {
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
@@ -765,7 +702,6 @@ namespace Microsoft.OData.Client
         /// <param name="getTaskResult">Func which gets a task result value.</param>
         /// <param name="catchBlock">The operation to follow up with.</param>
         /// <returns>A new Task which wraps both the <paramref name="antecedentTask"/> and the conditional execution of <paramref name="catchBlock"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static Task<TResult> FollowOnFaultAndCatchExceptionWithImplementation<TResult, TExceptionType>(
             Task antecedentTask,
             Func<Task, TResult> getTaskResult,
@@ -846,11 +782,8 @@ namespace Microsoft.OData.Client
         /// This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.
         /// Note that the operation may not return any value, since the original result of the antecedent task will be used always.
         /// Also if the operation fails, the resulting task fails. If both tasks fail, the antecedent task failure is reported only.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static Task<TResult> FollowAlwaysWithImplementation<TResult>(this Task antecedentTask, Func<Task, TResult> getTaskResult, Action<Task> operation)
         {
-#if ODATALIB
-#endif			
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
             Debug.Assert(operation != null, "operation != null");
 

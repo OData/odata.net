@@ -15,12 +15,10 @@ namespace Microsoft.OData.Service.Providers
     using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Edm.Vocabularies;
+    using Microsoft.OData;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -161,7 +159,7 @@ namespace Microsoft.OData.Service.Providers
             Version edmVersion = null;
             if (!MetadataProviderUtils.DataServiceEdmVersionMap.TryGetValue(odataVersion, out edmVersion))
             {
-                this.SetEdmVersion(Microsoft.OData.Edm.Library.EdmConstants.EdmVersionLatest);
+                this.SetEdmVersion(EdmConstants.EdmVersionLatest);
             }
             else
             {
@@ -169,7 +167,7 @@ namespace Microsoft.OData.Service.Providers
             }
 
             // Initialize the minimum Edm Metadata Version to 4.0.
-            this.MinMetadataEdmSchemaVersion = Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4;
+            this.MinMetadataEdmSchemaVersion = EdmConstants.EdmVersion4;
 
             this.AnnotationsCache = new VocabularyAnnotationCache(this);
         }
@@ -381,15 +379,15 @@ namespace Microsoft.OData.Service.Providers
         }
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
         /// <remarks>
         /// Materialization state: none required. No change in materialization state.
         /// Cache state: none required. No change in cache state.
         /// </remarks>
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
             return null;
         }
@@ -1445,7 +1443,7 @@ namespace Microsoft.OData.Service.Providers
             //       we don't consider visibility at all since it depends
             //       not only on the type but also the entity set the type came from (MEST scenarios!).
             //       ODataLib has no knowledge of entity sets so the design is for Astoria to not include
-            //       hidden navigation properties in the ODataEntry to begin with and not bother with
+            //       hidden navigation properties in the ODataResource to begin with and not bother with
             //       visibility here.
             // NOTE: We get here in materialization state 'Full' when we create the association types.
             //       We get here in cache state 'Full' when delay-loading the properties.
@@ -1610,10 +1608,7 @@ namespace Microsoft.OData.Service.Providers
                 }
 
                 string defaultValue = MetadataProviderUtils.GetAndRemoveDefaultValue(customAnnotations);
-                EdmConcurrencyMode concurrencyMode = resourceProperty.IsOfKind(ResourcePropertyKind.ETag)
-                    ? EdmConcurrencyMode.Fixed
-                    : EdmConcurrencyMode.None;
-                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, primitiveTypeReference, defaultValue, concurrencyMode);
+                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, primitiveTypeReference, defaultValue);
                 declaringType.AddProperty(result);
 
                 string mimeType = resourceProperty.MimeType;
@@ -1629,7 +1624,7 @@ namespace Microsoft.OData.Service.Providers
                 // NOTE: WCF DS does not support complex ETag properties
                 string defaultValue = MetadataProviderUtils.GetAndRemoveDefaultValue(customAnnotations);
 
-                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, typeReference, defaultValue, EdmConcurrencyMode.None);
+                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, typeReference, defaultValue);
                 declaringType.AddProperty(result);
 
                 // We need to mark all complex types in EF provider as "allow null" in order to maintain backward compat behavior
@@ -1644,7 +1639,7 @@ namespace Microsoft.OData.Service.Providers
             {
                 string defaultValue = MetadataProviderUtils.GetAndRemoveDefaultValue(customAnnotations);
                 IEdmTypeReference collectionTypeReference = this.EnsureTypeReference(resourceProperty.ResourceType, customAnnotations);
-                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, collectionTypeReference, defaultValue, EdmConcurrencyMode.None);
+                result = new MetadataProviderEdmStructuralProperty(declaringType, resourceProperty, collectionTypeReference, defaultValue);
                 declaringType.AddProperty(result);
             }
             else if (resourceProperty.IsOfKind(ResourcePropertyKind.ResourceSetReference) || resourceProperty.IsOfKind(ResourcePropertyKind.ResourceReference))

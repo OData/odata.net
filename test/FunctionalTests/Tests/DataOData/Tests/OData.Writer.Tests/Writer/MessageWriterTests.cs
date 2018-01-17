@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 #if !SILVERLIGHT
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -23,6 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for the <see cref="ODataMessageWriter" /> class to write different payloads.
     /// </summary>
@@ -42,13 +43,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             new WriterActionForPayloadKind[]
             {
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Unsupported, WriterAction = messageWriter => { throw new InvalidOperationException("Must not get here for unsupported kinds."); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Entry, WriterAction = messageWriter => 
-                    { ODataWriter writer = messageWriter.CreateODataEntryWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultEntry("TestModel.CityType")); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Feed, WriterAction = messageWriter => 
-                    { ODataWriter writer = messageWriter.CreateODataFeedWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultFeed()); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Collection, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Resource, WriterAction = messageWriter =>
+                    { ODataWriter writer = messageWriter.CreateODataResourceWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultEntry("TestModel.CityType")); writer.WriteEnd(); writer.Flush(); } },
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.ResourceSet, WriterAction = messageWriter =>
+                    { ODataWriter writer = messageWriter.CreateODataResourceSetWriter(); writer.WriteStart(ObjectModelUtils.CreateDefaultFeed()); writer.WriteEnd(); writer.Flush(); } },
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Collection, WriterAction = messageWriter =>
                     { ODataCollectionWriter writer = messageWriter.CreateODataCollectionWriter(); writer.WriteStart(new ODataCollectionStart { Name = "collection" }); writer.WriteEnd(); writer.Flush(); } },
-                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Batch, WriterAction = messageWriter => 
+                new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.Batch, WriterAction = messageWriter =>
                     { ODataBatchWriterTestWrapper writer = messageWriter.CreateODataBatchWriter(); writer.WriteStartBatch(); writer.WriteStartChangeset(); writer.WriteEndChangeset(); writer.WriteEndBatch(); writer.Flush(); } },
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.EntityReferenceLink, WriterAction = messageWriter => messageWriter.WriteEntityReferenceLink(ObjectModelUtils.CreateDefaultEntityReferenceLink()) },
                 new WriterActionForPayloadKind { PayloadKind = ODataPayloadKind.EntityReferenceLinks, WriterAction = messageWriter => messageWriter.WriteEntityReferenceLinks(ObjectModelUtils.CreateDefaultEntityReferenceLinks()) },
@@ -81,7 +82,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Test that the message writer can only be used once.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test that the message writer can only be used once.")]
         public void UseWriterOnceTests()
         {
             Uri baseUri = new Uri("http://www.odata.org/");
@@ -101,8 +103,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             UseWriterOnceTestCase[] messageWriterOperations = new UseWriterOnceTestCase[]
             {
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataCollectionWriter() },
-                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataEntryWriter() },
-                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataEntryWriter() },
+                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataResourceWriter() },
+                new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.CreateODataResourceWriter() },
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.WriteError(error, false), IsWriteError = true },
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.WriteEntityReferenceLink(link) },
                 new UseWriterOnceTestCase { WriterMethod = (messageWriter) => messageWriter.WriteEntityReferenceLinks(links) },
@@ -119,7 +121,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testCase, testConfiguration) =>
                 {
                     ODataMessageWriterSettings settingsWithBaseUri = testConfiguration.MessageWriterSettings.Clone();
-                    settingsWithBaseUri.PayloadBaseUri = baseUri;
+                    settingsWithBaseUri.BaseUri = baseUri;
                     settingsWithBaseUri.SetServiceDocumentUri(ServiceDocumentUri);
 
                     using (var memoryStream = new TestStream())
@@ -152,20 +154,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public Action<ODataMessageWriterTestWrapper> WriterMethod { get; set; }
         }
 
-        [TestMethod, Variation(Description = "Test that an OData entry writer can only be used to write entries and an ODataFeedWriter only for feeds.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test that an OData entry writer can only be used to write entries and an ODataFeedWriter only for feeds.")]
         public void ODataFeedAndEntryWriterIncorrectPayload()
         {
             var testCases = new[]
                 {
                     new
                     {
-                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataEntryWriter()),
+                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataResourceWriter()),
                         WriteAction = (Action<ODataWriter>)(writer => writer.WriteStart(ObjectModelUtils.CreateDefaultFeed())),
                         ExpectedErrorMessage = "Cannot write a top-level feed with a writer that was created to write a top-level entry."
                     },
                     new
                     {
-                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataFeedWriter()),
+                        ODataWriterFunc = (Func<ODataMessageWriterTestWrapper, ODataWriter>)(messageWriter => messageWriter.CreateODataResourceSetWriter()),
                         WriteAction = (Action<ODataWriter>)(writer => writer.WriteStart(ObjectModelUtils.CreateDefaultEntry())),
                         ExpectedErrorMessage = "Cannot write a top-level entry with a writer that was created to write a top-level feed."
                     },
@@ -194,7 +197,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests the correct error behavior for invalid calls after SetHeadersForPayload was called.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests the correct error behavior for invalid calls after SetHeadersForPayload was called.")]
         public void SetHeadersForPayloadAndInvalidCallsErrorTest()
         {
             string errorMessageTemplate = "The payload kind '{0}' used in the last call to ODataUtils.SetHeadersForPayload is incompatible with the payload being written which is of kind '{1}'.";
@@ -205,7 +209,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testCase, testConfiguration) =>
                 {
                     ODataMessageWriterSettings settingsWithBaseUri = testConfiguration.MessageWriterSettings.Clone();
-                    settingsWithBaseUri.PayloadBaseUri = baseUri;
+                    settingsWithBaseUri.BaseUri = baseUri;
 
                     ODataPayloadKind payloadKind = testCase.PayloadKind;
 
@@ -304,7 +308,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Entry,
+                        PayloadKind = ODataPayloadKind.Resource,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
                     new SetHeadersForPayloadTestCase
@@ -314,7 +318,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Feed,
+                        PayloadKind = ODataPayloadKind.ResourceSet,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
                     new SetHeadersForPayloadTestCase
@@ -372,7 +376,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Entry,
+                        PayloadKind = ODataPayloadKind.Resource,
                         AcceptHeader = multipleTypesWithQualityValues,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
@@ -384,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     new SetHeadersForPayloadTestCase
                     {
-                        PayloadKind = ODataPayloadKind.Feed,
+                        PayloadKind = ODataPayloadKind.ResourceSet,
                         AcceptHeader = multipleTypesWithQualityValues,
                         ExpectedFormatFunc = tc => ODataFormat.Json,
                     },
@@ -516,7 +520,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         // These tests are disabled on Silverlight and Phone because they use private reflection to validate the test result.
 #if !SILVERLIGHT && !WINDOWS_PHONE
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header.")]
         public void SetVersionInMessageHeaderTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -542,7 +547,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             // Add some error combinations
             string[] invalidVersionHeaders = { "randomstring", "V1.0", "1.5", "randomstring;1.0", "1", ";UserAgentString" };
-            IEnumerable<VersionMessageHeaderTestCase> errorTestCases = invalidVersionHeaders.Select(invalidHeader => 
+            IEnumerable<VersionMessageHeaderTestCase> errorTestCases = invalidVersionHeaders.Select(invalidHeader =>
                 new VersionMessageHeaderTestCase
                 {
                     VersionHeaderValue = invalidHeader,
@@ -600,7 +605,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header as well as in the writer settings.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header as well as in the writer settings.")]
         public void SetVersionInMessageHeaderAndSettingsTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -671,7 +677,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header.")]
         public void SetContentTypeInMessageHeaderTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -686,8 +693,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         }));
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors.Where(td => td.TestCase.ExpectedFormat == ODataFormat.Atom),
-                this.WriterTestConfigurationProvider.AllFormatsConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                testDescriptors.Where(td => false),
+                this.WriterTestConfigurationProvider.AllFormatsConfigurations.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     ODataPayloadKind payloadKind = testDescriptor.WriterInvocation.PayloadKind;
@@ -701,19 +708,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataMessageWriterSettings clonedSettings = new ODataMessageWriterSettings()
                     {
                         // NOTE intentionally not copying acceptable media types, acceptable char sets, format and useFormat
-                        PayloadBaseUri = settings.PayloadBaseUri,
-                        CheckCharacters = settings.CheckCharacters,
-                        DisableMessageStreamDisposal = settings.DisableMessageStreamDisposal,
-                        Indent = settings.Indent,
+                        BaseUri = settings.BaseUri,
+                        EnableCharactersCheck = settings.EnableCharactersCheck,
+                        EnableMessageStreamDisposal = settings.EnableMessageStreamDisposal,
                         MessageQuotas = new ODataMessageQuotas(settings.MessageQuotas),
-                        Version = settings.Version,
-                        EnableAtom = true
+                        Version = settings.Version
                     };
                     clonedSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     WriterTestConfiguration clonedTestConfiguration = new WriterTestConfiguration(
-                        testConfiguration.Format, 
-                        clonedSettings, 
-                        testConfiguration.IsRequest, 
+                        testConfiguration.Format,
+                        clonedSettings,
+                        testConfiguration.IsRequest,
                         testConfiguration.Synchronous);
 
                     using (var memoryStream = new TestStream())
@@ -761,7 +766,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header as well as in the writer settings.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header as well as in the writer settings.")]
         public void SetContentTypeInMessageHeaderAndSettingsTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -840,19 +846,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ExpectedFormat = ODataFormat.Json
         };
 
-        private static readonly ContentTypeMessageHeaderTestCase AppXmlTestCase = new ContentTypeMessageHeaderTestCase
-        {
-            ContentTypeHeaderValue = "application/xml",
-            ExpectedEncoding = null,
-            ExpectedFormat = ODataFormat.Atom
-        };
+        //private static readonly ContentTypeMessageHeaderTestCase AppXmlTestCase = new ContentTypeMessageHeaderTestCase
+        //{
+        //    ContentTypeHeaderValue = "application/xml",
+        //    ExpectedEncoding = null,
+        //    ExpectedFormat = ODataFormat.Atom
+        //};
 
-        private static readonly ContentTypeMessageHeaderTestCase TextXmlTestCase = new ContentTypeMessageHeaderTestCase
-        {
-            ContentTypeHeaderValue = "text/xml",
-            ExpectedEncoding = null,
-            ExpectedFormat = ODataFormat.Atom
-        };
+        //private static readonly ContentTypeMessageHeaderTestCase TextXmlTestCase = new ContentTypeMessageHeaderTestCase
+        //{
+        //    ContentTypeHeaderValue = "text/xml",
+        //    ExpectedEncoding = null,
+        //    ExpectedFormat = ODataFormat.Atom
+        //};
 
         private static IEnumerable<ContentTypeMessageHeaderTestCase> CreateContentTypeHeaderTestCases(ODataPayloadKind payloadKind)
         {
@@ -860,41 +866,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             IEnumerable<ContentTypeMessageHeaderTestCase> testCases;
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                 case ODataPayloadKind.EntityReferenceLinks:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml;type=feed",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
                         AppJsonLightTestCase,
                     };
 
                     break;
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml;type=entry",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atom+xml",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
                         AppJsonLightTestCase,
                     };
 
@@ -902,8 +884,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.Property:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
-                        TextXmlTestCase,
+                        //AppXmlTestCase,
+                        //TextXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -911,8 +893,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.EntityReferenceLink:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
-                        TextXmlTestCase,
+                        //AppXmlTestCase,
+                        //TextXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -944,8 +926,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.Collection:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
-                        TextXmlTestCase,
+                        //AppXmlTestCase,
+                        //TextXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -953,12 +935,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.ServiceDocument:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        new ContentTypeMessageHeaderTestCase
-                        {
-                            ContentTypeHeaderValue = "application/atomsvc+xml",
-                            ExpectedEncoding = null,
-                            ExpectedFormat = ODataFormat.Atom
-                        },
                         AppJsonLightTestCase,
                     };
 
@@ -978,7 +954,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.Error:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppXmlTestCase,
+                        // AppXmlTestCase,
                         AppJsonLightTestCase,
                     };
 
@@ -1031,8 +1007,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     ContentTypeHeaderValue = "abc/pqr",
                     ExpectedException = tc => ODataExpectedExceptions.ODataContentTypeException(
-                        "MediaTypeUtils_CannotDetermineFormatFromContentType", 
-                        TestMediaTypeUtils.GetSupportedMediaTypes(payloadKind, /*includeAppJson*/true), 
+                        "MediaTypeUtils_CannotDetermineFormatFromContentType",
+                        TestMediaTypeUtils.GetSupportedMediaTypes(payloadKind, /*includeAppJson*/true),
                         "abc/pqr"),
                 },
             };
@@ -1041,7 +1017,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 #endif
 
-        [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream.")]
         public void NullStreamMessageTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -1078,7 +1055,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verifies no BOM is written out on default writer.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies no BOM is written out on default writer.")]
         public void NoByteOrderMarkByDefaultTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -1118,7 +1096,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         this.Assert.AreEqual(60, payload[0], "BOM might be present which is not expected");
                         this.Assert.AreEqual(63, payload[1], "BOM might be present which is not expected");
                     }
-                });   
+                });
         }
 
         [TestMethod, Variation(Description = "Verifies that IODataRequestMessage and IODataResponseMessage continue to have settable properties.")]
@@ -1128,14 +1106,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var exception = TestExceptionUtils.RunCatching(() => requestMessage.Url = new Uri("http://www.odata.org"));
             ExceptionUtilities.Assert(exception == null, "No exception was expected. Exception was thrown {0}", exception);
 
-            var responseMessage= new TestResponseMessage(new MemoryStream());
+            var responseMessage = new TestResponseMessage(new MemoryStream());
             exception = TestExceptionUtils.RunCatching(() => responseMessage.StatusCode = 5);
             ExceptionUtilities.Assert(exception == null, "No exception was expected. Exception was thrown {0}", exception);
         }
-        
+
         // These tests are disabled on Silverlight and Phone because they only run on async configuration 
 #if !SILVERLIGHT && !WINDOWS_PHONE
-        [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream task.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream task.")]
         public void NullStreamTaskMessageTest()
         {
             this.CombinatorialEngineProvider.RunCombinations(

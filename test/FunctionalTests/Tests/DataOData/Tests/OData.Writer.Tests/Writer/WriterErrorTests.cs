@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    
+
     /// <summary>
     /// Tests for writing errors with the ODataWriter or ODataMessageWriter.
     /// </summary>
@@ -36,7 +36,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         /// </summary>
         private readonly int customSetRecursionDepthLimit = 3;
 
-        [TestMethod, Variation(Description = "Validates the payloads for various top-level errors written using ODataMessageWriter.WriteError().")]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Validates the payloads for various top-level errors written using ODataMessageWriter.WriteError().")]
         public void TopLevelODataMessageWriterErrorTest()
         {
             this.CombinatorialEngineProvider.RunCombinations(
@@ -50,15 +52,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataAnnotatedError error = (ODataAnnotatedError)testDescriptor.PayloadItems.Single();
 
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
-                        testDescriptor, 
-                        testConfiguration, 
+                        testDescriptor,
+                        testConfiguration,
                         (messageWriter) => messageWriter.WriteError(error.Error, error.IncludeDebugInformation),
                         this.Assert,
                         baselineLogger: this.Logger);
                 });
         }
 
-        [TestMethod, Variation(Description = "Validates the payloads for various top-level errors written using an ODataWriter.")]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Validates the payloads for various top-level errors written using an ODataWriter.")]
         public void TopLevelODataWriterErrorTest()
         {
             EdmEntitySet entitySet = null;
@@ -92,7 +96,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var container = new EdmEntityContainer("TestModel", "DefaultContainer");
             model.AddElement(container);
-            
+
             entitySet = container.AddEntitySet("Customers", customer);
 
             return model;
@@ -130,65 +134,65 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Code = "code42", Message = "message text", InnerError = new InnerError { Message = "some inner error" }, ExpectedException = (ExpectedException) null
                 },
                 new {
-                    Error = new ODataAnnotatedError 
-                    { 
-                        Error = new ODataError() 
-                        { 
-                            ErrorCode = "code42", 
-                            Message = "message text", 
-                            InnerError = new ODataInnerError 
-                            { 
-                                Message = "some inner error", 
-                                TypeName = "some type name", 
-                                StackTrace = "some stack trace" 
-                            } 
+                    Error = new ODataAnnotatedError
+                    {
+                        Error = new ODataError()
+                        {
+                            ErrorCode = "code42",
+                            Message = "message text",
+                            InnerError = new ODataInnerError
+                            {
+                                Message = "some inner error",
+                                TypeName = "some type name",
+                                StackTrace = "some stack trace"
+                            }
                         },
                         IncludeDebugInformation = true,
                     },
-                    Code = "code42", 
-                    Message = "message text", 
-                    InnerError = new InnerError 
-                    { 
-                        Message = "some inner error", 
-                        TypeName = "some type name", 
-                        StackTrace = "some stack trace" 
+                    Code = "code42",
+                    Message = "message text",
+                    InnerError = new InnerError
+                    {
+                        Message = "some inner error",
+                        TypeName = "some type name",
+                        StackTrace = "some stack trace"
                     },
                     ExpectedException = (ExpectedException) null
                 },
                 new {
-                    Error = new ODataAnnotatedError 
-                    { 
-                        Error = new ODataError() 
-                        { 
-                            ErrorCode = "code42", 
-                            Message = "message text", 
-                            InnerError = new ODataInnerError 
-                            { 
-                                Message = "some inner error", 
-                                TypeName = "some type name", 
+                    Error = new ODataAnnotatedError
+                    {
+                        Error = new ODataError()
+                        {
+                            ErrorCode = "code42",
+                            Message = "message text",
+                            InnerError = new ODataInnerError
+                            {
+                                Message = "some inner error",
+                                TypeName = "some type name",
                                 StackTrace = "some stack trace",
-                                InnerError = new ODataInnerError 
-                                { 
-                                    Message = "nested inner error", 
-                                    TypeName = "nested type name", 
+                                InnerError = new ODataInnerError
+                                {
+                                    Message = "nested inner error",
+                                    TypeName = "nested type name",
                                     StackTrace = "nested stack trace",
-                                    InnerError = new ODataInnerError 
-                                    { 
-                                        Message = "nested nested inner error", 
-                                        TypeName = "nested nested type name", 
+                                    InnerError = new ODataInnerError
+                                    {
+                                        Message = "nested nested inner error",
+                                        TypeName = "nested nested type name",
                                         StackTrace = "nested nested stack trace"
                                     }
                                 }
-                            } 
+                            }
                         },
                         IncludeDebugInformation = true,
                     },
-                    Code = "code42", 
-                    Message = "message text", 
-                    InnerError = new InnerError 
-                    { 
-                        Message = "some inner error", 
-                        TypeName = "some type name", 
+                    Code = "code42",
+                    Message = "message text",
+                    InnerError = new InnerError
+                    {
+                        Message = "some inner error",
+                        TypeName = "some type name",
                         StackTrace = "some stack trace",
                         NestedError = new InnerError
                         {
@@ -210,22 +214,22 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Code = "code42", Message = "message text", InnerError = new InnerError { Message = "some inner error", TypeName = "System.Exception" }, ExpectedException = (ExpectedException) null
                 },
                 new {
-                    Error = new ODataAnnotatedError 
-                    { 
-                        Error = new ODataError() 
-                        { 
-                            ErrorCode = "code42", 
-                            Message = "message text", 
+                    Error = new ODataAnnotatedError
+                    {
+                        Error = new ODataError()
+                        {
+                            ErrorCode = "code42",
+                            Message = "message text",
                             InnerError = new ODataInnerError(
                                 new Exception("some inner error", new Exception("nested inner error", new Exception("nested nested inner error"))))
                         },
                         IncludeDebugInformation = true,
                     },
-                    Code = "code42", 
-                    Message = "message text", 
-                    InnerError = new InnerError 
-                    { 
-                        Message = "some inner error", 
+                    Code = "code42",
+                    Message = "message text",
+                    InnerError = new InnerError
+                    {
+                        Message = "some inner error",
                         TypeName = "System.Exception",
                         NestedError = new InnerError
                         {
@@ -242,41 +246,41 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 // Max recursion depth is set to 3, so 4 nested inner errors should be invalid.
                 new {
-                    Error = new ODataAnnotatedError 
-                    { 
-                        Error = new ODataError() 
-                        { 
-                            ErrorCode = "code42", 
-                            Message = "message text", 
-                            InnerError = new ODataInnerError 
-                            { 
-                                Message = "some inner error", 
-                                TypeName = "some type name", 
+                    Error = new ODataAnnotatedError
+                    {
+                        Error = new ODataError()
+                        {
+                            ErrorCode = "code42",
+                            Message = "message text",
+                            InnerError = new ODataInnerError
+                            {
+                                Message = "some inner error",
+                                TypeName = "some type name",
                                 StackTrace = "some stack trace",
-                                InnerError = new ODataInnerError 
-                                { 
-                                    Message = "nested inner error", 
-                                    TypeName = "nested type name", 
+                                InnerError = new ODataInnerError
+                                {
+                                    Message = "nested inner error",
+                                    TypeName = "nested type name",
                                     StackTrace = "nested stack trace",
-                                    InnerError = new ODataInnerError 
-                                    { 
-                                        Message = "nested nested inner error", 
-                                        TypeName = "nested nested type name", 
+                                    InnerError = new ODataInnerError
+                                    {
+                                        Message = "nested nested inner error",
+                                        TypeName = "nested nested type name",
                                         StackTrace = "nested nested stack trace",
-                                        InnerError = new ODataInnerError 
-                                        { 
-                                            Message = "nested nested nested inner error", 
-                                            TypeName = "nested nested nested type name", 
+                                        InnerError = new ODataInnerError
+                                        {
+                                            Message = "nested nested nested inner error",
+                                            TypeName = "nested nested nested type name",
                                             StackTrace = "nested nested nested stack trace"
                                         }
                                     }
                                 }
-                            } 
+                            }
                         },
                         IncludeDebugInformation = true,
                     },
-                    Code = (string) null, 
-                    Message = (string) null, 
+                    Code = (string) null,
+                    Message = (string) null,
                     InnerError = (InnerError) null,
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_RecursionDepthLimitReached", Convert.ToString(this.customSetRecursionDepthLimit))
                 }
@@ -284,68 +288,44 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             ExpectedException errorNotAllowedException = ODataExpectedExceptions.ODataException("ODataMessageWriter_ErrorPayloadInRequest");
 
-            return  testCases.Select(tc =>
-            {
-                return new PayloadWriterTestDescriptor<ODataAnnotatedError>(
-                    this.Settings,
-                    tc.Error,
-                    (testConfiguration) =>
-                    {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            if (testConfiguration.IsRequest && throwOnRequests)
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = errorNotAllowedException
-                                };
-                            }
-                            else if (tc.ExpectedException != null)
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = tc.ExpectedException
-                                };
-                            }
-                            else
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    Xml = ExpectedAtomErrorPayload(tc.Code, tc.Message, tc.InnerError)
-                                };
-                            }
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
-                        {
-                            if (testConfiguration.IsRequest && throwOnRequests)
-                            {
-                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = errorNotAllowedException
-                                };
-                            }
-                            else if (tc.ExpectedException != null)
-                            {
-                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = tc.ExpectedException
-                                };
-                            }
-                            else
-                            {
-                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    Json = ExpectedJsonLightErrorPayload(tc.Code, tc.Message, tc.InnerError),
-                                    FragmentExtractor = (result) => { JsonUtils.TrimSurroundingWhitespaces(result); return result; },
-                                };
-                            }
-                        }
-                        else
-                        {
-                            throw new ODataTestException("Expected results are only implemented for ATOM and JSON lite.");
-                        }
-                    });
-            });
+            return testCases.Select(tc =>
+           {
+               return new PayloadWriterTestDescriptor<ODataAnnotatedError>(
+                   this.Settings,
+                   tc.Error,
+                   (testConfiguration) =>
+                   {
+                       if (testConfiguration.Format == ODataFormat.Json)
+                       {
+                           if (testConfiguration.IsRequest && throwOnRequests)
+                           {
+                               return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                               {
+                                   ExpectedException2 = errorNotAllowedException
+                               };
+                           }
+                           else if (tc.ExpectedException != null)
+                           {
+                               return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                               {
+                                   ExpectedException2 = tc.ExpectedException
+                               };
+                           }
+                           else
+                           {
+                               return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                               {
+                                   Json = ExpectedJsonLightErrorPayload(tc.Code, tc.Message, tc.InnerError),
+                                   FragmentExtractor = (result) => { JsonUtils.TrimSurroundingWhitespaces(result); return result; },
+                               };
+                           }
+                       }
+                       else
+                       {
+                           throw new ODataTestException("Expected results are only implemented for ATOM and JSON lite.");
+                       }
+                   });
+           });
         }
 
         /// <summary>
@@ -427,7 +407,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 "$(NL)",
                 "{",
                 "$(Indent)\"" + JsonLightConstants.ODataErrorPropertyName + "\":{",
-                "$(Indent)$(Indent)\"" + JsonConstants.ODataErrorCodeName + "\":\"" + code + "\",\"" ,
+                "$(Indent)$(Indent)\"" + JsonConstants.ODataErrorCodeName + "\":\"" + code + "\",\"",
                 JsonConstants.ODataErrorMessageName + "\":\"" + message + "\"",
                 ExpectedJsonLightInnerErrorPayload(innerError, 0),
                 "$(Indent)}",

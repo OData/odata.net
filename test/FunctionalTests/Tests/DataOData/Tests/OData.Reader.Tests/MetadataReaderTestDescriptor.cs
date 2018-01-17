@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
@@ -257,7 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     IEnumerable<EdmError> errors;
 
-                    if (!EdmxWriter.TryWriteEdmx(this.PayloadEdmModel, xmlWriter, EdmxTarget.OData, out errors))
+                    if (!CsdlWriter.TryWriteCsdl(this.PayloadEdmModel, xmlWriter, CsdlTarget.OData, out errors))
                     {
                         var errorBuilder = new StringBuilder();
 

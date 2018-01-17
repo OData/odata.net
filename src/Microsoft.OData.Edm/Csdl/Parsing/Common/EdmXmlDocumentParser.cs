@@ -7,9 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Common
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal abstract IEnumerable<KeyValuePair<Version, string>> SupportedVersions { get; }
 
-        internal XmlAttributeInfo GetOptionalAttribute(XmlElementInfo element, string attributeName)
+        internal static XmlAttributeInfo GetOptionalAttribute(XmlElementInfo element, string attributeName)
         {
             return element.Attributes[attributeName];
         }
@@ -47,17 +47,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         protected override XmlReader InitializeReader(XmlReader reader)
         {
             XmlReaderSettings readerSettings = new XmlReaderSettings
-                                                   {
-                                                       CheckCharacters = true,
-                                                       CloseInput = false,
-                                                       IgnoreWhitespace = true,
-                                                       ConformanceLevel = ConformanceLevel.Auto,
-                                                       IgnoreComments = true,
-                                                       IgnoreProcessingInstructions = true,
+            {
+                CheckCharacters = true,
+                CloseInput = false,
+                IgnoreWhitespace = true,
+                ConformanceLevel = ConformanceLevel.Auto,
+                IgnoreComments = true,
+                IgnoreProcessingInstructions = true,
 #if !ORCAS
-                                                       DtdProcessing = DtdProcessing.Prohibit
+                DtdProcessing = DtdProcessing.Prohibit
 #endif
-                                                   };
+            };
 
             // user specified a stream to read from, read from it.
             // The Uri is just used to identify the stream in errors.
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
            where TItem : class
         {
             return Element<TItem>(
-                elementName, 
+                elementName,
                 (element, childValues) =>
                 {
                     BeginItem(element);
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         }
 
         protected abstract void AnnotateItem(object result, XmlElementValueCollection childValues);
-        
+
         protected void EndItem()
         {
             this.elementStack.Pop();
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalInteger(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? value;
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected long? OptionalLong(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 long? value;
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalSrid(string attributeName, int defaultSrid)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? srid;
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalScale(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? scale;
@@ -193,7 +193,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected int? OptionalMaxLength(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 int? value;
@@ -203,26 +203,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 }
 
                 return value;
-            }
-
-            return null;
-        }
-
-        protected EdmConcurrencyMode? OptionalConcurrencyMode(string attributeName)
-        {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
-            if (!attr.IsMissing)
-            {
-                switch (attr.Value)
-                {
-                    case CsdlConstants.Value_None:
-                        return EdmConcurrencyMode.None;
-                    case CsdlConstants.Value_Fixed:
-                        return EdmConcurrencyMode.Fixed;
-                    default:
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidConcurrencyMode, Edm.Strings.CsdlParser_InvalidConcurrencyMode(attr.Value));
-                        break;
-                }
             }
 
             return null;
@@ -247,7 +227,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 }
             }
 
-           return EdmMultiplicity.One;
+            return EdmMultiplicity.One;
         }
 
         protected EdmOnDeleteAction RequiredOnDeleteAction(string attributeName)
@@ -272,7 +252,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected bool? OptionalBoolean(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 bool? value;
@@ -289,7 +269,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string Optional(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             return !attr.IsMissing ? attr.Value : null;
         }
 
@@ -301,7 +281,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string OptionalAlias(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 return this.ValidateAlias(attr.Value);
@@ -351,7 +331,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string OptionalType(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 return this.ValidateTypeName(attr.Value);
@@ -373,7 +353,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected string OptionalQualifiedName(string attributeName)
         {
-            XmlAttributeInfo attr = this.GetOptionalAttribute(this.currentElement, attributeName);
+            XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
                 return this.ValidateQualifiedName(attr.Value);
@@ -458,7 +438,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     break;
             }
 
-            if (EdmUtil.IsQualifiedName(typeName) || Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None)
+            if (EdmUtil.IsQualifiedName(typeName) || Microsoft.OData.Edm.EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None)
             {
                 return name;
             }

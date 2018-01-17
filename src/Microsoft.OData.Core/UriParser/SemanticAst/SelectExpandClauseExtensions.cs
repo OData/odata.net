@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.UriParser.Visitors;
 
     /// <summary>
     /// Extension methods for <see cref="SelectExpandClause"/>.
@@ -241,5 +238,3 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
     }
 }
-
-#endif

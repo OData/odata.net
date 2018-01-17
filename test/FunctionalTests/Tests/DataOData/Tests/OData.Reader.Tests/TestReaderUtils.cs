@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Astoria.OData;
     using Microsoft.Test.Taupo.Common;
@@ -22,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Test.Taupo.OData.Common.Annotations;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.PayloadTransformation;
-    using ODataConstants = Microsoft.OData.Core.ODataConstants;
+    using ODataConstants = Microsoft.OData.ODataConstants;
 
     #endregion Namespaces
 
@@ -36,8 +36,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         public static readonly ODataPayloadKind[] ODataPayloadKinds = new ODataPayloadKind[]
             {
-                ODataPayloadKind.Feed,
-                ODataPayloadKind.Entry,
+                ODataPayloadKind.ResourceSet,
+                ODataPayloadKind.Resource,
                 ODataPayloadKind.Property,
                 ODataPayloadKind.EntityReferenceLink,
                 ODataPayloadKind.EntityReferenceLinks,
@@ -61,27 +61,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public static TestODataBehaviorKind[] ODataBehaviorKinds = new[] { TestODataBehaviorKind.Default, TestODataBehaviorKind.WcfDataServicesClient, TestODataBehaviorKind.WcfDataServicesServer };
 
         /// <summary>
-        /// List of all possible combinations of flags for the UndeclaredPropertyBehaviorKinds setting.
-        /// </summary>
-        public static ODataUndeclaredPropertyBehaviorKinds[] ODataUndeclaredPropertyBehaviorKindsCombinations = new[]
-            {
-                ODataUndeclaredPropertyBehaviorKinds.None,
-                ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty,
-                ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty,
-                ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty
-            };
-
-        /// <summary>
         /// Returns a text description of message reader settings.
         /// </summary>
         /// <param name="messageReaderSettings">The reader settings to get text description of.</param>
         /// <returns>Humanly readable description of <paramref name="messageReaderSettings"/>, used for debugging.</returns>
         public static string ToDebugString(this ODataMessageReaderSettings messageReaderSettings)
         {
-            return string.Format("DisablePrimitiveTypeConversion: {0}, CheckCharacters: {1}, DisableMessageStreamDisposal: {2}",
-                messageReaderSettings.DisablePrimitiveTypeConversion,
-                messageReaderSettings.CheckCharacters,
-                messageReaderSettings.DisableMessageStreamDisposal);
+            return string.Format("EnablePrimitiveTypeConversion: {0}, EnableCharactersCheck: {1}, EnableMessageStreamDisposal: {2}",
+                messageReaderSettings.EnablePrimitiveTypeConversion,
+                messageReaderSettings.EnableCharactersCheck,
+                messageReaderSettings.EnableMessageStreamDisposal);
         }
 
         /// <summary>
@@ -105,11 +94,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="urlResolver">Url resolver to add to the test message created.</param>
         /// <returns>Newly created test message.</returns>
         public static TestMessage CreateInputMessageFromStream(
-            TestStream messageContent, 
+            TestStream messageContent,
             ReaderTestConfiguration testConfiguration,
             ODataPayloadKind? payloadKind,
             string customContentTypeHeader,
-            IODataUrlResolver urlResolver)
+            IODataPayloadUriConverter urlResolver)
         {
             TestMessage message;
             if (testConfiguration.IsRequest)
@@ -159,7 +148,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <returns>The test wrapper for the newly created message reader.</returns>
         public static ODataMessageReaderTestWrapper CreateMessageReader(
             TestMessage message,
-            IEdmModel model, 
+            IEdmModel model,
             ReaderTestConfiguration testConfiguration)
         {
             ODataMessageReader messageReader;
@@ -183,9 +172,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="testConfiguration">The test configuration to use.</param>
         /// <returns>The payload to use for testing.</returns>
         public static byte[] GetPayload(
-            ReaderTestConfiguration testConfiguration, 
-            List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>> payloadNormalizers, 
-            PayloadReaderTestDescriptor.Settings settings, 
+            ReaderTestConfiguration testConfiguration,
+            List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>> payloadNormalizers,
+            PayloadReaderTestDescriptor.Settings settings,
             ODataPayloadElement payloadElement)
         {
             IPayloadSerializer payloadSerializer = null;
@@ -221,11 +210,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 payloadElementToSerialize = payloadElementCopy ?? payloadElementToSerialize;
             }
 
-            if (testConfiguration.Format == ODataFormat.Atom)
-            {
-                payloadSerializer = new XmlPayloadSerializer(settings.PayloadElementToXmlConverter);
-            }
-            else if (testConfiguration.Format == ODataFormat.Json)
+            if (testConfiguration.Format == ODataFormat.Json)
             {
                 // Create a copy of the payload element so that we can add annotations to it.
                 payloadElementToSerialize = payloadElementToSerialize.DeepCopy();
@@ -309,17 +294,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Returns true if the specified <paramref name="flag"/> is set in the <paramref name="undeclaredPropertyBehaviorKinds"/>.
-        /// </summary>
-        /// <param name="undeclaredPropertyBehaviorKinds">The value of the setting to test.</param>
-        /// <param name="flag">The flag to test.</param>
-        /// <returns>true if the flas is present, flase otherwise.</returns>
-        public static bool HasFlag(this ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds, ODataUndeclaredPropertyBehaviorKinds flag)
-        {
-            return (undeclaredPropertyBehaviorKinds & flag) == flag;
-        }
-
-        /// <summary>
         /// Creates the input message for the test descriptor
         /// </summary>
         /// <param name="testConfiguration">the test configuration to use</param>
@@ -327,13 +301,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="settings">The test descriptor settings</param>
         /// <param name="applyPayloadTransformations">Whether or not to apply payload transformations</param>
         /// <returns>The message for the test</returns>
-        public static TestMessage CreateInputMessage(ReaderTestConfiguration testConfiguration, 
+        public static TestMessage CreateInputMessage(ReaderTestConfiguration testConfiguration,
             PayloadReaderTestDescriptor readerTestDescriptor,
-            PayloadReaderTestDescriptor.Settings settings, 
+            PayloadReaderTestDescriptor.Settings settings,
             bool? applyPayloadTransformations)
         {
             TestMessage testMessage;
-            bool originalApplyTransformValue = false;           
+            bool originalApplyTransformValue = false;
             var odataTransformFactory = settings.PayloadTransformFactory as ODataLibPayloadTransformFactory;
 
             try
@@ -368,8 +342,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 }
 
                 testMessage = TestReaderUtils.CreateInputMessageFromStream(
-                    messageStream, 
-                    testConfiguration, 
+                    messageStream,
+                    testConfiguration,
                     readerTestDescriptor.PayloadElement.GetPayloadKindFromPayloadElement(),
                     readerTestDescriptor.PayloadElement.GetCustomContentTypeHeader(), readerTestDescriptor.UrlResolver);
 

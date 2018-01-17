@@ -4,19 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
-    /// Helper class to help bind function overloads. 
+    /// Helper class to help bind function overloads.
     /// This is shared between path and filter/orderby function resolution.
     /// </summary>
     internal static class FunctionOverloadResolver
@@ -30,7 +29,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="matchingOperationImport">The single matching function found.</param>
         /// <param name="resolver">Resolver to be used.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static bool ResolveOperationImportFromList(string identifier, IList<string> parameterNames, IEdmModel model, out IEdmOperationImport matchingOperationImport, ODataUriResolver resolver)
         {
             IList<IEdmOperationImport> candidateMatchingOperationImports = null;
@@ -99,6 +97,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return false;
             }
 
+            // If more than one overload matches, try to select based on optional parameters
+            if (candidateMatchingOperationImports.Count > 1)
+            {
+                candidateMatchingOperationImports = candidateMatchingOperationImports.FindBestOverloadBasedOnParameters(parameterNames).ToList();
+            }
+
             if (candidateMatchingOperationImports.Count > 1)
             {
                 throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads(identifier));
@@ -119,7 +123,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="matchingOperation">The single matching function found.</param>
         /// <param name="resolver">Resolver to be used.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static bool ResolveOperationFromList(string identifier, IEnumerable<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperation matchingOperation, ODataUriResolver resolver)
         {
             // TODO: update code that is duplicate between operation and operation import, add more tests.
@@ -128,7 +131,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 // TODO: look up actual container names here?
                 // When using extension, there may be function call with unqualified name. So loose the restriction here.
-                if (bindingType.IsOpenType() && !identifier.Contains(".") && resolver.GetType() == typeof(ODataUriResolver))
+                if (bindingType.IsOpen() && !identifier.Contains(".") && resolver.GetType() == typeof(ODataUriResolver))
                 {
                     matchingOperation = null;
                     return false;
@@ -218,6 +221,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (foundActionsWhenLookingForFunctions.Count > 0)
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+            }
+
+            // If more than one overload matches, try to select based on optional parameters
+            if (candidateMatchingOperations.Count > 1)
+            {
+                candidateMatchingOperations = candidateMatchingOperations.FindBestOverloadBasedOnParameters(parameterNames).ToList();
             }
 
             if (candidateMatchingOperations.Count > 1)

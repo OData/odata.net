@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     /// <summary>

@@ -8,7 +8,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataUtilsInternalTests
     {
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core.Tests
             settings.SelectedProperties.Should().BeSameAs(SelectedPropertiesNode.EntireSubtree);
         }
 
-        [Fact(Skip = "TODO: Update SelectedPropertiesNode class to adapt to V4, fix EntireSubtree logic for V4")]
+        [Fact]
         public void SelectedPropertiesShouldReturnEntireSubTreeWhenSelectExpandClauseIsNull()
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();

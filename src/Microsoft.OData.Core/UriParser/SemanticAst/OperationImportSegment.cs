@@ -4,19 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
-    using System;
-    using System.Collections;
+
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -58,7 +55,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="operationImport">A single operation import that this segment will represent.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input operation is null.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public OperationImportSegment(IEdmOperationImport operationImport, IEdmEntitySetBase entitySet)
             : this()
         {
@@ -68,6 +64,32 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             this.entitySet = entitySet;
             this.computedReturnEdmType = operationImport.Operation.ReturnType != null ? operationImport.Operation.ReturnType.Definition : null;
             this.EnsureTypeAndSetAreCompatable();
+
+            if (this.computedReturnEdmType != null)
+            {
+                this.TargetEdmNavigationSource = entitySet;
+                this.TargetEdmType = computedReturnEdmType;
+                this.TargetKind = this.TargetEdmType.GetTargetKindFromType();
+                this.SingleResult = computedReturnEdmType.TypeKind != EdmTypeKind.Collection;
+            }
+            else
+            {
+                this.TargetEdmNavigationSource = null;
+                this.TargetEdmType = null;
+                this.TargetKind = RequestTargetKind.VoidOperation;
+            }
+        }
+
+        /// <summary>
+        /// Build a segment representing a call to an operation - action, function, or service operation.
+        /// </summary>
+        /// <param name="operationImport">A single operation import that this segment will represent.</param>
+        /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
+        /// <param name="parameters">The list of parameters supplied to this segment.</param>
+        public OperationImportSegment(IEdmOperationImport operationImport, IEdmEntitySetBase entitySet, IEnumerable<OperationSegmentParameter> parameters)
+            : this(operationImport, entitySet)
+        {
+            this.parameters = new ReadOnlyCollection<OperationSegmentParameter>(parameters == null ? new List<OperationSegmentParameter>() : parameters.ToList());
         }
 
         /// <summary>
@@ -76,7 +98,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="operationImports">The list of possible FunctionImport overloads for this segment.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input operations is null.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public OperationImportSegment(IEnumerable<IEdmOperationImport> operationImports, IEdmEntitySetBase entitySet)
             : this()
         {
@@ -117,7 +138,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="operationImports">The list of possible FunctionImport overloads for this segment.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
-        /// <param name="parameters">The list of parameters supplied to this segment.</param>        
+        /// <param name="parameters">The list of parameters supplied to this segment.</param>
         public OperationImportSegment(IEnumerable<IEdmOperationImport> operationImports, IEdmEntitySetBase entitySet, IEnumerable<OperationSegmentParameter> parameters)
             : this(operationImports, entitySet)
         {
@@ -150,7 +171,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the <see cref="IEdmType"/> of this <see cref="OperationSegment"/>. 
+        /// Gets the <see cref="IEdmType"/> of this <see cref="OperationSegment"/>.
         /// </summary>
         /// <remarks>
         /// This value will be null for void service operations.
@@ -222,7 +243,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Ensures that the entity set and computed return type make sense.
         /// </summary>
         /// <exception cref="ODataException">Throws if the return type computed from the function call is null, or if the return type is not in the same hierarchy as the entity set provided.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         private void EnsureTypeAndSetAreCompatable()
         {
             // The return type should be in the type hierarchy of the set, We could be a little tighter but we don't want

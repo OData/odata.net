@@ -8,10 +8,9 @@ namespace AstoriaUnitTests.Tests.TDD.Client
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Core.Tests;
     using System.Linq;
     using FluentAssertions;
+    using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -23,9 +22,9 @@ namespace AstoriaUnitTests.Tests.TDD.Client
         public void Initialize()
         {
             this.contextWithKeyAsSegment = new DataServiceContext(new Uri("http://myservice/", UriKind.Absolute), ODataProtocolVersion.V4)
-                                           {
-                                               UrlConventions = DataServiceUrlConventions.KeyAsSegment,
-                                           };
+            {
+                UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash
+            };
         }
 
         [TestMethod]
@@ -98,13 +97,6 @@ namespace AstoriaUnitTests.Tests.TDD.Client
             var descriptor = this.contextWithKeyAsSegment.Entities.Single();
             descriptor.Identity.Should().Be("http://myservice/Things/0");
             descriptor.EditLink.Should().Be("http://myservice/Things/0");
-        }
-
-        [TestMethod]
-        public void ClientShouldAddHeadersForUrlConvention()
-        {
-            var args = this.contextWithKeyAsSegment.CreateRequestArgsAndFireBuildingRequest("GET", new Uri("http://temp.org"), null, HttpStack.Auto, null);
-            args.Headers[UrlConventionsConstants.UrlConventionHeaderName].Should().Be("KeyAsSegment");
         }
     }
 

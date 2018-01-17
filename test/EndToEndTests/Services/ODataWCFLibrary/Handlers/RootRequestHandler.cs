@@ -9,7 +9,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System;
     using System.IO;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
+    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     public class RootRequestHandler : RequestHandler
@@ -39,6 +40,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         public override Stream Process(Stream requestStream)
         {
+            ServiceScopeWrapper serviceScope = this.RootContainer.CreateServiceScope();
+            this.RequestContainer = serviceScope.ServiceProvider;
+
             try
             {
                 RequestHandler handler = this.DispatchHandler();
@@ -53,6 +57,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             {
                 ErrorHandler handler = new ErrorHandler(this, e);
                 return handler.Process(null);
+            }
+            finally
+            {
+                serviceScope.Dispose();
             }
         }
 

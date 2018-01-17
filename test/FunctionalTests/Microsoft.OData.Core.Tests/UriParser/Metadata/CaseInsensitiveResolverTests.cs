@@ -8,15 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     /// <summary>
     /// Unit tests for CaseInsensitiveODataUriResolver
@@ -33,7 +30,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People/TesTNS.PERsON",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmEntityTypeReference(PersonType, false))),
-                Strings.RequestUriProcessor_CannotQueryCollections("People"));
+                Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -63,7 +60,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People/NS.WHY",
                 parser => parser.ParsePath(),
-                Strings.RequestUriProcessor_CannotQueryCollections("People"));
+                Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -76,8 +73,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new ODataPathSegment[]
                 {
-                    new TypeSegment(PersonType, PeopleSet), 
-                    new PropertySegment(PersonNameProp), 
+                    new TypeSegment(PersonType, PeopleSet),
+                    new PropertySegment(PersonNameProp),
                 })),
                Strings.ExpandItemBinder_CannotFindType("TesTNS.PERsON"));
         }
@@ -93,7 +90,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                     new ODataPathSegment[]
                 {
                     new PropertySegment(AddrProperty),
-                    new TypeSegment(AddrType, null), 
+                    new TypeSegment(AddrType, null),
                 })),
                Strings.SelectBinder_MultiLevelPathInSelect);
         }
@@ -107,8 +104,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                       new ODataPathSegment[]
                 {
-                    new TypeSegment(StarPencil, PencilSet), 
-                    new PropertySegment(PencilId), 
+                    new TypeSegment(StarPencil, PencilSet),
+                    new PropertySegment(PencilId),
                 })),
                 "More than one types match the name 'TestNS.StarPencil' were found in model.");
         }
@@ -144,20 +141,20 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                Strings.CastBinder_ChildTypeIsNotEntity("TestNS.AddrESS"));
         }
 
-        [Fact(Skip = "TODO: Do not support built-in type name case insensitive. EnumValue's type name case insensitve also not supported.")]
-        public void CaseInsensitiveTypeCastInQueryOptionOrderBy2()
-        {
-            var uriParser = new ODataUriParser(
-                Model,
-                ServiceRoot,
-                new Uri("http://host/People?$orderby=cast(null, Edm.StRing)"))
-            {
-                Resolver = new ODataUriResolver() { EnableCaseInsensitive = true }
-            };
-
-            var clause = uriParser.ParseOrderBy();
-            clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("cast", EdmCoreModel.Instance.GetString(false));
-        }
+        //[Fact(Skip = "#582: Do not support built-in type name case insensitive. EnumValue's type name case insensitve also not supported.")]
+        //public void CaseInsensitiveTypeCastInQueryOptionOrderBy2()
+        //{
+        //    var uriParser = new ODataUriParser(
+        //        Model,
+        //        ServiceRoot,
+        //        new Uri("http://host/People?$orderby=cast(null, Edm.StRing)"))
+        //    {
+        //        Resolver = new ODataUriResolver() { EnableCaseInsensitive = true }
+        //    };
+        //
+        //    var clause = uriParser.ParseOrderBy();
+        //    clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("cast", EdmCoreModel.Instance.GetString(false));
+        //}
 
         [Fact]
         public void CaseInsensitiveTypeCastTypeNameConflictsInOrderby()
@@ -321,8 +318,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new ODataPathSegment[]
                     {
-                        new PropertySegment(AddrProperty), 
-                        new PropertySegment(ZipCodeProperty), 
+                        new PropertySegment(AddrProperty),
+                        new PropertySegment(ZipCodeProperty),
                     })),
                 Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "ADDR"));
         }

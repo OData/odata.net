@@ -10,10 +10,7 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 
     public static class ExpressionValidationTestModelBuilder
@@ -481,7 +478,7 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(friendInfo);
 
             var valueAnnotationCast = new EdmCastExpression(new EdmCollectionExpression(new EdmStringConstant("foo"), new EdmStringConstant("bar")), new EdmComplexTypeReference(address, true));
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 friendInfo,
                 friendInfo,
                 valueAnnotationCast);
@@ -538,7 +535,7 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(friendInfo);
 
             var valueAnnotationCast = new EdmCastExpression(new EdmCollectionExpression(new EdmStringConstant("foo"), new EdmStringConstant("bar")), new EdmComplexTypeReference(friend, true));
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 friendInfo,
                 friendInfo,
                 valueAnnotationCast);
@@ -594,7 +591,7 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(friendInfo);
 
             var valueAnnotationCast = new EdmCastExpression(new EdmCollectionExpression(new EdmStringConstant("foo"), new EdmStringConstant("bar")), new EdmComplexTypeReference(friend, true));
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 friendInfo,
                 friendInfo,
                 valueAnnotationCast);
@@ -659,7 +656,7 @@ namespace EdmLibTests.FunctionalUtilities
             var friendTerm = new EdmTerm("NS", "FriendTerm", new EdmEntityTypeReference(friend, true));
             model.AddElement(friendTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 friend,
                 friendTerm,
                 new EdmRecordExpression(
@@ -732,7 +729,7 @@ namespace EdmLibTests.FunctionalUtilities
             var friendTerm = new EdmTerm("NS", "FriendTerm", new EdmEntityTypeReference(friend, true));
             model.AddElement(friendTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 friend,
                 friendTerm,
                 new EdmRecordExpression(
@@ -768,7 +765,7 @@ namespace EdmLibTests.FunctionalUtilities
             var friendName = new EdmTerm("NS", "FriendName", EdmCoreModel.Instance.GetString(true));
             model.AddElement(friendName);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 friendName,
                 friendName,
                 new EdmIsTypeExpression(new EdmStringConstant("foo"), EdmCoreModel.Instance.GetString(true)));
@@ -817,7 +814,7 @@ namespace EdmLibTests.FunctionalUtilities
             var carTerm = new EdmTerm("NS", "CarTerm", new EdmComplexTypeReference(car, true));
             model.AddElement(carTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 car,
                 carTerm,
                 new EdmRecordExpression(
@@ -851,7 +848,7 @@ namespace EdmLibTests.FunctionalUtilities
             var booleanFlag = new EdmTerm("NS", "BooleanFlag", EdmCoreModel.Instance.GetBoolean(true));
             model.AddElement(booleanFlag);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 booleanFlag,
                 booleanFlag,
                 new EdmIsTypeExpression(new EdmIntegerConstant(32), EdmCoreModel.Instance.GetString(true)));
@@ -1158,7 +1155,7 @@ namespace EdmLibTests.FunctionalUtilities
             var booleanFlagTerm = new EdmTerm("NS", "BooleanFlagTerm", new EdmComplexTypeReference(booleanFlag, true));
             model.AddElement(booleanFlagTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 booleanFlag,
                 booleanFlagTerm,
                 new EdmRecordExpression(

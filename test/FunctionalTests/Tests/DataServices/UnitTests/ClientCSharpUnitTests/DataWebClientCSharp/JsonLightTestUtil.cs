@@ -39,12 +39,12 @@ namespace AstoriaUnitTests.Tests
         private static IEdmModel ResolveModelFromMetadataUri(DataServiceContext context)
         {
             var metadataUri = context.GetMetadataUri().AbsoluteUri;
-            return EdmxReader.Parse(XmlReader.Create(metadataUri));
+            return CsdlReader.Parse(XmlReader.Create(metadataUri));
         }
 
         private static IEdmModel ResolveModelFromString(string edmxToParse)
         {
-            return EdmxReader.Parse(XmlReader.Create(new StringReader(edmxToParse)));
+            return CsdlReader.Parse(XmlReader.Create(new StringReader(edmxToParse)));
         }
     }
 }

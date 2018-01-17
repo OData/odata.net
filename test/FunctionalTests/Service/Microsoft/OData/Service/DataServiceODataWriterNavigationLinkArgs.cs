@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DataServiceODataWriterNavigationLinkArgs.cs" company="Microsoft">
+// <copyright file="DataServiceODataWriterNestedResourceInfoArgs.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -7,22 +7,22 @@
 namespace Microsoft.OData.Service
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
-    /// Class that keeps track of the ODataNavigationLink and other information
+    /// Class that keeps track of the ODataNestedResourceInfo and other information
     /// that we need to provide to the service author when they choose to provide their own
     /// instance of ODataWriter.
     /// </summary>
-    public sealed class DataServiceODataWriterNavigationLinkArgs
+    public sealed class DataServiceODataWriterNestedResourceInfoArgs
     {
         /// <summary>
-        /// Creates a new instance of DataServiceODataWriterNavigationLinkArgs.
+        /// Creates a new instance of DataServiceODataWriterNestedResourceInfoArgs.
         /// </summary>
-        /// <param name="navigationLink">Instance of ODataNavigationLink.</param>
+        /// <param name="navigationLink">Instance of ODataNestedResourceInfo.</param>
         /// <param name="operationContext">Instance of DataServiceOperationContext.</param>
-        public DataServiceODataWriterNavigationLinkArgs(
-            ODataNavigationLink navigationLink,
+        public DataServiceODataWriterNestedResourceInfoArgs(
+            ODataNestedResourceInfo navigationLink,
             DataServiceOperationContext operationContext)
         {
             WebUtil.CheckArgumentNull(navigationLink, "navigationLink != null");
@@ -32,9 +32,9 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Gets the ODataNavigationLink instance that is going to be serialized.
+        /// Gets the ODataNestedResourceInfo instance that is going to be serialized.
         /// </summary>
-        public ODataNavigationLink NavigationLink
+        public ODataNestedResourceInfo NavigationLink
         {
             get;
             private set;

@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Traverse a NonSystemToken. 
+        /// Traverse a NonSystemToken.
         /// </summary>
         /// <param name="tokenIn">The NonSystemToken to traverse.</param>
         public void Visit(NonSystemToken tokenIn)

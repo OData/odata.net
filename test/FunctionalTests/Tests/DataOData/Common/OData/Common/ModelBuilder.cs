@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Diagnostics;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -22,7 +22,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.Test.Taupo.OData.Atom;
     using contractsOData = Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -510,7 +509,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             ODataPayloadKind payloadKind = payloadElement.GetPayloadKindFromPayloadElement();
             ExceptionUtilities.Assert(
-                payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed,
+                payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet,
                 "Can only determine entity type for entry or feed payloads.");
 
             EntityModelTypeAnnotation typeAnnotation = payloadElement.GetAnnotation<EntityModelTypeAnnotation>();
@@ -522,7 +521,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
 
             string entityTypeName;
-            if (payloadKind == ODataPayloadKind.Entry)
+            if (payloadKind == ODataPayloadKind.Resource)
             {
                 EntityInstance entity = payloadElement as EntityInstance;
                 Debug.Assert(entity != null, "entity != null");

@@ -4,9 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -95,6 +94,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         public override IEdmNavigationSource Translate(PropertySegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+
+            if (segment.EdmType.AsElementType() is IEdmComplexType)
+            {
+                return segment.TargetEdmNavigationSource;
+            }
+
             return null;
         }
 
@@ -139,7 +144,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="segment">The OpenPropertySegment to look in.</param>
         /// <returns>null, since an OpenProperty doesn't have an navigation source</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
-        public override IEdmNavigationSource Translate(OpenPropertySegment segment)
+        public override IEdmNavigationSource Translate(DynamicPathSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return null;

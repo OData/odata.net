@@ -6,14 +6,12 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     public class LiteralBinderTests
     {

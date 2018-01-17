@@ -80,14 +80,14 @@ namespace Microsoft.Test.OData.Framework.Client
             get { return this.wrappedInstance.Format; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the DataServiceContext.IgnoreMissingProperties property is set.
-        /// </summary>
-        public bool IgnoreMissingProperties
-        {
-            get { return this.wrappedInstance.IgnoreMissingProperties; }
-            set { this.wrappedInstance.IgnoreMissingProperties = value; }
-        }
+        ///// <summary>
+        ///// Gets or sets a value indicating whether the DataServiceContext.IgnoreMissingProperties property is set.
+        ///// </summary>
+        //public UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        //{
+        //    get { return this.wrappedInstance.UndeclaredPropertyBehavior; }
+        //    set { this.wrappedInstance.UndeclaredPropertyBehavior = value; }
+        //}
 
         /// <summary>
         /// Gets or sets a value indicating whether the DataServiceContext.IgnoreResourceNotFoundException property is set.
@@ -126,12 +126,12 @@ namespace Microsoft.Test.OData.Framework.Client
         }
 
         /// <summary>
-        /// Gets or sets the DataServiceContext.UrlConventions property.
+        /// Gets or sets the DataServiceContext.UrlKeyDelimiter property.
         /// </summary>
-        public DataServiceUrlConventions UrlConventions
+        public DataServiceUrlKeyDelimiter UrlKeyDelimiter
         {
-            get { return this.wrappedInstance.UrlConventions; }
-            set { this.wrappedInstance.UrlConventions = value; }
+            get { return this.wrappedInstance.UrlKeyDelimiter; }
+            set { this.wrappedInstance.UrlKeyDelimiter = value; }
         }
 
         /// <summary>
@@ -432,7 +432,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>batch response from which query results can be enumerated.</returns>
         public DataServiceResponse ExecuteBatch(DataServiceRequest[] param)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.ExecuteBatch(param);
@@ -508,7 +508,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>An instance of <see cref="DataServiceStreamResponse"/> which represents the response.</returns>
         public DataServiceStreamResponse GetReadStream(object entity)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.GetReadStream(entity);
@@ -526,7 +526,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>An instance of <see cref="DataServiceStreamResponse"/> which represents the response.</returns>
         public DataServiceStreamResponse GetReadStream(object entity, string name, DataServiceRequestArgs args)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.GetReadStream(entity, name, args);
@@ -551,7 +551,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>response from the request which can be enumerated or downcast to OperationResponse."/></returns>
         public IEnumerable<TElement> Execute<TElement>(Uri requestUri)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.Execute<TElement>(requestUri);
@@ -566,7 +566,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>The response for the specified <paramref name="continuation"/>.</returns>
         public QueryOperationResponse<TElement> Execute<TElement>(DataServiceQueryContinuation<TElement> continuation) 
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.Execute(continuation);
@@ -582,7 +582,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>A QueryOperationResponse with nothing to enumerate but holds other response information.</returns>
         public OperationResponse Execute(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.Execute(requestUri, httpMethod, operationParameters);
@@ -600,7 +600,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>A IEnumerable holiding response information.</returns>
         public IEnumerable<TElement> Execute<TElement>(Uri requestUri, string httpMethod, bool singleResult, params OperationParameter[] operationParameters)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.Execute<TElement>(requestUri, httpMethod, singleResult, operationParameters);
@@ -617,7 +617,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>A IEnumerable holiding response information.</returns>
         public IEnumerable<TElement> Execute<TElement>(Uri requestUri, string httpMethod, params OperationParameter[] operationParameters)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.Execute<TElement>(requestUri, httpMethod, operationParameters);
@@ -632,7 +632,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>QueryOperationResponse instance containing information about the response.</returns>
         public QueryOperationResponse LoadProperty(object entity, string propertyName)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.LoadProperty(entity, propertyName);
@@ -648,7 +648,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>QueryOperationResponse instance containing information about the response.</returns>
         public QueryOperationResponse LoadProperty(object entity, string propertyName, DataServiceQueryContinuation continuation)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.LoadProperty(entity, propertyName, continuation);
@@ -665,7 +665,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>QueryOperationResponse instance containing information about the response.</returns>
         public QueryOperationResponse<T> LoadProperty<T>(object entity, string propertyName, DataServiceQueryContinuation<T> continuation)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.LoadProperty(entity, propertyName, continuation);
@@ -678,7 +678,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>changeset response</returns>
         public DataServiceResponse SaveChanges()
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.SaveChanges();
@@ -692,7 +692,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>changeset response</returns>
         public DataServiceResponse SaveChanges(SaveChangesOptions options)
         {
-#if SILVERLIGHT || PORTABLELIB
+#if SILVERLIGHT || PORTABLELIB || (NETCOREAPP1_0 || NETCOREAPP2_0)
             throw new NotImplementedException();
 #else
             return this.wrappedInstance.SaveChanges(options);

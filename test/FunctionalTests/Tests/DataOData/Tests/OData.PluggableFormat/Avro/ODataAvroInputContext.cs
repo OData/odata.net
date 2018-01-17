@@ -9,29 +9,22 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System;
     using System.IO;
-    using System.Text;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Container;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     internal class ODataAvroInputContext : ODataInputContext
     {
         private Stream stream;
 
-        internal ODataAvroInputContext(
+        public ODataAvroInputContext(
             ODataFormat format,
-            Stream messageStream,
-            ODataMediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(format, messageInfo, messageReaderSettings)
         {
-            this.stream = messageStream;
+            this.stream = messageInfo.MessageStream;
 
             MemoryStream st = new MemoryStream();
             stream.CopyTo(st);
@@ -41,12 +34,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         public AvroReader AvroReader { get; private set; }
 
-        public override ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             return new ODataAvroReader(this, false);
         }
 
-        public override ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             return new ODataAvroReader(this, true);
         }

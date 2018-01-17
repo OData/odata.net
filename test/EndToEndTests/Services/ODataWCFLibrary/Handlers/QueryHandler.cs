@@ -11,8 +11,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.Collections.Generic;
     using System.Net;
     using System.Web;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -170,12 +170,13 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         throw new InvalidOperationException("Invalid target when query feed.");
                     }
 
-                    ODataWriter resultWriter = messageWriter.CreateODataFeedWriter(entitySet, entityType);
+                    ODataWriter resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, entityType);
 
                     ResponseWriter.WriteFeed(resultWriter, entityType, iEnumerableResults, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, this.QueryContext.DeltaLink, this.QueryContext.NextLink, this.RequestHeaders);
                     resultWriter.Flush();
                 }
-                else if (this.QueryContext.Target.NavigationSource != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)
+                else if ((this.QueryContext.Target.NavigationSource != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)
+                || this.QueryContext.Target.TypeKind == EdmTypeKind.Complex || queryResults.GetType().BaseType == typeof(ClrObject))
                 {
                     var currentETag = Utility.GetETagValue(queryResults);
                     // if the current entity has ETag field
@@ -191,10 +192,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         responseMessage.SetHeader(ServiceConstants.HttpHeaders.ETag, currentETag);
                     }
 
-                    // Query a single entity
-                    IEdmEntityType entityType = this.QueryContext.Target.Type as IEdmEntityType;
+                    // Query a single resource
+                    IEdmStructuredType structuredType = this.QueryContext.Target.Type as IEdmStructuredType;
 
-                    ODataWriter resultWriter = messageWriter.CreateODataEntryWriter(navigationSource, entityType);
+                    ODataWriter resultWriter = messageWriter.CreateODataResourceWriter(navigationSource, structuredType);
                     ResponseWriter.WriteEntry(resultWriter, queryResults, navigationSource, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.RequestHeaders);
                     resultWriter.Flush();
                 }

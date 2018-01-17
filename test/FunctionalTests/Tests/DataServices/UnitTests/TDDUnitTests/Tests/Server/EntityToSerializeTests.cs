@@ -8,7 +8,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Service;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;
     using FluentAssertions;
@@ -46,7 +46,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
             Uri serviceUri = new Uri("http://dummy");
 
-            KeySerializer keySerializer = KeySerializer.Create(UrlConvention.CreateWithExplicitValue(false));
+            KeySerializer keySerializer = KeySerializer.Create(false);
 
             Func<ResourceProperty, object> getPropertyValue = p => "fakePropertyValue";
             return EntityToSerialize.Create(new MyType { ID = 42 }, baseType, "MySet", shouldIncludeTypeSegment, getPropertyValue, keySerializer, serviceUri);

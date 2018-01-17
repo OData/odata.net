@@ -8,17 +8,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for producing and dealing with writer exceptions.
     /// </summary>
-    [TestClass, TestCase]
+    // [TestClass, TestCase]
     public class WriterExceptionTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org");
@@ -27,12 +28,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // use private reflection not available on Silverlight and Phone. Private reflection is used in ODataWriterCoreInspector IsInState() method.
 #if !SILVERLIGHT && !WINDOWS_PHONE
 
-        [Ignore]
         [TestMethod, Variation(Description = "Test that a writer behaves as expected in the presence of (non-fatal) OData exceptions.")]
         public void DisposeAfterExceptionTest()
         {
             // create a default entry and then set both read and edit links to null to provoke an exception during writing
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
             this.Assert.IsNull(entry.EditLink, "entry.EditLink == null");
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -98,10 +98,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that a writer behaves as expected in the presence of fatal exceptions.")]
         public void FatalExceptionTest()
         {
-            ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
 
             this.CombinatorialEngineProvider.RunCombinations(
                 new ODataItem[] { entry },
@@ -150,16 +151,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [Ignore]
         [TestMethod, Variation(Description = "Test that a writer throws when writing non-error content after an exception has been thrown.")]
         public void WriteAfterExceptionTest()
         {
             // create a default entry and then set both read and edit links to null to provoke an exception during writing
-            ODataEntry faultyEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResource faultyEntry = ObjectModelUtils.CreateDefaultEntry();
             this.Assert.IsNull(faultyEntry.EditLink, "entry.EditLink == null");
 
-            ODataEntry defaultEntry = ObjectModelUtils.CreateDefaultEntry();
-            ODataFeed defaultFeed = ObjectModelUtils.CreateDefaultFeed();
+            ODataResource defaultEntry = ObjectModelUtils.CreateDefaultEntry();
+            ODataResourceSet defaultFeed = ObjectModelUtils.CreateDefaultFeed();
 
             this.CombinatorialEngineProvider.RunCombinations(
                 new ODataItem[] { faultyEntry },
@@ -197,6 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 #endif
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that a writer can successfully dispose itself when nothing was written out.")]
         public void DisposeAfterWritingNothingTest()
         {
@@ -216,6 +217,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that a writer fails when trying to be used after dispose.")]
         public void WriteAfterDisposeTest()
         {

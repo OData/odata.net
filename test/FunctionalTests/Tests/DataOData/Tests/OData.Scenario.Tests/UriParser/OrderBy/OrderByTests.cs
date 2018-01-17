@@ -8,9 +8,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.OrderBy
 {
     using System;
     using System.Runtime.CompilerServices;
-    using ApprovalTests;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -204,16 +203,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.OrderBy
                 durationInKeysBase,
                 "nOw() sub id sub mindatetime() SUB duration'PT130S'",
                 "now() sub Id sub mindatetime() sub duration'PT130S'");
-        }
-
-        private void TestAllInOneExtensionOrderBy(Uri baseUri, string orderby, string origOrderby)
-        {
-            this.TestExtension(
-                this.CreateOrderByUriParser(baseUri, orderby),
-                new AllInOneResolver() { EnableCaseInsensitive = true },
-                parser => parser.ParseOrderBy(),
-                clause => QueryNodeToStringVisitor.GetTestCaseAndResultString(clause, origOrderby),
-                this.ApprovalVerify);
         }
     }
 }

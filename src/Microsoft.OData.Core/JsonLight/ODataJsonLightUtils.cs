@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -107,15 +107,13 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="model">The model of the operations.</param>
         /// <param name="operation">The operation in question.</param>
         /// <returns>The metadata reference name for the given operation.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used for matching the name of the operation to something written by the server. So using the name is safe without resolving the type from the client.")]
         internal static string GetMetadataReferenceName(IEdmModel model, IEdmOperation operation)
         {
             Debug.Assert(operation != null, "operation != null");
 
             string metadataReferenceName = operation.FullName();
             bool hasOverload = model.FindDeclaredOperations(operation.FullName()).Take(2).Count() > 1;
-            
+
             if (hasOverload)
             {
                 if (operation is IEdmFunction)

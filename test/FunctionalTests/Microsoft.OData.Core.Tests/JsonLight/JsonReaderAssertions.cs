@@ -5,15 +5,15 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonReaderAssertions
     {
-        private JsonReader jsonReader;
+        private IJsonReader jsonReader;
 
-        internal JsonReaderAssertions(JsonReader jsonReader)
+        internal JsonReaderAssertions(IJsonReader jsonReader)
         {
             this.jsonReader = jsonReader;
         }

@@ -18,7 +18,7 @@ namespace AstoriaUnitTests.EFFK
 
     public static class PopulateData
     {
-#if VS2015
+#if USELOCALDB
         private static string ConnectionString = @"server=(LocalDB)\MSSQLLocalDB;integrated security=true;";
 #else
         private static string ConnectionString = @"server=.\sqlexpress;integrated security=true;";

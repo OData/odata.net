@@ -498,11 +498,6 @@ namespace Microsoft.Test.Taupo.EntityModel.Edm
 
             var memberProperty = new MemberProperty(name, dataType);
 
-            if (propertyElement.GetOptionalAttributeValue("ConcurrencyMode", "None") == "Fixed")
-            {
-                memberProperty.Annotations.Add(new ConcurrencyTokenAnnotation());
-            }
-
             this.ParseAnnotations(memberProperty, propertyElement);
             return memberProperty;
         }

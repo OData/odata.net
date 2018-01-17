@@ -12,15 +12,15 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Diagnostics;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     public static class ODataVersionUtils
     {
         /// <summary>
-        /// Alls supported versions
+        /// All supported versions
         /// </summary>
-        public readonly static IEnumerable<ODataVersion> AllSupportedVersions = new ODataVersion[] { ODataVersion.V4 };
+        public readonly static IEnumerable<ODataVersion> AllSupportedVersions = new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 };
 
         /// <summary>
         /// The default version to use for reading and writing OData payloads.
@@ -38,6 +38,8 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 case ODataVersion.V4:
                     return "4.0";
+                case ODataVersion.V401:
+                    return "4.01";
                 default:
                     string errorMessage = "Unsupported version '" + version.ToString() + "' found.";
                     Debug.Assert(false, errorMessage);
@@ -56,6 +58,8 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 case ODataVersion.V4:
                     return DataServiceProtocolVersion.V4;
+                case ODataVersion.V401:
+                    return DataServiceProtocolVersion.V4_01;
                 default:
                     string errorMessage = "Unsupported version '" + version.ToString() + "' found.";
                     Debug.Assert(false, errorMessage);
@@ -83,6 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             switch (odataVersion)
             {
                 case ODataVersion.V4: return new Version(4, 0);
+                case ODataVersion.V401: return new Version(4, 1);
                 default:
                     throw new InvalidOperationException("Unsupported OData version: " + odataVersion.ToString());
             }

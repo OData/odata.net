@@ -721,79 +721,6 @@ namespace AstoriaUnitTests.Tests
         }
 
         [TestMethod]
-        public void OpenTypeFilterTest()
-        {
-            string[] queries = new string[]
-            {
-                "/Values?$filter=sampleValue4 eq 'abc'",
-                "/Values?$filter=sampleValue2 eq 12345",
-
-                "/Values?$filter=sampleValue2 ne 12346",
-
-                "/Values?$filter=sampleValue2 lt 12346",
-                "/Values?$filter=sampleValue2 le 12346",
-                "/Values?$filter=sampleValue2 le 12345",
-
-                "/Values?$filter=sampleValue2 gt 12344",
-                "/Values?$filter=sampleValue2 ge 12344",
-                "/Values?$filter=sampleValue2 ge 12345",
-
-                "/Values?$filter=sampleValue2 add 1 eq 12346",
-                "/Values?$filter=sampleValue2 sub 1 eq 12344",
-                "/Values?$filter=sampleValue2 mul 2 eq 12345 mul 2",
-                "/Values?$filter=sampleValue2 div 2 eq 12345 div 2",
-                "/Values?$filter=sampleValue2 mod 2 eq 12345 mod 2",
-
-                // "/Values?$filter=sampleValue2 pow 2 eq 12345 pow 2", -- pow not part of the language?
-                
-                "/Values?$filter=isof(sampleValue2, 'Edm.Int32')",
-                "/Values?$filter=not(not sampleValue3)",
-                "/Values?$filter=-sampleValue2 lt 0",
-
-                "/Values?$filter=sampleValue3 and sampleValue3",
-                "/Values?$filter=sampleValue3 or not sampleValue3",
-                "/Values?$orderby=sampleValue1,ID asc&$skiptoken=2009-07-26T00:00:00-07:00,'100'", 
-            };
-
-            using (TestUtil.MetadataCacheCleaner())
-            using (OpenWebDataServiceHelper.PageSizeCustomizer.Restore())
-            using (TestWebRequest request = TestWebRequest.CreateForInProcess())
-            {
-                OpenWebDataServiceHelper.PageSizeCustomizer.Value = OpenTypeFilterPageCustomizer;
-                request.DataServiceType = typeof(OpenTypeContextWithReflection<OpenElement>);
-
-                using (StaticCallbackManager<PopulatingValuesEventArgs<OpenElement>>.RegisterStatic((sender, args) =>
-                {
-                    var o = new OpenElement();
-                    o.ID = "101";
-                    o.Properties.Add("sampleValue1", DateTime.UtcNow);
-                    o.Properties.Add("sampleValue2", 12345);
-                    o.Properties.Add("sampleValue3", true);
-                    o.Properties.Add("sampleValue4", "abc");
-                    args.Values.Add(o);
-                }))
-                {
-                    foreach (string query in queries)
-                    {
-                        try
-                        {
-                            Trace.WriteLine("Running " + query);
-                            request.RequestUriString = query;
-                            request.Accept = "application/atom+xml,application/xml";
-                            request.SendRequest();
-                            XmlDocument document = request.GetResponseStreamAsXmlDocument();
-                            TestUtil.AssertSelectSingleElement(document, "//atom:entry");
-                        }
-                        catch (Exception ex)
-                        {
-                            Assert.Fail("Unexpected exception: " + ex);
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod]
         public void ComplexResourceType_Open()
         {
             Microsoft.OData.Service.Providers.ResourceType rt = new Microsoft.OData.Service.Providers.ResourceType(
@@ -926,42 +853,9 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        public void OpenTypeFriendlyFeedsWithNulls()
-        {
-            using (TestWebRequest request = TestWebRequest.CreateForInProcess())
-            {
-                using (TestUtil.MetadataCacheCleaner())
-                using (OpenWebDataServiceHelper.EnableFriendlyFeeds.Restore())
-                using (StaticCallbackManager<PopulatingValuesEventArgs<OpenElement>>.RegisterStatic((sender, args) =>
-                {
-                    var o = new OpenElement();
-                    o.ID = "1";
-                    o.Properties["NullableEmail"] = null;
-                    args.Values.Add(o);
-
-                    o = new OpenElement();
-                    o.ID = "2";
-                    o.Properties["NullableEmail"] = "wbasheer@microsoft.com";
-                    args.Values.Add(o);
-                }))
-                {
-                    OpenWebDataServiceHelper.EnableFriendlyFeeds.Value = true;
-                    request.DataServiceType = typeof(OpenTypeContextWithReflection<OpenElement>);
-                    request.Accept = "application/atom+xml,application/xml";
-                    request.RequestMaxVersion = "4.0;";
-                    request.RequestUriString = "/Values";
-                    Exception exception = TestUtil.RunCatching(request.SendRequest);
-                    Assert.AreEqual(exception, null);
-                    XmlDocument doc = request.GetResponseStreamAsXmlDocument();
-                    string xpath = "//ads:NullableEmail[@adsm:null='true']";
-                    XmlNodeList nodes = doc.SelectNodes(xpath, TestUtil.TestNamespaceManager);
-                    Assert.AreEqual(1, nodes.Count);
-                }
-            }
-        }
-
-        [TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void OpenTypeGetOpenPropertyValuesWithNull()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -1017,77 +911,6 @@ namespace AstoriaUnitTests.Tests
         public class OpenChangeInterceptorServiceState
         {
             public static bool InterceptorFired { get; set; }
-        }
-
-        [TestMethod]
-        public void OpenTypeChangeInterceptors()
-        {
-            using (TestWebRequest request = TestWebRequest.CreateForInProcess())
-            {
-                using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenChangeInterceptorServiceState), "InterceptorFired"))
-                using (StaticCallbackManager<PopulatingValuesEventArgs<OpenElement>>.RegisterStatic((sender, args) =>
-                {
-                    var o = new OpenElement();
-                    o.ID = "1";
-                    o.Properties["Foo"] = 1;
-                    args.Values.Add(o);
-                }))
-                {
-                    request.DataServiceType = typeof(OpenChangeInterceptorService<OpenTypeContextWithReflection<OpenElement>>);
-                    request.HttpMethod = "DELETE";
-                    request.RequestUriString = "/Values('1')/Foo/$value";
-                    Exception exception = TestUtil.RunCatching(request.SendRequest);
-                    Assert.IsTrue(exception == null, "Exception must not fire.");
-                    Assert.IsTrue(OpenChangeInterceptorServiceState.InterceptorFired, "Interceptor must fire for deletes.");
-                    OpenChangeInterceptorServiceState.InterceptorFired = false;
-
-                    string atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
-                    "<entry xml:base=\"/\" " + TestUtil.CommonPayloadNamespaces + ">" +
-                        AtomUpdatePayloadBuilder.GetCategoryXml("AstoriaUnitTests.Stubs.TypeOfValues") +
-                        "<content type=\"applicatiOn/xmL\"><adsm:properties>" +
-                            "<ads:ID>2</ads:ID>" +
-                            "<ads:Foo>SomeValue</ads:Foo>" +
-                        "</adsm:properties></content>" +
-                    "</entry>";
-
-                    request.HttpMethod = "POST";
-                    request.RequestUriString = "/Values";
-                    request.RequestStream = new MemoryStream();
-                    request.RequestContentType = "application/atom+xml";
-                    StreamWriter writer = new StreamWriter(request.RequestStream);
-                    writer.Write(atomPayload);
-                    writer.Flush();
-
-                    exception = TestUtil.RunCatching(request.SendRequest);
-                    Assert.IsTrue(exception == null, "Exception must not fire.");
-                    Assert.IsTrue(OpenChangeInterceptorServiceState.InterceptorFired, "Interceptor must fire for deletes.");
-                    OpenChangeInterceptorServiceState.InterceptorFired = false;
-
-                    atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
-                    "<entry xml:base=\"/\" " + TestUtil.CommonPayloadNamespaces + ">" +
-                        AtomUpdatePayloadBuilder.GetCategoryXml("AstoriaUnitTests.Stubs.TypeOfValues") +
-                        "<content type=\"applicatiOn/xmL\"><adsm:properties>" +
-                            "<ads:Bar>SomeOtherValue</ads:Bar>" +
-                        "</adsm:properties></content>" +
-                    "</entry>";
-
-                    foreach (String s in new[] { "PUT", "PATCH" })
-                    {
-                        request.HttpMethod = s;
-                        request.RequestUriString = "/Values('1')";
-                        request.RequestStream = new MemoryStream();
-                        request.RequestContentType = "application/atom+xml";
-                        writer = new StreamWriter(request.RequestStream);
-                        writer.Write(atomPayload);
-                        writer.Flush();
-
-                        exception = TestUtil.RunCatching(request.SendRequest);
-                        Assert.IsTrue(exception == null, "Exception must not fire.");
-                        Assert.IsTrue(OpenChangeInterceptorServiceState.InterceptorFired, "Interceptor must fire for deletes.");
-                        OpenChangeInterceptorServiceState.InterceptorFired = false;
-                    }
-                }
-            }
         }
 
         [TestMethod]

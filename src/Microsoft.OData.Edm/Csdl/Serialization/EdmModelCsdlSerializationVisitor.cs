@@ -8,10 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -160,6 +157,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(element);
         }
 
+        protected override void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference element)
+        {
+            this.schemaWriter.WriteTypeDefinitionAttributes(element);
+        }
+
         protected override void ProcessBinaryTypeReference(IEdmBinaryTypeReference element)
         {
             this.schemaWriter.WriteBinaryTypeAttributes(element);
@@ -227,10 +229,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(element);
         }
 
-        protected override void ProcessValueTerm(IEdmValueTerm term)
+        protected override void ProcessTerm(IEdmTerm term)
         {
             bool inlineType = term.Type != null && IsInlineType(term.Type);
-            this.BeginElement(term, (IEdmValueTerm t) => { this.schemaWriter.WriteValueTermElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
+            this.BeginElement(term, (IEdmTerm t) => { this.schemaWriter.WriteTermElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
             if (!inlineType)
             {
                 if (term.Type != null)
@@ -264,7 +266,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 VisitTypeReference(element.Type);
             }
 
-            this.EndElement(element);
+            this.VisitPrimitiveElementAnnotations(this.Model.DirectValueAnnotations(element));
+            IEdmVocabularyAnnotatable vocabularyAnnotatableElement = element as IEdmVocabularyAnnotatable;
+            if (vocabularyAnnotatableElement != null)
+            {
+                this.VisitElementVocabularyAnnotations(this.Model.FindDeclaredVocabularyAnnotations(vocabularyAnnotatableElement).Where(a => a.IsInline(this.Model)));
+            }
+
+            this.schemaWriter.WriteOperationParameterEndElement(element);
         }
 
         protected override void ProcessCollectionType(IEdmCollectionType element)
@@ -296,10 +305,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         #region Vocabulary Annotations
 
-        protected override void ProcessAnnotation(IEdmValueAnnotation annotation)
+        protected override void ProcessAnnotation(IEdmVocabularyAnnotation annotation)
         {
             bool isInline = IsInlineExpression(annotation.Value);
-            this.BeginElement(annotation, t => this.schemaWriter.WriteValueAnnotationElementHeader(t, isInline));
+            this.BeginElement(annotation, t => this.schemaWriter.WriteVocabularyAnnotationElementHeader(t, isInline));
             if (!isInline)
             {
                 base.ProcessAnnotation(annotation);
@@ -355,17 +364,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(constructor);
         }
 
-        protected override void ProcessPropertyReferenceExpression(IEdmPropertyReferenceExpression expression)
-        {
-            this.BeginElement(expression, this.schemaWriter.WritePropertyReferenceExpressionElementHeader);
-            if (expression.Base != null)
-            {
-                this.VisitExpression(expression.Base);
-            }
-
-            this.EndElement(expression);
-        }
-
         protected override void ProcessPathExpression(IEdmPathExpression expression)
         {
             this.schemaWriter.WritePathExpressionElement(expression);
@@ -379,11 +377,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
         {
             this.schemaWriter.WriteNavigationPropertyPathExpressionElement(expression);
-        }
-
-        protected override void ProcessParameterReferenceExpression(IEdmParameterReferenceExpression expression)
-        {
-            this.schemaWriter.WriteParameterReferenceExpressionElement(expression);
         }
 
         protected override void ProcessCollectionExpression(IEdmCollectionExpression expression)
@@ -418,20 +411,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(expression);
         }
 
-        protected override void ProcessOperationReferenceExpression(IEdmOperationReferenceExpression expression)
+        protected override void ProcessFunctionApplicationExpression(IEdmApplyExpression expression)
         {
-            this.schemaWriter.WriteOperationReferenceExpressionElement(expression);
-        }
-
-        protected override void ProcessOperationApplicationExpression(IEdmApplyExpression expression)
-        {
-            bool isFunction = expression.AppliedOperation.ExpressionKind == EdmExpressionKind.OperationReference;
-            this.BeginElement(expression, e => this.schemaWriter.WriteFunctionApplicationElementHeader(e, isFunction));
-            if (!isFunction)
-            {
-                this.VisitExpression(expression.AppliedOperation);
-            }
-
+            this.BeginElement(expression, e => this.schemaWriter.WriteFunctionApplicationElementHeader(e));
             this.VisitExpressions(expression.Arguments);
             this.EndElement(expression);
         }
@@ -449,17 +431,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression)
         {
             this.schemaWriter.WriteEnumMemberExpressionElement(expression);
-        }
-
-        protected override void ProcessEnumMemberReferenceExpression(IEdmEnumMemberReferenceExpression expression)
-        {
-            // This will also write <EnumMember>enumValue</EnumMember> according to V4 spec
-            this.schemaWriter.WriteEnumMemberReferenceExpressionElement(expression);
-        }
-
-        protected override void ProcessEntitySetReferenceExpression(IEdmEntitySetReferenceExpression expression)
-        {
-            this.schemaWriter.WriteEntitySetReferenceExpressionElement(expression);
         }
 
         protected override void ProcessDecimalConstantExpression(IEdmDecimalConstantExpression expression)
@@ -554,18 +525,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             if (operationImport.EntitySet != null)
             {
-                var entitySetReference = operationImport.EntitySet as IEdmEntitySetReferenceExpression;
-                if (entitySetReference != null)
+                var pathExpression = operationImport.EntitySet as IEdmPathExpression;
+                if (pathExpression != null)
                 {
-                    return entitySetReference.ReferencedEntitySet.Name;
-                }
-                else
-                {
-                    var pathExpression = operationImport.EntitySet as IEdmPathExpression;
-                    if (pathExpression != null)
-                    {
-                        return EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path);
-                    }
+                    return EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments);
                 }
             }
 
@@ -715,18 +678,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             foreach (IEdmVocabularyAnnotation annotation in annotations)
             {
-                switch (annotation.Term.TermKind)
-                {
-                    case EdmTermKind.Type:
-                    case EdmTermKind.Value:
-                        this.ProcessAnnotation((IEdmValueAnnotation)annotation);
-                        break;
-                    case EdmTermKind.None:
-                        this.ProcessVocabularyAnnotation(annotation);
-                        break;
-                    default:
-                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TermKind(annotation.Term.TermKind));
-                }
+                this.ProcessAnnotation(annotation);
             }
         }
 

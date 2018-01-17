@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    using System;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
 

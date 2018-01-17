@@ -269,7 +269,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Home = new Address("Jiaotong", 16)
             };
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":16,\"Street\":\"Jiaotong\"},\"Name\":\"July\"}}");
+            ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"July\",\"Home\":{\"Code\":16,\"Street\":\"Jiaotong\"}}}");
         }
 
         [TestMethod]
@@ -291,7 +291,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             context.Entities.FirstOrDefault().State = EntityStates.Unchanged;
             entity.Complex.Name = "July";
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":200,\"Street\":\"Dongchuan\"},\"Name\":\"July\"}}");
+            ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"July\",\"Home\":{\"Code\":200,\"Street\":\"Dongchuan\"}}}");
         }
 
         [TestMethod]
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             context.Entities.FirstOrDefault().State = EntityStates.Unchanged;
             entity.Complex.Home.Code = 17;
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Dongchuan\"},\"Name\":\"June\"}}");
+            ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Dongchuan\"}}}");
         }
 
         [TestMethod]
@@ -336,7 +336,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.ID = 71;
             entity.Complex.Home.Code = 17;
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Dongchuan\"},\"Name\":\"June\"},\"ID\":71}");
+            ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Dongchuan\"}}}");
         }
 
         [TestMethod]
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.Complex.Home.Code = 17;
             entity.Name = "Aug";
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"},\"Name\":\"June\"},\"ID\":71,\"Name\":\"Aug\"}");
+            ValidateBodyContent(context, "{\"ID\":71,\"Name\":\"Aug\",\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}");
         }
 
         [TestMethod]
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.Complex.Home.Code = 17;
             entity.Home.City = "Guangzhou";
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"},\"Name\":\"June\"},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"},\"ID\":71}");
+            ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"}}");
         }
 
         [TestMethod]
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.Complex.Home.Code = 17;
             ((DerivedEntityType)entity).Home.City = "Guangzhou";
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"},\"Name\":\"June\"},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"},\"ID\":71}");
+            ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"}}");
         }
 
         [TestMethod]
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.Complex.Home.Code = 17;
             ((HomeAddress)entity.Complex.Home).City = "Guangzhou";
             Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xiadu\"},\"Name\":\"June\"},\"ID\":71}");
+            ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xiadu\"}}}");
         }
 
         [TestMethod]
@@ -474,7 +474,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Home = new Address("Jiaotong", 16)
             };
             Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":16,\"Street\":\"Jiaotong\"},\"Name\":\"July\"}}", SaveChangesOptions.PostOnlySetProperties);
+            ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"July\",\"Home\":{\"Code\":16,\"Street\":\"Jiaotong\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
         [TestMethod]
@@ -502,7 +502,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             };
             ((DerivedEntityType)entity).Home = new HomeAddress("Xingang", 17, "Guangzhou");
             Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"},\"Name\":\"June\"},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"},\"ID\":71}", SaveChangesOptions.PostOnlySetProperties);
+            ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
         [TestMethod]
@@ -517,7 +517,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Home = new Address("Xiadu", 17)
             };
             Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"},\"Name\":\"June\"},\"ID\":71}", SaveChangesOptions.PostOnlySetProperties);
+            ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
         [TestMethod]
@@ -531,9 +531,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Home = new Address("Xiadu", 17)
             };
             Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
-            ValidateBodyContent(context, "{\"Complex\":{\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"},\"Name\":\"June\"},\"ID\":71}", SaveChangesOptions.PostOnlySetProperties);
+            ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void OnlyPostExplicitPropertiesUsedWithoutDataServiceCollectionShouldThrow()
         {
@@ -542,6 +543,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             Action action = () => context.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
             action.ShouldThrow<InvalidOperationException>().WithMessage("'SaveChangesOptions.OnlyPostExplicitProperties' must be used with 'DataServiceCollection'.");
         }
+#endif
 
         [TestMethod]
         public void TrackedEntityPayLoadShouldKeepEmptyIfNoPropertyHasBeenSetOnPost()
@@ -566,7 +568,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         {
             EntityType entity = new EntityType() { ID = 1 };
             context.AddObject("EntitySet", entity);
-            ValidateBodyContent(context, "{\"Complex\":null,\"ID\":1,\"StringCollection@odata.type\":\"#Collection(String)\",\"StringCollection\":[]}");
+            ValidateBodyContent(context, "{\"ID\":1,\"StringCollection@odata.type\":\"#Collection(String)\",\"StringCollection\":[],\"Complex\":null}");
         }
 
         // [OData Client] Enable DataServiceCollection to handle entities which derives from a generic type in custom partial class

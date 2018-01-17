@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
@@ -60,6 +59,17 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.TypeKind() == EdmTypeKind.Complex;
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a Edm.Untyped type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a Edm.Untyped type.</returns>
+        public static bool IsUntyped(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.TypeKind() == EdmTypeKind.Untyped;
         }
 
         /// <summary>
@@ -160,7 +170,24 @@ namespace Microsoft.OData.Edm
         public static bool IsTemporal(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.PrimitiveKind().IsTemporal();
+            return type.Definition.IsTemporal();
+        }
+
+        /// <summary>
+        /// Returns true if this definition refers to a temporal type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a temporal type.</returns>
+        public static bool IsTemporal(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind.IsTemporal();
         }
 
         /// <summary>
@@ -222,7 +249,24 @@ namespace Microsoft.OData.Edm
         public static bool IsDecimal(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.PrimitiveKind() == EdmPrimitiveTypeKind.Decimal;
+            return type.Definition.IsDecimal();
+        }
+
+        /// <summary>
+        /// Returns true if this definition refers to a decimal type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a decimal type.</returns>
+        public static bool IsDecimal(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Decimal;
         }
 
         /// <summary>
@@ -412,7 +456,24 @@ namespace Microsoft.OData.Edm
         /// <returns>This reference refers to a string type.</returns>
         public static bool IsString(this IEdmTypeReference type)
         {
-            return type.PrimitiveKind() == EdmPrimitiveTypeKind.String;
+            return type.Definition.IsString();
+        }
+
+        /// <summary>
+        /// Returns true if this definition refers to a string type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a string type.</returns>
+        public static bool IsString(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.String;
         }
 
         /// <summary>
@@ -423,7 +484,24 @@ namespace Microsoft.OData.Edm
         public static bool IsStream(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.PrimitiveKind() == EdmPrimitiveTypeKind.Stream;
+            return type.Definition.IsStream();
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a stream type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a stream type.</returns>
+        public static bool IsStream(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream;
         }
 
         /// <summary>
@@ -434,7 +512,7 @@ namespace Microsoft.OData.Edm
         public static bool IsSpatial(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return IsSpatial(type.Definition);
+            return type.Definition.IsSpatial();
         }
 
         /// <summary>
@@ -485,6 +563,108 @@ namespace Microsoft.OData.Edm
             return false;
         }
 
+        /// <summary>
+        /// Returns true if this definition refers to a geography type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a geography type.</returns>
+        public static bool IsGeography(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind.IsGeography();
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a geography type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a geography type.</returns>
+        public static bool IsGeography(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.Definition.IsGeography();
+        }
+
+        /// <summary>
+        /// Returns true if this type kind represents a geography type.
+        /// </summary>
+        /// <param name="typeKind">Type reference.</param>
+        /// <returns>This kind refers to a geography type.</returns>
+        public static bool IsGeography(this EdmPrimitiveTypeKind typeKind)
+        {
+            switch (typeKind)
+            {
+            case EdmPrimitiveTypeKind.Geography:
+            case EdmPrimitiveTypeKind.GeographyPoint:
+            case EdmPrimitiveTypeKind.GeographyLineString:
+            case EdmPrimitiveTypeKind.GeographyPolygon:
+            case EdmPrimitiveTypeKind.GeographyCollection:
+            case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+            case EdmPrimitiveTypeKind.GeographyMultiLineString:
+            case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if this definition refers to a geometry type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a geometry type.</returns>
+        public static bool IsGeometry(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind.IsGeometry();
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a geometry type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a geometry type.</returns>
+        public static bool IsGeometry(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.Definition.IsGeometry();
+        }
+
+        /// <summary>
+        /// Returns true if this type kind represents a geometry type.
+        /// </summary>
+        /// <param name="typeKind">Type reference.</param>
+        /// <returns>This kind refers to a geometry type.</returns>
+        public static bool IsGeometry(this EdmPrimitiveTypeKind typeKind)
+        {
+            switch (typeKind)
+            {
+            case EdmPrimitiveTypeKind.Geometry:
+            case EdmPrimitiveTypeKind.GeometryPoint:
+            case EdmPrimitiveTypeKind.GeometryLineString:
+            case EdmPrimitiveTypeKind.GeometryPolygon:
+            case EdmPrimitiveTypeKind.GeometryCollection:
+            case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+            case EdmPrimitiveTypeKind.GeometryMultiLineString:
+            case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                return true;
+            }
+
+            return false;
+        }
+
         #endregion
 
         // The As*** functions never return null -- if the supplied type does not have the appropriate shape, an encoding of a bad type is returned.
@@ -497,10 +677,10 @@ namespace Microsoft.OData.Edm
         public static IEdmPrimitiveTypeReference AsPrimitive(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            IEdmPrimitiveTypeReference reference = type as IEdmPrimitiveTypeReference;
-            if (reference != null)
+            IEdmPrimitiveTypeReference primitiveReference = type as IEdmPrimitiveTypeReference;
+            if (primitiveReference != null)
             {
-                return reference;
+                return primitiveReference;
             }
 
             IEdmType typeDefinition = type.Definition;
@@ -557,7 +737,51 @@ namespace Microsoft.OData.Edm
             }
             else if (typeDefinition.TypeKind == EdmTypeKind.TypeDefinition)
             {
-                return new EdmPrimitiveTypeReference(typeDefinition.UnderlyingType(), type.IsNullable);
+                IEdmPrimitiveType underlyingType = typeDefinition.UnderlyingType();
+                IEdmTypeDefinitionReference reference = type as IEdmTypeDefinitionReference;
+                if (reference == null)
+                {
+                    // No facet available if not IEdmTypeDefinitionReference.
+                    return new EdmPrimitiveTypeReference(underlyingType, type.IsNullable);
+                }
+
+                switch (underlyingType.PrimitiveKind)
+                {
+                    case EdmPrimitiveTypeKind.Binary:
+                        return new EdmBinaryTypeReference(underlyingType, reference.IsNullable, reference.IsUnbounded, reference.MaxLength);
+
+                    case EdmPrimitiveTypeKind.Decimal:
+                        return new EdmDecimalTypeReference(underlyingType, reference.IsNullable, reference.Precision, reference.Scale);
+
+                    case EdmPrimitiveTypeKind.String:
+                        return new EdmStringTypeReference(underlyingType, reference.IsNullable, reference.IsUnbounded, reference.MaxLength, reference.IsUnicode);
+
+                    case EdmPrimitiveTypeKind.Duration:
+                    case EdmPrimitiveTypeKind.DateTimeOffset:
+                    case EdmPrimitiveTypeKind.TimeOfDay:
+                        return new EdmTemporalTypeReference(underlyingType, reference.IsNullable, reference.Precision);
+
+                    case EdmPrimitiveTypeKind.Geography:
+                    case EdmPrimitiveTypeKind.GeographyPoint:
+                    case EdmPrimitiveTypeKind.GeographyLineString:
+                    case EdmPrimitiveTypeKind.GeographyPolygon:
+                    case EdmPrimitiveTypeKind.GeographyCollection:
+                    case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                    case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                    case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                    case EdmPrimitiveTypeKind.Geometry:
+                    case EdmPrimitiveTypeKind.GeometryPoint:
+                    case EdmPrimitiveTypeKind.GeometryLineString:
+                    case EdmPrimitiveTypeKind.GeometryPolygon:
+                    case EdmPrimitiveTypeKind.GeometryCollection:
+                    case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                    case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                    case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                        return new EdmSpatialTypeReference(underlyingType, reference.IsNullable, reference.SpatialReferenceIdentifier);
+
+                   default:
+                        return new EdmPrimitiveTypeReference(underlyingType, reference.IsNullable);
+                }
             }
 
             string typeFullName = type.FullName();
@@ -901,7 +1125,11 @@ namespace Microsoft.OData.Edm
         /// <returns>The primitive kind of the definition of this reference.</returns>
         public static EdmPrimitiveTypeKind PrimitiveKind(this IEdmTypeReference type)
         {
-            EdmUtil.CheckArgumentNull(type, "type");
+            if (type == null)
+            {
+                return EdmPrimitiveTypeKind.None;
+            }
+
             IEdmType typeDefinition = type.Definition;
             if (typeDefinition.TypeKind != EdmTypeKind.Primitive)
             {
@@ -957,6 +1185,32 @@ namespace Microsoft.OData.Edm
             }
 
             return ((IEdmStructuredType)thisType).InheritsFrom((IEdmStructuredType)otherType);
+        }
+
+        /// <summary>
+        /// Determines whether thisType is the same as otherType, or thisType derives from otherType, or
+        /// otherType derives from thisType.
+        /// </summary>
+        /// <param name="thisType">This EDM type.</param>
+        /// <param name="otherType">The other EDM type.</param>
+        /// <returns>true if thisType and otherType are along the same line in the type hierarchy; false otherwise.</returns>
+        public static bool IsOnSameTypeHierarchyLineWith(this IEdmType thisType, IEdmType otherType)
+        {
+            return thisType.IsOrInheritsFrom(otherType) || otherType.IsOrInheritsFrom(thisType);
+        }
+
+        /// <summary>
+        /// Returns the actual type of the given type.
+        /// If the given type is type definition, the actual type is its underlying type;
+        /// otherwise, return the given type itself.
+        /// </summary>
+        /// <param name="type">The given type.</param>
+        /// <returns>The actual type of the given type.</returns>
+        public static IEdmType AsActualType(this IEdmType type)
+        {
+            IEdmPrimitiveType underlyingType = type.UnderlyingType();
+
+            return underlyingType ?? type;
         }
 
         internal static IEdmPrimitiveTypeReference GetPrimitiveTypeReference(this IEdmPrimitiveType type, bool isNullable)
@@ -1046,11 +1300,14 @@ namespace Microsoft.OData.Edm
             return ((IEdmTypeDefinition)type).UnderlyingType;
         }
 
-        internal static IEdmType AsActualType(this IEdmType type)
+        internal static IEdmPrimitiveType UnderlyingType(this IEdmTypeReference type)
         {
-            IEdmPrimitiveType underlyingType = type.UnderlyingType();
+            if (type == null)
+            {
+                return null;
+            }
 
-            return underlyingType ?? type;
+            return type.Definition.UnderlyingType();
         }
 
         internal static IEdmTypeReference AsActualTypeReference(this IEdmTypeReference type)
@@ -1061,6 +1318,19 @@ namespace Microsoft.OData.Edm
             }
 
             return type.AsPrimitive();
+        }
+
+        internal static bool CanSpecifyMaxLength(this IEdmPrimitiveType type)
+        {
+            switch (type.PrimitiveKind)
+            {
+                case EdmPrimitiveTypeKind.Binary:
+                case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.String:
+                    return true;
+            }
+
+            return false;
         }
 
         private static IEnumerable<EdmError> ConversionError(EdmLocation location, string typeName, string typeKindName)

@@ -6,18 +6,25 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Core.UriParser.Visitors;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class ODataPathSegmentTests
     {
         private class DummySegment : ODataPathSegment
         {
+            public DummySegment()
+            {
+            }
+
+            public DummySegment(DummySegment other)
+                : base(other)
+            {
+            }
+
             public override IEdmType EdmType
             {
                 get { throw new NotImplementedException(); }
@@ -37,6 +44,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             {
                 throw new NotImplementedException();
             }
+
+            internal bool Equals(DummySegment other)
+            {
+                return base.Equals(other);
+            }
         }
 
         [Fact]
@@ -45,6 +57,20 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             DummySegment segment = new DummySegment();
             segment.Identifier = "blah";
             segment.Identifier.Should().Be("blah");
+        }
+
+        [Fact]
+        public void CopyConstructorAndEquals()
+        {
+            DummySegment segment = new DummySegment();
+            segment.Identifier = "blah";
+
+            DummySegment segment2 = new DummySegment(segment);
+            segment2.Identifier.Should().Be("blah");
+            segment.Equals(segment).Should().BeTrue();
+
+            segment2.Identifier = "different";
+            segment.Equals(segment2).Should().BeFalse();
         }
 
         [Fact]

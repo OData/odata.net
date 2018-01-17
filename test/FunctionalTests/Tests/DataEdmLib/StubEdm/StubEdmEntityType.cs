@@ -4,13 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.StubEdm
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-
     /// <summary>
     /// Stub implementation of EdmEntityType
     /// </summary>
@@ -89,14 +90,6 @@ namespace EdmLibTests.StubEdm
         /// Gets or sets the namespace
         /// </summary>
         public string Namespace { get; set; }
-
-        /// <summary>
-        /// Gets the term kind.
-        /// </summary>
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
 
         /// <summary>
         /// Gets or sets the name

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
@@ -12,10 +12,8 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Parsers.Common;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
 
     #endregion Namespaces
 
@@ -258,7 +256,7 @@ namespace Microsoft.OData.Core.UriParser
             }
 
 
-            UriPathParser pathParser = new UriPathParser(maxDepth);
+            UriPathParser pathParser = new UriPathParser(new ODataUriParserSettings() { PathLimit = maxDepth });
             var path = pathParser.ParsePathIntoSegments(queryUri, serviceBaseUri);
 
             // COMPAT 32: Differencies in query options parsing in WCF DS
@@ -266,7 +264,7 @@ namespace Microsoft.OData.Core.UriParser
             // We allow non-system $ query options in the lexical space.
             // We allow multiple instances of a custom or non-system $ query option in the lexical space.
             // TODO: we need to decide whether we want to allow multiple system $ query options with the same name (OIPI suggests that this is valid); we currently don't.
-            List<CustomQueryOptionToken> queryOptions = UriUtils.ParseQueryOptions(queryUri);
+            List<CustomQueryOptionToken> queryOptions = QueryOptionUtils.ParseQueryOptions(queryUri);
             IDictionary<string, string> parameterAliases = queryOptions.GetParameterAliases();
 
             QueryToken filter = null;

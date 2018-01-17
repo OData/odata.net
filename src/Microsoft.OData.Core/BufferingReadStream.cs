@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Core
                 int bytesInCurrentBuffer = currentBytes.Length - this.positionInCurrentBuffer;
                 if (bytesInCurrentBuffer == count)
                 {
-                    // Copy all the remaining bytes of the current buffer to the user buffer 
+                    // Copy all the remaining bytes of the current buffer to the user buffer
                     // and move to the next buffer
                     Buffer.BlockCopy(currentBytes, this.positionInCurrentBuffer, userBuffer, offset, count);
                     bytesRead += count;
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Core
                 this.MoveToNextBuffer();
             }
 
-            // When we get here we either could not satisfy the requested number of bytes 
+            // When we get here we either could not satisfy the requested number of bytes
             // from the buffers or are in buffering mode.
             Debug.Assert(this.currentReadNode == null, "No current read node should exist if we are not working off the buffers.");
             int bytesReadFromInnerStream = this.innerStream.Read(userBuffer, offset, count);
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         private void MoveToNextBuffer()
         {
-            // Drop the consumed data if not in buffering mode and continue 
+            // Drop the consumed data if not in buffering mode and continue
             // reading from the buffer if more data is available; if in
             // buffering mode, don't drop any data just move to the next buffer.
             if (this.bufferingModeDisabled)

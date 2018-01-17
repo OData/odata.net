@@ -4,21 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Component for parsing function parameters in both $filter/$orderby expressions and in paths.
@@ -39,7 +30,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Tries to parse a collection of function parameters for path.
-        /// </summary>     
+        /// </summary>
         /// <param name="parenthesisExpression">The contents of the parentheses portion of the current path segment.</param>
         /// <param name="configuration">The ODataUriParserConfiguration to create a UriQueryExpressionParser.</param>
         /// <param name="splitParameters">The parameters if they were successfully split.</param>

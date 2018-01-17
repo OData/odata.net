@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client.Annotation
     using System.Reflection;
 
     /// <summary>
-    /// Used to compare key in DataServiceContext.InstanceAnnotations. 
+    /// Used to compare key in DataServiceContext.InstanceAnnotations.
     /// </summary>
     internal class InstanceAnnotationDictWeakKeyComparer : WeakKeyComparer<object>
     {
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Client.Annotation
         }
 
         /// <summary>
-        /// Gets the target of the input object if it is a <see cref="WeakKeyReference&lt;T&gt;"/>, 
+        /// Gets the target of the input object if it is a <see cref="WeakKeyReference&lt;T&gt;"/>,
         /// else a new Tuple&lt;object, MemberInfo&gt; if it is a Tuple&lt;WeakKeyReferece&lt;object&gt;, MemberInfo&gt;.
         /// </summary>
         /// <param name="obj">The input object from which to get the target.</param>

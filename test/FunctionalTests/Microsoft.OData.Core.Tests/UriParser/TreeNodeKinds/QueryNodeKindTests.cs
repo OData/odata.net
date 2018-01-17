@@ -6,10 +6,10 @@
 
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.TreeNodeKinds
+namespace Microsoft.OData.Tests.UriParser.TreeNodeKinds
 {
     public class QueryNodeKindTests
     {
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.TreeNodeKinds
             int i = 0;
             foreach (var queryNodeKind in queryNodeKindFields)
             {
-                internalQueryNodeKindFields[i].Name.Should().Be(queryNodeKind.Name);
+                internalQueryNodeKindFields.ElementAt(i).Name.Should().Be(queryNodeKind.Name);
                 i++;
             }
         }

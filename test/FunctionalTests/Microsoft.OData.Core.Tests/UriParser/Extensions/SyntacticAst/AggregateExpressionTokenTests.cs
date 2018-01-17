@@ -6,12 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
+namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
 {
     public class AggregateExpressionTokenTests
     {
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
         }
 
         [Fact]
-        public void WithVerbSetCorrectly()
+        public void WithMethodSetCorrectly()
         {
             var token = new AggregateExpressionToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
             token.Method.Should().Be(AggregationMethod.CountDistinct);

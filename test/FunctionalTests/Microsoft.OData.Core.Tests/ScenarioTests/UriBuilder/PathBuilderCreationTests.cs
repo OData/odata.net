@@ -6,15 +6,12 @@
 
 using System;
 using System.Linq;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Expressions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
+namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
     public class PathBuilderCreationTests : UriBuilderTestBase
     {
@@ -24,14 +21,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = new ODataUri();
             odataUri.ServiceRoot = new Uri("http://gobbledygook/");
             IEdmOperationImport functionImport = HardCodedTestModel.TestModel.EntityContainer.FindOperationImports("GetPet1").Single();
-            IEdmEntitySetReferenceExpression reference = functionImport.EntitySet as IEdmEntitySetReferenceExpression;
-            OperationSegmentParameter[] parameters = new OperationSegmentParameter[] { new OperationSegmentParameter("id", new ConstantNode(1, "1")) };
+            IEdmEntitySetBase entitySet;
+            Assert.True(functionImport.TryGetStaticEntitySet(HardCodedTestModel.TestModel, out entitySet));
+            OperationSegmentParameter[] parameters = { new OperationSegmentParameter("id", new ConstantNode(1, "1")) };
             odataUri.Path = new ODataPath(new OperationImportSegment(
-                new IEdmOperationImport[] { functionImport },
-                reference.ReferencedEntitySet,
+                new [] { functionImport },
+                entitySet,
                 parameters));
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actual = odataUriBuilder.BuildUri();
+            Uri actual = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/GetPet1(id=1)"), actual);
         }
     }

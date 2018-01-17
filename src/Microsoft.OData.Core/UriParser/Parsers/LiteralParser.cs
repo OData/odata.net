@@ -4,18 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Text;
-    using System.Xml;
-    using Edm.Library;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
-    using Microsoft.Spatial;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using System.Xml;
+using Microsoft.OData.Edm;
+using Microsoft.Spatial;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>Use this class to parse literals from keys, etags, skiptokens, and filter/orderby expression constants.</summary>
     internal abstract class LiteralParser
     {
@@ -128,7 +127,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         return true;
                     }
 
-                    // we allow arbitary values to be encoded as a base 64 array, so we may have 
+                    // we allow arbitary values to be encoded as a base 64 array, so we may have
                     // found a binary value in place of another type. If so, convert it to a UTF-8
                     // string and interpret it normally.
                     string keyValue = Encoding.UTF8.GetString(byteArrayValue, 0, byteArrayValue.Length);
@@ -347,7 +346,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             /// <summary>
-            /// Determines whether the values for the specified types should be 
+            /// Determines whether the values for the specified types should be
             /// quoted in URI keys.
             /// </summary>
             /// <param name='type'>Type to check.</param>

@@ -8,7 +8,6 @@ namespace AstoriaUnitTests.Tests.Server
 {
     using System;
     using Microsoft.Spatial;
-    using Microsoft.Data.Spatial;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FluentAssertions;
 

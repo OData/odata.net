@@ -7,16 +7,11 @@
 namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriBuilder;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -24,7 +19,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
     {
         private readonly Uri serviceRoot = new Uri("http://www.example.com/");
         private readonly ODataUriParserSettings settings = new ODataUriParserSettings();
-     
+
         private EdmModel GetModel()
         {
             EdmModel model = new EdmModel();
@@ -32,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             edmEntityType.AddKeys(edmEntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
             edmEntityType.AddStructuralProperty("Color", EdmPrimitiveTypeKind.String);
             edmEntityType.AddStructuralProperty("FA", EdmPrimitiveTypeKind.String);
-            edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDog", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType }); 
+            edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDog", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType });
             edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyCat", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType });
             model.AddElement(edmEntityType);
             EdmEntityContainer container = new EdmEntityContainer("NS", "EntityContainer");
@@ -47,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
         {
             Uri fullUri = new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
             ODataUriParser odataUriParser = new ODataUriParser(this.GetModel(), serviceRoot, fullUri);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
             ODataUri odataUri = odataUriParser.ParseUri();
 
@@ -97,12 +92,10 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             SearchTermNode searchTermNode = (SearchTermNode)odataUri.Search.Expression;
             Assert.AreEqual(searchTermNode.Text, "FA");
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.AreEqual(new Uri("http://www.example.com/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
         }
 
@@ -111,14 +104,14 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
         {
             Uri fullUri = new Uri("http://www.example.com/People(1)?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
             ODataUriParser odataUriParser = new ODataUriParser(this.GetModel(), serviceRoot, fullUri);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
             ODataUri odataUri = odataUriParser.ParseUri();
 
             //verify path
             EntitySetSegment entitySet = (EntitySetSegment)odataUri.Path.FirstSegment;
             KeySegment keySegment = (KeySegment)odataUri.Path.LastSegment;
-            IEnumerable<KeyValuePair<string, object> > keyValuePairs = keySegment.Keys;
+            IEnumerable<KeyValuePair<string, object>> keyValuePairs = keySegment.Keys;
             Assert.AreEqual(odataUri.Path.Count, 2);
             Assert.AreEqual(entitySet.EntitySet.Name, "People");
             foreach (var keyValuePair in keyValuePairs)
@@ -167,8 +160,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             //verify $search
             SearchTermNode searchTermNode = (SearchTermNode)odataUri.Search.Expression;
             Assert.AreEqual(searchTermNode.Text, "FA");
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.AreEqual(new Uri("http://www.example.com/People(1)?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA"), actualUri);
         }
 
@@ -177,10 +169,10 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
         {
             Uri fullUri = new Uri("http://www.example.com/People/1?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$top=1&$skip=2&$count=false");
             ODataUriParser oDataUriParser = new ODataUriParser(this.GetModel(), serviceRoot, fullUri);
-            oDataUriParser.UrlConventions = ODataUrlConventions.KeyAsSegment;
+            oDataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
             SetODataUriParserSettingsTo(this.settings, oDataUriParser.Settings);
             ODataUri odataUri = oDataUriParser.ParseUri();
-            
+
             //verify path
             EntitySetSegment entitySet = (EntitySetSegment)odataUri.Path.FirstSegment;
             KeySegment keySegment = (KeySegment)odataUri.Path.LastSegment;
@@ -226,8 +218,7 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             //verify $count
             Assert.AreEqual(odataUri.QueryCount, false);
 
-            ODataUriBuilder uriBuilderWithKeyAsSegment = new ODataUriBuilder(ODataUrlConventions.KeyAsSegment, odataUri);
-            Uri actualUri = uriBuilderWithKeyAsSegment.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.AreEqual(new Uri("http://www.example.com/People/1?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID%2CMyDog%2CMyCat&$expand=MyDog%2CMyCat%2F%24ref&$top=1&$skip=2&$count=false"), actualUri);
         }
 
@@ -237,11 +228,10 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             Uri queryUri = new Uri("People", UriKind.Relative);
             ODataUriParser odataUriParser = new ODataUriParser(this.GetModel(), queryUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.AreEqual(queryUri, actualUri);
         }
 
@@ -251,11 +241,10 @@ namespace Microsoft.Test.OData.Tests.Client.UriBuilderTests
             Uri queryUri = new Uri("http://www.example.com/People");
             ODataUriParser odataUriParser = new ODataUriParser(this.GetModel(), serviceRoot, queryUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(ODataUrlConventions.Default, odataUri);
-            Uri actualUri = odataUriBuilder.BuildUri();
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.AreEqual(queryUri, actualUri);
         }
 

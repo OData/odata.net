@@ -7,7 +7,6 @@
 namespace Microsoft.Test.OData.Services.PerfService
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     public static class PerfServiceEdmModel
     {

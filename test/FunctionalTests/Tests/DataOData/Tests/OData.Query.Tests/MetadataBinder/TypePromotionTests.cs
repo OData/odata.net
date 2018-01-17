@@ -4,21 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser.Semantic;
-
 namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;

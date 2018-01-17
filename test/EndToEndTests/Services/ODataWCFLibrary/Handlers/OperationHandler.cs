@@ -12,8 +12,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
 
     public class OperationHandler : RequestHandler
@@ -68,7 +68,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 {
                     throw Utility.BuildException(HttpStatusCode.NotImplemented, "Unsupported return type in operation.", null);
                 }
-                else if (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity || this.QueryContext.Target.ElementTypeKind == EdmTypeKind.Entity)
+                else if (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity || this.QueryContext.Target.ElementTypeKind == EdmTypeKind.Entity
+                    || this.QueryContext.Target.TypeKind == EdmTypeKind.Complex || this.QueryContext.Target.ElementTypeKind == EdmTypeKind.Complex)
                 {
                     ODataWriter resultWriter;
 
@@ -78,8 +79,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     {
                         IEdmEntitySetBase entitySet = (IEdmEntitySetBase)entitySource;
 
-                        resultWriter = messageWriter.CreateODataFeedWriter(entitySet, (IEdmEntityType)this.QueryContext.Target.ElementType);
-                        ResponseWriter.WriteFeed(resultWriter, (IEdmEntityType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
+                        resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, (IEdmStructuredType)this.QueryContext.Target.ElementType);
+                        ResponseWriter.WriteFeed(resultWriter, (IEdmStructuredType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
                     }
                     else
                     {
@@ -100,7 +101,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             }
                         }
 
-                        resultWriter = messageWriter.CreateODataEntryWriter(entitySource, (IEdmEntityType)this.QueryContext.Target.Type);
+                        resultWriter = messageWriter.CreateODataResourceWriter(entitySource, (IEdmStructuredType)this.QueryContext.Target.Type);
                         ResponseWriter.WriteEntry(resultWriter, result, entitySource, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.RequestHeaders);
                     }
                 }
@@ -141,7 +142,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         private Expression[] ProcessActionInvokePostBody(IODataRequestMessage message, IEdmOperation operation)
         {
-            using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings(), this.DataSource.Model))
+            using (var messageReader = new ODataMessageReader(message, this.GetReaderSettings()))
             {
                 List<Expression> parameterValues = new List<Expression>();
                 var parameterReader = messageReader.CreateODataParameterReader(operation);
@@ -163,33 +164,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                 parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
                                 break;
                             }
-                        case ODataParameterReaderState.Entry:
+                        case ODataParameterReaderState.Resource:
                             {
-                                var entryReader = parameterReader.CreateEntryReader();
-                                object clrValue = ODataObjectModelConverter.ConvertPropertyValue(ODataObjectModelConverter.ReadEntryParameterValue(entryReader));
+                                var entryReader = parameterReader.CreateResourceReader();
+                                object clrValue = ODataObjectModelConverter.ReadEntityOrEntityCollection(entryReader, false);
                                 parameterValues.Add(Expression.Constant(clrValue, clrValue.GetType()));
                                 break;
                             }
-                        case ODataParameterReaderState.Feed:
+                        case ODataParameterReaderState.ResourceSet:
                             {
-                                IList collectionList = null;
-                                var feedReader = parameterReader.CreateFeedReader();
-                                while (feedReader.Read())
-                                {
-                                    if (feedReader.State == ODataReaderState.EntryEnd)
-                                    {
-                                        object clrItem = ODataObjectModelConverter.ConvertPropertyValue(feedReader.Item);
-                                        if (collectionList == null)
-                                        {
-                                            Type itemType = clrItem.GetType();
-                                            Type listType = typeof(List<>).MakeGenericType(new[] { itemType });
-                                            collectionList = (IList)Utility.QuickCreateInstance(listType);
-                                        }
-
-                                        collectionList.Add(clrItem);
-                                    }
-                                }
-
+                                var feedReader = parameterReader.CreateResourceSetReader();
+                                var collectionList = ODataObjectModelConverter.ReadEntityOrEntityCollection(feedReader, true);
                                 parameterValues.Add(Expression.Constant(collectionList, collectionList.GetType()));
                                 break;
                             }

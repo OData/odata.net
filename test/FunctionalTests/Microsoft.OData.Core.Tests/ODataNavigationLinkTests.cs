@@ -6,26 +6,26 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.Tests.Evaluation;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Tests.Evaluation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataNavigationLinkTests
     {
         private static readonly Uri ServiceUri = new Uri("http://service/", UriKind.Absolute);
-        private ODataNavigationLink navigationLink;
-        private ODataNavigationLink navigationLinkWithFullBuilder;
-        private ODataNavigationLink navigationLinkWithNoOpBuilder;
-        private ODataNavigationLink navigationLinkWithNullBuilder;
+        private ODataNestedResourceInfo navigationLink;
+        private ODataNestedResourceInfo navigationLinkWithFullBuilder;
+        private ODataNestedResourceInfo navigationLinkWithNoOpBuilder;
+        private ODataNestedResourceInfo navigationLinkWithNullBuilder;
 
         public ODataNavigationLinkTests()
         {
-            this.navigationLink = new ODataNavigationLink();
+            this.navigationLink = new ODataNestedResourceInfo();
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 TypeName = "ns.DerivedType",
                 Properties = new[]
@@ -35,19 +35,20 @@ namespace Microsoft.OData.Core.Tests
                 }
             };
 
-            var serializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
-            var typeContext = ODataFeedAndEntryTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
+            var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
             var metadataContext = new TestMetadataContext();
-            var entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
-            var metadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(ServiceUri, UrlConvention.CreateWithExplicitValue(false)));
-            this.navigationLinkWithFullBuilder = new ODataNavigationLink { Name = "NavProp" };
+            var entryMetadataContext = ODataResourceMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
+            var metadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext,
+                new ODataConventionalUriBuilder(ServiceUri, ODataUrlKeyDelimiter.Parentheses));
+            this.navigationLinkWithFullBuilder = new ODataNestedResourceInfo { Name = "NavProp" };
             this.navigationLinkWithFullBuilder.MetadataBuilder = metadataBuilder;
 
-            this.navigationLinkWithNoOpBuilder = new ODataNavigationLink { Name = "NavProp" };
-            this.navigationLinkWithNoOpBuilder.MetadataBuilder = new NoOpEntityMetadataBuilder(entry);
+            this.navigationLinkWithNoOpBuilder = new ODataNestedResourceInfo { Name = "NavProp" };
+            this.navigationLinkWithNoOpBuilder.MetadataBuilder = new NoOpResourceMetadataBuilder(entry);
 
-            this.navigationLinkWithNullBuilder = new ODataNavigationLink { Name = "NavProp" };
-            this.navigationLinkWithNullBuilder.MetadataBuilder = ODataEntityMetadataBuilder.Null;
+            this.navigationLinkWithNullBuilder = new ODataNestedResourceInfo { Name = "NavProp" };
+            this.navigationLinkWithNullBuilder.MetadataBuilder = ODataResourceMetadataBuilder.Null;
         }
 
         [Fact]
@@ -95,7 +96,7 @@ namespace Microsoft.OData.Core.Tests
         public void MetadataBuilderShouldNotAffectUserAssignedName()
         {
             this.navigationLink.Name = "Name";
-            this.navigationLink.MetadataBuilder = ODataEntityMetadataBuilder.Null;
+            this.navigationLink.MetadataBuilder = ODataResourceMetadataBuilder.Null;
             this.navigationLink.Name.Should().Be("Name");
         }
 

@@ -6,12 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class ExpandedNavigationSelectItemTests
     {
@@ -61,7 +59,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         public void FilterOptionSetCorrectly()
         {
             BinaryOperatorNode filterExpression = new BinaryOperatorNode(BinaryOperatorKind.Equal, new ConstantNode(1), new ConstantNode(1));
-            FilterClause filterClause = new FilterClause(filterExpression, new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
+            FilterClause filterClause = new FilterClause(filterExpression, new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
             ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, filterClause, null, null, null, null, null, null);
             expansion.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             expansion.FilterOption.Expression.As<BinaryOperatorNode>().Left.ShouldBeConstantQueryNode(1);
@@ -72,7 +70,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         public void OrderByOptionSetCorrectly()
         {
             SingleValuePropertyAccessNode propertyAccessNode = new SingleValuePropertyAccessNode(new ConstantNode(1), HardCodedTestModel.GetPersonNameProp());
-            OrderByClause orderBy = new OrderByClause(null, propertyAccessNode, OrderByDirection.Descending, new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
+            OrderByClause orderBy = new OrderByClause(null, propertyAccessNode, OrderByDirection.Descending, new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
             ExpandedNavigationSelectItem expansion = new ExpandedNavigationSelectItem(new ODataExpandPath(new NavigationPropertySegment(ModelBuildingHelpers.BuildValidNavigationProperty(), null)), HardCodedTestModel.GetPeopleSet(), null, null, orderBy, null, null, null, null, null);
             expansion.OrderByOption.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
         }

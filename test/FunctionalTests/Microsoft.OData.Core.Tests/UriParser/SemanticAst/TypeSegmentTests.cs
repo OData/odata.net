@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class TypeSegmentTests
     {
@@ -68,6 +68,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
             BatchSegment batchSegment = BatchSegment.Instance;
             typeSegment1.Equals(typeSegment2).Should().BeFalse();
             typeSegment1.Equals(batchSegment).Should().BeFalse();
+        }
+
+        [Fact]
+        public void CreateTypeSegmentWithExpectType()
+        {
+            TypeSegment typeSegment = new TypeSegment(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetEmployeeType(), null);
+            typeSegment.EdmType.Should().BeSameAs(HardCodedTestModel.GetPersonType());
+            typeSegment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetEmployeeType());
         }
     }
 }

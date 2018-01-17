@@ -22,13 +22,13 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
             var queryWithAzureKeys = contextWrapper.CreateQuery<Customer>("Customer").OrderBy(c => c.CustomerId).ToList();
 
-            contextWrapper.UrlConventions = DataServiceUrlConventions.Default;
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
 
             var queryWithDefaultKeys = contextWrapper.CreateQuery<Customer>("Customer").OrderBy(c => c.CustomerId).ToList();
 
             CollectionAssert.AreEqual(queryWithAzureKeys, queryWithDefaultKeys, new SimpleCustomerComparer());
 
-            contextWrapper.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
 
             queryWithAzureKeys = contextWrapper.CreateQuery<Customer>("Customer").OrderBy(c => c.CustomerId).ToList();
 
@@ -36,14 +36,14 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         }
 
         // This is an unsupported scenario and does not currently work.
-        [TestMethod, Ignore]
+        // [TestMethod] // github issuse: #896
         public void ClientChangesUrlConventionsBetweenQueryAndUpdate()
         {
             var contextWrapper = this.CreateWrappedContext();
 
             var customersWithAzureKeys = contextWrapper.CreateQuery<Customer>("Customer").Take(1).Single();
 
-            contextWrapper.UrlConventions = DataServiceUrlConventions.Default;
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
 
             var order = new Order { OrderId = 98765 };
             contextWrapper.AddRelatedObject(customersWithAzureKeys, "Orders", order);

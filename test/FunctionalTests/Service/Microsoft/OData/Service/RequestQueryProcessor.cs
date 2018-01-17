@@ -15,8 +15,7 @@ namespace Microsoft.OData.Service
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Text;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Internal;
     using Microsoft.OData.Service.Parsing;
@@ -242,10 +241,10 @@ namespace Microsoft.OData.Service
                 return currentNode;
             }
 
-            var openPropertySegment = lastSegment as OpenPropertySegment;
+            var openPropertySegment = lastSegment as DynamicPathSegment;
             if (openPropertySegment != null)
             {
-                return ApplyProjectionForProperty(currentNode, openPropertySegment.PropertyName, null /*property*/, targetResourceType);
+                return ApplyProjectionForProperty(currentNode, openPropertySegment.Identifier, null /*property*/, targetResourceType);
             }
 
             var propertySegment = lastSegment as PropertySegment;

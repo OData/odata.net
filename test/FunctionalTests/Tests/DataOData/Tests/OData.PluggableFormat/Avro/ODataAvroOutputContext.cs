@@ -8,8 +8,7 @@
 namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System.IO;
-    using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     internal class ODataAvroOutputContext : ODataOutputContext
@@ -19,27 +18,22 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         internal ODataAvroOutputContext(
              ODataFormat format,
-             Stream messageStream,
-             Encoding encoding,
-             ODataMessageWriterSettings messageWriterSettings,
-             bool writingResponse,
-             bool synchronous,
-             IEdmModel model,
-             IODataUrlResolver urlResolver)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+             ODataMessageInfo messageInfo,
+             ODataMessageWriterSettings messageWriterSettings)
+            : base(format, messageInfo, messageWriterSettings)
         {
-            this.outputStream = messageStream;
+            this.outputStream = messageInfo.MessageStream;
             this.AvroWriter = new AvroWriter(new StreamWrapper(outputStream));
         }
 
-        public override ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public override ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
-            return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, entityType), false);
+            return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, resourceType), false);
         }
 
-        public override ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public override ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
-            return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, entityType, true), true);
+            return new ODataAvroWriter(this, value => this.AvroWriter.Write(value), this.AvroWriter.UpdateSchema(null, resourceType, true), true);
         }
 
         public override ODataCollectionWriter CreateODataCollectionWriter(IEdmTypeReference itemTypeReference)

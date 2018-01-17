@@ -88,7 +88,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Encapsulates a 'deferred' result. The result is constructed with a delegate (must not 
+        /// Encapsulates a 'deferred' result. The result is constructed with a delegate (must not
         /// be null) and when the user requests a value the delegate is invoked and stored.
         /// </summary>
         private class Result

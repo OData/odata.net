@@ -13,8 +13,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System.Linq;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -56,7 +56,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 batchRequestDescriptors.Select(bd => new PayloadReaderTestDescriptor(this.PayloadReaderSettings)
             {
                 PayloadDescriptor = bd,
-                SkipTestConfiguration = tc => !tc.IsRequest || (tc.Format != ODataFormat.Json && tc.Format != ODataFormat.Atom)  
+                SkipTestConfiguration = tc => !tc.IsRequest || (tc.Format != ODataFormat.Json)  
             });
 
             IEnumerable<PayloadTestDescriptor> batchResponseDescriptors =
@@ -65,7 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 batchResponseDescriptors.Select(bd => new PayloadReaderTestDescriptor(this.PayloadReaderSettings)
                 {
                     PayloadDescriptor = bd,
-                    SkipTestConfiguration = tc => tc.IsRequest || (tc.Format != ODataFormat.Json && tc.Format != ODataFormat.Atom)
+                    SkipTestConfiguration = tc => tc.IsRequest || (tc.Format != ODataFormat.Json)
                 });
 
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = requestTestDescriptors.Concat(responseTestDescriptors);
@@ -624,7 +624,7 @@ POST http://example.org/Products HTTP/1.1
 
             if (maxPartsPerBatch.HasValue || maxOperationsPerChangeset.HasValue)
             {
-                newSettings = new ODataMessageReaderSettings(testConfig.MessageReaderSettings);
+                newSettings = testConfig.MessageReaderSettings.Clone();
 
                 if (maxPartsPerBatch.HasValue)
                 {

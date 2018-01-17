@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -24,11 +24,6 @@ namespace Microsoft.OData.Client.Materialization
         /// The collection value materialization policy.
         /// </summary>
         private CollectionValueMaterializationPolicy collectionValueMaterializationPolicy;
-
-        /// <summary>
-        /// The complex value materialization policy.
-        /// </summary>
-        private ComplexValueMaterializationPolicy complexValueMaterializerPolicy;
 
         /// <summary>
         /// The enum value materialization policy
@@ -63,23 +58,6 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// The complex value materialization policy.
-        /// </summary>
-        internal ComplexValueMaterializationPolicy ComplexValueMaterializationPolicy
-        {
-            get
-            {
-                Debug.Assert(this.complexValueMaterializerPolicy != null, "complexValueMaterializerPolicy != null");
-                return this.complexValueMaterializerPolicy;
-            }
-
-            set
-            {
-                this.complexValueMaterializerPolicy = value;
-            }
-        }
-
-        /// <summary>
         /// The Enum value materialization policy.
         /// </summary>
         internal EnumValueMaterializationPolicy EnumValueMaterializationPolicy
@@ -106,7 +84,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="entry">Odata entry</param>
         /// <param name="entity">Client clr object for the OData entry</param>
-        internal void SetInstanceAnnotations(ODataEntry entry, object entity)
+        internal void SetInstanceAnnotations(ODataResource entry, object entity)
         {
             if (entry != null)
             {
@@ -126,20 +104,6 @@ namespace Microsoft.OData.Client.Materialization
             {
                 IDictionary<string, object> instanceAnnotations = this.GetClrInstanceAnnotationsFromODataProperty(property);
                 SetInstanceAnnotations(instance, instanceAnnotations);
-            }
-        }
-
-        /// <summary>
-        /// Materialize instance annotation for an OData complex value
-        /// </summary>
-        /// <param name="complexValue">OData complex value</param>
-        /// <param name="complexInstance">Client clr object for the complex value</param>
-        internal void SetInstanceAnnotations(ODataComplexValue complexValue, object complexInstance)
-        {
-            if (complexValue != null)
-            {
-                IDictionary<string, object> instanceAnnotations = this.ConvertToClrInstanceAnnotations(complexValue.InstanceAnnotations);
-                SetInstanceAnnotations(complexInstance, instanceAnnotations);
             }
         }
 
@@ -165,7 +129,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="navigationProperty">OData single navigation property</param>
         /// <param name="type">The type of the declaringInstance</param>
         /// <param name="declaringInstance">the client object that the navigation property belongs to</param>
-        internal void SetInstanceAnnotations(string navigationPropertyName, ODataEntry navigationProperty, Type type, object declaringInstance)
+        internal void SetInstanceAnnotations(string navigationPropertyName, ODataResource navigationProperty, Type type, object declaringInstance)
         {
             if (navigationProperty != null)
             {
@@ -225,12 +189,12 @@ namespace Microsoft.OData.Client.Materialization
         {
             if (declaringInstance != null)
             {
-                bool ignoreMissingProperty = this.MaterializerContext.Context.IgnoreMissingProperties;
+                UndeclaredPropertyBehavior undeclaredPropertyBehavior = this.MaterializerContext.Context.UndeclaredPropertyBehavior;
 
                 // Get the client property info
                 ClientEdmModel edmModel = this.MaterializerContext.Model;
                 ClientTypeAnnotation clientTypeAnnotation = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(type));
-                ClientPropertyAnnotation clientPropertyAnnotation = clientTypeAnnotation.GetProperty(propertyName, ignoreMissingProperty);
+                ClientPropertyAnnotation clientPropertyAnnotation = clientTypeAnnotation.GetProperty(propertyName, undeclaredPropertyBehavior);
                 Tuple<object, MemberInfo> annotationKeyForProperty = new Tuple<object, MemberInfo>(declaringInstance, clientPropertyAnnotation.PropertyInfo);
                 SetInstanceAnnotations(annotationKeyForProperty, instanceAnnotations);
             }
@@ -244,13 +208,6 @@ namespace Microsoft.OData.Client.Materialization
         private IDictionary<string, object> GetClrInstanceAnnotationsFromODataProperty(ODataProperty property)
         {
             IDictionary<string, object> clientInstanceAnnotationValue = null;
-
-            // If the property is a complex type property, instance annotations are stored in the complex value.
-            var odataComplexPropertyValue = property.Value as ODataComplexValue;
-            if (odataComplexPropertyValue != null)
-            {
-                clientInstanceAnnotationValue = ConvertToClrInstanceAnnotations(odataComplexPropertyValue.InstanceAnnotations);
-            }
 
             if (clientInstanceAnnotationValue == null)
             {
@@ -302,31 +259,11 @@ namespace Microsoft.OData.Client.Materialization
                 return false;
             }
 
-            var complexValue = instanceAnnotation.Value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                var type = this.MaterializerContext.Context.ResolveTypeFromName(complexValue.TypeName);
-                if (type != null)
-                {
-                    ClientEdmModel edmModel = this.MaterializerContext.Model;
-                    ClientTypeAnnotation complexType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(type));
-
-                    // TODO: check if ComplexType inheritance will cause any issue
-                    var complexInstance = this.ComplexValueMaterializationPolicy.CreateNewInstance(complexType.EdmTypeReference, complexType.ElementType);
-                    this.ComplexValueMaterializationPolicy.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.IgnoreMissingProperties);
-                    this.ComplexValueMaterializationPolicy.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
-                    clrInstanceAnnotation = complexInstance;
-                    return true;
-                }
-
-                return false;
-            }
-
             var collectionValue = instanceAnnotation.Value as ODataCollectionValue;
             if (collectionValue != null)
             {
                 var serverSideModel = this.MaterializerContext.Context.Format.LoadServiceModel();
-                var valueTerm = serverSideModel.FindValueTerm(instanceAnnotation.Name);
+                var valueTerm = serverSideModel.FindTerm(instanceAnnotation.Name);
 
                 if (valueTerm != null && valueTerm.Type != null && valueTerm.Type.Definition != null)
                 {

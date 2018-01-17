@@ -52,8 +52,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         public void ClientProjectionPartialTrust(Uri serviceRoot)
         {
             DataServiceContext ctx = new DataServiceContext(serviceRoot);
-            ctx.EnableAtom = true;
-            ctx.Format.UseAtom();
+            //ctx.EnableAtom = true;
+            //ctx.Format.UseAtom();
             ctx.MergeOption = MergeOption.OverwriteChanges;
 
             var cust = ctx.CreateQuery<Customer>("Customers").Select(c => new Customer()
@@ -114,8 +114,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         public void ClientProjectionPartialTrustAnonymousType(Uri serviceRoot)
         {
             DataServiceContext ctx = new DataServiceContext(serviceRoot);
-            ctx.EnableAtom = true;
-            ctx.Format.UseAtom();
+            //ctx.EnableAtom = true;
+            //ctx.Format.UseAtom();
             var q = ctx.CreateQuery<Customer>("Customers").Select(c => new
             {
                 ID = c.ID,
@@ -153,8 +153,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         public void ClientProjectionPartialTrustRef(Uri serviceRoot)
         {
             DataServiceContext ctx = new DataServiceContext(serviceRoot);
-            ctx.EnableAtom = true;
-            ctx.Format.UseAtom();
+            //ctx.EnableAtom = true;
+            //ctx.Format.UseAtom();
             var q = ctx.CreateQuery<Order>("Orders").Where(o => o.ID == 0).Select(o => new NarrowCustomer()
             {
                 ID = o.Customer.ID,
@@ -171,7 +171,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(serviceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
+                //context.EnableAtom = true;
                 var q = from s in context.CreateQuery<StreamType>("MySet1")
                             select new
                             {
@@ -206,7 +206,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
     }
 
-    [TestClass]
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
+    // [TestClass]
     public class ClientPartialTrustTests
     {
         private static AppDomain mediumTrustDomain;
@@ -316,6 +317,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
          * Within the sandbox code you cannot use Visual Studio Unit Test Assembly to assert due to the lack of security permission. 
          * Use the assert in the test context instead.
          */
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientProjectionPartialTrust()
         {
@@ -327,6 +329,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientProjectionPartialTrustAnonymousType()
         {
@@ -338,6 +341,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientProjectionPartialTrustRef()
         {
@@ -349,6 +353,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientNamedStreamProjection()
         {

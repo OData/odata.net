@@ -10,8 +10,8 @@ namespace Microsoft.OData.Service.Serializers
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
 
@@ -97,10 +97,35 @@ namespace Microsoft.OData.Service.Serializers
                     throw new InvalidOperationException(Microsoft.OData.Service.Strings.Serializer_UnsupportedTopLevelType(element.GetType()));
                 }
 
+                if (resourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    var odataWriter = this.writer.CreateODataResourceWriter();
+                    var resource = this.GetComplexResource(propertyName, element);
+                    resource.Resource.SetSerializationInfo(new ODataResourceSerializationInfo() { ExpectedTypeName = resourceType.FullName });
+                    ODataWriterHelper.WriteResource(odataWriter, resource);
+                    return;
+                }
+
+                if (resourceType.ResourceTypeKind == ResourceTypeKind.Collection
+                    && resourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    var odataWriter = this.writer.CreateODataResourceSetWriter();
+                    var resourceSet = this.GetComplexResourceSet(propertyName, (CollectionResourceType)resourceType, element);
+                    resourceSet.ResourceSet.SetSerializationInfo(new ODataResourceSerializationInfo() { ExpectedTypeName = resourceType.FullName });
+                    ODataWriterHelper.WriteResourceSet(odataWriter, resourceSet);
+                    return;
+                }
+
+                var odataValue = this.GetPropertyValue(propertyName, resourceType, element, this.RequestDescription.TargetKind == RequestTargetKind.OpenProperty /*openProperty*/);
+                if (odataValue == null || odataValue is ODataNullValue)
+                {
+                    return;
+                }
+
                 var odataProperty = new ODataProperty
                 {
                     Name = propertyName,
-                    Value = this.GetPropertyValue(propertyName, resourceType, element, this.RequestDescription.TargetKind == RequestTargetKind.OpenProperty /*openProperty*/)
+                    Value = odataValue
                 };
 
                 this.writer.WriteProperty(odataProperty);

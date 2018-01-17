@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
-    using TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Node representing a filter transformation.

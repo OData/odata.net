@@ -4,16 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
-    internal abstract class UnresolvedVocabularyTerm : EdmElement, IEdmTerm, IUnresolvedElement
+    internal class UnresolvedVocabularyTerm : EdmElement, IEdmTerm, IUnresolvedElement
     {
+        private readonly UnresolvedTermTypeReference type = new UnresolvedTermTypeReference();
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string appliesTo = null;
+        private readonly string defaultValue = null;
 
-        protected UnresolvedVocabularyTerm(string qualifiedName)
+        public UnresolvedVocabularyTerm(string qualifiedName)
         {
             qualifiedName = qualifiedName ?? string.Empty;
             EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
@@ -29,14 +32,47 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.name; }
         }
 
-        public abstract EdmTermKind TermKind
+        public EdmSchemaElementKind SchemaElementKind
         {
-            get;
+            get { return EdmSchemaElementKind.Term; }
         }
 
-        public abstract EdmSchemaElementKind SchemaElementKind
+        public IEdmTypeReference Type
         {
-            get;
+            get { return this.type; }
+        }
+
+        public string AppliesTo
+        {
+            get { return this.appliesTo; }
+        }
+
+        public string DefaultValue
+        {
+            get { return this.defaultValue; }
+        }
+
+        private class UnresolvedTermTypeReference : IEdmTypeReference
+        {
+            private readonly UnresolvedTermType definition = new UnresolvedTermType();
+
+            public bool IsNullable
+            {
+                get { return false; }
+            }
+
+            public IEdmType Definition
+            {
+                get { return this.definition; }
+            }
+
+            private class UnresolvedTermType : IEdmType
+            {
+                public EdmTypeKind TypeKind
+                {
+                    get { return EdmTypeKind.None; }
+                }
+            }
         }
     }
 }

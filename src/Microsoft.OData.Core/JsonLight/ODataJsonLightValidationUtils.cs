@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Core.JsonLight
             Debug.Assert(metadataDocumentUri.IsAbsoluteUri, "metadataDocumentUri.IsAbsoluteUri");
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            // If a metadata reference property isn't based off of the known metadata document URI (for example, it points to a model on another server), 
+            // If a metadata reference property isn't based off of the known metadata document URI (for example, it points to a model on another server),
             // then it must be open. It is based off the known metadata document URI if it either is a fragment (i.e., starts with a hash) or starts with the known absolute URI.
             return ODataJsonLightUtils.IsMetadataReferenceProperty(propertyName)
                 && propertyName[0] != ODataConstants.ContextUriFragmentIndicator
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             if (propertyValue == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonLightValidationUtils_OperationPropertyCannotBeNull(propertyName, metadata));
+                throw new ODataException(Strings.ODataJsonLightValidationUtils_OperationPropertyCannotBeNull(propertyName, metadata));
             }
         }
     }

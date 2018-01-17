@@ -19,14 +19,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AstoriaUnitTests.DataWebClientCSharp
 {
-    [TestClass]
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
+    // [TestClass]
     public class SpatialLinqTests
     {
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SupportedLinqQueries_BaseGeography()
         {
             // Verify URI and results for LINQ queries that are valid for all spatial types
-            var testCases = new[] 
+            var testCases = new[]
             {
                 new
                 {
@@ -46,6 +48,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SupportedLinqQueries_GeographyPoint()
         {
@@ -53,6 +56,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             TestSupportedLinqQueries<GeographyPoint>(TestPoint.DefaultValues, typeof(GeographyPoint));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SupportedLinqQueries_GeographyLineString()
         {
@@ -60,6 +64,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             TestSupportedLinqQueries<GeographyLineString>(TestLineString.DefaultValues, typeof(GeographyLineString));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SupportedLinqQueries_GeometryPoint_Filter()
         {
@@ -76,7 +81,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Property2 = GeometryFactory.Point(3, 4),
                         },
                     };
-            
+
                     return new LinqTestCase[]
                     {
                         new LinqTestCase()
@@ -84,7 +89,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where t.Property1.Distance(t.Property2) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=geo.distance(Property1,Property2) gt 0.0",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -95,7 +100,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where t.Property1.Distance(GeometryFactory.Point(5, 6)) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=geo.distance(Property1,geometry'SRID=0;POINT (5 6)') gt 0.0",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -106,7 +111,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where t.Property1.Distance(null) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=geo.distance(Property1,null) gt 0.0",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -129,7 +134,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where ((GeometryPoint)null).Distance(t.Property1) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=geo.distance(null,Property1) gt 0.0",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -149,9 +154,10 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                         //},
                     };
                 };
-                TestSupportedLinqQueries(getTests);
+            TestSupportedLinqQueries(getTests);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SupportedLinqQueries_GeometryPoint_FilterWithDistanceFromLiteralToLiteral()
         {
@@ -176,7 +182,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where GeometryFactory.Point(5, 6).Build().Distance(GeometryFactory.Point(0, 0).Build()) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=true",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -187,7 +193,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where GeometryFactory.Point(5, 6).Build().Distance(null) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=false",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -198,7 +204,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where ((GeometryPoint)null).Distance(GeometryFactory.Point(5, 6).Build()) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=false",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -209,7 +215,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     where ((GeometryPoint)null).Distance(null) > 0
                                     select t,
-        
+
                             ExpectedUri = "?$filter=false",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -230,6 +236,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SupportedLinqQueries_GeometryPoint_OrderByDistanceFromLiteralToLiteral()
         {
@@ -254,7 +261,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     orderby GeometryFactory.Point(5, 6).Build().Distance(GeometryFactory.Point(0, 0).Build())
                                     select t,
-        
+
                             ExpectedUri = "?$orderby=1.0",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -265,7 +272,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     orderby GeometryFactory.Point(5, 6).Build().Distance(null)
                                     select t,
-        
+
                             ExpectedUri = "?$orderby=null",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -276,7 +283,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     orderby ((GeometryPoint)null).Distance(GeometryFactory.Point(5, 6).Build())
                                     select t,
-        
+
                             ExpectedUri = "?$orderby=null",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -287,7 +294,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Query = from t in context.CreateQuery<GeometricEntity<GeometryPoint>>("TripLegs")
                                     orderby ((GeometryPoint)null).Distance(null)
                                     select t,
-        
+
                             ExpectedUri = "?$orderby=null",
                             ExpectedResults = allEntities,
                             ServerPayload = GetSampleFeedPayload(allEntities, null),
@@ -308,6 +315,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void OpenSpatialProperties()
         {
@@ -324,8 +332,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
 
                 // Query the top level set
                 List<TripLeg<Geography>> results = context.CreateQuery<TripLeg<Geography>>("TripLegs").ToList();
@@ -380,9 +388,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
+                //context.EnableAtom = true;
                 context.MergeOption = MergeOption.NoTracking;
-                
+
                 var tests = getTests(context);
 
                 for (int i = 0; i < tests.Length; i++)
@@ -401,7 +409,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         private static LinqTestCase[] GetSupportedLinqQueries<T>(DataServiceContext context, GeographyPropertyValues defaultValues) where T : Geography
         {
             LinqTestCase[] tests = null;
-            
+
             IQueryable<TripLeg<T>> allTripLegsActual = context.CreateQuery<TripLeg<T>>("TripLegs");
 
             IQueryable<TripLeg<T>> allTripLegsExpected = new List<TripLeg<T>>()
@@ -467,7 +475,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     ServerPayload = GetSamplePropertyPayload("GeographyProperty1", tripLeg1Expected.Single().GeographyProperty1),
                 },
                 new LinqTestCase()
-                { 
+                {
                     Query = from t in tripLeg1Query
                             select new { t.GeographyProperty1, t.GeographyProperty2 },
 
@@ -526,7 +534,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 {
                     Query = from t in tripLeg1Query
                             select new
-                            { 
+                            {
                                 Lat = t.GeographyProperty2.Latitude,
                                 Long = t.GeographyProperty2.Longitude,
                                 Z = t.GeographyProperty2.Z,
@@ -564,7 +572,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     ExpectedUri = "?",
                     ExpectedResults = tripLeg1Expected.Select(tl => new { GeoPoint = GeographyFactory.Point(45.8, -127.0) }),
                     ServerPayload = GetSampleEntityPayload(tripLeg1Expected.Single(), null),
-                },                
+                },
                 new LinqTestCase()
                 {
                     Query = from t in tripLeg1Query
@@ -657,7 +665,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 {
                     Query = from t in tripLeg1Query
                             select new
-                            { 
+                            {
                                 Points = t.GeographyProperty1.Points,
                             },
 
@@ -669,7 +677,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 {
                     Query = from t in tripLeg1Query
                             select new
-                            { 
+                            {
                                 Count = t.GeographyProperty1.Points.Count,
                             },
 
@@ -690,7 +698,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             },
 
                     ExpectedUri = "?$select=GeographyProperty1,GeographyProperty2,GeographyProperty2,GeographyProperty1,GeographyProperty1",
-                    ExpectedResults = tripLeg1Expected.Select(tl => 
+                    ExpectedResults = tripLeg1Expected.Select(tl =>
                         new ProjectedComplexType()
                             {
                                 GeoProp = tl.GeographyProperty1,

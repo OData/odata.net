@@ -8,11 +8,9 @@ using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
     public class PropertyAndValueJsonLightWriterIntegrationTests
     {
@@ -48,7 +46,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = new EdmEntitySet(container, "MyTestEntitySet", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 Id = new Uri("http://mytest"),
                 TypeName = "NS.MyTestEntity",
@@ -60,29 +58,44 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
                     new ODataProperty {Name = "DecimalId", Value = 78.62m},
                     new ODataProperty {Name = "BoolValue1", Value = true},
                     new ODataProperty {Name = "BoolValue2", Value = false},
-                    new ODataProperty {Name = "LongNumbers", Value = new ODataCollectionValue {Items = new[] {0L, long.MinValue, long.MaxValue}, TypeName = "Collection(Int64)" }},
-                    new ODataProperty {Name = "FloatNumbers", Value = new ODataCollectionValue {Items = new[] {1F, float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN}, TypeName = "Collection(Single)" }},
-                    new ODataProperty {Name = "DoubleNumbers", Value = new ODataCollectionValue {Items = new[] {-1D, double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN}, TypeName = "Collection(Double)" }},
-                    new ODataProperty {Name = "DecimalNumbers", Value = new ODataCollectionValue {Items = new[] {0M, decimal.MinValue, decimal.MaxValue}, TypeName = "Collection(Decimal)" }},
-                    new ODataProperty
-                    {
-                        Name = "ComplexProperty",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new[]
-                            {
-                                new ODataProperty { Name = "CLongId", Value = 1L},
-                                new ODataProperty { Name = "CFloatId", Value = -1.0F},
-                                new ODataProperty { Name = "CDoubleId", Value = 1.0D},
-                                new ODataProperty { Name = "CDecimalId", Value = 1.0M},
-                            }
-                        }
-                    }
+                    new ODataProperty {Name = "LongNumbers", Value = new ODataCollectionValue {Items = new object[] {0L, long.MinValue, long.MaxValue}, TypeName = "Collection(Int64)" }},
+                    new ODataProperty {Name = "FloatNumbers", Value = new ODataCollectionValue {Items = new object[] {1F, float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN}, TypeName = "Collection(Single)" }},
+                    new ODataProperty {Name = "DoubleNumbers", Value = new ODataCollectionValue {Items = new object[] {-1D, double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN}, TypeName = "Collection(Double)" }},
+                    new ODataProperty {Name = "DecimalNumbers", Value = new ODataCollectionValue {Items = new object[] {0M, decimal.MinValue, decimal.MaxValue}, TypeName = "Collection(Decimal)" }},
                 },
-
             };
 
-            string outputPayload = this.WriterEntry(TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model), entry, entitySet, entityType);
+            var complexResourceInfo = new ODataNestedResourceInfo
+            {
+                Name = "ComplexProperty",
+                IsCollection = false
+            };
+
+            var complexResource = new ODataResource
+            {
+                TypeName = "NS.MyTestComplexType",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "CLongId", Value = 1L},
+                    new ODataProperty { Name = "CFloatId", Value = -1.0F},
+                    new ODataProperty { Name = "CDoubleId", Value = 1.0D},
+                    new ODataProperty { Name = "CDecimalId", Value = 1.0M},
+                }
+            };
+
+            string outputPayload = this.WriterEntry(
+                TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model),
+                entry, entitySet, entityType, false,
+                (writer) =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(complexResourceInfo);
+                    writer.WriteStart(complexResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+
             string expectedPayload =
                 "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#MyTestEntitySet/$entity\"," +
@@ -159,28 +172,40 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
                 {
                     new ODataProperty { Name = "Id", Value = 1 },
-                    new ODataProperty { Name = "Weight", Value = 60.5 },
-                    new ODataProperty
-                    {
-                        Name = "Address",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new[]
-                            {
-                                new ODataProperty { Name = "CountryRegion", Value = "China" }
-                            }
-                        }
-                    }
+                    new ODataProperty { Name = "Weight", Value = 60.5 }
                 }
             };
 
-            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType);
+            ODataNestedResourceInfo address = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            ODataResource addressResource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "CountryRegion", Value = "China" }
+                }
+            };
+
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, (writer)
+                =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(address);
+                    writer.WriteStart(addressResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
 
             const string expectedMinimalPayload =
                 "{" +
@@ -192,7 +217,16 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             outputPayload.Should().Be(expectedMinimalPayload);
 
-            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true);
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true, (writer)
+                =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(address);
+                    writer.WriteStart(addressResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
 
             const string expectedFullPayload =
                 "{" +
@@ -243,7 +277,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -251,21 +285,33 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
                     new ODataProperty { Name = "Id1", Value = (UInt32)1 },
                     new ODataProperty { Name = "Id2", Value = 2 },
                     new ODataProperty { Name = "Weight", Value = 60.5 },
-                    new ODataProperty
-                    {
-                        Name = "Address",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new[]
-                            {
-                                new ODataProperty { Name = "CountryRegion", Value = "China" }
-                            }
-                        }
-                    }
                 }
             };
 
-            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType);
+            ODataNestedResourceInfo address = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            ODataResource addressResource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "CountryRegion", Value = "China" }
+                }
+            };
+
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, (writer)
+                =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteStart(address);
+                writer.WriteStart(addressResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
 
             const string expectedMinimalPayload =
                 "{" +
@@ -278,7 +324,16 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             outputPayload.Should().Be(expectedMinimalPayload);
 
-            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true);
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true, (writer)
+                =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(address);
+                    writer.WriteStart(addressResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
 
             const string expectedFullPayload =
                 "{" +
@@ -314,7 +369,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -343,7 +398,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -393,7 +448,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "NS.Person",
                 Properties = new[]
@@ -407,11 +462,11 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
             write.ShouldThrow<ODataException>().WithMessage("The value of type 'System.UInt64' is not supported and cannot be converted to a JSON representation.");
         }
 
-        private string WriterEntry(IEdmModel userModel, ODataEntry entry, EdmEntitySet entitySet, IEdmEntityType entityType, bool fullMetadata = false)
+        private string WriterEntry(IEdmModel userModel, ODataResource entry, EdmEntitySet entitySet, IEdmEntityType entityType, bool fullMetadata = false, Action<ODataWriter> writeAction = null)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
 
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, AutoComputePayloadMetadataInJson = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com"));
             writerSettings.SetContentType(fullMetadata ?
@@ -420,9 +475,16 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             using (var msgReader = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, userModel))
             {
-                var writer = msgReader.CreateODataEntryWriter(entitySet, entityType);
-                writer.WriteStart(entry);
-                writer.WriteEnd();
+                var writer = msgReader.CreateODataResourceWriter(entitySet, entityType);
+                if (writeAction != null)
+                {
+                    writeAction(writer);
+                }
+                else
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteEnd();
+                }
             }
 
             message.Stream.Seek(0, SeekOrigin.Begin);

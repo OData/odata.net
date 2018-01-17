@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
 
     /// <summary>
     /// Combine a top level select and expand token.

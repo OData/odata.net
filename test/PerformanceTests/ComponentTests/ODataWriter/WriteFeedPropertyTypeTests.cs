@@ -10,7 +10,7 @@ namespace Microsoft.OData.Performance
     using System.Collections.Generic;
     using System.IO;
     using global::Xunit;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Xunit.Performance;
 
@@ -22,42 +22,49 @@ namespace Microsoft.OData.Performance
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithStringSet()
         {
             TestAndMeasure("EntityStringSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithInt32Set()
         {
             TestAndMeasure("EntityInt32Set");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithInt64Set()
         {
             TestAndMeasure("EntityInt64Set");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithDecimalSet()
         {
             TestAndMeasure("EntityDecimalSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithDateTimeOffsetSet()
         {
             TestAndMeasure("EntityDateTimeOffsetSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithGuidSet()
         {
             TestAndMeasure("EntityGuidSet");
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithMixedSet()
         {
             TestAndMeasure("EntityMixedSet");
@@ -77,8 +84,8 @@ namespace Microsoft.OData.Performance
                 {
                     using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, isFullValidation: true))
                     {
-                        ODataWriter writer = messageWriter.CreateODataFeedWriter(entitySet, entitySet.EntityType());
-                        writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc") });
+                        ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
+                        writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
                         for (int i = 0; i < NumberOfEntries; ++i)
                         {
                             writer.WriteStart(entry);
@@ -92,11 +99,11 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        private ODataEntry GenerateEntry(string name)
+        private ODataResource GenerateEntry(string name)
         {
             var entitySet = Model.EntityContainer.FindEntitySet(name);
 
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
 
             List<ODataProperty> properties = new List<ODataProperty>();
 

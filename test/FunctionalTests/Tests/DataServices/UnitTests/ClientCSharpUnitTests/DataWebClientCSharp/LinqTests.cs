@@ -24,6 +24,7 @@ namespace AstoriaUnitTests.Tests
     using NorthwindModel;
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [DeploymentItem("Workspaces", "Workspaces")]
     [TestClass]
     public class LinqTests
@@ -48,8 +49,8 @@ namespace AstoriaUnitTests.Tests
             _baseUri = request.ServiceRoot;
 
             context = new DataServiceContext(_baseUri);
-            context.EnableAtom = true;
-            context.Format.UseAtom();
+            //context.EnableAtom = true;
+            //context.Format.UseAtom();
             context.MergeOption = MergeOption.NoTracking;
             context.SendingRequest2 += LinqTests.VerifyMimeTypeForCountRequests;
             baseLineContext = ReadOnlyTestContext.CreateBaseLineContext();
@@ -78,8 +79,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqSimpleNavigation()
         {
             var baseline = baseLineContext.Teams;
@@ -97,7 +97,8 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, queryable);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void TestContinuation()
         {
             using (System.Data.Test.Astoria.TestUtil.RestoreStaticMembersOnDispose(typeof(OpenWebDataServiceHelper)))
@@ -113,8 +114,8 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(ReadOnlyTestContext);
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.MergeOption = MergeOption.NoTracking;
 
                     var teams = from cs in ctx.CreateQuery<Team>("Teams")
@@ -135,8 +136,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void TestNestedQuery()
         {
             using (System.Data.Test.Astoria.TestUtil.RestoreStaticMembersOnDispose(typeof(OpenWebDataServiceHelper)))
@@ -148,8 +148,8 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(NorthwindContext);
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.MergeOption = MergeOption.NoTracking;
 
                     var q = from c in ctx.CreateQuery<northwindClient.Categories>("Categories")
@@ -210,8 +210,7 @@ namespace AstoriaUnitTests.Tests
             VerifyNotSupportedQuery(q5);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void ShouldThrowNullExceptionForEntryReturnedByNavigationProperty()
         {
 
@@ -280,8 +279,7 @@ namespace AstoriaUnitTests.Tests
             Assert.IsInstanceOfType(e, typeof(NotSupportedException));
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqFindByKeySimple()
         {
             // no projections            
@@ -325,8 +323,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqFindByKeyAndNavigate()
         {
             // check uri here also since need to be using key syntax.
@@ -372,8 +369,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqComplexPaths()
         {
             // navigate to property on entity
@@ -454,8 +450,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTakeAndSkip()
         {
             //take
@@ -573,8 +568,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqOrderBy()
         {
             //Simple OrderBy
@@ -620,8 +614,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline3, queryable3);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqThenBy()
         {
             //Simple ThenBy
@@ -663,8 +656,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline3, queryable3);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqSelectMany()
         {
             // Queryable.SelectMany comes in these forms:
@@ -747,8 +739,7 @@ namespace AstoriaUnitTests.Tests
 #endif
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqSelectManyWithPosition()
         {
             ReadOnlyTestContext.ClearBaselineIncludes();
@@ -801,8 +792,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqSimpleFilter()
         {
             // simple filter
@@ -849,8 +839,7 @@ namespace AstoriaUnitTests.Tests
         }
 
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqBinaryExpressionsInFilter()
         {
             //AndAlso
@@ -1050,8 +1039,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline16, queryable16);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqBinaryExpressionsInOrderBy()
         {
             //AndAlso
@@ -1251,8 +1239,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline16, queryable16);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqUnaryExpressionsInFilter()
         {
             //Not
@@ -1330,8 +1317,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline6, queryable6);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqUnaryExpressionsInOrderBy()
         {
             //Not
@@ -1512,8 +1498,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         // ALinq: with multiple predicates and the key in the predicate fails
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqKeyPredicate_Positive()
         {
             // Within the same clause:
@@ -1605,8 +1590,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, queryable);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqKeyPredicate_NonFilterQueryOption()
         {
             // Applying key predicate before non-filter query option - converts key predicate to filter query option
@@ -1637,8 +1621,7 @@ namespace AstoriaUnitTests.Tests
             TestLinqQueries(testCases);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqKeyPredicate_Order()
         {
             // ALinq: order of the predicates should not matter for a composite key
@@ -1691,8 +1674,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_DirectProjection1()
         {
             {
@@ -1746,8 +1728,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_DirectProjection2()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -1775,8 +1756,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_DirectProjection3()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -1802,8 +1782,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_OrderBy1()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -1831,8 +1810,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_NestedSelect_Collection()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(Team), "HomeStadium");
@@ -1918,8 +1896,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_NestedSelect_Navigation_2()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -1959,8 +1936,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_NestedSelect_Navigation_3()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -2000,8 +1976,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_NestedSelect_Navigation_4()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -2030,8 +2005,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_NestedSelect_Navigation_5()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -2062,8 +2036,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_Positive1()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -2091,8 +2064,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTransparentIdentifier_Positive2()
         {
             ReadOnlyTestContext.AddBaselineIncludes(typeof(League), "Teams");
@@ -2120,8 +2092,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqComplexExpressionsInQueryOptions()
         {
             // several expressions
@@ -2198,8 +2169,7 @@ namespace AstoriaUnitTests.Tests
             return true;
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqPathsInQueryOptions()
         {
             // paths in filter and order
@@ -2267,8 +2237,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqDataTypes()
         {
             // bool
@@ -2602,8 +2571,7 @@ namespace AstoriaUnitTests.Tests
             // TODO
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqSpecialVBAndOr()
         {
 
@@ -2674,8 +2642,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV1Projections()
         {
             // project primitive
@@ -2780,8 +2747,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2SimpleProjections()
         {
             // simple projection into Anonymous type
@@ -2871,8 +2837,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsQueryOptions()
         {
             // all query options before projection - entity type
@@ -3082,8 +3047,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsNavigationAfterProjection()
         {
             bool passed;
@@ -3205,8 +3169,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsProjectingSingletons()
         {
             Trace.WriteLine("projection on singleton, non-entity type");
@@ -3284,8 +3247,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline3, queryable3, true);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsSingleValueReturningOperators()
         {
             // Single with non-entity type
@@ -3483,8 +3445,7 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(val9, baseline9);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsSelectingSingleProperty()
         {
             Trace.WriteLine("selecting single primitve property - non EntityType");
@@ -3588,8 +3549,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsCount()
         {
             // Count on projection, non entity type
@@ -3801,8 +3761,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline4, queryable4, true);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsKnownEntityTypes()
         {
             {
@@ -3921,8 +3880,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsKnownEntityTypesLegalCasts()
         {
             Trace.WriteLine("casts in projection");
@@ -4063,8 +4021,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         // I don't think this is relevant anymore... do we care about V2?
-        [Ignore]
-        [TestMethod]
+        // [TestMethod]
         public void LinqV2ProjectionsProjectingEntireEntity()
         {
             // selecting entire entity into non-Entity type
@@ -4363,8 +4320,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsNonEntityTypes()
         {
             // basic narrowing
@@ -4433,8 +4389,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsNonEntityTypesShapes()
         {
             // narrowing case into anonymous type which happens to include key
@@ -4450,8 +4405,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsWithExpand()
         {
             // Expand Option with entity type
@@ -4571,8 +4525,7 @@ namespace AstoriaUnitTests.Tests
             throw new NotSupportedException();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsOperatorsInProjection()
         {
             Trace.WriteLine("operations over properties of primitive types in non-Entity Type");
@@ -5182,8 +5135,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsTransparentIdentifiers()
         {
             // basic TransparentIdentifier
@@ -5374,8 +5326,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqV2ProjectionsRegressions()
         {
             ReadOnlyTestContext.ClearBaselineIncludes();
@@ -5609,8 +5560,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTypeIs()
         {
             // TypeIs over member
@@ -5660,8 +5610,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqConvert()
         {
             // cast member
@@ -5709,8 +5658,7 @@ namespace AstoriaUnitTests.Tests
             //ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqImmediateExecute()
         {
             // First on Resource Set
@@ -5886,8 +5834,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqNonGenericQueryableAPI()
         {
             // nongeneric Provider.Execute
@@ -5946,8 +5893,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqRegressions()
         {
             ReadOnlyTestContext.ClearBaselineIncludes();
@@ -6053,8 +5999,7 @@ namespace AstoriaUnitTests.Tests
             Assert.IsTrue(!query.ToString().Contains(".0"));
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqRegressions2()
         {
             // TODO: this will raise a new error
@@ -6274,8 +6219,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqRegressions3()
         {
             ReadOnlyTestContext.ClearBaselineIncludes();
@@ -6519,8 +6463,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         // NOTE: This test has a VB equivalent in ClientRegressionTests.SelectManyWithTypeCast
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqCast()
         {
             {
@@ -6762,7 +6705,7 @@ namespace AstoriaUnitTests.Tests
                 Trace.WriteLine("Cast to narrow type");
                 ReadOnlyTestContext.ClearBaselineIncludes();
                 ReadOnlyTestContext.AddBaselineIncludes(typeof(Team), "HomeStadium");
-                context.IgnoreMissingProperties = true;
+                context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
                 var query10 = (from Team t in context.CreateQuery<Team>("Teams")
                                where t.TeamID == 1
@@ -6778,8 +6721,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqExpand()
         {
             // simple expand
@@ -7041,8 +6983,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqMultipleKeys()
         {
             // using multiple keys - multiple predicates
@@ -7236,8 +7177,7 @@ namespace AstoriaUnitTests.Tests
 
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTypesFromOtherNamespaces()
         {
             // simple case - root type differs
@@ -7285,8 +7225,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline2, queryable2);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqNormalizeCompareAgainstZero()
         {
             var queryable = from s in context.CreateQuery<Stadium>("Stadiums")
@@ -7351,8 +7290,7 @@ namespace AstoriaUnitTests.Tests
                        select s;
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqMethods()
         {
             // complex, nested methods
@@ -7445,8 +7383,7 @@ namespace AstoriaUnitTests.Tests
             ReadOnlyTestContext.ClearBaselineIncludes();
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqStringMethods()
         {
             // methods in predicate and order by
@@ -7633,8 +7570,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, query);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqMathMethods()
         {
             //Round
@@ -7713,8 +7649,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, query);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqDateTimeOffsetMethods()
         {
             //Day
@@ -7796,8 +7731,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, query);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqTimeSpanMethods()
         {
             //hour
@@ -7840,8 +7774,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, query);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqVBSpecificMethods()
         {
             // Strings.Trim
@@ -7897,8 +7830,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, query);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqFuncletization()
         {
             // constants
@@ -7967,8 +7899,7 @@ namespace AstoriaUnitTests.Tests
             return value;
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void LinqAddQueryOption()
         {
             {
@@ -8222,8 +8153,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void ProjectionAndCountTest()
         {
             DataServiceQuery q = (DataServiceQuery)from t in context.CreateQuery<Team>("Teams").IncludeTotalCount()
@@ -8236,8 +8166,7 @@ namespace AstoriaUnitTests.Tests
             Assert.IsTrue(qor.TotalCount == qor1.TotalCount, "The counts must be the same from sync and async versions");
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod]
         public void ResourceBinderAnalyzeProjectionTest()
         {
             var engine = System.Data.Test.Astoria.CombinatorialEngine.FromDimensions(
@@ -8400,7 +8329,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        // [TestMethod]
         public void ProjectionClient_X_ServiceOp()
         {
             using (System.Data.Test.Astoria.TestUtil.MetadataCacheCleaner())
@@ -8409,8 +8338,8 @@ namespace AstoriaUnitTests.Tests
                 request.DataServiceType = typeof(Projections_ServiceOperations_NorthWindDataContextService);
                 request.StartService();
                 var ctx = new DataServiceContext(request.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 ctx.MergeOption = Microsoft.OData.Client.MergeOption.NoTracking;
                 ctx.Credentials = System.Net.CredentialCache.DefaultCredentials;
 

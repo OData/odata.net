@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.IO;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// WellKnownText Lexer
@@ -73,7 +72,7 @@ namespace Microsoft.Data.Spatial
                 case '9':
                     tokenType = (int)WellKnownTextTokenType.Number;
                     return false;
-                
+
                 // E is special because of exponents
                 case 'e':
                 case 'E':

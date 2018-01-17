@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -12,13 +12,13 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
 
     /// <summary>
-    /// Implementation class wrapped by the <see cref="ODataBatchOperationRequestMessage"/> and 
+    /// Implementation class wrapped by the <see cref="ODataBatchOperationRequestMessage"/> and
     /// <see cref="ODataBatchOperationResponseMessage"/> implementations.
     /// </summary>
     internal sealed class ODataBatchOperationMessage : ODataMessage
@@ -26,8 +26,8 @@ namespace Microsoft.OData.Core
         /// <summary>Listener interface to be notified of operation changes.</summary>
         private readonly IODataBatchOperationListener operationListener;
 
-        /// <summary>The URL resolver to perform custom URL resolution for URLs read or written from/to the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        /// <summary>The URL converter to perform custom URL conversion for URLs read or written from/to the payload.</summary>
+        private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>A function to retrieve the content stream for this batch operation message.</summary>
         private Func<Stream> contentStreamCreatorFunc;
@@ -41,13 +41,13 @@ namespace Microsoft.OData.Core
         /// <param name="contentStreamCreatorFunc">A function to retrieve the content stream for this batch operation message.</param>
         /// <param name="headers">The headers of the batch operation message.</param>
         /// <param name="operationListener">Listener interface to be notified of part changes.</param>
-        /// <param name="urlResolver">The URL resolver to perform custom URL resolution for URLs read or written from/to the payload.</param>
+        /// <param name="payloadUriConverter">The URL resolver to perform custom URL resolution for URLs read or written from/to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         internal ODataBatchOperationMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
-            IODataUrlResolver urlResolver,
+            IODataPayloadUriConverter payloadUriConverter,
             bool writing)
             : base(writing, /*disableMessageStreamDisposal*/ false, /*maxMessageSize*/ -1)
         {
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Core
             this.contentStreamCreatorFunc = contentStreamCreatorFunc;
             this.operationListener = operationListener;
             this.headers = headers;
-            this.urlResolver = urlResolver;
+            this.payloadUriConverter = payloadUriConverter;
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core
             return contentStream;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
@@ -179,9 +179,9 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(payloadUri, "payloadUri");
 
-            if (this.urlResolver != null)
+            if (this.payloadUriConverter != null)
             {
-                return this.urlResolver.ResolveUrl(baseUri, payloadUri);
+                return this.payloadUriConverter.ConvertPayloadUri(baseUri, payloadUri);
             }
 
             // Return null to indicate that no custom URL resolution is desired.
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Indicates that the headers and request/response line have been read or written.
-        /// Can be called only once per batch part and headers cannot be modified 
+        /// Can be called only once per batch part and headers cannot be modified
         /// anymore after this method was called.
         /// </summary>
         internal void PartHeaderProcessingCompleted()

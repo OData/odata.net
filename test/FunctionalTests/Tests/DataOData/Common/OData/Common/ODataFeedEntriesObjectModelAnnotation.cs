@@ -8,13 +8,13 @@ namespace Microsoft.Test.Taupo.OData.Common
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>
     /// An OData object model annotation for feeds to capture all the entries of the feed.
     /// </summary>
-    public sealed class ODataFeedEntriesObjectModelAnnotation : List<ODataEntry>
+    public sealed class ODataFeedEntriesObjectModelAnnotation : List<ODataResource>
     {
     }
 }

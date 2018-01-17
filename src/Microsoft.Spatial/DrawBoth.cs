@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
-    using Microsoft.Spatial;
-
     /// <summary>
     /// Base class to create a unified set of handlers for Geometry and Geography
     /// </summary>

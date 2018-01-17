@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.Linq;
     using System.Net;
     using System.ServiceModel.Web;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.Vocabularies;
@@ -109,7 +109,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     {
                         responseMessage.SetStatusCode(HttpStatusCode.Created);
                         var edmEntitySet = (IEdmEntitySetBase)this.QueryContext.Target.NavigationSource;
-                        ResponseWriter.WriteEntry(messageWriter.CreateODataEntryWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
+                        ResponseWriter.WriteEntry(messageWriter.CreateODataResourceWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
                     }
                 }
             }
@@ -127,7 +127,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
             // handle content type
             var parentUri = this.QueryContext.Target.BuildContainerUri(this.ServiceRootUri);
-            var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model);
+            var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model, this.RequestContainer);
             var contentType = this.HandleContentType((IEdmEntityType)parentContext.Target.ElementType);
 
             // handle ETag
@@ -140,7 +140,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             {
                 responseMessage.SetStatusCode(HttpStatusCode.OK);
                 var edmEntitySet = (IEdmEntitySetBase)parentContext.Target.NavigationSource;
-                ResponseWriter.WriteEntry(messageWriter.CreateODataEntryWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
+                ResponseWriter.WriteEntry(messageWriter.CreateODataResourceWriter(edmEntitySet), entity, edmEntitySet, ODataVersion.V4, null);
             }
         }
 
@@ -307,7 +307,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             else
             {
                 var parentUri = this.QueryContext.Target.BuildContainerUri(this.ServiceRootUri);
-                var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model);
+                var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model, this.RequestContainer);
                 edmEntitySet = parentContext.Target.NavigationSource as IEdmEntitySet;
             }
 

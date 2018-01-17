@@ -4,9 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.UriParser
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -31,9 +30,9 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         Convert = InternalQueryNodeKind.Convert,
 
         /// <summary>
-        /// Non-entity node referencing a range variable.
+        /// Non-resource node referencing a range variable.
         /// </summary>
-        NonentityRangeVariableReference = InternalQueryNodeKind.NonentityRangeVariableReference,
+        NonResourceRangeVariableReference = InternalQueryNodeKind.NonResourceRangeVariableReference,
 
         /// <summary>
         /// Node used to represent a binary operator.
@@ -81,9 +80,9 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         SingleValueOpenPropertyAccess = InternalQueryNodeKind.SingleValueOpenPropertyAccess,
 
         /// <summary>
-        /// Cast on a single thing.
+        /// Cast on a single resource.
         /// </summary>
-        SingleEntityCast = InternalQueryNodeKind.SingleEntityCast,
+        SingleResourceCast = InternalQueryNodeKind.SingleResourceCast,
 
         /// <summary>
         /// All query.
@@ -91,19 +90,19 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         All = InternalQueryNodeKind.All,
 
         /// <summary>
-        /// Cast on a collection of entities.
+        /// Cast on a collection of resources.
         /// </summary>
-        EntityCollectionCast = InternalQueryNodeKind.EntityCollectionCast,
+        CollectionResourceCast = InternalQueryNodeKind.CollectionResourceCast,
 
         /// <summary>
-        /// Placeholder node referencing a rangeVariable on the binding stack that references an entity.
+        /// Placeholder node referencing a rangeVariable on the binding stack that references an entity or a complex.
         /// </summary>
-        EntityRangeVariableReference = InternalQueryNodeKind.EntityRangeVariableReference,
+        ResourceRangeVariableReference = InternalQueryNodeKind.ResourceRangeVariableReference,
 
         /// <summary>
-        /// Node the represents a function call that returns a single entity.
+        /// Node the represents a function call that returns a single entity or complex.
         /// </summary>
-        SingleEntityFunctionCall = InternalQueryNodeKind.SingleEntityFunctionCall,
+        SingleResourceFunctionCall = InternalQueryNodeKind.SingleResourceFunctionCall,
 
         /// <summary>
         /// Node that represents a function call that returns a collection.
@@ -111,12 +110,12 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         CollectionFunctionCall = InternalQueryNodeKind.CollectionFunctionCall,
 
         /// <summary>
-        /// Node that represents a funciton call that returns a collection of entities.
+        /// Node that represents a function call that returns a collection of resources.
         /// </summary>
-        EntityCollectionFunctionCall = InternalQueryNodeKind.EntityCollectionFunctionCall,
+        CollectionResourceFunctionCall = InternalQueryNodeKind.CollectionResourceFunctionCall,
 
         /// <summary>
-        /// Node that represents a named function parameter. 
+        /// Node that represents a named function parameter.
         /// </summary>
         NamedFunctionParameter = InternalQueryNodeKind.NamedFunctionParameter,
 
@@ -146,12 +145,22 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         CollectionOpenPropertyAccess = InternalQueryNodeKind.CollectionOpenPropertyAccess,
 
         /// <summary>
-        /// Cast on a collection property.
+        /// Node represents a collection of complex property.
         /// </summary>
-        CollectionPropertyCast = InternalQueryNodeKind.CollectionPropertyCast,
+        CollectionComplexNode = InternalQueryNodeKind.CollectionComplexNode,
 
         /// <summary>
-        /// Cast on a single value property.
+        /// Node represents a single complex property.
+        /// </summary>
+        SingleComplexNode = InternalQueryNodeKind.SingleComplexNode,
+
+        /// <summary>
+        /// Count of a collection contains primitive or enum or complex or entity type.
+        /// </summary>
+        Count = InternalQueryNodeKind.Count,
+
+        /// <summary>
+        /// Cast on a single value.
         /// </summary>
         SingleValueCast = InternalQueryNodeKind.SingleValueCast,
     }
@@ -177,9 +186,9 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         Convert = 2,
 
         /// <summary>
-        /// Non-entity node referencing a range variable.
+        /// Non-resource node referencing a range variable.
         /// </summary>
-        NonentityRangeVariableReference = 3,
+        NonResourceRangeVariableReference = 3,
 
         /// <summary>
         /// Parameter node used to represent a binary operator.
@@ -227,9 +236,9 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         SingleValueOpenPropertyAccess = 12,
 
         /// <summary>
-        /// Cast on a single thing.
+        /// Cast on a single resource.
         /// </summary>
-        SingleEntityCast = 13,
+        SingleResourceCast = 13,
 
         /// <summary>
         /// All query.
@@ -237,19 +246,19 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         All = 14,
 
         /// <summary>
-        /// Cast on a collection.
+        /// Cast on a resource collection.
         /// </summary>
-        EntityCollectionCast = 15,
+        CollectionResourceCast = 15,
 
         /// <summary>
-        /// Entity  node referencing a range variable.
+        /// Resource node referencing a range variable.
         /// </summary>
-        EntityRangeVariableReference = 16,
+        ResourceRangeVariableReference = 16,
 
         /// <summary>
-        /// SingleEntityFunctionCall node.
+        /// SingleResourceFunctionCall node.
         /// </summary>
-        SingleEntityFunctionCall = 17,
+        SingleResourceFunctionCall = 17,
 
         /// <summary>
         /// Node that represents a function call that returns a collection.
@@ -257,9 +266,9 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         CollectionFunctionCall = 18,
 
         /// <summary>
-        /// Node that represents a funciton call that returns a collection of entities.
+        /// Node that represents a function call that returns a collection of resources.
         /// </summary>
-        EntityCollectionFunctionCall = 19,
+        CollectionResourceFunctionCall = 19,
 
         /// <summary>
         /// Node that represents a named function parameter.
@@ -292,18 +301,23 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         CollectionOpenPropertyAccess = 25,
 
         /// <summary>
-        /// Cast on a collection property.
+        /// Node represents a collection of complex property.
         /// </summary>
-        CollectionPropertyCast = 26,
+        CollectionComplexNode = 26,
 
         /// <summary>
-        /// Cast on a single value.
+        /// Node represents a single complex property.
         /// </summary>
-        SingleValueCast = 27,
+        SingleComplexNode = 27,
 
         /// <summary>
         /// Node describing count of a collection contains primitive or enum or complex or entity type.
         /// </summary>
-        CollectionCount = 28,
+        Count = 28,
+
+        /// <summary>
+        /// Cast on a single value.
+        /// </summary>
+        SingleValueCast = 29,
     }
 }

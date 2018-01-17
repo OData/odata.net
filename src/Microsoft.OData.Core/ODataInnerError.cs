@@ -4,11 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using System.Globalization;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -20,12 +22,12 @@ namespace Microsoft.OData.Core
 #endif
     public sealed class ODataInnerError
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataInnerError" /> class with default values.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with default values.</summary>
         public ODataInnerError()
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataInnerError" /> class with exception object.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
         /// <param name="exception">The <see cref="T:System.Exception" /> used to create the inner error.</param>
         public ODataInnerError(Exception exception)
         {
@@ -72,5 +74,24 @@ namespace Microsoft.OData.Core
             get;
             set;
         }
-    }
+
+        /// <summary>
+        /// Serialization to Json format string.
+        /// </summary>
+        /// <returns>The string in Json format</returns>
+        internal string ToJson()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{{" +
+                "\"message\":\"{0}\"," +
+                "\"type\":\"{1}\"," +
+                "\"stacktrace\":\"{2}\"," +
+                "\"innererror\":{3}" +
+                "}}",
+                this.Message == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Message),
+                this.TypeName == null ? "" : JsonValueUtils.GetEscapedJsonString(this.TypeName),
+                this.StackTrace == null ? "" : JsonValueUtils.GetEscapedJsonString(this.StackTrace),
+                this.InnerError == null ? "{}" : this.InnerError.ToJson());
+        }
+}
 }

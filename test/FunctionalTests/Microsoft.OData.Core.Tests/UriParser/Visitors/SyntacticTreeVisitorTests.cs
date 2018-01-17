@@ -7,14 +7,11 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Core.UriParser.Visitors;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Visitors
+namespace Microsoft.OData.Tests.UriParser.Visitors
 {
     public class SyntacticTreeVisitorTests
     {
@@ -156,7 +153,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
         public void AggregateExpressionOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateExpressionToken(new EndPathToken("Identifier", null), AggregationMethod.Sum, "Alias"));
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateExpressionToken(new EndPathToken("Identifier", null), AggregationMethodDefinition.Sum, "Alias"));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 
@@ -166,6 +163,47 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
             FakeVisitor visitor = new FakeVisitor();
             Action visitUnaryOperatorToken = () => visitor.Visit(new GroupByToken(new List<EndPathToken>(), null));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+        }
+
+        [Fact]
+        public void ComputeNotImplemented()
+        {
+            ComputeToken token = new ComputeToken(new List<ComputeExpressionToken>());
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(token);
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Action acceptToken = () => token.Accept<string>(visitor);
+            acceptToken.ShouldThrow<NotImplementedException>();
+
+            ComputeVisitor computer = new ComputeVisitor();
+            token.Accept<string>(computer).ShouldBeEquivalentTo(typeof(ComputeToken).ToString());
+        }
+
+        [Fact]
+        public void ComputeExpressionNotImplemented()
+        {
+            ComputeExpressionToken token = new ComputeExpressionToken(new EndPathToken("Identifier", null), "Id");
+            FakeVisitor visitor = new FakeVisitor();
+            Action visitUnaryOperatorToken = () => visitor.Visit(token);
+            visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
+            Action acceptToken = () => token.Accept<string>(visitor);
+            acceptToken.ShouldThrow<NotImplementedException>();
+
+            ComputeVisitor computer = new ComputeVisitor();
+            token.Accept<string>(computer).ShouldBeEquivalentTo(typeof(ComputeExpressionToken).ToString());
+        }
+
+        private class ComputeVisitor : SyntacticTreeVisitor<string>
+        {
+            public override string Visit(ComputeToken tokenIn)
+            {
+                return tokenIn.ToString();
+            }
+
+            public override string Visit(ComputeExpressionToken tokenIn)
+            {
+                return tokenIn.ToString();
+            }
         }
     }
 }

@@ -9,11 +9,11 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using DSClient = Microsoft.OData.Client;
 
     /// <summary>
-    /// Materializes entities from a sequence of ODataEntry objects
+    /// Materializes entities from a sequence of ODataResource objects
     /// </summary>
     internal sealed class ODataEntriesEntityMaterializer : ODataEntityMaterializer
     {
@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client.Materialization
         private readonly ODataFormat format;
 
         /// <summary>The entries enumerator</summary>
-        private IEnumerator<ODataEntry> feedEntries;
+        private IEnumerator<ODataResource> feedEntries;
 
         /// <summary>Is the enumerator finished.</summary>
         private bool isFinished;
@@ -37,12 +37,12 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="materializeEntryPlan">The materialize entry plan.</param>
         /// <param name="format">The format.</param>
         public ODataEntriesEntityMaterializer(
-            IEnumerable<ODataEntry> entries,
+            IEnumerable<ODataResource> entries,
             IODataMaterializerContext materializerContext,
-            EntityTrackingAdapter entityTrackingAdapter, 
-            QueryComponents queryComponents, 
-            Type expectedType, 
-            ProjectionPlan materializeEntryPlan, 
+            EntityTrackingAdapter entityTrackingAdapter,
+            QueryComponents queryComponents,
+            Type expectedType,
+            ProjectionPlan materializeEntryPlan,
             ODataFormat format)
             : base(materializerContext, entityTrackingAdapter, queryComponents, expectedType, materializeEntryPlan)
         {
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Feed being materialized; possibly null.
         /// </summary>
-        internal override ODataFeed CurrentFeed
+        internal override ODataResourceSet CurrentFeed
         {
             get { return null; }
         }
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Entry being materialized; possibly null.
         /// </summary>
-        internal override ODataEntry CurrentEntry
+        internal override ODataResource CurrentEntry
         {
             get
             {

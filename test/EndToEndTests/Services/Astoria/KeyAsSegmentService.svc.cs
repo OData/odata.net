@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Services.KeyAsSegmentService
         public new static void InitializeService(DataServiceConfiguration config)
         {
             Service.InitializeService(config);
-            config.DataServiceBehavior.UrlConventions = Microsoft.OData.Client.DataServiceUrlConventions.KeyAsSegment;
+            config.DataServiceBehavior.UrlKeyDelimiter = Microsoft.OData.Client.DataServiceUrlKeyDelimiter.Slash;
         }
     }
 }

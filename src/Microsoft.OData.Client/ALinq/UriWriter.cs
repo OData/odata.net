@@ -34,10 +34,10 @@ namespace Microsoft.OData.Client
 
         /// <summary>The dictionary to store the alias.</summary>
         private readonly Dictionary<string, string> alias = new Dictionary<string, string>(StringComparer.Ordinal);
-        
+
         /// <summary>the request data service version for the uri.</summary>
         private Version uriVersion;
-        
+
         /// <summary>
         /// For caching query options to be grouped
         /// </summary>
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client
         /// <param name="addTrailingParens">flag to indicate whether generated URI should include () if leaf is ResourceSet</param>
         /// <param name="e">The expression to translate</param>
         /// <param name="uri">uri</param>
-        /// <param name="version">version for query</param>    
+        /// <param name="version">version for query</param>
         internal static void Translate(DataServiceContext context, bool addTrailingParens, Expression e, out Uri uri, out Version version)
         {
             var writer = new UriWriter(context);
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Client
 
                 fullUri = fullUri.Substring(0, fullUri.Length - 1);
             }
-            
+
 
             uri = UriUtil.CreateUri(fullUri, UriKind.Absolute);
             version = writer.uriVersion;
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Client
 
             if (rse.KeyPredicateConjuncts.Count > 0)
             {
-                this.context.UrlConventions.AppendKeyExpression(rse.GetKeyProperties(), kvp => ClientTypeUtil.GetServerDefinedName(kvp.Key), kvp => kvp.Value.Value, this.uriBuilder);
+                this.context.UrlKeyDelimiter.AppendKeyExpression(rse.GetKeyProperties(), kvp => ClientTypeUtil.GetServerDefinedName(kvp.Key), kvp => kvp.Value.Value, this.uriBuilder);
             }
 
             if (rse.IsOperationInvocation)
@@ -309,7 +309,7 @@ namespace Microsoft.OData.Client
                 // append $count segment: /$count
                 this.uriBuilder.Append(UriHelper.FORWARDSLASH).Append(UriHelper.DOLLARSIGN).Append(UriHelper.COUNT);
             }
-            
+
             this.VisitQueryOptions(rse);
             return rse;
         }
@@ -322,7 +322,7 @@ namespace Microsoft.OData.Client
         {
             if (!this.uriBuilder.ToString().EndsWith(UriHelper.FORWARDSLASH.ToString(), StringComparison.Ordinal))
             {
-                this.uriBuilder.Append(UriHelper.FORWARDSLASH);   
+                this.uriBuilder.Append(UriHelper.FORWARDSLASH);
             }
 
             if (rse.IsOperationInvocation)

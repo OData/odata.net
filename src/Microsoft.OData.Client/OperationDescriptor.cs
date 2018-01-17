@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
     public abstract class OperationDescriptor : Descriptor
     {
         #region fields
-        
+
         /// <summary>Maps to m:action\@title. Human-readable description of the service operation.</summary>
         private string title;
 

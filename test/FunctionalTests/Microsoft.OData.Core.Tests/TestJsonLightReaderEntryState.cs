@@ -7,52 +7,59 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
-    internal class TestJsonLightReaderEntryState : IODataJsonLightReaderEntryState
+    internal class TestJsonLightReaderEntryState : IODataJsonLightReaderResourceState
     {
-        private ODataEntry entry = ReaderUtils.CreateNewEntry();
-        private readonly EdmEntityType edmEntityType = new EdmEntityType("TestNamespace", "EntityType");
+        private ODataResourceBase entry = ReaderUtils.CreateNewResource();
+        private EdmStructuredType edmStructuredType = new EdmEntityType("TestNamespace", "EntityType");
         private SelectedPropertiesNode selectedProperties;
-        private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
+        private PropertyAndAnnotationCollector propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
-        public ODataEntry Entry
+        public ODataResourceBase Resource
         {
             get { return this.entry; }
             set { this.entry = value; }
         }
 
-        public IEdmEntityType EntityType
+        public IEdmStructuredType ResourceType
         {
             get
             {
-                if (!this.edmEntityType.Properties().Any())
+                if (!this.edmStructuredType.Properties().Any())
                 {
-                    this.edmEntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32);
+                    this.edmStructuredType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32);
                 }
 
-                return this.edmEntityType;
+                return this.edmStructuredType;
+            }
+            set
+            {
+                this.edmStructuredType = (EdmStructuredType)value;
             }
         }
 
-        public ODataEntityMetadataBuilder MetadataBuilder { get; set; }
+        public IEdmStructuredType ResourceTypeFromMetadata { get; set; }
+
+        public IEdmNavigationSource NavigationSource { get; set; }
+
+        public ODataResourceMetadataBuilder MetadataBuilder { get; set; }
 
         public bool AnyPropertyFound { get; set; }
 
-        public ODataJsonLightReaderNavigationLinkInfo FirstNavigationLinkInfo
+        public ODataJsonLightReaderNestedResourceInfo FirstNestedResourceInfo
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
         }
 
-        public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        public PropertyAndAnnotationCollector PropertyAndAnnotationCollector
         {
-            get { return this.duplicatePropertyNamesChecker; }
+            get { return this.propertyAndAnnotationCollector; }
         }
 
         public SelectedPropertiesNode SelectedProperties
@@ -75,7 +82,7 @@ namespace Microsoft.OData.Core.Tests
             get { throw new NotImplementedException(); }
         }
 
-        public bool ProcessingMissingProjectedNavigationLinks
+        public bool ProcessingMissingProjectedNestedResourceInfos
         {
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }

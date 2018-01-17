@@ -872,7 +872,7 @@
     <Property Name="Name" Type="String" MaxLength="30" Nullable="false" />
     <Property Name="City" Type="String" MaxLength="30" Nullable="false"/>
     <Property Name="State" Type="String" MaxLength="30" Nullable="false" />
-    <Property Name="Country" Type="String" MaxLength="30" Nullable="false" />
+    <Property Name="CountryOrRegion" Type="String" MaxLength="30" Nullable="false" />
     <NavigationProperty Name="Students" Relationship="Aruba.FK_Students_College" FromRole="College" ToRole="Students" />
   </EntityType>
   <EntityType Name="University" BaseType="Aruba.College">

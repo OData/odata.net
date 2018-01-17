@@ -10,7 +10,7 @@ SelectExpandQueryOption
 			FilterQueryOption
 				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 				Parameter = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = Orders
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
@@ -19,11 +19,11 @@ SelectExpandQueryOption
 						Property = OrderID
 						TypeReference = [Edm.Int32 Nullable=False]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = Orders
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				GreaterThan
 					1941(Type: [Edm.Int32 Nullable=False])
 			SelectExpandQueryOption
@@ -34,7 +34,7 @@ SelectExpandQueryOption
 						FilterQueryOption
 							ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
 							Parameter = 
-							EntityRangeVariable
+							ResourceRangeVariable
 								Name = $it
 								NavigationSource = LoggedInEmployee
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
@@ -45,7 +45,7 @@ SelectExpandQueryOption
 										NonentityRangeVariableReferenceNode
 											Name = a
 											Range Variable = 
-											NonentityRangeVariable
+											NonResourceRangeVariable
 												Name = a
 												TypeReference = [Edm.String Nullable=True Unicode=True]
 											TypeReference = [Edm.String Nullable=True Unicode=True]
@@ -56,16 +56,16 @@ SelectExpandQueryOption
 										Property = Numbers
 										ItemType = [Edm.String Nullable=True Unicode=True]
 										Source = 
-										EntityRangeVariableReferenceNode
+										ResourceRangeVariableReferenceNode
 											Name = $it
 											NavigationSource = LoggedInEmployee
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 									Parameters = 
-									NonentityRangeVariable
+									NonResourceRangeVariable
 										Name = a
 										TypeReference = [Edm.String Nullable=True Unicode=True]
-									EntityRangeVariable
+									ResourceRangeVariable
 										Name = $it
 										NavigationSource = LoggedInEmployee
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
@@ -82,11 +82,11 @@ SelectExpandQueryOption
 													Property = DateHired
 													TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 													Source = 
-													EntityRangeVariableReferenceNode
+													ResourceRangeVariableReferenceNode
 														Name = $it
 														NavigationSource = LoggedInEmployee
 														TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
-														Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+														Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 									Equal
 										1943(Type: [Edm.Int32 Nullable=False])
 						SelectExpandQueryOption

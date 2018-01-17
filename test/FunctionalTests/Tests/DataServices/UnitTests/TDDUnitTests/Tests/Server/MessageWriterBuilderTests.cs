@@ -4,21 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.UriParser;
+
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Service;
-    using Microsoft.OData.Service.Caching;
-    using Microsoft.OData.Service.Providers;
-    using System.Net;
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Service;
+    using Microsoft.OData.Service.Caching;
+    using Microsoft.OData.Service.Providers;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
@@ -58,9 +58,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             var provider = new DataServiceProviderWrapper(
                 new DataServiceCacheItem(
                     configuration,
-                    staticConfiguration), 
-                providerSimulator, 
-                providerSimulator, 
+                    staticConfiguration),
+                providerSimulator,
+                providerSimulator,
                 this.dataServiceSimulator,
                 false);
 
@@ -74,17 +74,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void CreatedSettingsShouldHaveIndentTurnedOff()
-        {
-            var settings = MessageWriterBuilder.CreateMessageWriterSettings();
-            settings.Indent.Should().BeFalse();
-        }
-
-        [TestMethod]
         public void CreatedSettingsShouldHaveCheckCharactersTurnedOff()
         {
             var settings = MessageWriterBuilder.CreateMessageWriterSettings();
-            settings.CheckCharacters.Should().BeFalse();
+            settings.EnableCharactersCheck.Should().BeFalse();
         }
 
         [TestMethod]
@@ -101,9 +94,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void ServiceUriShouldBeSetAsBase()
         {
             Uri serviceUri = new Uri("http://www.example.com");
-            var testSubject = new ODataMessageWriterSettings { PayloadBaseUri = null };
+            var testSubject = new ODataMessageWriterSettings { BaseUri = null };
             MessageWriterBuilder.ApplyCommonSettings(testSubject, serviceUri, VersionUtil.Version4Dot0, this.dataServiceSimulator, this.responseMessageSimulator);
-            testSubject.PayloadBaseUri.Should().BeSameAs(serviceUri);
+            testSubject.BaseUri.Should().BeSameAs(serviceUri);
         }
 
         [TestMethod]
@@ -115,23 +108,14 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void ApplyCommonSettingsUsesODataServerBehavior()
-        {
-            var testSubject = new ODataMessageWriterSettings();
-            testSubject.EnableDefaultBehavior();
-            MessageWriterBuilder.ApplyCommonSettings(testSubject, new Uri("http://www.example.com"), VersionUtil.Version4Dot0, this.dataServiceSimulator, this.responseMessageSimulator);
-            testSubject.WriterBehavior.ShouldHave().AllProperties().EqualTo(ODataWriterBehavior.CreateODataServerBehavior());
-        }
-
-        [TestMethod]
         public void ApplyCommonSettingsShouldDisableMessageStreamDisposalForTopLevel()
         {
             // AstoriaResponseMessage is only used for representing top-level responses, not individual parts of a batched response.
             var topLevelResponseMessage = new AstoriaResponseMessage(this.host);
 
-            var testSubject = new ODataMessageWriterSettings { DisableMessageStreamDisposal = false };
+            var testSubject = new ODataMessageWriterSettings { EnableMessageStreamDisposal = true };
             MessageWriterBuilder.ApplyCommonSettings(testSubject, new Uri("http://www.example.com"), VersionUtil.Version4Dot0, this.dataServiceSimulator, topLevelResponseMessage);
-            testSubject.DisableMessageStreamDisposal.Should().BeTrue();
+            testSubject.EnableMessageStreamDisposal.Should().BeFalse();
         }
 
         [TestMethod]
@@ -141,9 +125,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             // For this test, its enough to just pass the test implementation of the response contract.
             var nonTopLevelResponseMessage = this.responseMessageSimulator;
 
-            var testSubject = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var testSubject = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             MessageWriterBuilder.ApplyCommonSettings(testSubject, new Uri("http://www.example.com"), VersionUtil.Version4Dot0, this.dataServiceSimulator, nonTopLevelResponseMessage);
-            testSubject.DisableMessageStreamDisposal.Should().BeFalse();
+            testSubject.EnableMessageStreamDisposal.Should().BeTrue();
         }
 
         [TestMethod]

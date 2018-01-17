@@ -11,10 +11,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.IO;
     using System.Linq;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Metadata;
@@ -271,7 +270,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             IEnumerable<EdmError> errors;
             using (XmlReader reader = XmlReader.Create(new StringReader(csdl)))
             {
-                if (!CsdlReader.TryParse(new[] { reader }, out model, out errors))
+                if (!SchemaReader.TryParse(new[] { reader }, out model, out errors))
                 {
                     string errorStrings = string.Join(", ", errors.Select(e => e.ToString()).ToArray());
                     this.Assert.Fail("Could not parse CSDL: " + System.Environment.NewLine + errorStrings);

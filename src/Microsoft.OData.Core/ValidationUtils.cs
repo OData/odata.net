@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -13,7 +13,7 @@ namespace Microsoft.OData.Core
     using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core
         /// <remarks>Keep this array in sync with MetadataProviderUtils.InvalidCharactersInPropertyNames in Astoria.</remarks>
         internal static readonly char[] InvalidCharactersInPropertyNames = new char[] { ':', '.', '@' };
 
-        /// <summary>Maximum batch boundary length supported (not includeding leading CRLF or '-').</summary>
+        /// <summary>Maximum batch boundary length supported (not including leading CRLF or '-').</summary>
         private const int MaxBoundaryLength = 70;
 
         /// <summary>
@@ -52,7 +52,10 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(typeName != null, "typeName != null");
 
-            if (typeKind != EdmTypeKind.Primitive && typeKind != EdmTypeKind.Enum && typeKind != EdmTypeKind.Complex && typeKind != EdmTypeKind.Collection)
+            if (typeKind != EdmTypeKind.Primitive
+                && typeKind != EdmTypeKind.Enum
+                && typeKind != EdmTypeKind.Collection
+                && typeKind != EdmTypeKind.Untyped)
             {
                 throw new ODataException(Strings.ValidationUtils_IncorrectValueTypeKind(typeName, typeKind.ToString()));
             }
@@ -89,7 +92,7 @@ namespace Microsoft.OData.Core
             // Entity types must be assignable
             if (!EdmLibraryExtensions.IsAssignableFrom(expectedEntityTypeReference.EntityDefinition(), payloadEntityTypeReference.EntityDefinition()))
             {
-                throw new ODataException(Strings.ValidationUtils_EntryTypeNotAssignableToExpectedType(payloadEntityTypeReference.FullName(), expectedEntityTypeReference.FullName()));
+                throw new ODataException(Strings.ValidationUtils_ResourceTypeNotAssignableToExpectedType(payloadEntityTypeReference.FullName(), expectedEntityTypeReference.FullName()));
             }
         }
 
@@ -155,20 +158,11 @@ namespace Microsoft.OData.Core
         /// Validates a null collection item against the expected type.
         /// </summary>
         /// <param name="expectedItemType">The expected item type or null if no expected item type exists.</param>
-        /// <param name="writerBehavior">The <see cref="ODataWriterBehavior"/> instance controlling the behavior of the writer.</param>
-        internal static void ValidateNullCollectionItem(IEdmTypeReference expectedItemType, ODataWriterBehavior writerBehavior)
+        internal static void ValidateNullCollectionItem(IEdmTypeReference expectedItemType)
         {
-            if (expectedItemType != null)
+            if (expectedItemType != null && expectedItemType.IsODataPrimitiveTypeKind() && !expectedItemType.IsNullable)
             {
-                if (expectedItemType.IsODataPrimitiveTypeKind())
-                {
-                    // WCF DS allows null values for non-nullable primitive types, so we need to check for a knob which enables this behavior.
-                    // See the description of ODataWriterBehavior.AllowNullValuesForNonNullablePrimitiveTypes for more details.
-                    if (!expectedItemType.IsNullable && !writerBehavior.AllowNullValuesForNonNullablePrimitiveTypes)
-                    {
-                        throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
-                    }
-                }
+                throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
             }
         }
 
@@ -214,7 +208,7 @@ namespace Microsoft.OData.Core
             // null action/function can not appear in the enumeration
             if (operation == null)
             {
-                string enumerableName = isAction ? "ODataEntry.Actions" : "ODataEntry.Functions";
+                string enumerableName = isAction ? "ODataResource.Actions" : "ODataResource.Functions";
                 throw new ODataException(Strings.ValidationUtils_EnumerableContainsANullItem(enumerableName));
             }
         }
@@ -250,37 +244,29 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates that the specified <paramref name="entry"/> is a valid entry as per the specified type.
+        /// Validates that the specified <paramref name="resource"/> is a valid resource as per the specified type.
         /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        /// <param name="entityType">Optional entity type to validate the entry against.</param>
-        /// <param name="model">Model containing the entity type.</param>
-        /// <param name="validateMediaResource">true if the validation of the default MediaResource should be done; false otherwise.</param>
-        /// <remarks>If the <paramref name="entityType"/> is available only entry-level tests are performed, properties and such are not validated.</remarks>
-        internal static void ValidateEntryMetadataResource(ODataEntry entry, IEdmEntityType entityType, IEdmModel model, bool validateMediaResource)
+        /// <param name="resource">The resource to validate.</param>
+        /// <param name="resourceType">Optional entity type to validate the resource against.</param>
+        /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
+        internal static void ValidateMediaResource(ODataResourceBase resource, IEdmEntityType resourceType)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
 
-            if (entityType != null)
+            if (resourceType != null)
             {
-                Debug.Assert(model != null, "model != null");
-                Debug.Assert(model.IsUserModel(), "model.IsUserModel()");
-
-                if (validateMediaResource)
+                if (resource.MediaResource == null)
                 {
-                    if (entry.MediaResource == null)
+                    if (resourceType.HasStream)
                     {
-                        if (entityType.HasStream)
-                        {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(entityType.FullTypeName()));
-                        }
+                        throw new ODataException(Strings.ValidationUtils_ResourceWithoutMediaResourceAndMLEType(resourceType.FullTypeName()));
                     }
-                    else
+                }
+                else
+                {
+                    if (!resourceType.HasStream)
                     {
-                        if (!entityType.HasStream)
-                        {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(entityType.FullTypeName()));
-                        }
+                        throw new ODataException(Strings.ValidationUtils_ResourceWithMediaResourceAndNonMLEType(resourceType.FullTypeName()));
                     }
                 }
             }
@@ -297,7 +283,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(expectedTypeReference != null, "expectedTypeReference != null");
 
             // Note that valueInstanceType is never a nullable type because GetType() on Nullable variables at runtime will always yield
-            // a Type object that represents the underlying type, not the Nullable type itself. 
+            // a Type object that represents the underlying type, not the Nullable type itself.
             Type valueInstanceType = value.GetType();
             IEdmPrimitiveTypeReference valuePrimitiveTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(valueInstanceType);
             ValidateIsExpectedPrimitiveType(value, valuePrimitiveTypeReference, expectedTypeReference);
@@ -346,11 +332,11 @@ namespace Microsoft.OData.Core
             IEdmType expectedType = expectedTypeReference.Definition;
             IEdmPrimitiveType typeFromValue = (IEdmPrimitiveType)typeReferenceFromValue.Definition;
 
-            // The two primitive types match if they have the same definition and either both or only the 
+            // The two primitive types match if they have the same definition and either both or only the
             // expected type is nullable
-            // NOTE: for strings and binary values we must not check nullability here because the type reference 
+            // NOTE: for strings and binary values we must not check nullability here because the type reference
             //       from the value is always nullable since C# has no way to express non-nullable strings.
-            //       However, this codepath is only hit if the value is not 'null' so we can assign a non-null 
+            //       However, this codepath is only hit if the value is not 'null' so we can assign a non-null
             //       value to both nullable and non-nullable string/binary types.
             bool nullableCompatible = expectedTypeReference.IsNullable == typeReferenceFromValue.IsNullable ||
                 expectedTypeReference.IsNullable && !typeReferenceFromValue.IsNullable ||
@@ -373,7 +359,6 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="serviceDocumentElement">The element in service document to validate.</param>
         /// <param name="format">Format that is being validated.</param>
-        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of ToString is safe in this context")]
         internal static void ValidateServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, ODataFormat format)
         {
             if (serviceDocumentElement == null)
@@ -381,7 +366,7 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
             }
 
-            // The resource collection URL must not be null; 
+            // The resource collection URL must not be null;
             if (serviceDocumentElement.Url == null)
             {
                 throw new ODataException(Strings.ValidationUtils_ResourceMustSpecifyUrl);
@@ -399,7 +384,7 @@ namespace Microsoft.OData.Core
         /// <param name="serviceDocumentUrl">The service document url to validate.</param>
         internal static void ValidateServiceDocumentElementUrl(string serviceDocumentUrl)
         {
-            // The service document URL must not be null or empty; 
+            // The service document URL must not be null or empty;
             if (serviceDocumentUrl == null)
             {
                 throw new ODataException(Strings.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull);
@@ -411,18 +396,27 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="actualTypeKind">The actual type kind to compare.</param>
         /// <param name="expectedTypeKind">The expected type kind to compare against.</param>
+        /// <param name="expectStructuredType">This value indicates if the <paramref name="actualTypeKind"/> is expected to be complex or entity.
+        /// True for complex or entity, false for non-structured type kind, null for indetermination.</param>
         /// <param name="typeName">The name of the type to use in the error.</param>
-        internal static void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind, string typeName)
+        internal static void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind, bool? expectStructuredType, string typeName)
         {
-            if (actualTypeKind != expectedTypeKind)
+            if (expectStructuredType.HasValue && expectStructuredType.Value
+                && (expectedTypeKind.IsStructured() || expectedTypeKind == EdmTypeKind.None)
+                && actualTypeKind.IsStructured())
+            {
+                return;
+            }
+
+            if (expectedTypeKind != actualTypeKind)
             {
                 if (typeName == null)
                 {
                     throw new ODataException(Strings.ValidationUtils_IncorrectTypeKindNoTypeName(actualTypeKind.ToString(), expectedTypeKind.ToString()));
                 }
 
-                if (actualTypeKind == EdmTypeKind.TypeDefinition && expectedTypeKind == EdmTypeKind.Primitive ||
-                    actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.TypeDefinition)
+                if (actualTypeKind == EdmTypeKind.TypeDefinition && expectedTypeKind == EdmTypeKind.Primitive
+                    || actualTypeKind == EdmTypeKind.Primitive && expectedTypeKind == EdmTypeKind.TypeDefinition)
                 {
                     return;
                 }
@@ -446,21 +440,6 @@ namespace Microsoft.OData.Core
             //// NOTE: we do not have to check the validity of the characters in the boundary string
             ////       since we check their validity when reading the boundary parameter value of the Content-Type header.
             ////       See HttpUtils.ReadQuotedParameterValue.
-        }
-
-        /// <summary>
-        /// Null validation of complex properties will be skipped if edm version is less than v3 and data service version exists.
-        /// In such cases, the provider decides what should be done if a null value is stored on a non-nullable complex property.
-        /// </summary>
-        /// <param name="model">The model containing the complex property.</param>
-        /// <returns>True if complex property should be validated for null values.</returns>
-        internal static bool ShouldValidateComplexPropertyNullValue(IEdmModel model)
-        {
-            // Null validation of complex properties will be skipped if edm version < v3 and data service version exists.
-            Debug.Assert(model != null, "For null validation model is required.");
-            Debug.Assert(model.IsUserModel(), "For complex properties, the model should be user model.");
-
-            return true;
         }
 
         /// <summary>

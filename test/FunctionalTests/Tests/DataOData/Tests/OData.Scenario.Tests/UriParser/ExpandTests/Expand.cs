@@ -4,18 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Microsoft.Test.Taupo.OData.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
 {
-    using System;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class Expand : UriParserTestsBase
     {
@@ -135,8 +132,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
             }
             catch (ODataException e)
             {
-                var expected = ODataExpectedExceptions.ODataException("ExpandItemBinder_PropertyIsNotANavigationProperty", "HomeAddress", this.person.FullName());
-                expected.ExpectedMessage.Verifier.VerifyMatch("ExpandItemBinder_PropertyIsNotANavigationProperty", e.Message, "HomeAddress", this.person.FullName());
+                var expected = ODataExpectedExceptions.ODataException("ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty", "HomeAddress", this.person.FullName());
+                expected.ExpectedMessage.Verifier.VerifyMatch("ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty", e.Message, "HomeAddress", this.person.FullName());
             }
         }
 
@@ -151,8 +148,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
             }
             catch (ODataException e)
             {
-                var expected = ODataExpectedExceptions.ODataException("ExpandItemBinder_PropertyIsNotANavigationProperty", "CustomerID", this.order.FullName());
-                expected.ExpectedMessage.Verifier.VerifyMatch("ExpandItemBinder_PropertyIsNotANavigationProperty", e.Message, "CustomerID", this.order.FullName());
+                var expected = ODataExpectedExceptions.ODataException("ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty", "CustomerID", this.order.FullName());
+                expected.ExpectedMessage.Verifier.VerifyMatch("ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty", e.Message, "CustomerID", this.order.FullName());
             }
         }
 

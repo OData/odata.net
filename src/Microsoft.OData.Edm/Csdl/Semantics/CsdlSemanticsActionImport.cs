@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             get { return (IEdmAction)this.Operation; }
         }
-        
+
         public override EdmContainerElementKind ContainerElementKind
         {
             get { return EdmContainerElementKind.ActionImport; }

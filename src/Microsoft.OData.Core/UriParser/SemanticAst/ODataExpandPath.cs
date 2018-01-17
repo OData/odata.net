@@ -4,17 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
-    /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/> or <see cref="NavigationPropertySegment"/>.
+    /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/> or <see cref="NavigationPropertySegment"/> or <see cref="PropertySegment"/> of complex.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataExpandPathCollection just doesn't sound right")]
     public class ODataExpandPath : ODataPath
@@ -60,7 +58,14 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             bool foundNavProp = false;
             foreach (ODataPathSegment segment in this)
             {
-                if (segment is TypeSegment) 
+                if (segment is TypeSegment)
+                {
+                    if (index == this.Count - 1)
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                    }
+                }
+                else if (segment is PropertySegment)
                 {
                     if (index == this.Count - 1)
                     {

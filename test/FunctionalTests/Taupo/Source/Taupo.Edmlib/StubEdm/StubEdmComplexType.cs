@@ -4,13 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.Test.Taupo.Edmlib.StubEdm
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-
     /// <summary>
     /// Stub implementation of EdmComplexType
     /// </summary>
@@ -58,14 +59,6 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         public EdmTypeKind TypeKind
         {
             get { return EdmTypeKind.Complex; }
-        }
-
-        /// <summary>
-        /// Gets the term kind
-        /// </summary>
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
         }
 
         /// <summary>

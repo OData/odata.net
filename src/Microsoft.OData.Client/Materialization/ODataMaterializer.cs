@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Client.Materialization
     internal abstract class ODataMaterializer : IDisposable
     {
         /// <summary>Empty navigation links collection</summary>
-        internal static readonly ODataNavigationLink[] EmptyLinks = new ODataNavigationLink[0];
+        internal static readonly ODataNestedResourceInfo[] EmptyLinks = new ODataNestedResourceInfo[0];
 
         /// <summary>Empty property collection</summary>
         protected static readonly ODataProperty[] EmptyProperties = new ODataProperty[0];
@@ -33,9 +33,6 @@ namespace Microsoft.OData.Client.Materialization
 
         /// <summary>The collection value materialization policy. </summary>
         private readonly CollectionValueMaterializationPolicy collectionValueMaterializationPolicy;
-
-        /// <summary>The complex value materializer policy. </summary>
-        private readonly ComplexValueMaterializationPolicy complexValueMaterializerPolicy;
 
         /// <summary>The enum value materialization policy. </summary>
         private readonly EnumValueMaterializationPolicy enumValueMaterializationPolicy;
@@ -61,16 +58,11 @@ namespace Microsoft.OData.Client.Materialization
             this.nextLinkTable = new Dictionary<IEnumerable, DataServiceQueryContinuation>(DSClient.ReferenceEqualityComparer<IEnumerable>.Instance);
 
             this.enumValueMaterializationPolicy = new EnumValueMaterializationPolicy(this.MaterializerContext);
-            this.lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(this.Format));
+            this.lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             this.primitiveValueMaterializationPolicy = new PrimitiveValueMaterializationPolicy(this.MaterializerContext, this.lazyPrimitivePropertyConverter);
             this.collectionValueMaterializationPolicy = new CollectionValueMaterializationPolicy(this.MaterializerContext, this.primitiveValueMaterializationPolicy);
-            this.complexValueMaterializerPolicy = new ComplexValueMaterializationPolicy(this.MaterializerContext, this.lazyPrimitivePropertyConverter);
             this.instanceAnnotationMaterializationPolicy = new InstanceAnnotationMaterializationPolicy(this.MaterializerContext);
-            this.collectionValueMaterializationPolicy.ComplexValueMaterializationPolicy = this.complexValueMaterializerPolicy;
             this.collectionValueMaterializationPolicy.InstanceAnnotationMaterializationPolicy = this.instanceAnnotationMaterializationPolicy;
-            this.complexValueMaterializerPolicy.CollectionValueMaterializationPolicy = this.collectionValueMaterializationPolicy;
-            this.complexValueMaterializerPolicy.InstanceAnnotationMaterializationPolicy = this.instanceAnnotationMaterializationPolicy;
-            this.instanceAnnotationMaterializationPolicy.ComplexValueMaterializationPolicy = this.complexValueMaterializerPolicy;
             this.instanceAnnotationMaterializationPolicy.CollectionValueMaterializationPolicy = this.collectionValueMaterializationPolicy;
             this.instanceAnnotationMaterializationPolicy.EnumValueMaterializationPolicy = this.enumValueMaterializationPolicy;
         }
@@ -84,10 +76,10 @@ namespace Microsoft.OData.Client.Materialization
         internal abstract object CurrentValue { get; }
 
         /// <summary>Feed being materialized; possibly null.</summary>
-        internal abstract ODataFeed CurrentFeed { get; }
+        internal abstract ODataResourceSet CurrentFeed { get; }
 
         /// <summary>Entry being materialized; possibly null.</summary>
-        internal abstract ODataEntry CurrentEntry { get; }
+        internal abstract ODataResource CurrentEntry { get; }
 
         /// <summary>Table storing the next links assoicated with the current payload</summary>
         internal Dictionary<IEnumerable, DataServiceQueryContinuation> NextLinkTable
@@ -147,14 +139,6 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Gets the complex value materialization policy.
-        /// </summary>
-        protected ComplexValueMaterializationPolicy ComplexValueMaterializationPolicy
-        {
-            get { return this.complexValueMaterializerPolicy; }
-        }
-
-        /// <summary>
         /// Gets the collection value materialization policy.
         /// </summary>
         protected EnumValueMaterializationPolicy EnumValueMaterializationPolicy
@@ -201,8 +185,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="plan">The projection plan.</param>
         /// <param name="payloadKind">expected payload kind.</param>
         /// <returns>A materializer specialized for the given response.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000", Justification = "ODataMaterializer is disposed by the caller.")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         public static ODataMaterializer CreateMaterializerForMessage(
             IODataResponseMessage responseMessage,
             ResponseInfo responseInfo,
@@ -228,11 +210,23 @@ namespace Microsoft.OData.Client.Materialization
                     edmType = responseInfo.TypeResolver.ResolveExpectedTypeForReading(materializerType);
                 }
 
-                if (payloadKind == ODataPayloadKind.Entry || payloadKind == ODataPayloadKind.Feed)
+                if (payloadKind == ODataPayloadKind.Property && edmType != null)
+                {
+                    if (edmType.TypeKind.IsStructured())
+                    {
+                        payloadKind = ODataPayloadKind.Resource;
+                    }
+                    else if (edmType.TypeKind == EdmTypeKind.Collection && (edmType as IEdmCollectionType).ElementType.IsStructured())
+                    {
+                        payloadKind = ODataPayloadKind.ResourceSet;
+                    }
+                }
+
+                if (payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet)
                 {
                     // In V1/V2, we allowed System.Object type to be allowed to pass to ExecuteQuery.
                     // Hence we need to explicitly check for System.Object to allow this
-                    if (edmType != null && edmType.TypeKind != EdmTypeKind.Entity)
+                    if (edmType != null && !edmType.TypeKind.IsStructured())
                     {
                         throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidNonEntityType(materializerType.FullName));
                     }
@@ -278,7 +272,7 @@ namespace Microsoft.OData.Client.Materialization
                         case ODataPayloadKind.Property:
                         case ODataPayloadKind.IndividualProperty:
                             // Top level properties cannot be of entity type.
-                            if (edmType != null && edmType.TypeKind == EdmTypeKind.Entity)
+                            if (edmType != null && (edmType.TypeKind == EdmTypeKind.Entity || edmType.TypeKind == EdmTypeKind.Complex))
                             {
                                 throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(materializerType.FullName));
                             }
@@ -315,7 +309,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>Reads the next value from the input content.</summary>
         /// <returns>true if another value is available after reading; false otherwise.</returns>
         /// <remarks>
-        /// After invocation, the currentValue field (and CurrentValue property) will 
+        /// After invocation, the currentValue field (and CurrentValue property) will
         /// reflect the value materialized from the parser; possibly null if the
         /// result is true (for null values); always null if the result is false.
         /// </remarks>
@@ -350,7 +344,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="responseInfo">The response context</param>
         /// <param name="payloadKind">Type of the message.</param>
         /// <returns>The message reader.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000", Justification = "ODataMessageReader must be disposed by the caller")]
         protected static ODataMessageReader CreateODataMessageReader(IODataResponseMessage responseMessage, ResponseInfo responseInfo, ref ODataPayloadKind payloadKind)
         {
             ODataMessageReaderSettings settings = responseInfo.ReadHelper.CreateSettings();
@@ -376,10 +369,7 @@ namespace Microsoft.OData.Client.Materialization
                     detectionResult = payloadKinds.First();
                 }
 
-                // Astoria client only supports atom, jsonlight and raw value payloads.
-#pragma warning disable 618
-                if (detectionResult.Format != ODataFormat.Atom && detectionResult.Format != ODataFormat.Json && detectionResult.Format != ODataFormat.RawValue)
-#pragma warning restore 618
+                if (detectionResult.Format != ODataFormat.Json && detectionResult.Format != ODataFormat.RawValue)
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidContentTypeEncountered(responseMessage.GetHeader(XmlConstants.HttpContentType)));
                 }

@@ -7,9 +7,9 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     public class VerificationHelpers
     {

@@ -20,9 +20,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.ifFalse = ifFalse;
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.If; }
+            get { return EdmExpressionKind.If; }
         }
 
         public CsdlExpressionBase Test

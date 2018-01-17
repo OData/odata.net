@@ -1,550 +1,80 @@
 Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[]}
 
 Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[]}
 
-Combination: 6; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Combination: 6; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 8; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 14; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 16; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 14; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
-
-Combination: 22; TestConfiguration = Format: Atom, Request: False, Synchronous: True
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-  </workspace>
-</service>
-
-Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: False
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-  </workspace>
-</service>
-
-Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 30; TestConfiguration = Format: Atom, Request: False, Synchronous: True
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
-
-Combination: 32; TestConfiguration = Format: Atom, Request: False, Synchronous: False
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
 Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
 Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 46; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 48; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 62; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 86; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 88; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 98; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 100; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 94; TestConfiguration = Format: Atom, Request: False, Synchronous: True
+Combination: 110; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 96; TestConfiguration = Format: Atom, Request: False, Synchronous: False
+Combination: 112; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
-
-Combination: 110; TestConfiguration = Format: Atom, Request: False, Synchronous: True
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
-
-Combination: 112; TestConfiguration = Format: Atom, Request: False, Synchronous: False
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
-
-Combination: 142; TestConfiguration = Format: Atom, Request: False, Synchronous: True
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-  </workspace>
-</service>
-
-Combination: 144; TestConfiguration = Format: Atom, Request: False, Synchronous: False
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-  </workspace>
-</service>
-
-Combination: 146; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 148; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 158; TestConfiguration = Format: Atom, Request: False, Synchronous: True
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
-
-Combination: 160; TestConfiguration = Format: Atom, Request: False, Synchronous: False
-Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<service xml:base="http://odata.org/" xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata">
-  <workspace>
-    <atom:title type="text">Default</atom:title>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title />
-    </collection>
-    <collection href="CollectionRelativeUrl">
-      <atom:title type="text">CollectionName</atom:title>
-    </collection>
-  </workspace>
-</service>
-
-Combination: 170; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 172; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 194; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 196; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 218; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
-
-Combination: 220; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{
-  "@odata.context":"http://odata.org/$metadata","value":[
-    {
-      "name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    },{
-      "name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"
-    }
-  ]
-}
+{"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 

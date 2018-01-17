@@ -7,7 +7,7 @@
 using System.IO;
 using Microsoft.Spatial;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
+namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
     internal static class SpatialHelpers
     {

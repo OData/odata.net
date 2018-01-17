@@ -28,7 +28,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Data;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.ModuleCore;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NorthwindModel;
@@ -39,6 +39,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Tests;
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
     /// <summary>
     /// This is a test class for WebDataServiceTest and is intended
     /// to contain all WebDataServiceTest Unit Tests
@@ -205,9 +206,8 @@ namespace AstoriaUnitTests.Tests
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(BlobDataServicePipelineHandlers)))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(InterceptorChecker)))
-                    using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                    using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                         new KeyValuePair<string, string>[] { new KeyValuePair<string, string>(typeToApplyAttribute, attributeValue) },
-                        null,
                         "BlobSupportTest_BlobEdmMetadataTest"))
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                     {
@@ -255,8 +255,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobETagTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
@@ -284,7 +284,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void BlobObjectContextTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
@@ -308,9 +309,8 @@ namespace AstoriaUnitTests.Tests
                     new Dimension("Format", UnitTestsUtil.ResponseFormats),
                     new Dimension("Location", new WebServerLocation[] { WebServerLocation.InProcessStreamedWcf, WebServerLocation.InProcess, WebServerLocation.InProcessWcf }));
 
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                    null,
                     "BlobSupportTest_BlobProjectionTests_EFProvider"))
                 {
                     string blobETag = "\"BlobETag123\"";
@@ -403,8 +403,8 @@ namespace AstoriaUnitTests.Tests
 
                 this.EnsureTestHasNoLeakedStreams();
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void EdmBlobWithInheritanceTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -475,7 +475,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobReflectionContextItemTest()
             {
                 Assert.AreEqual(0, DataServiceStreamProvider.UnDisposedInstances,
@@ -577,7 +578,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobReflectionContextPhotoTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
@@ -713,8 +715,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobReflectionContextPermissionTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
@@ -799,8 +801,8 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobPostBindingTest()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
@@ -989,8 +991,8 @@ namespace AstoriaUnitTests.Tests
                     Assert.IsNull(PhotoDataServiceContext._items.Single(i => i.ID == 500).RelatedItems.SingleOrDefault(i => i.ID == id));
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod]
             public void BlobEntryWithNoProperties()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -1009,8 +1011,8 @@ namespace AstoriaUnitTests.Tests
                     req.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(req.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     var q = from p in ctx.CreateQuery<Photo>("Items") where p.ParentFolder != null select new { p.ParentFolder.ID };
 
                     bool foundEntry = false;
@@ -1024,7 +1026,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib now accepts MLE payloads without content element.
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobUpdateMLEWithEmptyContentETagTest()
             {
                 using (TestUtil.MetadataCacheCleaner())
@@ -1056,8 +1059,8 @@ namespace AstoriaUnitTests.Tests
                     Assert.AreEqual(412, req.ResponseStatusCode, "The request should have failed due to mismatch in ETags");
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobUpdateBindingTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -1254,8 +1257,8 @@ namespace AstoriaUnitTests.Tests
 
                 this.EnsureTestHasNoLeakedStreams();
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BlobEtagTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
@@ -1529,223 +1532,6 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation]
-            [Ignore]
-                public void BlobBatchingTest()
-            {
-                this.EnsureTestHasNoLeakedStreams();
-
-                string[] entitySets = new string[]
-                {
-                    "Items",
-                    "Customers",
-                    "CustomersWithPrefer"
-                };
-
-                string expectedPhotoDescription = "Batch photo description";
-                string expectedPhotoName = "Batch photo name";
-                int expectedPhotoRating = 3;
-                byte[] expectedPhotoThumbNail = new byte[] { 1, 2, 3, 4 };
-
-                string expectedCompanyName = "Microsoft Corp.";
-                string expectedAddress = "One Microsoft Way";
-                string expectedCity = "Redmond";
-
-                string batchRequestsDirectory = Path.Combine(TestUtil.ServerUnitTestSamples, @"tests\BatchRequests");
-
-                CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("EntitySets", entitySets),
-                    new Dimension("Locations", new[] { WebServerLocation.InProcess }));
-
-                TestUtil.RunCombinatorialEngineFail(engine, table =>
-                {
-                    string specifiedEntitySet = (string)table["EntitySets"];
-                    string entitySet = specifiedEntitySet.StartsWith("Customers") ? "Customers" : specifiedEntitySet;
-                    Type entityType = entitySet == "Items" ? typeof(Photo) : typeof(NorthwindModel.Customers);
-
-                    // MR etag
-                    string blobETag = "\"BlobETag123\"";
-                    DataServiceStreamProvider.GetStreamETagOverride = (entity, operationContext) => blobETag;
-
-                    // ID and ContentType
-                    object expectedID = 123456;
-                    string blobContentType = DataServiceStreamProvider.GetContentType(new Photo() { ID = (int)expectedID });
-                    if (specifiedEntitySet == "Customers")
-                    {
-                        expectedID = "C" + "4321";
-                        blobContentType = DataServiceStreamProvider.GetContentType(NorthwindModel.Customers.CreateCustomers((string)expectedID, expectedCompanyName));
-                    }
-                    else
-                        if (specifiedEntitySet == "CustomersWithPrefer")
-                        {
-                            expectedID = "C" + "4322";
-                            blobContentType = DataServiceStreamProvider.GetContentType(NorthwindModel.Customers.CreateCustomers((string)expectedID, expectedCompanyName));
-                        }
-
-                    // Slug header
-                    string slug = expectedID.ToString();
-
-                    WebServerLocation serverLocation = (WebServerLocation)table["Locations"];
-
-                    using (TestUtil.RestoreStaticMembersOnDispose(typeof(BlobDataServicePipelineHandlers)))
-                    using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                    using (TestUtil.RestoreStaticMembersOnDispose(typeof(InterceptorChecker)))
-                    using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
-                        new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                        null,
-                        "BlobSupportTest_BlobBatchingTest"))
-                    using (PhotoDataServiceContext.CreateChangeScope())
-                    using (TestWebRequest request = TestWebRequest.CreateForLocation(serverLocation))
-                    {
-                        // payload to update
-                        string payload = string.Empty;
-                        if (entityType == typeof(Photo))
-                        {
-                            payload = GetPhotoPayload(UnitTestsUtil.AtomFormat, request.BaseUri, (int)expectedID, expectedPhotoDescription, expectedPhotoName, expectedPhotoRating, expectedPhotoThumbNail);
-                        }
-                        else if (entityType == typeof(NorthwindModel.Customers))
-                        {
-                            payload = GetCustomerPayload(UnitTestsUtil.AtomFormat, request.BaseUri, (string)expectedID, expectedCompanyName, expectedAddress, expectedCity);
-                        }
-
-                        // Blob content
-                        byte[] buffer;
-                        if (serverLocation == WebServerLocation.InProcessStreamedWcf)
-                        {
-                            buffer = new byte[1024 * 1024];
-                        }
-                        else
-                        {
-                            buffer = new byte[20];
-                        }
-
-                        Batch_FillBuffer(buffer, (byte)'1');
-
-                        ///////////////////////////////////////////////////
-                        // Testing Post and update in the same changeset
-                        MemoryStream stream = new MemoryStream();
-                        StreamWriter writer = new StreamWriter(stream);
-
-                        Batch_BeginBatchMultiPart(writer);
-                        Batch_BeginChangeSet(writer, "2");
-                        Batch_PostMR(entitySet, entityType, blobContentType, slug, writer, buffer);
-
-                        Batch_BeginChangeSet(writer, "3");
-                        // This is to verify that 1.0 and 2.0 client works still behave the same.
-                        Batch_UpdateMLE("PATCH", payload, writer, "4.0");
-
-                        Batch_BeginChangeSet(writer, "4");
-                        Batch_UpdateMLE("PUT", payload, writer, requestContent: (specifiedEntitySet == "CustomersWithPrefer"));
-
-                        Batch_BeginChangeSet(writer, "5");
-                        Batch_UpdateMLE("PATCH", payload, writer, requestContent: (specifiedEntitySet == "CustomersWithPrefer"));
-
-                        Batch_BeginChangeSet(writer, "6");
-                        Batch_PutMR(blobContentType, buffer, writer);
-                        Batch_EndChangeSet(writer);
-
-                        // GET MR -- If-None-Match -- should return 304
-                        DataServiceStreamProvider.ThrowDataServiceException304 = true;
-                        Batch_Begin(writer);
-                        Batch_GetMR(entitySet, expectedID, blobETag, writer);
-
-                        // GET MR -- If-None-Match -- should return 304
-                        DataServiceStreamProvider.ThrowDataServiceException304 = false;
-                        Batch_Begin(writer);
-                        Batch_GetMR(entitySet, expectedID, blobETag, writer);
-
-                        Batch_Begin(writer);
-                        Batch_GetMR(entitySet, expectedID, null, writer);
-
-                        Batch_Begin(writer);
-                        Batch_GetMLE(entitySet, expectedID, writer);
-                        Batch_End(writer);
-
-                        if (entitySet == "Items")
-                        {
-                            request.ServiceType = typeof(PhotoDataService);
-                        }
-                        else if (entitySet == "Customers")
-                        {
-                            request.ServiceType = typeof(NorthwindDefaultStreamService);
-                        }
-
-                        request.HttpMethod = "POST";
-                        request.RequestUriString = "/$batch";
-                        request.RequestContentType = "multipart/mixed;boundary=boundary1";
-                        request.RequestStream = stream;
-
-                        AstoriaTestLog.WriteLineIgnore("#####################################################");
-                        AstoriaTestLog.WriteLineIgnore("+++++++++++++++++++ BATCH REQUEST +++++++++++++++++++");
-                        if (buffer.Length < 100)
-                        {
-                            stream.Position = 0;
-                            AstoriaTestLog.WriteLineIgnore((new StreamReader(stream)).ReadToEnd());
-                        }
-                        else
-                        {
-                            AstoriaTestLog.WriteLineIgnore("Payload is too large to log...");
-                        }
-
-                        AstoriaTestLog.WriteLineIgnore("------------------- BATCH REQUEST -------------------");
-                        AstoriaTestLog.WriteLineIgnore("#####################################################");
-
-                        stream.Position = 0;
-                        request.SendRequest();
-
-                        string baseUriWithSlash = request.BaseUri.EndsWith("/") ? request.BaseUri : request.BaseUri + "/";
-                        string key = expectedID.GetType() == typeof(string) ? "'" + expectedID.ToString() + "'" : expectedID.ToString();
-                        string expectedLocation = "Location: " + baseUriWithSlash + entitySet + "(" + key + ")";
-                        string response = request.GetResponseStreamAsText();
-
-                        AstoriaTestLog.WriteLineIgnore("#####################################################");
-                        AstoriaTestLog.WriteLineIgnore("+++++++++++++++++++ BATCH RESPONSE ++++++++++++++++++");
-                        if (buffer.Length < 100)
-                        {
-                            AstoriaTestLog.WriteLineIgnore(response);
-                        }
-                        else
-                        {
-                            AstoriaTestLog.WriteLineIgnore("Payload is too large to log...");
-                        }
-
-                        AstoriaTestLog.WriteLineIgnore("------------------- BATCH RESPONSE ------------------");
-                        AstoriaTestLog.WriteLineIgnore("#####################################################");
-
-                        TestUtil.AssertContains(response, expectedLocation);
-
-                        if (entitySet == "Items")
-                        {
-                            ValidateMediaResourceFromStorage(typeof(Photo), null, expectedID, buffer);
-                            ValidatePhotoMLEOnContext((int)expectedID, expectedPhotoDescription, expectedPhotoName, expectedPhotoRating, expectedPhotoThumbNail);
-                        }
-                        else
-                        {
-                            ValidateMediaResourceFromStorage(typeof(NorthwindModel.Customers), null, expectedID, buffer);
-                        }
-
-                        response = BatchTestUtil.PrepareResponseForFileCompare(new StringReader(response), request.BaseUri, "http://host/");
-
-                        // Strip an extra \r\n from the response inserted by preparation.
-                        Assert.AreEqual('\r', response[response.Length - 2], "response[response.Length - 2]");
-                        Assert.AreEqual('\n', response[response.Length - 1], "response[response.Length - 1]");
-                        response = response.Substring(0, response.Length - 2);
-
-                        string responseBaselineFileName = Path.Combine(batchRequestsDirectory, "Blob" + specifiedEntitySet + (serverLocation == WebServerLocation.InProcessStreamedWcf ? "Streamed" : "") + "Response.txt");
-                        BatchTestUtil.CompareBatchResponse(responseBaselineFileName, response);
-
-                        Assert.AreEqual(1, BlobDataServicePipelineHandlers.ProcessingRequestInvokeCount);
-                        Assert.AreEqual(1, BlobDataServicePipelineHandlers.ProcessingChangesetInvokeCount);
-                        Assert.AreEqual(1, BlobDataServicePipelineHandlers.ProcessedChangesetInvokeCount);
-                        Assert.AreEqual(1, BlobDataServicePipelineHandlers.ProcessedRequestInvokeCount);
-
-                        InterceptorChecker.ValidateQueryInterceptor(5);
-                        InterceptorChecker.ValidateChangeInterceptor(5);
-                        DataServiceStreamProvider.ValidateInstantiatedInstances();
-                    }
-                });
-            }
-
             private void Batch_GetMLE(string entitySet, object expectedID, StreamWriter writer)
             {
                 writer.WriteLine("GET {0}({1}) HTTP/1.1", entitySet, expectedID.GetType() == typeof(string) ? "'" + expectedID + "'" : expectedID);
@@ -1862,8 +1648,8 @@ namespace AstoriaUnitTests.Tests
                 writer.WriteLine("--cs--");
                 writer.Flush();
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void BlobAcceptContentTypeHeaderTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
@@ -1988,8 +1774,8 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Verify that no query options can be applied to Media Resources + invalid queries for Blobs and Projections")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Verify that no query options can be applied to Media Resources + invalid queries for Blobs and Projections")]
             public void BlobStreamQueryOptionTests()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
@@ -2178,8 +1964,8 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Test cases for  'IDataServiceStreamProvider.GetReadStreamUri'")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Test cases for  'IDataServiceStreamProvider.GetReadStreamUri'")]
             public void GetReadStreamUriTest()
             {
                 var testCases = new[] {
@@ -2264,8 +2050,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Verify that we can call GetQueryStringValue(headerName) correctly in an IDataServiceStreamProvider method.")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Verify that we can call GetQueryStringValue(headerName) correctly in an IDataServiceStreamProvider method.")]
             public void BlobQueryStringHeaderTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
@@ -2290,9 +2076,8 @@ namespace AstoriaUnitTests.Tests
             public void BlobCallbackQueryOptionTest()
             {
                 this.EnsureTestHasNoLeakedStreams();
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true") },
-                    null,
                     "BlobSupportTest_BlobProjectionTests_EFProvider"))
                 {
                     string blobETag = "\"BlobETag123\"";
@@ -2332,8 +2117,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             #region Cross Feature - Blobs, service ops, concurrency, RowCount
-
-            [TestCategory("Partition2"), TestMethod, Variation("Cross Feature - Blobs, service ops, concurrency, RowCount, query options")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Cross Feature - Blobs, service ops, concurrency, RowCount, query options")]
             public void Blob_ServiceOp_Concurrency_RowCount_QueryOptions()
             {
                 var TestCases = new[]
@@ -2798,8 +2583,8 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature - Blobs and Projections
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests Projection on MLEs - Reflection provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests Projection on MLEs - Reflection provider")]
             public void BlobProjectionTests_ReflectionProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -3096,438 +2881,16 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            // Ignore this as it is for atom, and bound to nw db.
-            [Ignore] 
-            [TestCategory("Partition2"), TestMethod, Variation("Tests Projection on MLEs - EF provider")]
-            public void BlobProjectionTests_EFProvider()
-            {
-                using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
-                using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
-                    new KeyValuePair<string, string>[] {
-                        new KeyValuePair<string, string>("Customers", "true"),
-                        new KeyValuePair<string, string>("Orders", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed"),
-                        new KeyValuePair<string[], string>(new string[] {"Orders", "Freight"}, "Fixed")
-                    },
-                    "BlobSupportTest_BlobProjectionTests_EFProvider"))
-                {
-                    CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                        new Dimension("Location", new[] { WebServerLocation.InProcess, WebServerLocation.InProcessWcf, WebServerLocation.InProcessStreamedWcf }),
-                        new Dimension("Accept", UnitTestsUtil.ResponseFormats));
-
-                    TestUtil.RunCombinatorialEngineFail(engine, table =>
-                    {
-                        string accept = (string)table["Accept"];
-
-                        using (TestWebRequest request = TestWebRequest.CreateForLocation((WebServerLocation)table["Location"]))
-                        {
-                            // Customers, Orders are MLE, Order_Details is non-MLE
-                            var testCases = new[] {
-                                // Make sure when there's no projected properties, we omit the <m:properties /> node
-                                // This should hold true for both MLE and non-MLE entities.
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details(OrderID=10355,ProductID=1)?$expand=Orders",
-                                        "/Orders(10355)?$expand=Order_Details",
-                                    },
-                                    XPathExprs = new string[] {
-                                        // Order_Details(OrderID=10643,ProductID=28) is not MLE and must not have @src while Orders(10643) must have @src because it is an MLE 
-                                        "not(/atom:entry[contains(atom:id, 'Order_Details(OrderID=10355,ProductID=1)')]/atom:content/@src) or boolean(/atom:entry[contains(atom:id, 'Orders(10355)')]/atom:content/@src)",
-                                        // "boolean(/atom:entry/atom:content/adsm:properties)",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 2
-
-                                },
-                                // Project 1 property
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Customers('ALFKI')?$select=City"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "boolean(/atom:entry/adsm:properties/ads:City)",
-                                        "boolean(/atom:entry/atom:content/@src)",
-                                        "not(/atom:entry/adsm:properties/*[local-name()!='City'])",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 1
-                                },
-                                // Project 2 primitive properties
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Customers('ALFKI')?$select=City,CompanyName",
-                                        "/Customers('ALFKI')?$select=City,*"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "boolean(/atom:entry/adsm:properties/ads:City)",
-                                        "boolean(/atom:entry/adsm:properties/ads:CompanyName)",
-                                        "boolean(/atom:entry/atom:content/@src)",
-                                        "count(/atom:entry/adsm:properties/*) >= 2",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 1
-                                },
-                                // Explicitly project all properties
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Customers('ALFKI')?$select=*,*",
-                                        "/Customers?$filter=City eq 'Berlin'&$select=*",
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not((/atom:entry | /atom:feed/atom:entry)/atom:content/adsm:properties)",
-                                        "count((/atom:entry | /atom:feed/atom:entry)/adsm:properties/*) = 10",
-                                        "boolean((/atom:entry | /atom:feed/atom:entry)/atom:content/@src)",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 1
-                                },
-                                // Implicitly/Explicitly project all properties of the expanded entity
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details(OrderID=10643,ProductID=28)?$expand=Orders",  /*Implicit projection */
-                                        "/Order_Details(OrderID=10643,ProductID=28)?$expand=Orders($select=*)" /*Explicit projection */
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:entry/atom:content/@src)",
-                                        "not(/atom:entry/adsm:properties)",
-                                        "boolean(/atom:entry/atom:content/adsm:properties)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content/@src)",
-                                        "count(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties/*) = 10",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 2
-                                },
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Customers('ALFKI')?$expand=Orders",        /*Implicit projection */
-                                        "/Customers('ALFKI')?$expand=Orders($select=*)",      /*Explicit projection */
-                                    },
-                                    XPathExprs = new string[] {
-                                        "boolean(/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/atom:content/adsm:properties)",
-                                        "boolean(/atom:entry/atom:content/@src)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/atom:content)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/atom:content[not(@src)])",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry[count(adsm:properties/*) != 10])",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 2
-                                },
-                                // Project 1 property, expand an MLE and implicitly/explicitly project all properties  of the expanded MLE 
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Customers('ALFKI')?$select=*&$expand=Orders", 
-                                        "/Customers('ALFKI')?$select=City&$expand=Orders",
-                                        "/Customers('ALFKI')?$select=City&$expand=Orders($select=*)"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "boolean(/atom:entry/adsm:properties/ads:City)",
-                                        "count(/atom:entry/adsm:properties/*) >= 1",
-                                        "not(/atom:entry/atom:content/adsm:properties)",
-                                        "boolean(/atom:entry/atom:content/@src)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/atom:content)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/atom:content[not(@src)])",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry[count(adsm:properties/*) != 10])",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 2
-                                },
-                                // Project 1 property in the expanded MLE
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details(OrderID=10643,ProductID=28)?$select=Quantity&$expand=Orders($select=ShipCity)"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/adsm:content/@src)",
-                                        "boolean(/atom:entry/atom:content/adsm:properties/ads:Quantity)",
-                                        "count(/atom:entry/atom:content/adsm:properties/*) = 1",
-            
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content/*)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content[not(@src)])",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties[not(ads:ShipCity)])",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties[count(*) != 1])",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 2
-                                },
-                                // Project nav property in the expanded MLE
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details(OrderID=10643,ProductID=28)?$select=Quantity&$expand=Orders($expand=Customers)"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/adsm:content/@src)",
-                                        "boolean(/atom:entry/atom:content/adsm:properties/ads:Quantity)",
-                                        "count(/atom:entry/atom:content/adsm:properties/*) = 1",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content/*)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:content[not(@src)])",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties/*)",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 3
-                                },
-                                // V1 expand
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details(OrderID=10643,ProductID=28)?$expand=Orders"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/adsm:content/@src)",
-                                        "count(/atom:entry/atom:content/adsm:properties/*) = 5",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content/*)",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content[not(@src)])",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties[not(ads:ShipCity)])",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties[count(*) != 10])",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 2
-                                },
-                                // multilevel expand and project, only project 1 property per level
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details(OrderID=10643,ProductID=28)?$select=Quantity&$expand=Orders($expand=Customers($select=CompanyName;$expand=Orders($select=ShipCity)))"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/adsm:content/@src)",
-                                        "boolean(/atom:entry/atom:content/adsm:properties/ads:Quantity)",
-                                        "count(/atom:entry/atom:content/adsm:properties/*) = 1",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content/*)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content[not(@src)])",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties[not(ads:ShipCity)])",
-                                        "boolean    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties[count(*) != 1])",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:content)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/adsm:properties)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:content/*)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:content[not(@src)])",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/adsm:properties[not(ads:CompanyName)])",
-                                        "boolean    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/adsm:properties[count(*) != 1])",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/atom:content)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/adsm:properties)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/atom:content/*)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/atom:content[not(@src)])",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/adsm:properties[not(ads:ShipCity)])",
-                                        "boolean    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:feed/atom:entry/adsm:properties[count(*) != 1])",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 4
-                                },
-                                // multilevel expand and project, only project 0 property per level
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details(OrderID=10643,ProductID=28)?$expand=Orders($expand=Customers($select=CustomerDemographics))"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:entry/adsm:properties)",
-                                        "not(/atom:entry/adsm:content/@src)",
-                                        "count(/atom:entry/atom:content/adsm:properties/*) > 0",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content)",
-                                        "boolean    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/adsm:properties)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content/*)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:content[not(@src)])",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:content)",
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/adsm:properties)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:content/*)",
-                                        "not    (/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:content[not(@src)])",
-
-                                        "boolean(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='CustomerDemographics'])",
-                                        "not(/atom:entry/atom:link[@title='Orders']/adsm:inline/atom:entry/atom:link[@title='Customers']/adsm:inline/atom:entry/atom:link[@title='CustomerDemographics']/*)",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 3
-                                },
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Customers?$top=5&$select=CompanyName&$skip=10",
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:feed/atom:entry/atom:content/adsm:properties)",
-                                        "count(/atom:feed/atom:entry/atom:content[@src]) = 5",
-                                        "count(/atom:feed/atom:entry/adsm:properties/ads:CompanyName) = 5",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 1
-                                },
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Customers?$select=CompanyName,City&$filter=CustomerID eq 'CACTU'",
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:feed/atom:entry/atom:content/adsm:properties)",
-                                        "count(/atom:feed/atom:entry/atom:content[@src]) = 1",
-                                        "count(/atom:feed/atom:entry/adsm:properties/*) = 2",
-                                        "boolean(/atom:feed/atom:entry/adsm:properties/ads:CompanyName)",
-                                        "boolean(/atom:feed/atom:entry/adsm:properties/ads:City)",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 1
-                                },
-                                new {
-                                    QueryStrings = new string[] {
-                                        "/Order_Details?$filter=Orders/ShipCity eq 'Berlin'&$select=OrderID"
-                                    },
-                                    XPathExprs = new string[] {
-                                        "not(/atom:feed/atom:entry/atom:content/@src)",
-                                        "not(/atom:feed/atom:entry/adsm:properties)",
-                                        "boolean(/atom:feed/atom:entry/atom:content)",
-                                        "not(/atom:feed/atom:entry/atom:content/adsm:properties[not(ads:OrderID)])",
-                                        "not(/atom:feed/atom:entry/atom:content/adsm:properties[count(*) != 1])",
-
-                                        "not(//atom:entry/atom:link[@rel='edit-media' and not(contains(../atom:link[@rel='edit']/@href, substring-before(substring-after(@adsm:etag, '\"'), '\"')))])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and @title='Order_Details'] and @adsm:etag]) = 0",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")] and contains(@adsm:etag, '030-0074321')]) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, \"Customers('ALFKI')\")]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')] and @adsm:etag =  'W/\"29.4600\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(10643)')]])",
-                                        "count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')] and @adsm:etag =  'W/\"1.2100\"']) = count(//atom:entry[atom:link[@rel='edit' and contains(@href, 'Orders(11011)')]])"
-                                    },
-                                    ExpectedQueryInterceptorCalls = 2
-                                },
-                            };
-
-                            DataServiceStreamProvider.GetStreamETagOverride = (entity, operationContext) =>
-                            {
-
-                                string entityName = entity.GetType().Name;
-                                string entityId = entity is NorthwindModel.Customers ? "'" + ((NorthwindModel.Customers)entity).CustomerID + "'" :
-                                                  entity is NorthwindModel.Orders ? ((NorthwindModel.Orders)entity).OrderID.ToString() :
-                                                  string.Empty;
-
-                                return string.Format("W/\"{0}({1})\"", entityName, entityId);
-                            };
-
-                            foreach (var testCase in testCases)
-                            {
-                                foreach (string queryString in testCase.QueryStrings)
-                                {
-                                    BLOBSupportTest.ValidateInterceptorOverride = () =>
-                                    {
-                                        InterceptorChecker.ValidateQueryInterceptor(testCase.ExpectedQueryInterceptorCalls);
-                                        InterceptorChecker.ValidateChangeInterceptor(0);
-                                    };
-
-                                    Assert.IsNull(SendRequest(typeof(NorthwindDefaultStreamService), request, "GET", queryString, null, null, accept, null, null, null, 200));
-
-                                    string expectedHeaderETagContent = queryString.Contains("$expand=") ? null :
-                                                                       queryString.StartsWith("/Customers(") ? "'030-0074321'" :
-                                                                       queryString.StartsWith("/Orders(") ? "29.4600" :
-                                                                       null;
-
-                                    string expectedHeaderETag = expectedHeaderETagContent != null ? string.Format("W/\"{0}\"", expectedHeaderETagContent) : null;
-
-                                    Assert.AreEqual(expectedHeaderETag, request.ResponseETag);
-
-                                    XmlDocument atomResponse = UnitTestsUtil.GetResponseAsAtom(request);
-                                    UnitTestsUtil.VerifyXPathExpressionResults(atomResponse, true, testCase.XPathExprs);
-                                }
-                            }
-                        }
-                    });
-                }
-            }
-
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests Projection on MLEs Client Queries- EF provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests Projection on MLEs Client Queries- EF provider")]
             public void BlobProjectionTestsClientQueries_EFProvider()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Customers", "true"),
                         new KeyValuePair<string, string>("Orders", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed"),
-                        new KeyValuePair<string[], string>(new string[] {"Orders", "Freight"}, "Fixed")
                     },
                     "BlobSupportTest_BlobProjectionTestsClientQueries_EFProvider"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -3536,8 +2899,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
 
                     ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
 
@@ -3596,8 +2959,8 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature - Projections and Expand on MLEs
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests Projection and Expand on MLEs - IDSP provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests Projection and Expand on MLEs - IDSP provider")]
             public void BlobProjectionTests_IDSP()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -3975,8 +3338,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests Projection and Expand on MLEs - Open Type provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests Projection and Expand on MLEs - Open Type provider")]
             public void BlobProjectionTests_OpenTypeProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -4362,18 +3725,15 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature - Server Blobs and $orderby
-
-            [TestCategory("Partition1"), TestMethod, Variation("Tests orderby on MLEs, positive cases - EF provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation("Tests orderby on MLEs, positive cases - EF provider")]
             public void BlobAndOrderby_EFProvider()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Orders", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Orders", "Freight"}, "Fixed")
                     },
                     "BlobSupportTest_BlobAndOrderby_EFProvider"))
                 {
@@ -4424,8 +3784,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs, positive cases - reflection provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs, positive cases - reflection provider")]
             public void BlobAndOrderby_ReflectionProvider()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
@@ -4481,8 +3841,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs on IDSP and OpenTypes provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs on IDSP and OpenTypes provider")]
             public void BlobAndOrderBy_IDSPAndOpenTypesProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -4737,18 +4097,15 @@ namespace AstoriaUnitTests.Tests
                             }, 1),
                         };
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests top and skip on MLEs - EF provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests top and skip on MLEs - EF provider")]
             public void BlobAndTopSkip_EFProvider()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Customers", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed")
                     },
                     "BlobSupportTest_BlobAndTopSkip_EFProvider"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -4800,8 +4157,8 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests top and skip on MLEs - IDSP and OpenTypes provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests top and skip on MLEs - IDSP and OpenTypes provider")]
             public void BlobAndTopSkip_IDSPAndOpenTypesProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -4873,8 +4230,8 @@ namespace AstoriaUnitTests.Tests
                     });
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs, positive cases - reflection provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests orderby on MLEs, positive cases - reflection provider")]
             public void BlobAndTopSkip_ReflectionProvider()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
@@ -5020,8 +4377,8 @@ namespace AstoriaUnitTests.Tests
                     Assert.AreEqual(atomCustomersId, responseCustomersId, "IDs don't match.");
                 }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Tests Top and Skip on MLEs, negative cases")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Tests Top and Skip on MLEs, negative cases")]
             public void BlobTopSkipNegative()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -5039,12 +4396,9 @@ namespace AstoriaUnitTests.Tests
 
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BLOBSupportTest)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("Customers", "true")
-                    },
-                    new KeyValuePair<string[], string>[] {
-                        new KeyValuePair<string[], string>(new string[] {"Customers", "Phone"}, "Fixed")
                     },
                     "BlobSupportTest_BlobAndTopSkip_EFProvider"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -5076,8 +4430,8 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Blob Client Insert Tests
-
-            [TestCategory("Partition2"), TestMethod, Variation("Blob client insert tests -- in memory provider")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Blob client insert tests -- in memory provider")]
             public void BlobClientInsertTests()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(DataServiceStreamProvider)))
@@ -5093,8 +4447,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.ResolveName = type =>
                     {
                         if (type == typeof(Item))
@@ -5229,8 +4583,8 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region Cross Feature BlobServer and SDP Client
-
-            [TestCategory("Partition2"), TestMethod, Variation("HasStream attribute mismatch in server/client types")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("HasStream attribute mismatch in server/client types")]
             public void BlobServerClientMismatchHasStreamTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -5266,9 +4620,9 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
-                        ctx.IgnoreMissingProperties = true;
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
+                        ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
                         ctx.ResolveName = (type) =>
                         {
@@ -5311,11 +4665,11 @@ namespace AstoriaUnitTests.Tests
                             string expectedMsg = String.Empty;
                             if (OpenWebDataServiceHelper.EnableBlobServer && clientType == typeof(MyCustomer))
                             {
-                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_EntryWithoutMediaResourceAndMLEType"), CustomRowBasedContext.CustomerFullName);
+                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_ResourceWithoutMediaResourceAndMLEType"), CustomRowBasedContext.CustomerFullName);
                             }
                             else if (!OpenWebDataServiceHelper.EnableBlobServer && clientType == typeof(MyMLECustomer))
                             {
-                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_EntryWithMediaResourceAndNonMLEType"), CustomRowBasedContext.CustomerFullName);
+                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_ResourceWithMediaResourceAndNonMLEType"), CustomRowBasedContext.CustomerFullName);
                             }
                             else
                             {
@@ -5361,8 +4715,8 @@ namespace AstoriaUnitTests.Tests
                 public double DollarAmount { get; set; }
                 public MyCustomer Customer { get; set; }
             }
-
-            [TestCategory("Partition2"), TestMethod, Variation("Blob Server X SDP client")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition2"), TestMethod, Variation("Blob Server X SDP client")]
             public void BlobServerXSDPClientTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -5399,9 +4753,9 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
-                        ctx.IgnoreMissingProperties = true;
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
+                        ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
                         if (request.DataServiceType == typeof(CustomRowBasedContext))
                         {

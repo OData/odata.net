@@ -12,19 +12,19 @@ Model Present: true
 
 Combination: 4; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"p1":[{"One":1}]}
+{"p1":[{"@odata.type":"#TestModel.ComplexType","One":1}]}
 
 Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"p1":[{"One":1},{"One":2},{"One":3}]}
+{"p1":[{"@odata.type":"#TestModel.ComplexType","One":1},{"@odata.type":"#TestModel.ComplexType","One":2},{"@odata.type":"#TestModel.ComplexType","One":3}]}
 
 Combination: 6; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"p1":[{"OneProperty":1,"OneCollectionProperty":[15,20]},{"OneProperty":2,"OneCollectionProperty":[25]}]}
+{"p1":[{"@odata.type":"#TestModel.MyComplex","OneProperty":1,"OneCollectionProperty":[15,20]},{"@odata.type":"#TestModel.MyComplex","OneProperty":2,"OneCollectionProperty":[25]}]}
 
 Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"One":1},{"One":2},{"One":3}],"p7":null,"p8":[]}
+{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"@odata.type":"#TestModel.ComplexType","One":1},{"@odata.type":"#TestModel.ComplexType","One":2},{"@odata.type":"#TestModel.ComplexType","One":3}],"p7":null,"p8":[]}
 
 Combination: 8; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
@@ -40,17 +40,17 @@ Model Present: true
 
 Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"p1":[{"One":1}]}
+{"p1":[{"@odata.type":"#TestModel.ComplexType","One":1}]}
 
 Combination: 12; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"p1":[{"One":1},{"One":2},{"One":3}]}
+{"p1":[{"@odata.type":"#TestModel.ComplexType","One":1},{"@odata.type":"#TestModel.ComplexType","One":2},{"@odata.type":"#TestModel.ComplexType","One":3}]}
 
 Combination: 13; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"p1":[{"OneProperty":1,"OneCollectionProperty":[15,20]},{"OneProperty":2,"OneCollectionProperty":[25]}]}
+{"p1":[{"@odata.type":"#TestModel.MyComplex","OneProperty":1,"OneCollectionProperty":[15,20]},{"@odata.type":"#TestModel.MyComplex","OneProperty":2,"OneCollectionProperty":[25]}]}
 
 Combination: 14; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"One":1},{"One":2},{"One":3}],"p7":null,"p8":[]}
+{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"@odata.type":"#TestModel.ComplexType","One":1},{"@odata.type":"#TestModel.ComplexType","One":2},{"@odata.type":"#TestModel.ComplexType","One":3}],"p7":null,"p8":[]}
 

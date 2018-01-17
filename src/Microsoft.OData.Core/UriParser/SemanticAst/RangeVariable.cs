@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
-    using System;
+
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -15,7 +15,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// A RangeVariable, which represents an iterator variable either over a collection, either of entities or not.
     /// Exists outside of the main SemanticAST, but hooked in via a RangeVariableReferenceNode (either Non-Entity or Entity).
     /// </summary>
-    public abstract class RangeVariable : ODataAnnotatable
+    public abstract class RangeVariable
     {
         /// <summary>
         /// Gets the name of the associated rangeVariable.

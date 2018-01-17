@@ -8,19 +8,11 @@ namespace Microsoft.Test.Taupo.OData.WCFService
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.OData.Contracts;
     #endregion Namespaces
 
@@ -147,7 +139,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         /// </summary>
         /// <param name="segment">The OpenPropertySegment</param>
         /// <returns>The linq expression</returns>
-        public override Expression Translate(OpenPropertySegment segment)
+        public override Expression Translate(DynamicPathSegment segment)
         {
             throw new NotImplementedException("OpenPropertySegment translation is not supported");
         }

@@ -11,9 +11,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.Common
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.DataServiceProvider;
-    using Microsoft.Test.Taupo.OData.Query.Tests.Common.DataServiceProvider;
+
     #endregion Namespaces
 
     /// <summary>

@@ -13,8 +13,8 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;
 
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Service
         /// Storage for whether or not the response body or etag should be written once it has been determined.
         /// </summary>
         private bool? responseBodyOrETagShouldBeWritten;
-        
+
         /// <summary>
         /// Storage for whether or not the response body should be written once it has been determined.
         /// </summary>
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Service
             this.ActualResponseVersion = this.ResponseVersion;
 
             this.Preference = ClientPreference.None;
-            
+
             this.containerName = InferContainerNameFromSegments(segmentInfos);
             this.mimeType = InferMimeTypeFromSegments(segmentInfos);
         }
@@ -235,13 +235,13 @@ namespace Microsoft.OData.Service
 
         /// <summary>Client preference for payload in response.</summary>
         internal ClientPreference Preference { get; private set; }
-        
+
         /// <summary>
         /// If the server needs to write a response body or etag in the response based on the request verb and uri.
         /// NOTE: The client's preference is not considered when determining this.
         /// </summary>
-        internal bool ShouldWriteResponseBodyOrETag 
-        { 
+        internal bool ShouldWriteResponseBodyOrETag
+        {
             get
             {
                 Debug.Assert(this.responseBodyOrETagShouldBeWritten.HasValue, "Whether or not the response has a body or etag has not yet been determined.");
@@ -253,7 +253,7 @@ namespace Microsoft.OData.Service
         /// If the server needs to write a response body in the response based on the request verb, uri, and client preference.
         /// </summary>
         internal bool ShouldWriteResponseBody
-        { 
+        {
             get
             {
                 Debug.Assert(this.responseBodyShouldBeWritten.HasValue, "Whether or not the response has a body has not yet been determined.");
@@ -443,18 +443,6 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Gets a value indicating whether the response to this request will be Atom.
-        /// </summary>
-        internal bool IsAtomResponse
-        {
-            get
-            {
-                return this.ResponseFormat.IsAtom
-                       && this.TargetKind == RequestTargetKind.Resource;
-            }
-        }
-
-        /// <summary>
         /// Function name specified in $callback for JSONP.
         /// </summary>
         /// 
@@ -594,7 +582,7 @@ namespace Microsoft.OData.Service
         internal void DetermineResponseFormat(IDataService service)
         {
             Debug.Assert(service != null, "service != null");
-            
+
             switch (this.TargetKind)
             {
                 case RequestTargetKind.Batch:
@@ -620,7 +608,7 @@ namespace Microsoft.OData.Service
                         // valid version. At this point the final response version is not yet known.
                         this.InitializeVersion(service);
                         ODataVersion version = CommonUtil.ConvertToODataVersion(this.effectiveMaxResponseVersion);
-                        Debug.Assert(version <= ODataVersion.V4, "Unexpected version, is there a new one?");
+                        Debug.Assert(version <= ODataVersion.V401, "Unexpected version, is there a new one?");
 
                         // for legacy reasons, if we won't be writing a response then do not fail.
                         bool throwIfNoMatch = this.ShouldWriteResponseBody;
@@ -1083,11 +1071,11 @@ namespace Microsoft.OData.Service
                 ResourceTypeKind resourceTypeKind = this.TargetResourceType.ResourceTypeKind;
                 if (resourceTypeKind == ResourceTypeKind.EntityType)
                 {
-                    return this.IsSingleResult ? ODataPayloadKind.Entry : ODataPayloadKind.Feed;
+                    return this.IsSingleResult ? ODataPayloadKind.Resource : ODataPayloadKind.ResourceSet;
                 }
 
                 Debug.Assert(resourceTypeKind == ResourceTypeKind.EntityCollection, "description.TargetResourceType.ResourceTypeKind == ResourceTypeKind.EntityCollection");
-                return ODataPayloadKind.Feed;
+                return ODataPayloadKind.ResourceSet;
             }
 
             if (this.TargetSource == RequestTargetSource.Property)

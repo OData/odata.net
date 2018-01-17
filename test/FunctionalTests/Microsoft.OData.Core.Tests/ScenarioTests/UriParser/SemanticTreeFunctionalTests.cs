@@ -8,18 +8,17 @@ using System;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Legacy long-span integration tests that use SemanticTree to test various features.
-    /// 
+    ///
     /// TODO: remove tests that have already been covered by unit tests or functional tests through our actual public APIs.
     /// Note that there is some value is having these as integration tests for (what will become) ParseUri(). But the issues found
     /// here should be coverable in more targeted unit tests.
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var cmp = this.edmModel.FindType("Fully.Qualified.Namespace.Dog");
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As
-                <SingleValuePropertyAccessNode>().Source.As<SingleEntityCastNode>().EntityTypeReference.Definition.Should().Be(cmp);
+                <SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmp);
         }
 
         [Fact]
@@ -68,7 +67,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var cmp = this.edmModel.FindType("Fully.Qualified.Namespace.Employee");
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As
-                <SingleValuePropertyAccessNode>().Source.As<SingleEntityCastNode>().EntityTypeReference.Definition.Should().Be(cmp);
+                <SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmp);
         }
 
         [Fact]
@@ -90,7 +89,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         {
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Person/Shoe eq 'Sketchers'", this.edmModel);
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
-            semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleEntityCastNode>().EntityTypeReference.Definition.Should().Be(cmpPerson);
+            semanticTree.Filter.Expression.As<BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpPerson);
         }
 
         [Fact]
@@ -99,7 +98,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var semanticTree = HardCodedTestModel.ParseUri("People?$filter=MyDog/MyPeople/any(a: a/Fully.Qualified.Namespace.Employee/Shoe eq 'Calvin Klein' )", this.edmModel);
             var cmpEmployee = this.edmModel.FindType("Fully.Qualified.Namespace.Employee");
             semanticTree.Filter.Expression.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleEntityCastNode>().EntityTypeReference.Definition.Should().Be(cmpEmployee);
+                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpEmployee);
         }
 
         [Fact]
@@ -109,7 +108,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             semanticTree.Filter.Expression.ShouldBeAnyQueryNode().
                 And.Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
                 And.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp()).
-                And.Source.ShouldBeEntityRangeVariableReferenceNode("a").
+                And.Source.ShouldBeResourceRangeVariableReferenceNode("a").
                 And.TypeReference.Definition.Should().Be(HardCodedTestModel.GetEmployeeType());
         }
 
@@ -120,16 +119,16 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var cmpEmployee = this.edmModel.FindType("Fully.Qualified.Namespace.Employee");
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
             semanticTree.Filter.Expression.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleEntityCastNode>().EntityTypeReference.Definition.Should().Be(cmpEmployee);
+                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpEmployee);
             semanticTree.Filter.Expression.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleEntityCastNode>().Source.As<SingleEntityCastNode>().EntityTypeReference.Definition.Should().Be(cmpPerson);
+                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpPerson);
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void CollectionDowncastInPathShouldBeAllowed()
         {
             var semanticTree = HardCodedTestModel.ParseUri("People/Fully.Qualified.Namespace.Employee", this.edmModel);
-            semanticTree.Path.LastSegment.ShouldBeTypeSegment(HardCodedTestModel.GetEmployeeType());
+            semanticTree.Path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(HardCodedTestModel.GetEmployeeType().GetTypeReference()));
             semanticTree.Path.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
         }
 
@@ -272,10 +271,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
             semanticTree.Filter.Expression.As<AnyNode>().Body.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<EntityRangeVariableReferenceNode>().
+                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
                 TypeReference.Definition.Should().Be(cmpPerson);
             semanticTree.Filter.Expression.As<AnyNode>().Body.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Right.As<SingleValuePropertyAccessNode>().Source.As<EntityRangeVariableReferenceNode>().
+                <BinaryOperatorNode>().Right.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
                 TypeReference.Definition.Should().Be(cmpPerson);
         }
 
@@ -287,10 +286,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var cmpPerson = this.edmModel.FindType("Fully.Qualified.Namespace.Person");
             var cmpDog = this.edmModel.FindType("Fully.Qualified.Namespace.Dog");
             semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<EntityRangeVariableReferenceNode>().
+                <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
                 TypeReference.Definition.Should().Be(cmpPerson);
             semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<AnyNode>().Body.As
-                <BinaryOperatorNode>().Right.As<SingleValuePropertyAccessNode>().Source.As<EntityRangeVariableReferenceNode>().
+                <BinaryOperatorNode>().Right.As<SingleValuePropertyAccessNode>().Source.As<ResourceRangeVariableReferenceNode>().
                 TypeReference.Definition.Should().Be(cmpDog);
         }
 
@@ -321,10 +320,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         [Fact]
         public void CountQueryWithInvalidArgument()
         {
-            string[] args = { 
-                                "Dogs?$count='true'", 
-                                "Dogs?$count=invalidValue", 
-                                "Dogs?$count=true/$count", 
+            string[] args = {
+                                "Dogs?$count='true'",
+                                "Dogs?$count=invalidValue",
+                                "Dogs?$count=true/$count",
                                 "Dogs/$count=true"
                             };
             foreach (var arg in args)
@@ -379,7 +378,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         public void LongFilterWithTrim()
         {
             // Query like "People?$filter=trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(trim(Shoe)))))))))))))))))))) eq 'somevalue'";
-            int nestingLevel = 400;
+
+            // Nesting level = 400 likely will cause stack-overflow in default VS IDE environment.
+            int nestingLevel = 300;
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < nestingLevel; i++)
             {
@@ -406,7 +408,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             node.Parameters.Single()
                 .As<SingleValuePropertyAccessNode>()
-                .Source.As<EntityRangeVariableReferenceNode>()
+                .Source.As<ResourceRangeVariableReferenceNode>()
                 .TypeReference.Definition.Should().Be(personType);
 
         }
@@ -432,7 +434,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 .Left.As<BinaryOperatorNode>()
                 .Left.As<BinaryOperatorNode>()
                  .Left.As<SingleValuePropertyAccessNode>()
-                .Source.As<EntityRangeVariableReferenceNode>()
+                .Source.As<ResourceRangeVariableReferenceNode>()
                .TypeReference.Definition.Should().Be(personType);
         }
 
@@ -466,7 +468,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
         }
 
         [Fact]
@@ -476,9 +478,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
         }
 
         [Fact]
@@ -488,7 +490,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
             semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
         }
 
         [Fact]
@@ -498,7 +500,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var cmp = this.edmModel.FindType("Edm.String");
             semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<NonentityRangeVariableReferenceNode>().TypeReference.Definition.Should().Be(cmp);
+                Left.As<NonResourceRangeVariableReferenceNode>().TypeReference.Definition.Should().Be(cmp);
         }
 
         [Fact]

@@ -10,16 +10,15 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Library.Expressions;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     public class ExtendedContainerElementsFunctionalTests
     {
@@ -74,10 +73,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             IEnumerable<EdmError> errors;
             IEdmModel model1;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
             Assert.True(parsed);
 
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out model, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out model, out errors);
             Assert.True(parsed);
         }
 
@@ -110,9 +109,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             var operationImports = model.FindDeclaredOperationImports("FunctionImport0").ToArray();
             path.LastSegment.ShouldBeOperationImportSegment(operationImports);
             IEdmOperationImport operationImport = operationImports.Single();
-            var expression = operationImport.EntitySet as EdmEntitySetReferenceExpression;
-            var set1 = model.FindDeclaredEntitySet("EntitySet1");
-            expression.ReferencedEntitySet.Should().Be(set1);
+            var expression = operationImport.EntitySet as IEdmPathExpression;
+            expression.PathSegments.Single().Should().Be("EntitySet1");
         }
 
         [Fact]

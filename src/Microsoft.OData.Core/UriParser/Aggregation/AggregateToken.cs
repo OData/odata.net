@@ -4,32 +4,43 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.UriParser;
 
-    internal sealed class AggregateToken : ApplyTransformationToken
+    /// <summary>
+    /// Query token representing an Aggregate token.
+    /// </summary>
+    public sealed class AggregateToken : ApplyTransformationToken
     {
         private readonly IEnumerable<AggregateExpressionToken> expressions;
 
+        /// <summary>
+        /// Create an AggregateToken.
+        /// </summary>
+        /// <param name="expressions">The list of AggregateExpressionToken.</param>
         public AggregateToken(IEnumerable<AggregateExpressionToken> expressions)
         {
             ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
             this.expressions = expressions;
         }
 
+        /// <summary>
+        /// Gets the kind of this token.
+        /// </summary>
         public override QueryTokenKind Kind
         {
             get { return QueryTokenKind.Aggregate; }
         }
 
+        /// <summary>
+        /// Gets the list of AggregateExpressionToken.
+        /// </summary>
         public IEnumerable<AggregateExpressionToken> Expressions
         {
             get

@@ -5,11 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Class containing tests for Entity-Id identified by $id system query parameter
@@ -20,6 +20,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         public void ParseEntityId()
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://example.org/"), new Uri("http://example.org/People(0)/$ref?$id=http://test.org/People(1)"));
+            Assert.Equal(new Uri("http://test.org/People(1)"), parser.ParseEntityId().Id);
+
+            // The ParseEntityId() function first checks for the initialization of the object's entityIdSegment.
+            // This second call is to simply hit the case where initialization has already taken place.
             Assert.Equal(new Uri("http://test.org/People(1)"), parser.ParseEntityId().Id);
         }
 

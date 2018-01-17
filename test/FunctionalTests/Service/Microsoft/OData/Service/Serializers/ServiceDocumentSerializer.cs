@@ -11,8 +11,7 @@ namespace Microsoft.OData.Service.Serializers
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
     #endregion Namespaces
 
@@ -48,11 +47,6 @@ namespace Microsoft.OData.Service.Serializers
                     Url = new Uri(rs.Name, UriKind.RelativeOrAbsolute),
                     Name = rs.Name
                 };
-
-                entitySetInfo.SetAnnotation<AtomResourceCollectionMetadata>(new AtomResourceCollectionMetadata()
-                {
-                    Title = new AtomTextConstruct { Text = rs.Name }
-                });
 
                 return entitySetInfo;
             });

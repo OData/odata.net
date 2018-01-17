@@ -6,16 +6,14 @@
 
 using System;
 using System.IO;
-using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Core.Tests.JsonLight;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 {
     public class DateReaderJsonLightTests
     {
@@ -65,25 +63,24 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader.JsonLight
             IEdmModel model = new EdmModel();
             IEdmPrimitiveTypeReference typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)model.FindType(edmTypeName), true);
 
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            object actualValue;
-            using (ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                JsonLightUtils.JsonLightStreamingMediaType,
-                Encoding.UTF8,
-                new ODataMessageReaderSettings(),
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                model,
-                /*urlResolver*/ null))
+            var messageInfo = new ODataMessageInfo
             {
-                ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
+                IsResponse = true,
+                MediaType = JsonLightUtils.JsonLightStreamingMediaType,
+                IsAsync = false,
+                Model = new EdmModel(),
+            };
+
+            object actualValue;
+            using (var inputContext = new ODataJsonLightInputContext(
+                new StringReader(payload), messageInfo, new ODataMessageReaderSettings()))
+            {
+                var deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
                 deserializer.JsonReader.Read();
                 actualValue = deserializer.ReadNonEntityValue(
                     /*payloadTypeName*/ null,
                     typeReference,
-                    /*duplicatePropertyNamesChecker*/ null,
+                    /*propertyAndAnnotationCollector*/ null,
                     /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
                     /*isTopLevelPropertyValue*/ true,

@@ -7,7 +7,7 @@
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     internal class EdmPrimitiveValueSimulator : IEdmPrimitiveValue
     {

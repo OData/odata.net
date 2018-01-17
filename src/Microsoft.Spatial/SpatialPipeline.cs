@@ -81,7 +81,7 @@ namespace Microsoft.Spatial
             {
                 return spatialPipeline.GeographyPipeline;
             }
-            
+
             return null;
         }
 

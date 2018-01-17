@@ -8,23 +8,19 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class VCardMediaTypeResolver : ODataMediaTypeResolver
     {
-        private static readonly VCardMediaTypeResolver instance = new VCardMediaTypeResolver();
         private readonly ODataMediaTypeFormat[] mediaTypeFormats = new ODataMediaTypeFormat[]
         {
             new ODataMediaTypeFormat(new ODataMediaType("text", "x-vCard"), new VCardFormat())
         };
 
-        private VCardMediaTypeResolver() { }
-
-        public static VCardMediaTypeResolver Instance { get { return instance; } }
-
         public override IEnumerable<ODataMediaTypeFormat> GetMediaTypeFormats(ODataPayloadKind payloadKind)
         {
-            if (payloadKind == ODataPayloadKind.Property)
+            if (payloadKind == ODataPayloadKind.Resource
+                || payloadKind == ODataPayloadKind.Property)
             {
                 return mediaTypeFormats.Concat(base.GetMediaTypeFormats(payloadKind));
             }

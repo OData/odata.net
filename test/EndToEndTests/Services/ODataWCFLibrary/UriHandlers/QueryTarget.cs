@@ -4,16 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
+
 namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-
     public class QueryTarget : PathSegmentHandler
     {
         bool resolved = false;
@@ -251,12 +250,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
             this.canonicalSegments.Add(segment);
         }
 
-        public override void Handle(OpenPropertySegment segment)
+        public override void Handle(DynamicPathSegment segment)
         {
             this.ThrowIfResolved();
 
             this.NavigationSource = null;
-            this.Property = new EdmOpenStructuralProperty(segment.PropertyName);
+            this.Property = new EdmOpenStructuralProperty(segment.Identifier);
             this.Type = segment.EdmType;
             this.ElementType = this.GetElementType(this.Type);
 
@@ -420,11 +419,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.UriHandlers
             }
 
             public string DefaultValueString
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public EdmConcurrencyMode ConcurrencyMode
             {
                 get { throw new NotImplementedException(); }
             }

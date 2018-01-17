@@ -6,14 +6,11 @@
 
 namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Validation;
     using microsoft.odata.sampleService.models.typedefinition;
-    using System;
 
     public class TypeDefinitionDataSource : ODataReflectionDataSource
     {

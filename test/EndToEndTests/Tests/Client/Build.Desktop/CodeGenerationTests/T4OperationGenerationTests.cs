@@ -27,7 +27,6 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         {
         }
 
-
         [TestMethod]
         public void FunctionImportTest()
         {
@@ -134,7 +133,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         [TestMethod]
-        public void ActionBoundOnEntityWithEntityParameter()
+        public void ActionBoundOnEntityWithEntityOrEntityCollectionParameter()
         {
             var customer = TestClientContext.Customers.First();
 
@@ -144,6 +143,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                 OrderID = orderId,
                 OrderDate = new DateTimeOffset(new DateTime(2011, 3, 4, 16, 3, 57)),
                 OrderShelfLifes = new ObservableCollection<TimeSpan>(),
+                InfoFromCustomer = new InfoFromCustomer { CustomerMessage = "I need XXL" },
             };
 
             Order newOrder = customer.PlaceOrder(order).GetValue();
@@ -168,14 +168,6 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual((product.UnitPrice * (1 - percentage / 100)), product1.UnitPrice);
         }
 
-        //TODO: not supported now
-        [Ignore]
-        [TestMethod]
-        public void ActionBoundOnEntitySet()
-        {
-            //Products.Discount();
-        }
-
         [TestMethod]
         public void ActionImportWithCollectionOfPrimitiveParameter()
         {
@@ -191,7 +183,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         [TestMethod]
-        public void ActionImportWithCollectionOfComplexTypeParameter()
+        public void ActionImportWithComplexTypeParameter()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
             var boss = TestClientContext.Boss.GetValue();
@@ -202,8 +194,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         //Complex type as function parameter in uri is not supported
-        [Ignore]
-        [TestMethod]
+        // [TestMethod] // github issuse: #896
         public void UnBoundFunctionReturnEntity()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;

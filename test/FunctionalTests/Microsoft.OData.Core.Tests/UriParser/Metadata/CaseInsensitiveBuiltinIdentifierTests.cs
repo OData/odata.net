@@ -8,15 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     // not support by design: true false null $it
     // not support as not support (in ODL): $entity, $all, $crossjoin, $format, $skiptoken, $root, date, time
@@ -739,7 +736,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
 
         private void TestCaseInsensitiveBuiltIn<TResult>(string original, string caseInsensitive, Func<ODataUriParser, TResult> parse, Action<TResult> verify, string errorMessage)
         {
-            this.TestUriParserExtension(original, caseInsensitive, parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver.EnableCaseInsensitive = true);
+            this.TestUriParserExtension(original, caseInsensitive, parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver = new ODataUriResolver { EnableCaseInsensitive = true });
         }
 
         private void TestQueryOptionParserCaseInsensitiveBuiltIn<TResult>(
@@ -752,7 +749,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             this.TestExtension(
                 () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), original),
                 () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), caseInsensitive),
-                parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver.EnableCaseInsensitive = true);
+                parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver = new ODataUriResolver { EnableCaseInsensitive = true });
         }
     }
 }

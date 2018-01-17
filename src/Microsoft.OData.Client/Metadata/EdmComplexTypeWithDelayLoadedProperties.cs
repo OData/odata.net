@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.Providers
 #else
 namespace Microsoft.OData.Service.Providers
@@ -16,7 +16,6 @@ namespace Microsoft.OData.Service.Providers
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>

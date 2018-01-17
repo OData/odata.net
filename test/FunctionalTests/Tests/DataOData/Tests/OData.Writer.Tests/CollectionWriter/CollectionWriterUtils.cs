@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
@@ -53,20 +53,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             bool writeCollection = items != null;
             items = items ?? new CollectionWriterTestDescriptor.ItemDescription[0];
 
-            string xmlResultTemplate, jsonLightResultTemplate;
-            CreateResultTemplates(writeCollection, items, out xmlResultTemplate, out jsonLightResultTemplate);
+            string jsonLightResultTemplate;
+            CreateResultTemplates(writeCollection, items, out jsonLightResultTemplate);
 
             return (testConfiguration) =>
                 {
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        return new AtomWriterTestExpectedResults(settings) 
-                        {
-                            Xml = PopulateXmlResultTemplate(collectionName, xmlResultTemplate),
-                            FragmentExtractor = (result) => NormalizeNamespacePrefixes(result),
-                        };
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json)
+                    if (testConfiguration.Format == ODataFormat.Json)
                     {
                         return new JsonWriterTestExpectedResults(settings)
                         {
@@ -100,15 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         {
             return (testConfiguration) =>
             {
-                if (testConfiguration.Format == ODataFormat.Atom)
-                {
-                    return new AtomWriterTestExpectedResults(settings)
-                    {
-                        FragmentExtractor = (result) => NormalizeNamespacePrefixes(result),
-                        ExpectedException2 = expectedExceptionFunc(testConfiguration)
-                    };
-                }
-                else if (testConfiguration.Format == ODataFormat.Json)
+                if (testConfiguration.Format == ODataFormat.Json)
                 {
                     return new JsonWriterTestExpectedResults(settings)
                     {
@@ -190,7 +174,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
                         writer.WriteStart(new ODataCollectionStart { Name = testDescriptor.CollectionName, SerializationInfo = serInfo });
                         break;
-                    
+
                     case CollectionWriterTestDescriptor.WriterInvocations.Item:
                         object payloadItem = payloadItems[payloadItemIndex];
 
@@ -203,7 +187,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                         writer.WriteItem(payloadItem);
                         payloadItemIndex++;
                         break;
-                    
+
                     case CollectionWriterTestDescriptor.WriterInvocations.Error:
                         ODataAnnotatedError error2 = testDescriptor.PayloadItems[payloadItemIndex] as ODataAnnotatedError;
                         if (error2 == null)
@@ -214,11 +198,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                         messageWriter.WriteError(error2.Error, error2.IncludeDebugInformation);
                         payloadItemIndex++;
                         break;
-                    
+
                     case CollectionWriterTestDescriptor.WriterInvocations.EndCollection:
                         writer.WriteEnd();
                         break;
-                    
+
                     case CollectionWriterTestDescriptor.WriterInvocations.UserException:
                         throw new Exception("User code triggered an exception.");
 
@@ -249,9 +233,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         }
 
         private static void CreateResultTemplates(
-            bool writeCollection, 
-            IEnumerable<CollectionWriterTestDescriptor.ItemDescription> itemResults, 
-            out string xmlResultTemplate, 
+            bool writeCollection,
+            IEnumerable<CollectionWriterTestDescriptor.ItemDescription> itemResults,
             out string jsonLightResultTemplate)
         {
             List<string> xmlLines = new List<string>();
@@ -298,7 +281,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                         firstLineInItem = false;
                     }
 
-
                     xmlLines.Add(itemResult.ExpectedXml);
                     firstItemInCollection = false;
                 }
@@ -312,7 +294,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 Debug.Assert(jsonLightLines.Count == 0);
                 if (!writeCollection)
                 {
-                    xmlResultTemplate = null;
                     jsonLightResultTemplate = null;
                     return;
                 }
@@ -352,7 +333,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 // </m:value>
                 xmlLines.Add(@"</{6}>");
             }
-            xmlResultTemplate = string.Join("$(NL)", xmlLines);
             jsonLightResultTemplate = string.Join("$(NL)", jsonLightLines);
         }
 

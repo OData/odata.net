@@ -21,9 +21,9 @@ namespace Microsoft.OData.Client.Materialization
         DataServiceContext Context { get; }
 
         /// <summary>
-        /// Gets a value indicating whether Ignore missing properties is set or not
+        /// Gets a value indicating whether to support untyped properties is set or not
         /// </summary>
-        bool IgnoreMissingProperties { get; }
+        UndeclaredPropertyBehavior UndeclaredPropertyBehavior { get; }
 
         /// <summary>
         /// Gets a value indicated the Client Edm Model
@@ -40,8 +40,8 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="expectedType">Expected client clr type based on the API called.</param>
         /// <param name="readerTypeName">
-        /// The name surfaced by the ODataLib reader. 
-        /// If we have a server model, this will be a server type name that needs to be resolved. 
+        /// The name surfaced by the ODataLib reader.
+        /// If we have a server model, this will be a server type name that needs to be resolved.
         /// If not, then this will already be a client type name.</param>
         /// <returns>The resolved annotation for the client type to materialize into.</returns>
         ClientTypeAnnotation ResolveTypeForMaterialization(Type expectedType, string readerTypeName);

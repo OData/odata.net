@@ -5,7 +5,7 @@ OrderByClause
 	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 	Direction = Ascending
 	Range Variable = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = SpecialOrder
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
@@ -30,11 +30,11 @@ OrderByClause
 																Property = ProductID
 																TypeReference = [Edm.Int32 Nullable=False]
 																Source = 
-																EntityRangeVariableReferenceNode
+																ResourceRangeVariableReferenceNode
 																	Name = a
 																	NavigationSource = OrderDetails
 																	TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-																	Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+																	Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 													GreaterThanOrEqual
 														3.2(Type: [Edm.Single Nullable=False])
 												)
@@ -44,21 +44,21 @@ OrderByClause
 															Property = OrderPlaced
 															TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 															Source = 
-															EntityRangeVariableReferenceNode
+															ResourceRangeVariableReferenceNode
 																Name = a
 																NavigationSource = OrderDetails
 																TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-																Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+																Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 													Equal
 														SingleValuePropertyAccessNode
 															Property = OrderPlaced
 															TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 															Source = 
-															EntityRangeVariableReferenceNode
+															ResourceRangeVariableReferenceNode
 																Name = a
 																NavigationSource = OrderDetails
 																TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-																Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+																Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 												)
 										)
 									)
@@ -77,17 +77,17 @@ OrderByClause
 			Multiplicity = Many
 			Navigation Property = OrderDetails
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = SpecialOrder
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = a
 			NavigationSource = OrderDetails
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = SpecialOrder
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

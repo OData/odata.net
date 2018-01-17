@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 {
     #region Namespaces
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Json;
@@ -59,7 +59,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             using (TextReader expectedJsonTextReader = new StringReader(this.ExpectedJsonText))
             using (TextReader jsonTextReader = new StringReader(this.JsonText))
             {
-                JsonReader expectedJsonReader = new JsonReader(expectedJsonTextReader, this.assert, ODataFormat.Json, isIeee754Compatible: true);
+                JsonReader expectedJsonReader = new JsonReader(expectedJsonTextReader, this.assert, isIeee754Compatible: true);
                 ReorderingJsonReader reorderingJsonReader = new ReorderingJsonReader(jsonTextReader, /*maxInnerErrorDepth*/int.MaxValue, this.assert, isIeee754Compatible: true);
 
                 while (reorderingJsonReader.Read())

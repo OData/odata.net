@@ -4,17 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Evaluation;
+
     #endregion Namespaces
 
     /// <summary>
@@ -50,14 +48,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Indicates which level of context Url should be used when writing payload.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get { return ODataContextUrlLevel.Full; }
-        }
-
-        /// <summary>
         /// Returns the metadata document URI which has been validated to be non-null.
         /// </summary>
         private Uri NonNullMetadataDocumentUri
@@ -66,7 +56,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 if (this.metadataDocumentUri == null)
                 {
-                    throw new ODataException(OData.Core.Strings.ODataOutputContext_MetadataDocumentUriMissing);
+                    throw new ODataException(Strings.ODataOutputContext_MetadataDocumentUriMissing);
                 }
 
                 return this.metadataDocumentUri;
@@ -76,48 +66,37 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
-        /// <param name="autoComputePayloadMetadataInJson">
-        /// If true, the type name to write according to full metadata rules. 
-        /// If false, the type name writing according to minimal metadata rules.
-        /// This is for backwards compatibility.
-        /// </param>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
-        internal override JsonLightTypeNameOracle GetTypeNameOracle(bool autoComputePayloadMetadataInJson)
+        internal override JsonLightTypeNameOracle GetTypeNameOracle()
         {
-            if (autoComputePayloadMetadataInJson)
-            {
-                return new JsonFullMetadataTypeNameOracle();
-            }
-
-            return new JsonMinimalMetadataTypeNameOracle();
+            return new JsonFullMetadataTypeNameOracle();
         }
 
         /// <summary>
-        /// Creates the metadata builder for the given entry. If such a builder is set, asking for payload
-        /// metadata properties (like EditLink) of the entry may return a value computed by convention, 
+        /// Creates the metadata builder for the given resource. If such a builder is set, asking for payload
+        /// metadata properties (like EditLink) of the resource may return a value computed by convention,
         /// depending on the metadata level and whether the user manually set an edit link or not.
         /// </summary>
-        /// <param name="entry">The entry to create the metadata builder for.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry or feed.</param>
-        /// <param name="serializationInfo">The serialization info for the entry.</param>
-        /// <param name="actualEntityType">The entity type of the entry.</param>
+        /// <param name="resource">The resource to create the metadata builder for.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
+        /// <param name="serializationInfo">The serialization info for the resource.</param>
+        /// <param name="actualResourceType">The structured type of the resource.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
-        /// <param name="isResponse">true if the entity metadata builder to create should be for a response payload; false for a request.</param>
-        /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.
-        /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
+        /// <param name="isResponse">true if the resource metadata builder to create should be for a response payload; false for a request.</param>
+        /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.</param>
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
-        internal override ODataEntityMetadataBuilder CreateEntityMetadataBuilder(
-            ODataEntry entry, 
-            IODataFeedAndEntryTypeContext typeContext, 
-            ODataFeedAndEntrySerializationInfo serializationInfo, 
-            IEdmEntityType actualEntityType, 
-            SelectedPropertiesNode selectedProperties, 
-            bool isResponse, 
-            bool? keyAsSegment,
+        internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
+            ODataResourceBase resource,
+            IODataResourceTypeContext typeContext,
+            ODataResourceSerializationInfo serializationInfo,
+            IEdmStructuredType actualResourceType,
+            SelectedPropertiesNode selectedProperties,
+            bool isResponse,
+            bool keyAsSegment,
             ODataUri odataUri)
         {
-            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(resource != null, "resource != null");
             Debug.Assert(typeContext != null, "typeContext != null");
             Debug.Assert(selectedProperties != null, "selectedProperties != null");
 
@@ -126,34 +105,44 @@ namespace Microsoft.OData.Core.JsonLight
                 this.model,
                 this.NonNullMetadataDocumentUri,
                 odataUri);
-            
-            UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(keyAsSegment, typeContext);
-            ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri, urlConvention);
 
-            IODataEntryMetadataContext entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, serializationInfo, actualEntityType, metadataContext, selectedProperties);
-            return new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext, uriBuilder);
+            ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri,
+                keyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
+
+            IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualResourceType, metadataContext, selectedProperties);
+
+            // Create ODataConventionalEntityMetadataBuilder if actualResourceType is entity type or typeContext.NavigationSourceKind is not none (complex type would be none) for no model scenario.
+            if (actualResourceType != null && actualResourceType.TypeKind == EdmTypeKind.Entity ||
+                actualResourceType == null && typeContext.NavigationSourceKind != EdmNavigationSourceKind.None)
+            {
+                return new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
+            }
+            else
+            {
+                return new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
+            }
         }
 
         /// <summary>
         /// Injects the appropriate metadata builder based on the metadata level.
         /// </summary>
-        /// <param name="entry">The entry to inject the builder.</param>
+        /// <param name="resource">The resource to inject the builder.</param>
         /// <param name="builder">The metadata builder to inject.</param>
-        internal override void InjectMetadataBuilder(ODataEntry entry, ODataEntityMetadataBuilder builder)
+        internal override void InjectMetadataBuilder(ODataResourceBase resource, ODataResourceMetadataBuilder builder)
         {
-            base.InjectMetadataBuilder(entry, builder);
+            base.InjectMetadataBuilder(resource, builder);
 
             // Inject to the Media Resource.
-            var mediaResource = entry.NonComputedMediaResource;
+            var mediaResource = resource.NonComputedMediaResource;
             if (mediaResource != null)
             {
                 mediaResource.SetMetadataBuilder(builder, /*propertyName*/null);
             }
 
             // Inject to named stream property values
-            if (entry.NonComputedProperties != null)
+            if (resource.NonComputedProperties != null)
             {
-                foreach (ODataProperty property in entry.NonComputedProperties)
+                foreach (ODataProperty property in resource.NonComputedProperties)
                 {
                     var streamReferenceValue = property.ODataValue as ODataStreamReferenceValue;
                     if (streamReferenceValue != null)
@@ -164,7 +153,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // Inject to operations
-            IEnumerable<ODataOperation> operations = ODataUtilsInternal.ConcatEnumerables((IEnumerable<ODataOperation>)entry.NonComputedActions, (IEnumerable<ODataOperation>)entry.NonComputedFunctions);
+            IEnumerable<ODataOperation> operations = ODataUtilsInternal.ConcatEnumerables((IEnumerable<ODataOperation>)resource.NonComputedActions, (IEnumerable<ODataOperation>)resource.NonComputedFunctions);
             if (operations != null)
             {
                 foreach (ODataOperation operation in operations)

@@ -191,11 +191,11 @@ namespace Microsoft.OData.Client
         /// <summary>Creates new DataServiceCollection.</summary>
         /// <param name="entityMaterializer">The materializer</param>
         /// <param name="context"><see cref="DataServiceContext"/> associated with the new collection.</param>
-        /// <param name="items">Enumeration of items to initialize the new DataServiceCollection with.</param>       
+        /// <param name="items">Enumeration of items to initialize the new DataServiceCollection with.</param>
         /// <param name="trackingMode">The tracking mode for the new collection.</param>
         /// <param name="entitySetName">The name of the entity set the elements in the collection belong to.</param>
         /// <param name="entityChangedCallback">Delegate that gets called when an entity changes.</param>
-        /// <param name="collectionChangedCallback">Delegate that gets called when an entity collection changes.</param> 
+        /// <param name="collectionChangedCallback">Delegate that gets called when an entity collection changes.</param>
         /// <remarks>This is the internal constructor called from materializer and used inside our projection queries.</remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800", Justification = "Constructor and debug-only code can't reuse cast.")]
         internal DataServiceCollection(
@@ -224,10 +224,10 @@ namespace Microsoft.OData.Client
         }
 
         #region Properties
-        /// <summary>A completion event for the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, <see cref="LoadAsync()"/> 
+        /// <summary>A completion event for the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, <see cref="LoadAsync()"/>
         /// and <see cref="LoadNextPartialSetAsync"/> method.</summary>
-        /// <remarks>This event is raised exactly once for each call to the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>, 
-        /// <see cref="LoadAsync()"/> or <see cref="LoadNextPartialSetAsync"/> method. It is called both when the operation 
+        /// <remarks>This event is raised exactly once for each call to the <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/>,
+        /// <see cref="LoadAsync()"/> or <see cref="LoadNextPartialSetAsync"/> method. It is called both when the operation
         /// succeeded and/or when it failed.</remarks>
         public event EventHandler<LoadCompletedEventArgs> LoadCompleted;
 
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Client
         }
         #endregion Properties
 
-        /// <summary>Loads a collection of entity objects into the collection.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads a collection of entity objects into the collection.</summary>
         /// <param name="items">Collection of entity objects to be added to the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" />.</param>
         /// <remarks>
         /// When tracking is enabled, the behavior of Load would be to attach all those entities that are not already tracked by the context
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="T:System.InvalidOperationException">When a previous call to <see cref="M:Microsoft.OData.Client.DataServiceCollection`1.LoadAsync" /> is not yet complete.</exception>
         /// <remarks>This method uses the event-based async pattern.
         /// The method returns immediately without waiting for the query to complete. Then it calls the handler of the
-        /// <see cref="LoadCompleted"/> event exactly once on the UI thread. The event will be raised regradless
+        /// <see cref="LoadCompleted"/> event exactly once on the UI thread. The event will be raised regardless
         /// if the query succeeded or not.
         /// This class only support one asynchronous operation in flight.</remarks>
         public void LoadAsync(System.Linq.IQueryable<T> query)
@@ -467,7 +467,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Loads a single entity object into the collection.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads a single entity object into the collection.</summary>
         /// <param name="item">Entity object to be added.</param>
         /// <remarks>
         /// When tracking is enabled, the behavior of Load would be to attach the entity if it is not already tracked by the context
@@ -646,7 +646,7 @@ namespace Microsoft.OData.Client
             foreach (T item in items)
             {
                 // if this is too slow, consider hashing the set
-                // or just use LoadProperties                    
+                // or just use LoadProperties
                 if (!this.Contains(item))
                 {
                     this.Add(item);
@@ -757,7 +757,6 @@ namespace Microsoft.OData.Client
         /// The method does not process the results of the <paramref name="endCall"/>, it just raises the <see cref="LoadCompleted"/>
         /// event as appropriate. If there's some processing to be done for the results it should all be done by the
         /// <paramref name="endCall"/> method before it returns.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void BeginLoadAsyncOperation(
             Func<AsyncCallback, IAsyncResult> beginCall,
             Func<IAsyncResult, QueryOperationResponse> endCall)
@@ -768,7 +767,7 @@ namespace Microsoft.OData.Client
             // to do this in WinForms/WCF once we decide to add it there as well.
             // Note that we must mark the operation as in progress before we actually call Begin
             //   as the async operation might end immediately inside the Begin call and we have no control
-            //   over the ordering between the End callback thread, the thread Begin is called from 
+            //   over the ordering between the End callback thread, the thread Begin is called from
             //   and the UI thread on which we process the end event.
             this.ongoingAsyncOperation = null;
             try
@@ -804,7 +803,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="endCall">End method to complete the asynchronous query execution.</param>
         /// <param name="asyncResult">IAsyncResult to be passed to <paramref name="endCall"/>.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void EndLoadAsyncOperation(Func<IAsyncResult, QueryOperationResponse> endCall, IAsyncResult asyncResult)
         {
             try

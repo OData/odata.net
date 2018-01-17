@@ -10,8 +10,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Xml;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -46,14 +46,17 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                ODataResource entry = reader.Item as ODataResource;
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                }
                             }
                         }
                     }
@@ -77,14 +80,17 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.AreEqual(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                ODataResource entry = reader.Item as ODataResource;
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.AreEqual(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                }
                             }
                         }
                     }
@@ -138,14 +144,17 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.AreEqual(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                ODataResource entry = reader.Item as ODataResource;
+                                if (entry != null && entry.TypeName.EndsWith("Customer"))
+                                {
+                                    Assert.AreEqual(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                }
                             }
                         }
                     }
@@ -171,7 +180,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             }
         }
 
-
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void InsertAndUpdatePropertyValueUsingLinq()
         {
@@ -226,5 +235,6 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             var queryable4 = TestClientContext.Execute<Order>(new Uri("Orders()?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", UriKind.Relative));
             Assert.IsTrue(queryable4.Count() == 0);
         }
+#endif
     }
 }

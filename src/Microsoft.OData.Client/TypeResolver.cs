@@ -11,10 +11,8 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Class which contains all the logic for resolving the type from the wire name.
@@ -63,19 +61,9 @@ namespace Microsoft.OData.Client
 
             if (serviceModel != null && clientEdmModel != null)
             {
-                if (clientEdmModel.EdmStructuredSchemaElements == null)
+                foreach (var element in serviceModel.SchemaElements.Where(se => se is IEdmStructuredType))
                 {
-                    clientEdmModel.EdmStructuredSchemaElements = serviceModel.SchemaElements.Where(se => se is IEdmStructuredType).ToList();
-                }
-                else
-                {
-                    foreach (var element in serviceModel.SchemaElements.Where(se => se is IEdmStructuredType))
-                    {
-                        if (!clientEdmModel.EdmStructuredSchemaElements.Contains(element))
-                        {
-                            clientEdmModel.EdmStructuredSchemaElements.Add(element);
-                        }
-                    }
+                    clientEdmModel.EdmStructuredSchemaElements.TryAdd(element.Name, element);
                 }
             }
         }
@@ -87,8 +75,8 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                // DEVNOTE: because the two instances are different types, both internal, do NOT use ternary or 
-                // coalesce operators here (?: and ??). 
+                // DEVNOTE: because the two instances are different types, both internal, do NOT use ternary or
+                // coalesce operators here (?: and ??).
                 // This is a known C# compiler issue which produces unverifiable IL causing a runtime exception
                 // in partial trust environments.
                 if (this.serviceModel != null)
@@ -115,8 +103,8 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="expectedType">Expected client clr type based on the API called.</param>
         /// <param name="readerTypeName">
-        /// The name surfaced by the ODataLib reader. 
-        /// If we have a server model, this will be a server type name that needs to be resolved. 
+        /// The name surfaced by the ODataLib reader.
+        /// If we have a server model, this will be a server type name that needs to be resolved.
         /// If not, then this will already be a client type name.</param>
         /// <returns>The resolved annotation for the client type to materialize into.</returns>
         internal ClientTypeAnnotation ResolveTypeForMaterialization(Type expectedType, string readerTypeName)
@@ -145,7 +133,7 @@ namespace Microsoft.OData.Client
                 }
 
                 // If there was no type name specified in the payload, then the type resolver won't be invoked
-                // and hence that edm type name might not be in the resolver cache. Hence look that up in the 
+                // and hence that edm type name might not be in the resolver cache. Hence look that up in the
                 // ClientEdmModel cache. This lookup is more expensive and is unique across the app domain for the
                 // given version.
                 return this.clientEdmModel.GetClientTypeAnnotation(readerTypeName);
@@ -154,10 +142,10 @@ namespace Microsoft.OData.Client
             Type collectionImplementationType = ClientTypeUtil.GetImplementationType(expectedType, typeof(ICollection<>));
             Type collectionElementType = collectionImplementationType.GetGenericArguments()[0];
 
-            // In case of collection, the expectedType might be collection of nullable types (for e.g. ICollection<int?>). 
+            // In case of collection, the expectedType might be collection of nullable types (for e.g. ICollection<int?>).
             // There is no way to know the nullability from the wireTypeName (For e.g. Collection(Edm.Int32)).
             // Hence in case of collections of primitives, we need to look at the element type of the expected type
-            // and use that to create the instance otherwise we will not be able to assign the created ICollection<> 
+            // and use that to create the instance otherwise we will not be able to assign the created ICollection<>
             // instance to the property on the user's entity (ICollection<int> cannot be assigned to ICollection<int?>).
             // There is also no need to invoke the resolver for primitives, so we just use the element type.
             if (!PrimitiveType.IsKnownType(collectionElementType))

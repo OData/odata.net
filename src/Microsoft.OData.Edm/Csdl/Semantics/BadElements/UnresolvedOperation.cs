@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
@@ -20,7 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly string name;
         private readonly IEdmTypeReference returnType;
 
-        public UnresolvedOperation(string qualifiedName, string errorMessage, EdmLocation location) 
+        public UnresolvedOperation(string qualifiedName, string errorMessage, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedOperation, errorMessage) })
         {
             qualifiedName = qualifiedName ?? string.Empty;
@@ -53,7 +52,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return false; }
         }
 
-        public Expressions.IEdmPathExpression EntitySetPath
+        public IEdmPathExpression EntitySetPath
         {
             get { return null; }
         }

@@ -17,13 +17,17 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Client.Providers;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using c = Microsoft.OData.Client;
+
+#if PORTABLELIB && WINDOWSPHONE
+    // Windows Phone 8.0 doesn't support ConcurrentDictionary
+    using ConcurrentEdmSchemaDictionary = System.Collections.Generic.Dictionary<string, Edm.IEdmSchemaElement>;
+#else
+    using ConcurrentEdmSchemaDictionary = System.Collections.Concurrent.ConcurrentDictionary<string, Edm.IEdmSchemaElement>;
+#endif
 
     #endregion Namespaces.
 
@@ -55,6 +59,7 @@ namespace Microsoft.OData.Client
         internal ClientEdmModel(ODataProtocolVersion maxProtocolVersion)
         {
             this.maxProtocolVersion = maxProtocolVersion;
+            this.EdmStructuredSchemaElements = new ConcurrentEdmSchemaDictionary();
         }
 
         /// <summary>
@@ -109,12 +114,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the state of whether the edm structured schema elements have been set.
+        /// Gets the state of edm structured schema elements keyed by their Name.
         /// </summary>
-        internal List<IEdmSchemaElement> EdmStructuredSchemaElements
+        internal ConcurrentEdmSchemaDictionary EdmStructuredSchemaElements
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -186,11 +191,11 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
             return null;
         }
@@ -360,7 +365,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Find properties with dynamic MIME type related properties and 
+        /// Find properties with dynamic MIME type related properties and
         /// set the references from each ClientProperty to its related MIME type property
         /// </summary>
         /// <param name="edmStructuredType">Client edm type instance to wire up the mime type properties.</param>
@@ -411,11 +416,10 @@ namespace Microsoft.OData.Client
             {
                 Type collectionType;
                 bool isOpen = false;
-                if (EdmStructuredSchemaElements != null && EdmStructuredSchemaElements.Any())
+                IEdmSchemaElement edmSchemaElement = null;
+                if (EdmStructuredSchemaElements.TryGetValue(ClientTypeUtil.GetServerDefinedTypeName(type), out edmSchemaElement))
                 {
-                    IEdmStructuredType edmStructuredType =
-                        EdmStructuredSchemaElements.FirstOrDefault(
-                            et => (et != null && et.Name == ClientTypeUtil.GetServerDefinedTypeName(type))) as IEdmStructuredType;
+                    var edmStructuredType = edmSchemaElement as IEdmStructuredType;
                     if (edmStructuredType != null)
                     {
                         isOpen = edmStructuredType.IsOpen;
@@ -464,7 +468,7 @@ namespace Microsoft.OData.Client
                                 if (edmBaseType == null && keyProperties.Any(k => k.DeclaringType == type && k.Name == property.Name))
                                 {
                                     Debug.Assert(edmProperty.PropertyKind == EdmPropertyKind.Structural, "edmProperty.PropertyKind == EdmPropertyKind.Structural");
-                                    Debug.Assert(edmProperty.Type.TypeKind() == EdmTypeKind.Primitive, "edmProperty.Type.TypeKind() == EdmTypeKind.Primitive");
+                                    Debug.Assert(edmProperty.Type.TypeKind() == EdmTypeKind.Primitive || edmProperty.Type.TypeKind() == EdmTypeKind.Enum, "edmProperty.Type.TypeKind() == EdmTypeKind.Primitive || edmProperty.Type.TypeKind() == EdmTypeKind.Enum");
                                     loadedKeyProperties.Add((IEdmStructuralProperty)edmProperty);
                                 }
                             }
@@ -490,14 +494,14 @@ namespace Microsoft.OData.Client
                     {
                         Action<EdmEnumTypeWithDelayLoadedMembers> delayLoadEnumMembers = (enumType) =>
                         {
-#if DNXCORE50
+#if PORTABLELIB
                             foreach (FieldInfo tmp in enumTypeTmp.GetFields().Where(fieldInfo => fieldInfo.IsStatic))
 #else
                             foreach (FieldInfo tmp in enumTypeTmp.GetFields(BindingFlags.Static | BindingFlags.Public))
 #endif
                             {
                                 object memberValue = Enum.Parse(enumTypeTmp, tmp.Name, false);
-                                enumType.AddMember(new EdmEnumMember(enumType, tmp.Name, new EdmIntegerConstant((long)Convert.ChangeType(memberValue, typeof(long), CultureInfo.InvariantCulture.NumberFormat))));
+                                enumType.AddMember(new EdmEnumMember(enumType, tmp.Name, new EdmEnumMemberValue((long)Convert.ChangeType(memberValue, typeof(long), CultureInfo.InvariantCulture.NumberFormat))));
                             }
                         };
 

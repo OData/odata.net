@@ -13,8 +13,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using AstoriaUnitTests.TDD.Common;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
@@ -24,8 +23,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private readonly IEdmModel serviceModel = new EdmModel();
         private DataServiceClientFormat v3TestSubject;
         private DataServiceContext v3Context;
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+        private readonly QueryComponents queryComponentsWithSelect = new QueryComponents(new Uri("http://temp.org/?$select=foo"), new Version(1, 1, 1, 1), typeof(object), null, null);
+        private readonly QueryComponents queryComponentsWithoutSelect = new QueryComponents(new Uri("http://temp.org/"), new Version(1, 1, 1, 1), typeof(object), null, null);
+#else
         private readonly QueryComponents queryComponentsWithSelect = new QueryComponents(new Uri("http://temp.org/?$select=foo"), new Version(), typeof(object), null, null);
         private readonly QueryComponents queryComponentsWithoutSelect = new QueryComponents(new Uri("http://temp.org/"), new Version(), typeof(object), null, null);
+#endif
         private static IODataRequestMessage RequestWithApplicationJson;
         private static IODataResponseMessage ResponseWithApplicationJson;
 
@@ -49,7 +53,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ApiSample()
         {
-            this.v3Context.Format.UseAtom();
             this.v3Context.Format.UseJson(this.serviceModel);
         }
 
@@ -76,53 +79,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.v3TestSubject.ServiceModel.Should().BeSameAs(this.serviceModel);
         }
 
-        [TestMethod]
-        public void AtomShouldStoreFormat()
-        {
-            this.v3TestSubject.UseAtom();
-            this.v3TestSubject.ODataFormat.Should().BeSameAs(ODataFormat.Atom);
-            this.v3TestSubject.ServiceModel.Should().BeNull();
-        }
 
-        [TestMethod]
-        public void AtomShouldClearResolver()
-        {
-            this.v3TestSubject.UseJson(this.serviceModel);
-            this.v3TestSubject.UseAtom();
-            this.v3TestSubject.ServiceModel.Should().BeNull();
-        }
 
         [TestMethod]
         public void AtomShouldBeTheDefault()
         {
             this.v3TestSubject.ODataFormat.Should().BeSameAs(ODataFormat.Json);
-        }
-
-        [TestMethod]
-        public void UsingAtomShouldBeFalseAfterUseJson()
-        {
-            this.v3TestSubject.UseJson(this.serviceModel);
-            this.v3TestSubject.UsingAtom.Should().BeFalse();
-        }
-
-        [TestMethod]
-        public void UsingAtomShouldBeTrueAfterUseAtom()
-        {
-            this.v3TestSubject.UseAtom();
-            this.v3TestSubject.UsingAtom.Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void SetRequestAcceptHeaderShouldSetAcceptHeaderToAtomWhenUsingAtom()
-        {
-            this.TestSetRequestAcceptHeader(f => f.UseAtom(), null, TestConstants.MimeApplicationAtomPlusXml);
-        }
-
-        [TestMethod]
-        public void SetRequestAcceptHeaderShouldNotSetAcceptHeaderIfAlreadySetWhenUsingAtom()
-        {
-            const string initialHeaderValue = "InitialHeaderValue";
-            this.TestSetRequestAcceptHeader(f => f.UseAtom(), initialHeaderValue, initialHeaderValue);
         }
 
         [TestMethod]
@@ -160,52 +122,28 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void SetRequestAcceptHeaderForQueryInJsonWithSelect()
         {
             this.TestSetRequestHeader(
-                f => f.UseJson(this.serviceModel), 
-                (f, r) => f.SetRequestAcceptHeaderForQuery(r, this.queryComponentsWithSelect), 
-                "Accept", 
+                f => f.UseJson(this.serviceModel),
+                (f, r) => f.SetRequestAcceptHeaderForQuery(r, this.queryComponentsWithSelect),
+                "Accept",
                 null,
                 TestConstants.MimeApplicationJsonODataFullMetadata);
-        }
-
-        [TestMethod]
-        public void SetRequestAcceptHeaderForQueryInAtomWithSelect()
-        {
-            this.TestSetRequestHeader(f => f.UseAtom(), (f, r) => f.SetRequestAcceptHeaderForQuery(r, this.queryComponentsWithSelect), "Accept", null, TestConstants.MimeApplicationAtomPlusXml);
         }
 
         [TestMethod]
         public void SetRequestAcceptHeaderForQueryInJsonWithoutSelect()
         {
             this.TestSetRequestHeader(
-                f => f.UseJson(this.serviceModel), 
-                (f, r) => f.SetRequestAcceptHeaderForQuery(r, this.queryComponentsWithoutSelect), 
-                "Accept", 
-                null, 
+                f => f.UseJson(this.serviceModel),
+                (f, r) => f.SetRequestAcceptHeaderForQuery(r, this.queryComponentsWithoutSelect),
+                "Accept",
+                null,
                 TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
-        [TestMethod]
-        public void SetRequestAcceptHeaderForQueryInAtomWithoutSelect()
-        {
-            this.TestSetRequestHeader(f => f.UseAtom(), (f, r) => f.SetRequestAcceptHeaderForQuery(r, this.queryComponentsWithoutSelect), "Accept", null, TestConstants.MimeApplicationAtomPlusXml);
-        }
 
         private void TestSetRequestAcceptHeader(Action<DataServiceClientFormat> configureFormat, string initialHeaderValue, string expectedValueAfterSet)
         {
             this.TestSetRequestHeader(configureFormat, (f, r) => f.SetRequestAcceptHeader(r), TestConstants.HttpAccept, initialHeaderValue, expectedValueAfterSet);
-        }
-
-        [TestMethod]
-        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToAtomWhenUsingAtom()
-        {
-            this.TestSetRequestContentTypeHeaderForEntry(f => f.UseAtom(), null, TestConstants.MimeApplicationAtom);
-        }
-
-        [TestMethod]
-        public void SetRequestContentTypeHeaderShouldNotSetContentTypeHeaderIfAlreadySetWhenUsingAtom()
-        {
-            const string initialHeaderValue = "InitialHeaderValue";
-            this.TestSetRequestContentTypeHeaderForEntry(f => f.UseAtom(), initialHeaderValue, initialHeaderValue);
         }
 
         [TestMethod]
@@ -226,19 +164,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.TestSetRequestContentTypeHeaderForAction(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
-        [TestMethod]
-        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToXmlLightWhenUsingAtomForLinks()
-        {
-            this.TestSetRequestContentTypeHeaderForLinks(f => f.UseAtom(), null, TestConstants.MimeApplicationXml);
-        }
-
-        [TestMethod]
-        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonODataMinimalMetadataWhenUsingAtomForActions()
-        {
-            this.TestSetRequestContentTypeHeaderForAction(f => f.UseAtom(), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
-        }
-
-        [TestMethod]
+        // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void SetRequestContentTypeHeaderShouldNotSetContentTypeHeaderIfAlreadySetWhenUsingJson()
         {
             const string initialHeaderValue = "InitialHeaderValue";
@@ -270,35 +198,17 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void UseAtomShouldNotInvokeOrRemoveDelegate()
-        {
-            Func<IEdmModel> throwIfCalled = () => { throw new Exception("Should not be called"); };
-            this.v3Context.Format.LoadServiceModel = throwIfCalled;
-            this.v3Context.Format.UseAtom();
-            this.v3Context.Format.LoadServiceModel.Should().BeSameAs(throwIfCalled);
-        }
-
-        [TestMethod]
         public void ValidateCanWriteRequestMessageShouldNotThrowForV3AndJsonLightWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
-            this.v3TestSubject.ValidateCanWriteRequestFormat(RequestWithApplicationJson, isParameterPayload: false);
-            this.v3TestSubject.ValidateCanWriteRequestFormat(RequestWithApplicationJson, isParameterPayload: true);
+            DataServiceClientFormat.ValidateCanWriteRequestFormat(RequestWithApplicationJson);
         }
 
         [TestMethod]
         public void ValidateCanReadResponseMessageShouldNotThrowForV3AndJsonLightWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
-            this.v3TestSubject.ValidateCanReadResponseFormat(ResponseWithApplicationJson);
-        }
-
-        [TestMethod]
-        public void UseAtomButResponseIsJsonShouldThrow()
-        {
-            this.v3TestSubject.UseAtom();
-            Action callOverload = () => this.v3TestSubject.ValidateCanReadResponseFormat(ResponseWithApplicationJson);
-            callOverload.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.DataServiceClientFormat_ValidServiceModelRequiredForJson);
+            DataServiceClientFormat.ValidateCanReadResponseFormat(ResponseWithApplicationJson);
         }
 
         private void TestSetRequestContentTypeHeaderForEntry(Action<DataServiceClientFormat> configureFormat, string initialHeaderValue, string expectedValueAfterSet)
@@ -333,7 +243,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             if (expectedHeaderToSet == "Content-Type")
             {
-                if (!this.v3TestSubject.UsingAtom || expectedValueAfterSet == TestConstants.MimeApplicationJsonODataMinimalMetadata)
+                if (expectedValueAfterSet == TestConstants.MimeApplicationJsonODataMinimalMetadata)
                 {
                     headers.GetHeader("OData-Version").Should().Be("4.0");
                 }

@@ -4,18 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>
@@ -27,7 +23,7 @@ namespace Microsoft.OData.Core.UriParser
         /// Pre-look map for BinaryOperator kind resolver
         /// </summary>
         private static Dictionary<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>, EdmPrimitiveTypeKind> additionalMap =
-            new Dictionary<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>, EdmPrimitiveTypeKind>(EqualityComparer<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>>.Default)
+                new Dictionary<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>, EdmPrimitiveTypeKind>(EqualityComparer<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>>.Default)
                 {
                     {
                         new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
@@ -45,12 +41,33 @@ namespace Microsoft.OData.Core.UriParser
                     },
                     {
                         new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Add,
+                            EdmPrimitiveTypeKind.Date,
+                            EdmPrimitiveTypeKind.Duration),
+                        EdmPrimitiveTypeKind.Date
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Add,
+                            EdmPrimitiveTypeKind.Duration,
+                            EdmPrimitiveTypeKind.Date),
+                        EdmPrimitiveTypeKind.Date
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Add,
+                            EdmPrimitiveTypeKind.Duration,
+                            EdmPrimitiveTypeKind.Duration),
+                        EdmPrimitiveTypeKind.Duration
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
                             BinaryOperatorKind.Subtract,
                             EdmPrimitiveTypeKind.DateTimeOffset,
                             EdmPrimitiveTypeKind.Duration),
                         EdmPrimitiveTypeKind.DateTimeOffset
                     },
-                     {
+                    {
                         new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
                             BinaryOperatorKind.Subtract,
                             EdmPrimitiveTypeKind.DateTimeOffset,
@@ -59,30 +76,23 @@ namespace Microsoft.OData.Core.UriParser
                     },
                     {
                         new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Add,
+                            BinaryOperatorKind.Subtract,
                             EdmPrimitiveTypeKind.Date,
                             EdmPrimitiveTypeKind.Duration),
-                        EdmPrimitiveTypeKind.DateTimeOffset
+                        EdmPrimitiveTypeKind.Date
                     },
                     {
                         new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Add,
+                            BinaryOperatorKind.Subtract,
+                            EdmPrimitiveTypeKind.Date,
+                            EdmPrimitiveTypeKind.Date),
+                        EdmPrimitiveTypeKind.Duration
+                    },
+                    {
+                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
+                            BinaryOperatorKind.Subtract,
                             EdmPrimitiveTypeKind.Duration,
-                            EdmPrimitiveTypeKind.Date),
-                        EdmPrimitiveTypeKind.DateTimeOffset
-                    },
-                    {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Subtract,
-                            EdmPrimitiveTypeKind.Date,
                             EdmPrimitiveTypeKind.Duration),
-                        EdmPrimitiveTypeKind.DateTimeOffset
-                    },
-                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Subtract,
-                            EdmPrimitiveTypeKind.Date,
-                            EdmPrimitiveTypeKind.Date),
                         EdmPrimitiveTypeKind.Duration
                     },
                 };

@@ -23,9 +23,11 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.Test.ModuleCore;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     [TestModule]
     public partial class UnitTestModule1
     {
+        [Ignore] // Remove Atom
         public partial class CollectionTest
         {
             #region XFeature entities and helpers
@@ -119,7 +121,7 @@ namespace AstoriaUnitTests.Tests
             #region XFeature - Collection & BatchWithSingleChangeset with IDataServiceHost/IDataServiceHost2 and Change Tracking
 
             // Cross feature, end to end (server + client) tests for collection combined with BatchWithSingleChangeset, IDataServiceHost/IDataServiceHost2 and Change tracking.
-            [TestCategory("Partition1"), TestMethod]
+            // [TestCategory("Partition1"), TestMethod]
             public void Collection_BatchIDataServiceHostAndChangeTracking()
             {
                 DSPMetadata metadata = CreateMetadataForXFeatureEntity();
@@ -148,8 +150,8 @@ namespace AstoriaUnitTests.Tests
 
                         // Add entities
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         foreach (XFeatureTestsEntity entity in testEntities)
                         {
                             ctx.AddObject("Entities", entity);
@@ -209,7 +211,7 @@ namespace AstoriaUnitTests.Tests
             #region XFeature - Collection & Server Driven Paging
 
             // Cross feature end to end (server + client) tests for collection combined with server driven paging (built-in and custom). 
-            [TestCategory("Partition1"), TestMethod]
+            // [TestCategory("Partition1"), TestMethod]
             public void Collection_ServerDrivenPaging()
             {
                 Action<DataServiceContext, DSPContext, int?, bool> test = (ctx, data, pageSize, customPaging) => 
@@ -248,7 +250,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             // Cross feature end to end (server + client) tests for collection combined with server driven paging (built-in and custom). 
-            [TestCategory("Partition1"), TestMethod]
+            // [TestCategory("Partition1"), TestMethod]
             public void Collection_ServerDrivenPaging_DataServiceCollection()
             {
                 Action<DataServiceContext, DSPContext, int?, bool> test = (ctx, data, pageSize, customPaging) =>
@@ -327,8 +329,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         test(ctx, data, pageSize, enableCustomPaging);
@@ -390,7 +392,7 @@ namespace AstoriaUnitTests.Tests
                 public static new InterceptorServiceDefinition Current { get { return (InterceptorServiceDefinition)DSPServiceDefinition.Current; } }
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties work correctly with query interceptors")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties work correctly with query interceptors")]
             public void Collection_QueryInterceptors()
             {
                 var metadata = CreateMetadataForXFeatureEntity();
@@ -406,8 +408,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     PopulateClientContextWithTestEntities(ctx);
 
                     ctx.IgnoreResourceNotFoundException = true;
@@ -462,7 +464,7 @@ namespace AstoriaUnitTests.Tests
                 service.QueryInterceptorCallCount = 0;
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties work correctly with change interceptors.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties work correctly with change interceptors.")]
             public void Collection_ChangeInterceptors()
             {
                 var metadata = CreateMetadataForXFeatureEntity();
@@ -486,8 +488,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
 
                         if (httpMethod != "POST")
                         {
@@ -540,8 +542,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         service.EnableChangeInterceptors = false;
                         PopulateClientContextWithTestEntities(ctx);
                         service.EnableChangeInterceptors = true;
@@ -564,10 +566,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             #endregion XFeature - Collection & Interceptors
-
             #region XFeature - Collection & Blobs/MLEs
-
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that MLEs with collection properties work correctly (server and client)")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that MLEs with collection properties work correctly (server and client)")]
             public void Collection_Blobs()
             {
                 DSPMetadata metadata = CreateMetadataForXFeatureEntity(true);
@@ -600,8 +600,8 @@ namespace AstoriaUnitTests.Tests
 
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
 
                     ctx.AddObject("Entities", clientMle);
                     ctx.SetSaveStream(clientMle, new MemoryStream(clientBlob), true, "application/octet-stream", clientMle.ID.ToString());
@@ -675,7 +675,7 @@ namespace AstoriaUnitTests.Tests
                 public Action<TestWebRequest> VerifyResponse { get; set; }
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collections work correctly with configuration options")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collections work correctly with configuration options")]
             public void Collection_Configuration()
             {
                 var testCases = new ConfigurationTestCase[] {
@@ -761,8 +761,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         request.RequestUriString = testCase.RequestUri;
@@ -789,7 +789,7 @@ namespace AstoriaUnitTests.Tests
 
             #region XFeature - Collection & IExpandProvider
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection can be correctly expanded with IExpandProvider")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection can be correctly expanded with IExpandProvider")]
             public void Collection_IExpandProvider()
             {
                 var metadata = CreateMetadataForXFeatureEntity();
@@ -811,8 +811,8 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         // set navigation
@@ -1002,7 +1002,7 @@ namespace AstoriaUnitTests.Tests
                 public ProcessingPipelineCallCount ExpectedCallCount { get; set; }
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collections work correctly with processing pipeline.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collections work correctly with processing pipeline.")]
             public void Collection_ProcessingPipeline()
             {
                 var metadata = CreateMetadataForXFeatureEntity();
@@ -1184,7 +1184,7 @@ namespace AstoriaUnitTests.Tests
 
             #region XFeature - Collection & Count
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collections work correctly with client and server side count and inlinecount.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collections work correctly with client and server side count and inlinecount.")]
             public void Collection_Count()
             {
                 TestUtil.RunCombinations(new int?[] { null, 1, 2 }, (sdpPageSize) =>
@@ -1204,8 +1204,8 @@ namespace AstoriaUnitTests.Tests
                     {
                         request.StartService();
                         var ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
                         var testCases = new[] {

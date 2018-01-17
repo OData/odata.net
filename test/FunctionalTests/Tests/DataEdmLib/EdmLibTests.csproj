@@ -5,6 +5,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>EdmLibTests</RootNamespace>
     <AssemblyName>EdmLibTests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -69,11 +70,11 @@
     <Compile Include="FunctionalTests\ConstructibleModelTestsUsingConverter.cs" />
     <Compile Include="FunctionalTests\ConstructibleModelTests.cs" />
     <Compile Include="FunctionalTests\CsdlLocationTests.cs" />
-    <Compile Include="FunctionalTests\CsdlParsingTests.cs" />
+    <Compile Include="FunctionalTests\SchemaParsingTests.cs" />
     <Compile Include="FunctionalTests\ParsingValidation.cs" />
     <Compile Include="FunctionalTests\CsdlSerializingTests.cs" />
     <Compile Include="FunctionalTests\ExtensionMethodsTests.cs" />
-    <Compile Include="FunctionalTests\EdmxParsingTests.cs" />
+    <Compile Include="FunctionalTests\CsdlParsingTests.cs" />
     <Compile Include="FunctionalTests\EdmxSerializingTests.cs" />
     <Compile Include="FunctionalTests\FindMethodTests.cs" />
     <Compile Include="FunctionalTests\OperationModelTests.cs" />
@@ -149,14 +150,13 @@
     <Compile Include="VocabularyStubs\StubRecordExpression.cs" />
     <Compile Include="VocabularyStubs\StubStringConstantExpression.cs" />
     <Compile Include="VocabularyStubs\StubTypeTerm.cs" />
-    <Compile Include="VocabularyStubs\StubValueAnnotation.cs" />
-    <Compile Include="VocabularyStubs\StubValueTerm.cs" />
+    <Compile Include="VocabularyStubs\StubVocabularyAnnotation.cs" />
+    <Compile Include="VocabularyStubs\StubTerm.cs" />
     <Compile Include="StubEdm\StubEdmComplexType.cs" />
     <Compile Include="StubEdm\StubEdmDirectValueAnnotationBinding.cs" />
     <Compile Include="StubEdm\StubEdmElement.cs" />
     <Compile Include="StubEdm\StubEdmEntityContainer.cs" />
     <Compile Include="StubEdm\StubEdmEntitySet.cs" />
-    <Compile Include="StubEdm\StubEdmEntitySetReferenceExpression.cs" />
     <Compile Include="StubEdm\StubEdmEntityType.cs" />
     <Compile Include="StubEdm\StubEdmEnumMember.cs" />
     <Compile Include="StubEdm\StubEdmEnumType.cs" />
@@ -174,25 +174,13 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="Resources\System.Data.Resources.AnnotationSchema.xsd">
+    <EmbeddedResource Include="Resources\Microsoft.OData.Resources.AnnotationSchema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CodeGenerationSchema.xsd">
+    <EmbeddedResource Include="Resources\Microsoft.OData.Resources.CodeGenerationSchema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_1_1.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_2.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_3.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\System.Data.Resources.CSDLSchema_4.xsd">
+    <EmbeddedResource Include="Resources\Microsoft.OData.Resources.CSDLSchema_4.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

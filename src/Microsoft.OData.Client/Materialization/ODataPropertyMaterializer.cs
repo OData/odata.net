@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Diagnostics;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -52,12 +52,11 @@ namespace Microsoft.OData.Client.Materialization
             ODataProperty property = this.messageReader.ReadProperty(expectedReaderType);
             Type underlyingExpectedType = Nullable.GetUnderlyingType(this.ExpectedType) ?? this.ExpectedType;
 
-            object propertyValue = property.Value;
             if (expectedClientType.IsCollection())
             {
                 Debug.Assert(WebUtil.IsCLRTypeCollection(underlyingExpectedType, this.MaterializerContext.Model) || (SingleResult.HasValue && !SingleResult.Value), "expected type must be collection or single result must be false");
 
-                // We are here for two cases: 
+                // We are here for two cases:
                 // (1) Something like Execute<ICollection<T>>, in which case the underlyingExpectedType is ICollection<T>
                 // (2) Execute<T> with the bool singleValue = false, in which case underlyingExpectedType is T
                 Type collectionItemType = this.ExpectedType;
@@ -87,14 +86,6 @@ namespace Microsoft.OData.Client.Materialization
 
                 this.currentValue = collectionInstance;
             }
-            else if (expectedClientType.IsComplex())
-            {
-                ODataComplexValue complexValue = propertyValue as ODataComplexValue;
-                Debug.Assert(this.MaterializerContext.Model.GetOrCreateEdmType(underlyingExpectedType).ToEdmTypeReference(false).IsComplex(), "expectedType must be complex type");
-
-                this.ComplexValueMaterializationPolicy.MaterializeComplexTypeProperty(underlyingExpectedType, complexValue);
-                this.currentValue = complexValue.GetMaterializedValue();
-            }
             else if (expectedClientType.IsEnum())
             {
                 this.currentValue = this.EnumValueMaterializationPolicy.MaterializeEnumTypeProperty(underlyingExpectedType, property);
@@ -102,7 +93,15 @@ namespace Microsoft.OData.Client.Materialization
             else
             {
                 Debug.Assert(this.MaterializerContext.Model.GetOrCreateEdmType(underlyingExpectedType).ToEdmTypeReference(false).IsPrimitive(), "expectedType must be primitive type");
-                this.currentValue = this.PrimitivePropertyConverter.ConvertPrimitiveValue(property.Value, this.ExpectedType);
+                object value = property.Value;
+                ODataUntypedValue untypedVal = value as ODataUntypedValue;
+                if ((untypedVal != null)
+                    && this.MaterializerContext.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
+                {
+                    value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                }
+
+                this.currentValue = this.PrimitivePropertyConverter.ConvertPrimitiveValue(value, this.ExpectedType);
             }
         }
     }

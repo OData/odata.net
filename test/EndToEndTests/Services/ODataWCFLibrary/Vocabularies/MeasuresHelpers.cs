@@ -8,24 +8,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
 
     public static class MeasuresHelpers
     {
         #region Initialization
 
         public static readonly IEdmModel Instance;
-        public static readonly IEdmValueTerm ISOCurrencyTerm;
-        public static readonly IEdmValueTerm ScaleTerm;
+        public static readonly IEdmTerm ISOCurrencyTerm;
+        public static readonly IEdmTerm ScaleTerm;
 
         internal const string MeasuresISOCurrency = "Org.OData.Measures.V1.ISOCurrency";
         internal const string MeasuresScale = "Org.OData.Measures.V1.Scale";
@@ -35,11 +31,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ODataSamples.Services.Core.Vocabularies.MeasuresVocabularies.xml"))
             {
                 IEnumerable<EdmError> errors;
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
-            ISOCurrencyTerm = Instance.FindDeclaredValueTerm(MeasuresISOCurrency);
-            ScaleTerm = Instance.FindDeclaredValueTerm(MeasuresScale);
+            ISOCurrencyTerm = Instance.FindDeclaredTerm(MeasuresISOCurrency);
+            ScaleTerm = Instance.FindDeclaredTerm(MeasuresScale);
         }
 
         #endregion
@@ -54,7 +50,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var target = property;
             var term = ISOCurrencyTerm;
             var expression = new EdmStringConstant(isoCurrency);
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, property.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
@@ -71,7 +67,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var target = property;
             var term = ScaleTerm;
             var expression = new EdmIntegerConstant(scale);
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, property.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
