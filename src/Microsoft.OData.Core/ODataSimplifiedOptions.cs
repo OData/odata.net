@@ -28,16 +28,15 @@ namespace Microsoft.OData
         {
             this.EnableParsingKeyAsSegmentUrl = true;
             this.EnableWritingKeyAsSegment = false;
+            this.EnableReadingKeyAsSegment = false;
 
             if (version == null || version < ODataVersion.V401)
             {
-                this.EnableReadingKeyAsSegment = false;
                 this.EnableReadingODataAnnotationWithoutPrefix = false;
                 this.EnableWritingODataAnnotationWithoutPrefix = false;
             }
             else
             {
-                this.EnableReadingKeyAsSegment = true;
                 this.EnableReadingODataAnnotationWithoutPrefix = true;
                 this.EnableWritingODataAnnotationWithoutPrefix = true;
             }
@@ -57,7 +56,8 @@ namespace Microsoft.OData
         public bool EnableReadingKeyAsSegment { get; set; }
 
         /// <summary>
-        /// True if can read reserved annotation name without prefix 'odata.', otherwise false. The default value is false.
+        /// True if can read reserved annotation name without prefix 'odata.', otherwise false.
+        /// The default value is false for OData 4.0 and true for OData 4.01.
         /// The option is applied during deserialization.
         /// </summary>
         public bool EnableReadingODataAnnotationWithoutPrefix { get; set; }
@@ -71,7 +71,8 @@ namespace Microsoft.OData
         public bool EnableWritingKeyAsSegment { get; set; }
 
         /// <summary>
-        /// True if write reserved annotation name without prefix 'odata.', otherwise false. The default value is false.
+        /// True if write reserved annotation name without prefix 'odata.', otherwise false.
+        /// The default value is false for OData 4.0, true for OData 4.01.
         /// The option is applied during serialization.
         /// </summary>
         public bool EnableWritingODataAnnotationWithoutPrefix { get; set; }

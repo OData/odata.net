@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.MultipartMixed;
-
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -109,10 +107,8 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Public property for the current group id the reader is processing.
-        /// The primary usage of this property is, for Json batch, to correlate atomic group id
-        /// in request and response operation messages.
-        /// For multipart batch, since there are no correlations between the changeset boundaries in
-        /// request and response, this value is ignored / not used, is always null.
+        /// The primary usage of this to correlate atomic group id in request and
+        /// response operation messages as needed.
         /// </summary>
         public string CurrentGroupId
         {
@@ -260,9 +256,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Gets the group id for the current request.
-        /// This is for Json batch format only, which requires atomic group ids from corresponding request and
-        /// response should be the same.
-        /// Default implementation here is provided for multipart batch.
+        /// Default implementation here is provided returning null.
         /// </summary>
         /// <returns>The group id for the current request.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
@@ -319,11 +313,11 @@ namespace Microsoft.OData
         /// <param name="contentId">The contentId of this request message.</param>
         /// <param name="groupId">The group id that this request belongs to. Can be null.</param>
         /// <param name="dependsOnRequestIds">
-        /// The prerequisite request Ids of this request message. For batch in Json format,
-        /// some of these request Ids are resolved from prerequisite atomic groups that are
-        /// specified in the dependsOn attribute of the request.
+        /// The prerequisite request Ids of this request message that could be specified by caller
+        /// explicitly.
         /// </param>
-        /// <param name="batchFormat">Format of the batch.</param>
+        /// <param name="dependsOnIdsValidationRequired">
+        /// Whether the <code>dependsOnIds</code> value needs to be validated.</param>
         /// <returns>The <see cref="ODataBatchOperationRequestMessage"/> instance.</returns>
         protected ODataBatchOperationRequestMessage BuildOperationRequestMessage(
             Func<Stream> streamCreatorFunc,
@@ -333,9 +327,9 @@ namespace Microsoft.OData
             string contentId,
             string groupId,
             IEnumerable<string> dependsOnRequestIds,
-            ODataFormat batchFormat)
+            bool dependsOnIdsValidationRequired)
         {
-            if (dependsOnRequestIds != null)
+            if (dependsOnRequestIds != null && dependsOnIdsValidationRequired)
             {
                 foreach (string id in dependsOnRequestIds)
                 {
@@ -344,13 +338,13 @@ namespace Microsoft.OData
                         throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
                     }
                 }
-
-                ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
-                    this.inputContext.MessageReaderSettings.BaseUri, batchFormat);
             }
 
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
                 requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.payloadUriConverter);
+
+            ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
+                this.inputContext.MessageReaderSettings.BaseUri);
 
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
                 contentId, this.payloadUriConverter, /*writing*/ false, this.container, dependsOnRequestIds, groupId);
@@ -363,8 +357,7 @@ namespace Microsoft.OData
         /// <param name="statusCode">The status code for the response.</param>
         /// <param name="headers">The headers for this response message.</param>
         /// <param name="contentId">The contentId of this request message.</param>
-        /// <param name="groupId">The groupId of this request message.
-        /// Value is null for multipart batch operation response message.</param>
+        /// <param name="groupId">The groupId of this request message.</param>
         /// <returns>The <see cref="ODataBatchOperationResponseMessage"/> instance.</returns>
         protected ODataBatchOperationResponseMessage BuildOperationResponseMessage(
             Func<Stream> streamCreatorFunc,

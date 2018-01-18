@@ -220,14 +220,36 @@ namespace Microsoft.OData
         ///
         /// When header name is ODataConstants.ContentTypeHeader:
         ///     If header value is application/json, append the following default values:
-        ///         odata.metadata=minimal
-        ///         odata.streaming=true
+        ///         (odata.)metadata=minimal
+        ///         (odata.)streaming=true
         ///         IEEE754Compatible=false
         /// </summary>
         /// <param name="headerName">The name of the header to append default values.</param>
         /// <param name="headerValue">The original header value string.</param>
         /// <returns>The header value string with appended default values.</returns>
         public static string AppendDefaultHeaderValue(string headerName, string headerValue)
+        {
+            return AppendDefaultHeaderValue(headerName, headerValue, ODataVersion.V4);
+        }
+
+        /// <summary>
+        /// Append default values required by OData to specified HTTP header.
+        ///
+        /// When header name is ODataConstants.ContentTypeHeader, if header value is application/json
+        ///     append the following default values for 4.0:
+        ///         odata.metadata=minimal
+        ///         odata.streaming=true
+        ///         IEEE754Compatible=false
+        ///     append the following default values for 4.01:
+        ///         metadata=minimal
+        ///         streaming=true
+        ///         IEEE754Compatible=false
+        /// </summary>
+        /// <param name="headerName">The name of the header to append default values.</param>
+        /// <param name="headerValue">The original header value string.</param>
+        /// <param name="version">The ODataVersion for which to create the default header value</param>
+        /// <returns>The header value string with appended default values.</returns>
+        public static string AppendDefaultHeaderValue(string headerName, string headerValue, ODataVersion version)
         {
             if (string.CompareOrdinal(headerName, ODataConstants.ContentTypeHeader) != 0)
             {
@@ -261,17 +283,17 @@ namespace Microsoft.OData
                 {
                     extendedParameters.Add(parameter);
 
-                    if (string.CompareOrdinal(parameter.Key, MimeConstants.MimeMetadataParameterName) == 0)
+                    if (HttpUtils.IsMetadataParameter(parameter.Key))
                     {
                         hasMetadata = true;
                     }
 
-                    if (string.CompareOrdinal(parameter.Key, MimeConstants.MimeStreamingParameterName) == 0)
+                    if (HttpUtils.IsStreamingParameter(parameter.Key))
                     {
                         hasStreaming = true;
                     }
 
-                    if (string.CompareOrdinal(parameter.Key, MimeConstants.MimeIeee754CompatibleParameterName) == 0)
+                    if (string.Compare(parameter.Key, MimeConstants.MimeIeee754CompatibleParameterName, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         hasIeee754Compatible = true;
                     }
@@ -281,14 +303,14 @@ namespace Microsoft.OData
             if (!hasMetadata)
             {
                 extendedParameters.Add(new KeyValuePair<string, string>(
-                    MimeConstants.MimeMetadataParameterName,
+                    version < ODataVersion.V401 ? MimeConstants.MimeMetadataParameterName : MimeConstants.MimeShortMetadataParameterName,
                     MimeConstants.MimeMetadataParameterValueMinimal));
             }
 
             if (!hasStreaming)
             {
                 extendedParameters.Add(new KeyValuePair<string, string>(
-                    MimeConstants.MimeStreamingParameterName,
+                    version < ODataVersion.V401 ? MimeConstants.MimeStreamingParameterName : MimeConstants.MimeShortStreamingParameterName,
                     MimeConstants.MimeParameterValueTrue));
             }
 

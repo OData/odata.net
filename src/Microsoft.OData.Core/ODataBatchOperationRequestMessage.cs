@@ -137,7 +137,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets the prerequisite request or group ids.
         /// </summary>
-        public List<string> DependsOnIds
+        public IEnumerable<string> DependsOnIds
         {
             get
             {

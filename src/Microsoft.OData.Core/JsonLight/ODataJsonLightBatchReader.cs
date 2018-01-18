@@ -181,7 +181,7 @@ namespace Microsoft.OData.JsonLight
                 id,
                 atomicityGroupId,
                 dependsOnReqIds,
-                ODataFormat.Json);
+                /*dependsOnIdsValidationRequired*/true);
 
             return requestMessage;
         }

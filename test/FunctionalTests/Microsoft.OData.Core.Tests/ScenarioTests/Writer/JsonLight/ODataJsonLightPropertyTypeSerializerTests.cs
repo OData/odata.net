@@ -51,10 +51,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeBinary_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new byte[] { 1, 2, 4 } }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"Binary");
+        }
+
+        [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeBoolean()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = true });
             result.Should().NotContain("@odata.type");
+        }
+
+        [Fact]
+        public void ShouldNotWriteODataTypeForPrimitiveTypeBoolean_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = true }, ODataVersion.V401);
+            result.Should().NotContain("@type");
         }
 
         [Fact]
@@ -65,10 +79,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeByte_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Byte.Parse("12") }, ODataVersion.V401);
+            result.Should().Contain("type\":\"Byte");
+        }
+
+        [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDate()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new Date(2014, 8, 8) });
             result.Should().Contain("@odata.type\":\"#Date");
+        }
+
+        [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeDate_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new Date(2014, 8, 8) }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"Date");
         }
 
         [Fact]
@@ -79,10 +107,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeDateTimeOffset_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new DateTimeOffset(2013, 11, 28, 12, 12, 12, TimeSpan.Zero) }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"DateTimeOffset");
+        }
+
+        [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeDecimal()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Decimal.Parse("111.100") });
             result.Should().Contain("@odata.type\":\"#Decimal");
+        }
+
+        [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeDecimal_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Decimal.Parse("111.100") }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"Decimal");
         }
 
         [Fact]
@@ -100,10 +142,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeInfiniteDouble_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.NegativeInfinity }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"Double");
+        }
+
+        [Fact]
         public void ShouldNotWriteODataTypeForPrimitiveTypeNormalDouble()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.Parse("111.11") });
             result.Should().NotContain("@odata.type");
+        }
+
+        [Fact]
+        public void ShouldNotWriteODataTypeForPrimitiveTypeNormalDouble_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Double.Parse("111.11") }, ODataVersion.V401);
+            result.Should().NotContain("@type");
         }
 
         [Fact]
@@ -114,10 +170,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeGuid_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Guid.Empty }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"Guid");
+        }
+
+        [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInt16()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int16.Parse("16") });
             result.Should().Contain("@odata.type\":\"#Int16");
+        }
+
+        [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeInt16_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int16.Parse("16") }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"Int16");
         }
 
         [Fact]
@@ -128,10 +198,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void ShouldNotWriteODataTypeForPrimitiveTypeInt32_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int32.Parse("32") }, ODataVersion.V401);
+            result.Should().NotContain("@type");
+        }
+
+        [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeInt64()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int64.Parse("64") });
             result.Should().Contain("@odata.type\":\"#Int64");
+        }
+
+        [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeInt64_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = Int64.Parse("64") }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"Int64");
         }
 
         [Fact]
@@ -142,10 +226,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeSByte_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = SByte.Parse("1") }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"SByte");
+        }
+
+        [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOfDay(23, 59, 59, 0) });
             result.Should().Contain("@odata.type\":\"#TimeOfDay");
+        }
+
+        [Fact]
+        public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay_401()
+        {
+            string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOfDay(23, 59, 59, 0) }, ODataVersion.V401);
+            result.Should().Contain("@type\":\"TimeOfDay");
         }
 
         [Fact]
@@ -336,10 +434,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         #region assist private functions
-        private string SerializeProperty(ODataProperty odataProperty)
+        private string SerializeProperty(ODataProperty odataProperty, ODataVersion version = ODataVersion.V4)
         {
             MemoryStream outputStream = new MemoryStream();
-            ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream);
+            ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream, version);
             var serializer = new ODataJsonLightPropertySerializer(jsonLightOutputContext);
 
             jsonLightOutputContext.JsonWriter.StartObjectScope();
@@ -374,9 +472,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             return payload;
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, ODataVersion version = ODataVersion.V4)
         {
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = version };
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
 
             var messageInfo = new ODataMessageInfo

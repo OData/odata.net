@@ -419,8 +419,12 @@ namespace Microsoft.OData.MultipartMixed
                 // Verify that we only allow single byte encodings and UTF-8 for now.
                 ReaderValidationUtils.ValidateEncodingSupportedInBatch(this.changesetEncoding);
             }
-            else if (this.ChangeSetBoundary != null)
+            else
             {
+                // Read the contentId not only for request in changeset; but also
+                // top-level request (if available), so that top-level request dependsOn
+                // ids can be derived (even though top-level request ids are typically
+                // not showing up on the wire).
                 headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId);
             }
 

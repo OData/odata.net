@@ -245,8 +245,8 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Given an enumerable of dependsOn ids containing request ids and group ids, convert the group ids
-        /// into associated request ids.
+        /// Given an enumerable of dependsOn ids containing request ids and group ids, return an enumeration of
+        /// equivalent request ids by converting the group ids into associated request ids.
         /// </summary>
         /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
         /// <returns>An enumerable consists of request ids.</returns>
@@ -342,10 +342,11 @@ namespace Microsoft.OData.JsonLight
 
             AddGroupIdLookup(contentId);
 
-            // create the new request operation
+            // Create the new request operation with a non-null dependsOnIds.
             this.CurrentOperationRequestMessage = BuildOperationRequestMessage(
                 this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId,
-                this.atomicityGroupId, dependsOnIds, ODataFormat.Json);
+                this.atomicityGroupId,
+                dependsOnIds ?? Enumerable.Empty<string>());
 
             this.SetState(BatchWriterState.OperationCreated);
 

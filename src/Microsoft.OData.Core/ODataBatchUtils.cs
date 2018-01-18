@@ -154,31 +154,8 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="uri">The Uri to validate the request Id reference.</param>
         /// <param name="dependsOnRequestIds">Enumeration of request Ids used to lookup the request Id reference.</param>
-        /// <param name="baseUri">The base Uri of the service.</param>
-        /// <param name="batchFormat">Format of the batch.</param>
-        internal static void ValidateReferenceUri(Uri uri, IEnumerable<string> dependsOnRequestIds, Uri baseUri, ODataFormat batchFormat)
-        {
-            // To be backward compatible with multipart batch creation, when batch is created with V4 API, the dependsOnId is
-            // default as null and therefore it should not enforce any Uri reference check.
-            if (batchFormat == ODataFormat.Batch && dependsOnRequestIds == null)
-            {
-                return;
-            }
-            else
-            {
-                ValidateReferenceUri(uri, dependsOnRequestIds, baseUri);
-            }
-        }
-
-        /// <summary>
-        /// Validates that the uri's reference of $requestId, if used, is one of the depends-on requests.
-        /// The Uri can be either absolute or relative.
-        /// Exception is thrown if the request Id reference is not found in the list of depends-on requests.
-        /// </summary>
-        /// <param name="uri">The Uri to validate the request Id reference.</param>
-        /// <param name="dependsOnRequestIds">Enumeration of request Ids used to lookup the request Id reference.</param>
         /// <param name="baseUri">The baseUri used for validation.</param>
-        private static void ValidateReferenceUri(Uri uri, IEnumerable<string> dependsOnRequestIds, Uri baseUri)
+        internal static void ValidateReferenceUri(Uri uri, IEnumerable<string> dependsOnRequestIds, Uri baseUri)
         {
             Debug.Assert(uri != null, "uri != null");
 
@@ -234,7 +211,8 @@ namespace Microsoft.OData
                 if (dependsOnRequestIds == null || !dependsOnRequestIds.Contains(referenceId))
                 {
                     throw new ODataException(Strings.ODataBatchReader_ReferenceIdNotIncludedInDependsOn(
-                        referenceId, UriUtils.UriToString(uri), string.Join(",", dependsOnRequestIds.ToArray())));
+                        referenceId, UriUtils.UriToString(uri),
+                        dependsOnRequestIds != null ? string.Join(",", dependsOnRequestIds.ToArray()) : "null"));
                 }
             }
         }

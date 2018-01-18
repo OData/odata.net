@@ -22,6 +22,11 @@ namespace Microsoft.OData.MultipartMixed
         private readonly string batchBoundary;
 
         /// <summary>
+        /// The dependsOnIds tracker for writer processing.
+        /// </summary>
+        private readonly DependsOnIdsTracker dependsOnIdsTracker;
+
+        /// <summary>
         /// The boundary string for the current changeset (only set when writing a changeset,
         /// e.g., after WriteStartChangeSet has been called and before WriteEndChangeSet is called).
         /// </summary>
@@ -52,6 +57,7 @@ namespace Microsoft.OData.MultipartMixed
             ExceptionUtils.CheckArgumentNotNull(batchBoundary, "batchBoundary is null");
             this.batchBoundary = batchBoundary;
             this.RawOutputContext.InitializeRawValueWriter();
+            this.dependsOnIdsTracker = new DependsOnIdsTracker();
         }
 
         /// <summary>
@@ -196,6 +202,21 @@ namespace Microsoft.OData.MultipartMixed
             // write the change set headers
             ODataMultipartMixedBatchWriterUtils.WriteChangeSetPreamble(this.RawOutputContext.TextWriter, this.changeSetBoundary);
             this.changesetStartBoundaryWritten = false;
+
+            // Set state to track dependsOn Ids.
+            this.dependsOnIdsTracker.ChangeSetStarted();
+        }
+
+        /// <summary>
+        /// Given an enumerable of dependsOnIds, return an enumeration of equivalent request ids.
+        /// </summary>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        /// <returns>If <code>dependsOnIds</code> is null, this is the implicit case therefore returns
+        /// an enumerable consists of request id from the <code>dependsOnIdsTracker</code>;
+        /// otherwise, this is explicit case therefore returns value passed in directly.</returns>
+        protected override IEnumerable<string> GetDependsOnRequestIds(IEnumerable<string> dependsOnIds)
+        {
+            return dependsOnIds ?? this.dependsOnIdsTracker.GetDependsOnIds();
         }
 
         /// <summary>
@@ -207,7 +228,9 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <param name="payloadUriOption">
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
-        /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
+        /// <param name="dependsOnIds">The prerequisite request ids of this request. By default its value should be null for Multipart/Mixed
+        /// format and the dependsOnIds implicitly derived per the protocol will be used; Otherwise, non-null will be used as override after
+        /// validation.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(
             string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption,
@@ -217,14 +240,23 @@ namespace Microsoft.OData.MultipartMixed
             this.WritePendingMessageData(true);
 
             // create the new request operation
+            // For Multipart batch format, validate dependsOnIds if it is user explicit input, otherwise skip validation
+            // when it is implicitly derived per protocol.
             ODataBatchOperationRequestMessage operationRequestMessage = BuildOperationRequestMessage(
                 this.RawOutputContext.OutputStream,
-                method, uri, contentId, /*groupId*/null, dependsOnIds, ODataFormat.Batch);
+                method, uri, contentId,
+                ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.changeSetBoundary),
+                dependsOnIds);
 
             this.SetState(BatchWriterState.OperationCreated);
 
             // write the operation's start boundary string
             this.WriteStartBoundaryForOperation();
+
+            if (contentId != null)
+            {
+                this.dependsOnIdsTracker.AddDependsOnId(contentId);
+            }
 
             // write the headers and request line
             ODataMultipartMixedBatchWriterUtils.WriteRequestPreamble(this.RawOutputContext.TextWriter, method, uri,
@@ -268,6 +300,8 @@ namespace Microsoft.OData.MultipartMixed
 
             // change the state first so we validate the change set boundary before attempting to write it.
             this.SetState(BatchWriterState.ChangesetCompleted);
+
+            this.dependsOnIdsTracker.ChangeSetEnded();
 
             Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
             this.changeSetBoundary = null;

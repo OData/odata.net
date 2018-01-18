@@ -4043,7 +4043,7 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataBatchOperationLis
 	Microsoft.OData.ODataInputContext InputContext  { protected get; }
 	Microsoft.OData.ODataBatchReaderState State  { public get; }
 
-	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, string groupId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnRequestIds, Microsoft.OData.ODataFormat batchFormat)
+	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, string groupId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnRequestIds, bool dependsOnIdsValidationRequired)
 	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, int statusCode, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, string groupId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
@@ -4072,7 +4072,7 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	public abstract void BatchOperationContentStreamDisposed ()
 	public abstract void BatchOperationContentStreamRequested ()
 	public abstract System.Threading.Tasks.Task BatchOperationContentStreamRequestedAsync ()
-	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId, string groupId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds, Microsoft.OData.ODataFormat batchFormat)
+	protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.IO.Stream outputStream, string method, System.Uri uri, string contentId, string groupId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
 	protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.IO.Stream outputStream, string contentId, string groupId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId)
 	public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption)
@@ -4088,7 +4088,7 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataBatchOperationLis
 	public System.Threading.Tasks.Task FlushAsync ()
 	protected abstract System.Threading.Tasks.Task FlushAsynchronously ()
 	protected abstract void FlushSynchronously ()
-	protected virtual System.Collections.Generic.IEnumerable`1[[System.String]] GetDependsOnRequestIds (System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
+	protected abstract System.Collections.Generic.IEnumerable`1[[System.String]] GetDependsOnRequestIds (System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
 	public abstract void OnInStreamError ()
 	protected void SetState (Microsoft.OData.ODataBatchWriter+BatchWriterState newState)
 	protected abstract void VerifyNotDisposed ()
@@ -4577,6 +4577,7 @@ ExtensionAttribute(),
 ]
 public sealed class Microsoft.OData.ODataUtils {
 	public static string AppendDefaultHeaderValue (string headerName, string headerValue)
+	public static string AppendDefaultHeaderValue (string headerName, string headerValue, Microsoft.OData.ODataVersion version)
 	public static System.Func`2[[System.String],[System.Boolean]] CreateAnnotationFilter (string annotationFilter)
 	[
 	ExtensionAttribute(),
@@ -4703,7 +4704,7 @@ public sealed class Microsoft.OData.ODataBatchOperationRequestMessage : IContain
 	public const readonly string ContentId = 
 
 	System.IServiceProvider Container  { public virtual get; }
-	System.Collections.Generic.List`1[[System.String]] DependsOnIds  { public get; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] DependsOnIds  { public get; }
 	string GroupId  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
@@ -5013,6 +5014,7 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 
 public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	public ODataMessageReaderSettings ()
+	public ODataMessageReaderSettings (Microsoft.OData.ODataVersion odataVersion)
 
 	System.Uri BaseUri  { public get; public set; }
 	System.Func`3[[Microsoft.OData.Edm.IEdmType],[System.String],[Microsoft.OData.Edm.IEdmType]] ClientCustomTypeResolver  { public get; public set; }
