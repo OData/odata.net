@@ -39,9 +39,9 @@ namespace Microsoft.OData.JsonLight
             {
                 foreach (KeyValuePair<string, string> parameter in mediaType.Parameters)
                 {
-                    if (!HttpUtils.CompareMediaTypeParameterNames(parameter.Key, MimeConstants.MimeMetadataParameterName))
+                    if (!HttpUtils.IsMetadataParameter(parameter.Key))
                     {
-                        // Only look at the "odata" parameter.
+                        // Only look at the "odata.metadata" parameter.
                         continue;
                     }
 
@@ -66,7 +66,7 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            // No "odata" media type parameter implies minimal metadata.
+            // No "odata.metadata" media type parameter implies minimal metadata.
             return new JsonMinimalMetadataLevel();
         }
 

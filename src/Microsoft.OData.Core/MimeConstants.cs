@@ -59,6 +59,9 @@ namespace Microsoft.OData
         /// <summary>Parameter value for type 'feed'.</summary>
         internal const string MimeTypeParameterValueFeed = "feed";
 
+        /// <summary>JSON Light 4.01 short parameter name for 'metadata' parameter.</summary>
+        internal const string MimeShortMetadataParameterName = "metadata";
+
         /// <summary>JSON Light parameter name for 'odata.metadata' parameter.</summary>
         internal const string MimeMetadataParameterName = "odata.metadata";
 
@@ -73,6 +76,9 @@ namespace Microsoft.OData
 
         /// <summary>JSON Light parameter value 'none'.</summary>
         internal const string MimeMetadataParameterValueNone = "none";
+
+        /// <summary>JSON Light 4.01 short parameter name for 'streaming' parameter.</summary>
+        internal const string MimeShortStreamingParameterName = "streaming";
 
         /// <summary>JSON Light Parameter name for 'odata.streaming' parameter.</summary>
         internal const string MimeStreamingParameterName = "odata.streaming";
