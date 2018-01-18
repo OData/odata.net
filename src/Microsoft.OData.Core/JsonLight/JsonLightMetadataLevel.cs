@@ -39,8 +39,7 @@ namespace Microsoft.OData.JsonLight
             {
                 foreach (KeyValuePair<string, string> parameter in mediaType.Parameters)
                 {
-                    if (!HttpUtils.CompareMediaTypeParameterNames(parameter.Key, MimeConstants.MimeMetadataParameterName)
-                        && !HttpUtils.CompareMediaTypeParameterNames(parameter.Key, MimeConstants.MimeShortMetadataParameterName))
+                    if (!HttpUtils.IsMetadataParameter(parameter.Key))
                     {
                         // Only look at the "odata.metadata" parameter.
                         continue;

@@ -283,14 +283,12 @@ namespace Microsoft.OData
                 {
                     extendedParameters.Add(parameter);
 
-                    if (string.Compare(parameter.Key, MimeConstants.MimeMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0
-                        || string.Compare(parameter.Key, MimeConstants.MimeShortMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (HttpUtils.IsMetadataParameter(parameter.Key))
                     {
                         hasMetadata = true;
                     }
 
-                    if (string.Compare(parameter.Key, MimeConstants.MimeStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0
-                        || string.Compare(parameter.Key, MimeConstants.MimeShortStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (HttpUtils.IsStreamingParameter(parameter.Key))
                     {
                         hasStreaming = true;
                     }

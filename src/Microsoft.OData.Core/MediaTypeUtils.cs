@@ -176,6 +176,21 @@ namespace Microsoft.OData
                 format = selectedMediaTypeWithFormat.Format;
                 mediaType = selectedMediaTypeWithFormat.MediaType;
 
+                // If any accept types in request used non-prefixed odata metadata or streaming type parameter,
+                // use the non-prefixed version in the response
+                if (specifiedTypes != null && mediaType.Parameters != null)
+                {
+                    if (specifiedTypes.Any(t => t.Key.Parameters != null && t.Key.Parameters.Any(p => String.Compare(p.Key, MimeConstants.MimeShortMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0)))
+                    {
+                        mediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, mediaType.Parameters.Select(p => new KeyValuePair<string, string>(String.Compare(p.Key, MimeConstants.MimeMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0 ? MimeConstants.MimeShortMetadataParameterName : p.Key, p.Value)));
+                    }
+
+                    if (specifiedTypes.Any(t => t.Key.Parameters != null && t.Key.Parameters.Any(p => String.Compare(p.Key, MimeConstants.MimeShortStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0)))
+                    {
+                        mediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, mediaType.Parameters.Select(p => new KeyValuePair<string, string>(String.Compare(p.Key, MimeConstants.MimeStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0 ? MimeConstants.MimeShortStreamingParameterName : p.Key, p.Value)));
+                    }
+                }
+
                 // If a charset was specified with the accept header, consider it for the encoding
                 string acceptableCharsets = settings.AcceptableCharsets;
                 if (specifiedCharset != null)
@@ -293,8 +308,7 @@ namespace Microsoft.OData
         /// </returns>
         internal static bool HasStreamingSetToTrue(this ODataMediaType mediaType)
         {
-            return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeStreamingParameterName, MimeConstants.MimeParameterValueTrue)
-                || mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeShortStreamingParameterName, MimeConstants.MimeParameterValueTrue);
+            return mediaType.MediaTypeHasParameterWithValue(MimeConstants.MimeStreamingParameterName, MimeConstants.MimeParameterValueTrue);
         }
 
         /// <summary>
@@ -548,8 +562,7 @@ namespace Microsoft.OData
                 if (HttpUtils.CompareMediaTypeNames(mediaType.SubType, MimeConstants.MimeJsonSubType) &&
                     HttpUtils.CompareMediaTypeNames(mediaType.Type, MimeConstants.MimeApplicationType))
                 {
-                    if (mediaType.Parameters == null ||
-                        !mediaType.Parameters.Any(p => HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeMetadataParameterName) || HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeShortMetadataParameterName)))
+                    if (mediaType.Parameters == null || !mediaType.Parameters.Any(p => HttpUtils.IsMetadataParameter(p.Key)))
                     {
                         // application/json detected; convert it to Json Light
                         IList<KeyValuePair<string, string>> existingParams = mediaType.Parameters != null ? mediaType.Parameters.ToList() : null;
