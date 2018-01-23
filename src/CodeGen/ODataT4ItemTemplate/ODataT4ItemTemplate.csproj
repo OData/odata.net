@@ -62,9 +62,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj">
-      <Project>{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}</Project>
-      <Name>Microsoft.OData.Client.Portable</Name>
+    <ProjectReference Include="..\..\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
+      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
+      <Name>Microsoft.OData.Client</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
       <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
