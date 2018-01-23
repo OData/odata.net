@@ -245,7 +245,7 @@ namespace Microsoft.OData.MultipartMixed
             ODataBatchOperationRequestMessage operationRequestMessage = BuildOperationRequestMessage(
                 this.RawOutputContext.OutputStream,
                 method, uri, contentId,
-                ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.changeSetBoundary),
+                this.changeSetBoundary,
                 dependsOnIds);
 
             this.SetState(BatchWriterState.OperationCreated);
@@ -329,7 +329,7 @@ namespace Microsoft.OData.MultipartMixed
             // so use the URL resolver from the batch message instead.
             this.CurrentOperationResponseMessage = BuildOperationResponseMessage(
                 this.RawOutputContext.OutputStream, contentId,
-                ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.changeSetBoundary));
+                this.changeSetBoundary);
 
             this.SetState(BatchWriterState.OperationCreated);
 
