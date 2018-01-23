@@ -541,6 +541,7 @@ Function BuildProcess
         {
             Write-Host "Found VS2017 version: $VS15MSBUILD"
             RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
+            RunBuild ('OData.CodeGen.sln') -vsToolVersion '15.0'
         }
         else
         {
