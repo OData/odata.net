@@ -228,23 +228,19 @@ namespace Microsoft.OData.Client
         /// <summary>Gets the parent entity that is related to the entity.</summary>
         /// <returns>An object that is the parent entity in the relationship link.</returns>
         /// <remarks>This is only set for entities added through AddRelateObject call</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public EntityDescriptor ParentForInsert { get; internal set; }
 
         /// <summary>Gets the name of the property of the entity that is a navigation property and links to the parent entity.</summary>
         /// <returns>The name of the parent property.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public string ParentPropertyForInsert { get; internal set; }
 
         /// <summary>Gets the parent entity that is related to the entity.</summary>
         /// <returns>An object that is the parent entity in the relationship link.</returns>
         /// <remarks>This is only set for entities updated through UpdateRelateObject call</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public EntityDescriptor ParentForUpdate { get; internal set; }
 
         /// <summary>Gets the name of the property of the entity that is a navigation property and links to the parent entity.</summary>
         /// <returns>The name of the parent property.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public string ParentPropertyForUpdate { get; internal set; }
 
         /// <summary>Gets the name of the type in the data source to which the entity is mapped.</summary>

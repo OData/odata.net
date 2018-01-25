@@ -66,17 +66,6 @@ namespace Microsoft.OData.UriParser
         private Stack<QueryToken> aggregateExpressionParents = new Stack<QueryToken>();
 
         /// <summary>
-        /// Gets if this parser is currently within an aggregate expression parsing stack.
-        /// </summary>
-        private bool IsInAggregateExpression
-        {
-            get
-            {
-                return this.parseAggregateExpresionDepth > 0;
-            }
-        }
-
-        /// <summary>
         /// Creates a UriQueryExpressionParser.
         /// </summary>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
@@ -121,6 +110,17 @@ namespace Microsoft.OData.UriParser
         internal ExpressionLexer Lexer
         {
             get { return this.lexer; }
+        }
+
+        /// <summary>
+        /// Gets if this parser is currently within an aggregate expression parsing stack.
+        /// </summary>
+        private bool IsInAggregateExpression
+        {
+            get
+            {
+                return this.parseAggregateExpresionDepth > 0;
+            }
         }
 
         /// <summary>
@@ -222,6 +222,38 @@ namespace Microsoft.OData.UriParser
                 default:
                     return edmTypeReference.Definition.FullTypeName();
             }
+        }
+
+        // parses $compute query option.
+        internal ComputeToken ParseCompute(string compute)
+        {
+            Debug.Assert(compute != null, "compute != null");
+
+            List<ComputeExpressionToken> transformationTokens = new List<ComputeExpressionToken>();
+
+            if (string.IsNullOrEmpty(compute))
+            {
+                return new ComputeToken(transformationTokens);
+            }
+
+            this.recursionDepth = 0;
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(compute);
+
+            while (true)
+            {
+                ComputeExpressionToken computed = this.ParseComputeExpression();
+                transformationTokens.Add(computed);
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            this.lexer.ValidateToken(ExpressionTokenKind.End);
+
+            return new ComputeToken(transformationTokens);
         }
 
         internal IEnumerable<QueryToken> ParseApply(string apply)
@@ -333,6 +365,7 @@ namespace Microsoft.OData.UriParser
 
                     return new EntitySetAggregateToken(expression, statements);
                 }
+
                 AggregationMethodDefinition verb;
 
                 // "with" verb
@@ -447,6 +480,21 @@ namespace Microsoft.OData.UriParser
 
             // '(' expression ')'
             return this.ParseParenExpression();
+        }
+
+        /// <summary>
+        /// Parse compute expression text into a token.
+        /// </summary>
+        /// <returns>The lexical token representing the compute expression text.</returns>
+        internal ComputeExpressionToken ParseComputeExpression()
+        {
+            // expression
+            QueryToken expression = this.ParseExpression();
+
+            // "as" alias
+            StringLiteralToken alias = this.ParseAggregateAs();
+
+            return new ComputeExpressionToken(expression, alias.Text);
         }
 
         /// <summary>

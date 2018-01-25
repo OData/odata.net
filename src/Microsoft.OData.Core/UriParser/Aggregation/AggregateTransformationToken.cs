@@ -14,12 +14,16 @@ namespace Microsoft.OData.UriParser.Aggregation
     using Microsoft.OData.UriParser;
 
     /// <summary>
-    /// Query token representing an Aggregate token. 
+    /// Query token representing an Aggregate token.
     /// </summary>
     public sealed class AggregateTransformationToken : ApplyTransformationToken
     {
         private readonly IEnumerable<AggregateTokenBase> expressions;
 
+        /// <summary>
+        /// Create an AggregateTransformationToken.
+        /// </summary>
+        /// <param name="expressions">The aggregate expressions.</param>
         public AggregateTransformationToken(IEnumerable<AggregateTokenBase> expressions)
         {
             ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
@@ -34,10 +38,10 @@ namespace Microsoft.OData.UriParser.Aggregation
             get { return QueryTokenKind.Aggregate; }
         }
 
-        /// <summary> 
-        /// Create an AggregateToken. 
-        /// </summary> 
-        /// <param name="expressions">The list of AggregateExpressionToken.</param> 
+        /// <summary>
+        /// Create an AggregateToken.
+        /// </summary>
+        /// <param name="expressions">The list of AggregateExpressionToken.</param>
         public IEnumerable<AggregateTokenBase> Expressions
         {
             get

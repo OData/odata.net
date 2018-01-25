@@ -757,7 +757,6 @@ namespace Microsoft.OData.Client
         /// The method does not process the results of the <paramref name="endCall"/>, it just raises the <see cref="LoadCompleted"/>
         /// event as appropriate. If there's some processing to be done for the results it should all be done by the
         /// <paramref name="endCall"/> method before it returns.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void BeginLoadAsyncOperation(
             Func<AsyncCallback, IAsyncResult> beginCall,
             Func<IAsyncResult, QueryOperationResponse> endCall)
@@ -804,7 +803,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="endCall">End method to complete the asynchronous query execution.</param>
         /// <param name="asyncResult">IAsyncResult to be passed to <paramref name="endCall"/>.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void EndLoadAsyncOperation(Func<IAsyncResult, QueryOperationResponse> endCall, IAsyncResult asyncResult)
         {
             try

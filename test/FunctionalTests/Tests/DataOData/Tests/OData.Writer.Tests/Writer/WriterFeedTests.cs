@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test feed payloads.")]
+        // [TestMethod, Variation(Description = "Test feed payloads.")]
         public void TaupoTopLevelFeedTest()
         {
             EntitySetInstance entitySet = new EntitySetInstance(PayloadGenerator.GenerateAtomPayloads().First())
@@ -102,7 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test writing feed payloads with user exceptions being thrown at various points.")]
+        // [TestMethod, Variation(Description = "Test writing feed payloads with user exceptions being thrown at various points.")]
         public void FeedUserExceptionTests()
         {
             IEdmModel edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -184,7 +184,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test feed payloads with next links.")]
+        // [TestMethod, Variation(Description = "Test feed payloads with next links.")]
         public void FeedNextLinkTests()
         {
             PayloadWriterTestDescriptor<ODataItem>[] testPayloads = this.CreateFeedNextLinkDescriptors();
@@ -204,7 +204,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test feed payloads with next link value set after writing Feed Start.")]
+        // [TestMethod, Variation(Description = "Test feed payloads with next link value set after writing Feed Start.")]
         public void SetNextLinkAfterResourceSetStartTests()
         {
             var testPayloads = this.CreateFeedNextLinkDescriptors().ToArray();
@@ -232,7 +232,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test feed payloads with inline count.")]
+        // [TestMethod, Variation(Description = "Test feed payloads with inline count.")]
         public void FeedInlineCountTests()
         {
             PayloadWriterTestDescriptor<ODataItem>[] testDescriptors = this.CreateFeedQueryCountDescriptors();
@@ -296,7 +296,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test feeds with payloads combining inline count, next link and element type.")]
+        // [TestMethod, Variation(Description = "Test feeds with payloads combining inline count, next link and element type.")]
         public void WriteFeedTests()
         {
             EdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -359,7 +359,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests various error cases for feeds.")]
+        // [TestMethod, Variation(Description = "Tests various error cases for feeds.")]
         public void ODataFeedWriterErrorTests()
         {
             var feed = new EntitySetInstance(
@@ -426,7 +426,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test homogeneity of feed payloads.")]
+        // [TestMethod, Variation(Description = "Test homogeneity of feed payloads.")]
         public void FeedValidatorTests()
         {
             var model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();

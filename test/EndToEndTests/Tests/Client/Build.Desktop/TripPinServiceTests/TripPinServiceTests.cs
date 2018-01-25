@@ -440,8 +440,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         #region client test
 
-        [Ignore] // Move to another service, instead of trippin service.
-        [TestMethod]
+        // Move to another service, instead of trippin service.
+        // [TestMethod] // github issuse: #896
         public void TestNullableCollection()
         {
             var people = TestClientContext.People.First();

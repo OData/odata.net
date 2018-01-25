@@ -141,7 +141,6 @@ namespace Microsoft.OData
         /// <param name="targetTypeReference">Type to convert the string to.</param>
         /// <returns>The value converted to the target type.</returns>
         /// <remarks>This method does not convert null value.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static object ConvertStringToPrimitive(string text, IEdmPrimitiveTypeReference targetTypeReference)
         {
             Debug.Assert(text != null, "text != null");

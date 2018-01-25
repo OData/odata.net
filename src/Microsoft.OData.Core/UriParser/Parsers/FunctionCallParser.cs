@@ -86,7 +86,7 @@ namespace Microsoft.OData.UriParser
             result = null;
             string functionName;
 
-            var position = lexer.SnapshotPosition();
+            ExpressionLexer.ExpressionLexerPosition position = lexer.SnapshotPosition();
 
             if (this.Lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {

@@ -28,13 +28,14 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
         /// <summary>This is a test class for etags test</summary>
         [TestClass, TestCase]
         public class BatchTests
         {
             /// <summary>Tests whether the configuration options are honored.</summary>
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void ConfigurationBatchTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -152,7 +153,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void TestExceedMaxBatchCount()
             {
                 // Astoria Server: Assert on Batch Request after configuring MaxBatchCount
@@ -251,69 +252,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            // sampleinvalidrequest4.txt is a repro for this bug. Currently we accept the ODL new behavior
-            // which is technically a breaking change.
-            // Note that in this case ODL behavior causes the GET after the first changeset to be skipped, since part of it is reported
-            // as the payload of the POST before it. Any data after the end of the part until the next boundary is ignored.
-            //
-            // We now ignore any additional data after the end batch boundary (WCF DS used to fail on these)
-            // The sampleinvalidrequest6.txt is a repro for this bug. Which is now a success case.
-            [TestCategory("Partition2"), TestMethod, Variation]
-            [Ignore]
-            public void SampleBatchTest()
-            {
-                using (OpenWebDataServiceHelper.EntitySetAccessRule.Restore())
-                using (OpenWebDataServiceHelper.ServiceOperationAccessRule.Restore())
-                {
-                    CustomRowBasedContext.PreserveChanges = false;
-                    string batchRequestsDirectory = Path.Combine(TestUtil.ServerUnitTestSamples, @"tests\BatchRequests");
-                    TestUtil.RunCombinations(
-                        Directory.GetFiles(batchRequestsDirectory, "*batch*"),
-                        (fileName) =>
-                        {
-                            string batchRequest = File.ReadAllText(fileName);
-                            string responseFileName = fileName.Replace("batch", "response");
-
-                            string RequestMaxVersion = "4.0";
-
-                            TestUtil.RunCombinations(
-                                new Type[] { typeof(CustomDataContext), typeof(CustomRowBasedContext) },
-                                (contextType) =>
-                                {
-                                    if (contextType == typeof(CustomRowBasedContext))
-                                    {
-                                        // Hide Region navigation property on the Customer ResponseType to make 
-                                        // both contexts look identical
-                                        OpenWebDataServiceHelper.EntitySetAccessRule.Value = new Dictionary<string, EntitySetRights>()
-                                        {
-                                            {"Regions", EntitySetRights.None},
-                                            {"*", EntitySetRights.All}
-                                        };
-
-                                        // Hide service operations returning hidden types.
-                                        OpenWebDataServiceHelper.ServiceOperationAccessRule.Value = new Dictionary<string, ServiceOperationRights>()
-                                        {
-                                            {"GetRegionByName", ServiceOperationRights.None},
-                                            {"*", ServiceOperationRights.All}
-                                        };
-                                    }
-
-                                    TestUtil.RunCombinations(
-                                        new WebServerLocation[] { WebServerLocation.InProcess },
-                                        (location) =>
-                                        {
-                                            using (ChangeScope.GetChangeScope(contextType))
-                                            {
-                                                string actualResponse = BatchTestUtil.GetResponse(batchRequest, contextType, location, RequestMaxVersion);
-                                                BatchTestUtil.CompareBatchResponse(responseFileName, actualResponse);
-                                            }
-                                        });
-                                });
-                        });
-                }
-            }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void UriCompositionRulesChangedOnServer()
             {
                 string batchRequestsDirectory = Path.Combine(TestUtil.ServerUnitTestSamples, @"tests\BatchRequests");
@@ -355,24 +295,6 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition2"), TestMethod, Variation("Batch request with service operations requests")]
-            [Ignore]
-            public void SampleServiceOperationBatch()
-            {
-                string batchRequestsDirectory = Path.Combine(TestUtil.ServerUnitTestSamples, @"tests\BatchRequests");
-                foreach (string fileName in Directory.GetFiles(batchRequestsDirectory, "*serviceoperationrequest*"))
-                {
-                    string batchRequest = File.ReadAllText(fileName);
-                    string responseFileName = fileName.Replace("request", "response");
-
-                    using (CustomDataContext.CreateChangeScope())
-                    {
-                        string actualResponse = BatchTestUtil.GetResponse(batchRequest, typeof(OpenBatchDataService), WebServerLocation.InProcess);
-                        BatchTestUtil.CompareBatchResponse(responseFileName, actualResponse);
-                    }
-                }
-            }
-
             private sealed class BatchContentTypeTestCase
             {
                 public string ContentType { get; set; }
@@ -385,7 +307,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition2"), TestMethod, Variation]
+            // [TestCategory("Partition2"), TestMethod, Variation]
             public void BatchContentTypeTest()
             {
                 var testCases = new BatchContentTypeTestCase[]

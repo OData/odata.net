@@ -36,7 +36,6 @@ namespace Microsoft.Spatial
         /// </summary>
         /// <exception cref = "ParseErrorException">Throws if the input is not valid. In that case, guarantees that it will not pass anything down the pipeline, or will clear the pipeline by passing down a Reset.</exception>
         /// <param name = "input">The input string</param>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "We're calling this correctly")]
         public void ReadGeography(TSource input)
         {
             Util.CheckArgumentNull(input, "input");
@@ -62,7 +61,6 @@ namespace Microsoft.Spatial
         /// </summary>
         /// <exception cref = "ParseErrorException">Throws if the input is not valid. In that case, guarantees that it will not pass anything down the pipeline, or will clear the pipeline by passing down a Reset.</exception>
         /// <param name = "input">The input string</param>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "We're calling this correctly")]
         public void ReadGeometry(TSource input)
         {
             Util.CheckArgumentNull(input, "input");

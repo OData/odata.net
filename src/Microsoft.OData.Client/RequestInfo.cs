@@ -135,7 +135,6 @@ namespace Microsoft.OData.Client
         /// True if the user could have modified a part of the request. This lets us turn off assertions that normally
         /// prevent us from making certain mistakes we don't mind the user intentionally ignoring.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will be called in retail soon")]
         internal bool UserModifiedRequestInBuildingRequest
         {
             get { return this.Context.HasBuildingRequestEventHandlers; }
@@ -478,6 +477,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Return the request DSV header value for this request.
         /// </summary>
+        /// <param name="headers">Web headers.</param>
         /// <returns>The request DSV header value for this request as Version instance.</returns>
         private static Version GetRequestVersion(WebHeaderCollection headers)
         {

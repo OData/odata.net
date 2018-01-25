@@ -411,7 +411,6 @@ namespace Microsoft.OData.JsonLight
         /// <typeparam name="T">The type returned from the <paramref name="action"/> to execute.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of executing the <paramref name="action"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private T InterceptException<T>(Func<T> action)
         {
             try
@@ -1078,9 +1077,13 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
             this.jsonLightResourceDeserializer.ReadResourceSetContentStart();
-            this.EnterScope(new JsonLightDeltaResourceSetScope(resourceSet, this.CurrentNavigationSource, this.CurrentEntityType, selectedProperties, this.CurrentScope.ODataUri));
+            IJsonReader jsonReader = this.jsonLightResourceDeserializer.JsonReader;
+            if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
+            }
 
-            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
+            this.EnterScope(new JsonLightDeltaResourceSetScope(resourceSet, this.CurrentNavigationSource, this.CurrentEntityType, selectedProperties, this.CurrentScope.ODataUri));
         }
 
         /// <summary>

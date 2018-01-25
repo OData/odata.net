@@ -57,7 +57,6 @@ namespace Microsoft.OData
         /// <param name="array">The array to sort.</param>
         /// <param name="comparison">The comparison to use to compare items in the array</param>
         /// <returns>Array of KeyValuePairs where the sequence of Values is the sorted representation of <paramref name="array"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Array.Sort is causing this, but it is needed in order to sort the KeyValuePairs using our own comparer.")]
         internal static KeyValuePair<int, T>[] StableSort<T>(this T[] array, Comparison<T> comparison)
         {
             ExceptionUtils.CheckArgumentNotNull(array, "array");

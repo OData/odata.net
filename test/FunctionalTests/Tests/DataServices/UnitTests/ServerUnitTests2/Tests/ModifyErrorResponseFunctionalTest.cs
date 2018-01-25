@@ -306,9 +306,11 @@ namespace AstoriaUnitTests.Tests
                 HandleExceptionCalls.Should().Be(2);
             }
         }
+
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
         [Ignore] // Remove Atom
-        [TestMethod]
-        [TestCategory("Partition2")]
+        // [TestMethod]
+        // [TestCategory("Partition2")]
         public void CustomAnnotationOnErrorShouldBeIgnoredInAtom()
         {
             using (TestWebRequest webRequest = this.SetupRequest())

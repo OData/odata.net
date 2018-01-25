@@ -19,6 +19,7 @@ namespace AstoriaUnitTests.Tests
     using ocs = AstoriaUnitTests.ObjectContextStubs;
     #endregion
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
     [TestClass]
     public class AnyAllFilterTests
     {
@@ -36,7 +37,7 @@ namespace AstoriaUnitTests.Tests
             public List<MVComplexType> CollectionOfComplexType { get; set; }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void FilterCollectionWithAnyAll()
         {
 
@@ -103,7 +104,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void FilterNavigationWithAnyAll()
         {
             ocs.PopulateData.EntityConnection = null;
@@ -239,7 +240,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void FilterNavigationWithAnyAll_TypeCasts()
         {
             using (OpenWebDataServiceHelper.AcceptAnyAllRequests.Restore())
@@ -348,7 +349,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void TestAnyAllWithQueryInterceptor()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())

@@ -10,9 +10,6 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Common;
 using Microsoft.Test.OData.Utils.Metadata;
-#if !NETCOREAPP1_0
-using Microsoft.Test.OData.Utils.ODataLibOM;
-#endif
 
 namespace Microsoft.Test.OData.Utils.ODataLibTest
 {

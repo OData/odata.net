@@ -23,6 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for the <see cref="ODataMessageWriter" /> class to write different payloads.
     /// </summary>
@@ -82,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test that the message writer can only be used once.")]
+        // [TestMethod, Variation(Description = "Test that the message writer can only be used once.")]
         public void UseWriterOnceTests()
         {
             Uri baseUri = new Uri("http://www.odata.org/");
@@ -154,7 +155,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test that an OData entry writer can only be used to write entries and an ODataFeedWriter only for feeds.")]
+        // [TestMethod, Variation(Description = "Test that an OData entry writer can only be used to write entries and an ODataFeedWriter only for feeds.")]
         public void ODataFeedAndEntryWriterIncorrectPayload()
         {
             var testCases = new[]
@@ -197,7 +198,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests the correct error behavior for invalid calls after SetHeadersForPayload was called.")]
+        // [TestMethod, Variation(Description = "Tests the correct error behavior for invalid calls after SetHeadersForPayload was called.")]
         public void SetHeadersForPayloadAndInvalidCallsErrorTest()
         {
             string errorMessageTemplate = "The payload kind '{0}' used in the last call to ODataUtils.SetHeadersForPayload is incompatible with the payload being written which is of kind '{1}'.";
@@ -520,7 +521,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // These tests are disabled on Silverlight and Phone because they use private reflection to validate the test result.
 #if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header.")]
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header.")]
         public void SetVersionInMessageHeaderTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -605,7 +606,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header as well as in the writer settings.")]
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header as well as in the writer settings.")]
         public void SetVersionInMessageHeaderAndSettingsTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -677,7 +678,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header.")]
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header.")]
         public void SetContentTypeInMessageHeaderTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -766,7 +767,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header as well as in the writer settings.")]
+        // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the content type is specified as message header as well as in the writer settings.")]
         public void SetContentTypeInMessageHeaderAndSettingsTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -1017,7 +1018,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 #endif
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream.")]
+        // [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream.")]
         public void NullStreamMessageTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -1055,7 +1056,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies no BOM is written out on default writer.")]
+        // [TestMethod, Variation(Description = "Verifies no BOM is written out on default writer.")]
         public void NoByteOrderMarkByDefaultTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -1113,7 +1114,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // These tests are disabled on Silverlight and Phone because they only run on async configuration 
 #if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream task.")]
+        // [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream task.")]
         public void NullStreamTaskMessageTest()
         {
             this.CombinatorialEngineProvider.RunCombinations(

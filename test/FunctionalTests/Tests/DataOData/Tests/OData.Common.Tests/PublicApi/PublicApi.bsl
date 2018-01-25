@@ -1365,6 +1365,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static bool IsStream (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static bool IsStream (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
@@ -1755,6 +1760,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static string FullNavigationSourceName (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static string FullTypeName (Microsoft.OData.Edm.IEdmType type)
 
 	[
@@ -1946,6 +1956,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	ExtensionAttribute(),
 	]
 	public static bool IsOpen (Microsoft.OData.Edm.IEdmStructuredTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsOpen (Microsoft.OData.Edm.IEdmType type)
 
 	[
 	ExtensionAttribute(),
@@ -2586,6 +2601,10 @@ public class Microsoft.OData.Edm.EdmTypeDefinitionReference : Microsoft.OData.Ed
 	System.Nullable`1[[System.Int32]] SpatialReferenceIdentifier  { public virtual get; }
 }
 
+public class Microsoft.OData.Edm.EdmUntypedStructuredTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmStructuredTypeReference, IEdmTypeReference, IEdmUntypedTypeReference {
+	public EdmUntypedStructuredTypeReference (Microsoft.OData.Edm.IEdmStructuredType definition)
+}
+
 public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeReference, IEdmUntypedTypeReference {
 	public EdmUntypedTypeReference (Microsoft.OData.Edm.IEdmUntypedType definition)
 }
@@ -2614,6 +2633,16 @@ public sealed class Microsoft.OData.Edm.EdmNavigationPropertyInfo {
 	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; public set; }
 
 	public Microsoft.OData.Edm.EdmNavigationPropertyInfo Clone ()
+}
+
+public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.OData.Edm.EdmStructuredType, IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmStructuredType, IEdmType, IEdmVocabularyAnnotatable {
+	public EdmUntypedStructuredType ()
+	public EdmUntypedStructuredType (string namespaceName, string name)
+
+	string Name  { public virtual get; }
+	string Namespace  { public virtual get; }
+	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
+	Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
 }
 
 public enum Microsoft.OData.Edm.Csdl.CsdlTarget : int {
@@ -3780,7 +3809,6 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
 	public static string Immutable = "Org.OData.Core.V1.Immutable"
 	public static string IsLanguageDependent = "Org.OData.Core.V1.IsLanguageDependent"
 	public static string IsMediaType = "Org.OData.Core.V1.IsMediaType"
-	public static string IsOptional = "IsOptional"
 	public static string IsURL = "Org.OData.Core.V1.IsURL"
 	public static string LongDescription = "Org.OData.Core.V1.LongDescription"
 	public static string MediaType = "Org.OData.Core.V1.MediaType"
@@ -3912,6 +3940,7 @@ public enum Microsoft.OData.ODataReaderState : int {
 	Exception = 8
 	NestedResourceInfoEnd = 6
 	NestedResourceInfoStart = 5
+	Primitive = 10
 	ResourceEnd = 4
 	ResourceSetEnd = 2
 	ResourceSetStart = 1
@@ -4104,8 +4133,8 @@ public abstract class Microsoft.OData.ODataInputContext : IDisposable {
 	public virtual Microsoft.OData.ODataError ReadError ()
 	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataError]] ReadErrorAsync ()
 	internal virtual Microsoft.OData.Edm.IEdmModel ReadMetadataDocument (System.Func`2[[System.Uri],[System.Xml.XmlReader]] getReferencedModelReaderFunc)
-	public virtual Microsoft.OData.ODataProperty ReadProperty (Microsoft.OData.Edm.IEdmStructuralProperty property, Microsoft.OData.Edm.IEdmTypeReference expectedPropertyTypeReference)
-	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataProperty]] ReadPropertyAsync (Microsoft.OData.Edm.IEdmStructuralProperty property, Microsoft.OData.Edm.IEdmTypeReference expectedPropertyTypeReference)
+	public virtual Microsoft.OData.ODataProperty ReadProperty (Microsoft.OData.Edm.IEdmStructuralProperty edmStructuralProperty, Microsoft.OData.Edm.IEdmTypeReference expectedPropertyTypeReference)
+	public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataProperty]] ReadPropertyAsync (Microsoft.OData.Edm.IEdmStructuralProperty edmStructuralProperty, Microsoft.OData.Edm.IEdmTypeReference expectedPropertyTypeReference)
 	internal virtual Microsoft.OData.ODataServiceDocument ReadServiceDocument ()
 	internal virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataServiceDocument]] ReadServiceDocumentAsync ()
 	internal virtual object ReadValue (Microsoft.OData.Edm.IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
@@ -4157,13 +4186,13 @@ public abstract class Microsoft.OData.ODataOutputContext : IDisposable {
 	internal virtual System.Threading.Tasks.Task WriteEntityReferenceLinkAsync (Microsoft.OData.ODataEntityReferenceLink link)
 	internal virtual void WriteEntityReferenceLinks (Microsoft.OData.ODataEntityReferenceLinks links)
 	internal virtual System.Threading.Tasks.Task WriteEntityReferenceLinksAsync (Microsoft.OData.ODataEntityReferenceLinks links)
-	public virtual void WriteError (Microsoft.OData.ODataError error, bool includeDebugInformation)
-	public virtual System.Threading.Tasks.Task WriteErrorAsync (Microsoft.OData.ODataError error, bool includeDebugInformation)
+	public virtual void WriteError (Microsoft.OData.ODataError odataError, bool includeDebugInformation)
+	public virtual System.Threading.Tasks.Task WriteErrorAsync (Microsoft.OData.ODataError odataError, bool includeDebugInformation)
 	internal virtual void WriteInStreamError (Microsoft.OData.ODataError error, bool includeDebugInformation)
 	internal virtual System.Threading.Tasks.Task WriteInStreamErrorAsync (Microsoft.OData.ODataError error, bool includeDebugInformation)
 	internal virtual void WriteMetadataDocument ()
-	public virtual void WriteProperty (Microsoft.OData.ODataProperty property)
-	public virtual System.Threading.Tasks.Task WritePropertyAsync (Microsoft.OData.ODataProperty property)
+	public virtual void WriteProperty (Microsoft.OData.ODataProperty odataProperty)
+	public virtual System.Threading.Tasks.Task WritePropertyAsync (Microsoft.OData.ODataProperty odataProperty)
 	internal virtual void WriteServiceDocument (Microsoft.OData.ODataServiceDocument serviceDocument)
 	internal virtual System.Threading.Tasks.Task WriteServiceDocumentAsync (Microsoft.OData.ODataServiceDocument serviceDocument)
 	internal virtual void WriteValue (object value)
@@ -4231,7 +4260,7 @@ public abstract class Microsoft.OData.ODataServiceDocumentElement : Microsoft.OD
 	System.Uri Url  { public get; public set; }
 }
 
-public abstract class Microsoft.OData.ODataValue : Microsoft.OData.ODataAnnotatable {
+public abstract class Microsoft.OData.ODataValue : Microsoft.OData.ODataItem {
 	protected ODataValue ()
 }
 
@@ -4241,6 +4270,7 @@ public abstract class Microsoft.OData.ODataWriter {
 	public abstract void Flush ()
 	public abstract System.Threading.Tasks.Task FlushAsync ()
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataPrimitiveValue primitiveValue)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo, System.Action nestedAction)
@@ -4250,6 +4280,8 @@ public abstract class Microsoft.OData.ODataWriter {
 	public abstract System.Threading.Tasks.Task WriteEndAsync ()
 	public abstract void WriteEntityReferenceLink (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink)
 	public abstract System.Threading.Tasks.Task WriteEntityReferenceLinkAsync (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink)
+	public virtual void WritePrimitive (Microsoft.OData.ODataPrimitiveValue primitiveValue)
+	public virtual System.Threading.Tasks.Task WritePrimitiveAsync (Microsoft.OData.ODataPrimitiveValue primitiveValue)
 	public abstract void WriteStart (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract void WriteStart (Microsoft.OData.ODataResource resource)
 	public abstract void WriteStart (Microsoft.OData.ODataResourceSet resourceSet)
@@ -4829,6 +4861,8 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	bool EnablePrimitiveTypeConversion  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
+	System.Func`3[[System.Object],[System.String],[Microsoft.OData.Edm.IEdmTypeReference]] PrimitiveTypeResolver  { public get; public set; }
+	bool ReadUntypedAsString  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 
@@ -5153,7 +5187,7 @@ public enum Microsoft.OData.UriParser.OrderByDirection : int {
 }
 
 public enum Microsoft.OData.UriParser.QueryNodeKind : int {
-	AggregatedCollectionPropertyNode = 30
+	AggregatedCollectionPropertyNode = 31
 	All = 14
 	Any = 9
 	BinaryOperator = 4
@@ -5162,7 +5196,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	CollectionNavigationNode = 10
 	CollectionOpenPropertyAccess = 25
 	CollectionPropertyAccess = 7
-	CollectionPropertyNode = 29
+	CollectionPropertyNode = 30
 	CollectionResourceCast = 15
 	CollectionResourceFunctionCall = 19
 	Constant = 1
@@ -5180,6 +5214,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	SingleNavigationNode = 11
 	SingleResourceCast = 13
 	SingleResourceFunctionCall = 17
+	SingleValueCast = 29
 	SingleValueFunctionCall = 8
 	SingleValueOpenPropertyAccess = 12
 	SingleValuePropertyAccess = 6
@@ -5188,14 +5223,16 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 
 public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	Aggregate = 24
-	AggregateGroupBy = 27
+	AggregateGroupBy = 26
 	All = 19
 	Any = 15
 	BinaryOperator = 3
+	Compute = 27
+	ComputeExpression = 28
 	CustomQueryOption = 9
 	DottedIdentifier = 17
 	EndPath = 7
-	EntitySetAggregateExpression = 26
+	EntitySetAggregateExpression = 29
 	Expand = 13
 	ExpandTerm = 20
 	FunctionCall = 6
@@ -5204,7 +5241,7 @@ public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
-	PropertyAggregateExpression = 25
+	PropertyAggregateExpression = 26
 	RangeVariable = 18
 	Select = 10
 	Star = 11
@@ -5399,6 +5436,7 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	public virtual T Visit (Microsoft.OData.UriParser.SingleNavigationNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleResourceCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleResourceFunctionCallNode nodeIn)
+	public virtual T Visit (Microsoft.OData.UriParser.SingleValueCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValueFunctionCallNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValuePropertyAccessNode nodeIn)
@@ -5502,7 +5540,9 @@ public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.U
 public class Microsoft.OData.UriParser.ExpandedReferenceSelectItem : Microsoft.OData.UriParser.SelectItem {
 	public ExpandedReferenceSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 	public ExpandedReferenceSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.FilterClause filterOption, Microsoft.OData.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.UriParser.SearchClause searchOption)
+	public ExpandedReferenceSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.FilterClause filterOption, Microsoft.OData.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.UriParser.SearchClause searchOption, Microsoft.OData.UriParser.ComputeClause computeOption)
 
+	Microsoft.OData.UriParser.ComputeClause ComputeOption  { public get; }
 	System.Nullable`1[[System.Boolean]] CountOption  { public get; }
 	Microsoft.OData.UriParser.FilterClause FilterOption  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
@@ -5556,6 +5596,7 @@ public class Microsoft.OData.UriParser.ODataQueryOptionParser {
 	Microsoft.OData.UriParser.ODataUriParserSettings Settings  { public get; }
 
 	public Microsoft.OData.UriParser.Aggregation.ApplyClause ParseApply ()
+	public Microsoft.OData.UriParser.ComputeClause ParseCompute ()
 	public System.Nullable`1[[System.Boolean]] ParseCount ()
 	public string ParseDeltaToken ()
 	public Microsoft.OData.UriParser.FilterClause ParseFilter ()
@@ -5810,6 +5851,39 @@ public sealed class Microsoft.OData.UriParser.CollectionResourceFunctionCallNode
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
+public sealed class Microsoft.OData.UriParser.ComputeClause {
+	public ComputeClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpression]] computedItems)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpression]] ComputedItems  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.ComputeExpression {
+	public ComputeExpression (Microsoft.OData.UriParser.SingleValueNode expression, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+
+	string Alias  { public get; }
+	Microsoft.OData.UriParser.SingleValueNode Expression  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.ComputeExpressionToken : Microsoft.OData.UriParser.QueryToken {
+	public ComputeExpressionToken (Microsoft.OData.UriParser.QueryToken expression, string alias)
+
+	string Alias  { public get; }
+	Microsoft.OData.UriParser.QueryToken Expression  { public get; }
+	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.UriParser.ComputeToken : Microsoft.OData.UriParser.Aggregation.ApplyTransformationToken {
+	public ComputeToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpressionToken]] expressions)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpressionToken]] Expressions  { public get; }
+	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
 public sealed class Microsoft.OData.UriParser.ConstantNode : Microsoft.OData.UriParser.SingleValueNode {
 	public ConstantNode (object constantValue)
 	public ConstantNode (object constantValue, string literalText)
@@ -5920,6 +5994,7 @@ public sealed class Microsoft.OData.UriParser.EntitySetSegment : Microsoft.OData
 public sealed class Microsoft.OData.UriParser.ExpandedNavigationSelectItem : Microsoft.OData.UriParser.ExpandedReferenceSelectItem {
 	public ExpandedNavigationSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.SelectExpandClause selectExpandOption)
 	public ExpandedNavigationSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.SelectExpandClause selectAndExpand, Microsoft.OData.UriParser.FilterClause filterOption, Microsoft.OData.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.UriParser.SearchClause searchOption, Microsoft.OData.UriParser.LevelsClause levelsOption)
+	public ExpandedNavigationSelectItem (Microsoft.OData.UriParser.ODataExpandPath pathToNavigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.SelectExpandClause selectAndExpand, Microsoft.OData.UriParser.FilterClause filterOption, Microsoft.OData.UriParser.OrderByClause orderByOption, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countOption, Microsoft.OData.UriParser.SearchClause searchOption, Microsoft.OData.UriParser.LevelsClause levelsOption, Microsoft.OData.UriParser.ComputeClause computeOption)
 
 	Microsoft.OData.UriParser.LevelsClause LevelsOption  { public get; }
 	Microsoft.OData.UriParser.SelectExpandClause SelectAndExpand  { public get; }
@@ -5932,7 +6007,9 @@ public sealed class Microsoft.OData.UriParser.ExpandTermToken : Microsoft.OData.
 	public ExpandTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToNavigationProp)
 	public ExpandTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ExpandToken expandOption)
 	public ExpandTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.UriParser.QueryToken searchOption, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ExpandToken expandOption)
+	public ExpandTermToken (Microsoft.OData.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.UriParser.QueryToken searchOption, Microsoft.OData.UriParser.SelectToken selectOption, Microsoft.OData.UriParser.ExpandToken expandOption, Microsoft.OData.UriParser.ComputeToken computeOption)
 
+	Microsoft.OData.UriParser.ComputeToken ComputeOption  { public get; }
 	System.Nullable`1[[System.Boolean]] CountQueryOption  { public get; }
 	Microsoft.OData.UriParser.ExpandToken ExpandOption  { public get; }
 	Microsoft.OData.UriParser.QueryToken FilterOption  { public get; }
@@ -6145,6 +6222,7 @@ public sealed class Microsoft.OData.UriParser.ODataUriParser {
 	Microsoft.OData.ODataUrlKeyDelimiter UrlKeyDelimiter  { public get; public set; }
 
 	public Microsoft.OData.UriParser.Aggregation.ApplyClause ParseApply ()
+	public Microsoft.OData.UriParser.ComputeClause ParseCompute ()
 	public System.Nullable`1[[System.Boolean]] ParseCount ()
 	public string ParseDeltaToken ()
 	public Microsoft.OData.UriParser.EntityIdSegment ParseEntityId ()
@@ -6373,6 +6451,15 @@ public sealed class Microsoft.OData.UriParser.SingletonSegment : Microsoft.OData
 
 	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.UriParser.SingleValueCastNode : Microsoft.OData.UriParser.SingleValueNode {
+	public SingleValueCastNode (Microsoft.OData.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmPrimitiveType primitiveType)
+
+	Microsoft.OData.UriParser.SingleValueNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
 public sealed class Microsoft.OData.UriParser.SingleValueFunctionCallNode : Microsoft.OData.UriParser.SingleValueNode {
@@ -7541,14 +7628,16 @@ public sealed class Microsoft.OData.Client.WritingNestedResourceInfoArgs {
 
 public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	Aggregate = 24
-	AggregateGroupBy = 27
+	AggregateGroupBy = 26
 	All = 19
 	Any = 15
 	BinaryOperator = 3
+	Compute = 27
+	ComputeExpression = 28
 	CustomQueryOption = 9
 	DottedIdentifier = 17
 	EndPath = 7
-	EntitySetAggregateExpression = 26
+	EntitySetAggregateExpression = 29
 	Expand = 13
 	ExpandTerm = 20
 	FunctionCall = 6
@@ -7557,7 +7646,7 @@ public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
-	PropertyAggregateExpression = 25
+	PropertyAggregateExpression = 26
 	RangeVariable = 18
 	Select = 10
 	Star = 11
@@ -7697,6 +7786,25 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.BinaryOperatorToken :
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
 
+public sealed class Microsoft.OData.Client.ALinq.UriParser.ComputeExpressionToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+	public ComputeExpressionToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, string alias)
+
+	string Alias  { public get; }
+	Microsoft.OData.Client.ALinq.UriParser.QueryToken Expression  { public get; }
+	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.ComputeToken : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
+	public ComputeToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ComputeExpressionToken]] expressions)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ComputeExpressionToken]] Expressions  { public get; }
+	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
 public sealed class Microsoft.OData.Client.ALinq.UriParser.CustomQueryOptionToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
 	public CustomQueryOptionToken (string name, string value)
 
@@ -7743,7 +7851,9 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken : Mic
 	public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp)
 	public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption)
 	public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption)
+	public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
 
+	Microsoft.OData.Client.ALinq.UriParser.ComputeToken ComputeOption  { public get; }
 	System.Nullable`1[[System.Boolean]] CountQueryOption  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.ExpandToken ExpandOption  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.QueryToken FilterOption  { public get; }

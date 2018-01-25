@@ -27,14 +27,14 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         [Fact]
         public void StatementsSetCorrectly()
         {
-            var token = new AggregateTransformationToken(statements);
+            AggregateTransformationToken token = new AggregateTransformationToken(statements);
             ((object)token.Expressions).Should().Be(statements);
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
-            var token = new AggregateTransformationToken(statements);
+            AggregateTransformationToken token = new AggregateTransformationToken(statements);
             token.Kind.Should().Be(QueryTokenKind.Aggregate);
         }
     }

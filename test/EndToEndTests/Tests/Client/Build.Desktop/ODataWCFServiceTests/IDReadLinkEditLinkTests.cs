@@ -26,12 +26,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         }
 
-        //[TestMethod]
-        //public void ClientShouldUseTheEditLinkGotFromPayloadToUpdateTheEntryInAtom()
-        //{
-        //    this.UpdateObject(MimeTypes.ApplicationAtomXml);
-        //}
-
         [TestMethod]
         public void ClientShouldUseTheEditLinkGotFromPayloadToUpdateTheEntryInMinimalMetadataJson()
         {
@@ -107,8 +101,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.IsNull(entityDescriptor);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod] // github issuse: #896
         public void ItIsAbleToDeserializeObjectsIfTheyAreTransientInAtom()
         {
             this.QueryObjectsWhenTheyAreTransient(MimeTypes.ApplicationAtomXml);

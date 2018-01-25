@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
@@ -360,6 +361,48 @@ namespace Microsoft.OData.Tests.JsonLight
             this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products/$entity\",\"@odata.type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}");
         }
 
+        [Fact]
+        public void JsonLightDeltaResourceScopePropertyAccessors()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(outputContext, this.GetCustomers(), this.GetCustomerType());
+            BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            Assembly assembly = typeof(ODataAction).GetTypeInfo().Assembly;
+            Type typeWriter = assembly.GetType("Microsoft.OData.JsonLight.ODataJsonLightDeltaWriter");
+
+            writer = new ODataJsonLightDeltaWriter(outputContext, this.GetCustomers(), this.GetCustomerType());
+            writer.WriteStart(feedWithoutInfo);
+            writer.WriteStart(customerUpdated);
+
+            // Get the CurrentDeltaResourceScope obj and type, and then exercise the setters and getters for its properties.
+            PropertyInfo propCurrentDeltaResourceScope = typeWriter.GetProperty("CurrentDeltaResourceScope", bindFlags);
+            object objCurrentDeltaResourceScope = propCurrentDeltaResourceScope.GetValue(writer);
+            Type typeCurrentDeltaResourceScope = typeWriter.GetNestedType("JsonLightDeltaResourceScope", bindFlags);
+
+            //ODataJsonLightDeltaWriter.JsonLightDeltaResourceScope properties
+            string[] propertyNames = new string[]
+            {
+                "ReadLinkWritten",
+                "MediaEditLinkWritten",
+                "MediaReadLinkWritten",
+                "MediaContentTypeWritten",
+                "MediaETagWritten",
+            };
+
+            foreach (string propertyName in propertyNames)
+            {
+                PropertyInfo currentPropertyInfo = typeCurrentDeltaResourceScope.GetProperty(propertyName, bindFlags);
+
+                object currentProperty = currentPropertyInfo.GetValue(objCurrentDeltaResourceScope);
+                currentProperty.Should().Be(false);
+
+                // value should only be set from false to true.
+                currentPropertyInfo.SetValue(objCurrentDeltaResourceScope, true);
+                currentProperty = currentPropertyInfo.GetValue(objCurrentDeltaResourceScope);
+                currentProperty.Should().Be(true);
+            }
+        }
         #region Expanded Feeds
 
         #region Test Data

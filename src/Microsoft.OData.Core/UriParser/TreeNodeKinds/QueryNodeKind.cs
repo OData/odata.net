@@ -160,6 +160,11 @@ namespace Microsoft.OData.UriParser
         Count = InternalQueryNodeKind.Count,
 
         /// <summary>
+        /// Cast on a single value.
+        /// </summary>
+        SingleValueCast = InternalQueryNodeKind.SingleValueCast,
+
+        /// <summary>
         /// Node represents a property of a collection.
         /// </summary>
         CollectionPropertyNode = InternalQueryNodeKind.CollectionPropertyNode,
@@ -321,13 +326,18 @@ namespace Microsoft.OData.UriParser
         Count = 28,
 
         /// <summary>
+        /// Cast on a single value.
+        /// </summary>
+        SingleValueCast = 29,
+
+        /// <summary>
         /// Node represents a property of a collection.
         /// </summary>
-        CollectionPropertyNode = 29,
+        CollectionPropertyNode = 30,
 
         /// <summary>
         /// Node represents a property of a aggregated collection.
         /// </summary>
-        AggregatedCollectionPropertyNode = 30,
+        AggregatedCollectionPropertyNode = 31,
     }
 }

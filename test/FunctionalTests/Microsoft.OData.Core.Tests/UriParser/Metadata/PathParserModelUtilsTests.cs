@@ -5,12 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Metadata
@@ -26,62 +24,62 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         [Fact]
         public void PrimitiveTypeIsNotOpen()
         {
-            this.edmPrimitiveType.IsOpenType().Should().BeFalse();
+            this.edmPrimitiveType.IsOpen().Should().BeFalse();
         }
 
         [Fact]
         public void NonOpenEntityTypeIsNotOpen()
         {
-            this.nonOpenEdmEntityType.IsOpenType().Should().BeFalse();
+            this.nonOpenEdmEntityType.IsOpen().Should().BeFalse();
         }
 
         [Fact]
         public void NonOpenComplexTypeIsNotOpen()
         {
-            this.nonOpenEdmComplexType.IsOpenType().Should().BeFalse();
+            this.nonOpenEdmComplexType.IsOpen().Should().BeFalse();
         }
 
         [Fact]
         public void OpenEntityTypeIsOpen()
         {
-            this.openEdmEntityType.IsOpenType().Should().BeTrue();
+            this.openEdmEntityType.IsOpen().Should().BeTrue();
         }
 
         [Fact]
         public void OpenComplexTypeIsOpen()
         {
-            this.openEdmComplexType.IsOpenType().Should().BeTrue();
+            this.openEdmComplexType.IsOpen().Should().BeTrue();
         }
 
         [Fact]
         public void PrimitiveCollectionTypeIsNotOpen()
         {
-            this.ToCollection(this.edmPrimitiveType).IsOpenType().Should().BeFalse();
+            this.ToCollection(this.edmPrimitiveType).IsOpen().Should().BeFalse();
         }
 
         [Fact]
         public void NonOpenEntityCollectionTypeIsNotOpen()
         {
-            this.ToCollection(this.nonOpenEdmEntityType).IsOpenType().Should().BeFalse();
+            this.ToCollection(this.nonOpenEdmEntityType).IsOpen().Should().BeFalse();
         }
 
         [Fact]
         public void NonOpenComplexCollectionTypeIsNotOpen()
         {
-            this.ToCollection(this.nonOpenEdmComplexType).IsOpenType().Should().BeFalse();
+            this.ToCollection(this.nonOpenEdmComplexType).IsOpen().Should().BeFalse();
         }
 
         [Fact]
         public void OpenEntityCollectionTypeIsOpen()
         {
             // TODO: when SingleResult is removed from the semantic path parser, change this to return false.
-             this.ToCollection(this.openEdmEntityType).IsOpenType().Should().BeTrue();
+             this.ToCollection(this.openEdmEntityType).IsOpen().Should().BeTrue();
         }
 
         [Fact]
         public void OpenComplexCollectionTypeIsOpen()
         {
-            this.ToCollection(this.openEdmComplexType).IsOpenType().Should().BeTrue();
+            this.ToCollection(this.openEdmComplexType).IsOpen().Should().BeTrue();
         }
 
         [Fact]

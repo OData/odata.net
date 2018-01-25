@@ -272,26 +272,26 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Read the property from the input and
+        /// Read the EDM structural property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
-        /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
+        /// <param name="edmStructuralProperty">The <see cref="IEdmProperty"/> producing the property to be read.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
-        public virtual ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        public virtual ODataProperty ReadProperty(IEdmStructuralProperty edmStructuralProperty, IEdmTypeReference expectedPropertyTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 
 #if PORTABLELIB
         /// <summary>
-        /// Asynchronously read the property from the input and
+        /// Asynchronously read the EDM structural property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
-        /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
+        /// <param name="edmStructuralProperty">The <see cref="IEdmProperty"/> producing the property to be read.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
-        public virtual Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        public virtual Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty edmStructuralProperty, IEdmTypeReference expectedPropertyTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }

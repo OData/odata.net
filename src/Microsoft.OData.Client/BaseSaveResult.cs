@@ -232,7 +232,6 @@ namespace Microsoft.OData.Client
         /// <param name="statusCode">status code</param>
         /// <returns>text</returns>
         [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Cache exception so user can examine it later")]
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "underlying stream is disposed so wrapping StreamReader doesn't need to be disposed")]
         internal static DataServiceClientException GetResponseText(Func<Stream> getResponseStream, HttpStatusCode statusCode)
         {
             string message = null;
@@ -431,7 +430,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle request.BeginGetResponse with request.EndGetResponse and then copy response stream</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected override void AsyncEndGetResponse(IAsyncResult asyncResult)
         {
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
@@ -1056,8 +1054,6 @@ namespace Microsoft.OData.Client
         /// <param name="binding">The binding.</param>
         /// <param name="targetResource">The target's entity descriptor.</param>
         /// <returns>The original link uri or one with the target entity key appended.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0011:EntityDescriptorPublicPropertiesRule",
-             Justification = "This property has been limited by get/set")]
         private static Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
         {
             // To delete from a collection, we need to append the key.
@@ -1201,7 +1197,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="descriptor">descriptor, whose response is getting handled.</param>
         /// <param name="responseHeaders">response headers.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "instance is used in Assert")]
         private void HandleResponsePut(Descriptor descriptor, HeaderCollection responseHeaders)
         {
             Debug.Assert(descriptor != null, "descriptor != null");
@@ -1296,7 +1291,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndRead(IAsyncResult asyncResult)
 #endif
         {

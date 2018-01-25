@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
             var messageReader = new ODataMessageReader((IODataResponseMessage)readerResponseMemoryMessage, new ODataMessageReaderSettings() {MaxProtocolVersion = ODataVersion.V4, EnableMessageStreamDisposal = false}, this.model);
             var organizationReader = messageReader.CreateODataResourceReader(this.organizationsSet, this.organizationsSet.EntityType());
-            organizationReader.Read().Should().Be(true);
+            organizationReader.Read().Should().BeTrue();
             organizationReader.Item.As<ODataResource>();
         }
 #endif

@@ -109,7 +109,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path.LastSegment.ShouldBePropertySegment(HardCodedTestModel.GetAddressCityProperty());
         }
 
-        [Fact(Skip = "This test currently fails")]
+        [Fact]
         public void ComplexServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("GetSomeAddress/foo");
@@ -434,12 +434,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path.LastSegment.ShouldBeOperationSegment(model.FindOperations("Test.IsDark").Single()).And.Operations.Should().HaveCount(1);
         }
 
-        // Fix ODataUri parser to support composable Functions on Complex, it can also be supported when we don't track the entity set as well.
-        [Fact(Skip = "This test currently fails")]
+        [Fact]
         public void FunctionBoundToComplexAreComposable()
         {
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
-            var path = PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/Color/GetMostPopularVegetableWithThisColor/ID", model);
+            var path = PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/Color/Test.GetMostPopularVegetableWithThisColor/ID", model);
 
             path.Should().HaveCount(5);
             path.LastSegment.ShouldBePropertySegment(model.FindType("Test.Vegetable").As<IEdmEntityType>().Properties().Single(p => p.Name == "ID"));
@@ -789,6 +788,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$42(notgood)"));
             parser.BatchReferenceCallback = contentId => new BatchReferenceSegment(contentId, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
+            var batchReferenceCallbackClone = parser.BatchReferenceCallback;
+            Assert.Equal(parser.BatchReferenceCallback, batchReferenceCallbackClone);
+
             Action parse = () => parser.ParsePath();
 
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_SyntaxError);
@@ -1051,10 +1053,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.Employee(1)", ODataErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
-        [Fact(Skip = "This test currently fails")]
-        public void ComplexTypesCannotBeCasted()
+        [Fact]
+        public void ComplexTypesCanBeCasted()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/Fully.Qualified.Namespace.Address", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.Address"));
+            //PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/Fully.Qualified.Namespace.Address", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.Address"));
+            var path = PathFunctionalTestsUtil.RunParsePath("People(1)/MyAddress/Fully.Qualified.Namespace.Address");
+            VerificationHelpers.VerifyPath(path, new Action<ODataPathSegment>[]
+            {
+                s => s.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet()),
+                s => s.ShouldBeSimpleKeySegment(1),
+                s => s.ShouldBePropertySegment(HardCodedTestModel.GetPersonAddressProp()),
+                s => s.ShouldBeTypeSegment(HardCodedTestModel.GetAddressType())
+            });
         }
 
         [Fact]
@@ -1104,10 +1114,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParseErrorPath("$metaDATA", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$metaDATA"));
         }
 
-        [Fact(Skip = "This test currently fails")]
+        [Fact]
         public void DirectValueServiceOperationWithKeyLookupIsInvalid()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("DirectValuePrimitiveServiceOperation(ID='Bob')", "TODO");
+            PathFunctionalTestsUtil.RunParseErrorPath("DirectValuePrimitiveServiceOperation(ID='Bob')", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("DirectValuePrimitiveServiceOperation"));
         }
 
         [Fact]
@@ -1134,13 +1144,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()).Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
-        [Fact(Skip = "This test currently fails")]
-        public void ValueOnEntityThatisNotMLEShouldThrow()
-        {
-            Action parse = () => PathFunctionalTestsUtil.RunParsePath("Dogs(1)/$value");
-
-            parse.ShouldThrow<ODataException>().WithMessage("TODO");
-        }
+        //[Fact(Skip = "#833: Throw exception when $value appears after a stream.")]
+        //public void ValueOnEntityThatisNotMediaLinkEntryShouldThrow()
+        //{
+        //    // From 4.7 of the spec (http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html)
+        //    // Properties of type Edm.Stream already return the raw value of the media stream
+        //    // and do not support appending the $value segment.
+        //    Action parse = () => PathFunctionalTestsUtil.RunParsePath("Dogs(1)/$value");
+        //
+        //    parse.ShouldThrow<ODataException>().WithMessage("TODO");
+        //}
 
         [Fact]
         public void ValueOnCollectionShouldThrow()

@@ -180,15 +180,17 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid("UpdateStuff"));
         }
 
-        [Fact(Skip = "Skipped in Microsoft.Test.Edm.TDD.Tests")]
+        [Fact]
         public void OperationImportEntitySetReferenceEntitySetTargetPathShouldNotError()
         {
+            var model = new EdmModel();
             var defaultContainer = new EdmEntityContainer("f", "d");
+            model.AddElement(defaultContainer);
             var entitySet = defaultContainer.AddEntitySet("EntitySet", DefaultValidEntityType.EntityDefinition());
             var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true));
 
-            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmPathExpression("Schema.EntityContainer/EntitySet"), true);
-            ValidateNoError(ValidationRules.OperationImportEntitySetExpressionIsInvalid, new EdmModel(), edmFunctionImport);
+            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmPathExpression("EntitySet"), true);
+            ValidateNoError(ValidationRules.OperationImportEntitySetExpressionIsInvalid, model, edmFunctionImport);
         }
 
         [Fact]

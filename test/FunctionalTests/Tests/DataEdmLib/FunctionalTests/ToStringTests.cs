@@ -188,11 +188,13 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntityType astonishing = new EdmEntityType("AwesomeNamespace", "AstonishingEntity", null, false, false);
             IEdmEntityType aweInspiring = new EdmEntityType("AwesomeNamespace", "AweInspiringEntity", null, false, false);
             IEdmComplexType breathTaking = new EdmComplexType("AwesomeNamespace", "BreathtakingComplex", null, false);
+            IEdmStructuredType stunning = new EdmUntypedStructuredType("AwesomeNamespace", "StunningStructured");
             IEdmPrimitiveType primitive = (IEdmPrimitiveType)EdmCoreModel.Instance.GetInt32(false).Definition;
 
             Assert.AreEqual("AwesomeNamespace.AstonishingEntity", astonishing.ToString(), "To string correct");
             Assert.AreEqual("AwesomeNamespace.AweInspiringEntity", aweInspiring.ToString(), "To string correct");
             Assert.AreEqual("AwesomeNamespace.BreathtakingComplex", breathTaking.ToString(), "To string correct");
+            Assert.AreEqual("AwesomeNamespace.StunningStructured", stunning.ToString(), "To string correct");
             Assert.AreEqual("Edm.Int32", primitive.ToString(), "To string correct");
         }
 

@@ -11,12 +11,13 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>PortableTests.WindowsStore_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Microsoft.Test.OData.Tests.Client.Portable.WindowsStore_TemporaryKey.pfx</PackageCertificateKeyFile>
     <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_SECURITY_RULES;WIN8;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;</DefineConstants>
     <VisualStudioEdition>ThisIsANecessaryButMeaninglessProperty</VisualStudioEdition>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <AppxPackageName>E2E.Portable.WindowsStore</AppxPackageName>
     <TargetFrameworkFolderName>WindowsStore</TargetFrameworkFolderName>
+    <PackageCertificateThumbprint>73F745F657268D260012322ABE0D78FB642EAA08</PackageCertificateThumbprint>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup>
@@ -58,7 +59,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="App.config" />
-    <None Include="PortableTests.WindowsStore_TemporaryKey.pfx" />
+    <None Include="Microsoft.Test.OData.Tests.Client.Portable.WindowsStore_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Images\UnitTestLogo.png">

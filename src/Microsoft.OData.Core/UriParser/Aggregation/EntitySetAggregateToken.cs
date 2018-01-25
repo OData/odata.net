@@ -14,11 +14,19 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
+    /// <summary>
+    /// Query token representing an Entity Set Aggregate expression.
+    /// </summary>
     public sealed class EntitySetAggregateToken : AggregateTokenBase
     {
         private readonly QueryToken entitySet;
         private readonly IEnumerable<AggregateTokenBase> expressions;
 
+        /// <summary>
+        /// Create an EntitySetAggregateToken.
+        /// </summary>
+        /// <param name="entitySet">The entity set.</param>
+        /// <param name="expressions">The aggregate expressions.</param>
         public EntitySetAggregateToken(QueryToken entitySet, IEnumerable<AggregateTokenBase> expressions)
         {
             ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
@@ -26,11 +34,17 @@ namespace Microsoft.OData.UriParser.Aggregation
             this.entitySet = entitySet;
         }
 
+        /// <summary>
+        /// Gets the kind of this token.
+        /// </summary>
         public override QueryTokenKind Kind
         {
             get { return QueryTokenKind.EntitySetAggregateExpression; }
         }
 
+        /// <summary>
+        /// Gets the expressions associated with the aggregation token.
+        /// </summary>
         public IEnumerable<AggregateTokenBase> Expressions
         {
             get
@@ -39,6 +53,9 @@ namespace Microsoft.OData.UriParser.Aggregation
             }
         }
 
+        /// <summary>
+        /// Gets the entity set associated with the aggregation token.
+        /// </summary>
         public QueryToken EntitySet
         {
             get
@@ -80,7 +97,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         {
             List<string> properties = new List<string>();
             QueryToken token = entitySet;
-            var pathToken = token as PathToken;
+            PathToken pathToken = token as PathToken;
 
             while (pathToken != null)
             {

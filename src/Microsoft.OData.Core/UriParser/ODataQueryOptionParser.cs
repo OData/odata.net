@@ -44,6 +44,11 @@ namespace Microsoft.OData.UriParser
         private ApplyClause applyClause;
 
         /// <summary>
+        /// Compute clause for computation queries
+        /// </summary>
+        private ComputeClause computeClause;
+
+        /// <summary>
         /// The path info about parsed segments and target edm type and navigation source.
         /// </summary>
         private ODataPathInfo odataPathInfo;
@@ -326,6 +331,31 @@ namespace Microsoft.OData.UriParser
             string deltaTokenQuery;
             return this.TryGetQueryOption(UriQueryConstants.DeltaTokenQueryOption, out deltaTokenQuery) ? deltaTokenQuery : null;
         }
+
+        /// <summary>
+        /// Parses a compute clause on the given full Uri, binding
+        /// the text into semantic nodes using the constructed mode.
+        /// </summary>
+        /// <returns>A <see cref="ComputeClause"/> representing the computed properties.</returns>
+        public ComputeClause ParseCompute()
+        {
+            if (this.computeClause != null)
+            {
+                return this.computeClause;
+            }
+
+            string computeQuery;
+
+            if (!this.TryGetQueryOption(UriQueryConstants.ComputeQueryOption, out computeQuery)
+                || string.IsNullOrEmpty(computeQuery)
+                || this.targetEdmType == null)
+            {
+                return null;
+            }
+
+            this.computeClause = ParseComputeImplementation(computeQuery, this.Configuration, this.odataPathInfo);
+            return this.computeClause;
+        }
         #endregion public methods
 
         #region private methods
@@ -412,8 +442,7 @@ namespace Microsoft.OData.UriParser
             SelectExpandSyntacticParser.Parse(select, expand, odataPathInfo.TargetStructuredType, configuration, out expandTree, out selectTree);
 
             // semantic pass
-            SelectExpandSemanticBinder binder = new SelectExpandSemanticBinder();
-            return binder.Bind(odataPathInfo, expandTree, selectTree, configuration);
+            return SelectExpandSemanticBinder.Bind(odataPathInfo, expandTree, selectTree, configuration);
         }
 
         /// <summary>
@@ -541,6 +570,34 @@ namespace Microsoft.OData.UriParser
             SearchBinder searchBinder = new SearchBinder(binder.Bind);
 
             return searchBinder.BindSearch(queryToken);
+        }
+
+        /// <summary>
+        /// Parses the <paramref name="compute"/> clause, binding
+        /// the text into a metadata-bound list of compuations using the provided model.
+        /// </summary>
+        /// <param name="compute">String representation of the compute expression from the URI.</param>
+        /// <param name="configuration">The configuration used for binding.</param>
+        /// <param name="odataPathInfo">The path info from Uri path.</param>
+        /// <returns>A <see cref="ComputeClause"/> representing the metadata bound compute expression.</returns>
+        private static ComputeClause ParseComputeImplementation(string compute, ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
+        {
+            ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
+            ExceptionUtils.CheckArgumentNotNull(compute, "compute");
+
+            // Get the syntactic representation of the apply expression
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+            ComputeToken computeToken = expressionParser.ParseCompute(compute);
+
+            // Bind it to metadata
+            BindingState state = new BindingState(configuration);
+            state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
+            state.RangeVariables.Push(state.ImplicitRangeVariable);
+            MetadataBinder binder = new MetadataBinder(state);
+            ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
+            ComputeClause boundNode = computeBinder.BindCompute(computeToken);
+
+            return boundNode;
         }
 
         /// <summary>

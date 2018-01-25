@@ -424,6 +424,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Parses the $compute.
+        /// </summary>
+        /// <returns>ComputeClause representing $compute.</returns>
+        public ComputeClause ParseCompute()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseCompute();
+        }
+
+        /// <summary>
         /// Parse a full Uri into its contingent parts with semantic meaning attached to each part.
         /// See <see cref="ODataUri"/>.
         /// </summary>
@@ -579,6 +589,7 @@ namespace Microsoft.OData.UriParser
                 case UriQueryConstants.CountQueryOption:
                 case UriQueryConstants.FormatQueryOption:
                 case UriQueryConstants.SearchQueryOption:
+                case UriQueryConstants.ComputeQueryOption:
                     return true;
                 default:
                     return false;

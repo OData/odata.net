@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -234,6 +235,41 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinks(referenceLinks), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false);
             WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinks(referenceLinks), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true);
         }
+
+        [Fact]
+        public void ShouldWriteNextLinkAnnotationForEntityReferenceLinksRequest()
+        {
+            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
+            ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
+            {
+                Links = new[] { referenceLink },
+                NextPageLink = new Uri("http://odata.org/nextpage")
+            };
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinks(referenceLinks),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}",
+                writingResponse: true);
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinks(referenceLinks),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}",
+                writingResponse: true);
+        }
+
+        [Fact]
+        public void ShouldWriteCountAnnotationForEntityReferenceLinksRequest()
+        {
+            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
+            ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
+            {
+                Links = new[] { referenceLink },
+                Count = 1,
+                NextPageLink = new Uri("http://odata.org/nextpage")
+            };
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinks(referenceLinks),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}",
+                writingResponse: true);
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinks(referenceLinks),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}",
+                writingResponse: true);
+        }
         #endregion sync
 
         #region async
@@ -244,6 +280,37 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks { Links = new[] { referenceLink } };
             WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
             WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
+        }
+
+        [Fact]
+        public void AsyncWriteNextLinkAnnotationForEntityReferenceLinksRequest()
+        {
+            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
+            ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
+            {
+                Links = new[] { referenceLink },
+                NextPageLink = new Uri("http://odata.org/nextpage")
+            };
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
+        }
+
+        [Fact]
+        public void AsyncShouldWriteCountAnnotationForEntityReferenceLinksRequest()
+        {
+            ODataEntityReferenceLink referenceLink = new ODataEntityReferenceLink { Url = new Uri("http://host/Orders(1)") };
+            ODataEntityReferenceLinks referenceLinks = new ODataEntityReferenceLinks
+            {
+                Links = new[] { referenceLink },
+                Count = 1,
+                NextPageLink = new Uri("http://odata.org/nextpage")
+            };
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.WriteEntityReferenceLinksAsync(referenceLinks).Wait(),
+                "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@odata.count\":1,\"@odata.nextLink\":\"http://odata.org/nextpage\",\"value\":[{\"@odata.id\":\"http://host/Orders(1)\"}]}", writingResponse: true, synchronous: false);
         }
         #endregion async
         #endregion WriteEntityReferenceLinks

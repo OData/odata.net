@@ -77,7 +77,8 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         /// <summary>
         /// Execute actions with parameter ( Primitive, complex, collection, multiple ) Parms
         /// </summary>
-        [Fact(Skip="Failed for Astoria service")]
+        // github issuse: #896
+        // [Fact(Skip="Failed for Astoria service")]
         public void ActionTestsParams()
         {
 

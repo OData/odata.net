@@ -14,15 +14,15 @@ namespace AstoriaUnitTests.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Service.Providers;
     using test = System.Data.Test.Astoria;
     using BindingFlags = System.Reflection.BindingFlags;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
     [TestClass]
     public class CreateODataWriterTests
     {
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void CreateODataWriterDelegateTest()
         {
             int createODataWriterDelegateCount = 0;
@@ -105,7 +105,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void CreateODataWriterInlinecountTest()
         {
             foreach (string acceptType in new string[] { "application/atom+xml", "application/json;odata.metadata=minimal" })
@@ -274,7 +274,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void CreateODataWriterDelegateTestForOpenProvider()
         {
             var testInfo = new[] {
@@ -354,7 +354,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ChangingFeedCollectionValueForTopLevel()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -437,7 +437,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void DataServiceOdataWriterWriteEndForEntryTest()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -502,7 +502,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void DataServiceOdataWriterWriteEndForLinksTest()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -546,7 +546,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void DataServiceOdataWriterWriteEndForFeedTest()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())

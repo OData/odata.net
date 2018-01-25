@@ -70,8 +70,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Error tests for writing primitive values in raw format.")]
+        // [TestMethod, Variation(Description = "Error tests for writing primitive values in raw format.")]
         public void RawValueErrorTests()
         {
             var primitiveValueCases = new[]

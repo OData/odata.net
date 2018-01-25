@@ -166,7 +166,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     new bool[] { true, false },  // enableMessageStreamDisposal
                     new bool[] { true, false },  // isRequest
                     new bool[] { true, false },  // synchronous
-                    (version, enableMessageStreamDisposal, isRequest, synchronous) =>
+                    new bool[] { true, false },  // skipStateValidationBeforeRead
+                    (version, enableMessageStreamDisposal, isRequest, synchronous, skipStateValidationBeforeRead) =>
                     {
 
 #if SILVERLIGHT || WINDOWS_PHONE
@@ -185,7 +186,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                             format,
                             settings,
                             isRequest,
-                            synchronous));
+                            synchronous,
+                            skipStateValidationBeforeRead: skipStateValidationBeforeRead));
                     });
             }
             else
@@ -205,7 +207,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 combinatorialEngine.RunCombinations(
                     limitedCombinations,
                     new bool[] { true, false }, // isRequest
-                    (limitedCombination, isRequest) =>
+                    new bool[] { true, false },  // skipStateValidationBeforeRead
+                    (limitedCombination, isRequest, skipStateValidationBeforeRead) =>
                     {
 
 #if SILVERLIGHT || WINDOWS_PHONE
@@ -224,7 +227,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                             format,
                             settings,
                             isRequest,
-                            limitedCombination.Synchronous));
+                            limitedCombination.Synchronous,
+                            skipStateValidationBeforeRead: skipStateValidationBeforeRead));
                     });
             }
 

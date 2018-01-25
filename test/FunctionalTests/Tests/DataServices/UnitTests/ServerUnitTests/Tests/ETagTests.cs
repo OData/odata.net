@@ -23,13 +23,14 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         /// <summary>This is a test class for etags test</summary>
         [TestClass, TestCase]
         public class ETagTests : AstoriaTestCase
         {
             #region GET tests
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void GetTopLevelEntitySet()
             {
                 string[] jsonXPaths = new string[] {
@@ -45,7 +46,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void CannotPassETagInGetTopLevelEntitySet()
             {
                 var ifMatch = new KeyValuePair<string, string>("If-Match", "W/\"foo\"");
@@ -59,7 +60,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void GetSingleEntityFromTopLevelEntitySet()
             {
                 string[] jsonXPaths = new string[] {
@@ -75,7 +76,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void GetComplexProperty()
             {
                 string[] jsonXPaths = new string[] {
@@ -91,7 +92,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void GetPrimitiveProperty()
             {
                 string[] jsonXPaths = new string[] {
@@ -107,7 +108,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void GetResourceFromReferenceNavigationProperty()
             {
                 string[] jsonXPaths = new string[] {
@@ -123,7 +124,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void GetNullValuedResourceFromReferenceNavigationProperty()
             {
                 TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, "/Customers(0)/BestFriend", typeof(CustomDataContext), null, "GET");
@@ -135,7 +136,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void GetSingleEntityFromTopLevelEntitySetWithoutETagProperties()
             {
                 string[] jsonXPaths = new string[] {
@@ -175,7 +176,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void Validate304HasNoHeaders()
             {
                 var serviceUri = new Uri("http://" + Environment.MachineName + ":" + NetworkUtil.GetRandomPortNumber() + "/" + System.Guid.NewGuid() + "/Service/");
@@ -273,7 +274,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void ETag_VerifyETagInPayloadInTopLevelPost()
             {
                 string jsonPayload = "{ " +
@@ -327,7 +328,7 @@ namespace AstoriaUnitTests.Tests
             // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an ATOM payload entry has no content and no links (and it's a V1 entry)
             // We decided to break the old behavior and always check the ETag.
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void ETag_PUTPATCHResourceWithNoContent()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(

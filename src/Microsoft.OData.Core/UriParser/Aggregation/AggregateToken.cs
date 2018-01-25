@@ -14,9 +14,9 @@ namespace Microsoft.OData.UriParser.Aggregation
 #endif
     using Microsoft.OData.UriParser;
 
-    /// <summary> 
-    /// Query token representing an Aggregate expression. 
-    /// </summary> 
+    /// <summary>
+    /// Query token representing an Aggregate expression.
+    /// </summary>
     public sealed class AggregateToken : AggregateTokenBase
     {
         private readonly QueryToken expression;
@@ -27,7 +27,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         private readonly string alias;
 
         /// <summary>
-        /// Create an AggregateExpressionToken. 
+        /// Create an AggregateExpressionToken.
         /// </summary>
         /// <param name="expression">The aggregate expression.</param>
         /// <param name="method">The aggregation method.</param>
@@ -43,13 +43,13 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Create an AggregateExpressionToken. 
+        /// Create an AggregateExpressionToken.
         /// </summary>
         /// <param name="expression">The aggregate expression.</param>
         /// <param name="methodDefinition">The aggregate method definition.</param>
         /// <param name="alias">The alias for this query token.</param>
-        public AggregateToken(QueryToken expression, AggregationMethodDefinition methodDefinition, string alias) 
-            : this(expression, methodDefinition.MethodKind, alias) 
+        public AggregateToken(QueryToken expression, AggregationMethodDefinition methodDefinition, string alias)
+            : this(expression, methodDefinition.MethodKind, alias)
         {
             this.methodDefinition = methodDefinition;
         }
@@ -63,7 +63,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Gets the AggregationMethod of this token. 
+        /// Gets the AggregationMethod of this token.
         /// </summary>
         public AggregationMethod Method
         {
@@ -79,7 +79,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Gets the aggregate method definition. 
+        /// Gets the aggregate method definition.
         /// </summary>
         public AggregationMethodDefinition MethodDefinition
         {
@@ -90,7 +90,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Gets the alias. 
+        /// Gets the alias.
         /// </summary>
         public string Alias
         {

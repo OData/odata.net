@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm
         private readonly string name;
 
         private readonly Cache<BadLabeledExpression, IEdmExpression> expressionCache = new Cache<BadLabeledExpression, IEdmExpression>();
-        private static readonly Func<BadLabeledExpression, IEdmExpression> ComputeExpressionFunc = (me) => me.ComputeExpression();
+        private static readonly Func<BadLabeledExpression, IEdmExpression> ComputeExpressionFunc = (me) => ComputeExpression();
 
         public BadLabeledExpression(string name, IEnumerable<EdmError> errors)
             : base(errors)
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm
             get { return this.expressionCache.GetValue(this, ComputeExpressionFunc, null); }
         }
 
-        private IEdmExpression ComputeExpression()
+        private static IEdmExpression ComputeExpression()
         {
             return EdmNullExpression.Instance;
         }

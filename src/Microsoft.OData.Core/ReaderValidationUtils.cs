@@ -318,7 +318,7 @@ namespace Microsoft.OData
                 }
             }
 
-            if ((expectedTypeKind != EdmTypeKind.None || expectStructuredType == true) && targetTypeReference != null)
+            if ((expectedTypeKind != EdmTypeKind.None || (targetTypeKind != EdmTypeKind.Untyped && expectStructuredType == true)) && targetTypeReference != null)
             {
                 ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeKind, forResource, payloadTypeName);
             }
@@ -778,6 +778,9 @@ namespace Microsoft.OData
                     {
                         VerifyCollectionComplexItemType(expectedTypeReference, payloadType);
                     }
+
+                    break;
+                case EdmTypeKind.Untyped: // untyped: no validation (can be anything)
 
                     break;
                 case EdmTypeKind.Enum: // enum: no validation

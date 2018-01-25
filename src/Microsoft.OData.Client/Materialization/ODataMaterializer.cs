@@ -185,8 +185,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="plan">The projection plan.</param>
         /// <param name="payloadKind">expected payload kind.</param>
         /// <returns>A materializer specialized for the given response.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000", Justification = "ODataMaterializer is disposed by the caller.")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         public static ODataMaterializer CreateMaterializerForMessage(
             IODataResponseMessage responseMessage,
             ResponseInfo responseInfo,
@@ -346,7 +344,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="responseInfo">The response context</param>
         /// <param name="payloadKind">Type of the message.</param>
         /// <returns>The message reader.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000", Justification = "ODataMessageReader must be disposed by the caller")]
         protected static ODataMessageReader CreateODataMessageReader(IODataResponseMessage responseMessage, ResponseInfo responseInfo, ref ODataPayloadKind payloadKind)
         {
             ODataMessageReaderSettings settings = responseInfo.ReadHelper.CreateSettings();

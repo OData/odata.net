@@ -51,23 +51,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod, TestCategory("Reader.Feeds"), Variation(Description = "Test homogeneity of feed payloads.")]
-        public void FeedValidatorTests()
-        {
-            IEdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel();
-            var testDescriptors = this.CreateFeedValidatorDescriptors(model);
-
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-            this.CombinatorialEngineProvider.RunCombinations(
-               testDescriptors,
-               this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
-               (testDescriptor, testConfiguration) =>
-               {
-                   testDescriptor.RunTest(testConfiguration);
-               });
-        }
-
         private IEnumerable<PayloadReaderTestDescriptor> CreateFeedValidatorDescriptors(IEdmModel model)
         {
             var cityType = model.FindType("TestModel.CityType");

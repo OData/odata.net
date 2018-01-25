@@ -11,6 +11,7 @@ namespace AstoriaUnitTests.Tests
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
@@ -24,8 +25,9 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
     [Ignore] // Remove Atom
-    [TestClass]
+    // [TestClass]
     public class DbContextTest
     {
         static readonly Type ContextType;

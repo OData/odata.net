@@ -19,27 +19,6 @@ namespace Microsoft.OData
     internal sealed class GeographyTypeConverter : IPrimitiveTypeConverter
     {
         /// <summary>
-        /// Create a geography instance from the value in an Xml reader.
-        /// </summary>
-        /// <param name="reader">The Xml reader to use to read the value.</param>
-        /// <remarks>In order to be consistent with how we are reading other types of property values elsewhere in the product, the reader
-        /// is expected to be placed at the beginning of the element when entering this method. After this method call, the reader will be placed
-        /// at the EndElement, such that the next Element will be read in the next Read call. The deserializer that uses this value expects
-        /// the reader to be in these states when entering and leaving the method.
-        /// </remarks>
-        /// <returns>Geography instance that was read.</returns>
-        public object TokenizeFromXml(XmlReader reader)
-        {
-            Debug.Assert(reader.NodeType == XmlNodeType.Element, "reader at element");
-            reader.ReadStartElement(); // <d:Property>
-
-            Geography geography = GmlFormatter.Create().Read<Geography>(reader);
-            reader.SkipInsignificantNodes();
-            Debug.Assert(reader.NodeType == XmlNodeType.EndElement, "reader at end of current element");
-            return geography;
-        }
-
-        /// <summary>
         /// Write the Atom representation of an instance of a primitive type to an XmlWriter.
         /// </summary>
         /// <param name="instance">The instance to write.</param>

@@ -953,14 +953,8 @@
     <Compile Include="..\UriParser\Aggregation\AggregateExpression.cs">
       <Link>UriParser\Aggregation\AggregateExpression.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Aggregation\AggregateExpressionToken.cs">
-      <Link>UriParser\Aggregation\AggregateExpressionToken.cs</Link>
-    </Compile>
     <Compile Include="..\UriParser\Aggregation\AggregateToken.cs">
       <Link>UriParser\Aggregation\AggregateToken.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\Aggregation\AggregateTransformationNode.cs">
-      <Link>UriParser\Aggregation\AggregateTransformationNode.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Aggregation\AggregationMethod.cs">
       <Link>UriParser\Aggregation\AggregationMethod.cs</Link>
@@ -992,6 +986,27 @@
     <Compile Include="..\UriParser\Aggregation\TransformationNodeKind.cs">
       <Link>UriParser\Aggregation\TransformationNodeKind.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateExpression.cs"> 
+      <Link>UriParser\Aggregation\EntitySetAggregateExpression.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateToken.cs"> 
+      <Link>UriParser\Aggregation\EntitySetAggregateToken.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateExpressionBase.cs"> 
+      <Link>UriParser\Aggregation\AggregateExpressionBase.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateTokenBase.cs"> 
+      <Link>UriParser\Aggregation\AggregateTokenBase.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateTransformationToken.cs"> 
+      <Link>UriParser\Aggregation\AggregateTransformationToken.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateTransformationNode.cs">
+      <Link>UriParser\Aggregation\AggregateTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs"> 
+      <Link>UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs</Link> 
+    </Compile>
     <Compile Include="..\UriParser\Binders\BinaryOperatorBinder.cs">
       <Link>UriParser\Binders\BinaryOperatorBinder.cs</Link>
     </Compile>
@@ -1000,6 +1015,9 @@
     </Compile>
     <Compile Include="..\UriParser\Binders\BindingState.cs">
       <Link>UriParser\Binders\BindingState.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\ComputeBinder.cs">
+      <Link>UriParser\Binders\ComputeBinder.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Binders\DottedIdentifierBinder.cs">
       <Link>UriParser\Binders\DottedIdentifierBinder.cs</Link>
@@ -1187,9 +1205,6 @@
     <Compile Include="..\UriParser\Parsers\ODataPathParser.cs">
       <Link>UriParser\Parsers\ODataPathParser.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\OpenTypeMethods.cs">
-      <Link>UriParser\Parsers\OpenTypeMethods.cs</Link>
-    </Compile>
     <Compile Include="..\UriParser\Parsers\PathParserModelUtils.cs">
       <Link>UriParser\Parsers\PathParserModelUtils.cs</Link>
     </Compile>
@@ -1297,6 +1312,12 @@
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceNode.cs">
       <Link>UriParser\SemanticAst\CollectionResourceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeClause.cs">
+      <Link>UriParser\SemanticAst\ComputeClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeExpression.cs">
+      <Link>UriParser\SemanticAst\ComputeExpression.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\ConstantNode.cs">
       <Link>UriParser\SemanticAst\ConstantNode.cs</Link>
@@ -1451,6 +1472,9 @@
     <Compile Include="..\UriParser\SemanticAst\SingleNavigationNode.cs">
       <Link>UriParser\SemanticAst\SingleNavigationNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueCastNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueCastNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\SingleResourceCastNode.cs">
       <Link>UriParser\SemanticAst\SingleResourceCastNode.cs</Link>
     </Compile>
@@ -1498,6 +1522,12 @@
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\BinaryOperatorToken.cs">
       <Link>UriParser\SyntacticAst\BinaryOperatorToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeExpressionToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
       <Link>UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>

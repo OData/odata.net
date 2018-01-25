@@ -22,7 +22,7 @@ namespace AstoriaUnitTests.Tests
     {
         /// <summary>This is a test class for update functionality on entities.</summary>
         [Ignore] // Remove Atom
-        [TestClass, TestCase]
+        // [TestClass, TestCase] //  For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
         public class UpdateEntityTests
         {
             #region UpdateEntityFormatTestCase

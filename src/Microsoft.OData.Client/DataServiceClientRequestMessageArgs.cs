@@ -27,7 +27,6 @@ namespace Microsoft.OData.Client
         /// <param name="useDefaultCredentials">True if the default credentials need to be sent with the request. Otherwise false.</param>
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
-        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "useDefaultCredentials", Justification = "the parameter is used in the SL version.")]
         public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers)
         {
             Debug.Assert(method != null, "method cannot be null");

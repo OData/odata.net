@@ -101,7 +101,6 @@ namespace Microsoft.OData.Client
         /// is expected. Should be null when expecting a void response, a single entry, or a feed.</param>
         /// <param name="bodyOperationParameters">The body operation parameters associated with a service action.</param>
         /// <param name="uriOperationParameters">The uri operation parameters associated with a service function or a service operation.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used in DataServiceContext")]
         internal QueryComponents(
             Uri uri,
             Version version,

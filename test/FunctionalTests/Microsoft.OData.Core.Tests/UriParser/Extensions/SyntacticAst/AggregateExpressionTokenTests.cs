@@ -33,28 +33,28 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         [Fact]
         public void ExpressionSetCorrectly()
         {
-            var token = new AggregateToken(expressionToken, AggregationMethod.Sum, "Alias");
+            AggregateToken token = new AggregateToken(expressionToken, AggregationMethod.Sum, "Alias");
             token.Expression.Should().Be(expressionToken);
         }
 
         [Fact]
         public void WithMethodSetCorrectly()
         {
-            var token = new AggregateToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
+            AggregateToken token = new AggregateToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
             token.Method.Should().Be(AggregationMethod.CountDistinct);
         }
 
         [Fact]
         public void AliasSetCorrectly()
         {
-            var token = new AggregateToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
+            AggregateToken token = new AggregateToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
             token.Alias.Should().BeEquivalentTo("Alias");
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
-            var token = new AggregateToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
+            AggregateToken token = new AggregateToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
             token.Kind.Should().Be(QueryTokenKind.PropertyAggregateExpression);
         }
     }

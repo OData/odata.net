@@ -1,4 +1,12 @@
-﻿namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataJsonLightEntryAndFeedSerializerUndecalredTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using Microsoft.OData;
+
+namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
 {
     using FluentAssertions;
     using Microsoft.OData;
@@ -292,6 +300,121 @@
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""UndeclaredCollection1"":[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]}");
         }
+
+        [Fact]
+        public void WriteEntryUntypedPrimitiveResourceCollectionTest()
+        {
+            string result = this.WriteUntypedCollectionsTest((ODataWriter writer) =>
+            {
+                writer.WriteStart(new ODataNestedResourceInfo { Name = "UntypedCollection", IsCollection = true });
+                writer.WriteStart(new ODataResourceSet { TypeName = "Collection(Edm.Untyped)" });
+                writer.Write(new ODataPrimitiveValue(1));
+                writer.WriteStart((ODataResource)null);
+                writer.WriteEnd(); // null value
+                writer.Write(new ODataPrimitiveValue("abc"));
+                writer.WriteEnd(); // resource set
+                writer.WriteEnd(); // nested resource info
+            },
+            true );
+
+            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UntypedCollection"":[1,null,""abc""]}");
+        }
+
+        [Fact]
+        public void WriteEntryUntypedResourceCollectionTest()
+        {
+            string result = this.WriteUntypedCollectionsTest((ODataWriter writer) =>
+            {
+                writer.WriteStart(new ODataNestedResourceInfo
+                { Name = "UntypedCollection", IsCollection = true });   //  "UntypedCollection" :
+                writer.WriteStart(new ODataResourceSet()                //  
+                { TypeName = "Collection(Edm.Untyped)" });              //  [
+                writer.Write(new ODataPrimitiveValue("string"));        //     "string",
+                writer.WriteStart(new ODataResourceSet()                //  
+                { TypeName = "Collection(Edm.Untyped)" });              //     [
+                writer.Write((ODataResource)null);                      //        null,
+                writer.Write(new ODataPrimitiveValue(1));               //        1,
+                writer.WriteStart(new ODataResource()
+                {
+                    Properties = new ODataProperty[] {                  //        {
+                        new ODataProperty {Name="prop",
+                            Value = new ODataPrimitiveValue(1) },       //            "prop": 1,
+                        new ODataProperty {Name="nullProp",
+                            Value = new ODataNullValue() },             //            "nullProp": "null",
+                        new ODataProperty {Name="collectionProp",       //            "collectionProp@odata.type":"#Collection(String)"
+                            Value = new ODataCollectionValue {          //            "collectionProp":
+                                TypeName="Collection(Edm.String)",      //             [
+                                Items=new object[] {                    //
+                                    "abc",                              //                  "abc",
+                                    null                                //                  null
+                                } } } } } );                            //             ],
+                writer.WriteStart(new ODataNestedResourceInfo()
+                { Name = "nestedCollection", IsCollection = true });    //             "nestedCollection" :
+                writer.WriteStart(new ODataResourceSet()                //  
+                { TypeName = "Collection(Edm.Untyped)" });              //             [
+                writer.Write(new ODataPrimitiveValue(1));               //                  1,
+                writer.Write((ODataResource)null);                      //                  null
+                writer.WriteStart(new ODataResource());                 //                  {
+                writer.WriteEnd();                                      //                  },
+                writer.WriteStart(new ODataResourceSet());              //                  [
+                writer.WriteEnd();                                      //                  ]
+                writer.WriteEnd();                                      //             ]
+                writer.WriteEnd();  // nestedCollection ResourceInfo
+                writer.WriteEnd();                                      //         }
+                writer.WriteEnd();                                      //      ]
+                writer.WriteEnd();                                      //   ]
+                writer.WriteEnd();  // untypedCollection ResourceInfo
+            },
+            true);
+
+            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UntypedCollection"":[""string"",[null,1,{""prop"":1,""nullProp"":null,""collectionProp@odata.type"":""#Collection(String)"",""collectionProp"":[""abc"",null],""nestedCollection"":[1,null,{},[]]}]]}");
+        }
+
+        [Fact]
+        public void WriteEntryUntypedNestedResourceCollectionTest()
+        {
+            string result = this.WriteUntypedCollectionsTest((ODataWriter writer) =>
+            {
+                writer.WriteStart(new ODataNestedResourceInfo
+                { Name = "UntypedCollection", IsCollection = true });   // "UntypedCollection" :
+                writer.WriteStart(new ODataResourceSet()                // 
+                { TypeName = "Collection(Edm.Untyped)" });              // [    
+                writer.Write((ODataResource)null);                      //    null,
+                writer.WriteStart(new ODataResourceSet()
+                { TypeName = "Collection(test.Undeclared)" });          //    [
+                writer.Write((ODataResource)null);                      //       null,
+                writer.Write(new ODataPrimitiveValue(1));               //       1,
+                writer.Write((ODataResource)null);                      //       null,
+                writer.Write(new ODataPrimitiveValue("abc"));           //       "abc"
+                writer.WriteEnd();                                      //    ],
+                writer.WriteStart(new ODataResourceSet()
+                { TypeName = "Collection(Edm.Untyped)" });              //    [
+                writer.Write(new ODataPrimitiveValue(2));               //       2,
+                writer.Write(new ODataPrimitiveValue("def"));           //       "def",
+                writer.Write((ODataResource)null);                      //       null,
+                writer.WriteEnd();                                      //     ],
+                writer.WriteStart(new ODataResourceSet()
+                { TypeName = "Collection(Edm.Untyped)" });              //    [
+                writer.WriteStart(new ODataResourceSet()
+                { TypeName = "Collection(Edm.Int32)" });                //       [
+                writer.Write(new ODataPrimitiveValue(3));               //         3,
+                writer.Write((ODataResource)null);                      //         null,
+                writer.WriteEnd();                                      //       ],
+                writer.WriteStart(new ODataResourceSet()
+                { TypeName = "Collection(Edm.Int32)" });                //       [
+                writer.Write(new ODataPrimitiveValue(4));               //         4,
+                writer.Write(new ODataPrimitiveValue(5));               //         5
+                writer.WriteEnd();                                      //       ]
+                writer.WriteEnd();                                      //     ]
+                writer.WriteEnd();                                      //   ]
+                writer.WriteEnd(); //nested ResourceInfo
+            },
+            true);
+
+            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UntypedCollection"":[null,[null,1,null,""abc""],[2,""def"",null],[[3,null],[4,5]]]}");
+        }
+
+
         #endregion
 
         #region open entity's property unknown name + known value type
@@ -536,6 +659,27 @@
 
         #endregion
 
+        private string WriteUntypedCollectionsTest(Action<ODataWriter> writeNestedCollection, bool isOpen)
+        {
+            var entry = new ODataResource
+            {
+                TypeName = isOpen ? "Server.NS.ServerOpenEntityType" : "Server.NS.ServerEntityType",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
+                }
+            };
+
+            return this.WriteEntryPayload(
+                isOpen ? this.serverOpenEntitySet : this.serverEntitySet,
+                isOpen ? this.serverOpenEntityType : this.serverEntityType,
+                writer =>
+                {
+                    writer.WriteStart(entry);
+                    writeNestedCollection(writer);
+                    writer.WriteEnd();
+                });
+        }
 
         private string WriteNonOpenEntryUndeclaredPropertiesTest(ODataNestedResourceInfo undeclaredResourceInfo, ODataResource undeclaredResource, bool isOpen)
         {

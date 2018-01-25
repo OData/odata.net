@@ -24,7 +24,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The set of key property names and the values to be used in searching for the given item.
         /// </summary>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Using key value pair is exactly what we want here.")]
         private readonly ReadOnlyCollection<KeyValuePair<string, object>> keys;
 
         /// <summary>
@@ -44,9 +43,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="edmType">The type of the item this key returns.</param>
         /// <param name="navigationSource">The navigation source that this key is used to search.</param>
         /// <exception cref="ODataException">Throws if the input entity set is not related to the input type.</exception>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Using key value pair is exactly what we want here.")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Using key value pair is exactly what we want here.")]
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public KeySegment(IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
         {
             this.keys = new ReadOnlyCollection<KeyValuePair<string, object>>(keys.ToList());
@@ -85,7 +82,6 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Using key value pair is exactly what we want here.")]
         public IEnumerable<KeyValuePair<string, object>> Keys
         {
-            [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "Using key value pair is exactly what we want here.")]
             get { return this.keys.AsEnumerable(); }
         }
 

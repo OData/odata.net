@@ -315,9 +315,9 @@ namespace Microsoft.OData.Tests.UriParser
         public static AndConstraint<SingleResourceCastNode> ShouldBeSingleResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
             node.Should().BeOfType<SingleResourceCastNode>();
-            var singlePropertyCastNode = node.As<SingleResourceCastNode>();
-            singlePropertyCastNode.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<SingleResourceCastNode>(singlePropertyCastNode);
+            var singleValueCastNode = node.As<SingleResourceCastNode>();
+            singleValueCastNode.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
+            return new AndConstraint<SingleResourceCastNode>(singleValueCastNode);
         }
 
         public static AndConstraint<CollectionResourceCastNode> ShouldBeCollectionResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)

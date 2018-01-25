@@ -43,6 +43,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class RegressionUnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/876
         /// <summary>This is a test class for adding regression tests.</summary>
         [TestClass, TestCase]
         public class RegressionTestDev11 : AstoriaTestCase
@@ -56,7 +57,7 @@ namespace AstoriaUnitTests.Tests
             #region Service Operations
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Service Operation rights is not checked, service operation always invoke even if there are errors in query syntax. Also Exception message should be more user friendly.")]
+            // [TestMethod, Variation("Service Operation rights is not checked, service operation always invoke even if there are errors in query syntax. Also Exception message should be more user friendly.")]
             public void ServiceOpInvokeAndRights()
             {
                 string queryPortionNotEmpty = DataServicesResourceUtil.GetString("RequestUriProcessor_SegmentDoesNotSupportKeyPredicates");
@@ -247,7 +248,7 @@ namespace AstoriaUnitTests.Tests
             #region Edm.Boolean should be returned in error messages, not System.Boolean
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Edm.Boolean should be returned in error messages, not System.Boolean")]
+            // [TestMethod, Variation("Edm.Boolean should be returned in error messages, not System.Boolean")]
             public void ErrorMessageShouldReturnEdmBooleanInsteadOfSystemBoolean()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -264,7 +265,7 @@ namespace AstoriaUnitTests.Tests
             #region Default ODataBatchReaderStreamBuffer Length
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void TestDefaultBatchReaderBufferLength()
             {
                 Type batchStreamType = typeof(Microsoft.OData.ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchReaderStreamBuffer");
@@ -340,40 +341,6 @@ Content-ID: 1
                     // verify that we use the AreByteArraysNotEqual method in this call
                     doc = ExpressionTreeTestUtils.CreateRequestAndGetExpressionTreeXml(typeof(Context), "/Values?$filter=BinaryValue ne binary'AAAB'");
                     UnitTestsUtil.VerifyXPathResultCount(doc, 1, "//Method[@type='DataServiceProviderMethods' and text()='AreByteArraysNotEqual']");
-                }
-            }
-
-            [TestMethod, Variation("Medium trust bug for binary filter scenarios")]
-            [Ignore]
-            public void Scenario()
-            {
-                LocalWebServerHelper.RunInMediumTrust = true;
-                try
-                {
-                    KeyValuePair<string, string>[] uri_XPaths = new KeyValuePair<string, string>[] {
-                        new KeyValuePair<string, string>("/Values?$filter=BinaryValue eq binary'AAAB'", "count(//atom:entry)=1"),
-                        new KeyValuePair<string, string>("/Values?$filter=BinaryValue ne binary'AQID'", "count(//atom:entry)=3"),
-                        new KeyValuePair<string, string>("/Values?$filter=BinaryValue eq binary'AAAA'", "count(//atom:entry)=0"),
-                        new KeyValuePair<string, string>("/Values?$filter=BinaryValue ne binary'AAAA'", "count(//atom:entry)=4"),
-                    };
-
-                    foreach (var uri in uri_XPaths)
-                    {
-                        TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(
-                            UnitTestsUtil.AtomFormat,
-                            uri.Key,
-                            typeof(Context),
-                            null,
-                            "GET",
-                            null,
-                            WebServerLocation.Local);
-
-                        UnitTestsUtil.VerifyXPaths(request.GetResponseStreamAsXmlDocument(), uri.Value);
-                    }
-                }
-                finally
-                {
-                    LocalWebServerHelper.RunInMediumTrust = null;
                 }
             }
 
@@ -541,7 +508,7 @@ Content-ID: 1
 
             #region InvalidRequestVersionErrorMsg
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void InvalidRequestVersionErrorMsg()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -606,7 +573,7 @@ Content-ID: 1
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Assertion when inserting a short payload in batch")]
+            // [TestMethod, Variation("Assertion when inserting a short payload in batch")]
             public void InsertShortPayloadInBatchShouldWork()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(BaseStreamProvider2), "DefaultBufferSize"))
@@ -687,7 +654,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #region Verify that setting reference property when FK is part of the PK in EF works.
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Verify that setting reference property when FK is part of the PK in EF works.")]
+            // [TestMethod, Variation("Verify that setting reference property when FK is part of the PK in EF works.")]
             public void SettingReferencePropertyWhenFKIsPartOfPKShouldWork()
             {
                 Type providerType = typeof(EFFK.CustomObjectContextPOCO);
@@ -777,7 +744,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("In PUT requests to EF provider, we fire change interceptors with entities which do not have the new value")]
+            // [TestMethod, Variation("In PUT requests to EF provider, we fire change interceptors with entities which do not have the new value")]
             public void FireChangeInterceptorsInPutToEFShouldWork_Batch()
             {
                 TestUtil.RunCombinations(
@@ -852,7 +819,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
             #region In batch case, if both If-Match and If-None-Match is specified, we fire an assert and then ignore the If-None-Match header
             [Ignore] // Remove Atom
-            [TestMethod, Variation("In batch case, if both If-Match and If-None-Match is specified, we fire an assert and then ignore the If-None-Match header")]
+            // [TestMethod, Variation("In batch case, if both If-Match and If-None-Match is specified, we fire an assert and then ignore the If-None-Match header")]
             public void IgnoreIfNoneMatchHeaderWhenIfMatchAndIfNonMatchIsSpecified()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -891,7 +858,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
             #region Since we are calling the EF API directly, we need to catch the exceptions internally and throw DataServiceException
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Since we are calling the EF API directly, we need to catch the exceptions internally and throw DataServiceException")]
+            // [TestMethod, Variation("Since we are calling the EF API directly, we need to catch the exceptions internally and throw DataServiceException")]
             public void ShouldThrowDataServiceExceptionInsteadOfInternalExceptions()
             {
                 TestUtil.RunCombinations(
@@ -993,7 +960,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #region Ignore IncludeAssociationLinksInResponse knob value if the MPV is set to less than 4.0
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Ignore IncludeAssociationLinksInResponse knob value if the MPV is set to less than 4.0")]
+            // [TestMethod, Variation("Ignore IncludeAssociationLinksInResponse knob value if the MPV is set to less than 4.0")]
             public void IgnoreIncludeAssociationLinksInResponseIfMPVLessThan40()
             {
                 // Not including V1, since CustomDataContext has EPM mappings
@@ -1276,7 +1243,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #region JSON deserializer should fail on stream properties in requests.
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("JSON deserializer should fail on stream properties in requests.")]
+            // [TestMethod, Variation("JSON deserializer should fail on stream properties in requests.")]
             public void JsonInsertPayloadWithNamedStream()
             {
                 DSPMetadata metadata = new DSPMetadata("TestContainer", "RegressionTestsDev11");
@@ -1349,7 +1316,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Hidden Navigation Properties causes type segment to be appended at the end of canonical uris")]
+            // [TestMethod, Variation("Hidden Navigation Properties causes type segment to be appended at the end of canonical uris")]
             public void HiddenNavigationPropertiesAppendTypeSegmentToCanonicalUri()
             {
                 var metadata = GetModel();
@@ -1572,11 +1539,10 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 {
                     return this.CurrentDataSource.GetPeople();
                 }
-
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ValueAfterCollectionOfPrimitives()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -1602,7 +1568,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ValueAfterCollectionOfObjects()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -1661,7 +1627,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void VoidServiceOperationUnchangedResponse()
             {
                 var tests = new[] { new { Function = "/TestMethod_Int", Error = TestDataService4.ERROR_INT },
@@ -1695,7 +1661,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
             #region Allow custom hosts in WCF scenarios
             [Ignore] // Remove Atom
-            [TestMethod, Description("Allow custom hosts in WCF scenarios")]
+            // [TestMethod, Description("Allow custom hosts in WCF scenarios")]
             public void AllowCustomHostsWcfScenarios()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -1799,34 +1765,8 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
             }
 
-            [Ignore]
-            [TestMethod]
-            public void SkipTokenEscape()
-            {
-                using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
-                {
-                    String parameterExpr = Uri.EscapeDataString("'&:%26'");
-                    String filterExpr = String.Format("$filter={0}%20eq%20{0}", parameterExpr);
-                    String orderExpr = String.Format("$orderby={0}%20eq%20{0}", parameterExpr);
-
-                    request.DataServiceType = typeof(SkipTokenEscapeService);
-                    request.RequestUriString = "/GetCustomers()?parameter=" + parameterExpr + "&" + filterExpr + "&" + orderExpr;
-                    request.HttpMethod = "GET";
-                    request.Accept = "application/atom+xml,application/xml";
-                    request.SendRequest();
-
-                    var responseBody = request.GetResponseStreamAsXmlDocument();
-                    UnitTestsUtil.VerifyXPaths(responseBody,
-                        String.Format("atom:feed/atom:link[@rel = 'next' and contains(@href, \"{0}\") and contains(@href,\"{1}\") and contains(@href,\"{2}\")]", parameterExpr, filterExpr, orderExpr));
-
-                    String nextLinkUri = responseBody.SelectSingleNode("atom:feed/atom:link[@rel = 'next']", TestUtil.TestNamespaceManager).Attributes["href"].Value;
-                    request.RequestUriString = nextLinkUri.Replace(request.BaseUri, "/");
-                    request.SendRequest();
-                }
-            }
-
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void SkipTokenEscape_NonStringLiteral()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -1902,7 +1842,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ShouldDisplayCorrectTypeStringForGenericEntityType()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -1919,7 +1859,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ShouldDisplayCorrectTypeStringForGenericComplexType()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -1958,7 +1898,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Description("Querying the complex type property with a loop returned invalid response version")]
+            // [TestMethod, Description("Querying the complex type property with a loop returned invalid response version")]
             public void ComplexTypePropertyWithLoopShouldReturnValidResponseVersion()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -2376,7 +2316,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             }
 
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void SingleResultAttributeShouldNotAffectNavProps()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -2443,7 +2383,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             #region [Astoria-ODataLib-Integration] In-stream errors due to XmlExceptions are written out backwards (error before partial valid payload)
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Astoria-ODataLib-Integration] In-stream errors due to XmlExceptions are written out backwards (error before partial valid payload")]
+            // [TestMethod, Variation("Astoria-ODataLib-Integration] In-stream errors due to XmlExceptions are written out backwards (error before partial valid payload")]
             public void InStreamErrorsDueToXmlExceptionsWrittenOutBackwards()
             {
                 DSPMetadata metadata = new DSPMetadata("TestContainer", "TestNamespace");
@@ -2616,7 +2556,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
             #region Invalid Content Id reference in batch produces null reference exception
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Invalid Content Id reference in batch produces null reference exception")]
+            // [TestMethod, Variation("Invalid Content Id reference in batch produces null reference exception")]
             public void InvalidContentIdReferenceInBatchShouldProduceNullReferenceException()
             {
                 string batchPayload =
@@ -2735,38 +2675,6 @@ Accept: application/atom+xml
             #endregion
 
             #region Replace Function
-
-            [TestMethod]
-            [Ignore]
-            public void TestReplaceFunctionFeature()
-            {
-                // Replace With Both Default Options
-                RunReplaceFunctionTest(null, null, 1);
-
-                // Replace Only Enabled In Code
-                RunReplaceFunctionTest(true, null, 2);
-
-                // Replace Enabled In Config
-                RunReplaceFunctionTest(null, true, 3);
-
-                // Replace Enabled In Both
-                RunReplaceFunctionTest(true, true, 4);
-
-                // Replace Disabled In Code And Enabled In Config
-                RunReplaceFunctionTest(false, true, 5);
-
-                // Replace Disabled In Code
-                RunReplaceFunctionTest(false, null, 6);
-
-                // Replace Disabled In Config
-                RunReplaceFunctionTest(null, false, 7);
-
-                // Replace Enabled In Code And Disabled In Config
-                RunReplaceFunctionTest(true, false, 8);
-
-                // Replace Disabled In Both
-                RunReplaceFunctionTest(false, false, 9);
-            }
 
             private void RunReplaceFunctionTest(bool? apivalue, bool? configValue, int i)
             {
@@ -2928,7 +2836,7 @@ Accept: application/atom+xml
 
             #region [Regression,Security] Infinite loop in 'prefer' header parsing when the value contains a separator character
             [Ignore] // Remove Atom
-            [TestMethod, Variation("[Regression,Security] Infinite loop in 'prefer' header parsing when the value contains a separator character")]
+            // [TestMethod, Variation("[Regression,Security] Infinite loop in 'prefer' header parsing when the value contains a separator character")]
             public void PreferHeaderWithSeperator()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -2956,7 +2864,7 @@ Accept: application/atom+xml
 
             #region MicrosoftDataServicesRequestUri
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Specifying MicrosoftDataServicesRequestUri in OnStartProcessingRequest does not get picked up")]
+            // [TestMethod, Variation("Specifying MicrosoftDataServicesRequestUri in OnStartProcessingRequest does not get picked up")]
             public void MicrosoftDataServicesRequestUriShouldWorkInOnStartProcessingRequest()
             {
                 var rootUri = new Uri("http://abcpqr/SomeRandomService/WcfDataService.svc/");
@@ -3121,8 +3029,7 @@ Accept: application/atom+xml
             /// <summary>
             /// Setting InstanceContextMode to Single on DataService results in cached query results being returned for subsequent queries
             /// </summary>
-            [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ServiceWithSingleInstanceContextModeShouldReturnCorrectResults()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -3163,7 +3070,7 @@ Accept: application/atom+xml
             /// For "Multiple" ConcurrencyMode, the code throws exception. That is by design.
             /// </summary>
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ServiceWithSingleInstanceContextModeAndSingleConcurrencyMode_SimultaneousRequestsShouldBeProcessedSequentially()
             {
                 using (TestWebRequest request1 = TestWebRequest.CreateForInProcessWcf())
@@ -3290,7 +3197,7 @@ Accept: application/atom+xml
             /// The test makes sure that it returns 200 (OK) status code
             /// </summary>
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ReflectionServiceProviderShouldWorkIfGenericParameterInDataServiceIsAnInterface()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())

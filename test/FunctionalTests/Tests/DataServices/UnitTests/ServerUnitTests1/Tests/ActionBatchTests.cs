@@ -16,13 +16,14 @@ using t = System.Data.Test.Astoria;
 
 namespace AstoriaUnitTests.Tests.Server
 {
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     [TestClass]
     public class ActionBatchTests
     {
         private static readonly Version V4 = new Version(4, 0);
 
         [Ignore] // Ignore this currently, it is for testing the WCF DS.
-        [TestCategory("Partition1"), TestMethod, Variation("Batch tests with actions in them")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Batch tests with actions in them")]
         public void BatchedActionTests()
         {
             #region Test Cases
@@ -1273,8 +1274,7 @@ Cache-Control: no-cache
             });
         }
 
-        [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Variation("Verify that $metadata in batch passes the right operation context instance.")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Verify that $metadata in batch passes the right operation context instance.")]
         public void BatchedActionMetadataTest()
         {
             var service = ActionTests.ModelWithActions();

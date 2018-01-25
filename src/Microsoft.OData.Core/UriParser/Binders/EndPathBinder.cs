@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Metadata;
-using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
 using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser
 {
@@ -68,7 +68,7 @@ namespace Microsoft.OData.UriParser
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 // These are error cases in practice, but we let ourselves throw later for better context-sensitive error messages
-                var edmNavigationProperty = (IEdmNavigationProperty)property;
+                IEdmNavigationProperty edmNavigationProperty = (IEdmNavigationProperty)property;
                 if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
                     return new CollectionNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
@@ -112,7 +112,7 @@ namespace Microsoft.OData.UriParser
         internal SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
         {
             if (parentNode.TypeReference == null ||
-                parentNode.TypeReference.Definition.IsOpenType() ||
+                parentNode.TypeReference.Definition.IsOpen() ||
                 IsAggregatedProperty(endPathToken.Identifier))
             {
                 return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
@@ -172,15 +172,15 @@ namespace Microsoft.OData.UriParser
                 return new CountNode(colNode);
             }
 
-            var collectionParent = parent as CollectionNavigationNode;
+            CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
             if (collectionParent != null)
             {
-                var parentType = collectionParent.EntityItemType;
-                var property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
+                IEdmEntityTypeReference parentType = collectionParent.EntityItemType;
+                IEdmProperty property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
 
-                if (property.PropertyKind == EdmPropertyKind.Structural 
+                if (property.PropertyKind == EdmPropertyKind.Structural
                     && !property.Type.IsCollection()
-                    && this.state.AggregatedPropertyNames!= null 
+                    && this.state.AggregatedPropertyNames != null
                     && this.state.AggregatedPropertyNames.Any(p => p == collectionParent.NavigationProperty.Name))
                 {
                     return new AggregatedCollectionPropertyNode(collectionParent, property);

@@ -415,7 +415,7 @@ namespace Microsoft.OData.Edm.Validation
         #region IEdmEntitySet
 
         /// <summary>
-        /// Validates that an entity set can only have a single navigation property targetting it that has Contains set to true.
+        /// Validates that an entity set can only have a single navigation property targeting it that has Contains set to true.
         /// </summary>
         public static readonly ValidationRule<IEdmEntitySet> EntitySetCanOnlyBeContainedByASingleNavigationProperty =
             new ValidationRule<IEdmEntitySet>(
@@ -1577,7 +1577,7 @@ namespace Microsoft.OData.Edm.Validation
            new ValidationRule<IEdmOperation>(
                (context, operation) =>
                {
-                   if (operation.IsBound && operation.Parameters.Where(p => !(p is IEdmOptionalParameter)).Count() == 0)
+                   if (operation.IsBound && !operation.Parameters.Any(p => !(p is IEdmOptionalParameter)))
                    {
                        context.AddError(
                            operation.Location(),

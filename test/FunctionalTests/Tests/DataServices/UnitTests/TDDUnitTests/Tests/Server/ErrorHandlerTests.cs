@@ -67,8 +67,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             this.service.OperationContext.InitializeAndCacheHeaders(this.service);
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/885
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void HandleExceptionArgShouldContainCorrectResponseContentTypeWhenMpvIs30()
         {
             var testCases = new Dictionary<string, string>
@@ -96,8 +97,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             }
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/885
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void HandleExceptionArgShouldContainCorrectResponseContentTypeWhenMpvIs20()
         {
             var testCases = new Dictionary<string, string>

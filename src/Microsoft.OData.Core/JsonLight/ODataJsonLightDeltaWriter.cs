@@ -1490,7 +1490,7 @@ namespace Microsoft.OData.JsonLight
                     scope = this.CreateDeltaResourceScope(WriterState.DeltaDeletedEntry, item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaResourceSet:
-                    scope = this.CreateDeltaResourceSetScope(item, navigationSource, entityType, selectedProperties, odataUri);
+                    scope = CreateDeltaResourceSetScope(item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
                 case WriterState.DeltaLink:
                     scope = this.CreateDeltaLinkScope(WriterState.DeltaLink, item, navigationSource, entityType, selectedProperties, odataUri);
@@ -1569,7 +1569,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        private DeltaResourceSetScope CreateDeltaResourceSetScope(ODataItem resourceSet, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private static DeltaResourceSetScope CreateDeltaResourceSetScope(ODataItem resourceSet, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             return new JsonLightDeltaResourceSetScope(resourceSet, navigationSource, resourceType, selectedProperties, odataUri);
         }

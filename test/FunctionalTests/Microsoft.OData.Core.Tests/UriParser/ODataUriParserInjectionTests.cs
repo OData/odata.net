@@ -206,6 +206,9 @@ namespace Microsoft.OData.Tests.UriParser
                             throw new Exception("Not supported Type");
                     }
                 };
+
+            var parseDynamicPathSegmentFuncClone = uriParser.ParseDynamicPathSegmentFunc;
+            Assert.Equal(uriParser.ParseDynamicPathSegmentFunc, parseDynamicPathSegmentFuncClone);
             var path = uriParser.ParsePath();
 
             path.ElementAt(2).ShouldBeDynamicPathSegment("root");
@@ -481,7 +484,7 @@ namespace Microsoft.OData.Tests.UriParser
             Uri fullUri = new Uri("https://serviceRoot/drive/recent?$count=true");
             ODataPath odataPath;
             var uriParser = ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(fullUri, out odataPath);
-            uriParser.ParseCount().Should().Be(true);
+            uriParser.ParseCount().Should().BeTrue();
         }
 
         private ODataPath ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(Uri fullUri, ODataUrlKeyDelimiter uriConventions = null)

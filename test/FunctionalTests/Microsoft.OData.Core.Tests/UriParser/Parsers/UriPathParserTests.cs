@@ -105,15 +105,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 #endif
         }
 
-        /*
-         * TODO: If an unescaped chracter like a newline, tab, carriage return or whatever is in a segment, it appears
-         * to be lost. I think this is impossible in practice, since real URLs will have them escaped, but we should ensure
-         * that we behavior in some reasonable manner. */
-        [Fact(Skip = "This test currently fails.")]
-        public void ParsePathKeepsUnescapedNewline()
+        [Fact]
+        public void ParsePathRemovesUnescapedNewline()
         {
+             // If an un-escaped character like a newline, tab, carriage return or whatever is in a segment, it is lost.
+             // This is unlikely in practice, since real URLs will have them escaped, but we should ensure
+             // that we behavior in some reasonable manner.
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "Newline\n"), this.baseUri);
-            string[] expectedListOrder = new[] { "Newline\n" };
+            string[] expectedListOrder = new[] { "Newline" };
 
 #if NETCOREAPP1_0
             list.SequenceEqual(expectedListOrder).Should().BeTrue();
@@ -262,6 +261,40 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             {
                 s => s.Should().Be("one"),
             });
+        }
+
+        [Fact]
+        public void IsCharHexDigitTest()
+        {
+            UriParserHelper.IsCharHexDigit(' ').Should().BeFalse();
+            UriParserHelper.IsCharHexDigit('0').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('1').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('9').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit(':').Should().BeFalse();
+            UriParserHelper.IsCharHexDigit('A').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('B').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('F').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('G').Should().BeFalse();
+            UriParserHelper.IsCharHexDigit('a').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('b').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('f').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('g').Should().BeFalse();
+        }
+
+        [Fact]
+        public void TryRemoveQuotesTest()
+        {
+            string test = "' '";
+            UriParserHelper.TryRemoveQuotes(ref test).Should().BeTrue();
+            test.Should().Be(" ");
+
+            test = "invalid";
+            UriParserHelper.TryRemoveQuotes(ref test).Should().BeFalse();
+            test.Should().Be("invalid");
+
+            test = "'invalid";
+            UriParserHelper.TryRemoveQuotes(ref test).Should().BeFalse();
+            test.Should().Be("'invalid");
         }
 
         /// <summary>

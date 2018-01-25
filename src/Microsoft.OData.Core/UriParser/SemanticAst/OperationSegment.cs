@@ -55,7 +55,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="operation">A single operation import that this segment will represent.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input operation is null.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public OperationSegment(IEdmOperation operation, IEdmEntitySetBase entitySet)
             : this()
         {
@@ -98,7 +97,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="operations">The list of possible operation overloads for this segment.</param>
         /// <param name="entitySet">The <see cref="IEdmEntitySetBase"/> containing the entities that this function returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input operations is null.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public OperationSegment(IEnumerable<IEdmOperation> operations, IEdmEntitySetBase entitySet)
             : this()
         {
@@ -241,7 +239,6 @@ namespace Microsoft.OData.UriParser
         /// Ensures that the entity set and computed return type make sense.
         /// </summary>
         /// <exception cref="ODataException">Throws if the return type computed from the function call is null, or if the return type is not in the same hierarchy as the entity set provided.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         private void EnsureTypeAndSetAreCompatable()
         {
             // The return type should be in the type hierarchy of the set, We could be a little tighter but we don't want

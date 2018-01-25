@@ -259,7 +259,6 @@ namespace Microsoft.OData.Client
         /// <param name="callback">The System.AsyncCallback delegate.</param>
         /// <param name="state">The state object for this request.</param>
         /// <returns>An System.IAsyncResult that references the asynchronous request.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
         {
             // Currently this method cannot get called from SendingRequest2 event - But if we expose these
@@ -277,7 +276,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="asyncResult">The pending request for a stream.</param>
         /// <returns>A System.IO.Stream to use to write request data.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override Stream EndGetRequestStream(IAsyncResult asyncResult)
         {
             return this.httpRequest.EndGetRequestStream(asyncResult);
@@ -289,7 +287,6 @@ namespace Microsoft.OData.Client
         /// <param name="callback">The System.AsyncCallback delegate.</param>
         /// <param name="state">The state object for this request.</param>
         /// <returns>An System.IAsyncResult that references the asynchronous request for a response.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
         {
             return this.httpRequest.BeginGetResponse(callback, state);
@@ -300,7 +297,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="asyncResult">The pending request for a response.</param>
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
         {
             Debug.Assert(this.httpRequest != null, "this.httpRequest != null");
@@ -326,7 +322,6 @@ namespace Microsoft.OData.Client
         /// Returns a response from an Internet resource.
         /// </summary>
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IODataResponseMessage GetResponse()
         {
             try
@@ -570,7 +565,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="webException">WebException instance.</param>
         /// <returns>an instance of DataServiceWebException that abstracts the WebException.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Caller will dispose the message later.")]
         private static DataServiceTransportException ConvertToDataServiceWebException(WebException webException)
         {
             HttpWebResponseMessage errorResponseMessage = null;

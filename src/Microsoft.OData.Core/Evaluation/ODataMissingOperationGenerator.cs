@@ -112,7 +112,6 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Computes the operations that are missing from the payload but should be added by conventions onto the resource.
         /// </summary>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Parameter type is needed to get binding type.")]
         private void ComputeMissingOperationsToResource()
         {
             Debug.Assert(this.resourceMetadataContext != null, "this.resourceMetadataContext != null");

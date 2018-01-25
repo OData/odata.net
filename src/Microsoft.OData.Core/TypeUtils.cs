@@ -86,5 +86,25 @@ namespace Microsoft.OData
                 return typeA == typeB;
             }
         }
+
+        /// <summary>
+        /// Parses a qualified type name and returns the type namespace and type name
+        /// </summary>
+        /// <param name="qualifiedTypeName">The fully qualified type name.</param>
+        /// <param name="namespaceName">The returned namespace name.</param>
+        /// <param name="typeName">The returned type name.</param>
+        /// <param name="isCollection">Returns whether or not the returned type is a collection.</param>
+        internal static void ParseQualifiedTypeName(string qualifiedTypeName, out string namespaceName, out string typeName, out bool isCollection)
+        {
+            isCollection = qualifiedTypeName.StartsWith(ODataConstants.CollectionPrefix + "(", StringComparison.Ordinal);
+            if (isCollection)
+            {
+                qualifiedTypeName = qualifiedTypeName.Substring(ODataConstants.CollectionPrefix.Length + 1).TrimEnd(')');
+            }
+
+            int separator = qualifiedTypeName.LastIndexOf(".", StringComparison.Ordinal);
+            namespaceName = qualifiedTypeName.Substring(0, separator);
+            typeName = qualifiedTypeName.Substring(separator == 0 ? 0 : separator + 1);
+        }
     }
 }

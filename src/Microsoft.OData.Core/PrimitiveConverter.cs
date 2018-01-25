@@ -78,60 +78,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Try to create an object of type <paramref name="targetType"/> from the value in <paramref name="reader" />.
-        /// </summary>
-        /// <param name="reader">XmlReader to use to read the value.</param>
-        /// <param name="targetType">Expected type of the value in the reader.</param>
-        /// <param name="tokenizedPropertyValue">Object of type <paramref name="targetType"/>, null if no object could be created.</param>
-        /// <returns>True if the value was converted to the specified type, otherwise false.</returns>
-        internal bool TryTokenizeFromXml(XmlReader reader, Type targetType, out object tokenizedPropertyValue)
-        {
-            tokenizedPropertyValue = null;
-
-            Debug.Assert(reader != null, "Expected a non-null XmlReader.");
-            Debug.Assert(reader.NodeType == XmlNodeType.Element, "Expected the reader to be at the start of an element.");
-            Debug.Assert(targetType != null, "Expected a valid type to convert value.");
-
-            IPrimitiveTypeConverter primitiveTypeConverter;
-            if (this.TryGetConverter(targetType, out primitiveTypeConverter))
-            {
-                tokenizedPropertyValue = primitiveTypeConverter.TokenizeFromXml(reader);
-                Debug.Assert(reader.NodeType == XmlNodeType.EndElement, "Expected reader to be at the end of an element");
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Try to write the XML representation of <paramref name="instance"/> to the specified <paramref name="writer"/>
-        /// </summary>
-        /// <param name="instance">Object to convert to XML representation.</param>
-        /// <param name="writer">XmlWriter to use to write the converted value.</param>
-        /// <returns>True if the value was written, otherwise false.</returns>
-        internal bool TryWriteAtom(object instance, XmlWriter writer)
-        {
-            Debug.Assert(instance != null, "Expected a non-null instance to write.");
-            Debug.Assert(writer != null, "Expected a non-null XmlWriter.");
-
-            return this.TryWriteValue(instance, ptc => ptc.WriteAtom(instance, writer));
-        }
-
-        /// <summary>
-        /// Try to write the text representation of <paramref name="instance"/> to the specified <paramref name="writer"/>
-        /// </summary>
-        /// <param name="instance">Object to convert to text representation.</param>
-        /// <param name="writer">TextWriter to use to write the converted value.</param>
-        /// <returns>True if the value was written, otherwise false.</returns>
-        internal bool TryWriteAtom(object instance, TextWriter writer)
-        {
-            Debug.Assert(instance != null, "Expected a non-null instance to write.");
-            Debug.Assert(writer != null, "Expected a non-null TextWriter.");
-
-            return this.TryWriteValue(instance, ptc => ptc.WriteAtom(instance, writer));
-        }
-
-        /// <summary>
         /// Try to write the JSON Lite representation of <paramref name="instance"/> using a registered primitive type converter
         /// </summary>
         /// <param name="instance">Object to convert to JSON representation.</param>
@@ -146,26 +92,6 @@ namespace Microsoft.OData
             this.TryGetConverter(instanceType, out primitiveTypeConverter);
             Debug.Assert(primitiveTypeConverter != null, "primitiveTypeConverter != null");
             primitiveTypeConverter.WriteJsonLight(instance, jsonWriter);
-        }
-
-        /// <summary>
-        /// Tries to write the value of object instance using a registered primitive type converter.
-        /// </summary>
-        /// <param name="instance">Object to write.</param>
-        /// <param name="writeMethod">Method to use when writing the value, if a registered converter is found for the type.</param>
-        /// <returns>True if the value was written using a registered primitive type converter, otherwise false.</returns>
-        private bool TryWriteValue(object instance, Action<IPrimitiveTypeConverter> writeMethod)
-        {
-            Type instanceType = instance.GetType();
-
-            IPrimitiveTypeConverter primitiveTypeConverter;
-            if (this.TryGetConverter(instanceType, out primitiveTypeConverter))
-            {
-                writeMethod(primitiveTypeConverter);
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>

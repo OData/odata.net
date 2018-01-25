@@ -227,5 +227,8 @@ namespace Microsoft.OData
 
         /// <summary>"with" keyword for aggregate verb expressions.</summary>
         internal const string KeywordWith = "with";
+
+        /// <summary>the compute query option.</summary>
+        internal const string QueryOptionCompute = "$compute";
     }
 }

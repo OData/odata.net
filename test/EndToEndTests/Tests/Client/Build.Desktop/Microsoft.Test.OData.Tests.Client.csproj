@@ -19,11 +19,14 @@
     <DefineConstants>$(DefineConstants);ENABLE_AVRO</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="$(NuGetPack)\Microsoft.TextTemplating.CBT.10.1.0.1\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll" Condition="'$(BuildInOSS)' != 'true'" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(BuildInOSS)' == 'true'" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -219,6 +222,7 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -230,65 +234,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec')"
-         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec" AdditionalMetadata="TargetPath=">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec')"
-         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec" AdditionalMetadata="TargetPath=">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\Content\App.config.transform" AdditionalMetadata="TargetPath=Content">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\Content\Web.config.transform" AdditionalMetadata="TargetPath=Content">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" AdditionalMetadata="TargetPath=lib\net40">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\lib\net40\EntityFramework.xml" AdditionalMetadata="TargetPath=lib\net40">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" AdditionalMetadata="TargetPath=lib\net45">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.xml" AdditionalMetadata="TargetPath=lib\net45">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\about_EntityFramework.help.txt" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\EntityFramework.PowerShell.dll" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\EntityFramework.PowerShell.Utility.dll" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\EntityFramework.PS3.psd1" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\EntityFramework.psd1" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\EntityFramework.psm1" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\init.ps1" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\install.ps1" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\migrate.exe" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\Redirect.config" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\tools\Redirect.VS11.config" AdditionalMetadata="TargetPath=tools">
-      <Output TaskParameter="Include" ItemName="EF5" />
-    </CreateItem>
     <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
     </CreateItem>
@@ -349,7 +294,6 @@
     <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBReferences" />
     </CreateItem>
-    <Copy SourceFiles="@(EF5)" DestinationFiles="@(EF5->'$(OutDir)EntityFramework.5.0.0\%(TargetPath)\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(CSDSCReferences)" DestinationFiles="@(CSDSCReferences->'$(OutDir)CSDSCReferences\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(CSReferences)" DestinationFiles="@(CSReferences->'$(OutDir)CSReferences\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(VBDSCReferences)" DestinationFiles="@(VBReferences->'$(OutDir)VBDSCReferences\%(Filename)%(Extension)')" />

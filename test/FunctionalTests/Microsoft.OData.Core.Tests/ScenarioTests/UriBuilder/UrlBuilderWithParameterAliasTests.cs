@@ -55,11 +55,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             OperationSegmentParameter p = odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPetCount()).And.Parameters.First();
             p.Name.Should().Be("colorPattern");
             p.Value.As<ParameterAliasNode>().Alias.Should().Be("@p1");
-            p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
+            p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().BeTrue();
             p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
-            aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
+            aliasNodes["@p1"].TypeReference.IsEnum().Should().BeTrue();
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
@@ -163,13 +163,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
             p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
-            p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
+            p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().BeTrue();
             p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
-            aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
+            aliasNodes["@p1"].TypeReference.IsEnum().Should().BeTrue();
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
@@ -189,13 +189,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
             p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
-            p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
+            p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().BeTrue();
             p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("238563");
-            aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
+            aliasNodes["@p1"].TypeReference.IsEnum().Should().BeTrue();
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);

@@ -326,7 +326,6 @@ namespace Microsoft.OData
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         public override sealed Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
@@ -391,6 +390,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         protected abstract bool ReadAtResourceEndImplementation();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Primitive'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtPrimitiveImplementation()
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
@@ -537,7 +545,6 @@ namespace Microsoft.OData
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected virtual Task<bool> ReadAsynchronously()
         {
             // We are reading from the fully buffered read stream here; thus it is ok
@@ -601,6 +608,10 @@ namespace Microsoft.OData
                     result = this.ReadAtResourceEndImplementation();
                     break;
 
+                case ODataReaderState.Primitive:
+                    result = this.ReadAtPrimitiveImplementation();
+                    break;
+
                 case ODataReaderState.NestedResourceInfoStart:
                     result = this.ReadAtNestedResourceInfoStartImplementation();
                     break;
@@ -632,7 +643,6 @@ namespace Microsoft.OData
         /// <typeparam name="T">The type returned from the <paramref name="action"/> to execute.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of executing the <paramref name="action"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private T InterceptException<T>(Func<T> action)
         {
             try
@@ -730,7 +740,8 @@ namespace Microsoft.OData
                 Debug.Assert(
                     state == ODataReaderState.Exception && item == null ||
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||
-                    state == ODataReaderState.ResourceEnd && (item == null || item is ODataResource) ||
+                    state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
+                    state == ODataReaderState.Primitive &&  (item == null || item is ODataPrimitiveValue) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||

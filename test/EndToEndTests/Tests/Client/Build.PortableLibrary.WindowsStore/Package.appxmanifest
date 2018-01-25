@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="94193331-8e63-46e1-aa85-d2dd5096b451" Publisher="CN=licheng" Version="1.0.0.0" />
+  <Identity Name="94193331-8e63-46e1-aa85-d2dd5096b451" Publisher="CN=robward" Version="1.0.0.0" />
   <Properties>
     <DisplayName>OData.Tests.Portable.WindowsStore</DisplayName>
-    <PublisherDisplayName>licheng</PublisherDisplayName>
+    <PublisherDisplayName>robward</PublisherDisplayName>
     <Logo>Images\UnitTestStoreLogo.png</Logo>
     <Description>Microsoft.Test.OData.Tests.Client.Portable.WindowsStore</Description>
   </Properties>

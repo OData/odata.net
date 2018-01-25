@@ -209,14 +209,6 @@ namespace Microsoft.OData.Tests.Evaluation
             this.entryMetadataContextWithoutModel.ETagProperties.Should().BeEmpty();
         }
 
-        [Fact(Skip = "we should remove this case because we need model to calc ETag")]
-        public void ETagPropertiesShouldReturnEmptyForEntryMetadataContextWithModelWithoutETagsAndThereAreSerializationInfoOnEntryProperties()
-        {
-            var odataEntry = new ODataResource { Properties = new[] { new ODataProperty { Name = "Name", Value = null, SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag } } } };
-            var entryMetadataContext = ODataResourceMetadataContext.Create(odataEntry, this.typeContext, /*serializationInfo*/null, new EdmEntityType("ns", "TypeName"), new TestMetadataContext(), SelectedPropertiesNode.EntireSubtree);
-            entryMetadataContext.ETagProperties.Should().BeEmpty();
-        }
-
         [Fact]
         public void ETagPropertiesShouldThrowWhenSerializationInfoIsSetAndPropertyValueIsNonPrimitive()
         {
@@ -232,28 +224,6 @@ namespace Microsoft.OData.Tests.Evaluation
             this.entryMetadataContextWithoutModel.ETagProperties.Should().HaveCount(1).And.Contain(p => p.Key == "Name" && p.Value == null);
         }
 
-        [Fact(Skip = "we should remove this case because we need model to calc ETag")]
-        public void ETagPropertiesShouldThrowWhenMetadataIsPresentAndPropertyValueIsNonPrimitive()
-        {
-            this.entry.Properties = new[] { new ODataProperty { Name = "Name2", Value = new ODataCollectionValue() } };
-            Action test = () => this.entryMetadataContextWithModel.ETagProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name2", "ns.TypeName"));
-        }
-
-        [Fact(Skip = "we should remove this case because we need model to calc ETag")]
-        public void ETagPropertiesShouldNotThrowWhenMetadataIsPresentAndPropertyValueIsNull()
-        {
-            this.entry.Properties = new[] { new ODataProperty { Name = "Name2", Value = null }, new ODataProperty { Name = "Name3", Value = null }};
-            this.entryMetadataContextWithModel.ETagProperties.Should().HaveCount(2).And.Contain(p => p.Key == "Name2" && p.Value == null).And.Contain(p => p.Key == "Name3" && p.Value == null);
-        }
-
-        [Fact(Skip = "we should remove this case because we need model to calc ETag")]
-        public void ETagPropertiesShouldThrowWhenETagPropertyInMetadataIsNotInEntry()
-        {
-            Action test = () => this.entryMetadataContextWithModel.ETagProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.EdmValueUtils_PropertyDoesntExist("ns.TypeName", "Name2"));
-        }
-
         [Fact]
         public void ShouldGetETagPropertiesBasedOnSerializationInfo()
         {
@@ -265,19 +235,6 @@ namespace Microsoft.OData.Tests.Evaluation
             };
 
             this.entryMetadataContextWithoutModel.ETagProperties.Should().Contain(p => p.Key == "Name1").And.Contain(p => p.Key == "Name2").And.HaveCount(2);
-        }
-
-        [Fact(Skip = "we should remove this case because we need model to calc ETag")]
-        public void ShouldGetETagPropertiesBasedOnMetadata()
-        {
-            this.entry.Properties = new[]
-            {
-                new ODataProperty { Name = "Name1", Value = "value1", SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag } },
-                new ODataProperty { Name = "Name2", Value = "value2", SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag } },
-                new ODataProperty { Name = "Name3", Value = "value3" },
-            };
-
-            this.entryMetadataContextWithModel.ETagProperties.Should().Contain(p => p.Key == "Name2").And.Contain(p => p.Key == "Name3").And.HaveCount(2);
         }
         #endregion ETagProperties
 

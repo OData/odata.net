@@ -19,8 +19,10 @@ Imports System.Linq.Expressions
 
 Partial Public Class ClientModule
 
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     'Remove Atom
-    <Ignore> <TestClass()> Public Class ClientProjectionTests
+    ' <TestClass()>
+    Public Class ClientProjectionTests
         Inherits AstoriaTestCase
 
         Private Shared web As TestWebRequest = Nothing
@@ -423,8 +425,10 @@ Partial Public Class ClientModule
     End Class
 
 #Region "Cross Feature Tests - Type Resolving/Projections/SDP Client"
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     'Remove Atom
-    <Ignore> <TestClass()> Public Class ClientProjectionTypeResolvingTests
+    ' <TestClass()>
+     Public Class ClientProjectionTypeResolvingTests
         Inherits AstoriaTestCase
 
         Private Shared web As TestWebRequest = Nothing

@@ -34,7 +34,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="topOption">A top clause for this expand (can be null)</param>
         /// <param name="skipOption">A skip clause for this expand (can be null)</param>
         /// <param name="countOption">An query count clause for this expand (can be null)</param>
-        /// <param name="searchOption">An levels clause for this expand (can be null)</param>
+        /// <param name="searchOption">A search clause for this expand (can be null)</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
         public ExpandedReferenceSelectItem(
              ODataExpandPath pathToNavigationProperty,
@@ -45,6 +45,33 @@ namespace Microsoft.OData.UriParser
              long? skipOption,
              bool? countOption,
              SearchClause searchOption)
+            : this(pathToNavigationProperty, navigationSource, filterOption, orderByOption, topOption, skipOption, countOption, searchOption, null)
+        {
+        }
+
+        /// <summary>
+        /// Create an expand item, using a navigationProperty, its entity set, and any expand options.
+        /// </summary>
+        /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
+        /// <param name="navigationSource">the navigation source for this expand level.</param>
+        /// <param name="filterOption">A filter clause for this expand (can be null)</param>
+        /// <param name="orderByOption">An Orderby clause for this expand (can be null)</param>
+        /// <param name="topOption">A top clause for this expand (can be null)</param>
+        /// <param name="skipOption">A skip clause for this expand (can be null)</param>
+        /// <param name="countOption">An query count clause for this expand (can be null)</param>
+        /// <param name="searchOption">A search clause for this expand (can be null)</param>
+        /// <param name="computeOption">A compute clause for this expand (can be null)</param>
+        /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
+        public ExpandedReferenceSelectItem(
+             ODataExpandPath pathToNavigationProperty,
+             IEdmNavigationSource navigationSource,
+             FilterClause filterOption,
+             OrderByClause orderByOption,
+             long? topOption,
+             long? skipOption,
+             bool? countOption,
+             SearchClause searchOption,
+             ComputeClause computeOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProperty, "pathToNavigationProperty");
 
@@ -56,6 +83,7 @@ namespace Microsoft.OData.UriParser
             this.SkipOption = skipOption;
             this.CountOption = countOption;
             this.SearchOption = searchOption;
+            this.ComputeOption = computeOption;
         }
 
         /// <summary>
@@ -95,6 +123,14 @@ namespace Microsoft.OData.UriParser
         /// Gets the orderby clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
         /// </summary>
         public OrderByClause OrderByOption
+        {
+            get; private set;
+        }
+
+        /// <summary>
+        /// Gets the compute clause for this expand item. Can be null if not specified(and will always be null in NonOptionMode).
+        /// </summary>
+        public ComputeClause ComputeOption
         {
             get; private set;
         }

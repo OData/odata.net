@@ -38,9 +38,10 @@ namespace AstoriaUnitTests
 
     public partial class ClientModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/885
         /// <summary>This is a test class for update, insert and delete functionality.</summary>
         [Ignore] // Remove Atom
-        [TestClass]
+        // [TestClass]
         public class ClientBasics
         {
             private static SimpleWorkspace arubaWorkspace;
