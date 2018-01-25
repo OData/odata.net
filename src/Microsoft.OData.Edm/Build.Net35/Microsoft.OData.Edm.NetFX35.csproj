@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AllowCrossTargeting>true</AllowCrossTargeting>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <AssemblyName>Microsoft.OData.Edm.NetFX35</AssemblyName>
+    <AssemblyName>Microsoft.OData.Edm.NetFX35.V7</AssemblyName>
     <OutputType>Library</OutputType>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>

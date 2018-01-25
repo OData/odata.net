@@ -90,7 +90,32 @@ namespace Microsoft.OData
         /// <returns>returns true if the parameter names are the same.</returns>
         internal static bool CompareMediaTypeParameterNames(string parameterName1, string parameterName2)
         {
-            return string.Equals(parameterName1, parameterName2, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(parameterName1, parameterName2, StringComparison.OrdinalIgnoreCase)
+                || (IsMetadataParameter(parameterName1) && IsMetadataParameter(parameterName2))
+                || (IsStreamingParameter(parameterName1) && IsStreamingParameter(parameterName2));
+        }
+
+        /// <summary>
+        /// Determines whether or not a parameter is the odata metadata parameter.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <returns>returns true if the parameter name is the odata metadata parameter.</returns>
+        internal static bool IsMetadataParameter(string parameterName)
+        {
+            return (String.Compare(parameterName, MimeConstants.MimeMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0
+                || String.Compare(parameterName, MimeConstants.MimeShortMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0);
+        }
+
+
+        /// <summary>
+        /// Determines whether or not a parameter is the odata streaming parameter.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter.</param>
+        /// <returns>returns true if the parameter name is the odata streaming parameter.</returns>
+        internal static bool IsStreamingParameter(string parameterName)
+        {
+            return (String.Compare(parameterName, MimeConstants.MimeStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0
+                || String.Compare(parameterName, MimeConstants.MimeShortStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         /// <summary>Gets the best encoding available for the specified charset request.</summary>

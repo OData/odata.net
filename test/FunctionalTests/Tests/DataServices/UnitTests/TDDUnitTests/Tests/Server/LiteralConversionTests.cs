@@ -17,6 +17,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using FluentAssertions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Service;
+    using Microsoft.OData;
 
     /// <summary>
     /// Note: Several tests in this file were copied from older 'unit-tests' which used reflection.
@@ -122,6 +123,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             KeyAsSegmentsLiteralFormatter.Format("$").Should().Be("%24%24");
             KeyAsSegmentsLiteralFormatter.Format("$foo").Should().Be("%24%24foo");
+        }
+
+        [TestMethod]
+        public void KeyAsSegmentFormatterShouldFormatEnumValue()
+        {
+            KeyAsSegmentsLiteralFormatter.Format(new ODataEnumValue("Value1")).Should().Be("Value1");
+            KeyAsSegmentsLiteralFormatter.Format(new ODataEnumValue("Value2", "Custom Type")).Should().Be("Value2");
         }
 
         [TestMethod]

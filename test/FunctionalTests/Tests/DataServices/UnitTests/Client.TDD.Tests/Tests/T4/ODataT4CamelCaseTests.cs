@@ -14,10 +14,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq.Expressions;
     using AstoriaUnitTests.Tests;
     using FluentAssertions;
-    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using OData = Microsoft.OData;
 
     public partial class Container : DataServiceContext
     {
@@ -247,79 +248,79 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void MaterializeEntityShouldWork()
         {
-            var odataEntry = new ODataResource() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
-            odataEntry.Properties = new ODataProperty[]
+            var odataEntry = new OData.ODataResource() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
+            odataEntry.Properties = new OData.ODataProperty[]
             {
-                new ODataProperty { Name = "keyProp", Value = 1 },
-                new ODataProperty { Name = "colorProp", Value = new ODataEnumValue("blue") },
-                new ODataProperty {
+                new OData.ODataProperty { Name = "keyProp", Value = 1 },
+                new OData.ODataProperty { Name = "colorProp", Value = new OData.ODataEnumValue("blue") },
+                new OData.ODataProperty {
                     Name = "primitiveCollection",
-                    Value = new ODataCollectionValue
+                    Value = new OData.ODataCollectionValue
                     {
                         TypeName = "Edm.Int32",
                         Items = new List<object> {1, 2, 3}
                     }
                 },
-                new ODataProperty {
+                new OData.ODataProperty {
                     Name = "enumCollection",
-                    Value = new ODataCollectionValue
+                    Value = new OData.ODataCollectionValue
                     {
                         TypeName = "color",
-                        Items = new List<ODataEnumValue> { new ODataEnumValue("white"), new ODataEnumValue("blue") }
+                        Items = new List<OData.ODataEnumValue> { new OData.ODataEnumValue("white"), new OData.ODataEnumValue("blue") }
                     }
                 }
             };
 
-            var complexP = new ODataNestedResourceInfo()
+            var complexP = new OData.ODataNestedResourceInfo()
             {
                 Name = "complexProp",
                 IsCollection = false
             };
 
-            var complexResource = new ODataResource
+            var complexResource = new OData.ODataResource
             {
-                Properties = new ODataProperty[]
+                Properties = new OData.ODataProperty[]
                 {
-                    new ODataProperty { Name = "age", Value = 11 },
-                    new ODataProperty { Name = "name", Value = "June" }
+                    new OData.ODataProperty { Name = "age", Value = 11 },
+                    new OData.ODataProperty { Name = "name", Value = "June" }
                 }
             };
 
-            var complexColP = new ODataNestedResourceInfo
+            var complexColP = new OData.ODataNestedResourceInfo
             {
                 Name = "complexCollection",
                 IsCollection = true
             };
 
-            var complexColResourceSet = new ODataResourceSet();
+            var complexColResourceSet = new OData.ODataResourceSet();
 
-            var items = new List<ODataResource>
+            var items = new List<OData.ODataResource>
             {
-                new ODataResource
+                new OData.ODataResource
                 {
-                    Properties = new ODataProperty[]
+                    Properties = new OData.ODataProperty[]
                     {
-                        new ODataProperty { Name = "name", Value = "Aug" },
-                        new ODataProperty { Name = "age", Value = 8 },
-                        new ODataProperty { Name = "color", Value = new ODataEnumValue("white")}
+                        new OData.ODataProperty { Name = "name", Value = "Aug" },
+                        new OData.ODataProperty { Name = "age", Value = 8 },
+                        new OData.ODataProperty { Name = "color", Value = new OData.ODataEnumValue("white")}
                     }
                 },
-                new ODataResource
+                new OData.ODataResource
                 {
-                    Properties = new ODataProperty[]
+                    Properties = new OData.ODataProperty[]
                     {
-                        new ODataProperty { Name = "name", Value = "Sep" },
-                        new ODataProperty { Name = "age", Value = 9 },
-                        new ODataProperty { Name = "color", Value = new ODataEnumValue("blue") }
+                        new OData.ODataProperty { Name = "name", Value = "Sep" },
+                        new OData.ODataProperty { Name = "age", Value = 9 },
+                        new OData.ODataProperty { Name = "color", Value = new OData.ODataEnumValue("blue") }
                     }
                 }
             };
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            var materializerEntry = MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Json, true, clientEdmModel);
+            var materializerEntry = MaterializerEntry.CreateEntry(odataEntry, OData.ODataFormat.Json, true, clientEdmModel);
 
-            MaterializerNavigationLink.CreateLink(complexP, MaterializerEntry.CreateEntry(complexResource, ODataFormat.Json, true, clientEdmModel));
+            MaterializerNavigationLink.CreateLink(complexP, MaterializerEntry.CreateEntry(complexResource, OData.ODataFormat.Json, true, clientEdmModel));
             MaterializerFeed.CreateFeed(complexColResourceSet, items);
             MaterializerNavigationLink.CreateLink(complexColP, complexColResourceSet);
 
@@ -327,7 +328,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(EntityType), null, new Dictionary<Expression, Expression>());
 
-            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataResource[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Json);
+            var entriesMaterializer = new ODataEntriesEntityMaterializer(new OData.ODataResource[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, OData.ODataFormat.Json);
 
             var customersRead = new List<EntityType>();
             while (entriesMaterializer.Read())
@@ -349,34 +350,34 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void MaterializeComplexTypeShouldWork()
         {
-            ODataResource complexValue = new ODataResource
+            OData.ODataResource complexValue = new OData.ODataResource
             {
-                Properties = new ODataProperty[]
+                Properties = new OData.ODataProperty[]
                 {
-                    new ODataProperty { Name = "age", Value = 11 },
-                    new ODataProperty { Name = "name", Value = "June" },
-                    new ODataProperty { Name = "color", Value = new ODataEnumValue("blue") },
-                    new ODataProperty
+                    new OData.ODataProperty { Name = "age", Value = 11 },
+                    new OData.ODataProperty { Name = "name", Value = "June" },
+                    new OData.ODataProperty { Name = "color", Value = new OData.ODataEnumValue("blue") },
+                    new OData.ODataProperty
                     {
                         Name = "primitives",
-                        Value = new ODataCollectionValue
+                        Value = new OData.ODataCollectionValue
                         {
                             TypeName = "Edm.Int32",
                             Items = new List<object> {1, 2, 3}
                         }
                     },
-                    new ODataProperty
+                    new OData.ODataProperty
                     {
                         Name = "enums",
-                        Value = new ODataCollectionValue
+                        Value = new OData.ODataCollectionValue
                         {
                             TypeName = "color",
-                            Items = new List<ODataEnumValue> { new ODataEnumValue("white"), new ODataEnumValue("blue") }
+                            Items = new List<OData.ODataEnumValue> { new OData.ODataEnumValue("white"), new OData.ODataEnumValue("blue") }
                         }
                     }
                 }
             };
-            var materializerEntry = MaterializerEntry.CreateEntry(complexValue, ODataFormat.Json, false, new ClientEdmModel(ODataProtocolVersion.V4));
+            var materializerEntry = MaterializerEntry.CreateEntry(complexValue, OData.ODataFormat.Json, false, new ClientEdmModel(ODataProtocolVersion.V4));
             this.CreateEntryMaterializationPolicy().Materialize(materializerEntry, typeof(ComplexType), false);
             var complex = materializerEntry.ResolvedObject as ComplexType;
             complex.Name.Should().Be("June");
@@ -389,8 +390,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void MaterializeEnumTypeShouldWork()
         {
-            ODataEnumValue enumValue = new ODataEnumValue("blue");
-            ODataProperty property = new ODataProperty { Name = "enumProperty", Value = enumValue };
+            OData.ODataEnumValue enumValue = new OData.ODataEnumValue("blue");
+            OData.ODataProperty property = new OData.ODataProperty { Name = "enumProperty", Value = enumValue };
             var enumPolicy = new EnumValueMaterializationPolicy(new TestMaterializerContext());
             var result = enumPolicy.MaterializeEnumTypeProperty(typeof(Color), property);
             property.GetMaterializedValue().Should().Be(Color.Blue);

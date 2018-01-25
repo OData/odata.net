@@ -35,6 +35,9 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             {"ProductDetails", new List<string>{"ProductID", "ProductDetailID"}}
         };
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
+        // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
         [TestMethod]
         public void TestRootQuery()
         {
@@ -51,6 +54,8 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
+        // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
+        // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
         [TestMethod]
         public void TestTopOption()
         {
@@ -70,6 +75,8 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
+        // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
+        // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
         [TestMethod]
         public void TestSkipOption()
         {
@@ -89,6 +96,8 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
+        // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
+        // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
         [TestMethod]
         public void TestOrderByOption()
         {
@@ -111,6 +120,8 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
+        // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
+        // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
         [TestMethod]
         public void TestOrderByThenByOption()
         {
@@ -130,6 +141,8 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             }
         }
 
+        // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
+        // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
         [TestMethod]
         public void TestOrderByDescendingOption()
         {
@@ -256,6 +269,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
             }
         }
+#endif
 
         [TestMethod]
         public void ParseServiceDocument()

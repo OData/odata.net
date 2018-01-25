@@ -1,12 +1,12 @@
-# OData .NET Libraries
+﻿# OData .NET Libraries
  Build  | Status
 --------|---------
-Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/106/badge"/>
+Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/422/badge"/>
 Nightly | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/107/badge"/>
 
 ## 1. Introduction
 
-The [OData .NET Libraries](http://odata.github.io/odata.net) (or OData .NET, for short) project includes the implementation of core functionalities of OData protocol on the .NET platform which includes URI parsing, request and response reading and writing, Entity Data Model (EDM) building, and also a .Net OData client which can be used to consume OData service. It is a fully open sourced project maintained by Microsoft OData team. The libraries are used by [WebApi](https://github.com/OData/WebApi/ "WeiApi") and [RESTier](https://github.com/odata/RESTier/ "RESTier") which are recommended to be adopted to build new OData Services.
+The [OData .NET Libraries](http://odata.github.io/odata.net) (or OData .NET, for short) project includes the implementation of core functionalities of OData protocol on the .NET platform which includes URI parsing, request and response reading and writing, Entity Data Model (EDM) building, and also a .Net OData client which can be used to consume OData service. It is a fully open sourced project maintained by Microsoft OData team. The libraries are used by [WebApi](https://github.com/OData/WebApi/ "WebApi") and [RESTier](https://github.com/odata/RESTier/ "RESTier") which are recommended to be adopted to build new OData Services.
 
 [OData](http://www.odata.org/ "OData") stands for the Open Data Protocol. It was initiated by Microsoft and is now an [ISO](https://www.oasis-open.org/news/pr/iso-iec-jtc-1-approves-oasis-odata-standard-for-open-data-exchange) approved and [OASIS](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=odata) standard. OData enables the creation and consumption of REST APIs, which allow resources, identified using URLs and defined in a data model, to be published and edited by Web clients using simple HTTP requests.
 
@@ -27,7 +27,7 @@ The project currently has six branches: [master](https://github.com/OData/odata.
 
 **master branch:**
 
-This master branch is the developement branch for ODataV4 7.x and is now most actively iterated. It builds upon the OData 6.15 release which is now on [maintenance-6.x branch](https://github.com/OData/odata.net/tree/maintenance-6.x) and produces both [PCL (Portable Class Libraries) Profile111](https://msdn.microsoft.com/library/gg597391.aspx) and [.NET Standard 1.1](https://docs.microsoft.com/en-us/dotnet/articles/standard/library) libraries.
+This master branch is the development branch for ODataV4 7.x and is now most actively iterated. It builds upon the OData 6.15 release which is now on [maintenance-6.x branch](https://github.com/OData/odata.net/tree/maintenance-6.x) and produces both [PCL (Portable Class Libraries) Profile111](https://msdn.microsoft.com/library/gg597391.aspx) and [.NET Standard 1.1](https://docs.microsoft.com/en-us/dotnet/articles/standard/library) libraries. The branch builds mostly with Visual Studio 2015, and it is undergoing migration towards Visual Studio 2017; currently, the .NET Standard and .NET Core projects have been migrated. Due to the number of test projects, complete migration to the latest version of Visual Studio will be broken down into multiple steps. The code is shared between the .NET Framework and .NET Standard platforms, and you may use either Visual Studio 2015/2017 to contribute.
 
 For each profile above, it has the following libraries:
 
@@ -38,7 +38,7 @@ For each profile above, it has the following libraries:
 
 For these libraries, we accept bug reports and pull requests. The corresponding fixes and implementations will be included into every new release.
 
-While Visual Studio 2017 has been released, this branch currently compiles against Visual Studio 2015 due to internal migrations to Visual Studio 2017--rest assured, the desire to move to the new product is highly visible. With that said, this branch utilizes `project.json` files for its `.csproj` files, there is a change in the build process for those who are unfamiliar. Please either 1) run `nuget restore Microsoft.Test.OData.DotNetStandard.sln` in the commandline of the `odata.net/sln` directory, or 2) enable automatic package restore via Visual Studio to build them (in VS2015, go to `Tools->NuGet Package Manager->Package Manager Settings`. Enable "Allow NuGet to download missing packages".). More info regarding the command can be found [here](https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore).
+Note: Per the [.NET Standard 1.1](https://docs.microsoft.com/en-us/dotnet/articles/standard/library) support chart, OData supports apps for Windows 8.0; however, Visual Studio 2013 was the last version that supported apps for Windows 8.0. Keeping Visual Studio 2013 conflicted with several goals (one of which is to simplify number of installations on a dev machine) and therefore, all tests for Windows 8.0 apps have been removed. Please be forewarned that if you choose to develop applications for Windows 8.0 (which has been superseded by Windows 8.1 and 10), OData no longer offers tests for that platform. You may, however, review the commit history to retrieve the tests housed in `Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.csproj`.
 
 **release branch:**
 
@@ -86,24 +86,24 @@ Here is the usage of each solution file (the `OData.sln` shortcut opens the one 
 - OData.Net45.sln (default) - Product source built with .Net Framework Portable 4.5 and contains corresponding unit tests. _Recommended_ for doing general bug fixes and feature development.
 - OData.NetStandard.sln - Product source built with .Net Standard 1.1.
 - OData.Tests.E2E.sln - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression) and not intended to be opened frequently. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
-- OData.Tests.NetStandard.sln - Product source built with .Net Standard 1.1 and contains corresponding unit tests written in .NET Core. Note that once OData has migrated to VS2017, this solution will replace OData.NetStandard.sln (and take its name) to reduce the number of solutions.
+- OData.Tests.E2E.NetCore.VS2017.sln - Product source built with .Net Standard 1.1 and E2E OData Client tests build with .Net Core 1.0-2.0. The purpose of this solution is to house .Net Core E2E test cases. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test the .Net Standard versions of the product code.
+- OData.Tests.NetStandard.VS2017.sln - Product source built with .Net Standard 1.1 and contains corresponding unit tests written in .NET Core. Note that once OData has migrated to VS2017, this solution will replace OData.NetStandard.sln (and take its name) to reduce the number of solutions.
 - OData.Tests.Performance.sln - Product source and performance tests built with .Net Framework version 4.6.
 - OData.Tests.WindowsApps.sln - Product source and test harnesses written in Windows Portable and Windows Phone 8.1.
-- OData.Tests.WindowsStore.VS2013.sln - Product source and test harnesses written in Windows Store 8.0. Note: this solution requires VS2013 as newer versions don't support this platform anymore; however, there is no hard requirement for you to have VS2013 on your machine and the build script will skip this solution if VS2013 is not installed.
 
-Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within OData.Tests.E2E.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
+Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within OData.Tests.E2E.sln and OData.Tests.E2E.NetCore.VS2017.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
 
 ### 3.2 One-click build and test script in command line
 
 Open Command Line Window with "**Run as administrator**", `cd` to the root folder and run following command:
 
-    `build.cmd`
+`build.cmd`
 
 This will build the full product and run all tests. It will take about 60 minutes. Use the to ensure your change compiles and passes tests before submitting a pull request.
 
 Optionally, you can run following command:
 
-    `build.cmd quick`
+`build.cmd quick`
 
 This will build a single set of product Dlls and run unit tests. It will take about 5 minutes. Use this for quickly testing a change.
 

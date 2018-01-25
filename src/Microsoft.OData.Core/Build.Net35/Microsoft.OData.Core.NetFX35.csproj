@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AllowCrossTargeting>true</AllowCrossTargeting>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <AssemblyName>Microsoft.OData.Core.NetFX35</AssemblyName>
+    <AssemblyName>Microsoft.OData.Core.NetFX35.V7</AssemblyName>
     <OutputType>Library</OutputType>
     <DefineConstants>$(DefineConstants);ODATA_CORE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
@@ -308,8 +308,26 @@
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightWriterUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ReorderingJsonReader.cs">
-      <Link>Microsoft\OData\Core\JsonLight\ReorderingJsonReader.cs</Link>
+      <Link>Microsoft\OData\Core\JsonLight\ReorderingJsonReader.cs</Link>  
+    </Compile>        
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchReader.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchReader.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchWriter.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchWriter.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchReaderStream.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchReaderStream.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs</Link>
+    </Compile>    
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\BufferingJsonReader.cs">
       <Link>Microsoft\OData\Core\Json\BufferingJsonReader.cs</Link>
     </Compile>
@@ -430,6 +448,30 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\MimeConstants.cs">
       <Link>Microsoft\OData\Core\MimeConstants.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchFormat.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchFormat.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchInputContext.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchInputContext.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>    
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\DependsOnIdsTracker.cs">
+      <Link>Microsoft\OData\Core\MultipartMixed\DependsOnIdsTracker.cs</Link>
+    </Compile>    
     <Compile Include="$(ODataCrossTargettingSourcePath)\NonDisposingStream.cs">
       <Link>Microsoft\OData\Core\NonDisposingStream.cs</Link>
     </Compile>
@@ -447,9 +489,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataAsynchronousWriter.cs">
       <Link>Microsoft\OData\Core\ODataAsynchronousWriter.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchFormat.cs">
-      <Link>Microsoft\OData\Core\ODataBatchFormat.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchOperationHeaders.cs">
       <Link>Microsoft\OData\Core\ODataBatchOperationHeaders.cs</Link>
@@ -495,9 +534,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriter.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriter.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriterUtils.cs">
-      <Link>Microsoft\OData\Core\ODataBatchWriterUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionReader.cs">
       <Link>Microsoft\OData\Core\ODataCollectionReader.cs</Link>

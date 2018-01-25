@@ -411,8 +411,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             }
         }
 
-
-
         protected override ODataMessageWriterSettings GetWriterSettings()
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings

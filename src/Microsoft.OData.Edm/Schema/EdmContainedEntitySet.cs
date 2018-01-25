@@ -83,15 +83,15 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Finds the entity set that a navigation property targets.
         /// </summary>
-        /// <param name="property">The navigation property.</param>
+        /// <param name="navigationProperty">The navigation property.</param>
         /// <param name="bindingPath">The binding path of the navigation property</param>
         /// <returns>The entity set that the navigation property targets</returns>
-        public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property, IEdmPathExpression bindingPath)
+        public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
         {
-            IEdmNavigationSource navigationTarget = base.FindNavigationTarget(property, bindingPath);
+            IEdmNavigationSource navigationTarget = base.FindNavigationTarget(navigationProperty, bindingPath);
             if (navigationTarget is IEdmUnknownEntitySet)
             {
-                return this.parentNavigationSource.FindNavigationTarget(property, bindingPath);
+                return this.parentNavigationSource.FindNavigationTarget(navigationProperty, bindingPath);
             }
 
             return navigationTarget;

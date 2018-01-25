@@ -29,7 +29,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="batchReaderStream">The underlying stream to read from.</param>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
-        internal ODataBatchOperationReadStream(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
+        private ODataBatchOperationReadStream(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
             : base(listener)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");

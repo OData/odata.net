@@ -13,7 +13,6 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
     using System.Net;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
-    using Microsoft.Test.OData.Framework;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -132,6 +131,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         /// <summary>
         /// Verify actions in entry payload format json minimalmetadata, and json nometadata.
         /// </summary>
@@ -183,6 +183,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                 this.VerifyActionInJsonLightPayload("OrderLine(OrderId=-10,ProductId=-10)", expectedRetrieveProductAction, mimeType);
             }
         }
+#endif
 
         private void VerifyOperationsInMetadata(Dictionary<string, string> expectedOperations, IEnumerable<IEdmOperationImport> actualActionImports)
         {
@@ -250,6 +251,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType)
         {
             var verifyActionNotInPayload = (acceptMimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata);
@@ -277,5 +279,6 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                 }
             }
         }
+#endif
     }
 }

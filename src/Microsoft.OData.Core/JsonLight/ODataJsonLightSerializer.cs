@@ -57,12 +57,14 @@ namespace Microsoft.OData.JsonLight
                 new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(jsonLightOutputContext), jsonLightOutputContext.TypeNameOracle));
             this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(() =>
                 new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter,
-                    this.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix));
+                    this.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix, this.MessageWriterSettings.Version));
 
             if (initContextUriBuilder)
             {
                 // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-                this.ContextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
+                this.ContextUriBuilder = ODataContextUriBuilder.Create(
+                    this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri,
+                    this.jsonLightOutputContext.WritingResponse && !(this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel));
             }
         }
 
@@ -138,7 +140,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
         internal ODataContextUrlInfo WriteContextUriProperty(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
         {
-            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.None)
+            if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
                 return null;
             }
@@ -151,9 +153,7 @@ namespace Microsoft.OData.JsonLight
                 contextUrlInfo = contextUrlInfoGen();
             }
 
-            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.OnDemand
-                && contextUrlInfo != null
-                && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
+            if (contextUrlInfo != null && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
             {
                 return null;
             }
@@ -171,7 +171,7 @@ namespace Microsoft.OData.JsonLight
                     this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataContext);
                 }
 
-                this.JsonWriter.WritePrimitiveValue(contextUri.AbsoluteUri);
+                this.JsonWriter.WritePrimitiveValue(contextUri.IsAbsoluteUri ? contextUri.AbsoluteUri : contextUri.OriginalString);
                 this.allowRelativeUri = true;
                 return contextUrlInfo;
             }

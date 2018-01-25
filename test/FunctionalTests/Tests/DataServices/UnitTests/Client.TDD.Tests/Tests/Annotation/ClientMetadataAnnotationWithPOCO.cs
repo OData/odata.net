@@ -22,6 +22,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
         private UserDefinedServiceContainer dsc = new UserDefinedServiceContainer(new Uri("http://UserDefinedService"));
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void GetAnnotationTargetingBoundFunction()
         {
@@ -109,6 +110,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             Assert.IsTrue(result);
             Assert.AreEqual("ActionImportWithParameter", annotationValue);
         }
+#endif
 
         [TestMethod]
         public void GetAnnotationTargetingType()

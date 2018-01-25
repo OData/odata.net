@@ -13,5 +13,8 @@ namespace Microsoft.OData
     {
         /// <summary>Version 4.0.</summary>
         V4,
+
+        /// <summary>Version 4.01.</summary>
+        V401
     }
 }

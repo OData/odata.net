@@ -145,6 +145,10 @@ namespace Microsoft.OData.JsonLight
                 // Instance-level annotation for the instance itself; not property name.
                 propertyName = null;
                 annotationName = jsonPropertyName.Substring(1);
+                if (annotationName.IndexOf('.') == -1)
+                {
+                    annotationName = JsonLightConstants.ODataAnnotationNamespacePrefix + annotationName;
+                }
             }
             else
             {
@@ -313,7 +317,9 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Reorders the buffered properties to conform to the required payload order.
             /// </summary>
-            /// <remarks>The required order is: odata.context comes first, odata.type comes next, then all odata.* property annotations
+            /// <remarks>
+            /// The required order is: odata.context comes first, odata.removed comes next (for deleted resources),
+            /// then comes odata.type, then all odata.* property annotations
             /// and finally, we preserve the relative order of custom annotations and data properties.</remarks>
             internal void Reorder()
             {
@@ -412,6 +418,17 @@ namespace Microsoft.OData.JsonLight
             }
 
             /// <summary>
+            /// Checks whether an annotation name is a odata.removed annotation.
+            /// </summary>
+            /// <param name="annotationName">The annotation name to check.</param>
+            /// <returns>true if the annotation name represents an odata.removed annotation; otherwise false.</returns>
+            private static bool IsODataRemovedAnnotation(string annotationName)
+            {
+                Debug.Assert(annotationName != null, "annotationName != null");
+                return string.CompareOrdinal(ODataAnnotationNames.ODataRemoved, annotationName) == 0;
+            }
+
+            /// <summary>
             /// Checks whether an annotation name is a odata.type annotation.
             /// </summary>
             /// <param name="annotationName">The annotation name to check.</param>
@@ -455,6 +472,7 @@ namespace Microsoft.OData.JsonLight
             private IEnumerable<string> SortPropertyNames()
             {
                 string contextAnnotationName = null;
+                string removedAnnotationName = null;
                 string typeAnnotationName = null;
                 string idAnnotationName = null;
                 string etagAnnotationName = null;
@@ -483,6 +501,10 @@ namespace Microsoft.OData.JsonLight
                     if (IsODataContextAnnotation(propertyName))
                     {
                         contextAnnotationName = propertyName;
+                    }
+                    else if (IsODataRemovedAnnotation(propertyName))
+                    {
+                        removedAnnotationName = propertyName;
                     }
                     else if (IsODataTypeAnnotation(propertyName))
                     {
@@ -519,6 +541,11 @@ namespace Microsoft.OData.JsonLight
                 if (contextAnnotationName != null)
                 {
                     yield return contextAnnotationName;
+                }
+
+                if (removedAnnotationName != null)
+                {
+                    yield return removedAnnotationName;
                 }
 
                 if (typeAnnotationName != null)

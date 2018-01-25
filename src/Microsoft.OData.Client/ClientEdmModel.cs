@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm.Vocabularies;
     using c = Microsoft.OData.Client;
 
-#if PORTABLELIB
+#if PORTABLELIB && WINDOWSPHONE
     // Windows Phone 8.0 doesn't support ConcurrentDictionary
     using ConcurrentEdmSchemaDictionary = System.Collections.Generic.Dictionary<string, Edm.IEdmSchemaElement>;
 #else
@@ -468,7 +468,7 @@ namespace Microsoft.OData.Client
                                 if (edmBaseType == null && keyProperties.Any(k => k.DeclaringType == type && k.Name == property.Name))
                                 {
                                     Debug.Assert(edmProperty.PropertyKind == EdmPropertyKind.Structural, "edmProperty.PropertyKind == EdmPropertyKind.Structural");
-                                    Debug.Assert(edmProperty.Type.TypeKind() == EdmTypeKind.Primitive, "edmProperty.Type.TypeKind() == EdmTypeKind.Primitive");
+                                    Debug.Assert(edmProperty.Type.TypeKind() == EdmTypeKind.Primitive || edmProperty.Type.TypeKind() == EdmTypeKind.Enum, "edmProperty.Type.TypeKind() == EdmTypeKind.Primitive || edmProperty.Type.TypeKind() == EdmTypeKind.Enum");
                                     loadedKeyProperties.Add((IEdmStructuralProperty)edmProperty);
                                 }
                             }

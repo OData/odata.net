@@ -86,6 +86,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ExpandQuery()
         {
@@ -94,6 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var query = contextWrapper.CreateQuery<RowIndex>("RowIndex").Expand(i => i.Rows);
             var results = query.Execute();
         }
+#endif
 
         [TestMethod]
         public void ProjectionQuery()

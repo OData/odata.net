@@ -62,10 +62,6 @@ $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static 
 $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
-# Use Visual Studio 2013 compiler for older apps, such as Windows Store for 8.0 (as needed for PCL111/.NET Standard 1.1)
-$VS12MSBUILD=$PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
-$VS12XAMLTARGETFILE=$PROGRAMFILESX86 + "\MSBuild\Microsoft\WindowsXaml\v12.0\Microsoft.Windows.UI.Xaml.CSharp.targets"
-
 # Use Visual Studio 2017 compiler for .NET Core and .NET Standard. Because VS2017 has different paths for different
 # versions, we have to check for each version. Meanwhile, the dotnet CLI is required to run the .NET Core unit tests in this script.
 $VS15VERSIONS = "Enterprise",
@@ -143,7 +139,9 @@ $NightlyTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
 # .NET Core tests are different and require the dotnet tool. The tool references the .csproj (VS2017) files instead of dlls
 $NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.NetCore.csproj",
     "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.NetCore.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj"
+    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj"
 
 $QuickTestSuite = @()
 $NightlyTestSuite = @()
@@ -306,11 +304,7 @@ Function RunBuild ($sln, $vsToolVersion)
     # Default to VS2015
     $MSBUILD = $VS14MSBUILD
     
-    if($vsToolVersion -eq '12.0')
-    {
-        $MSBUILD=$VS12MSBUILD
-    }
-    elseif($vsToolVersion -eq '15.0')
+    if($vsToolVersion -eq '15.0')
     {
         $MSBUILD=$VS15MSBUILD
     }
@@ -501,6 +495,7 @@ Function RunTest($title, $testdir, $framework)
     {
         foreach($testProj in $testdir)
         {
+            Write-Host "Launching $testProj..."
             & $DOTNETTEST "test" ($ENLISTMENT_ROOT + $testProj) "--no-build" >> $TESTLOG
         }
     }
@@ -545,7 +540,7 @@ Function BuildProcess
         if($VS15MSBUILD)
         {
             Write-Host "Found VS2017 version: $VS15MSBUILD"
-            RunBuild ('OData.Tests.NetStandard.VS2017.sln') -vsToolVersion '15.0'
+            RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
         }
         else
         {
@@ -555,17 +550,6 @@ Function BuildProcess
         }
         RunBuild ('OData.CodeGen.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
-        # Windows Store builds 8.0 apps which is needed to meet PCL111/.NET Standard 1.1 criteria
-        # Because VS2015 doesn't support 8.0 apps, we need to use VS2013. Skip if VS2013 not installed.
-        if([System.IO.File]::Exists($VS12MSBUILD) -And [System.IO.File]::Exists($VS12XAMLTARGETFILE))
-        {
-            RunBuild ('OData.Tests.WindowsStore.VS2013.sln') -vsToolVersion '12.0'
-        }
-        else
-        {
-            Write-Host ('Skipping OData.Tests.WindowsStore.VS2013.sln because VS2013 not installed or ' + `
-            'missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013') -ForegroundColor $Warning
-        }
     }
 
     Write-Host "Build Done" -ForegroundColor $Success

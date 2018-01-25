@@ -246,6 +246,12 @@ namespace Microsoft.OData.Evaluation
                 return WellKnownTextSqlFormatter.Create(true).Write(geometry);
             }
 
+            ODataEnumValue enumValue = value as ODataEnumValue;
+            if (enumValue != null)
+            {
+                return enumValue.Value;
+            }
+
             throw SharedUtils.CreateExceptionForUnconvertableType(value);
         }
 
@@ -516,6 +522,12 @@ namespace Microsoft.OData.Evaluation
             internal override string Format(object value)
             {
                 Debug.Assert(value != null, "value != null");
+
+                ODataEnumValue enumValue = value as ODataEnumValue;
+                if (enumValue != null)
+                {
+                    value = enumValue.Value;
+                }
 
                 object converted;
                 if (SharedUtils.TryConvertToStandardType(value, out converted))

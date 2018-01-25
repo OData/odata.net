@@ -15,14 +15,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Wrapper of ODataBatchReaderStream to expose the internal API.
+    /// Wrapper of ODataMultipartMixedBatchReaderStream to expose the internal API.
     /// </summary>
     public sealed class BatchReaderStreamWrapper
     {
         /// <summary>
         /// The type of the stream buffer class in the product code.
         /// </summary>
-        private static readonly Type batchStreamType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchReaderStream");
+        private static readonly Type batchStreamType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataMultipartMixedBatchReaderStream");
 
         /// <summary>
         /// The stream buffer instance from the product code.
@@ -56,10 +56,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         }
 
         /// <summary>
-        /// The boundary string for the current changeset (only set when reading a changeset
-        /// or an operation in a changeset).
+        /// The boundary string for the current change set (only set when reading a change set
+        /// or an operation in a change set).
         /// </summary>
-        /// <remarks>When not reading a changeset (or operation in a changeset) this field is null.</remarks>
+        /// <remarks>When not reading a change set (or operation in a change set) this field is null.</remarks>
         public string ChangeSetBoundary
         {
             get
@@ -105,7 +105,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         }
 
         /// <summary>
-        /// Reads from the batch stream without checking for a boundary delimiter since we 
+        /// Reads from the batch stream without checking for a boundary delimiter since we
         /// know the length of the stream.
         /// </summary>
         /// <param name="userBuffer">The byte array to read bytes into.</param>
@@ -120,7 +120,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <summary>
         /// Reads the start of a part including the request/response line and the headers.
         /// </summary>
-        /// <returns>true if the start of a changeset part was detected; otherwise false.</returns>
+        /// <returns>true if the start of a change set part was detected; otherwise false.</returns>
         /// <remarks>
         /// This method caches what it has read from the stream in a request or response
         /// operation message that will be returned to the client later when CreateRequestOperationMessage
@@ -134,7 +134,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <summary>
         /// Reads and validates the headers of a batch part.
         /// </summary>
-        /// <param name="isChangeSetPart">true if the headers indicate a changset part; otherwise false.</param>
+        /// <param name="isChangeSetPart">true if the headers indicate a change set part; otherwise false.</param>
         /// <returns>A batch operation headers; never null.</returns>
         public BatchOperationHeadersWrapper ReadPartHeaders(out bool isChangeSetPart)
         {
@@ -147,7 +147,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <summary>
         /// Reads a line (all bytes until a line feed) from the underlying stream.
         /// </summary>
-        /// <returns>Returns the string that was read from the underyling stream (not including a terminating line feed).</returns>
+        /// <returns>Returns the string that was read from the underlying stream (not including a terminating line feed).</returns>
         public string ReadLine()
         {
             return (string)ReflectionUtils.InvokeMethod(this.batchStream, "ReadLine");

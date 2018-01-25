@@ -483,7 +483,7 @@ namespace Microsoft.OData.Service
             if (cachedConstructor == null)
             {
                 Type dataContextType = typeof(T);
-                if (dataContextType.IsAbstract)
+                if (dataContextType.IsAbstract())
                 {
                     throw new InvalidOperationException(
                         Strings.DataService_ContextTypeIsAbstract(dataContextType, this.GetType()));
@@ -1085,7 +1085,7 @@ namespace Microsoft.OData.Service
                 {
                     throw DataServiceException.CreateBadRequestError(Strings.DataService_CannotUpdateKeyProperties(description.Property.Name));
                 }
-                else if (!WebUtil.IsNullableType(description.Property.Type) && description.Property.Type.IsValueType)
+                else if (!WebUtil.IsNullableType(description.Property.Type) && description.Property.Type.IsValueType())
                 {
                     // 403 - Forbidden
                     throw new DataServiceException(403, Strings.BadRequest_CannotNullifyValueTypeProperty);
@@ -2194,7 +2194,7 @@ namespace Microsoft.OData.Service
             private readonly ODataMessageWriter messageWriter;
 
             /// <summary>Hashset to make sure that the content ids specified in the batch are all unique.</summary>
-            private readonly HashSet<int> contentIds = new HashSet<int>(new Int32EqualityComparer());
+            private readonly HashSet<string> contentIds = new HashSet<string>();
 
             /// <summary>Dictionary to track objects represented by each content id within a changeset.</summary>
             private readonly Dictionary<string, SegmentInfo> contentIdsToSegmentInfoMapping = new Dictionary<string, SegmentInfo>(StringComparer.Ordinal);
@@ -2742,7 +2742,8 @@ namespace Microsoft.OData.Service
             /// <param name="contentIds">content ids that are defined in the batch.</param>
             /// <param name="writer">Output writer.</param>
             /// <returns>An instance of the batch service host which represents the current operation.</returns>
-            private static BatchServiceHost CreateBatchServiceHostFromOperationMessage(IDataService dataService, ODataBatchOperationRequestMessage operationRequestMessage, HashSet<int> contentIds, ODataBatchWriter writer)
+            private static BatchServiceHost CreateBatchServiceHostFromOperationMessage(IDataService dataService, 
+                ODataBatchOperationRequestMessage operationRequestMessage, HashSet<string> contentIds, ODataBatchWriter writer)
             {
                 Debug.Assert(dataService != null && dataService.GetType() != typeof(BatchDataService), "dataService should not be of type BatchDataService.");
                 Debug.Assert(operationRequestMessage != null, "operationRequestMessage != null");
@@ -2756,15 +2757,9 @@ namespace Microsoft.OData.Service
                 string contentIdValue = operationRequestMessage.ContentId;
                 if (!String.IsNullOrEmpty(contentIdValue))
                 {
-                    int contentId;
-                    if (!Int32.TryParse(contentIdValue, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out contentId))
+                    if (!contentIds.Add(contentIdValue))
                     {
-                        throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeAnInteger(contentIdValue));
-                    }
-
-                    if (!contentIds.Add(contentId))
-                    {
-                        throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeUniqueInBatch(contentId));
+                        throw DataServiceException.CreateBadRequestError(Strings.DataService_ContentIdMustBeUniqueInBatch(contentIdValue));
                     }
                 }
 

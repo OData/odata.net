@@ -26,6 +26,7 @@ namespace Microsoft.OData.JsonLight
     /// </summary>
     internal sealed class ODataJsonLightReader : ODataReaderCoreAsync
     {
+        #region private fields
         /// <summary>The input to read the payload from.</summary>
         private readonly ODataJsonLightInputContext jsonLightInputContext;
 
@@ -37,7 +38,9 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>true if the reader is created for reading parameter; false otherwise.</summary>
         private readonly bool readingParameter;
+        #endregion private fields
 
+        #region Constructors
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -70,6 +73,10 @@ namespace Microsoft.OData.JsonLight
             this.EnterScope(this.topLevelScope);
         }
 
+        #endregion
+
+        #region private properties
+
         /// <summary>
         /// Returns the current resource state.
         /// </summary>
@@ -78,7 +85,8 @@ namespace Microsoft.OData.JsonLight
             get
             {
                 Debug.Assert(
-                    this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd,
+                    this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd ||
+                    this.State == ODataReaderState.DeletedResourceStart || this.State == ODataReaderState.DeletedResourceEnd,
                     "This property can only be accessed in the EntryStart or EntryEnd scope.");
                 return (IODataJsonLightReaderResourceState)this.CurrentScope;
             }
@@ -119,7 +127,10 @@ namespace Microsoft.OData.JsonLight
                 return scope != null ? (ODataNestedResourceInfo)scope.Item : null;
             }
         }
+        #endregion private properties
 
+        #region ReadAt<>Implementation Methods
+        #region ReadAtStartImplementation
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
@@ -142,9 +153,11 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or a Uri Operation Parameter or not.
-            ODataPayloadKind payloadKind = this.ReadingResourceSet
-                ? ODataPayloadKind.ResourceSet
-                : ODataPayloadKind.Resource;
+            ODataPayloadKind payloadKind = this.ReadingDelta
+                ? ODataPayloadKind.Delta
+                : this.ReadingResourceSet ?
+                    ODataPayloadKind.ResourceSet
+                    : ODataPayloadKind.Resource;
 
             // Following parameter "this.IsReadingNestedPayload || this.readingParameter" indicates whether to read
             // { "value" :
@@ -184,9 +197,12 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or not.
-            ODataPayloadKind payloadKind = this.ReadingResourceSet
-                ? ODataPayloadKind.ResourceSet
-                : ODataPayloadKind.Resource;
+            ODataPayloadKind payloadKind = this.ReadingDelta
+                ? ODataPayloadKind.Delta
+                : this.ReadingResourceSet ?
+                    ODataPayloadKind.ResourceSet
+                    : ODataPayloadKind.Resource;
+
             return this.jsonLightResourceDeserializer.ReadPayloadStartAsync(
                 payloadKind,
                 propertyAndAnnotationCollector,
@@ -197,7 +213,9 @@ namespace Microsoft.OData.JsonLight
                     this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector));
         }
 #endif
+        #endregion ReadAtStartImplementation
 
+        #region ResourceSet
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetStart'.
         /// </summary>
@@ -267,7 +285,9 @@ namespace Microsoft.OData.JsonLight
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetEndImplementationSynchronously);
         }
 #endif
+        #endregion ResourceSet
 
+        #region Resource
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryStart'.
         /// </summary>
@@ -326,19 +346,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtResourceEndImplementationSynchronously();
         }
 
-        /// <summary>
-        /// Implementation of the reader logic when in state 'Primitive'.
-        /// </summary>
-        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.PrimitiveValue         end of primitive value in a collection
-        /// Post-Condition: The reader is positioned on the first node after the primitive value
-        /// </remarks>
-        protected override bool ReadAtPrimitiveImplementation()
-        {
-            return this.ReadAtPrimitiveSynchronously();
-        }
-
 #if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryEnd'.
@@ -355,6 +362,39 @@ namespace Microsoft.OData.JsonLight
         }
 #endif
 
+        #endregion Resource
+
+        #region Primitive
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Primitive'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.PrimitiveValue         end of primitive value in a collection
+        /// Post-Condition: The reader is positioned on the first node after the primitive value
+        /// </remarks>
+        protected override bool ReadAtPrimitiveImplementation()
+        {
+            return this.ReadAtPrimitiveSynchronously();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Implementation of the reader logic when in state 'Primitive'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.PrimitiveValue         end of primitive value in a collection
+        /// Post-Condition: The reader is positioned on the first node after the primitive value
+        /// </remarks>
+        protected override Task<bool> ReadAtPrimitiveImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtEntityReferenceLinkSynchronously);
+        }
+#endif
+        #endregion Primitive
+
+        #region NestedResourceInfo
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
@@ -441,6 +481,9 @@ namespace Microsoft.OData.JsonLight
         }
 #endif
 
+        #endregion NestedResourceInfo
+
+        #region EntityReferenceLink
         /// <summary>
         /// Implementation of the reader logic when in state 'EntityReferenceLink'.
         /// </summary>
@@ -478,6 +521,244 @@ namespace Microsoft.OData.JsonLight
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtEntityReferenceLinkSynchronously);
         }
 #endif
+        #endregion EntityReferenceLink
+
+        #region DeltaResourceSet
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  Any start node            - The first resource in the resource set
+        ///                 JsonNodeType.EndArray     - The end of the resource set
+        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
+        ///                 on the node following the resource set end in case of an empty resource set
+        /// </remarks>
+        protected override bool ReadAtDeltaResourceSetStartImplementation()
+        {
+            return this.ReadAtResourceSetStartImplementationSynchronously();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  Any start node            - The first resource in the resource set
+        ///                 JsonNodeType.EndArray     - The end of the resource set
+        /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
+        ///                 on the node following the resource set end in case of an empty resource set
+        /// </remarks>
+        protected override Task<bool> ReadAtDeltaResourceSetStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetStartImplementationSynchronously);
+        }
+#endif
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition: JsonNodeType.Property        if the resource set has further instance or property annotations after the resource set property
+        ///                JsonNodeType.EndObject       if the resource set has no further instance or property annotations after the resource set property
+        /// Post-Condition: JsonNodeType.EndOfInput     for a top-level resource set when not reading a nested payload
+        ///                 JsonNodeType.Property       more properties exist on the owning resource after the expanded link containing the resource set
+        ///                 JsonNodeType.EndObject      no further properties exist on the owning resource after the expanded link containing the resource set
+        ///                 JsonNodeType.EndArray       end of expanded link in request, in this case the resource set doesn't actually own the array object and it won't read it.
+        ///                 Any                         in case of expanded resource set in request, this might be the next item in the expanded array, which is not a resource
+        /// </remarks>
+        protected override bool ReadAtDeltaResourceSetEndImplementation()
+        {
+            // Logic is same as for ResourceSet
+            return this.ReadAtResourceSetEndImplementationSynchronously();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition: JsonNodeType.Property        if the resource set has further instance or property annotations after the resource set property
+        ///                JsonNodeType.EndObject       if the resource set has no further instance or property annotations after the resource set property
+        /// Post-Condition: JsonNodeType.EndOfInput     for a top-level resource set when not reading a nested payload
+        ///                 JsonNodeType.Property       more properties exist on the owning resource after the expanded link containing the resource set
+        ///                 JsonNodeType.EndObject      no further properties exist on the owning resource after the expanded link containing the resource set
+        ///                 JsonNodeType.EndArray       end of expanded link in request, in this case the resource set doesn't actually own the array object and it won't read it.
+        ///                 Any                         in case of expanded resource set in request, this might be the next item in the expanded array, which is not a resource
+        /// </remarks>
+        protected override Task<bool> ReadAtDeltaResourceSetEndImplementationAsync()
+        {
+            // Logic is same as for ResourceSet
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetEndImplementationSynchronously);
+        }
+#endif
+        #endregion DeltaResourceSet
+
+        #region DeltaDeletedEntry
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaDeletedEntryStart'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.StartArray             Start of the expanded resource set of the nested resource info to read next.
+        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.StartArray             Start of the expanded resource set of the nested resource info to read next.
+        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// </remarks>
+        protected override bool ReadAtDeletedResourceStartImplementation()
+        {
+            return this.ReadAtDeletedResourceStartImplementationSynchronously();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaDeletedResourceStart'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.StartArray             Start of the expanded resource set of the nested resource info to read next.
+        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.StartArray             Start of the expanded resource set of the nested resource info to read next.
+        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// </remarks>
+        protected override Task<bool> ReadAtDeletedResourceStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceStartImplementationSynchronously);
+        }
+#endif
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.EndObject              end of object of the resource
+        ///                 JsonNodeType.PrimitiveValue         end of primitive value in a collection
+        /// Post-Condition: The reader is positioned on the first node after the deleted resource's end-object node
+        /// </remarks>
+        protected override bool ReadAtDeletedResourceEndImplementation()
+        {
+            // Same logic as ReadAtResourceEndImplementation
+            return this.ReadAtResourceEndImplementationSynchronously();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.EndObject              end of object of the resource
+        ///                 JsonNodeType.PrimitiveValue (null)  end of null expanded resource
+        /// Post-Condition: The reader is positioned on the first node after the deleted resource's end-object node
+        /// </remarks>
+        protected override Task<bool> ReadAtDeletedResourceEndImplementationAsync()
+        {
+            // Same logic as ReadAtResourceEndImplementationAsync
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceEndImplementationSynchronously);
+        }
+#endif
+
+        #endregion DeltaDeletedEntry
+
+        #region DeltaLink
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaLinkImplementation'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndArry               If no (more) properties exist in the resource's content
+        /// </remarks>
+        protected override bool ReadAtDeltaLinkImplementation()
+        {
+            return this.ReadAtDeltaLinkImplementationSynchronously();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaLinkImplementation'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// </remarks>
+        protected override Task<bool> ReadAtDeltaLinkImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaLinkImplementationSynchronously);
+        }
+#endif
+
+        #endregion DeltaLink
+
+        #region DeltaDeletedLink
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaLinkImplementation'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndArry               If no (more) properties exist in the resource's content
+        /// </remarks>
+        protected override bool ReadAtDeltaDeletedLinkImplementation()
+        {
+            return this.ReadAtDeltaDeletedLinkImplementationSynchronously();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaDeletedLinkImplementation'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// </remarks>
+        protected override Task<bool> ReadAtDeltaDeletedLinkImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaDeletedLinkImplementationSynchronously);
+        }
+#endif
+
+        #endregion DeltaDeletedLink
+
+        #endregion ReadAt<>Implementation methods
+
+        #region ReadAt<>ImplementationSynchronously methods
+
+        #region Start
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
@@ -532,41 +813,61 @@ namespace Microsoft.OData.JsonLight
 
             if (this.ReadingResourceSet)
             {
-                ODataResourceSet resourceSet = new ODataResourceSet();
-
                 // Store the duplicate property names checker to use it later when reading the resource set end
-                // (since we allow resource set-related annotations to appear after the resource set's data).
+                // (since we allow resourceSet-related annotations to appear after the resource set's data).
                 this.topLevelScope.PropertyAndAnnotationCollector = propertyAndAnnotationCollector;
 
                 bool isReordering = this.jsonLightInputContext.JsonReader is ReorderingJsonReader;
-                if (!this.IsReadingNestedPayload)
+
+                if (this.ReadingDelta)
                 {
-                    if (!this.readingParameter)
+                    ODataDeltaResourceSet resourceSet = new ODataDeltaResourceSet();
+
+                    // Read top-level resource set annotations for delta resource sets.
+                    this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
+                        resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/true,
+                        /*readAllFeedProperties*/isReordering);
+                    this.ReadDeltaResourceSetStart(resourceSet, selectedProperties);
+
+                    this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
+                }
+                else
+                {
+                    ODataResourceSet resourceSet = new ODataResourceSet();
+                    if (!this.IsReadingNestedPayload)
                     {
-                        // Skip top-level resource set annotations for nested resource sets.
-                        this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
-                            resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/true,
-                            /*readAllFeedProperties*/isReordering);
+                        if (!this.readingParameter)
+                        {
+                            // Skip top-level resource set annotations for nested resource sets.
+                            this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
+                                resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/true,
+                                /*readAllFeedProperties*/isReordering);
+                        }
+                        else
+                        {
+                            // This line will be used to read the first node of a resource set in Uri operation parameter, The first node is : '['
+                            // Node is in following format:
+                            // [
+                            //      {...}, <------------ complex object.
+                            //      {...}, <------------ complex object.
+                            // ]
+                            this.jsonLightResourceDeserializer.JsonReader.Read();
+                        }
                     }
-                    else
-                    {
-                        // This line will be used to read the first node of a resource set in Uri operation parameter, The first node is : '['
-                        // Node is in following format:
-                        // [
-                        //      {...}, <------------ complex object.
-                        //      {...}, <------------ complex object.
-                        // ]
-                        this.jsonLightResourceDeserializer.JsonReader.Read();
-                    }
+
+                    this.ReadResourceSetStart(resourceSet, selectedProperties);
                 }
 
-                this.ReadResourceSetStart(resourceSet, selectedProperties);
                 return true;
             }
 
-            this.ReadResourceStart(propertyAndAnnotationCollector, selectedProperties);
+            this.ReadResourceSetItemStart(propertyAndAnnotationCollector, selectedProperties);
             return true;
         }
+
+        #endregion Start
+
+        #region ResourceSet
 
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetStart'.
@@ -604,7 +905,7 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private bool ReadAtResourceSetEndImplementationSynchronously()
         {
-            Debug.Assert(this.State == ODataReaderState.ResourceSetEnd, "this.State == ODataReaderState.ResourceSetEnd");
+            Debug.Assert(this.State == ODataReaderState.ResourceSetEnd || this.State == ODataReaderState.DeltaResourceSetEnd, "Not in (delta) resource set end state.");
             Debug.Assert(
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
@@ -620,7 +921,7 @@ namespace Microsoft.OData.JsonLight
             bool isTopLevelResourceSet = this.IsTopLevel;
             bool isExpandedLinkContent = this.IsExpandedLinkContent;
 
-            this.PopScope(ODataReaderState.ResourceSetEnd);
+            this.PopScope(this.State == ODataReaderState.ResourceSetEnd ? ODataReaderState.ResourceSetEnd : ODataReaderState.DeltaResourceSetEnd);
 
             // When we finish a top-level resource set in a nested payload (inside parameter or delta payload),
             // we can directly turn the reader into Completed state because we don't have any JSON token
@@ -685,8 +986,11 @@ namespace Microsoft.OData.JsonLight
             return true;
         }
 
+        #endregion ResourceSet
+
+        #region Resource
         /// <summary>
-        /// Implementation of the reader logic when in state 'EntryStart'.
+        /// Implementation of the reader logic when in state 'ResourceStart'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
@@ -703,14 +1007,15 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private bool ReadAtResourceStartImplementationSynchronously()
         {
-            if (this.CurrentResource != null && !this.IsReadingNestedPayload)
+            ODataResourceBase currentResource = this.Item as ODataResourceBase;
+            if (currentResource != null && !this.IsReadingNestedPayload)
             {
                 this.CurrentResourceState.ResourceTypeFromMetadata = this.ParentScope.ResourceType;
                 ODataResourceMetadataBuilder builder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
                         this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
-                if (builder != this.CurrentResource.MetadataBuilder)
+                if (builder != currentResource.MetadataBuilder)
                 {
                     ODataNestedResourceInfo parentNestInfo = this.ParentNestedInfo;
                     ODataConventionalResourceMetadataBuilder conventionalResourceMetadataBuilder =
@@ -730,15 +1035,15 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     // Set the metadata builder and parent metadata builder for the resource itself
-                    this.CurrentResource.MetadataBuilder = builder;
+                    currentResource.MetadataBuilder = builder;
                     if (parentNestInfo != null && parentNestInfo.MetadataBuilder != null)
                     {
-                        this.CurrentResource.MetadataBuilder.ParentMetadataBuilder = parentNestInfo.MetadataBuilder;
+                        currentResource.MetadataBuilder.ParentMetadataBuilder = parentNestInfo.MetadataBuilder;
                     }
                 }
             }
 
-            if (this.CurrentResource == null)
+            if (currentResource == null)
             {
                 // Debug.Assert(this.IsExpandedLinkContent || this.CurrentResourceType.IsODataComplexTypeKind() || this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped,
                 //    "null or untyped resource can only be reported in an expanded link or in collection of complex instance.");
@@ -817,7 +1122,7 @@ namespace Microsoft.OData.JsonLight
             bool isTopLevel = this.IsTopLevel;
             bool isExpandedLinkContent = this.IsExpandedLinkContent;
 
-            this.PopScope(ODataReaderState.ResourceEnd);
+            this.PopScope(this.State == ODataReaderState.ResourceEnd ? ODataReaderState.ResourceEnd : ODataReaderState.DeletedResourceEnd);
 
             // Read over the end object node (or null value) and position the reader on the next node in the input.
             // This can hit the end of the input.
@@ -863,6 +1168,10 @@ namespace Microsoft.OData.JsonLight
             return result;
         }
 
+        #endregion Resource
+
+        #region Primitive
+
         /// <summary>
         /// Implementation of the reader logic when in state 'Primitive'.
         /// </summary>
@@ -887,54 +1196,99 @@ namespace Microsoft.OData.JsonLight
             return true;
         }
 
+        #endregion Primitive
+
+        #region DeletedEntry
+
         /// <summary>
-        /// Reads the next entity or complex value (or primitive or collection value for an untyped collection) in a resource set.
+        /// Implementation of the reader logic when in state 'DeletedEntryStart'.
         /// </summary>
-        private void ReadNextResourceSetItem()
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.StartArray             Start of the expanded resource set of the nested resource info to read next.
+        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// Post-Condition: JsonNodeType.StartObject            Start of the expanded resource of the nested resource info to read next.
+        ///                 JsonNodeType.StartArray             Start of the expanded resource set of the nested resource info to read next.
+        ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource of the nested resource info to read next.
+        ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
+        ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
+        /// </remarks>
+        private bool ReadAtDeletedResourceStartImplementationSynchronously()
         {
-            Debug.Assert(this.State == ODataReaderState.ResourceSetStart,
-                "this.State == ODataReaderState.ResourceSetStart");
-            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.PrimitiveValue,
-                JsonNodeType.StartObject, JsonNodeType.StartArray);
+            Debug.Assert(this.CurrentScope is JsonLightDeletedResourceScope);
 
-            // End of item in a resource set
-            switch (this.jsonLightResourceDeserializer.JsonReader.NodeType)
+            if (((JsonLightDeletedResourceScope)(this.CurrentScope)).Is40DeletedResource)
             {
-                case JsonNodeType.StartObject:
-                    // another resource in a resource set
-                    this.ReadResourceStart( /*propertyAndAnnotationCollector*/
-                        null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
-                    break;
-                case JsonNodeType.StartArray:
-                    // we are at the start of a nested resource set
-                    this.ReadResourceSetStart(new ODataResourceSet(), SelectedPropertiesNode.EntireSubtree);
-                    break;
-                case JsonNodeType.EndArray:
-                    // we are at the end of a resource set
-                    this.ReadResourceSetEnd();
-                    break;
-                case JsonNodeType.PrimitiveValue:
-                    // we are at a null value, or a non-null primitive value within an untyped collection
-                    object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
-                    if (primitiveValue != null && this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped)
-                    {
-                        this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
-                            this.CurrentNavigationSource, this.CurrentResourceType, this.CurrentScope.ODataUri));
-                    }
-                    else
-                    {
-                        // null resource (ReadResourceStart will raise the appropriate error for a non-null primitive value)
-                        this.ReadResourceStart( /*propertyAndAnnotationCollector*/
-                            null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
-                    }
-
-                    break;
-                default:
-                    throw new ODataException(
-                        ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
-                            this.jsonLightResourceDeserializer.JsonReader.NodeType));
+                this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject);
+                this.EndEntry();
+                return true;
             }
+
+            return this.ReadAtResourceStartImplementationSynchronously();
         }
+
+        #endregion DeletedEntry
+
+        #region (Deleted)Link
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaLink'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.Property               The next annotation.
+        ///                 JsonNodeType.EndObject              No more other annotation or property in the link.
+        /// Post-Condition: The reader is positioned on the first node after the link's end-object node.
+        /// </remarks>
+        private bool ReadAtDeltaLinkImplementationSynchronously()
+        {
+            return this.EndDeltaLink(ODataReaderState.DeltaLink);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaDeletedLink'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.Property               The next annotation.
+        ///                 JsonNodeType.EndObject              No more other annotation or property in the link.
+        /// Post-Condition: The reader is positioned on the first node after the link's end-object node.
+        /// </remarks>
+        private bool ReadAtDeltaDeletedLinkImplementationSynchronously()
+        {
+            return this.EndDeltaLink(ODataReaderState.DeltaDeletedLink);
+        }
+
+        /// <summary>
+        /// Reads the end of the delta(deleted)link.
+        /// </summary>
+        /// <param name="readerState">The state of the link or deleted link being completed.</param>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.Property               The next annotation.
+        ///                 JsonNodeType.EndObject              No more other annotation or property in the link.
+        /// Post-Condition: The reader is positioned on the first node after the link's end-object node.
+        /// </remarks>
+        private bool EndDeltaLink(ODataReaderState readerState)
+        {
+            Debug.Assert(readerState == ODataReaderState.DeltaLink || readerState == ODataReaderState.DeltaDeletedLink, "ReadAtDeltaLinkImplementation called when not on delta(deleted)link");
+            Debug.Assert(
+                this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject,
+                "Not positioned at end of object after reading delta link");
+
+            this.PopScope(readerState);
+
+            // Read over the end object node (or null value) and position the reader on the next node in the input.
+            // This should never hit the end of the input.
+            this.jsonLightResourceDeserializer.JsonReader.Read();
+            this.ReadNextResourceSetItem();
+            return true;
+        }
+
+        #endregion (Deleted)Link
 
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
@@ -1012,10 +1366,21 @@ namespace Microsoft.OData.JsonLight
                     Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
                     Debug.Assert(nestedResourceInfo.NestedResourceSet != null,
                         "We must have a precreated expanded resource set already.");
-                    JsonLightResourceScope parentScope = (JsonLightResourceScope)this.ParentScope;
+                    JsonLightResourceBaseScope parentScope = (JsonLightResourceBaseScope)this.ParentScope;
                     SelectedPropertiesNode parentSelectedProperties = parentScope.SelectedProperties;
                     Debug.Assert(parentSelectedProperties != null, "parentProjectedProperties != null");
-                    this.ReadResourceSetStart(nestedResourceInfo.NestedResourceSet, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, currentLink.Name));
+
+                    ODataResourceSet resourceSet = nestedResourceInfo.NestedResourceSet as ODataResourceSet;
+                    if (resourceSet != null)
+                    {
+                        this.ReadResourceSetStart(resourceSet, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, currentLink.Name));
+                    }
+                    else
+                    {
+                        ODataDeltaResourceSet deltaResourceSet = nestedResourceInfo.NestedResourceSet as ODataDeltaResourceSet;
+                        Debug.Assert(deltaResourceSet != null, "Nested recource collection is not a resource set or a delta resource set");
+                        this.ReadDeltaResourceSetStart(deltaResourceSet, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, currentLink.Name));
+                    }
                 }
             }
             else
@@ -1052,7 +1417,7 @@ namespace Microsoft.OData.JsonLight
                 JsonNodeType.Property);
 
             this.PopScope(ODataReaderState.NestedResourceInfoEnd);
-            Debug.Assert(this.State == ODataReaderState.ResourceStart, "this.State == ODataReaderState.ResourceStart");
+            Debug.Assert(this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.DeletedResourceStart, "this.State == ODataReaderState.ResourceStart");
 
             ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
             IODataJsonLightReaderResourceState resourceState = this.CurrentResourceState;
@@ -1105,6 +1470,62 @@ namespace Microsoft.OData.JsonLight
             return true;
         }
 
+        #endregion ReadAt<>Synchronously methods
+
+        /// <summary>
+        /// Reads the next entity or complex value (or primitive or collection value for an untyped collection) in a resource set.
+        /// </summary>
+        private void ReadNextResourceSetItem()
+        {
+            Debug.Assert(this.State == ODataReaderState.ResourceSetStart ||
+                this.State == ODataReaderState.DeltaResourceSetStart,
+                "Reading a resource set item while not in a ResourceSetStart or DeltaResourceSetStart state.");
+            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.PrimitiveValue,
+                JsonNodeType.StartObject, JsonNodeType.StartArray);
+
+            // End of item in a resource set
+            switch (this.jsonLightResourceDeserializer.JsonReader.NodeType)
+            {
+                case JsonNodeType.StartObject:
+                    // another resource in a resource set
+                    this.ReadResourceSetItemStart( /*propertyAndAnnotationCollector*/
+                        null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
+                    break;
+                case JsonNodeType.StartArray:
+                    // we are at the start of a nested resource set
+                    this.ReadResourceSetStart(new ODataResourceSet(), SelectedPropertiesNode.EntireSubtree);
+                    break;
+                case JsonNodeType.EndArray:
+                    // we are at the end of a resource set
+                    this.ReadResourceSetEnd();
+                    break;
+                case JsonNodeType.PrimitiveValue:
+                    // we are at a null value, or a non-null primitive value within an untyped collection
+                    object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
+                    if (primitiveValue != null && this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped)
+                    {
+                        this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
+                            this.CurrentNavigationSource, this.CurrentResourceType, this.CurrentScope.ODataUri));
+                    }
+                    else
+                    {
+                        // null resource (ReadResourceStart will raise the appropriate error for a non-null primitive value)
+                        this.ReadResourceSetItemStart( /*propertyAndAnnotationCollector*/
+                            null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
+                    }
+
+                    break;
+                default:
+                    throw new ODataException(
+                        ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
+                            this.jsonLightResourceDeserializer.JsonReader.NodeType));
+            }
+        }
+
+        #region Read<> methods
+
+        #region ResourceSet
+
         /// <summary>
         /// Reads the start of the JSON array for the content of the resource set and sets up the reader state correctly.
         /// </summary>
@@ -1129,7 +1550,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.EnterScope(new JsonLightResourceSetScope(resourceSet, this.CurrentNavigationSource,
-                this.CurrentResourceType, selectedProperties, this.CurrentScope.ODataUri));
+                this.CurrentResourceType, selectedProperties, this.CurrentScope.ODataUri, /*isDelta*/ false));
         }
 
         /// <summary>
@@ -1137,8 +1558,9 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private void ReadResourceSetEnd()
         {
-            Debug.Assert(this.State == ODataReaderState.ResourceSetStart,
-                "this.State == ODataReaderState.ResourceSetStart");
+            Debug.Assert(this.State == ODataReaderState.ResourceSetStart || this.State == ODataReaderState.DeltaResourceSetStart,
+                "Not in ResourceSetStart or DeltaResourceSetStart state when reading end of (delta) resource set.");
+            Debug.Assert(this.Item is ODataResourceSetBase, "Current Item is not ResourceSetBase");
 
             this.jsonLightResourceDeserializer.ReadResourceSetContentEnd();
 
@@ -1153,12 +1575,16 @@ namespace Microsoft.OData.JsonLight
             {
                 // Temp ban reading the instance annotation after the resource set in parameter payload. (!this.IsReadingNestedPayload => !this.readingParameter)
                 // Nested resource set payload won't have a NextLink annotation after the resource set itself since the payload is NOT pageable.
-                this.jsonLightResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(this.CurrentResourceSet,
+                this.jsonLightResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(this.Item as ODataResourceSetBase,
                     expandedNestedResourceInfo, this.topLevelScope.PropertyAndAnnotationCollector);
             }
 
-            this.ReplaceScope(ODataReaderState.ResourceSetEnd);
+            this.ReplaceScope(this.State == ODataReaderState.ResourceSetStart ? ODataReaderState.ResourceSetEnd : ODataReaderState.DeltaResourceSetEnd);
         }
+
+        #endregion ResourceSet
+
+        #region NestedResourceInfo
 
         /// <summary>
         /// Reads the start of an expanded resource (null or non-null).
@@ -1209,15 +1635,39 @@ namespace Microsoft.OData.JsonLight
             {
                 // Expanded resource
                 // The expected type for an expanded resource is the same as for the nested resource info around it.
-                JsonLightResourceScope parentScope = (JsonLightResourceScope)this.ParentScope;
+                JsonLightResourceBaseScope parentScope = (JsonLightResourceBaseScope)this.ParentScope;
                 SelectedPropertiesNode parentSelectedProperties = parentScope.SelectedProperties;
                 Debug.Assert(parentSelectedProperties != null, "parentProjectedProperties != null");
-                this.ReadResourceStart(/*propertyAndAnnotationCollector*/ null, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, nestedResourceInfo.Name));
+                this.ReadResourceSetItemStart(/*propertyAndAnnotationCollector*/ null, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, nestedResourceInfo.Name));
             }
         }
 
         /// <summary>
-        /// Reads the start of a resource and sets up the reader state correctly
+        /// Verifies that the current item is an <see cref="ODataNestedResourceInfo"/> instance,
+        /// sets the cardinality of the link (IsCollection property) and moves the reader
+        /// into state 'NestedResourceInfoEnd'.
+        /// </summary>
+        /// <param name="isCollection">A flag indicating whether the link represents a collection or not.</param>
+        private void ReadExpandedNestedResourceInfoEnd(bool isCollection)
+        {
+            Debug.Assert(this.State == ODataReaderState.NestedResourceInfoStart,
+                "this.State == ODataReaderState.NestedResourceInfoStart");
+            this.CurrentNestedResourceInfo.IsCollection = isCollection;
+
+            // Record that we read the link on the parent resource's scope.
+            IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.ParentScope;
+            parentResourceState.NavigationPropertiesRead.Add(this.CurrentNestedResourceInfo.Name);
+
+            // replace the 'NestedResourceInfoStart' scope with the 'NestedResourceInfoEnd' scope
+            this.ReplaceScope(ODataReaderState.NestedResourceInfoEnd);
+        }
+
+        #endregion NestedResourceInfo
+
+        #region Resource
+
+        /// <summary>
+        /// Reads the start of a (standard, delta, primitive, or null) resource and sets up the reader state correctly
         /// </summary>
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
@@ -1232,9 +1682,12 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.Property               Property after deferred link or expanded entity reference
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        private void ReadResourceStart(PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+        private void ReadResourceSetItemStart(PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             SelectedPropertiesNode selectedProperties)
         {
+            IEdmNavigationSource source = this.CurrentNavigationSource;
+            IEdmStructuredType resourceType = this.CurrentResourceType;
+
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property,
                 JsonNodeType.EndObject, JsonNodeType.PrimitiveValue);
 
@@ -1272,7 +1725,8 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.Read();
             }
 
-            if (this.ReadingResourceSet || this.IsExpandedLinkContent)
+            ODataDeltaKind resourceKind = ODataDeltaKind.Resource;
+            if (this.ReadingResourceSet || this.IsExpandedLinkContent || this.ReadingDelta)
             {
                 string contextUriStr =
                     this.jsonLightResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Resource,
@@ -1284,28 +1738,159 @@ namespace Microsoft.OData.JsonLight
                     var parseResult = ODataJsonLightContextUriParser.Parse(
                         this.jsonLightResourceDeserializer.Model,
                         contextUriStr,
-                        ODataPayloadKind.Resource,
+                        this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.Resource,
                         this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
                         this.jsonLightInputContext.ReadingResponse);
-                    if (this.jsonLightInputContext.ReadingResponse && parseResult != null)
+                    if (parseResult != null)
                     {
-                        ReaderValidationUtils.ValidateResourceSetOrResourceContextUri(parseResult, this.CurrentScope,
-                            false);
+                        resourceKind = parseResult.DeltaKind;
+                        if (this.jsonLightInputContext.ReadingResponse)
+                        {
+                            // a top-level (deleted) resource in a delta response can come from any entity set
+                            if (this.ReadingDelta && this.IsTopLevel && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
+                            {
+                                IEdmStructuredType parsedType = parseResult.EdmType as IEdmStructuredType;
+                                if (parsedType != null)
+                                {
+                                    resourceType = parsedType;
+                                    source = parseResult.NavigationSource;
+                                }
+                            }
+                            else
+                            {
+                                ReaderValidationUtils.ValidateResourceSetOrResourceContextUri(parseResult, this.CurrentScope,
+                                    false);
+                            }
+                        }
                     }
                 }
             }
 
-            // Setup the new resource state
-            this.StartResource(propertyAndAnnotationCollector, selectedProperties);
+            // If this is a resource in a delta resource set, check to see if it's a 4.01 deleted resource
+            ODataDeletedResource deletedResource = null;
+            if (this.ReadingDelta && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
+            {
+                deletedResource = this.jsonLightResourceDeserializer.IsDeletedResource();
+                if (deletedResource != null)
+                {
+                    resourceKind = ODataDeltaKind.DeletedEntry;
+                }
+            }
+
+            switch (resourceKind)
+            {
+                case ODataDeltaKind.None:
+                case ODataDeltaKind.Resource:
+                    // Setup the new resource state
+                    this.StartResource(source, resourceType, propertyAndAnnotationCollector, selectedProperties);
+
+                    // Start reading the resource up to the first nested resource info
+                    this.StartReadingResource();
+
+                    break;
+
+                case ODataDeltaKind.ResourceSet:
+                    this.ReadAtResourceSetStartImplementation();
+                    break;
+
+                case ODataDeltaKind.DeletedEntry:
+                    // OData 4.0 deleted entry
+                    if (deletedResource == null)
+                    {
+                        deletedResource = this.jsonLightResourceDeserializer.ReadDeletedEntry();
+                        this.StartDeletedResource(
+                            deletedResource,
+                            source,
+                            resourceType,
+                            propertyAndAnnotationCollector,
+                            selectedProperties,
+                            true /*is 4.0 Deleted Resource*/);
+                    }
+                    else // OData 4.01 deleted entry
+                    {
+                        this.StartDeletedResource(
+                            deletedResource,
+                            source,
+                            resourceType,
+                            propertyAndAnnotationCollector,
+                            selectedProperties);
+
+                        // Start reading the resource up to the first nested resource info
+                        this.StartReadingResource();
+                    }
+
+                    break;
+
+                case ODataDeltaKind.DeletedLink:
+                    this.StartDeltaLink(ODataReaderState.DeltaDeletedLink);
+                    break;
+
+                case ODataDeltaKind.Link:
+                    this.StartDeltaLink(ODataReaderState.DeltaLink);
+                    break;
+
+                default:
+                    Debug.Assert(true, "Uknown ODataDeltaKind " + resourceKind.ToString());
+                    break;
+            }
+        }
+
+        #endregion Resource
+
+        #region DeltaResourceSet
+        /// <summary>
+        /// Reads the start of the JSON array for the content of the delta resource set and sets up the reader state correctly.
+        /// </summary>
+        /// <param name="deltaResourceSet">The delta resource set to read the contents for.</param>
+        /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
+        /// <remarks>
+        /// Pre-Condition:  The first node of the resource set property value; this method will throw if the node is not
+        ///                 JsonNodeType.StartArray
+        /// Post-Condition: The reader is positioned on the first item in the resource set, or on the end array of the resource set.
+        /// </remarks>
+        private void ReadDeltaResourceSetStart(ODataDeltaResourceSet deltaResourceSet, SelectedPropertiesNode selectedProperties)
+        {
+            Debug.Assert(deltaResourceSet != null, "resourceSet != null");
+
+            this.jsonLightResourceDeserializer.ReadResourceSetContentStart();
+            IJsonReader jsonReader = this.jsonLightResourceDeserializer.JsonReader;
+            if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
+            }
+
+            Debug.Assert(this.CurrentResourceType is IEdmEntityType, "Delta resource type is not an entity");
+
+            this.EnterScope(new JsonLightResourceSetScope(
+                deltaResourceSet,
+                this.CurrentNavigationSource,
+                this.CurrentResourceType as IEdmEntityType,
+                selectedProperties,
+                this.CurrentScope.ODataUri,
+                /*isDelta*/ true));
+        }
+
+        #endregion DeltaResourceSet
+
+        #endregion Read<> methods
+
+        #region private methods
+
+        /// <summary>
+        /// Read the resource up to the first nested resource info.
+        /// </summary>
+        private void StartReadingResource()
+        {
+            ODataResourceBase currentResource = this.Item as ODataResourceBase;
 
             // Read the odata.type annotation.
             this.jsonLightResourceDeserializer.ReadResourceTypeName(this.CurrentResourceState);
 
             // Resolve the type name
-            this.ApplyResourceTypeNameFromPayload(this.CurrentResource.TypeName);
+            this.ApplyResourceTypeNameFromPayload(currentResource.TypeName);
 
-            // Validate type with resource set validator if available
-            if (this.CurrentResourceSetValidator != null)
+            // Validate type with resource set validator if available and not reading top-level delta resource set
+            if (this.CurrentResourceSetValidator != null && !(this.ReadingDelta && this.CurrentResourceDepth == 0))
             {
                 this.CurrentResourceSetValidator.ValidateResource(this.CurrentResourceType);
             }
@@ -1318,26 +1903,6 @@ namespace Microsoft.OData.JsonLight
                 JsonNodeType.StartArray,
                 JsonNodeType.EndObject,
                 JsonNodeType.PrimitiveValue);
-        }
-
-        /// <summary>
-        /// Verifies that the current item is an <see cref="ODataNestedResourceInfo"/> instance,
-        /// sets the cardinality of the link (IsCollection property) and moves the reader
-        /// into state 'NestedResourceInfoEnd'.
-        /// </summary>
-        /// <param name="isCollection">A flag indicating whether the link represents a collection or not.</param>
-        private void ReadExpandedNestedResourceInfoEnd(bool isCollection)
-        {
-            Debug.Assert(this.State == ODataReaderState.NestedResourceInfoStart,
-                "this.State == ODataReaderState.NestedResourceInfoStart");
-            this.CurrentNestedResourceInfo.IsCollection = isCollection;
-
-            // Record that we read the link on the parent resource's scope.
-            IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.ParentScope;
-            parentResourceState.NavigationPropertiesRead.Add(this.CurrentNestedResourceInfo.Name);
-
-            // replace the 'NestedResourceInfoStart' scope with the 'NestedResourceInfoEnd' scope
-            this.ReplaceScope(ODataReaderState.NestedResourceInfoEnd);
         }
 
         /// <summary>
@@ -1361,8 +1926,16 @@ namespace Microsoft.OData.JsonLight
                 {
                     // because this is a request, there is no $select query option.
                     SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.EntireSubtree;
-                    this.ReadResourceSetStart(nestedResourceInfo.NestedResourceSet ?? new ODataResourceSet(),
-                        selectedProperties);
+                    ODataDeltaResourceSet deltaResourceSet = nestedResourceInfo.NestedResourceSet as ODataDeltaResourceSet;
+                    if (deltaResourceSet != null)
+                    {
+                        this.ReadDeltaResourceSetStart(deltaResourceSet, selectedProperties);
+                    }
+                    else
+                    {
+                        ODataResourceSet resourceSet = nestedResourceInfo.NestedResourceSet as ODataResourceSet;
+                        this.ReadResourceSetStart(resourceSet ?? new ODataResourceSet(), selectedProperties);
+                    }
                 }
                 else
                 {
@@ -1379,20 +1952,88 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Starts the resource, initializing the scopes and such. This method starts a non-null resource only.
         /// </summary>
+        /// <param name="source">The source for the resource</param>
+        /// <param name="resourceType">The entity type of the resource</param>
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
-        private void StartResource(PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+        private void StartResource(IEdmNavigationSource source, IEdmStructuredType resourceType, PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             SelectedPropertiesNode selectedProperties)
         {
             this.EnterScope(new JsonLightResourceScope(
                 ODataReaderState.ResourceStart,
                 ReaderUtils.CreateNewResource(),
-                this.CurrentNavigationSource,
-                this.CurrentResourceType,
+                source,
+                resourceType,
                 propertyAndAnnotationCollector ?? this.jsonLightInputContext.CreatePropertyAndAnnotationCollector(),
                 selectedProperties,
                 this.CurrentScope.ODataUri));
+        }
+
+        /// <summary>
+        /// Starts the deleted resource, initializing the scopes and such. This method starts a non-null resource only.
+        /// </summary>
+        /// <param name="deletedResource">The deletedResource to be created.</param>
+        /// <param name="source">The navigation source of the deleted resource.</param>
+        /// <param name="resourceType">The entity type of the deleted resource.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
+        /// or null if a new one should be created.</param>
+        /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
+        /// <param name="is40DeletedResource">Whether the current resource being read is a 4.0-style deleted resource.</param>
+        private void StartDeletedResource(ODataDeletedResource deletedResource, IEdmNavigationSource source, IEdmStructuredType resourceType, PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+            SelectedPropertiesNode selectedProperties, bool is40DeletedResource = false)
+        {
+            this.EnterScope(new JsonLightDeletedResourceScope(
+                ODataReaderState.DeletedResourceStart,
+                deletedResource,
+                source,
+                resourceType,
+                propertyAndAnnotationCollector ?? this.jsonLightInputContext.CreatePropertyAndAnnotationCollector(),
+                selectedProperties,
+                this.CurrentScope.ODataUri,
+                is40DeletedResource));
+        }
+
+        /// <summary>
+        /// Starts the (deleted) link, initializing the scopes and such. This method starts a non-null resource only.
+        /// </summary>
+        /// <param name="state">The reader state to switch to.</param>
+        private void StartDeltaLink(ODataReaderState state)
+        {
+            Debug.Assert(
+                state == ODataReaderState.DeltaLink || state == ODataReaderState.DeltaDeletedLink,
+                "state must be either DeltaResource or DeltaDeletedEntry or DeltaLink or DeltaDeletedLink.");
+            Debug.Assert(this.CurrentResourceType is IEdmEntityType, "DeltaLink is not from an entity type");
+
+            ODataDeltaLinkBase link;
+            if (state == ODataReaderState.DeltaLink)
+            {
+                link = new ODataDeltaLink(null, null, null);
+            }
+            else
+            {
+                link = new ODataDeltaDeletedLink(null, null, null);
+            }
+
+            this.EnterScope(new JsonLightDeltaLinkScope(
+                state,
+                link,
+                this.CurrentNavigationSource,
+                this.CurrentResourceType as IEdmEntityType,
+                this.CurrentScope.ODataUri));
+
+            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
+
+            // Read source property.
+            this.jsonLightResourceDeserializer.ReadDeltaLinkSource(link);
+
+            // Read relationship property.
+            this.jsonLightResourceDeserializer.ReadDeltaLinkRelationship(link);
+
+            // Read target property.
+            this.jsonLightResourceDeserializer.ReadDeltaLinkTarget(link);
+
+            Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject, "Unexpected content in a delta (deleted) link");
         }
 
         /// <summary>
@@ -1456,7 +2097,7 @@ namespace Microsoft.OData.JsonLight
             IEdmNavigationSource navigationSource;
 
             // Since we are entering a nested info scope, check whether the current resource is derived type in order to correctly further property or navigation property.
-            var currentScope = this.CurrentScope as JsonLightResourceScope;
+            JsonLightResourceBaseScope currentScope = this.CurrentScope as JsonLightResourceBaseScope;
             ODataUri odataUri = this.CurrentScope.ODataUri.Clone();
             ODataPath odataPath = odataUri.Path ?? new ODataPath();
 
@@ -1522,7 +2163,7 @@ namespace Microsoft.OData.JsonLight
                 if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
                 {
                     IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
-                    ODataResource resource = this.CurrentScope.Item as ODataResource;
+                    ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
                     KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, null, currentEntityType);
                     odataPath = odataPath.AppendKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
                 }
@@ -1553,18 +2194,19 @@ namespace Microsoft.OData.JsonLight
         private void EndEntry()
         {
             IODataJsonLightReaderResourceState resourceState = this.CurrentResourceState;
+            ODataResourceBase currentResource = this.Item as ODataResourceBase;
 
-            if (this.CurrentResource != null && !this.IsReadingNestedPayload)
+            if (currentResource != null && !this.IsReadingNestedPayload)
             {
                 // Builder should not be used outside the odataresource, lazy builder logic does not work here
                 // We should refactor this
                 foreach (string navigationPropertyName in this.CurrentResourceState.NavigationPropertiesRead)
                 {
-                    this.CurrentResource.MetadataBuilder.MarkNestedResourceInfoProcessed(navigationPropertyName);
+                    currentResource.MetadataBuilder.MarkNestedResourceInfoProcessed(navigationPropertyName);
                 }
 
                 ODataConventionalEntityMetadataBuilder builder =
-                    this.CurrentResource.MetadataBuilder as ODataConventionalEntityMetadataBuilder;
+                    currentResource.MetadataBuilder as ODataConventionalEntityMetadataBuilder;
                 if (builder != null)
                 {
                     builder.EndResource();
@@ -1573,13 +2215,13 @@ namespace Microsoft.OData.JsonLight
 
             this.jsonLightResourceDeserializer.ValidateMediaEntity(resourceState);
 
-            // In responses, ensure that all projected properties get created.
+            // In non-delta responses, ensure that all projected properties get created.
             // Also ignore cases where the resource is 'null' which happens for expanded null entries.
-            if (this.jsonLightInputContext.ReadingResponse && this.CurrentResource != null)
+            if (this.jsonLightInputContext.ReadingResponse && !this.ReadingDelta && currentResource != null)
             {
                 // If we have a projected nested resource info that was missing from the payload, report it now.
                 ODataJsonLightReaderNestedResourceInfo unprocessedNestedResourceInfo =
-                    this.CurrentResource.MetadataBuilder.GetNextUnprocessedNavigationLink();
+                    currentResource.MetadataBuilder.GetNextUnprocessedNavigationLink();
                 if (unprocessedNestedResourceInfo != null)
                 {
                     this.CurrentResourceState.ProcessingMissingProjectedNestedResourceInfos = true;
@@ -1588,15 +2230,30 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            this.EndEntry(
-                new JsonLightResourceScope(
-                    ODataReaderState.ResourceEnd,
-                    (ODataResource)this.Item,
-                    this.CurrentNavigationSource,
-                    this.CurrentResourceType,
-                    this.CurrentResourceState.PropertyAndAnnotationCollector,
-                    this.CurrentResourceState.SelectedProperties,
-                    this.CurrentScope.ODataUri));
+            if (this.State == ODataReaderState.ResourceStart)
+            {
+                this.EndEntry(
+                    new JsonLightResourceScope(
+                        ODataReaderState.ResourceEnd,
+                        (ODataResource)this.Item,
+                        this.CurrentNavigationSource,
+                        this.CurrentResourceType,
+                        this.CurrentResourceState.PropertyAndAnnotationCollector,
+                        this.CurrentResourceState.SelectedProperties,
+                        this.CurrentScope.ODataUri));
+            }
+            else
+            {
+                this.EndEntry(
+                    new JsonLightDeletedResourceScope(
+                        ODataReaderState.DeletedResourceEnd,
+                        (ODataDeletedResource)this.Item,
+                        this.CurrentNavigationSource,
+                        this.CurrentResourceType,
+                        this.CurrentResourceState.PropertyAndAnnotationCollector,
+                        this.CurrentResourceState.SelectedProperties,
+                        this.CurrentScope.ODataUri));
+            }
         }
 
         /// <summary>
@@ -1641,6 +2298,10 @@ namespace Microsoft.OData.JsonLight
                 }
             }
         }
+
+#endregion private methods
+
+        #region scopes
 
         /// <summary>
         /// A reader top-level scope; keeping track of the current reader state and an item associated with this state.
@@ -1693,7 +2354,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// A reader resource scope; keeping track of the current reader state and an item associated with this state.
         /// </summary>
-        private sealed class JsonLightResourceScope : Scope, IODataJsonLightReaderResourceState
+        private abstract class JsonLightResourceBaseScope : Scope, IODataJsonLightReaderResourceState
         {
             /// <summary>The set of names of the navigation properties we have read so far while reading the resource.</summary>
             private List<string> navigationPropertiesRead;
@@ -1713,9 +2374,9 @@ namespace Microsoft.OData.JsonLight
             ///   this type will be assumed. Otherwise the specified type name must be
             ///   the expected type or a more derived type.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightResourceScope(
+            protected JsonLightResourceBaseScope(
                 ODataReaderState readerState,
-                ODataResource resource,
+                ODataResourceBase resource,
                 IEdmNavigationSource navigationSource,
                 IEdmStructuredType expectedResourceType,
                 PropertyAndAnnotationCollector propertyAndAnnotationCollector,
@@ -1724,8 +2385,9 @@ namespace Microsoft.OData.JsonLight
                 : base(readerState, resource, navigationSource, expectedResourceType, odataUri)
             {
                 Debug.Assert(
-                    readerState == ODataReaderState.ResourceStart || readerState == ODataReaderState.ResourceEnd,
-                    "readerState == ODataReaderState.ResourceStart || readerState == ODataReaderState.ResourceEnd");
+                    readerState == ODataReaderState.ResourceStart || readerState == ODataReaderState.ResourceEnd ||
+                    readerState == ODataReaderState.DeletedResourceStart || readerState == ODataReaderState.DeletedResourceEnd,
+                    "Resource scope created for invalid reader state: " + readerState);
 
                 this.PropertyAndAnnotationCollector = propertyAndAnnotationCollector;
                 this.SelectedProperties = selectedProperties;
@@ -1777,16 +2439,22 @@ namespace Microsoft.OData.JsonLight
             public bool ProcessingMissingProjectedNestedResourceInfos { get; set; }
 
             /// <summary>
+            /// The expected type defined in the model for the resource.
+            /// </summary>
+            public IEdmStructuredType ResourceTypeFromMetadata { get; set; }
+
+            /// <summary>
             /// The resource being read.
             /// </summary>
-            ODataResource IODataJsonLightReaderResourceState.Resource
+            ODataResourceBase IODataJsonLightReaderResourceState.Resource
             {
                 get
                 {
                     Debug.Assert(
-                        this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd,
+                        this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd ||
+                        this.State == ODataReaderState.DeletedResourceStart || this.State == ODataReaderState.DeletedResourceEnd,
                         "The IODataJsonLightReaderResourceState is only supported on ResourceStart or ResourceEnd scope.");
-                    return (ODataResource)this.Item;
+                    return (ODataResourceBase)this.Item;
                 }
             }
 
@@ -1798,16 +2466,11 @@ namespace Microsoft.OData.JsonLight
                 get
                 {
                     Debug.Assert(
-                        this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd,
-                        "The IODataJsonLightReaderResourceState is only supported on ResourceStart or ResourceEnd scope.");
+                        this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd | this.State == ODataReaderState.DeletedResourceStart || this.State == ODataReaderState.DeletedResourceEnd,
+                        "The IODataJsonLightReaderResourceState is only supported on (Deleted)ResourceStart or (Deleted)ResourceEnd scope.");
                     return this.ResourceType;
                 }
             }
-
-            /// <summary>
-            /// The expected type defined in the model for the resource.
-            /// </summary>
-            public IEdmStructuredType ResourceTypeFromMetadata { get; set; }
 
             /// <summary>
             /// The navigation source for the resource (if available)
@@ -1816,6 +2479,78 @@ namespace Microsoft.OData.JsonLight
             {
                 get { return this.NavigationSource; }
             }
+        }
+
+        /// <summary>
+        /// Base class for a reader resource scope; keeping track of the current reader state and an item associated with this state.
+        /// </summary>
+        private sealed class JsonLightResourceScope : JsonLightResourceBaseScope
+        {
+            /// <summary>
+            /// Constructor creating a new reader scope.
+            /// </summary>
+            /// <param name="readerState">The reader state of the new scope that is being created.</param>
+            /// <param name="resource">The item attached to this scope.</param>
+            /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+            /// <param name="expectedResourceType">The expected type for the scope.</param>
+            /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for this resource scope.</param>
+            /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
+            /// <remarks>The <paramref name="expectedResourceType"/> has the following meaning
+            ///   it's the expected base type of the resource. If the resource has no type name specified
+            ///   this type will be assumed. Otherwise the specified type name must be
+            ///   the expected type or a more derived type.
+            /// In all cases the specified type must be an entity type.</remarks>
+            internal JsonLightResourceScope(
+                ODataReaderState readerState,
+                ODataResourceBase resource,
+                IEdmNavigationSource navigationSource,
+                IEdmStructuredType expectedResourceType,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+                SelectedPropertiesNode selectedProperties,
+                ODataUri odataUri)
+                : base(readerState, resource, navigationSource, expectedResourceType, propertyAndAnnotationCollector, selectedProperties, odataUri)
+            {
+            }
+        }
+
+        /// <summary>
+        /// A reader deleted resource scope; keeping track of the current reader state and an item associated with this state.
+        /// </summary>
+        private sealed class JsonLightDeletedResourceScope : JsonLightResourceBaseScope
+        {
+            /// <summary>
+            /// Constructor creating a new reader scope.
+            /// </summary>
+            /// <param name="readerState">The reader state of the new scope that is being created.</param>
+            /// <param name="resource">The item attached to this scope.</param>
+            /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+            /// <param name="expectedResourceType">The expected type for the scope.</param>
+            /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for this resource scope.</param>
+            /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
+            /// <param name="is40DeletedResource">Whether the deleted resource being read is an OData 4.0 Deleted Resource</param>
+            /// <remarks>The <paramref name="expectedResourceType"/> has the following meaning
+            ///   it's the expected base type of the resource. If the resource has no type name specified
+            ///   this type will be assumed. Otherwise the specified type name must be
+            ///   the expected type or a more derived type.
+            /// In all cases the specified type must be an entity type.</remarks>
+            internal JsonLightDeletedResourceScope(
+                ODataReaderState readerState,
+                ODataDeletedResource resource,
+                IEdmNavigationSource navigationSource,
+                IEdmStructuredType expectedResourceType,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+                SelectedPropertiesNode selectedProperties,
+                ODataUri odataUri,
+                bool is40DeletedResource = false)
+                : base(readerState, resource, navigationSource, expectedResourceType, propertyAndAnnotationCollector, selectedProperties, odataUri)
+            {
+                this.Is40DeletedResource = is40DeletedResource;
+            }
+
+            /// <summary>Whether the payload is an OData 4.0 deleted resource.</summary>
+            internal bool Is40DeletedResource { get; }
         }
 
         /// <summary>
@@ -1831,12 +2566,13 @@ namespace Microsoft.OData.JsonLight
             /// <param name="expectedResourceType">The expected type for the scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
+            /// <param name="isDelta">True of the ResourceSetScope is for a delta resource set</param>
             /// <remarks>The <paramref name="expectedResourceType"/> has the following meaning
             ///   it's the expected base type of the entries in the resource set.
             ///   note that it might be a more derived type than the base type of the entity set for the resource set.
             /// In all cases the specified type must be an entity type.</remarks>
-            internal JsonLightResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(ODataReaderState.ResourceSetStart, resourceSet, navigationSource, expectedResourceType, odataUri)
+            internal JsonLightResourceSetScope(ODataResourceSetBase resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isDelta)
+                : base(isDelta ? ODataReaderState.DeltaResourceSetStart : ODataReaderState.ResourceSetStart, resourceSet, navigationSource, expectedResourceType, odataUri)
             {
                 this.SelectedProperties = selectedProperties;
             }
@@ -1872,5 +2608,34 @@ namespace Microsoft.OData.JsonLight
             /// </summary>
             public ODataJsonLightReaderNestedResourceInfo ReaderNestedResourceInfo { get; private set; }
         }
+
+        /// <summary>
+        /// A reader scope; keeping track of the current reader state and an item associated with this state.
+        /// </summary>
+        private sealed class JsonLightDeltaLinkScope : Scope
+        {
+            /// <summary>
+            /// Constructor creating a new reader scope.
+            /// </summary>
+            /// <param name="state">The reader state of the new scope that is being created.</param>
+            /// <param name="link">The link info attached to this scope.</param>
+            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
+            /// <param name="expectedEntityType">The expected type for the scope.</param>
+            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
+            /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
+            ///   it's the expected base type the entries in the expanded link (either the single resource
+            ///   or entries in the expanded resource set).
+            /// In all cases the specified type must be an entity type.</remarks>
+            public JsonLightDeltaLinkScope(ODataReaderState state, ODataDeltaLinkBase link, IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType, ODataUri odataUri)
+                : base(state, link, navigationSource, expectedEntityType, odataUri)
+            {
+                Debug.Assert(
+                    state == ODataReaderState.DeltaLink && link is ODataDeltaLink ||
+                    state == ODataReaderState.DeltaDeletedLink && link is ODataDeltaDeletedLink,
+                    "link must be either DeltaLink or DeltaDeletedLink.");
+            }
+        }
+
+        #endregion Scopes
     }
 }

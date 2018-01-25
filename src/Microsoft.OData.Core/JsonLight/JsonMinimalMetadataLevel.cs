@@ -19,14 +19,6 @@ namespace Microsoft.OData.JsonLight
     internal sealed class JsonMinimalMetadataLevel : JsonLightMetadataLevel
     {
         /// <summary>
-        /// Indicates which level of context Url should be used when writing payload.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get { return ODataContextUrlLevel.OnDemand; }
-        }
-
-        /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
@@ -50,7 +42,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
-            ODataResource resource,
+            ODataResourceBase resource,
             IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
             IEdmStructuredType actualResourceType,
@@ -70,7 +62,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resource">The resource to inject the builder.</param>
         /// <param name="builder">The metadata builder to inject.</param>
-        internal override void InjectMetadataBuilder(ODataResource resource, ODataResourceMetadataBuilder builder)
+        internal override void InjectMetadataBuilder(ODataResourceBase resource, ODataResourceMetadataBuilder builder)
         {
             // For minimal metadata we don't want to change the metadata builder that's currently on the resource because the resource might come from a JSON light
             // reader and it would contain the metadata builder from the reader.  Until we give the user the ability to choose whether to write what was reported

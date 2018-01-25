@@ -35,7 +35,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private TestClientEntityType entityWithDerivedComplexProperty;
         private TestClientEntityType entityWithDerivedComplexInCollection;
         private string serverComplexTypeName;
-        private string serverDerivedComplexTypeName;
 
         [TestInitialize]
         public void Init()
@@ -172,7 +171,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var nestedResourceInfo = results.Single().NestedResourceInfo;
             var nestedResource = results.Single().NestedResourceOrResourceSet.Item;
-            nestedResource.Should().BeResource().And.HaveSerializationTypeName(this.serverDerivedComplexTypeName);
+            nestedResource.Should().BeResource().And.HaveSerializationTypeName(null);
             nestedResourceInfo.Name.Should().Be("Address");
         }
 

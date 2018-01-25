@@ -22,7 +22,7 @@ namespace Microsoft.OData
         /// <param name="resourceType">Optional entity type to validate the resource against.</param>
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed,
         /// properties and such are not validated.</remarks>
-        void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType);
+        void ValidateMediaResource(ODataResourceBase resource, IEdmEntityType resourceType);
 
         /// <summary>
         /// Creates a PropertyAndAnnotationCollector instance.

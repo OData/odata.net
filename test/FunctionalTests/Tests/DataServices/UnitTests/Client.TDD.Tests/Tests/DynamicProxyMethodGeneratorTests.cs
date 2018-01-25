@@ -25,7 +25,11 @@ namespace AstoriaUnitTests.Tests.Client
 
             public bool HasPermissionsToCreateDynamicMethodsWithSkipVisibility { get; set; }
 
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            protected bool ThisAssemblyCanCreateHostedDynamicMethodsWithSkipVisibility()
+#else
             protected override bool ThisAssemblyCanCreateHostedDynamicMethodsWithSkipVisibility()
+#endif
             {
                 return this.HasPermissionsToCreateDynamicMethodsWithSkipVisibility;
             }
@@ -35,7 +39,12 @@ namespace AstoriaUnitTests.Tests.Client
         public void Sut_creates_Expression_method_call_bound_to_arguments()
         {
             // Arrange
-            var target = ((Func<int, int, int>)Sum).Method;
+            MethodInfo target;
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            target = ((Func<int, int, int>)Sum).GetMethodInfo();
+#else
+            target = ((Func<int, int, int>)Sum).Method;
+#endif
 
             const int firstAddend = 5;
             const int secondAddend = 17;
@@ -63,6 +72,7 @@ namespace AstoriaUnitTests.Tests.Client
             Assert.AreEqual(expectedSum, result);
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void When_client_can_create_DynamicMethod_with_skip_visibility_GetCallWrapper_returns_Expression_which_calls_DynamicMethod()
         {
@@ -82,12 +92,18 @@ namespace AstoriaUnitTests.Tests.Client
             Assert.IsNotNull(mce, "Expected return value to be a MethodCallExpression.");
             Assert.IsInstanceOfType(mce.Method, typeof(DynamicMethod));
         }
+#endif
 
         [TestMethod]
         public void When_client_cannot_create_DynamicMethod_with_skip_visibility_GetCallWrapper_returns_Expression_which_calls_method_directly()
         {
             // Arrange
-            var target = ((Action)Simple).Method;
+            MethodInfo target;
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            target = ((Action)Simple).GetMethodInfo();
+#else
+            target = ((Action)Simple).Method;
+#endif
             var sut = new DynamicProxyMethodGeneratorSimulator
             {
                 HasPermissionsToCreateDynamicMethodsWithSkipVisibility = false
@@ -127,7 +143,12 @@ namespace AstoriaUnitTests.Tests.Client
         public void When_client_can_create_DynamicMethods_with_skip_visibility_GetCallWrapper_returns_cached_DynamicMethod_on_multiple_calls()
         {
             // Arrange
-            var target = ((Action)Simple).Method;
+            MethodInfo target;
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            target = ((Action)Simple).GetMethodInfo();
+#else
+            target = ((Action)Simple).Method;
+#endif
             var sut = new DynamicProxyMethodGeneratorSimulator
             {
                 HasPermissionsToCreateDynamicMethodsWithSkipVisibility = true

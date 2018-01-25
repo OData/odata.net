@@ -11,7 +11,9 @@ namespace Microsoft.OData
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
+    using System.Text;
     using Microsoft.OData.Json;
+    using Microsoft.OData.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
@@ -26,7 +28,7 @@ namespace Microsoft.OData
         private static ODataRawValueFormat rawValueFormat = new ODataRawValueFormat();
 
         /// <summary>The batch format instance.</summary>
-        private static ODataBatchFormat batchFormat = new ODataBatchFormat();
+        private static ODataMultipartMixedBatchFormat batchFormat = new ODataMultipartMixedBatchFormat();
 
         /// <summary>The metadata format instance.</summary>
         private static ODataMetadataFormat metadataFormat = new ODataMetadataFormat();
@@ -129,5 +131,22 @@ namespace Microsoft.OData
         /// <returns>Task which represents the pending create operation.</returns>
         public abstract Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 #endif
+
+        /// <summary>
+        /// Returns the appropriate content-type for this format.
+        /// </summary>
+        /// <param name="mediaType">The specified media type.</param>
+        /// <param name="encoding">The specified encoding.</param>
+        /// <param name="writingResponse">True if the message writer is being used to write a response.</param>
+        /// <param name="mediaTypeParameters"> The resultant parameters list of the media type. Parameters list could be updated
+        /// when getting content type and should be returned if that is the case.
+        /// </param>
+        /// <returns>The content-type value for the format.</returns>
+        internal virtual string GetContentType(ODataMediaType mediaType, Encoding encoding,
+            bool writingResponse, out IEnumerable<KeyValuePair<string, string>> mediaTypeParameters)
+        {
+            mediaTypeParameters = mediaType.Parameters;
+            return HttpUtils.BuildContentType(mediaType, encoding);
+        }
     }
 }

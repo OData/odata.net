@@ -14,20 +14,32 @@ namespace Microsoft.OData
     public sealed class ODataSimplifiedOptions
     {
         /// <summary>
-        /// Instance for <see cref="ODataSimplifiedOptions"/>.
+        /// Constructor of ODataSimplifiedOptions
         /// </summary>
-        private static readonly ODataSimplifiedOptions DefaultOptions = new ODataSimplifiedOptions();
+        public ODataSimplifiedOptions() : this(null /*version*/)
+        {
+        }
 
         /// <summary>
         /// Constructor of ODataSimplifiedOptions
         /// </summary>
-        public ODataSimplifiedOptions()
+        /// <param name="version">The ODataVersion to create Default Options for.</param>
+        public ODataSimplifiedOptions(ODataVersion? version)
         {
             this.EnableParsingKeyAsSegmentUrl = true;
-            this.EnableReadingKeyAsSegment = false;
-            this.EnableReadingODataAnnotationWithoutPrefix = false;
             this.EnableWritingKeyAsSegment = false;
-            this.EnableWritingODataAnnotationWithoutPrefix = false;
+            this.EnableReadingKeyAsSegment = false;
+
+            if (version == null || version < ODataVersion.V401)
+            {
+                this.EnableReadingODataAnnotationWithoutPrefix = false;
+                this.EnableWritingODataAnnotationWithoutPrefix = false;
+            }
+            else
+            {
+                this.EnableReadingODataAnnotationWithoutPrefix = true;
+                this.EnableWritingODataAnnotationWithoutPrefix = true;
+            }
         }
 
         /// <summary>
@@ -44,7 +56,8 @@ namespace Microsoft.OData
         public bool EnableReadingKeyAsSegment { get; set; }
 
         /// <summary>
-        /// True if can read reserved annotation name without prefix 'odata.', otherwise false. The default value is false.
+        /// True if can read reserved annotation name without prefix 'odata.', otherwise false.
+        /// The default value is false for OData 4.0 and true for OData 4.01.
         /// The option is applied during deserialization.
         /// </summary>
         public bool EnableReadingODataAnnotationWithoutPrefix { get; set; }
@@ -58,7 +71,8 @@ namespace Microsoft.OData
         public bool EnableWritingKeyAsSegment { get; set; }
 
         /// <summary>
-        /// True if write reserved annotation name without prefix 'odata.', otherwise false. The default value is false.
+        /// True if write reserved annotation name without prefix 'odata.', otherwise false.
+        /// The default value is false for OData 4.0, true for OData 4.01.
         /// The option is applied during serialization.
         /// </summary>
         public bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
@@ -79,12 +93,13 @@ namespace Microsoft.OData
         /// Otherwise return the static instance of ODataSimplifiedOptions.
         /// </summary>
         /// <param name="container">Container</param>
+        /// <param name="version">OData Version</param>
         /// <returns>Instance of GetODataSimplifiedOptions</returns>
-        internal static ODataSimplifiedOptions GetODataSimplifiedOptions(IServiceProvider container)
+        internal static ODataSimplifiedOptions GetODataSimplifiedOptions(IServiceProvider container, ODataVersion? version = null)
         {
             if (container == null)
             {
-                return DefaultOptions;
+                return new ODataSimplifiedOptions(version);
             }
 
             return container.GetRequiredService<ODataSimplifiedOptions>();

@@ -44,6 +44,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// A read-only enumeration of <code>contentIdCache</code>.
+        /// </summary>
+        internal IEnumerable<string> ContentIdCache
+        {
+            get { return this.contentIdCache; }
+        }
+
+        /// <summary>
         /// Method to implement a custom URL conversion scheme.
         /// This method returns null if not custom conversion is desired.
         /// If the method returns a non-null URL that value will be used without further validation.

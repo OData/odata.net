@@ -27,7 +27,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// The resource instance.
         /// </summary>
-        private readonly ODataResource resource;
+        private readonly ODataResourceBase resource;
 
         /// <summary>
         /// The context object to answer basic questions regarding the type of the resource.
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="resource">The resource instance.</param>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
-        protected ODataResourceMetadataContext(ODataResource resource, IODataResourceTypeContext typeContext)
+        protected ODataResourceMetadataContext(ODataResourceBase resource, IODataResourceTypeContext typeContext)
         {
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(typeContext != null, "typeContext != null");
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// The resource instance.
         /// </summary>
-        public ODataResource Resource
+        public ODataResourceBase Resource
         {
             get { return this.resource; }
         }
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="selectedProperties">The selected properties.</param>
         /// <returns>A new instance of <see cref="ODataResourceMetadataContext"/>.</returns>
         internal static ODataResourceMetadataContext Create(
-            ODataResource resource,
+            ODataResourceBase resource,
             IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
             IEdmStructuredType actualResourceType,
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="actualEntityType">The edm entity type of the resource</param>
         /// <returns>Key value pair array</returns>
         internal static KeyValuePair<string, object>[] GetKeyProperties(
-            ODataResource resource,
+            ODataResourceBase resource,
             ODataResourceSerializationInfo serializationInfo,
             IEdmEntityType actualEntityType)
         {
@@ -193,7 +193,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="entityTypeName">The name of the entity type to get the property value.</param>
         /// <param name="isKeyProperty">true if the property is a key property, false otherwise.</param>
         /// <returns>The value of the property.</returns>
-        private static object GetPrimitiveOrEnumPropertyValue(ODataResource resource, string propertyName, string entityTypeName, bool isKeyProperty)
+        private static object GetPrimitiveOrEnumPropertyValue(ODataResourceBase resource, string propertyName, string entityTypeName, bool isKeyProperty)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -250,7 +250,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="propertyKind">The serialization info property kind.</param>
         /// <param name="actualEntityTypeName">The entity type name of the resource.</param>
         /// <returns>The property name value pairs filtered by serialization property kind.</returns>
-        private static KeyValuePair<string, object>[] GetPropertiesBySerializationInfoPropertyKind(ODataResource resource, ODataPropertyKind propertyKind, string actualEntityTypeName)
+        private static KeyValuePair<string, object>[] GetPropertiesBySerializationInfoPropertyKind(ODataResourceBase resource, ODataPropertyKind propertyKind, string actualEntityTypeName)
         {
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag, "propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag");
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Evaluation
             /// <param name="resource">The resource instance.</param>
             /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
             /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
-            internal ODataResourceMetadataContextWithoutModel(ODataResource resource, IODataResourceTypeContext typeContext, ODataResourceSerializationInfo serializationInfo)
+            internal ODataResourceMetadataContextWithoutModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, ODataResourceSerializationInfo serializationInfo)
                 : base(resource, typeContext)
             {
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
@@ -396,7 +396,7 @@ namespace Microsoft.OData.Evaluation
             /// <param name="actualResourceType">The structured type of the resource.</param>
             /// <param name="metadataContext">The metadata context to use.</param>
             /// <param name="selectedProperties">The selected properties.</param>
-            internal ODataResourceMetadataContextWithModel(ODataResource resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
+            internal ODataResourceMetadataContextWithModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties)
                 : base(resource, typeContext)
             {
                 Debug.Assert(actualResourceType != null, "actualResourceType != null");

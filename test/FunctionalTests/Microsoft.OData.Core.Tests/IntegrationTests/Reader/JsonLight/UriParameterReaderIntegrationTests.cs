@@ -201,7 +201,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     resources.Last().TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
                     nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
                 }));
-            Assert.Contains("An resource without a type name was found", ex.Message);
+            Assert.Contains("A resource without a type name was found", ex.Message);
         }
 
         [Fact]

@@ -221,7 +221,7 @@ namespace Microsoft.OData.JsonLight
                 return EdmLibraryExtensions.GetCollectionTypeFullName(collectionValue.TypeName);
             }
 
-            ODataResource resource = payloadItem as ODataResource;
+            ODataResourceBase resource = payloadItem as ODataResourceBase;
             if (resource != null)
             {
                 return resource.TypeName;

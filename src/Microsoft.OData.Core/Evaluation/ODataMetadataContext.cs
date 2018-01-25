@@ -241,7 +241,7 @@ namespace Microsoft.OData.Evaluation
             // Only apply the conventional template builder on response. On a request we would only report what's on the wire.
             if (resourceState.MetadataBuilder == null)
             {
-                ODataResource resource = resourceState.Resource;
+                ODataResourceBase resource = resourceState.Resource;
                 if (this.isResponse)
                 {
                     ODataTypeAnnotation typeAnnotation = resource.TypeAnnotation;

@@ -417,11 +417,9 @@ namespace Microsoft.OData.Edm {
         /// <summary>
         /// A string like "Required Parameter '{0}' must not follow an optional parameter."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional(object p0)
-        {
+        internal static string EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional, p0);
         }
-        
 
         /// <summary>
         /// A string like "The return type is not valid in operation '{0}'. The operation has an unsupported type."
@@ -909,6 +907,15 @@ namespace Microsoft.OData.Edm {
         internal static string EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType {
             get {
                 return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The enum expression is not compatible with the asserted type."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType);
             }
         }
 
