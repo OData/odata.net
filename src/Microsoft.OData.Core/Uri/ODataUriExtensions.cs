@@ -45,6 +45,18 @@ namespace Microsoft.OData
                 }
             }
 
+            if (odataUri.Apply != null)
+            {
+                var applyClauseToStringBuilder = new ApplyClauseToStringBuilder();
+                string result = applyClauseToStringBuilder.TranslateApplyClause(odataUri.Apply);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
+                    writeQueryPrefix = false;
+                    queryOptions = string.Concat(queryOptions, result);
+                }
+            }
+
             if (odataUri.OrderBy != null)
             {
                 queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
