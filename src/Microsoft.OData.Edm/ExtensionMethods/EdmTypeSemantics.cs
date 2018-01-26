@@ -998,6 +998,38 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// If this reference is of a path type, this will return a valid path type reference to the type definition.
+        /// Otherwise, it will return a bad path type reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>A valid path type reference if the definition of the reference is of a path type.
+        /// Otherwise a bad path type reference.</returns>
+        public static IEdmPathTypeReference AsPath(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPathTypeReference reference = type as IEdmPathTypeReference;
+            if (reference != null)
+            {
+                return reference;
+            }
+
+            IEdmType typeDefinition = type.Definition;
+            if (typeDefinition.TypeKind == EdmTypeKind.Path)
+            {
+                return new EdmPathTypeReference((IEdmPathType)typeDefinition, type.IsNullable);
+            }
+
+            string typeFullName = type.FullName();
+            List<EdmError> errors = new List<EdmError>(type.Errors());
+            if (errors.Count == 0)
+            {
+                errors.AddRange(ConversionError(type.Location(), typeFullName, EdmConstants.Type_Path));
+            }
+
+            return new BadPathTypeReference(typeFullName, type.IsNullable, errors);
+        }
+
+        /// <summary>
         /// If this reference is of a spatial type, this will return a valid spatial type reference to the type definition. Otherwise, it will return a bad spatial type reference.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
