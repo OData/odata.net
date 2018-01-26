@@ -250,7 +250,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private IEnumerable<EdmError> ValidateStructure(object item)
         {
-            if (item is IEdmValidCoreModelElement || this.visited.Contains(item) || (this.skipVisitation != null && this.skipVisitation.Contains(item)))
+            if (item is IEdmCoreModelElement || this.visited.Contains(item) || (this.skipVisitation != null && this.skipVisitation.Contains(item)))
             {
                 // If we already visited this object, then errors (if any) have already been reported.
                 return Enumerable.Empty<EdmError>();
@@ -329,7 +329,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private void CollectReference(object reference)
         {
-            if (!(reference is IEdmValidCoreModelElement) &&
+            if (!(reference is IEdmCoreModelElement) &&
                 !this.visited.Contains(reference) &&
                 (this.skipVisitation == null || !this.skipVisitation.Contains(reference)))
             {

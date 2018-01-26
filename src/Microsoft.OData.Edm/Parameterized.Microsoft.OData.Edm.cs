@@ -25,6 +25,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "Unexpected abstract type kind."
+        /// </summary>
+        internal static string EdmPath_UnexpectedKind {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmPath_UnexpectedKind);
+            }
+        }
+
+        /// <summary>
         /// A string like "Annotations in the 'Documentation' namespace must implement 'IEdmDocumentation', but '{0}' does not."
         /// </summary>
         internal static string Annotations_DocumentationPun(object p0) {

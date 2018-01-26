@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.Edm
 {
-    using System;
-
     /// <summary>
     /// Defines EDM metatypes.
     /// </summary>
@@ -56,7 +54,12 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a type implementing <see cref="IEdmUntypedType"/>.
         /// </summary>
-        Untyped
+        Untyped,
+
+        /// <summary>
+        /// Represetns a type implementing <see cref="IEdmPathType"/>.
+        /// </summary>
+        Path,
     }
 
     /// <summary>

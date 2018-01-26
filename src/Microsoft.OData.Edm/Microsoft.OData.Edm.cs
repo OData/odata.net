@@ -70,6 +70,7 @@ namespace Microsoft.OData.Edm {
     /// </summary>
     internal sealed class EntityRes {
         internal const string EdmPrimitive_UnexpectedKind = "EdmPrimitive_UnexpectedKind";
+        internal const string EdmPath_UnexpectedKind = "EdmPath_UnexpectedKind";
         internal const string Annotations_DocumentationPun = "Annotations_DocumentationPun";
         internal const string Annotations_TypeMismatch = "Annotations_TypeMismatch";
         internal const string Constructable_VocabularyAnnotationMustHaveTarget = "Constructable_VocabularyAnnotationMustHaveTarget";

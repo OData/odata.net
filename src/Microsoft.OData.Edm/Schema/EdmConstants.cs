@@ -69,6 +69,7 @@ namespace Microsoft.OData.Edm
         internal const string Type_EntityReference = "EntityReference";
         internal const string Type_Enum = "Enum";
         internal const string Type_TypeDefinition = "TypeDefinition";
+        internal const string Type_Path = "Path";
 
         internal const string Type_Primitive = "Primitive";
         internal const string Type_Binary = "Binary";
