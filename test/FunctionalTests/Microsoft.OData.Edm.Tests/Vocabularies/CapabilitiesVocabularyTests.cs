@@ -12,7 +12,6 @@ using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
@@ -358,6 +357,12 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             p = complexType.FindProperty("NonCountableProperties");
             Assert.NotNull(p);
             Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
+            Assert.Equal(EdmTypeKind.Path, p.Type.AsCollection().ElementType().TypeKind());
+            IEdmPathType pathType = p.Type.AsCollection().ElementType().AsPath().Definition as IEdmPathType;
+            Assert.NotNull(pathType);
+            Assert.Equal("PropertyPath", pathType.Name);
+            Assert.Equal("Edm", pathType.Namespace);
+            Assert.Equal("Edm.PropertyPath", pathType.FullName());
 
             p = complexType.FindProperty("NonCountableNavigationProperties");
             Assert.NotNull(p);
@@ -488,6 +493,13 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             p = complexType.FindProperty("NonExpandableProperties");
             Assert.NotNull(p);
             Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
+
+            Assert.Equal(EdmTypeKind.Path, p.Type.AsCollection().ElementType().TypeKind());
+            IEdmPathType pathType = p.Type.AsCollection().ElementType().AsPath().Definition as IEdmPathType;
+            Assert.NotNull(pathType);
+            Assert.Equal("NavigationPropertyPath", pathType.Name);
+            Assert.Equal("Edm", pathType.Namespace);
+            Assert.Equal("Edm.NavigationPropertyPath", pathType.FullName());
         }
 
         [Fact]
