@@ -103,7 +103,6 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.AnnotationInaccessibleTerm,
                 ValidationRules.ElementDirectValueAnnotationFullNameMustBeUnique,
                 ValidationRules.VocabularyAnnotationInaccessibleTarget,
-                ValidationRules.NavigationPropertyEntityMustNotIndirectlyContainItself,
                 ValidationRules.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet,
                 ValidationRules.NavigationPropertyMappingMustPointToValidTargetForProperty,
                 ValidationRules.DirectValueAnnotationHasXmlSerializableName,
