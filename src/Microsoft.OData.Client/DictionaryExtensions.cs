@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Collections.Concurrent;
-	using System.Diagnostics;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -103,5 +103,5 @@ namespace Microsoft.OData.Client
             return false;
         }
 #endif
-	}
+    }
 }
