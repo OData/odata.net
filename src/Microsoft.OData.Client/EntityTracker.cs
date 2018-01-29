@@ -28,8 +28,8 @@ namespace Microsoft.OData.Client
 		#region Resource state management
 
 #if PORTABLELIB && WINDOWSPHONE
-		/// <summary>Set of tracked resources</summary>
-		private Dictionary<object, EntityDescriptor> entityDescriptors = new Dictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
+        /// <summary>Set of tracked resources</summary>
+        private Dictionary<object, EntityDescriptor> entityDescriptors = new Dictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
 #else
 		/// <summary>Set of tracked resources</summary>
 		private ConcurrentDictionary<object, EntityDescriptor> entityDescriptors = new ConcurrentDictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Client
 #endif
 
 #if PORTABLELIB && WINDOWSPHONE
-		/// <summary>Set of tracked bindings</summary>
+        /// <summary>Set of tracked bindings</summary>
         private Dictionary<LinkDescriptor, LinkDescriptor> bindings;
 #else
 		/// <summary>Set of tracked bindings</summary>
@@ -554,7 +554,7 @@ namespace Microsoft.OData.Client
             if (null == this.bindings)
             {
 #if PORTABLELIB && WINDOWSPHONE
-				System.Threading.Interlocked.CompareExchange(ref this.bindings, new Dictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
+                System.Threading.Interlocked.CompareExchange(ref this.bindings, new Dictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
 #else
 				System.Threading.Interlocked.CompareExchange(ref this.bindings, new ConcurrentDictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
 #endif

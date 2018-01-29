@@ -55,21 +55,21 @@ namespace Microsoft.OData.Client
             }
         }
 
-		/// <summary>
-		/// Convenience funcion that wraps ConcurrentDictionary.TryAdd() to allow same signature as IDictionary
-		/// </summary>
-		public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
-		{
-			return self.TryAdd(key, value);
-		}
+        /// <summary>
+        /// Convenience funcion that wraps ConcurrentDictionary.TryAdd() to allow same signature as IDictionary
+        /// </summary>
+        public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
+        {
+            return self.TryAdd(key, value);
+        }
 
-		/// <summary>
-		/// Convenience function for ConcurrentDictionary to allow same signature as IDictionary
-		/// </summary>
-		public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key)
+        /// <summary>
+        /// Convenience function for ConcurrentDictionary to allow same signature as IDictionary
+        /// </summary>
+        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key)
 		{
-			return ((IDictionary<TKey, TValue>)self).Remove(key);
-		}
+            return ((IDictionary<TKey, TValue>)self).Remove(key);
+        }
 
 #if PORTABLELIB
         /// <summary>
