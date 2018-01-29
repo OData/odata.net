@@ -9,7 +9,8 @@ namespace Microsoft.OData.Client
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
+	using System.Collections.Concurrent;
+	using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -24,22 +25,36 @@ namespace Microsoft.OData.Client
         /// <summary>Storage for the client model.</summary>
         private readonly ClientEdmModel model;
 
-        #region Resource state management
+		#region Resource state management
 
-        /// <summary>Set of tracked resources</summary>
-        private Dictionary<object, EntityDescriptor> entityDescriptors = new Dictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
+#if PORTABLELIB && WINDOWSPHONE
+		/// <summary>Set of tracked resources</summary>
+		private Dictionary<object, EntityDescriptor> entityDescriptors = new Dictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
+#else
+		/// <summary>Set of tracked resources</summary>
+		private ConcurrentDictionary<object, EntityDescriptor> entityDescriptors = new ConcurrentDictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
+#endif
+#if PORTABLELIB && WINDOWSPHONE
+		/// <summary>Set of tracked resources by Identity</summary>
+		private Dictionary<Uri, EntityDescriptor> identityToDescriptor;
+#else
+		/// <summary>Set of tracked resources by Identity</summary>
+		private ConcurrentDictionary<Uri, EntityDescriptor> identityToDescriptor;
+#endif
 
-        /// <summary>Set of tracked resources by Identity</summary>
-        private Dictionary<Uri, EntityDescriptor> identityToDescriptor;
-
-        /// <summary>Set of tracked bindings</summary>
+#if PORTABLELIB && WINDOWSPHONE
+		/// <summary>Set of tracked bindings</summary>
         private Dictionary<LinkDescriptor, LinkDescriptor> bindings;
+#else
+		/// <summary>Set of tracked bindings</summary>
+		private ConcurrentDictionary<LinkDescriptor, LinkDescriptor> bindings;
+#endif
 
-        /// <summary>change order</summary>
-        private uint nextChange;
-        #endregion
+		/// <summary>change order</summary>
+		private uint nextChange;
+#endregion
 
-        #region ctor
+#region ctor
 
         /// <summary>
         /// Creates a new instance of EntityTracker class which tracks all instances of entities and links tracked by the context.
@@ -50,9 +65,9 @@ namespace Microsoft.OData.Client
             this.model = maxProtocolVersion;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Returns a collection of all the links (ie. associations) currently being tracked by the context.
@@ -78,9 +93,9 @@ namespace Microsoft.OData.Client
                 return this.entityDescriptors.Values;
             }
         }
-        #endregion
+#endregion
 
-        #region Entity Methods
+#region Entity Methods
 
         /// <summary>Gets the entity descriptor corresponding to a particular entity</summary>
         /// <param name="entity">Entity for which to find the entity descriptor</param>
@@ -184,9 +199,9 @@ namespace Microsoft.OData.Client
             }
         }
 
-        #endregion Entity Methods
+#endregion Entity Methods
 
-        #region Link Methods
+#region Link Methods
         /// <summary>
         /// Gets the link descriptor corresponding to a particular link b/w source and target objects
         /// </summary>
@@ -367,7 +382,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        #endregion // Link Methods
+#endregion // Link Methods
 
         /// <summary>response materialization has an identity to attach to the inserted object</summary>
         /// <param name="entityDescriptorFromMaterializer">entity descriptor containing all the information about the entity from the response.</param>
@@ -525,18 +540,26 @@ namespace Microsoft.OData.Client
         {
             if (null == this.identityToDescriptor)
             {
+#if PORTABLELIB && WINDOWSPHONE
                 System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new Dictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
-            }
-        }
+#else
+				System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new ConcurrentDictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
+#endif
+			}
+		}
 
         /// <summary>create this.bindings when necessary</summary>
         private void EnsureLinkBindings()
         {
             if (null == this.bindings)
             {
-                System.Threading.Interlocked.CompareExchange(ref this.bindings, new Dictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
-            }
-        }
+#if PORTABLELIB && WINDOWSPHONE
+				System.Threading.Interlocked.CompareExchange(ref this.bindings, new Dictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
+#else
+				System.Threading.Interlocked.CompareExchange(ref this.bindings, new ConcurrentDictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
+#endif
+			}
+		}
 
         /// <summary>
         /// Ensure an identity is unique and does not point to another resource

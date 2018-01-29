@@ -8,11 +8,12 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Collections.Concurrent;
+	using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Useful extension methods for IDictionary
+    /// Useful extension methods for IDictionary and ConcurrentDictionary
     /// </summary>
     internal static class DictionaryExtensions
     {
@@ -54,6 +55,22 @@ namespace Microsoft.OData.Client
             }
         }
 
+		/// <summary>
+		/// Convenience funcion that wraps ConcurrentDictionary.TryAdd() to allow same signature as IDictionary
+		/// </summary>
+		public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
+		{
+			return self.TryAdd(key, value);
+		}
+
+		/// <summary>
+		/// Convenience function for ConcurrentDictionary to allow same signature as IDictionary
+		/// </summary>
+		public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key)
+		{
+			return ((IDictionary<TKey, TValue>)self).Remove(key);
+		}
+
 #if PORTABLELIB
         /// <summary>
         /// Try to add a key/value pair to the dictionary and returns true if the key was added, false if it was already present.
@@ -86,5 +103,5 @@ namespace Microsoft.OData.Client
             return false;
         }
 #endif
-    }
+	}
 }
