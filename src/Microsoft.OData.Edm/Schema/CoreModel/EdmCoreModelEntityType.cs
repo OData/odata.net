@@ -10,7 +10,7 @@ using System.Linq;
 namespace Microsoft.OData.Edm
 {
     /// <summary>
-    /// The built-in Edm.EntityType abstrat type in the core model.
+    /// The built-in Edm.EntityType abstract type in the core model.
     /// </summary>
     internal sealed class EdmCoreModelEntityType : EdmType, IEdmEntityType, IEdmCoreModelElement
     {

@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Edm
 {
     /// <summary>
-    /// The built-in Edm.AnnotationPath, Edm.PropertyPath, Edm.NavigationPropertyPath abstrat type in the core model.
+    /// The built-in Edm.AnnotationPath, Edm.PropertyPath, Edm.NavigationPropertyPath abstract type in the core model.
     /// </summary>
     internal sealed class EdmCoreModelPathType : EdmType, IEdmPathType, IEdmCoreModelElement
     {

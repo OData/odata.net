@@ -91,11 +91,11 @@ namespace Microsoft.OData.Edm
                 _coreSchemaElements.Add(primitive);
             }
 
-            _coreSchemaElements.Add(_complexType); // Edm.EntityType
+            _coreSchemaElements.Add(_complexType); // Edm.ComplexType
             _coreSchemaTypes[_complexType.Namespace + '.' + _complexType.Name] = _complexType;
             _coreSchemaTypes[_complexType.Name] = _complexType;
 
-            _coreSchemaElements.Add(_entityType); // Edm.ComplexType
+            _coreSchemaElements.Add(_entityType); // Edm.EntityType
             _coreSchemaTypes[_entityType.Namespace + '.' + _entityType.Name] = _entityType;
             _coreSchemaTypes[_entityType.Name] = _entityType;
 
