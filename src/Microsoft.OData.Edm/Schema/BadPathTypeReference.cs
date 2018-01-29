@@ -30,7 +30,7 @@ namespace Microsoft.OData.Edm
         {
             EdmError error = this.Errors.FirstOrDefault();
             Debug.Assert(error != null, "error != null");
-            string prefix = error != null ? error.ErrorCode.ToString() + ":" : "";
+            string prefix = error.ErrorCode + ":";
             return prefix + this.ToTraceString();
         }
     }
