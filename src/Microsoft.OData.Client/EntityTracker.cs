@@ -52,9 +52,9 @@ namespace Microsoft.OData.Client
 
         /// <summary>change order</summary>
         private uint nextChange;
-#endregion
+     #endregion
 
-#region ctor
+     #region ctor
 
         /// <summary>
         /// Creates a new instance of EntityTracker class which tracks all instances of entities and links tracked by the context.
@@ -65,9 +65,9 @@ namespace Microsoft.OData.Client
             this.model = maxProtocolVersion;
         }
 
-#endregion
+     #endregion
 
-#region Properties
+     #region Properties
 
         /// <summary>
         /// Returns a collection of all the links (ie. associations) currently being tracked by the context.
@@ -93,9 +93,9 @@ namespace Microsoft.OData.Client
                 return this.entityDescriptors.Values;
             }
         }
-#endregion
+     #endregion
 
-#region Entity Methods
+     #region Entity Methods
 
         /// <summary>Gets the entity descriptor corresponding to a particular entity</summary>
         /// <param name="entity">Entity for which to find the entity descriptor</param>
@@ -199,9 +199,9 @@ namespace Microsoft.OData.Client
             }
         }
 
-#endregion Entity Methods
+     #endregion Entity Methods
 
-#region Link Methods
+     #region Link Methods
         /// <summary>
         /// Gets the link descriptor corresponding to a particular link b/w source and target objects
         /// </summary>
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#endregion // Link Methods
+     #endregion // Link Methods
 
         /// <summary>response materialization has an identity to attach to the inserted object</summary>
         /// <param name="entityDescriptorFromMaterializer">entity descriptor containing all the information about the entity from the response.</param>
