@@ -260,7 +260,6 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.Path:
                     this.ProcessPathTypeReference(reference.AsPath());
                     break;
-
                 default:
                     throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(reference.TypeKind().ToString()));
             }
