@@ -41,7 +41,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     {
         private const string NameSpacePrefixReference = "Microsoft.Test.OData.Services.TestServices.";
         private const string NameSpacePrefixCodeGenerationTests = "CodeGenerationTests.";
-        private const string T4Version = "2.4.0";
+        private const string T4Version = "#VersionNumber#";
         private const string SystemIO = "System.IO.dll";
         private const string SystemRuntime = "System.Runtime.dll";
         private const string SystemXmlReaderWriter = "System.Xml.ReaderWriter.dll";
