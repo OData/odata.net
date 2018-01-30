@@ -520,7 +520,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                       "<PropertyRef Name=\"Id\" />" +
                     "</Key>" +
                     "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                    "<Property Name=\"Properties\" Type=\"Edm.ComplexType\" />" +
+                    "<Property Name=\"ComplexProperty\" Type=\"Edm.ComplexType\" />" +
                   "</EntityType>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             EdmModel model = new EdmModel();
             EdmEntityType customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
-            customer.AddStructuralProperty("Properties", EdmCoreModel.Instance.GetComplexType(true));
+            customer.AddStructuralProperty("ComplexProperty", EdmCoreModel.Instance.GetComplexType(true));
             model.AddElement(customer);
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
@@ -548,7 +548,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                       "<PropertyRef Name=\"Id\" />" +
                     "</Key>" +
                     "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                    "<NavigationProperty Name=\"Properties\" Type=\"Edm.EntityType\" />" +
+                    "<NavigationProperty Name=\"EntityNavigationProperty\" Type=\"Edm.EntityType\" />" +
                   "</EntityType>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
@@ -562,7 +562,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Target = EdmCoreModel.Instance.GetEntityType(true).EntityDefinition(),
                 ContainsTarget = false,
                 TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
-                Name = "Properties"
+                Name = "EntityNavigationProperty"
             });
             model.AddElement(customer);
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
