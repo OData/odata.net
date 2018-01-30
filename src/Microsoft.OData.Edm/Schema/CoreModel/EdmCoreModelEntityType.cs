@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Edm.Csdl;
 
 namespace Microsoft.OData.Edm
 {
@@ -32,12 +33,12 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the name of this type.
         /// </summary>
-        public string Name => EdmCoreModelConstants.EntityType;
+        public string Name => CsdlConstants.TypeName_Entity_Short;
 
         /// <summary>
         /// Gets the namespace of this type.
         /// </summary>
-        public string Namespace => EdmCoreModelConstants.EdmNamespace;
+        public string Namespace => EdmConstants.EdmNamespace;
 
         /// <summary>
         /// Gets the value indicating whether or not this type is a media entity.

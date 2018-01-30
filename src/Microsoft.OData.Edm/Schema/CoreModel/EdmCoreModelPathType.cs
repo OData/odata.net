@@ -14,11 +14,10 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmCoreModelPathType"/> class.
         /// </summary>
-        /// <param name="name">The name.</param>
         /// <param name="pathKind">The path kind.</param>
-        public EdmCoreModelPathType(string name, EdmPathTypeKind pathKind)
+        public EdmCoreModelPathType(EdmPathTypeKind pathKind)
         {
-            Name = name ?? string.Empty;
+            Name = pathKind.ToString();
             PathKind = pathKind;
         }
 
@@ -45,7 +44,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the namespace of this type.
         /// </summary>
-        public string Namespace => EdmCoreModelConstants.EdmNamespace;
+        public string Namespace => EdmConstants.EdmNamespace;
 
         /// <summary>
         /// Gets the name of this type.

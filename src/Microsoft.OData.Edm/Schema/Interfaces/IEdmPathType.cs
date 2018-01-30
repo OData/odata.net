@@ -19,17 +19,17 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents a Edm.AnnotationPath type.
         /// </summary>
-        Annotation,
+        AnnotationPath,
 
         /// <summary>
         /// Represents a Edm.PropertyPath type.
         /// </summary>
-        Property,
+        PropertyPath,
 
         /// <summary>
         /// Represents a Edm.NavigationPropertyPath type.
         /// </summary>
-        NavigationProperty
+        NavigationPropertyPath
     }
 
     /// <summary>
@@ -37,6 +37,9 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public interface IEdmPathType : IEdmSchemaType
     {
+        /// <summary>
+        /// Gets the path kind of this type.
+        /// </summary>
         EdmPathTypeKind PathKind { get; }
     }
 }

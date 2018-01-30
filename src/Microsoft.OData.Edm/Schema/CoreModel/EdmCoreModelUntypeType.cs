@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Csdl;
+
 namespace Microsoft.OData.Edm
 {
     /// <summary>
@@ -29,12 +31,12 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the name of this type.
         /// </summary>
-        public string Name => EdmCoreModelConstants.Untyped;
+        public string Name => CsdlConstants.TypeName_Untyped_Short;
 
         /// <summary>
         /// Gets the namespace of this type.
         /// </summary>
-        public string Namespace => EdmCoreModelConstants.EdmNamespace;
+        public string Namespace => EdmConstants.EdmNamespace;
 
         /// <summary>
         /// Private constructor.

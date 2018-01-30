@@ -67,9 +67,9 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [InlineData("Edm.AnnotationPath", EdmPathTypeKind.Annotation)]
-        [InlineData("Edm.PropertyPath", EdmPathTypeKind.Property)]
-        [InlineData("Edm.NavigationPropertyPath", EdmPathTypeKind.NavigationProperty)]
+        [InlineData("Edm.AnnotationPath", EdmPathTypeKind.AnnotationPath)]
+        [InlineData("Edm.PropertyPath", EdmPathTypeKind.PropertyPath)]
+        [InlineData("Edm.NavigationPropertyPath", EdmPathTypeKind.NavigationPropertyPath)]
         public void GetPathTypeKindShouldReturnCorrectPathTypeKind(string qualifiedName, EdmPathTypeKind kind)
         {
             Assert.Equal(kind, EdmCoreModel.Instance.GetPathTypeKind(qualifiedName));

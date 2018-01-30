@@ -943,9 +943,6 @@
     <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
       <Link>Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\CoreModel\EdmCoreModelConstants.cs">
-      <Link>Schema\CoreModel\EdmCoreModelConstants.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
       <Link>Schema\CoreModel\IEdmCoreModelElement.cs</Link>
     </Compile>
