@@ -41,42 +41,41 @@ namespace Microsoft.OData.Edm
         {
             IList<EdmCoreModelPrimitiveType> primitiveTypes = new List<EdmCoreModelPrimitiveType>
             {
-                new EdmCoreModelPrimitiveType("Double", EdmPrimitiveTypeKind.Double),
-                new EdmCoreModelPrimitiveType("Single", EdmPrimitiveTypeKind.Single),
-                new EdmCoreModelPrimitiveType("Int64", EdmPrimitiveTypeKind.Int64),
-                new EdmCoreModelPrimitiveType("Int32", EdmPrimitiveTypeKind.Int32),
-                new EdmCoreModelPrimitiveType("Int16", EdmPrimitiveTypeKind.Int16),
-                new EdmCoreModelPrimitiveType("SByte", EdmPrimitiveTypeKind.SByte),
-                new EdmCoreModelPrimitiveType("Byte", EdmPrimitiveTypeKind.Byte),
-                new EdmCoreModelPrimitiveType("Boolean", EdmPrimitiveTypeKind.Boolean),
-                new EdmCoreModelPrimitiveType("Guid", EdmPrimitiveTypeKind.Guid),
-                new EdmCoreModelPrimitiveType("Duration", EdmPrimitiveTypeKind.Duration),
-                new EdmCoreModelPrimitiveType("TimeOfDay", EdmPrimitiveTypeKind.TimeOfDay),
-                new EdmCoreModelPrimitiveType("DateTimeOffset", EdmPrimitiveTypeKind.DateTimeOffset),
-                new EdmCoreModelPrimitiveType("Date", EdmPrimitiveTypeKind.Date),
-                new EdmCoreModelPrimitiveType("Decimal", EdmPrimitiveTypeKind.Decimal),
-                new EdmCoreModelPrimitiveType("Binary", EdmPrimitiveTypeKind.Binary),
-                new EdmCoreModelPrimitiveType("String", EdmPrimitiveTypeKind.String),
-                new EdmCoreModelPrimitiveType("Stream", EdmPrimitiveTypeKind.Stream),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Double),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Single),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Int64),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Int32),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Int16),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.SByte),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Byte),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Boolean),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Guid),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Duration),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Date),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Decimal),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Binary),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.String),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Stream),
 
-                new EdmCoreModelPrimitiveType("Geography", EdmPrimitiveTypeKind.Geography),
-                new EdmCoreModelPrimitiveType("GeographyPoint", EdmPrimitiveTypeKind.GeographyPoint),
-                new EdmCoreModelPrimitiveType("GeographyLineString", EdmPrimitiveTypeKind.GeographyLineString),
-                new EdmCoreModelPrimitiveType("GeographyPolygon", EdmPrimitiveTypeKind.GeographyPolygon),
-                new EdmCoreModelPrimitiveType("GeographyCollection", EdmPrimitiveTypeKind.GeographyCollection),
-                new EdmCoreModelPrimitiveType("GeographyMultiPolygon", EdmPrimitiveTypeKind.GeographyMultiPolygon),
-                new EdmCoreModelPrimitiveType("GeographyMultiLineString", EdmPrimitiveTypeKind.GeographyMultiLineString),
-                new EdmCoreModelPrimitiveType("GeographyMultiPoint", EdmPrimitiveTypeKind.GeographyMultiPoint),
-                new EdmCoreModelPrimitiveType("Geometry", EdmPrimitiveTypeKind.Geometry),
-                new EdmCoreModelPrimitiveType("GeometryPoint", EdmPrimitiveTypeKind.GeometryPoint),
-                new EdmCoreModelPrimitiveType("GeometryLineString", EdmPrimitiveTypeKind.GeometryLineString),
-                new EdmCoreModelPrimitiveType("GeometryPolygon", EdmPrimitiveTypeKind.GeometryPolygon),
-                new EdmCoreModelPrimitiveType("GeometryCollection", EdmPrimitiveTypeKind.GeometryCollection),
-                new EdmCoreModelPrimitiveType("GeometryMultiPolygon", EdmPrimitiveTypeKind.GeometryMultiPolygon),
-                new EdmCoreModelPrimitiveType("GeometryMultiLineString", EdmPrimitiveTypeKind.GeometryMultiLineString),
-                new EdmCoreModelPrimitiveType("GeometryMultiPoint", EdmPrimitiveTypeKind.GeometryMultiPoint),
-
-                new EdmCoreModelPrimitiveType("PrimitiveType", EdmPrimitiveTypeKind.PrimitiveType), // Edm.PrimitiveType
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Geography),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Geometry),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryCollection),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.PrimitiveType), // Edm.PrimitiveType
             };
 
             foreach (var primitive in primitiveTypes)
@@ -105,9 +104,9 @@ namespace Microsoft.OData.Edm
 
             EdmCoreModelPathType[] pathTypes =
             {
-                new EdmCoreModelPathType("AnnotationPath", EdmPathTypeKind.Annotation),  // Edm.AnotationPath
-                new EdmCoreModelPathType("PropertyPath", EdmPathTypeKind.Property), // Edm.PropertyPath
-                new EdmCoreModelPathType("NavigationPropertyPath", EdmPathTypeKind.NavigationProperty), // Edm.NavigationPropertyPath
+                new EdmCoreModelPathType(EdmPathTypeKind.AnnotationPath),  // Edm.AnotationPath
+                new EdmCoreModelPathType(EdmPathTypeKind.PropertyPath), // Edm.PropertyPath
+                new EdmCoreModelPathType(EdmPathTypeKind.NavigationPropertyPath), // Edm.NavigationPropertyPath
             };
 
             foreach (var pathType in pathTypes)
@@ -128,7 +127,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public static string Namespace
         {
-            get { return EdmCoreModelConstants.EdmNamespace; }
+            get { return EdmConstants.EdmNamespace; }
         }
 
         /// <summary>
@@ -374,7 +373,7 @@ namespace Microsoft.OData.Edm
         /// <returns>A new Edm.AnnotationPath type reference.</returns>
         public IEdmPathTypeReference GetAnnotationPath(bool isNullable)
         {
-            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.Annotation), isNullable);
+            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.AnnotationPath), isNullable);
         }
 
         /// <summary>
@@ -384,7 +383,7 @@ namespace Microsoft.OData.Edm
         /// <returns>A new Edm.PropertyPath type reference.</returns>
         public IEdmPathTypeReference GetPropertyPath(bool isNullable)
         {
-            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.Property), isNullable);
+            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.PropertyPath), isNullable);
         }
 
         /// <summary>
@@ -394,7 +393,7 @@ namespace Microsoft.OData.Edm
         /// <returns>A new Edm.NavigationPropertyPath type reference.</returns>
         public IEdmPathTypeReference GetNavigationPropertyPath(bool isNullable)
         {
-            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.NavigationProperty), isNullable);
+            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.NavigationPropertyPath), isNullable);
         }
 
         /// <summary>

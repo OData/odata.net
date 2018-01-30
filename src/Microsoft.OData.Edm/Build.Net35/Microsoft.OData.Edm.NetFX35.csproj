@@ -1016,9 +1016,6 @@
     <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
       <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\CoreModel\EdmCoreModelConstants.cs">
-      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelConstants.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
       <Link>Microsoft\OData\Edm\Schema\CoreModel\IEdmCoreModelElement.cs</Link>
     </Compile>

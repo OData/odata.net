@@ -14,11 +14,10 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmCoreModelPrimitiveType"/> class.
         /// </summary>
-        /// <param name="name">The name.</param>
         /// <param name="pathKind">The path kind.</param>
-        public EdmCoreModelPrimitiveType(string name, EdmPrimitiveTypeKind primitiveKind)
+        public EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind primitiveKind)
         {
-            Name = name ?? string.Empty;
+            Name = primitiveKind.ToString();
             PrimitiveKind = primitiveKind;
         }
 
@@ -30,7 +29,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Getst the namespace of this type.
         /// </summary>
-        public string Namespace => EdmCoreModelConstants.EdmNamespace;
+        public string Namespace => EdmConstants.EdmNamespace;
 
         /// <summary>
         /// Gets the kind of this type.
