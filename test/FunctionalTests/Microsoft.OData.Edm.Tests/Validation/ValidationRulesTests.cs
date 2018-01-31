@@ -107,6 +107,31 @@ namespace Microsoft.OData.Edm.Tests.Validation
             ValidateNoError(ValidationRules.EntityContainerDuplicateEntityContainerMemberName, new EdmModel(), container);
         }
 
+        [Theory]
+        [InlineData(EdmTypeKind.Complex)]
+        [InlineData(EdmTypeKind.Primitive)]
+        public void OperationReturnTypeWithCollectionOfAbstractTypeShouldError(EdmTypeKind typeKind)
+        {
+            EdmCollectionTypeReference collectionType;
+            if (typeKind == EdmTypeKind.Complex)
+            {
+                collectionType =
+                    new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetComplexType(false)));
+            }
+            else
+            {
+                collectionType =
+                    new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetPrimitiveType(false)));
+            }
+            EdmFunction function = new EdmFunction("NS", "MyFunction", collectionType);
+
+            ValidateError(
+                ValidationRules.OperationReturnTypeCannotBeCollectionOfAbstractType,
+                function,
+                EdmErrorCode.OperationWithCollectionOfAbstractReturnTypeInvalid,
+                Strings.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType(collectionType.FullName(), function.FullName()));
+        }
+
         [Fact]
         public void EntitySetsWithSameNameShouldError()
         {
@@ -119,6 +144,19 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 container,
                 EdmErrorCode.DuplicateEntityContainerMemberName,
                 Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName("Set"));
+        }
+
+        [Fact]
+        public void EntitySetsWithEdmEntityTypeShouldError()
+        {
+            var container = new EdmEntityContainer("ns", "container");
+            EdmEntitySet entitySet = new EdmEntitySet(container, "Set", EdmCoreModel.Instance.GetEntityType());
+
+            ValidateError(
+                ValidationRules.EntitySetTypeCannotBeEdmEntityType,
+                entitySet,
+                EdmErrorCode.EntityTypeOfEntitySetCannotBeEdmEntityType,
+                Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet(entitySet.Name));
         }
 
         #endregion
@@ -854,6 +892,25 @@ namespace Microsoft.OData.Edm.Tests.Validation
         }
 
         [Fact]
+        public void TestInterfaceSingletonTypeOfEdmEntityTypeType()
+        {
+            var model = new EdmModel();
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+
+            var singleton = new EdmSingleton(entityContainer, "Singleton", EdmCoreModel.Instance.GetEntityType());
+            entityContainer.AddElement(singleton);
+
+            ValidateError(
+                ValidationRules.SingletonTypeCannotBeEdmEntityType,
+                model,
+                singleton,
+                EdmErrorCode.EntityTypeOfSingletonCannotBeEdmEntityType,
+                Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton("Singleton"));
+        }
+
+        [Fact]
         public void TestInterfaceEntitySetTypeOfCollectionOfComplexTypeModel()
         {
             var model = new EdmModel();
@@ -924,6 +981,82 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 entitySet,
                 EdmErrorCode.EntitySetTypeMustBeCollectionOfEntityType,
                 Strings.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType("NS.Entity", "Set"));
+        }
+
+        [Fact]
+        public void TestInterfaceEntityTypeBaseTypeOfEdmEntityType()
+        {
+            IEdmEntityType entity = new EdmEntityType("NS", "MyEntity", EdmCoreModel.Instance.GetEntityType());
+
+            ValidateError(
+                ValidationRules.StructuredTypeBaseTypeCannotBeAbstractType,
+                entity,
+                EdmErrorCode.EntityTypeBaseTypeCannotBeEdmEntityType,
+                Strings.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType("Edm.EntityType", "entity", "NS.MyEntity"));
+        }
+
+        [Fact]
+        public void TestInterfaceComplexTypeBaseTypeOfEdmEntityType()
+        {
+            IEdmComplexType complex = new EdmComplexType("NS", "MyComplex", EdmCoreModel.Instance.GetComplexType());
+
+            ValidateError(
+                ValidationRules.StructuredTypeBaseTypeCannotBeAbstractType,
+                complex,
+                EdmErrorCode.ComplexTypeBaseTypeCannotBeEdmComplexType,
+                Strings.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType("Edm.ComplexType", "complex", "NS.MyComplex"));
+        }
+
+        [Fact]
+        public void TestInterfaceTypeDefinitionUnderlyingTypeOfEdmPrimitiveType()
+        {
+            var typeDefinition = new EdmTypeDefinition("MyNS", "Address", EdmPrimitiveTypeKind.PrimitiveType);
+
+            ValidateError(
+                ValidationRules.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                typeDefinition,
+                EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("type definition", typeDefinition.FullName()));
+        }
+
+        [Fact]
+        public void TestInterfaceEntityTypeKeytypeOfEdmPrimitiveType()
+        {
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.PrimitiveType));
+
+            ValidateError(
+                ValidationRules.EntityTypeKeyTypeCannotBeEdmPrimitiveType,
+                entity,
+                EdmErrorCode.KeyPropertyTypeCannotBeEdmPrimitiveType,
+                Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey("Id", "NS.Entity"));
+        }
+
+        [Theory]
+        [InlineData(EdmTypeKind.Complex)]
+        [InlineData(EdmTypeKind.Primitive)]
+        public void TestInterfaceEdmPropertyTypeOfEdmPrimitiveType(EdmTypeKind typeKind)
+        {
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            EdmCollectionTypeReference collectionType;
+            if (typeKind == EdmTypeKind.Complex)
+            {
+                collectionType =
+                    new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetComplexType(false)));
+            }
+            else
+            {
+                collectionType =
+                    new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetPrimitiveType(false)));
+            }
+
+            var property = entity.AddStructuralProperty("Property", collectionType);
+
+            ValidateError(
+                ValidationRules.PropertyTypeCannotBeCollectionOfAbstractType,
+                property,
+                EdmErrorCode.PropertyTypeCannotBeCollectionOfAbstractType,
+                Strings.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType(property.Type.FullName(), "Property"));
         }
 
         private static void ValidateNoError<T>(ValidationRule<T> validationRule, IEdmModel model, T item) where T : IEdmElement

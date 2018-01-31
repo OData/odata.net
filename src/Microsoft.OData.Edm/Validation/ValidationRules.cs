@@ -523,6 +523,21 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that the type of an entity set cannot be Edm.EntityType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmEntitySet> EntitySetTypeCannotBeEdmEntityType =
+            new ValidationRule<IEdmEntitySet>(
+                (context, entitySet) =>
+                {
+                    if (entitySet.Type.AsElementType() == EdmCoreModelEntityType.Instance)
+                    {
+                        context.AddError(
+                           entitySet.Location(),
+                           EdmErrorCode.EntityTypeOfEntitySetCannotBeEdmEntityType,
+                           Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet(entitySet.Name));
+                    }
+                });
         #endregion
 
         #region IEdmSingelton
@@ -536,7 +551,9 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (!(singleton.Type is IEdmEntityType))
                     {
-                        string errorMessage = Strings.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType(singleton.Type.FullTypeName(), singleton.Name);
+                        string errorMessage =
+                            Strings.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType(
+                                singleton.Type.FullTypeName(), singleton.Name);
 
                         context.AddError(
                             singleton.Location(),
@@ -545,6 +562,21 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that the type of singleton cannot be Edm.EntityType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmSingleton> SingletonTypeCannotBeEdmEntityType =
+            new ValidationRule<IEdmSingleton>(
+                (context, singleton) =>
+                {
+                    if (singleton.Type == EdmCoreModelEntityType.Instance)
+                    {
+                        context.AddError(
+                           singleton.Location(),
+                           EdmErrorCode.EntityTypeOfSingletonCannotBeEdmEntityType,
+                           Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton(singleton.Name));
+                    }
+                });
         #endregion
 
         #region IEdmStructuredType
@@ -620,6 +652,28 @@ namespace Microsoft.OData.Edm.Validation
                                 (structuredType.TypeKind == EdmTypeKind.Entity) ? EdmErrorCode.EntityMustHaveEntityBaseType : EdmErrorCode.ComplexTypeMustHaveComplexBaseType,
                                 Strings.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
                         }
+                    }
+                });
+
+        /// <summary>
+        /// Validates that the base type of a structured type cannot be Edm.EntityType or Edm.ComplexType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmStructuredType> StructuredTypeBaseTypeCannotBeAbstractType =
+            new ValidationRule<IEdmStructuredType>(
+                (context, structuredType) =>
+                {
+                    if (structuredType.BaseType != null &&
+                        (structuredType.BaseType == EdmCoreModelComplexType.Instance || structuredType.BaseType == EdmCoreModelEntityType.Instance) &&
+                        !context.IsBad(structuredType.BaseType))
+                    {
+                        string typeKind = structuredType.TypeKind == EdmTypeKind.Entity ? "entity" : "complex";
+                        context.AddError(
+                            structuredType.Location(),
+                            (structuredType.TypeKind == EdmTypeKind.Entity)
+                                ? EdmErrorCode.EntityTypeBaseTypeCannotBeEdmEntityType
+                                : EdmErrorCode.ComplexTypeBaseTypeCannotBeEdmComplexType,
+                            Strings.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType(
+                                structuredType.BaseType.FullTypeName(), typeKind, structuredType.FullTypeName()));
                     }
                 });
 
@@ -702,7 +756,6 @@ namespace Microsoft.OData.Edm.Validation
                            Strings.EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType(enumType.FullName()));
                    }
                });
-
         #endregion
 
         #region IEdmEnumMember
@@ -730,6 +783,25 @@ namespace Microsoft.OData.Edm.Validation
                    }
                });
 
+        #endregion
+
+        #region IEdmTypeDefintion
+
+        /// <summary>
+        /// Validates that the underlying type of a type definition cannot be Edm.PrimitiveType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmTypeDefinition> TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType =
+            new ValidationRule<IEdmTypeDefinition>(
+                (context, typeDefinition) =>
+                {
+                    if (typeDefinition.UnderlyingType == EdmCoreModel.Instance.GetPrimitiveType() && !context.IsBad(typeDefinition.UnderlyingType))
+                    {
+                        context.AddError(
+                            typeDefinition.Location(),
+                            EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                            Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("type definition", typeDefinition.FullName()));
+                    }
+                });
         #endregion
 
         #region IEdmEntityType
@@ -864,6 +936,29 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that Edm.PrimitiveType cannot be used as the type of a key property of an entity type.
+        /// </summary>
+        public static readonly ValidationRule<IEdmEntityType> EntityTypeKeyTypeCannotBeEdmPrimitiveType =
+            new ValidationRule<IEdmEntityType>(
+                (context, entityType) =>
+                {
+                    if (entityType.DeclaredKey != null)
+                    {
+                        foreach (IEdmStructuralProperty key in entityType.DeclaredKey)
+                        {
+                            if (key.Type.Definition == EdmCoreModel.Instance.GetPrimitiveType())
+                            {
+                                context.AddError(
+                                    entityType.Location(),
+                                    EdmErrorCode.KeyPropertyTypeCannotBeEdmPrimitiveType,
+                                    Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey(
+                                        key.Name, entityType.FullName()));
+                            }
+                        }
+                    }
+                });
+
         #endregion
 
         #region IEdmEntityReferenceType
@@ -963,6 +1058,7 @@ namespace Microsoft.OData.Edm.Validation
 
                     if (validatedType.TypeKind != EdmTypeKind.Primitive && validatedType.TypeKind != EdmTypeKind.Enum
                         && validatedType.TypeKind != EdmTypeKind.Untyped && validatedType.TypeKind != EdmTypeKind.Complex
+                        && validatedType.TypeKind != EdmTypeKind.Path
                         && !context.IsBad(validatedType))
                     {
                         context.AddError(property.Location(), EdmErrorCode.InvalidPropertyType, Strings.EdmModel_Validator_Semantic_InvalidPropertyType(property.Type.TypeKind().ToString()));
@@ -1348,9 +1444,31 @@ namespace Microsoft.OData.Edm.Validation
                     if (property.PropertyKind == EdmPropertyKind.None && !context.IsBad(property))
                     {
                         context.AddError(
-                        property.Location(),
-                        EdmErrorCode.PropertyMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone(property.Name));
+                            property.Location(),
+                            EdmErrorCode.PropertyMustNotHaveKindOfNone,
+                            Strings.EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone(property.Name));
+                    }
+                });
+
+        /// <summary>
+        /// Collection(Edm.PrimitiveType) and Collection(Edm.ComplexType) cannot be used as the type of a property.
+        /// </summary>
+        public static readonly ValidationRule<IEdmProperty> PropertyTypeCannotBeCollectionOfAbstractType =
+            new ValidationRule<IEdmProperty>(
+                (context, property) =>
+                {
+                    if (property.Type.IsCollection())
+                    {
+                        IEdmTypeReference elementType = property.Type.AsCollection().ElementType();
+                        if (elementType.Definition == EdmCoreModelComplexType.Instance ||
+                            elementType.Definition == EdmCoreModel.Instance.GetPrimitiveType())
+                        {
+                            context.AddError(
+                                property.Location(),
+                                EdmErrorCode.PropertyTypeCannotBeCollectionOfAbstractType,
+                                Strings.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType(
+                                    property.Type.FullName(), property.Name));
+                        }
                     }
                 });
 
@@ -1695,6 +1813,25 @@ namespace Microsoft.OData.Edm.Validation
                }
            });
 
+
+        /// <summary>
+        /// Validates that the return type cannot be Collection(Edm.PrimitiveType) or Collection(Edm.ComplexType).
+        /// </summary>
+        public static readonly ValidationRule<IEdmOperation> OperationReturnTypeCannotBeCollectionOfAbstractType =
+            new ValidationRule<IEdmOperation>((context, operation) =>
+            {
+                if (operation.ReturnType != null && operation.ReturnType.IsCollection())
+                {
+                    IEdmTypeReference elementType = operation.ReturnType.AsCollection().ElementType();
+                    if (elementType.Definition == EdmCoreModelComplexType.Instance ||
+                        elementType.Definition == EdmCoreModel.Instance.GetPrimitiveType())
+                    {
+                        context.AddError(operation.Location(),
+                            EdmErrorCode.OperationWithCollectionOfAbstractReturnTypeInvalid,
+                            Strings.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType(operation.ReturnType.FullName(), operation.FullName()));
+                    }
+                }
+            });
 
         #endregion
 

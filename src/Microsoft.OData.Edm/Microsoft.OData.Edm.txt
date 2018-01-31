@@ -92,6 +92,8 @@ EdmModel_Validator_Semantic_PropertyNameAlreadyDefined=Each property name in a t
 EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind=The base type kind of a structured type must be the same as its derived type.
 EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen=The base type of open type '{0}' is not open type.
 EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity=The key property '{0}' must belong to the entity '{1}'.
+EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey=The 'Edm.PrimitiveType' cannot be used as the type of a key property '{0}' of an entity type '{1}'.
+EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType=The 'Edm.PrimitiveType' cannot be used as the underlying type of '{0}' type '{1}'.
 EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity=The dependent property '{0}' must belong to the dependent entity '{1}'.
 EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect=The property '{0}' cannot belong to a type other than its declaring type. 
 EdmModel_Validator_Semantic_InaccessibleType=The named type '{0}' could not be found from the model being validated.
@@ -161,6 +163,11 @@ EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType=The bou
 EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType=The type '{0}' of the entity set '{1}' is not valid, it must be collection of entity type.
 EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType=The type '{0}' of the singleton '{1}' is not valid, it must be entity type.
 EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton=The navigation property mapping '{0}' is invalid because its type is collection but target to a singleton '{1}'.
+EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType=The type '{0}' cannot be the base type of an '{1}' type '{2}'.
+EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType=The type '{0}' cannot be used as the type of a property '{1}'.
+EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType=The type '{0}' cannot be used as the return type of a function '{1}'.
+EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton=The type 'Edm.EntityType' cannot be used as the type of a singleton '{0}' in an entity container.
+EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet=The type 'Edm.EntityType' cannot be used as the type of an entity set '{0}' in an entity container.
 
 ;Error message for Syntactic validation rules
 EdmModel_Validator_Syntactic_MissingName=The name is missing or not valid.

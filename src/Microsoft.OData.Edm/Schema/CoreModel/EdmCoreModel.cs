@@ -36,6 +36,7 @@ namespace Microsoft.OData.Edm
         private readonly EdmCoreModelComplexType _complexType = EdmCoreModelComplexType.Instance;
         private readonly EdmCoreModelEntityType _entityType = EdmCoreModelEntityType.Instance;
         private readonly EdmCoreModelUntypedType _untypedType = EdmCoreModelUntypedType.Instance;
+        private readonly EdmCoreModelPrimitiveType _primitiveType = new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.PrimitiveType);
 
         private EdmCoreModel()
         {
@@ -75,7 +76,7 @@ namespace Microsoft.OData.Edm
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPolygon),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiLineString),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPoint),
-                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.PrimitiveType), // Edm.PrimitiveType
+                _primitiveType, // Edm.PrimitiveType
             };
 
             foreach (var primitive in primitiveTypes)
@@ -269,6 +270,15 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets Edm.PrimitiveType type.
+        /// </summary>
+        /// <returns>IEdmPrimitiveType type definition.</returns>
+        public IEdmPrimitiveType GetPrimitiveType()
+        {
+            return this._primitiveType;
+        }
+
+        /// <summary>
         /// Gets Edm.ComplexType type.
         /// </summary>
         /// <returns>IEdmComplexType type definition.</returns>
@@ -414,6 +424,16 @@ namespace Microsoft.OData.Edm
         public IEdmComplexTypeReference GetComplexType(bool isNullable)
         {
             return new EdmComplexTypeReference(this._complexType, isNullable);
+        }
+
+        /// <summary>
+        /// Gets a reference to the Edm.PrimitiveType type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.PrimitiveType type reference.</returns>
+        public IEdmPrimitiveTypeReference GetPrimitiveType(bool isNullable)
+        {
+            return new EdmPrimitiveTypeReference(this._primitiveType, isNullable);
         }
 
         /// <summary>
