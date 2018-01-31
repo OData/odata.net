@@ -536,10 +536,10 @@ public enum Microsoft.OData.Edm.EdmOnDeleteAction : int {
 }
 
 public enum Microsoft.OData.Edm.EdmPathTypeKind : int {
-	Annotation = 1
-	NavigationProperty = 3
+	AnnotationPath = 1
+	NavigationPropertyPath = 3
 	None = 0
-	Property = 2
+	PropertyPath = 2
 }
 
 public enum Microsoft.OData.Edm.EdmPrimitiveTypeKind : int {
