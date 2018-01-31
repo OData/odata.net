@@ -107,6 +107,13 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.NavigationPropertyMappingMustPointToValidTargetForProperty,
                 ValidationRules.DirectValueAnnotationHasXmlSerializableName,
                 ValidationRules.FunctionMustHaveReturnType,
+                ValidationRules.EntitySetTypeCannotBeEdmEntityType,
+                ValidationRules.SingletonTypeCannotBeEdmEntityType,
+                ValidationRules.OperationReturnTypeCannotBeCollectionOfAbstractType,
+                ValidationRules.PropertyTypeCannotBeCollectionOfAbstractType,
+                ValidationRules.EntityTypeKeyTypeCannotBeEdmPrimitiveType,
+                ValidationRules.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                ValidationRules.StructuredTypeBaseTypeCannotBeAbstractType
             });
 
         private static readonly ValidationRuleSet V4RuleSet =
