@@ -43,7 +43,7 @@ namespace Microsoft.OData.Edm
         /// Returns true if this reference refers to a path type.
         /// </summary>
         /// <param name="type">Type reference.</param>
-        /// <returns>This reference refers to a pah type.</returns>
+        /// <returns>This reference refers to a path type.</returns>
         public static bool IsPath(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");

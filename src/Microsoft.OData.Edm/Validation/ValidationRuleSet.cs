@@ -113,6 +113,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.PropertyTypeCannotBeCollectionOfAbstractType,
                 ValidationRules.EntityTypeKeyTypeCannotBeEdmPrimitiveType,
                 ValidationRules.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                ValidationRules.EnumUnderlyingTypeCannotBeEdmPrimitiveType,
                 ValidationRules.StructuredTypeBaseTypeCannotBeAbstractType
             });
 
