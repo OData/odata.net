@@ -13,6 +13,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -395,6 +396,100 @@ namespace Microsoft.OData.Tests.UriParser
             parser.ParseSearch().Should().NotBeNull();
             parser.ParseSkipToken().Should().Be("abc");
             parser.ParseDeltaToken().Should().Be("def");
+        }
+
+        [Fact]
+        public void ParseSelectPrimitiveAnnotationShouldWork()
+        {
+            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.PrimitiveTerm";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            selectItem.Should().NotBeNull();
+            AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
+            annotationSegment.Should().NotBeNull();
+            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.PrimitiveTerm");
+            annotationSegment.Term.Type.TypeKind().Should().Be(EdmTypeKind.Primitive);
+        }
+
+        [Fact]
+        public void ParseSelectODataControlInformationShouldFail()
+        {
+            string relativeUriString = "People?$select=@odata.type";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            Action action = () => parser.ParseSelectAndExpand();
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid("@odata.type"));
+        }
+
+        [Fact]
+        public void ParseSelectUnknownODataControlInformationShouldFail()
+        {
+            string relativeUriString = "People?$select=@odata.unknown";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            Action action = () => parser.ParseSelectAndExpand();
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid("@odata.unknown"));
+        }
+
+        [Fact]
+        public void ParseSelectPropertyAnnotationShouldWork()
+        {
+            string relativeUriString = "People?$select=Name/@Fully.Qualified.Namespace.PrimitiveTerm";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            selectItem.Should().NotBeNull();
+            List<ODataPathSegment> segments = selectItem.SelectedPath.ToList();
+            segments.Count.Should().Be(2);
+            PropertySegment propertySegment = segments[0] as PropertySegment;
+            propertySegment.Property.Name.Should().Be("Name");
+            AnnotationSegment annotationSegment = segments[1] as AnnotationSegment;
+            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.PrimitiveTerm");
+            annotationSegment.Term.Type.TypeKind().Should().Be(EdmTypeKind.Primitive);
+        }
+
+        [Fact]
+        public void ParseSelectComplexAnnotationShouldWork()
+        {
+            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.ComplexTerm";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
+            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.ComplexTerm");
+            annotationSegment.Term.Type.FullName().Should().Be("Fully.Qualified.Namespace.Address");
+        }
+
+        [Fact]
+        public void ParseSelectComplexAnnotationWithPathShouldWork()
+        {
+            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.ComplexTerm/Street";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            List<ODataPathSegment> segments = selectItem.SelectedPath.ToList();
+            segments.Count.Should().Be(2);
+            AnnotationSegment annotationSegment = segments[0] as AnnotationSegment;
+            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.ComplexTerm");
+            annotationSegment.Term.Type.FullName().Should().Be("Fully.Qualified.Namespace.Address");
+            PropertySegment propertySegment = segments[1] as PropertySegment;
+            propertySegment.Property.Name.Should().Be("Street");
+        }
+
+        [Fact]
+        public void ParseSelectOpenAnnotationShouldWork()
+        {
+            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.UnknownTerm";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
+            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.UnknownTerm");
+            annotationSegment.Term.Type.FullName().Should().Be("Edm.Untyped");
         }
 
         [Fact]

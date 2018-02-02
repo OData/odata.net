@@ -70,7 +70,10 @@ namespace Microsoft.OData.UriParser
             // The order-by expressions need to be primitive / enumeration types
             SingleValueNode expressionResultNode = expressionNode as SingleValueNode;
             if (expressionResultNode == null ||
-                (expressionResultNode.TypeReference != null && !expressionResultNode.TypeReference.IsODataPrimitiveTypeKind() && !expressionResultNode.TypeReference.IsODataEnumTypeKind() && !expressionResultNode.TypeReference.IsODataTypeDefinitionTypeKind()))
+                (expressionResultNode.TypeReference != null &&
+                !expressionResultNode.TypeReference.IsODataPrimitiveTypeKind() &&
+                !expressionResultNode.TypeReference.IsODataEnumTypeKind() &&
+                !expressionResultNode.TypeReference.IsODataTypeDefinitionTypeKind()))
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_OrderByExpressionNotSingleValue);
             }

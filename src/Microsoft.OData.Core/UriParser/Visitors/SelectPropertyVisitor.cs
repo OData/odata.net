@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
         public override void Visit(SystemToken tokenIn)
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
-            throw new ODataException(ODataErrorStrings.SelectPropertyVisitor_SystemTokenInSelect(tokenIn.Identifier));
+            throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(tokenIn.Identifier));
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Microsoft.OData.UriParser
             IEdmStructuredType currentLevelType = this.edmType;
 
             // first, walk through all type segments in a row, converting them from tokens into segments.
-            if (tokenIn.IsNamespaceOrContainerQualified())
+            if (tokenIn.IsNamespaceOrContainerQualified() && !UriParserHelper.IsAnnotation(tokenIn.Identifier))
             {
                 PathSegmentToken firstNonTypeToken;
                 pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(tokenIn, this.model, this.maxDepth, this.resolver, ref currentLevelType, out firstNonTypeToken));
@@ -156,7 +156,12 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
-                    if (primitiveType == null && dynamicPath == null)
+                    if (UriParserHelper.IsAnnotation(nextToken.Identifier))
+                    {
+                        lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
+                            currentLevelType, resolver);
+                    }
+                    else if (primitiveType == null && dynamicPath == null)
                     {
                         // This means last segment a collection of complex type,
                         // current segment can only be type cast and cannot be property name.

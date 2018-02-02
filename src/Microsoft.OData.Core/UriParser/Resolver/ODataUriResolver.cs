@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.UriParser
 {
@@ -125,6 +126,33 @@ namespace Microsoft.OData.UriParser
             }
 
             return type.FindProperty(propertyName);
+        }
+
+        /// <summary>
+        /// Resolve term name from model.
+        /// </summary>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="termName">The term name to be resolved.</param>
+        /// <returns>Resolved term.</returns>
+        public virtual IEdmTerm ResolveTerm(IEdmModel model, string termName)
+        {
+            if (EnableCaseInsensitive)
+            {
+                var result = model.SchemaElements.OfType<IEdmTerm>()
+               .Where(_ => string.Equals(termName, _.FullName(), StringComparison.OrdinalIgnoreCase))
+               .ToList();
+
+                if (result.Count == 1)
+                {
+                    return result.Single();
+                }
+                else if (result.Count > 1)
+                {
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(termName));
+                }
+            }
+
+            return model.FindTerm(termName);
         }
 
         /// <summary>

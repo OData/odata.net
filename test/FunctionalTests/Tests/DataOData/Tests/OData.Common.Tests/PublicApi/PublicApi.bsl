@@ -5533,6 +5533,7 @@ public abstract class Microsoft.OData.UriParser.PathSegmentToken {
 public abstract class Microsoft.OData.UriParser.PathSegmentTranslator`1 {
 	protected PathSegmentTranslator`1 ()
 
+	public virtual T Translate (Microsoft.OData.UriParser.AnnotationSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.BatchReferenceSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.BatchSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.CountSegment segment)
@@ -5789,6 +5790,7 @@ public class Microsoft.OData.UriParser.ODataUriResolver {
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] ResolveOperationImports (Microsoft.OData.Edm.IEdmModel model, string identifier)
 	public virtual System.Collections.Generic.IDictionary`2[[Microsoft.OData.Edm.IEdmOperationParameter],[Microsoft.OData.UriParser.SingleValueNode]] ResolveOperationParameters (Microsoft.OData.Edm.IEdmOperation operation, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.UriParser.SingleValueNode]] input)
 	public virtual Microsoft.OData.Edm.IEdmProperty ResolveProperty (Microsoft.OData.Edm.IEdmStructuredType type, string propertyName)
+	public virtual Microsoft.OData.Edm.Vocabularies.IEdmTerm ResolveTerm (Microsoft.OData.Edm.IEdmModel model, string termName)
 	public virtual Microsoft.OData.Edm.IEdmSchemaType ResolveType (Microsoft.OData.Edm.IEdmModel model, string typeName)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveUnboundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier)
 }
@@ -5855,6 +5857,16 @@ public sealed class Microsoft.OData.UriParser.AlternateKeysODataUriResolver : Mi
 	public AlternateKeysODataUriResolver (Microsoft.OData.Edm.IEdmModel model)
 
 	public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
+}
+
+public sealed class Microsoft.OData.UriParser.AnnotationSegment : Microsoft.OData.UriParser.ODataPathSegment {
+	public AnnotationSegment (Microsoft.OData.Edm.Vocabularies.IEdmTerm term)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.Vocabularies.IEdmTerm Term  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
 }
 
 public sealed class Microsoft.OData.UriParser.AnyNode : Microsoft.OData.UriParser.LambdaNode {

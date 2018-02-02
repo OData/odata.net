@@ -15,6 +15,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -369,6 +370,15 @@ namespace Microsoft.OData.Tests.UriParser
             // entity type with enum as key
             var fullyQualifiedNamespaceShape = new EdmEntityType("Fully.Qualified.Namespace", "Shape", null, false, false);
             fullyQualifiedNamespaceShape.AddKeys(fullyQualifiedNamespaceShape.AddStructuralProperty("Color", colorTypeReference));
+            #endregion
+
+            #region Annotation Terms
+            var fullyQualifiedAnnotationTerm = new EdmTerm("Fully.Qualified.Namespace", "PrimitiveTerm", EdmPrimitiveTypeKind.String);
+            model.AddElement(fullyQualifiedAnnotationTerm);
+
+            var fullyQualifiedStructuredAnnotationTerm = new EdmTerm("Fully.Qualified.Namespace", "ComplexTerm", new EdmComplexTypeReference(FullyQualifiedNamespaceAddress, false));
+            model.AddElement(fullyQualifiedStructuredAnnotationTerm);
+            
             #endregion
 
             #region Operations
@@ -1174,6 +1184,8 @@ namespace Microsoft.OData.Tests.UriParser
         <Parameter Name=""id"" Type=""Fully.Qualified.Namespace.IdType"" Nullable=""false"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Pet6"" />
       </Function>
+      <Term Name=""PrimitiveTerm"" Type=""Edm.String""/>
+      <Term Name=""ComplexTerm"" Type=""Fully.Qualified.Namespace.Address""/>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
