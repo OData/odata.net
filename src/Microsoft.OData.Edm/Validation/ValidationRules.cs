@@ -756,6 +756,22 @@ namespace Microsoft.OData.Edm.Validation
                            Strings.EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType(enumType.FullName()));
                    }
                });
+
+        /// <summary>
+        /// Validates that the underlying type of a type definition cannot be Edm.PrimitiveType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmEnumType> EnumUnderlyingTypeCannotBeEdmPrimitiveType =
+            new ValidationRule<IEdmEnumType>(
+                (context, enumType) =>
+                {
+                    if (enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.PrimitiveType && !context.IsBad(enumType.UnderlyingType))
+                    {
+                        context.AddError(
+                            enumType.Location(),
+                            EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                            Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("enumeration", enumType.FullName()));
+                    }
+                });
         #endregion
 
         #region IEdmEnumMember
