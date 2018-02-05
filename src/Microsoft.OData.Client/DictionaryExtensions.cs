@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Concurrent;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-
+    
     /// <summary>
     /// Useful extension methods for IDictionary and ConcurrentDictionary
     /// </summary>
@@ -58,9 +58,10 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Convenience funcion that wraps ConcurrentDictionary.TryAdd() to allow same signature as IDictionary
         /// </summary>
-        public static bool Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
+        public static void Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
         {
-            return self.TryAdd(key, value);
+            if(!self.TryAdd(key, value))
+                throw new ArgumentException("Argument_AddingDuplicate");
         }
 
         /// <summary>
