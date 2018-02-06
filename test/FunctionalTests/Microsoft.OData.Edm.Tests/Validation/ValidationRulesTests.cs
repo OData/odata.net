@@ -1184,7 +1184,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
                 navigationProperty,
                 EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("Collection(NS.OtherEntity)", "NavigationProperty"));
+                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("Collection(NS.OtherEntity)", "NavigationProperty", "NS.Entity"));
         }
 
         [Fact]
@@ -1208,7 +1208,94 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
                 navigationProperty,
                 EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("NS.OtherEntity", "NavigationProperty"));
+                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("NS.OtherEntity", "NavigationProperty", "NS.Complex"));
+        }
+
+        [Fact]
+        public void TestInterfaceTypeOfNavigationPropertyOnComplexRecursiveCannotHavePathTypeProperty()
+        {
+            // Complex                                   <--
+            //     -- PathProperty (Edm.PropertyPath)      |
+            //     -- ComplexProperty (NS.Complex)      ----
+            // Entity                                   <----
+            //     -- Id (Edm.Int32)                        |
+            //     -- ComplexProperty (NS.Complex)          |
+            //     -- NavigationProperty (NS.Entity)      ---
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            complex.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(true));
+            complex.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complex, false));
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            entity.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complex, true));
+
+            var navigationProperty = entity.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                ContainsTarget = false,
+                Name = "NavigationProperty",
+                Target = entity,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            ValidateError(
+                ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
+                navigationProperty,
+                EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("NS.Entity", "NavigationProperty", "NS.Entity"));
+        }
+
+        [Fact]
+        public void TestInterfaceTypeOfDeclaringTypeOfEntitySetRecursiveCannotHavePathTypeProperty()
+        {
+            // Complex                                   <--
+            //     -- PathProperty (Edm.PropertyPath)      |
+            //     -- ComplexProperty (NS.Complex)      ----
+            // Entity
+            //     -- Id (Edm.Int32)
+            //     -- ComplexProperty (NS.Complex)
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            complex.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(true));
+            complex.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complex, false));
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            entity.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complex, true));
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmEntitySet entitySet = new EdmEntitySet(container, "Entities", entity);
+
+            ValidateError(
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                entitySet,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+        }
+
+        [Fact]
+        public void TestInterfaceTypeOfDeclaringTypeOfSingletonRecursiveCannotHavePathTypeProperty()
+        {
+            // Complex                                   <--
+            //     -- PathProperty (Edm.PropertyPath)      |
+            //     -- ComplexProperty (NS.Complex)      ----
+            // Entity
+            //     -- Id (Edm.Int32)
+            //     -- ComplexProperty (NS.Complex)
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            complex.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(true));
+            complex.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complex, false));
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            entity.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complex, true));
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmSingleton singleton = new EdmSingleton(container, "Me", entity);
+
+            ValidateError(
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                singleton,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "singleton", "Me"));
         }
 
         private static void ValidateNoError<T>(ValidationRule<T> validationRule, IEdmModel model, T item) where T : IEdmElement

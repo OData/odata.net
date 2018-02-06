@@ -497,6 +497,77 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Same(EdmCoreModel.Instance.GetPathType(EdmPathTypeKind.NavigationPropertyPath), property.Type.AsCollection().ElementType().Definition);
         }
 
+        [Fact]
+        public void ParsingPropertyWithEdmPathTypeWorksButValidationFailed()
+        {
+            string properties =
+                @"<Property Name=""PathProperty"" Type=""Collection(Edm.PropertyPath)"" />";
+
+            IEdmModel model = GetEdmModel(properties: properties);
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "PathProperty");
+            Assert.NotNull(property);
+            Assert.True(property.Type.IsNullable);
+            Assert.True(property.Type.IsCollection());
+            Assert.Equal(EdmTypeKind.Path, property.Type.AsCollection().ElementType().TypeKind());
+            Assert.Same(EdmCoreModel.Instance.GetPathType(EdmPathTypeKind.PropertyPath), property.Type.AsCollection().ElementType().Definition);
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            var error = Assert.Single(errors);
+            Assert.NotNull(error);
+            Assert.Equal(EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty, error.ErrorCode);
+        }
+
+        [Fact]
+        public void ParsingRecursivePropertyWithEdmPathTypeWorksButValidationFailed()
+        {
+            string properties =
+                @"<Property Name=""PathProperty"" Type=""Collection(Edm.PropertyPath)"" />
+                  <Property Name=""ComplexProperty"" Type=""NS.Address"" />";
+
+            IEdmModel model = GetEdmModel(properties: properties);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            var property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "ComplexProperty");
+            Assert.NotNull(property);
+            Assert.True(property.Type.IsNullable);
+            Assert.Equal(EdmTypeKind.Complex, property.Type.TypeKind());
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            var error = Assert.Single(errors);
+            Assert.NotNull(error);
+            Assert.Equal(EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty, error.ErrorCode);
+        }
+
+        [Fact]
+        public void ParsingNavigationPropertyWithEdmPathTypeWorksButValidationFailed()
+        {
+            string properties =
+                @"<NavigationProperty Name=""NavigationProperty"" Type=""Collection(NS.Customer)"" />
+                  <Property Name=""PathProperty"" Type=""Collection(Edm.AnnotationPath)"" />";
+
+            IEdmModel model = GetEdmModel(properties: properties);
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var navProperty = customer.DeclaredNavigationProperties().FirstOrDefault(c => c.Name == "NavigationProperty");
+            Assert.NotNull(navProperty);
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            Assert.NotNull(errors);
+            Assert.Equal(3, errors.Count());
+
+            Assert.Equal(new[] {EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty}, errors.Select(e => e.ErrorCode));
+        }
+
         private void RunValidTest(Func<XmlReader, IEdmModel> parse)
         {
             var result = parse(this.validReader);
