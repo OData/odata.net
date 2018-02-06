@@ -1347,5 +1347,15 @@ namespace Microsoft.OData.Edm.Validation
         /// Edm.EntityType cannot be used as the type of an entity set in an entity container.
         /// </summary>
         EntityTypeOfEntitySetCannotBeEdmEntityType = 385,
+
+        /// <summary>
+        /// The dclaring type of navigation source cannot have path type property.
+        /// </summary>
+        DeclaringTypeOfNavigationSourceCannotHavePathProperty = 386,
+
+        /// <summary>
+        /// The type of navigation property cannot have path type property.
+        /// </summary>
+        TypeOfNavigationPropertyCannotHavePathProperty = 387
     }
 }

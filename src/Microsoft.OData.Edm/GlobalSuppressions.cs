@@ -270,4 +270,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#EntityTypeKeyTypeCannotBeEdmPrimitiveType")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#EntitySetTypeCannotBeEdmEntityType")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#SingletonTypeCannotBeEdmEntityType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#EnumUnderlyingTypeCannotBeEdmPrimitiveType")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#NavigationSourceDeclaringTypeCannotHavePathTypeProperty")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#NavigationPropertyTypeCannotHavePathTypeProperty")]
 
