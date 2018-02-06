@@ -1468,7 +1468,7 @@ namespace Microsoft.OData.Edm.Validation
                     if (HasPathTypeProperty(structuredType, visited))
                     {
                         string errorMessage = Strings
-                            .EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty(property.Type.FullName(), property.Name);
+                            .EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty(property.Type.FullName(), property.Name, property.DeclaringType.FullTypeName());
 
                         context.AddError(
                             property.Location(),

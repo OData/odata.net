@@ -169,7 +169,7 @@ EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType=
 EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton=The type 'Edm.EntityType' cannot be used as the type of a singleton '{0}' in an entity container.
 EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet=The type 'Edm.EntityType' cannot be used as the type of an entity set '{0}' in an entity container.
 EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty=The declaring type '{0}' of {1} '{2}' cannot include path type property.
-EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty=The type '{0}' of navigation property '{1}' cannot include path type property.
+EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty=The type '{0}' of navigation property '{1}' on declaring type '{2}' cannot include path type property.
 
 ;Error message for Syntactic validation rules
 EdmModel_Validator_Syntactic_MissingName=The name is missing or not valid.
