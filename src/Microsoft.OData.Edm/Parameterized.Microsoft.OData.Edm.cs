@@ -1213,6 +1213,20 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The declaring type '{0}' of {1} '{2}' cannot include path type property."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' of navigation property '{1}' cannot include path type property."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The name is missing or not valid."
         /// </summary>
         internal static string EdmModel_Validator_Syntactic_MissingName {

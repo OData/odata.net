@@ -1020,6 +1020,18 @@ namespace Microsoft.OData.Edm.Tests.Validation
         }
 
         [Fact]
+        public void TestInterfaceEnumUnderlyingTypeOfEdmPrimitiveType()
+        {
+            var enumType = new EdmEnumType("MyNS", "Address", EdmPrimitiveTypeKind.PrimitiveType, false);
+
+            ValidateError(
+                ValidationRules.EnumUnderlyingTypeCannotBeEdmPrimitiveType,
+                enumType,
+                EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("enumeration", enumType.FullName()));
+        }
+
+        [Fact]
         public void TestInterfaceEntityTypeKeytypeOfEdmPrimitiveType()
         {
             EdmEntityType entity = new EdmEntityType("NS", "Entity");
@@ -1057,6 +1069,146 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 property,
                 EdmErrorCode.PropertyTypeCannotBeCollectionOfAbstractType,
                 Strings.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType(property.Type.FullName(), "Property"));
+        }
+
+        [Fact]
+        public void TestInterfaceDeclaringTypeOfEntitySetCannotHavePathTypeProperty()
+        {
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            entity.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(false)); // path property
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmEntitySet entitySet = new EdmEntitySet(container, "Entities", entity);
+
+            ValidateError(
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                entitySet,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+        }
+
+        [Fact]
+        public void TestInterfaceDeclaringTypeOfSingletonCannotHavePathTypeProperty()
+        {
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            entity.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(false)); // path property
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmSingleton singleton = new EdmSingleton(container, "MyEntity", entity);
+
+            ValidateError(
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                singleton,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "singleton", "MyEntity"));
+        }
+
+        [Fact]
+        public void TestInterfaceComplexTypeOfDeclaringTypeOfEntitySetCannotHavePathTypeProperty()
+        {
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            complex.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(false)); // path property on complex
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            entity.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complex, true));
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmEntitySet entitySet = new EdmEntitySet(container, "Entities", entity);
+
+            ValidateError(
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                entitySet,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+        }
+
+        [Fact]
+        public void TestInterfaceBaseDeclaringTypeOfEntitySetCannotHavePathTypeProperty()
+        {
+            EdmEntityType baseType = new EdmEntityType("NS", "Base");
+            baseType.AddKeys(baseType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            baseType.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(false));// path property on base
+
+            EdmEntityType derived = new EdmEntityType("NS", "Derived", baseType);
+            derived.AddStructuralProperty("PrimitiveProperty", EdmCoreModel.Instance.GetInt32(false));
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmEntitySet entitySet = new EdmEntitySet(container, "Deriveds", derived);
+
+            ValidateError(
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                entitySet,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Derived", "entity set", "Deriveds"));
+        }
+
+        [Fact]
+        public void TestInterfaceBaseComplexTypeOfDeclaringTypeOfEntitySetCannotHavePathTypeProperty()
+        {
+            EdmComplexType baseType = new EdmComplexType("NS", "Base");
+            baseType.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(false)); // path property on complex base
+
+            EdmComplexType derived = new EdmComplexType("NS", "Derived", baseType);
+            derived.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(derived, true));
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            entity.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(derived, true));
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmEntitySet entitySet = new EdmEntitySet(container, "Entities", entity);
+
+            ValidateError(
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                entitySet,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+        }
+
+        [Fact]
+        public void TestInterfaceTypeOfNavigationPropertyCannotHavePathTypeProperty()
+        {
+            EdmEntityType otherEntity = new EdmEntityType("NS", "OtherEntity");
+            otherEntity.AddKeys(otherEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            otherEntity.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(false));
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            var navigationProperty = entity.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                ContainsTarget = false,
+                Name = "NavigationProperty",
+                Target = otherEntity,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+
+            ValidateError(
+                ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
+                navigationProperty,
+                EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("Collection(NS.OtherEntity)", "NavigationProperty"));
+        }
+
+        [Fact]
+        public void TestInterfaceTypeOfNavigationPropertyOnComplexCannotHavePathTypeProperty()
+        {
+            EdmEntityType otherEntity = new EdmEntityType("NS", "OtherEntity");
+            otherEntity.AddKeys(otherEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            otherEntity.AddStructuralProperty("PathProperty", EdmCoreModel.Instance.GetPropertyPath(false));
+
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            complex.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String);
+            var navigationProperty = complex.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                ContainsTarget = false,
+                Name = "NavigationProperty",
+                Target = otherEntity,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            ValidateError(
+                ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
+                navigationProperty,
+                EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("NS.OtherEntity", "NavigationProperty"));
         }
 
         private static void ValidateNoError<T>(ValidationRule<T> validationRule, IEdmModel model, T item) where T : IEdmElement

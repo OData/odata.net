@@ -230,6 +230,8 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType = "EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType";
         internal const string EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton = "EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton";
         internal const string EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet = "EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet";
+        internal const string EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty = "EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty";
+        internal const string EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty = "EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty";
         internal const string EdmModel_Validator_Syntactic_MissingName = "EdmModel_Validator_Syntactic_MissingName";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong = "EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed = "EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed";

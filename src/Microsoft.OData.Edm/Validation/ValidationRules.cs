@@ -313,6 +313,35 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
+        /// Validates that there is no entity set or singleton whose entity type has not property defined with Path type.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationSource> NavigationSourceDeclaringTypeCannotHavePathTypeProperty =
+            new ValidationRule<IEdmNavigationSource>(
+                (context, navigationSource) =>
+                {
+                    IEdmEntityType entityType = navigationSource.EntityType();
+
+                    if (entityType == null)
+                    {
+                        return;
+                    }
+
+                    IList<IEdmStructuredType> visited = new List<IEdmStructuredType>();
+                    if (HasPathTypeProperty(entityType, visited))
+                    {
+                        string name = navigationSource is IEdmSingleton ? "singleton" : "entity set";
+
+                        string errorMessage = Strings
+                            .EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty(entityType.FullName(), name, navigationSource.Name);
+
+                        context.AddError(
+                            navigationSource.Location(),
+                            EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                            errorMessage);
+                    }
+                });
+
+        /// <summary>
         /// Validates that the entity type of an entity set or singleton can be found from the model being validated.
         /// </summary>
         public static readonly ValidationRule<IEdmNavigationSource> NavigationSourceInaccessibleEntityType =
@@ -1413,6 +1442,38 @@ namespace Microsoft.OData.Edm.Validation
                                 EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself,
                                 Strings.EdmModel_Validator_Semantic_NavigationPropertyEntityMustNotIndirectlyContainItself(property.Name));
                         }
+                    }
+                });
+
+        /// <summary>
+        /// Validates that the type of the navigation property cannot have path type property defined.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationProperty> NavigationPropertyTypeCannotHavePathTypeProperty =
+            new ValidationRule<IEdmNavigationProperty>(
+                (context, property) =>
+                {
+                    IEdmTypeReference propertyType = property.Type;
+                    if (propertyType.IsCollection())
+                    {
+                        propertyType = propertyType.AsCollection().ElementType();
+                    }
+
+                    IEdmStructuredType structuredType = propertyType.ToStructuredType();
+                    if (structuredType == null)
+                    {
+                        return;
+                    }
+
+                    IList<IEdmStructuredType> visited = new List<IEdmStructuredType>();
+                    if (HasPathTypeProperty(structuredType, visited))
+                    {
+                        string errorMessage = Strings
+                            .EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty(property.Type.FullName(), property.Name);
+
+                        context.AddError(
+                            property.Location(),
+                            EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                            errorMessage);
                     }
                 });
 
@@ -2625,6 +2686,49 @@ namespace Microsoft.OData.Edm.Validation
             var navigationProperty = definingType.FindProperty(pathSegments.Last()) as IEdmNavigationProperty;
             return navigationProperty != null;
         }
+
+        private static bool HasPathTypeProperty(IEdmStructuredType structuredType, IList<IEdmStructuredType> visited)
+        {
+            if (structuredType == null || visited == null || visited.Any(c => c == structuredType))
+            {
+                return false;
+            }
+
+            visited.Add(structuredType);
+
+            IEdmStructuredType baseType = structuredType.BaseType;
+            if (baseType != null)
+            {
+                if (HasPathTypeProperty(baseType, visited))
+                {
+                    return true;
+                }
+            }
+
+            foreach (var property in structuredType.DeclaredProperties)
+            {
+                IEdmTypeReference propertyType = property.Type;
+                if (propertyType.IsCollection())
+                {
+                    propertyType = propertyType.AsCollection().ElementType();
+                }
+
+                if (propertyType.IsStructured())
+                {
+                    if (HasPathTypeProperty(propertyType.AsStructured().StructuredDefinition(), visited))
+                    {
+                        return true;
+                    }
+                }
+                else if (propertyType.IsPath())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         internal class EdmTypeReferenceComparer : IEqualityComparer<IEdmTypeReference>
         {
