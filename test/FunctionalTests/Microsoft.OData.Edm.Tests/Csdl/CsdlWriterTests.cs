@@ -507,6 +507,96 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
         #endregion
 
+        [Fact]
+        public void ShouldWriteEdmComplexTypeProperty()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"Customer\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                    "<Property Name=\"ComplexProperty\" Type=\"Edm.ComplexType\" />" +
+                  "</EntityType>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmEntityType customer = new EdmEntityType("NS", "Customer");
+            customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            customer.AddStructuralProperty("ComplexProperty", EdmCoreModel.Instance.GetComplexType(true));
+            model.AddElement(customer);
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
+        public void ShouldWriteEdmEntityTypeProperty()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"Customer\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                    "<NavigationProperty Name=\"EntityNavigationProperty\" Type=\"Edm.EntityType\" />" +
+                  "</EntityType>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmEntityType customer = new EdmEntityType("NS", "Customer");
+            customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Target = EdmCoreModel.Instance.GetEntityType(true).EntityDefinition(),
+                ContainsTarget = false,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Name = "EntityNavigationProperty"
+            });
+            model.AddElement(customer);
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
+        public void ShouldWriteEdmPathTypeProperty()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<ComplexType Name=\"SelectType\">" +
+                    "<Property Name=\"DefaultSelect\" Type=\"Collection(Edm.PropertyPath)\" />" +
+                    "<Property Name=\"DefaultHidden\" Type=\"Collection(Edm.NavigationPropertyPath)\" Nullable=\"false\" />" +
+                  "</ComplexType>" +
+                  "<Term Name=\"MyTerm\" Type=\"NS.SelectType\" />" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = new EdmComplexType("NS", "SelectType");
+            complexType.AddStructuralProperty("DefaultSelect", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetPropertyPath(true))));
+            complexType.AddStructuralProperty("DefaultHidden", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetNavigationPropertyPath(false))));
+            model.AddElement(complexType);
+            EdmTerm term = new EdmTerm("NS", "MyTerm", new EdmComplexTypeReference(complexType, true));
+            model.AddElement(term);
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
         private string GetCsdl(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;

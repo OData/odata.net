@@ -535,6 +535,13 @@ public enum Microsoft.OData.Edm.EdmOnDeleteAction : int {
 	None = 0
 }
 
+public enum Microsoft.OData.Edm.EdmPathTypeKind : int {
+	AnnotationPath = 1
+	NavigationPropertyPath = 3
+	None = 0
+	PropertyPath = 2
+}
+
 public enum Microsoft.OData.Edm.EdmPrimitiveTypeKind : int {
 	Binary = 1
 	Boolean = 2
@@ -565,6 +572,7 @@ public enum Microsoft.OData.Edm.EdmPrimitiveTypeKind : int {
 	Int32 = 9
 	Int64 = 10
 	None = 0
+	PrimitiveType = 34
 	SByte = 11
 	Single = 12
 	Stream = 14
@@ -594,6 +602,7 @@ public enum Microsoft.OData.Edm.EdmTypeKind : int {
 	EntityReference = 5
 	Enum = 6
 	None = 0
+	Path = 9
 	Primitive = 1
 	TypeDefinition = 7
 	Untyped = 8
@@ -849,6 +858,13 @@ public interface Microsoft.OData.Edm.IEdmOptionalParameter : IEdmElement, IEdmNa
 public interface Microsoft.OData.Edm.IEdmPathExpression : IEdmElement, IEdmExpression {
 	string Path  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] PathSegments  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.IEdmPathType : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
+	Microsoft.OData.Edm.EdmPathTypeKind PathKind  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.IEdmPathTypeReference : IEdmElement, IEdmTypeReference {
 }
 
 public interface Microsoft.OData.Edm.IEdmPrimitiveType : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
@@ -1146,6 +1162,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	ExtensionAttribute(),
 	]
 	public static Microsoft.OData.Edm.IEdmEnumTypeReference AsEnum (Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.IEdmPathTypeReference AsPath (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
 	ExtensionAttribute(),
@@ -2260,7 +2281,7 @@ public class Microsoft.OData.Edm.EdmComplexTypeReference : Microsoft.OData.Edm.E
 	public EdmComplexTypeReference (Microsoft.OData.Edm.IEdmComplexType complexType, bool isNullable)
 }
 
-public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmModel, IEdmValidCoreModelElement {
+public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, IEdmCoreModelElement, IEdmElement, IEdmModel {
 	public static readonly Microsoft.OData.Edm.EdmCoreModel Instance = Microsoft.OData.Edm.EdmCoreModel
 
 	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
@@ -2279,24 +2300,34 @@ public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, 
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
 	public System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] FindOperationImportsByNameNonBindingParameterType (string operationImportName, System.Collections.Generic.IEnumerable`1[[System.String]] parameterNames)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetAnnotationPath (bool isNullable)
 	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isNullable)
 	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetBoolean (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetByte (bool isNullable)
 	public static Microsoft.OData.Edm.IEdmCollectionTypeReference GetCollection (Microsoft.OData.Edm.IEdmTypeReference elementType)
+	public Microsoft.OData.Edm.IEdmComplexType GetComplexType ()
+	public Microsoft.OData.Edm.IEdmComplexTypeReference GetComplexType (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDate (bool isNullable)
 	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDateTimeOffset (bool isNullable)
 	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (bool isNullable)
 	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (System.Nullable`1[[System.Int32]] precision, System.Nullable`1[[System.Int32]] scale, bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDouble (bool isNullable)
 	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDuration (bool isNullable)
+	public Microsoft.OData.Edm.IEdmEntityType GetEntityType ()
+	public Microsoft.OData.Edm.IEdmEntityTypeReference GetEntityType (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetGuid (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt16 (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt32 (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt64 (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetNavigationPropertyPath (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPathType GetPathType (Microsoft.OData.Edm.EdmPathTypeKind kind)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetPathType (Microsoft.OData.Edm.EdmPathTypeKind kind, bool isNullable)
+	public Microsoft.OData.Edm.EdmPathTypeKind GetPathTypeKind (string typeName)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetPrimitive (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveType GetPrimitiveType (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind)
 	public Microsoft.OData.Edm.EdmPrimitiveTypeKind GetPrimitiveTypeKind (string typeName)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetPropertyPath (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSByte (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSingle (bool isNullable)
 	public Microsoft.OData.Edm.IEdmSpatialTypeReference GetSpatial (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
@@ -2506,6 +2537,10 @@ public class Microsoft.OData.Edm.EdmPathExpression : Microsoft.OData.Edm.EdmElem
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 	string Path  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] PathSegments  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmPathTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmPathTypeReference, IEdmTypeReference {
+	public EdmPathTypeReference (Microsoft.OData.Edm.IEdmPathType definition, bool isNullable)
 }
 
 public class Microsoft.OData.Edm.EdmPrimitiveTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
@@ -5779,6 +5814,7 @@ public class Microsoft.OData.UriParser.ODataUriResolver {
 	public ODataUriResolver ()
 
 	bool EnableCaseInsensitive  { public virtual get; public virtual set; }
+	bool EnableNoDollarQueryOptions  { public virtual get; public virtual set; }
 	Microsoft.OData.UriParser.TypeFacetsPromotionRules TypeFacetsPromotionRules  { public get; public set; }
 
 	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.UriParser.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.UriParser.SingleValueNode& leftNode, Microsoft.OData.UriParser.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
