@@ -93,7 +93,6 @@
     <Compile Include="UriParser\SyntacticAst\ComputeToken.cs" />
     <Compile Include="UriParser\SyntacticAst\ComputeExpressionToken.cs" />
     <Compile Include="UriParser\TypeFacetsPromotionRules.cs" />
-    <Compile Include="Uri\ApplyClauseToStringBuilder.cs" />
     <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />
     <Compile Include="ServiceLifetime.cs" />

@@ -16,6 +16,23 @@ namespace Microsoft.OData
             _query = new StringBuilder();
         }
 
+        public string TranslateApplyClause(ApplyClause applyClause)
+        {
+            ExceptionUtils.CheckArgumentNotNull(applyClause, nameof(applyClause));
+
+            _query.Append(ExpressionConstants.QueryOptionApply);
+            _query.Append(ExpressionConstants.SymbolEqual);
+
+            bool appendSlash = false;
+            foreach (TransformationNode transformation in applyClause.Transformations)
+            {
+                appendSlash = AppendSlash(appendSlash);
+                Translate(transformation);
+            }
+
+            return appendSlash ? _query.ToString() : string.Empty;
+        }
+
         private bool AppendComma(bool appendComma)
         {
             if (appendComma)
@@ -72,12 +89,30 @@ namespace Microsoft.OData
             {
                 appendComma = AppendComma(appendComma);
 
-                AppendExpression(aggExpression.Expression);
-                _query.Append(ExpressionConstants.SymbolEscapedSpace);
-                AppendWord(ExpressionConstants.KeywordWith);
+                if (aggExpression.Method != AggregationMethod.VirtualPropertyCount)
+                {
+                    AppendExpression(aggExpression.Expression);
+                    _query.Append(ExpressionConstants.SymbolEscapedSpace);
+                    AppendWord(ExpressionConstants.KeywordWith);
+                }
+
                 AppendWord(GetAggregationMethodName(aggExpression));
                 AppendWord(ExpressionConstants.KeywordAs);
                 _query.Append(aggExpression.Alias);
+            }
+        }
+
+        private void Translate(ComputeTransformationNode transformation)
+        {
+            bool appendComma = false;
+            foreach (ComputeExpression computeExpression in transformation.Expressions)
+            {
+                appendComma = AppendComma(appendComma);
+
+                AppendExpression(computeExpression.Expression);
+                _query.Append(ExpressionConstants.SymbolEscapedSpace);
+                AppendWord(ExpressionConstants.KeywordAs);
+                _query.Append(computeExpression.Alias);
             }
         }
 
@@ -119,23 +154,6 @@ namespace Microsoft.OData
             }
         }
 
-        public string TranslateApplyClause(ApplyClause applyClause)
-        {
-            ExceptionUtils.CheckArgumentNotNull(applyClause, nameof(applyClause));
-
-            _query.Append(ExpressionConstants.QueryOptionApply);
-            _query.Append(ExpressionConstants.SymbolEqual);
-
-            bool appendSlash = false;
-            foreach (TransformationNode transformation in applyClause.Transformations)
-            {
-                appendSlash = AppendSlash(appendSlash);
-                Translate(transformation);
-            }
-
-            return appendSlash ? _query.ToString() : string.Empty;
-        }
-
         private void Translate(TransformationNode transformation)
         {
             switch (transformation.Kind)
@@ -149,18 +167,27 @@ namespace Microsoft.OData
                 case TransformationNodeKind.Filter:
                     _query.Append(ExpressionConstants.KeywordFilter);
                     break;
+                case TransformationNodeKind.Compute:
+                    _query.Append(ExpressionConstants.KeywordCompute);
+                    break;
                 default:
                     throw new NotSupportedException("unknown TransformationNodeKind value " + transformation.Kind.ToString());
             }
 
             _query.Append(ExpressionConstants.SymbolOpenParen);
 
-            if (transformation is GroupByTransformationNode groupByTransformation)
+            GroupByTransformationNode groupByTransformation;
+            AggregateTransformationNode aggTransformation;
+            FilterTransformationNode filterTransformation;
+            ComputeTransformationNode computeTransformation;
+            if ((groupByTransformation = transformation as GroupByTransformationNode) != null)
                 Translate(groupByTransformation);
-            else if (transformation is AggregateTransformationNode aggTransformation)
+            else if ((aggTransformation = transformation as AggregateTransformationNode) != null)
                 Translate(aggTransformation);
-            else if (transformation is FilterTransformationNode filterTransformation)
+            else if ((filterTransformation = transformation as FilterTransformationNode) != null)
                 Translate(filterTransformation);
+            else if ((computeTransformation = transformation as ComputeTransformationNode) != null)
+                Translate(computeTransformation);
             else
                 throw new NotSupportedException("unknown TransformationNode type " + transformation.GetType().Name);
 

@@ -1010,6 +1010,9 @@
     <Compile Include="..\UriParser\Aggregation\ApplyTransformationToken.cs">
       <Link>UriParser\Aggregation\ApplyTransformationToken.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\Aggregation\ComputeTransformationNode.cs">
+      <Link>UriParser\Aggregation\ComputeTransformationNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\Aggregation\FilterTransformationNode.cs">
       <Link>UriParser\Aggregation\FilterTransformationNode.cs</Link>
     </Compile>
@@ -1702,6 +1705,9 @@
     </Compile>
     <Compile Include="..\UriUtils.cs">
       <Link>UriUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ApplyClauseToStringBuilder.cs">
+      <Link>Uri\ApplyClauseToStringBuilder.cs</Link>
     </Compile>
     <Compile Include="..\Uri\ExpressionConstants.cs">
       <Link>Uri\ExpressionConstants.cs</Link>
