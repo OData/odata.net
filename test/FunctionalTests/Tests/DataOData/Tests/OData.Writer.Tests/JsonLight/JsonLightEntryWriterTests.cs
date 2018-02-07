@@ -48,7 +48,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             var nonMLEBaseType = new EdmEntityType("TestModel", "NonMLEBaseType");
             nonMLEBaseType.AddKeys(nonMLEBaseType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false)));
             model.AddElement(nonMLEBaseType);
-            var nonMLESet  = container.AddEntitySet("NonMLESet", nonMLEBaseType);
+            var nonMLESet = container.AddEntitySet("NonMLESet", nonMLEBaseType);
 
             var nonMLEType = new EdmEntityType("TestModel", "NonMLEType", nonMLEBaseType);
             nonMLEType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
@@ -66,13 +66,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             var mleType = new EdmEntityType("TestModel", "MLEType", mleBaseType, false, false, true);
             mleType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
             mleType.AddStructuralProperty("Description", EdmCoreModel.Instance.GetString(true));
-            mleType.AddStructuralProperty("StreamProperty", EdmPrimitiveTypeKind.Stream, isNullable:false);
+            mleType.AddStructuralProperty("StreamProperty", EdmPrimitiveTypeKind.Stream, isNullable: false);
             var mleNav = mleType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "NavProp", Target = otherType, TargetMultiplicity = EdmMultiplicity.Many });
             mleSet.AddNavigationTarget(mleNav, otherset);
             model.AddElement(mleType);
 
             IEnumerable<EntryPayloadTestCase> testCases = new[]
-            {   
+            {
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName at the beginning, nothing else",
@@ -96,7 +96,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                                 new ODataProperty { Name = "Name", Value = "test" },
                             }
                         }
-                        .WithAnnotation(new WriteEntryCallbacksAnnotation 
+                        .WithAnnotation(new WriteEntryCallbacksAnnotation
                             {
                                 BeforeWriteStartCallback = (entry) => { entry.TypeName = "TestModel.MLEType"; },
                                 BeforeWriteEndCallback = (entry) => { entry.TypeName = "NonExistingType"; }
@@ -197,16 +197,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                             new ODataProperty { Name = "ID", Value = (int)42 },
                             new ODataProperty { Name = "Name", Value = "test" },
                         }
-                    }.WithAnnotation(new WriteEntryCallbacksAnnotation 
+                    }.WithAnnotation(new WriteEntryCallbacksAnnotation
                         {
                             BeforeWriteStartCallback = (entry) =>
-                            { 
+                            {
                                 entry.EditLink = null;
                                 entry.MediaResource.EditLink = null;
                                 entry.MediaResource.ETag = null;
                                 entry.MediaResource.ContentType = null;
                             },
-                            BeforeWriteEndCallback = (entry) => 
+                            BeforeWriteEndCallback = (entry) =>
                             {
                                 entry.EditLink = new Uri("http://odata.org/editlink");
                                 entry.MediaResource.EditLink = new Uri("http://odata.org/mediaeditlink");
@@ -240,7 +240,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     testCase.Items,
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        Json = string.Format(CultureInfo.InvariantCulture, testCase.Json, 
+                        Json = string.Format(CultureInfo.InvariantCulture, testCase.Json,
                             string.Empty,
                             JsonLightWriterUtils.GetMetadataUrlPropertyForEntry(testCase.EntitySet.Name) + ","),
                         FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
@@ -338,7 +338,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             model.AddElement(nonMLEType);
             container.AddEntitySet("NonMLEType", nonMLEType);
 
-            ODataAction action = new ODataAction 
+            ODataAction action = new ODataAction
             {
                 Metadata = new Uri("http://odata.org/test/$metadata#defaultAction"),
                 Title = "Default Action",
@@ -432,6 +432,96 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 });
         }
 
+        [TestMethod, Variation(Description = "Test skipping null values when writing JSON Lite entries with IgnoreNullValues = true.")]
+        public void IgnoreNullPropertiesInEntryTest()
+        {
+            EdmModel model = new EdmModel();
+            var container = new EdmEntityContainer("TestModel", "TestContainer");
+            model.AddElement(container);
+
+            var customerType = new EdmEntityType("TestModel", "CustomerType", null, false, isOpen: false);
+            customerType.AddKeys(customerType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false)));
+            customerType.AddKeys(customerType.AddStructuralProperty("Hobby", EdmCoreModel.Instance.GetString(true)));
+            model.AddElement(customerType);
+            var customerSet = container.AddEntitySet("CustomerSet", customerType);
+
+            var addressType = new EdmComplexType("TestModel", "AddressType");
+            addressType.AddStructuralProperty("Street", EdmCoreModel.Instance.GetStream(true));
+            model.AddElement(addressType);
+
+            IEnumerable<EntryPayloadTestCase> testCases = new[]
+            {
+                new EntryPayloadTestCase
+                {
+                    DebugDescription = "Customer instance with all properties set.",
+                    Items = new[] { new ODataResource()
+                    {
+                        TypeName = "TestModel.CustomerType",
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty { Name = "ID", Value = (int)42 },
+                            new ODataProperty { Name = "Hobby", Value = "Hiking" },
+                        }
+                    } },
+                    Model = model,
+                    EntitySet = customerSet,
+                    Json = string.Join("$(NL)",
+                        "{{",
+                        "{0}\"ID\":\"42\", \"Hobby\":\"Hiking\"",
+                        "}}")
+                },
+                new EntryPayloadTestCase
+                {
+                    DebugDescription = "Customer instance without Hobby.",
+                    Items = new[] {new ODataResource()
+                    {
+                        TypeName = "TestModel.CustomerType",
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty { Name = "ID", Value = (int)44 },
+                            new ODataProperty { Name = "Hobby", Value = null },
+                        }
+                    } },
+                    Model = model,
+                    EntitySet = customerSet,
+                    Json = string.Join("$(NL)",
+                        "{{",
+                        "{0}\"ID\":\"44\"",
+                        "}}")
+                },
+
+            };
+
+            IEnumerable<PayloadWriterTestDescriptor<ODataItem>> testDescriptors = testCases.Select(testCase =>
+                new PayloadWriterTestDescriptor<ODataItem>(
+                    this.Settings,
+                    testCase.Items,
+                    tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                    {
+                        Json = string.Format(
+                            CultureInfo.InvariantCulture,
+                            testCase.Json,
+                            JsonLightWriterUtils.GetMetadataUrlPropertyForEntry(testCase.EntitySet.Name) + ","),
+                        FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
+                    })
+                {
+                    DebugDescription = testCase.DebugDescription,
+                    Model = testCase.Model,
+                    PayloadEdmElementContainer = testCase.EntitySet,
+                    PayloadEdmElementType = testCase.EntityType,
+                    SkipTestConfiguration = testCase.SkipTestConfiguration
+                });
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+                (testDescriptor, testConfiguration) =>
+                {
+                    testConfiguration.MessageWriterSettings.IgnoreNullValues = true;
+                    TestWriterUtils.WriteAndVerifyODataEdmPayload(testDescriptor, testConfiguration, this.Assert, this.Logger);
+                });
+        }
+
         [TestMethod, Variation(Description = "Test correct serialization format when writing JSON Lite entries with open properties.")]
         public void OpenPropertiesInEntryTest()
         {
@@ -439,7 +529,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             var container = new EdmEntityContainer("TestModel", "TestContainer");
             model.AddElement(container);
 
-            var openCustomerType = new EdmEntityType("TestModel", "OpenCustomerType", null, false, isOpen:true);
+            var openCustomerType = new EdmEntityType("TestModel", "OpenCustomerType", null, false, isOpen: true);
             openCustomerType.AddKeys(openCustomerType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false)));
             model.AddElement(openCustomerType);
             var customerSet = container.AddEntitySet("CustomerSet", openCustomerType);
@@ -494,7 +584,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         "\"type\":\"name\",\"properties\":{{",
                         "\"name\":\"EPSG:4326\"",
                         "}}",
-                        "}}", 
+                        "}}",
                         "}}",
                         "}}")
                 },
@@ -526,7 +616,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(
-                            CultureInfo.InvariantCulture, 
+                            CultureInfo.InvariantCulture,
                             testCase.Json,
                             JsonLightWriterUtils.GetMetadataUrlPropertyForEntry(testCase.EntitySet.Name) + ","),
                         FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
@@ -561,7 +651,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             customerType.AddStructuralProperty("Location2", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false));
             model.AddElement(customerType);
             var customerSet = container.AddEntitySet("CustomerSet", customerType);
-            
+
             ISpatial pointValue = GeographyFactory.Point(32.0, -100.0).Build();
 
             IEnumerable<EntryPayloadTestCase> testCases = new[]
@@ -590,7 +680,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         "\"type\":\"name\",\"properties\":{{",
                         "\"name\":\"EPSG:4326\"",
                         "}}",
-                        "}}", 
+                        "}}",
                         "}}",
                         "}}")
                 },
@@ -617,7 +707,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         "\"type\":\"name\",\"properties\":{{",
                         "\"name\":\"EPSG:4326\"",
                         "}}",
-                        "}}", 
+                        "}}",
                         "}}",
                         "}}")
                 },

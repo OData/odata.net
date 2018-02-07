@@ -382,7 +382,7 @@ namespace Microsoft.OData.JsonLight
                     throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
                 }
             }
-            else
+            else if (!this.MessageWriterSettings.IgnoreNullValues)
             {
                 this.JsonWriter.WriteName(property.Name);
                 this.JsonLightValueSerializer.WriteNullValue();
