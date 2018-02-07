@@ -26,16 +26,5 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             Uri result = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(query, Uri.UnescapeDataString(result.OriginalString));
         }
-
-        //[Fact]
-        public void BuildUrlWithApplyCompute()
-        {
-            var query = ("http://gobbledygook/People?$apply=compute((cast(LifeTime,'Edm.Double') add MyDog/LionWhoAteMe/AngerLevel) mul 2 as lifeAngerLevel,StockQuantity div FavoriteNumber as StockNumber)");
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(query));
-            ODataUri odataUri = parser.ParseUri();
-
-            Uri result = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(query, Uri.UnescapeDataString(result.OriginalString));
-        }
     }
 }
