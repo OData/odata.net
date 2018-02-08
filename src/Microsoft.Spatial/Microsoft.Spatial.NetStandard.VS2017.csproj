@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Spatial</AssemblyName>
+    <RootNamespace>Microsoft.Spatial</RootNamespace>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <TransparentAssembly>true</TransparentAssembly>
+    <SecurityMigration>false</SecurityMigration>
+    <DelaySign>True</DelaySign>
+    <SignAssembly>True</SignAssembly>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <DefineConstants>$(DefineConstants);SPATIAL;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;SUPPRESS_SECURITY_RULES</DefineConstants>
+    <EnableLocalization>true</EnableLocalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Build.NetStandard\**" />
+    <Compile Remove="Build.NuGet\**" />
+    <Compile Remove="InternalsVisibleTo.cs" />
+    <Compile Remove="Microsoft.Spatial.cs" />
+    <Compile Remove="Parameterized.Microsoft.Spatial.cs" />
+    <EmbeddedResource Remove="Build.NetStandard\**" />
+    <EmbeddedResource Remove="Build.NuGet\**" />
+    <None Remove="Build.NetStandard\**" />
+    <None Remove="Build.NuGet\**" />
+    <None Remove="Microsoft.Spatial.tt" />
+    <None Remove="Microsoft.Spatial.txt" />
+    <None Remove="Parameterized.Microsoft.Spatial.tt" />
+  </ItemGroup>
+
+  <Import Project="..\Build.props" />
+
+  <ItemGroup>
+    <Compile Include="InternalsVisibleTo.cs">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.Spatial.txt">
+      <ResFile>Microsoft.Spatial</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.Spatial.TextRes</FullClassName>
+    </TextStringResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Microsoft.Spatial.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.Spatial.cs</LastGenOutput>
+    </None>
+    <Compile Include="Microsoft.Spatial.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.Spatial.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <None Include="Parameterized.Microsoft.Spatial.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.Spatial.cs</LastGenOutput>
+    </None>
+    <Compile Include="Parameterized.Microsoft.Spatial.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.Spatial.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>  
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

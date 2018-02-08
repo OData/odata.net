@@ -16,17 +16,18 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Edm;
-
     #endregion Namespaces
 
     /// <summary>
     /// RAW format output context. Used by RAW values and batch.
     /// </summary>
-    internal sealed class ODataRawOutputContext : ODataOutputContext
+    internal class ODataRawOutputContext : ODataOutputContext
     {
         /// <summary>The encoding to use for the output.</summary>
-        private Encoding encoding;
+        protected Encoding encoding;
+
+        /// <summary>Listener to notify when writing in-stream errors.</summary>
+        protected IODataOutputInStreamErrorListener outputInStreamErrorListener;
 
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
@@ -36,9 +37,6 @@ namespace Microsoft.OData
 
         /// <summary>The output stream to write to (both sync and async cases).</summary>
         private Stream outputStream;
-
-        /// <summary>Listener to notify when writing in-stream errors.</summary>
-        private IODataOutputInStreamErrorListener outputInStreamErrorListener;
 
         /// <summary>RawValueWriter used to write actual values to the stream.</summary>
         private RawValueWriter rawValueWriter;
@@ -201,36 +199,6 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
-        /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        /// <returns>The created batch writer.</returns>
-        /// <remarks>We don't plan to make this public!</remarks>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
-        {
-            this.AssertSynchronous();
-
-            return this.CreateODataBatchWriterImplementation(batchBoundary);
-        }
-
-#if PORTABLELIB
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
-        /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        /// <returns>A running task for the created batch writer.</returns>
-        /// <remarks>We don't plan to make this public!</remarks>
-        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
-        {
-            this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation(batchBoundary));
-        }
-#endif
-
-        /// <summary>
         /// Creates an <see cref="ODataAsynchronousWriter" /> to write an async response.
         /// </summary>
         /// <returns>The created writer.</returns>
@@ -294,7 +262,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <remarks>This can only be called if the text writer was not yet initialized or it has been closed.
         /// It can be called several times with CloseWriter calls in between though.</remarks>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We create a NonDisposingStream which doesn't need to be disposed, even though it's IDisposable.")]
         internal void InitializeRawValueWriter()
         {
             Debug.Assert(this.rawValueWriter == null, "The rawValueWriter has already been initialized.");
@@ -369,14 +336,14 @@ namespace Microsoft.OData
                         this.rawValueWriter.Flush();
                     }
 
-                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitely.
+                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
                         this.asynchronousOutputStream.FlushSync();
                         this.asynchronousOutputStream.Dispose();
                     }
 
-                    // Dipose the message stream (note that we OWN this stream, so we always dispose it).
+                    // Dispose the message stream (note that we OWN this stream, so we always dispose it).
                     this.messageOutputStream.Dispose();
                 }
             }
@@ -414,20 +381,6 @@ namespace Microsoft.OData
                 this.rawValueWriter.WriteRawValue(value);
                 this.rawValueWriter.End();
             }
-        }
-
-        /// <summary>
-        /// Creates a batch writer.
-        /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        /// <returns>The newly created batch writer.</returns>
-        private ODataBatchWriter CreateODataBatchWriterImplementation(string batchBoundary)
-        {
-            // Batch writer needs the default encoding to not use the preamble.
-            this.encoding = this.encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
-            ODataBatchWriter batchWriter = new ODataBatchWriter(this, batchBoundary);
-            this.outputInStreamErrorListener = batchWriter;
-            return batchWriter;
         }
 
         /// <summary>

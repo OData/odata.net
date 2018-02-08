@@ -552,9 +552,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         private void VerifyUIntValuesRoundtripWithTypeInformation(IEnumerable clrValues, string edmTypeDefinitionName)
         {
             var typeReference = new EdmTypeDefinitionReference((IEdmTypeDefinition)this.model.FindType(edmTypeDefinitionName), true);
-            foreach (object clrValue in clrValues)
+            foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
             {
-                this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} of type {1}.", clrValue, edmTypeDefinitionName), isIeee754Compatible: true);
+                foreach (object clrValue in clrValues)
+                {
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} of type {1}.", clrValue, edmTypeDefinitionName), isIeee754Compatible: true);
+                }
             }
         }
 
@@ -563,7 +566,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType(edmTypeName), true);
             foreach (object clrValue in clrValues)
             {
-                this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} of type {1}.", clrValue, edmTypeName), isIeee754Compatible: true);
+                foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+                {
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} of type {1}.", clrValue, edmTypeName), isIeee754Compatible: true);
+                }
             }
         }
 
@@ -578,7 +584,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 object clrValue = clrValues.GetValue(iterator);
                 object expectedValue = expectedValues.GetValue(iterator);
-                this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} of type {1} of expected value {2}.", clrValue, edmTypeName, expectedValue), isIeee754Compatible: true, expectedValue: expectedValue);
+                foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+                {
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} of type {1} of expected value {2}.", clrValue, edmTypeName, expectedValue), isIeee754Compatible: true, expectedValue: expectedValue);
+                }
             }
         }
 
@@ -586,7 +595,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             foreach (object clrValue in clrValues)
             {
-                this.VerifyPrimitiveValueRoundtrips(clrValue, null, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: true);
+                foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+                {
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, null, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: true);
+                }
             }
         }
 
@@ -594,7 +606,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             foreach (object clrValue in clrValues)
             {
-                this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: true);
+                foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+                {
+                    this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: true);
+                }
             }
         }
 
@@ -602,7 +617,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             foreach (object clrValue in clrValues)
             {
-                this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: false);
+                foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+                {
+                    this.VerifyPrimitiveValueDoesNotRoundtrip(clrValue, null, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: false);
+                }
             }
         }
 
@@ -611,7 +629,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType(edmTypeName), true);
             foreach (object clrValue in clrValues)
             {
-                this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, ODataVersion.V4, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: false);
+                foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+                {
+                    this.VerifyPrimitiveValueRoundtrips(clrValue, typeReference, version, string.Format("JSON Light roundtrip value {0} with no expected type.", clrValue), isIeee754Compatible: false);
+                }
             }
         }
 

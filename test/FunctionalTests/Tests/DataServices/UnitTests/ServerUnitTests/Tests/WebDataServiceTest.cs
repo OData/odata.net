@@ -31,6 +31,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
     /// <summary>
     /// This is a test class for WebDataServiceTest and is intended
     /// to contain all WebDataServiceTest Unit Tests
@@ -105,7 +106,7 @@ namespace AstoriaUnitTests.Tests
             Assert.AreSame(host, actualHost);
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void WebDataServiceCsdlMimeTypes()
         {
             object[] targets = new object[]
@@ -189,7 +190,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void WebDataServiceWcfEntryPoint()
         {
             Type serviceType = typeof(OpenWebDataService<>).MakeGenericType(typeof(CustomDataContext));
@@ -235,7 +236,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void WebDataServiceDocumentTest()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -282,7 +283,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void WebDataServiceDocumentJsonLightTest()
         {
             // Smoke test to verify that JSON Light service document can be written through the server. Detailed format-specific tests are in ODL.
@@ -474,7 +475,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ProcessGetTest()
         {
             foreach (WebServerLocation location in new WebServerLocation[] { WebServerLocation.InProcess, WebServerLocation.InProcessWcf })
@@ -494,7 +495,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SerializeResponseBodyAcceptTypeTest()
         {
             // Verifies that the correct Content-Type is selected at serialization time.
@@ -601,48 +602,6 @@ namespace AstoriaUnitTests.Tests
                 {
                     Assert.AreEqual(result, TestUtil.GetMediaType(host.ResponseContentType));
                 }
-            });
-        }
-        [Ignore] // Remove Atom
-        [TestMethod]
-        public void DataServiceHostServiceRootUriTest()
-        {
-            // Edit link "../Product(1)" incorrectly produced when base uri is http://service.svc using IDSH
-            // Make sure service root URIs always end in '/' when using an IDataServiceHost/IDataServiceHost2
-            //
-            // Verifies that the service root URI for a IDSH is always terminated in a '/'
-            // NOTE: if the service URI would not be properly terminated in a '/', the created edit link in the resulting
-            //       entry would be incorrect.
-            Uri[] uris = new Uri[]
-            {
-                new Uri("http://host"),
-                new Uri("http://host/a/b"),
-                new Uri("http://host/a/b.svc"),
-                new Uri("http://host/a/b/c.svc")
-            };
-
-            TestUtil.RunCombinations(uris, (uri) =>
-            {
-                TestServiceHost host = new TestServiceHost(uri)
-                {
-                    RequestAccept = "application/atom+xml",
-                    RequestPathInfo = "/Customers(0)",
-                };
-
-                DataService<CustomDataContext> context = new OpenWebDataService<CustomDataContext>();
-                context.AttachHost(host);
-
-                Exception exception = TestUtil.RunCatching(delegate()
-                {
-                    context.ProcessRequest();
-                });
-
-                XmlDocument document = new XmlDocument(TestUtil.TestNameTable);
-                host.ResponseStream.Seek(0, SeekOrigin.Begin);
-                document.Load(host.ResponseStream);
-                UnitTestsUtil.VerifyXPaths(document, "/atom:entry/atom:link[@rel='edit' and @href='Customers(0)']");
-
-                TestUtil.AssertExceptionExpected(exception, false);
             });
         }
 

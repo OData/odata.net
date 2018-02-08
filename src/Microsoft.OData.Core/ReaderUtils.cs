@@ -61,6 +61,21 @@ namespace Microsoft.OData
             };
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ODataDeletedResource"/> instance to return to the user.
+        /// </summary>
+        /// <param name="id">The id of the deleted resource, or null if not yet known.</param>
+        /// <param name="reason">The <see cref="DeltaDeletedEntryReason"/> for the deleted resource.</param>
+        /// <returns>The newly created deleted resource.</returns>
+        /// <remarks>The method populates the Properties property with an empty read only enumeration.</remarks>
+        internal static ODataDeletedResource CreateDeletedResource(Uri id, DeltaDeletedEntryReason reason)
+        {
+            return new ODataDeletedResource(id, reason)
+            {
+                Properties = new ReadOnlyEnumerable<ODataProperty>()
+            };
+        }
+
         /// <summary>Checks for duplicate navigation links and if there already is an association link with the same name
         /// sets the association link URL on the nested resource info.</summary>
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for the current scope.</param>

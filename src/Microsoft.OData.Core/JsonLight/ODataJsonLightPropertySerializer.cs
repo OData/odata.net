@@ -77,8 +77,11 @@ namespace Microsoft.OData.JsonLight
                     this.JsonWriter.StartObjectScope();
                     ODataPayloadKind kind = this.JsonLightOutputContext.MessageWriterSettings.IsIndividualProperty ? ODataPayloadKind.IndividualProperty : ODataPayloadKind.Property;
 
-                    ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
-                    this.WriteContextUriProperty(kind, () => contextInfo);
+                    if (!(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
+                    {
+                        ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
+                        this.WriteContextUriProperty(kind, () => contextInfo);
+                    }
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
@@ -143,6 +146,10 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
+                // TODO: (issue #888) this logic results in type annotations not being written for dynamic properties on types that are not
+                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be hueristically
+                // determined. Need to change this.currentPropertyInfo.MetadataType.IsOpenProperty to this.currentPropertyInfo.MetadataType.IsDynamic,
+                // and fix related tests and other logic (this change alone results in writing type even if it's already implied by context).
                 isOpenProperty = (!this.WritingResponse && this.currentPropertyInfo.MetadataType.OwningType == null) // Treat property as dynamic property when writing request and owning type is null
                 || this.currentPropertyInfo.MetadataType.IsOpenProperty;
             }
@@ -176,9 +183,13 @@ namespace Microsoft.OData.JsonLight
 
             string propertyName = property.Name;
 
-            if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
+            if (this.JsonLightOutputContext.MessageWriterSettings.Validations != ValidationKinds.None)
             {
                 WriterValidationUtils.ValidatePropertyName(propertyName);
+            }
+
+            if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
+            {
                 this.currentPropertyInfo = new PropertySerializationInfo(propertyName, owningType) { IsTopLevel = isTopLevel };
             }
             else
@@ -189,6 +200,11 @@ namespace Microsoft.OData.JsonLight
             WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
 
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
+
+            if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
+            {
+                WriteODataTypeAnnotation(property, isTopLevel);
+            }
 
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
 
@@ -249,17 +265,9 @@ namespace Microsoft.OData.JsonLight
 
         private void WriteUntypedValue(ODataUntypedValue untypedValue)
         {
-            if (!this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType)
-            {
-                this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
-                this.jsonLightValueSerializer.WriteUntypedValue(untypedValue);
-                return;
-            }
-
-            Debug.Assert(
-                this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType,
-                "this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType");
-            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(this.currentPropertyInfo.PropertyName, this.currentPropertyInfo.MetadataType.OwningType.FullTypeName()));
+            this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
+            this.jsonLightValueSerializer.WriteUntypedValue(untypedValue);
+            return;
         }
 
         /// <summary>
@@ -279,6 +287,34 @@ namespace Microsoft.OData.JsonLight
                 else
                 {
                     this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations, property.Name, isUndeclaredProperty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes odata type annotation for property
+        /// </summary>
+        /// <param name="property">The property to handle.</param>
+        /// <param name="isTopLevel">If writing top level property.</param>
+        private void WriteODataTypeAnnotation(ODataProperty property, bool isTopLevel)
+        {
+            if (property.TypeAnnotation != null && property.TypeAnnotation.TypeName != null)
+            {
+                string typeName = property.TypeAnnotation.TypeName;
+                IEdmPrimitiveType primitiveType = EdmCoreModel.Instance.FindType(typeName) as IEdmPrimitiveType;
+                if (primitiveType == null ||
+                    (primitiveType.PrimitiveKind != EdmPrimitiveTypeKind.String &&
+                    primitiveType.PrimitiveKind != EdmPrimitiveTypeKind.Decimal &&
+                    primitiveType.PrimitiveKind != EdmPrimitiveTypeKind.Boolean))
+                {
+                    if (isTopLevel)
+                    {
+                        this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
+                    }
+                    else
+                    {
+                        this.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(property.Name, typeName);
+                    }
                 }
             }
         }

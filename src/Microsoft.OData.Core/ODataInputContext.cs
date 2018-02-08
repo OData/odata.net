@@ -84,7 +84,7 @@ namespace Microsoft.OData
             this.container = messageInfo.Container;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
-            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container, messageReaderSettings.Version);
         }
 
         /// <summary>
@@ -226,6 +226,30 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public virtual ODataReader CreateDeltaResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public virtual Task<ODataReader> CreateDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+#endif
+
+        /// <summary>
         /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
@@ -272,26 +296,26 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Read the property from the input and
+        /// Read the EDM structural property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
-        /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
+        /// <param name="edmStructuralProperty">The <see cref="IEdmProperty"/> producing the property to be read.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
-        public virtual ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        public virtual ODataProperty ReadProperty(IEdmStructuralProperty edmStructuralProperty, IEdmTypeReference expectedPropertyTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 
 #if PORTABLELIB
         /// <summary>
-        /// Asynchronously read the property from the input and
+        /// Asynchronously read the EDM structural property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
-        /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
+        /// <param name="edmStructuralProperty">The <see cref="IEdmProperty"/> producing the property to be read.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
-        public virtual Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        public virtual Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty edmStructuralProperty, IEdmTypeReference expectedPropertyTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
@@ -433,12 +457,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Create a <see cref="ODataBatchReader"/>.
         /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
         /// <returns>The newly created <see cref="ODataBatchReader"/>.</returns>
         /// <remarks>
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual ODataBatchReader CreateBatchReader(string batchBoundary)
+        internal virtual ODataBatchReader CreateBatchReader()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
@@ -447,12 +470,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataBatchReader"/>.</returns>
         /// <remarks>
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
+        internal virtual Task<ODataBatchReader> CreateBatchReaderAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }

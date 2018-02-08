@@ -261,6 +261,19 @@ namespace Microsoft.OData.UriParser
                     return true;
                 }
 
+                // Comparing an enum with a string is valid
+                if (left != null && right != null && left.IsEnum() && right.IsString())
+                {
+                    right = left;
+                    return true;
+                }
+
+                if (left != null && right != null && right.IsEnum() && left.IsString())
+                {
+                    left = right;
+                    return true;
+                }
+
                 // enum and spatial type support equality operator for null operand:
                 if ((left == null) && (right != null) && (right.IsEnum() || right is IEdmSpatialTypeReference))
                 {
@@ -438,53 +451,6 @@ namespace Microsoft.OData.UriParser
 
                 return applicableFunctions[bestFunctionIndex];
             }
-        }
-
-        /// <summary>Finds the exact fitting function for the specified arguments.</summary>
-        /// <param name="functions">Functions to consider.</param>
-        /// <param name="argumentTypes">Types of the arguments for the function.</param>
-        /// <returns>The exact fitting function; null if no exact match was found.</returns>
-        internal static FunctionSignature FindExactFunctionSignature(FunctionSignature[] functions, IEdmTypeReference[] argumentTypes)
-        {
-            Debug.Assert(functions != null, "functions != null");
-            Debug.Assert(argumentTypes != null, "argumentTypes != null");
-
-            for (int functionIndex = 0; functionIndex < functions.Length; functionIndex++)
-            {
-                FunctionSignature functionSignature = functions[functionIndex];
-                bool matchFound = true;
-
-                if (functionSignature.ArgumentTypes.Length != argumentTypes.Length)
-                {
-                    continue;
-                }
-
-                for (int argumentIndex = 0; argumentIndex < argumentTypes.Length; argumentIndex++)
-                {
-                    IEdmTypeReference functionSignatureArgumentType = functionSignature.ArgumentTypes[argumentIndex];
-                    IEdmTypeReference argumentType = argumentTypes[argumentIndex];
-                    Debug.Assert(functionSignatureArgumentType.IsODataPrimitiveTypeKind(), "Only primitive arguments are supported for functions.");
-
-                    if (!argumentType.IsODataPrimitiveTypeKind())
-                    {
-                        matchFound = false;
-                        break;
-                    }
-
-                    if (!argumentType.IsEquivalentTo(functionSignatureArgumentType))
-                    {
-                        matchFound = false;
-                        break;
-                    }
-                }
-
-                if (matchFound)
-                {
-                    return functionSignature;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>Checks whether the source type is compatible with the target type.</summary>

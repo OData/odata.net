@@ -25,7 +25,8 @@ namespace AstoriaUnitTests
     /// <summary>
     /// Test ReadingAtom when useJson on the Context is selected
     /// </summary>
-    [TestClass]
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
+    // [TestClass]
     public class ReadingAtomWithJsonTests
     {
         /// <summary>MIME type for ATOM bodies (http://www.iana.org/assignments/media-types/application/).</summary>

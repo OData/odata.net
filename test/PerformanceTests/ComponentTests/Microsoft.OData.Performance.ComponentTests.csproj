@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\InMemoryMessage.cs" />
     <Compile Include="Common\ODataMessageHelper.cs" />
     <Compile Include="Common\ODataMessageKind.cs" />
     <Compile Include="Common\SpatialFactory.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="ODataWriter\WriteFeedPropertyTypeTests.cs" />
     <Compile Include="Scenario\BinaryDataScaleTests.cs" />
     <Compile Include="Scenario\DataSizeScaleTests.cs" />
+    <Compile Include="Scenario\BatchRoundTripPerfTest.cs" />
     <Compile Include="Scenario\WriteReadFeedTestBase.cs" />
     <Compile Include="UriParser\UriParserTests.cs" />
   </ItemGroup>
@@ -112,16 +114,16 @@
     </When>
     <When Condition=" '$(TestType)'=='Official' ">
       <ItemGroup>
-        <Reference Include="Microsoft.OData.Core, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-          <HintPath>$(NugetPack)\Microsoft.OData.Core.$(OdlVersion).0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Core.dll</HintPath>
+        <Reference Include="Microsoft.OData.Core">
+          <HintPath>$(NugetPack)\Microsoft.OData.Core.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.OData.Core.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.OData.Edm, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-          <HintPath>$(NugetPack)\Microsoft.OData.Edm.$(OdlVersion).0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.OData.Edm.dll</HintPath>
+        <Reference Include="Microsoft.OData.Edm">
+          <HintPath>$(NugetPack)\Microsoft.OData.Edm.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.OData.Edm.dll</HintPath>
           <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.Spatial, Version=$(OdlVersion).0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-          <HintPath>$(NugetPack)\Microsoft.Spatial.$(OdlVersion).0\lib\portable-net40+sl5+wp8+win8+wpa\Microsoft.Spatial.dll</HintPath>
+        <Reference Include="Microsoft.Spatial">
+          <HintPath>$(NugetPack)\Microsoft.Spatial.$(OdlVersion).0\lib\portable-net45+win8+wpa81\Microsoft.Spatial.dll</HintPath>
           <Private>True</Private>
         </Reference>
       </ItemGroup>

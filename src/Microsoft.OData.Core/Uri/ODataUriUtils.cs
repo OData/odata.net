@@ -136,7 +136,7 @@ namespace Microsoft.OData
                 return ODataUriConversionUtils.ConvertToUriEnumLiteral(enumValue, version);
             }
 
-            ODataResource resource = value as ODataResource;
+            ODataResourceBase resource = value as ODataResourceBase;
             if (resource != null)
             {
                 return ODataUriConversionUtils.ConvertToUriEntityLiteral(resource, model);
@@ -154,7 +154,7 @@ namespace Microsoft.OData
                 return ODataUriConversionUtils.ConvertToUriEntityReferencesLiteral(links, model);
             }
 
-            var list = value as IEnumerable<ODataResource>;
+            IEnumerable<ODataResourceBase> list = value as IEnumerable<ODataResourceBase>;
             if (list != null)
             {
                 return ODataUriConversionUtils.ConvertToUriEntitiesLiteral(list, model);

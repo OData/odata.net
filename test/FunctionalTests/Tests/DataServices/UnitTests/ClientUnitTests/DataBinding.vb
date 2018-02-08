@@ -23,6 +23,7 @@ Imports System.Linq
 
 Partial Public Class ClientModule
 
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     <DeploymentItem("Workspaces", "Workspaces")>
     <TestClass()> Public Class DataBinding
 
@@ -61,7 +62,8 @@ Partial Public Class ClientModule
         End Sub
 
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DataBindingTest1()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DataBindingTest1()
             Dim customers = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             customers.Load(Me.ctx.Customers.Expand("Orders($expand=Customers)"))
             Assert.IsTrue(customers.Count > 0)
@@ -72,7 +74,8 @@ Partial Public Class ClientModule
             orders.Detach()
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DataBindingTest2()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DataBindingTest2()
 
             Dim nCustomers As Integer
             Dim nOrders As Integer
@@ -133,7 +136,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DataBindingTest3()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DataBindingTest3()
             Dim customers As DataServiceCollection(Of NorthwindBindingModel.Customers) =
                 New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx, (From c In Me.ctx.Customers Where c.CustomerID.Equals("ANTON") Or c.CustomerID.Equals("BLAUS") Select c),
                     TrackingMode.AutoChangeTracking, Nothing, AddressOf Me.OnEntityChanged, Nothing)
@@ -195,7 +199,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DataBindingTest4()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DataBindingTest4()
             Dim nCustomers As Integer
             Dim nOrders As Integer
 
@@ -266,7 +271,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DataBindingTest5()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DataBindingTest5()
             Me.ctx.MergeOption = MergeOption.OverwriteChanges
 
             Dim nCustomers As Integer
@@ -313,7 +319,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(orders.Count, nOrders)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DataBindingTest6()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DataBindingTest6()
             Me.ctx.MergeOption = MergeOption.OverwriteChanges
 
             Dim uri As New Uri("Customers", UriKind.Relative)
@@ -330,7 +337,8 @@ Partial Public Class ClientModule
             Assert.IsTrue(success)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub LoadMultipleLevelNavigationProperties()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub LoadMultipleLevelNavigationProperties()
             Dim oecCustomers = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             oecCustomers.Load((From c In Me.ctx.Customers Select c).Skip(10).Take(1))
             Dim c1 As NorthwindBindingModel.Customers = oecCustomers.Single()
@@ -350,7 +358,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub LoadExpandedDataServiceCollection()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub LoadExpandedDataServiceCollection()
             ' this query is taking too long to run, for this test, we should cap the top level to 2 items
             Dim oec1 = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             oec1.Load(Me.ctx.CreateQuery(Of NorthwindBindingModel.Customers)("Customers").Expand("Orders($expand=Employees)").Take(2))
@@ -358,7 +367,8 @@ Partial Public Class ClientModule
             oec2.Load(oec1)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub LoadDataServiceCollection()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub LoadDataServiceCollection()
             Dim web1 As TestWebRequest = TestWebRequest.CreateForInProcessWcf
             web1.DataServiceType = ServiceModelData.CustomData.ServiceModelType
             web1.StartService()
@@ -434,7 +444,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub AddingOrderToCustomer()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub AddingOrderToCustomer()
             Dim web1 As TestWebRequest = TestWebRequest.CreateForInProcessWcf
             web1.DataServiceType = ServiceModelData.CustomData.ServiceModelType
             web1.StartService()
@@ -476,7 +487,8 @@ Partial Public Class ClientModule
             End Using
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub ComplexTypePropertySetters()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub ComplexTypePropertySetters()
             Dim web1 As TestWebRequest = TestWebRequest.CreateForInProcessWcf
             web1.DataServiceType = ServiceModelData.CustomData.ServiceModelType
             web1.StartService()
@@ -519,7 +531,8 @@ Partial Public Class ClientModule
 
 
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub ClearWithDetachCollection()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub ClearWithDetachCollection()
             Dim web1 As TestWebRequest = TestWebRequest.CreateForInProcessWcf
             web1.DataServiceType = ServiceModelData.CustomData.ServiceModelType
             web1.StartService()
@@ -584,7 +597,8 @@ Partial Public Class ClientModule
             End Using
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub InsertFollowedByDelete()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub InsertFollowedByDelete()
             Dim oec = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
 
             Dim c = CreateCustomer()
@@ -667,7 +681,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CycleInObjectGraph()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub CycleInObjectGraph()
             Dim oec = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx, "Customers", Nothing, Nothing)
             Dim mOrig = ctx.MergeOption
 
@@ -698,7 +713,8 @@ Partial Public Class ClientModule
             Return False
         End Function
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub SetCollectionPropertyBasic()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub SetCollectionPropertyBasic()
             Dim oecCustomers = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             oecCustomers.Load(Me.ctx.Customers)
             Dim c1 = CreateCustomer()
@@ -767,7 +783,8 @@ Partial Public Class ClientModule
             Util.VerifyLink(Me.ctx, c1, "Orders", o1, EntityStates.Added)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub SetCollectionPropertyWithLoad()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub SetCollectionPropertyWithLoad()
             Dim oec = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             oec.Load(Me.ctx.Customers.Take(1))
             Dim c As NorthwindBindingModel.Customers = oec.First()
@@ -790,7 +807,8 @@ Partial Public Class ClientModule
             Assert.IsTrue(success)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub SetCollectionPropertyNull()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub SetCollectionPropertyNull()
             Dim oec = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             oec.Load(Me.ctx.Customers.Take(1))
             Dim c As NorthwindBindingModel.Customers = oec.First()
@@ -837,7 +855,8 @@ Partial Public Class ClientModule
             Assert.IsTrue(success)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MinimizeCallbacks()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub MinimizeCallbacks()
             Dim oecCustomers = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             oecCustomers.Load(Me.ctx.Customers.Expand("Orders").Take(1))
             Dim c = oecCustomers.First()
@@ -940,7 +959,8 @@ Partial Public Class ClientModule
             Return False
         End Function
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub DataBindingInheritanceTest()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub DataBindingInheritanceTest()
             Dim web1 As TestWebRequest = TestWebRequest.CreateForInProcessWcf
             web1.DataServiceType = ServiceModelData.CustomData.ServiceModelType
             web1.StartService()
@@ -965,7 +985,8 @@ Partial Public Class ClientModule
             End Using
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub AddRelatedObjectTest()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub AddRelatedObjectTest()
             ' This test covers the following 3 scenario after AddRelatedObject is called.
             ' Scenario 1: parent is deleted
             ' Scenario 2: child is deleted
@@ -1081,7 +1102,8 @@ Partial Public Class ClientModule
             Util.VerifyNoLink(Me.ctx, e)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub TestBatchWithSingleChangeset()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub TestBatchWithSingleChangeset()
             Dim c1 = CreateCustomer()
             Dim o1 = CreateOrder()
 
@@ -1120,7 +1142,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub AddToNavigationPropertyTrackedByDataServiceCollection()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub AddToNavigationPropertyTrackedByDataServiceCollection()
             Dim oec = New DataServiceCollection(Of NorthwindBindingModel.Region)(Me.ctx, "Region", Nothing, Nothing)
             Dim r1 = New NorthwindBindingModel.Region()
             r1.RegionID = 12345
@@ -1140,7 +1163,8 @@ Partial Public Class ClientModule
             ctx.SaveChanges()
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub AddAndRemoveEntityFromDataServiceCollection()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub AddAndRemoveEntityFromDataServiceCollection()
             Dim c1 = CreateCustomer()
             Dim o1 = CreateOrder()
 
@@ -1177,7 +1201,8 @@ Partial Public Class ClientModule
             ctx.SaveChanges()
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub Variation1()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub Variation1()
             Dim c1 = CreateCustomer()
             Dim o1 = CreateOrder()
             Dim e1 = CreateEmployee()
@@ -1198,7 +1223,8 @@ Partial Public Class ClientModule
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub FireEventOnSaveChanges()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub FireEventOnSaveChanges()
             Dim c1 = CreateCustomer()
             Dim o1 = CreateOrder()
 
@@ -1221,7 +1247,8 @@ Partial Public Class ClientModule
             ctx.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub TestAddEntityToDataServiceCollection()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub TestAddEntityToDataServiceCollection()
             Dim oec = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx)
             Dim c1 = CreateCustomer()
             Dim c2 = New NorthwindBindingModel.Customers()
@@ -1335,7 +1362,8 @@ Partial Public Class ClientModule
             Assert.IsFalse(exceptionHappened)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor ().")> Public Sub DataServiceCollectionCtor0()
+        ' <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor ().")>
+        Public Sub DataServiceCollectionCtor0()
             ' No param constructor should create empty collection with delayed load and tracking
             Dim createCollection = Function() New DataServiceCollection(Of NorthwindBindingModel.Customers)()
             ' Collection should be empty upon creation
@@ -1359,7 +1387,8 @@ Partial Public Class ClientModule
             VerifyCollectionDoesntKnowEntitySet(New DataServiceCollection(Of NorthwindSmallCustomerWithoutEntitySetAttribute)())
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (items).")> Public Sub DataServiceCollectionCtor1Items()
+        ' <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (items).")>
+        Public Sub DataServiceCollectionCtor1Items()
             ' Items param constructor should create empty collection without delayed loading, with tracking
             ' Tracking should be enabled from the start when created from DataServiceQuery
             Dim collection = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx.Customers)
@@ -1382,7 +1411,8 @@ Partial Public Class ClientModule
             VerifyDSCDelayedLoadingEnabled(createCollection)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (items, trackingmode).")> Public Sub DataServiceCollectionCtor2()
+        ' <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (items, trackingmode).")>
+        Public Sub DataServiceCollectionCtor2()
             ' Items with tracking mode constructor behavior
             ' With autotracking the behavior should be the same as without the parameter
             Dim collection = New DataServiceCollection(Of NorthwindBindingModel.Customers)(Me.ctx.Customers, TrackingMode.AutoChangeTracking)
@@ -1417,7 +1447,8 @@ Partial Public Class ClientModule
             VerifyDSCTrackingDisabled(collection)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (context, entityset, callback, callback).")> Public Sub DataServiceCollectionCtor4()
+        ' <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (context, entityset, callback, callback).")>
+        Public Sub DataServiceCollectionCtor4()
             ' Context and entity set names (and callbacks)
             ' null context should enable delay loading
             Dim createCollection = Function() New DataServiceCollection(Of NorthwindBindingModel.Customers)(Nothing, Nothing, Nothing, Nothing)
@@ -1433,7 +1464,8 @@ Partial Public Class ClientModule
             collectionWithEntitySet.Add(New NorthwindSmallCustomerWithoutEntitySetAttribute())
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (items, trackingmode, entityset, callback, callback).")> Public Sub DataServiceCollectionCtor5()
+        ' <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (items, trackingmode, entityset, callback, callback).")>
+        Public Sub DataServiceCollectionCtor5()
             ' Items, tracking mode and callbacks
             ' null items should have delay loading enabled
             Dim createCollection = Function() New DataServiceCollection(Of NorthwindBindingModel.Customers)(Nothing, TrackingMode.AutoChangeTracking, Nothing, Nothing, Nothing)
@@ -1463,7 +1495,8 @@ Partial Public Class ClientModule
             VerifyDSCCallbacksEnabled(collection)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (context, items, trackingmode, entityset, callback, callback).")> Public Sub DataServiceCollectionCtor6()
+        ' <TestCategory("Partition2")> <TestMethod(), Variation("DataServiceCollection ctor (context, items, trackingmode, entityset, callback, callback).")>
+        Public Sub DataServiceCollectionCtor6()
             ' Items, tracking mode and callbacks
             ' null items should have delay loading enabled
             Dim createCollection = Function() New DataServiceCollection(Of NorthwindBindingModel.Customers)(Nothing, Nothing, TrackingMode.AutoChangeTracking, Nothing, Nothing, Nothing)
@@ -1493,7 +1526,8 @@ Partial Public Class ClientModule
             collectionWithEntitySet.Add(New NorthwindSmallCustomerWithoutEntitySetAttribute())
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub IgnoreUnrecognizedPropertyChanges()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub IgnoreUnrecognizedPropertyChanges()
             ' Track changes on a Customer
             Dim collection = New DataServiceCollection(Of NorthwindBindingModel.Customers)(ctx.Customers.Take(1), TrackingMode.AutoChangeTracking)
             Dim customer = collection(0)

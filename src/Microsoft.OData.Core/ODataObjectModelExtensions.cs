@@ -28,6 +28,17 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resource">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
+        public static void SetSerializationInfo(this ODataResourceBase resource, ODataResourceSerializationInfo serializationInfo)
+        {
+            ExceptionUtils.CheckArgumentNotNull(resource, "resource");
+            resource.SerializationInfo = serializationInfo;
+        }
+
+        /// <summary>
+        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="resource"/>.
+        /// </summary>
+        /// <param name="resource">The instance to set the serialization info.</param>
+        /// <param name="serializationInfo">The serialization info to set.</param>
         public static void SetSerializationInfo(this ODataResource resource, ODataResourceSerializationInfo serializationInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(resource, "resource");
@@ -75,7 +86,42 @@ namespace Microsoft.OData
         public static void SetSerializationInfo(this ODataDeltaResourceSet deltaResourceSet, ODataDeltaResourceSetSerializationInfo serializationInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
+            ODataResourceSerializationInfo resourceSerializationInfo = new ODataResourceSerializationInfo()
+            {
+                NavigationSourceName = serializationInfo.EntitySetName,
+                NavigationSourceEntityTypeName = serializationInfo.EntityTypeName,
+                NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                ExpectedTypeName = serializationInfo.ExpectedTypeName
+            };
+
+            deltaResourceSet.SerializationInfo = resourceSerializationInfo;
+        }
+
+        /// <summary>
+        /// Provide additional serialization information to the <see cref="ODataDeltaWriter"/> for <paramref name="deltaResourceSet"/>.
+        /// </summary>
+        /// <param name="deltaResourceSet">The instance to set the serialization info.</param>
+        /// <param name="serializationInfo">The serialization info to set.</param>
+        public static void SetSerializationInfo(this ODataDeltaResourceSet deltaResourceSet, ODataResourceSerializationInfo serializationInfo)
+        {
+            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
             deltaResourceSet.SerializationInfo = serializationInfo;
+        }
+
+        /// <summary>
+        /// Provide additional serialization information to the <see cref="ODataDeltaWriter"/> for <paramref name="deltaDeletedEntry"/>.
+        /// </summary>
+        /// <param name="deltaDeletedEntry">The instance to set the serialization info.</param>
+        /// <param name="serializationInfo">The serialization info to set.</param>
+        public static void SetSerializationInfo(this ODataDeltaDeletedEntry deltaDeletedEntry, ODataResourceSerializationInfo serializationInfo)
+        {
+            ExceptionUtils.CheckArgumentNotNull(deltaDeletedEntry, "deltaDeletedEntry");
+            ODataDeltaSerializationInfo resourceSerializationInfo = new ODataDeltaSerializationInfo()
+            {
+                NavigationSourceName = serializationInfo.NavigationSourceName,
+            };
+
+            deltaDeletedEntry.SerializationInfo = resourceSerializationInfo;
         }
 
         /// <summary>

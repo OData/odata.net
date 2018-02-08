@@ -29,6 +29,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
     {
         //version strings
         private string DataServiceVersion4 = "4.0";
+        private string DataServiceVersion4_01 = "4.01";
 
         /// <summary>
         /// Gets or sets the exception verifier.
@@ -66,6 +67,18 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
                 "Failed to parse Data Service Version string");
 
             this.Assert.AreEqual(ODataUtils.ODataVersionToString(ODataVersion.V4), DataServiceVersion4,
+                "Failed to parse Data Service Version enum");
+
+            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01), ODataVersion.V401,
+                "Failed to parse Data Service Version string");
+
+            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01 + ";"), ODataVersion.V401,
+                "Failed to parse Data Service Version string");
+
+            this.Assert.AreEqual(ODataUtils.StringToODataVersion(DataServiceVersion4_01 + ";anything"), ODataVersion.V401,
+                "Failed to parse Data Service Version string");
+
+            this.Assert.AreEqual(ODataUtils.ODataVersionToString(ODataVersion.V401), DataServiceVersion4_01,
                 "Failed to parse Data Service Version enum");
 
             //negative tests

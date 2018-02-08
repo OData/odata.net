@@ -32,13 +32,6 @@ namespace EdmLibTests.FunctionalTests
             this.BasicXsdValidationTestForParserInputCsdl(typeof(VocabularyTestModelBuilder));
         }
 
-        [Ignore]
-        [TestMethod]
-        public void ParserModelBuilderModelsCsdlSchemaCompliantTests()
-        {
-            this.BasicXsdValidationTestForParserInputCsdl(typeof(ModelBuilder));
-        }
-
         [TestMethod]
         public void ParserComplexTypeWithBaseTypeAbstractCsdlSchemaCompliantTest()
         {
@@ -50,13 +43,6 @@ namespace EdmLibTests.FunctionalTests
                 this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.EdmComplexTypeInvalidIsPolymorphic(edmVersion), edmVersion);
                 this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ComplexTypeIsAbstractSupportInV40(edmVersion), edmVersion);
             }
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void ParserValidationTestModelsCsdlSchemaCompliantTests()
-        {
-            this.BasicXsdValidationTestForParserInputCsdl(typeof(ValidationTestModelBuilder));
         }
 
         [TestMethod]
@@ -90,27 +76,6 @@ namespace EdmLibTests.FunctionalTests
                 this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ValidDateTimeOffsetTypePrecisionValue(edmVersion), edmVersion);
                 this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ValidTimeTypePrecisionValue(edmVersion), edmVersion);
             }
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void ParserFindMethodsTestModelsCsdlSchemaCompliantTests()
-        {
-            this.BasicXsdValidationTestForParserInputCsdl(typeof(FindMethodsTestModelBuilder));
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void ParserFunctionTestModelsCsdlSchemaCompliantTests()
-        {
-            this.BasicXsdValidationTestForParserInputCsdl(typeof(OperationTestModelBuilder));
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void SerializerValidationTestModelsCsdlSchemaCompliantTests()
-        {
-            this.BasicXsdValidationTestForSerializerOutputCsdl(typeof(ValidationTestModelBuilder));
         }
 
         [TestMethod]
@@ -186,25 +151,6 @@ namespace EdmLibTests.FunctionalTests
         public void SerializerODataTestModelBuilderCsdlSchemaCompliantTests()
         {
             this.BasicXsdValidationTestForSerializerOutputCsdl(typeof(ODataTestModelBuilder));
-        }
-
-        [Ignore]
-        [TestMethod]
-        public void XsdFindsEntityPropertiesWithCollectionTypeInvalidRegressionTest()
-        {
-            var edmVersions = new EdmVersion[] { EdmVersion.V40 };
-            foreach (var edmVersion in edmVersions)
-            {
-                this.BasicXsdValidationTestForParserInputCsdl(this.GetSerializerResult(ModelBuilder.PropertyFacetsCollectionEdm()).Select(XElement.Parse), edmVersion);
-                this.BasicXsdValidationTestForParserInputCsdl(ODataTestModelBuilder.ODataTestModelWithCollectionProperty, edmVersion);
-            }
-
-            edmVersions = new EdmVersion[] { EdmVersion.V40 };
-            foreach (var edmVersion in edmVersions)
-            {
-                this.BasicXsdValidationTestForParserInputCsdl(ODataTestModelBuilder.ODataTestModelBasicTest, edmVersion);
-                this.BasicXsdValidationTestForParserInputCsdl(ODataTestModelBuilder.ODataTestModelDefaultModel, edmVersion);
-            }
         }
 
         [TestMethod]

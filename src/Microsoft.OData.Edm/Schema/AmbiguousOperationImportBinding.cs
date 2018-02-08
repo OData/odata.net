@@ -24,11 +24,6 @@ namespace Microsoft.OData.Edm
             get { return this.first.Operation; }
         }
 
-        public IEdmTypeReference ReturnType
-        {
-            get { return null; }
-        }
-
         public IEdmEntityContainer Container
         {
             get { return first.Container; }

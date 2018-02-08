@@ -23,12 +23,6 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void MinimalMetadataLevelShouldHaveContextUrlLevelOnDemand()
-        {
-            testSubject.ContextUrlLevel.Should().Be(ODataContextUrlLevel.OnDemand);
-        }
-
-        [Fact]
         public void MinimalMetadataLevelShouldReturnNullForCreateEntityMetadataBuilder()
         {
             testSubject.CreateResourceMetadataBuilder(

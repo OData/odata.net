@@ -705,6 +705,12 @@
     <Compile Include="..\Schema\BadNavigationProperty.cs">
       <Link>Schema\BadNavigationProperty.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\BadPathType.cs">
+      <Link>Schema\BadPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadPathTypeReference.cs">
+      <Link>Schema\BadPathTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\BadPrimitiveType.cs">
       <Link>Schema\BadPrimitiveType.cs</Link>
     </Compile>
@@ -773,9 +779,6 @@
     </Compile>
     <Compile Include="..\Schema\EdmContainedEntitySet.cs">
       <Link>Schema\EdmContainedEntitySet.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\EdmCoreModel.cs">
-      <Link>Schema\EdmCoreModel.cs</Link>
     </Compile>
     <Compile Include="..\Schema\EdmDecimalTypeReference.cs">
       <Link>Schema\EdmDecimalTypeReference.cs</Link>
@@ -912,6 +915,15 @@
     <Compile Include="..\Schema\EdmUnknownEntitySet.cs">
       <Link>Schema\EdmUnknownEntitySet.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredType.cs">
+      <Link>Schema\EdmUntypedStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredTypeReference.cs">
+      <Link>Schema\EdmUntypedStructuredTypeReference.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmPathTypeReference.cs">
+      <Link>\Schema\EdmPathTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
       <Link>Schema\EdmUntypedTypeReference.cs</Link>
     </Compile>
@@ -922,6 +934,27 @@
       <Link>Schema\IEdmRowType.cs</Link>
     </Compile>
     <Compile Include="..\Memoizer.cs" />
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelComplexType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPrimitiveType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
+      <Link>Schema\CoreModel\IEdmCoreModelElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelEntityType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPathType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModel.cs">
+      <Link>Schema\CoreModel\EdmCoreModel.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmAction.cs">
       <Link>Schema\Interfaces\IEdmAction.cs</Link>
     </Compile>
@@ -1041,6 +1074,12 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPathExpression.cs">
       <Link>Schema\Interfaces\IEdmPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathType.cs">
+      <Link>Schema\Interfaces\IEdmPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathTypeReference.cs">
+      <Link>Schema\Interfaces\IEdmPathTypeReference.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPrimitiveType.cs">
       <Link>Schema\Interfaces\IEdmPrimitiveType.cs</Link>

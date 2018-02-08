@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using System;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -122,6 +123,16 @@ namespace Microsoft.OData.Json
             }
 
             throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsString(value));
+        }
+
+        /// <summary>
+        /// Reads the next node from the <paramref name="jsonReader"/> as a URI and verifies that it is a PrimitiveValue node of type string.
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <returns>The string value read from the reader as a URI; throws an exception if no string value could be read.</returns>
+        internal static Uri ReadUriValue(this IJsonReader jsonReader)
+        {
+            return UriUtils.StringToUri(ReadStringValue(jsonReader));
         }
 
         /// <summary>

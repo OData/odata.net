@@ -222,8 +222,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                     new DataServiceRequest<Driver>(((from c in context.Driver where c.Name == "1" select c) as DataServiceQuery<Driver>).RequestUri),
                     new DataServiceRequest<Driver>(((from c in context.Driver where c.Name == "3" select c) as DataServiceQuery<Driver>).RequestUri)
                 }).EnqueueWait(this);
-            var qr = context.EndExecuteBatch(arBatch);
-            var actualValues = "";
+            DataServiceResponse qr = context.EndExecuteBatch(arBatch);
+            string actualValues = "";
             foreach (var r in qr)
             {
                 if (r is QueryOperationResponse<Customer>)
@@ -244,12 +244,12 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             this.EnqueueTestComplete();
         }
 
-#if !PORTABLELIB
+#if !PORTABLELIB && !NETCOREAPP1_0
         /// <summary>
         /// CancelRequest for Batch Requests
         /// </summary>
-        [Ignore]
-        [TestMethod, Asynchronous]
+        // github issuse: #896
+        // [TestMethod, Asynchronous]
         public void CancelBatchRequestTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;

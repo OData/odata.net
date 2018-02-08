@@ -19,7 +19,8 @@ namespace AstoriaUnitTests.Tests.Server
     using FluentAssertions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/885
+    // [TestClass]
     public class RequestUriProcessorTests
     {
         private static readonly Uri baseUri = new Uri("http://localhost/service/");
@@ -225,7 +226,7 @@ namespace AstoriaUnitTests.Tests.Server
         }
 
         [TestMethod]
-        [Ignore] // Currently we have overloads of geog, geogPoint; etc. because EF forces us to use properties of type Geography rather than GeographyPoint.
+        // Currently we have overloads of geog, geogPoint; etc. because EF forces us to use properties of type Geography rather than GeographyPoint.
         public void FilterBySpatialFunctionWrongType()
         {
             this.serviceFactory.SetRequestUri("Entities");

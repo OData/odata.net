@@ -23,8 +23,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private readonly IEdmModel serviceModel = new EdmModel();
         private DataServiceClientFormat v3TestSubject;
         private DataServiceContext v3Context;
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+        private readonly QueryComponents queryComponentsWithSelect = new QueryComponents(new Uri("http://temp.org/?$select=foo"), new Version(1, 1, 1, 1), typeof(object), null, null);
+        private readonly QueryComponents queryComponentsWithoutSelect = new QueryComponents(new Uri("http://temp.org/"), new Version(1, 1, 1, 1), typeof(object), null, null);
+#else
         private readonly QueryComponents queryComponentsWithSelect = new QueryComponents(new Uri("http://temp.org/?$select=foo"), new Version(), typeof(object), null, null);
         private readonly QueryComponents queryComponentsWithoutSelect = new QueryComponents(new Uri("http://temp.org/"), new Version(), typeof(object), null, null);
+#endif
         private static IODataRequestMessage RequestWithApplicationJson;
         private static IODataResponseMessage ResponseWithApplicationJson;
 
@@ -159,8 +164,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.TestSetRequestContentTypeHeaderForAction(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
+        // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SetRequestContentTypeHeaderShouldNotSetContentTypeHeaderIfAlreadySetWhenUsingJson()
         {
             const string initialHeaderValue = "InitialHeaderValue";

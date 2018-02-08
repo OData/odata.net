@@ -19,8 +19,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     [TestClass]
     public class ClientSpatialTests
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void TestCollectionOfSpatialTypes()
         {
             DSPUnitTestServiceDefinition roadTripServiceDefinition = GetRoadTripServiceDefinition(typeof(GeographyPoint), TestPoint.DefaultValues, false, false,

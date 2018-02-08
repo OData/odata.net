@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm
     internal class AmbiguousLabeledExpressionBinding : AmbiguousBinding<IEdmLabeledExpression>, IEdmLabeledExpression
     {
         private readonly Cache<AmbiguousLabeledExpressionBinding, IEdmExpression> expressionCache = new Cache<AmbiguousLabeledExpressionBinding, IEdmExpression>();
-        private static readonly Func<AmbiguousLabeledExpressionBinding, IEdmExpression> ComputeExpressionFunc = (me) => me.ComputeExpression();
+        private static readonly Func<AmbiguousLabeledExpressionBinding, IEdmExpression> ComputeExpressionFunc = (me) => ComputeExpression();
 
         public AmbiguousLabeledExpressionBinding(IEdmLabeledExpression first, IEdmLabeledExpression second)
             : base(first, second)
@@ -32,7 +32,7 @@ namespace Microsoft.OData.Edm
             get { return EdmExpressionKind.Labeled; }
         }
 
-        private IEdmExpression ComputeExpression()
+        private static IEdmExpression ComputeExpression()
         {
             return EdmNullExpression.Instance;
         }

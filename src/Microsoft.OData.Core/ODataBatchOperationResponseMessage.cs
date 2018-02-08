@@ -25,8 +25,7 @@ namespace Microsoft.OData
     public sealed class ODataBatchOperationResponseMessage : IODataResponseMessage, IODataPayloadUriConverter, IContainerProvider
 #endif
     {
-        /// <summary>Gets or Sets the Content-ID for this response message.</summary>
-        /// <returns>The Content-ID for this response message.</returns>
+        /// <summary>The Content-ID for this response message.</summary>
         public readonly string ContentId;
 
         /// <summary>
@@ -49,14 +48,16 @@ namespace Microsoft.OData
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
-        private ODataBatchOperationResponseMessage(
+        /// <param name="groupId">Value for the group id that corresponding request belongs to. Can be null.</param>
+        internal ODataBatchOperationResponseMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
             string contentId,
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,
-            IServiceProvider container)
+            IServiceProvider container,
+            string groupId)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -64,6 +65,7 @@ namespace Microsoft.OData
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.ContentId = contentId;
             this.Container = container;
+            this.GroupId = groupId;
         }
 
         /// <summary>Gets or sets the result status code of the response message.</summary>
@@ -93,6 +95,11 @@ namespace Microsoft.OData
         /// The dependency injection container to get related services.
         /// </summary>
         public IServiceProvider Container { get; private set; }
+
+        /// <summary>
+        /// The id of the group or change set that this response message is part of.
+        /// </summary>
+        public string GroupId { get; }
 
         /// <summary>
         /// Returns the actual operation message which is being wrapped.
@@ -144,54 +151,6 @@ namespace Microsoft.OData
         Uri IODataPayloadUriConverter.ConvertPayloadUri(Uri baseUri, Uri payloadUri)
         {
             return this.message.ResolveUrl(baseUri, payloadUri);
-        }
-
-        /// <summary>
-        /// Creates an operation response message that can be used to write the operation content to.
-        /// </summary>
-        /// <param name="outputStream">The output stream underlying the operation message.</param>
-        /// <param name="operationListener">The operation listener.</param>
-        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
-        /// <param name="container">The dependency injection container to get related services.</param>
-        /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
-        internal static ODataBatchOperationResponseMessage CreateWriteMessage(
-            Stream outputStream,
-            IODataBatchOperationListener operationListener,
-            IODataPayloadUriConverter payloadUriConverter,
-            IServiceProvider container)
-        {
-            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, /*contentId*/ null, payloadUriConverter, /*writing*/ true, container);
-        }
-
-        /// <summary>
-        /// Creates an operation response message that can be used to read the operation content from.
-        /// </summary>
-        /// <param name="batchReaderStream">The batch stream underyling the operation response message.</param>
-        /// <param name="statusCode">The status code to use for the operation response message.</param>
-        /// <param name="headers">The headers to use for the operation response message.</param>
-        /// <param name="contentId">The content-ID for the operation response message.</param>
-        /// <param name="operationListener">The operation listener.</param>
-        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
-        /// <param name="container">The dependency injection container to get related services.</param>
-        /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to read the operation content.</returns>
-        internal static ODataBatchOperationResponseMessage CreateReadMessage(
-            ODataBatchReaderStream batchReaderStream,
-            int statusCode,
-            ODataBatchOperationHeaders headers,
-            string contentId,
-            IODataBatchOperationListener operationListener,
-            IODataPayloadUriConverter payloadUriConverter,
-            IServiceProvider container)
-        {
-            Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
-            Debug.Assert(operationListener != null, "operationListener != null");
-
-            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
-            ODataBatchOperationResponseMessage responseMessage =
-                new ODataBatchOperationResponseMessage(streamCreatorFunc, headers, operationListener, contentId, payloadUriConverter, /*writing*/ false, container);
-            responseMessage.statusCode = statusCode;
-            return responseMessage;
         }
     }
 }

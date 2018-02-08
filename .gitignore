@@ -31,13 +31,13 @@ src/Microsoft.OData.Client/*/Microsoft.OData.Client.txt
 src/Microsoft.OData.Client/*/Microsoft.OData.Client.xml
 src/Microsoft.OData.Core/Microsoft.OData.Core.xml
 src/Microsoft.OData.Core/*/Microsoft.OData.Core.xml
-src/Microsoft.OData.Core/Build.Net35/Microsoft.OData.Core.NetFX35.xml
+src/Microsoft.OData.Core/Build.Net35/Microsoft.OData.Core.NetFX35*.xml
 src/Microsoft.OData.Edm/Microsoft.OData.Edm.xml
 src/Microsoft.OData.Edm/*/Microsoft.OData.Edm.xml
-src/Microsoft.OData.Edm/Build.Net35/Microsoft.OData.Edm.NetFX35.xml
+src/Microsoft.OData.Edm/Build.Net35/Microsoft.OData.Edm.NetFX35*.xml
 src/Microsoft.Spatial/Microsoft.Spatial.xml
 src/Microsoft.Spatial/*/Microsoft.Spatial.xml
-src/Microsoft.Spatial/Build.Net35/Microsoft.Spatial.NetFX35.xml
+src/Microsoft.Spatial/Build.Net35/Microsoft.Spatial.NetFX35*.xml
 src/Web/GenExe/DataSvcUtil.xml
 src/Web/ODataAdoNetProvider/DataFeedClient.35/Microsoft.Data.DataFeedClient.xml
 src/Web/ODataAdoNetProvider/DataFeedClient.40/Microsoft.Data.DataFeedClient.xml

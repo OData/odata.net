@@ -25,7 +25,6 @@ namespace Microsoft.OData.Client
         /// <param name="key">The key to find/add.</param>
         /// <param name="createValue">A callback to create a new value if one is not found.</param>
         /// <returns>The new or found value.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1811:'DictionaryExtensions.FindOrAdd<TKey, TValue>(this IDictionary<TKey, TValue>, TKey, Func<TValue>)' appears to have no upstream public or protected callers.", Justification = "Callers removed, but a useful helper method to have.")]
         internal static TValue FindOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> createValue)
         {
             Debug.Assert(dictionary != null, "dictionary != null");
@@ -54,5 +53,38 @@ namespace Microsoft.OData.Client
                 dictionary[item.Key] = item.Value;
             }
         }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Try to add a key/value pair to the dictionary and returns true if the key was added, false if it was already present.
+        /// The difference with Add is that it will not throw <see cref="ArgumentException"/> if the key is already present.
+        /// </summary>
+        /// <remarks>
+        /// This provides a shim for ConcurrentDictionary.TryAdd that isn't supported in Windows Phone 8.0.
+        /// </remarks>
+        /// <typeparam name="TKey">The type of the key.</typeparam>
+        /// <typeparam name="TValue">The type of the value.</typeparam>
+        /// <param name="dict">The dictionary to try to add the value to.</param>
+        /// <param name="key">The key to add if not already present.</param>
+        /// <param name="value">The value to add.</param>
+        /// <returns>True if the key was added or false if the key is already present.</returns>
+        internal static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
+        {
+            try
+            {
+                TValue val;
+                if (!dict.TryGetValue(key, out val))
+                {
+                    dict.Add(key, value);
+                    return true;
+                }
+            }
+            catch (ArgumentException)
+            {
+            }
+
+            return false;
+        }
+#endif
     }
 }

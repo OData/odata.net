@@ -181,7 +181,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="property">The property being loaded</param>
         /// <returns>property values as IEnumerable.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Returning MaterializeAtom, caller will dispose")]
         private MaterializeAtom ReadPropertyFromAtom(ClientPropertyAnnotation property)
         {
             DataServiceContext context = (DataServiceContext)this.Source;
@@ -271,7 +270,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="property">The property being loaded</param>
         /// <returns>property values as IEnumerable.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Returning MaterializeAtom, caller will dispose")]
         private MaterializeAtom ReadPropertyFromRawData(ClientPropertyAnnotation property)
         {
             DataServiceContext context = (DataServiceContext)this.Source;

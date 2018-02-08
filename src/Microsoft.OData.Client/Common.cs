@@ -149,6 +149,9 @@ namespace Microsoft.OData.Service
                 case ODataProtocolVersion.V4:
                     return ODataVersion.V4;
 
+                case ODataProtocolVersion.V401:
+                    return ODataVersion.V401;
+
                 default:
                     Debug.Assert(false, "Need to add a case for the new version that got added");
                     return (ODataVersion)(-1);
@@ -164,8 +167,15 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(version != null, "version != null");
 
-            Debug.Assert(version.Major == 4 && version.Minor == 0, "version.Major == 4 && version.Minor == 0");
-            return ODataVersion.V4;
+            Debug.Assert(version.Major == 4 && (version.Minor == 0 || version.Minor == 1), "Major version should be 4 and minor version should be 0 or 1");
+            if (version.Major == 4 && version.Minor == 1)
+            {
+                return ODataVersion.V401;
+            }
+            else
+            {
+                return ODataVersion.V4;
+            }
         }
 
         /// <summary>
@@ -248,7 +258,6 @@ namespace Microsoft.OData.Service
         /// <param name="text">Text to read.</param>
         /// <param name="result">Parsed version and trailing text.</param>
         /// <returns>true if the version was read successfully; false otherwise.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static bool TryReadVersion(string text, out KeyValuePair<Version, string> result)
         {
             Debug.Assert(text != null, "text != null");

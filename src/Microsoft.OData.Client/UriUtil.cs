@@ -34,7 +34,6 @@ namespace Microsoft.OData.Service
         /// </summary>
         /// <param name="uri">The uri instance</param>
         /// <returns>The string representation of the uri</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of OriginalString is safe in this context")]
         internal static string UriToString(Uri uri)
         {
             Debug.Assert(uri != null, "uri != null");

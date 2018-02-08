@@ -77,10 +77,6 @@ namespace Microsoft.OData
         /// <remarks>This field is set implicitly when one of the read (or reader creation) methods is called.</remarks>
         private Encoding encoding;
 
-        /// <summary>The batch boundary string if the payload to be read is a batch request or response.</summary>
-        /// <remarks>This is set implicitly when the CreateBatchReader method is called.</remarks>
-        private string batchBoundary;
-
         /// <summary>The context information for the message.</summary>
         private ODataMessageInfo messageInfo;
 
@@ -119,7 +115,11 @@ namespace Microsoft.OData
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against request message.
-            ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            if (requestedVersion > this.settings.MaxProtocolVersion)
+            {
+                throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
+            }
 
             this.model = model ?? GetModel(this.container);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
@@ -160,7 +160,11 @@ namespace Microsoft.OData
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
             // Validate OData version against response message.
-            ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
+            if (requestedVersion > this.settings.MaxProtocolVersion)
+            {
+                throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
+            }
 
             this.model = model ?? GetModel(this.container);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
@@ -373,12 +377,79 @@ namespace Microsoft.OData
         }
 #endif
 
+        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a delta resource set.</summary>
+        /// <returns>The created reader.</returns>
+        public ODataReader CreateODataDeltaResourceSetReader()
+        {
+            return this.CreateODataDeltaResourceSetReader(/*entitySet*/null, /*expectedResourceType*/null);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="expectedResourceType">The expected type for the resources in the resource set.</param>
+        /// <returns>The created reader.</returns>
+        public ODataReader CreateODataDeltaResourceSetReader(IEdmStructuredType expectedResourceType)
+        {
+            return this.CreateODataDeltaResourceSetReader(/*entitySet*/null, expectedResourceType);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
+        /// <returns>The created reader.</returns>
+        public ODataReader CreateODataDeltaResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            this.VerifyCanCreateODataResourceSetReader(entitySet, expectedResourceType);
+            expectedResourceType = expectedResourceType ?? this.edmTypeResolver.GetElementType(entitySet);
+            return this.ReadFromInput(
+                (context) => context.CreateDeltaResourceSetReader(entitySet, expectedResourceType),
+                ODataPayloadKind.ResourceSet);
+        }
+
+#if PORTABLELIB
+        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a delta resource set.</summary>
+        /// <returns>A running task for the created reader.</returns>
+        public Task<ODataReader> CreateODataDeltaResourceSetReaderAsync()
+        {
+            return this.CreateODataDeltaResourceSetReaderAsync(/*entitySet*/null, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
+        /// <returns>A running task for the created reader.</returns>
+        public Task<ODataReader> CreateODataDeltaResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
+        {
+            return this.CreateODataDeltaResourceSetReaderAsync(/*entitySet*/null, expectedResourceType);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read entities for.</param>
+        /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
+        /// <returns>A running task for the created reader.</returns>
+        public Task<ODataReader> CreateODataDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            this.VerifyCanCreateODataResourceSetReader(entitySet, expectedResourceType);
+            expectedResourceType = expectedResourceType ?? this.edmTypeResolver.GetElementType(entitySet);
+            return this.ReadFromInputAsync(
+                (context) => context.CreateDeltaResourceSetReaderAsync(entitySet, expectedResourceType),
+                ODataPayloadKind.Delta);
+        }
+#endif
+
         /// <summary>
         /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
         /// <returns>The created reader.</returns>
+        [Obsolete("Use CreateODataDeltaResourceSetReader.", false)]
         public ODataDeltaReader CreateODataDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.VerifyCanCreateODataDeltaReader(entitySet, expectedBaseEntityType);
@@ -395,6 +466,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
         /// <returns>A running task for the created reader.</returns>
+        [Obsolete("Use CreateODataDeltaResourceSetReader.", false)]
         public Task<ODataDeltaReader> CreateODataDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.VerifyCanCreateODataResourceSetReader(entitySet, expectedBaseEntityType);
@@ -520,7 +592,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateODataBatchReader();
             return this.ReadFromInput(
-                (context) => context.CreateBatchReader(this.batchBoundary),
+                (context) => context.CreateBatchReader(),
                 ODataPayloadKind.Batch);
         }
 
@@ -531,7 +603,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateODataBatchReader();
             return this.ReadFromInputAsync(
-                (context) => context.CreateBatchReaderAsync(this.batchBoundary),
+                (context) => context.CreateBatchReaderAsync(),
                 ODataPayloadKind.Batch);
         }
 #endif
@@ -922,7 +994,7 @@ namespace Microsoft.OData
 
             // Set the format, encoding and payload kind.
             string contentTypeHeader = this.GetContentTypeHeader(payloadKinds);
-            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.mediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind, out this.batchBoundary);
+            this.format = MediaTypeUtils.GetFormatFromContentType(contentTypeHeader, payloadKinds, this.mediaTypeResolver, out this.contentType, out this.encoding, out this.readerPayloadKind);
         }
 
         /// <summary>
@@ -1423,7 +1495,6 @@ namespace Microsoft.OData
         /// <param name="readFunc">The read function which will be called over the created input context.</param>
         /// <param name="payloadKinds">All possible kinds of payload to read.</param>
         /// <returns>A task which when completed return the read value from the input.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by the caller.")]
         private Task<T> ReadFromInputAsync<T>(Func<ODataInputContext, Task<T>> readFunc, params ODataPayloadKind[] payloadKinds) where T : class
         {
             this.ProcessContentType(payloadKinds);

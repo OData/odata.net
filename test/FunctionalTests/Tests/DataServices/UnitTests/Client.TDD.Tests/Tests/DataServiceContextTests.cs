@@ -177,6 +177,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.testSubject.GetEntityDescriptor(entity).Should().BeNull();
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ChangingStateToUnchangedShouldPreventRequestFromBeingSent()
         {
@@ -220,6 +221,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.testSubject.GetReadStream(entity, args);
             args.Headers.Should().BeEmpty();
         }
+#endif
 
         [TestMethod]
         public void DefaultResolveTypeWithNullTypeNameShouldReturnNullType()
@@ -234,6 +236,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             new DefaultResolveTypeContext().TestDefaultResolveType(typeof(ResolveTypeEntityType).FullName, typeNamespace, typeNamespace).Should().Be(typeof(ResolveTypeEntityType));
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void DisposeShouldBeCalledOnResponseMessageForExecuteWithNoContent()
         {
@@ -271,6 +274,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             Action test = () => this.testSubject.SaveChanges(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ContinueOnError);
             test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("options", ComparisonMode.Substring);
         }
+#endif
 
         [TestMethod]
         public void DataServiceContextDoesNotRestrictBaseUriScheme()

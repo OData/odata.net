@@ -105,7 +105,6 @@ namespace Microsoft.OData.Client
         /// otherwise it will be a faulted task holding the exception thrown.</returns>
         /// <remarks>The advantage of this method over CompletedTask property is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task GetTaskForSynchronousOperation(Action synchronousOperation)
         {
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
@@ -135,7 +134,6 @@ namespace Microsoft.OData.Client
         /// otherwise it will be a faulted task holding the exception thrown.</returns>
         /// <remarks>The advantage of this method over GetCompletedTask property is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task<T> GetTaskForSynchronousOperation<T>(Func<T> synchronousOperation)
         {
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
@@ -164,7 +162,6 @@ namespace Microsoft.OData.Client
         /// <returns>The task returned by the <paramref name="synchronousOperation"/> or a faulted task if the operation failed.</returns>
         /// <remarks>The advantage of this method over direct call is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task GetTaskForSynchronousOperationReturningTask(Func<Task> synchronousOperation)
         {
             try
@@ -190,7 +187,6 @@ namespace Microsoft.OData.Client
         /// <returns>The task returned by the <paramref name="synchronousOperation"/> or a faulted task if the operation failed.</returns>
         /// <remarks>The advantage of this method over direct call is that if the <paramref name="synchronousOperation"/> fails
         /// this method returns a faulted task, instead of throwing exception.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task<TResult> GetTaskForSynchronousOperationReturningTask<TResult>(Func<Task<TResult>> synchronousOperation)
         {
             try
@@ -496,7 +492,6 @@ namespace Microsoft.OData.Client
         /// <param name="source">The enumerable containing the tasks to be iterated through.</param>
         /// <returns>A Task that represents the complete asynchronous operation.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Stores the exception so that it doesn't bring down the process but isntead rethrows on the task calling thread.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static Task Iterate(
             this TaskFactory factory,
             IEnumerable<Task> source)
@@ -588,7 +583,6 @@ namespace Microsoft.OData.Client
         /// <param name="antecedentTask">The task which just finished.</param>
         /// <param name="taskCompletionSource">The task completion source to apply the result to.</param>
         /// <param name="operation">The func to execute as the follow up action in case of success of the <paramref name="antecedentTask"/>.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static void FollowOnSuccessWithContinuation<TResult>(Task antecedentTask, TaskCompletionSource<TResult> taskCompletionSource, Func<Task, TResult> operation)
         {
             switch (antecedentTask.Status)
@@ -653,7 +647,6 @@ namespace Microsoft.OData.Client
         /// <param name="getTaskResult">Func which gets a task result value.</param>
         /// <param name="operation">The operation to follow up with.</param>
         /// <returns>A new Task which wraps both the <paramref name="antecedentTask"/> and the conditional execution of <paramref name="operation"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static Task<TResult> FollowOnFaultWithImplementation<TResult>(Task antecedentTask, Func<Task, TResult> getTaskResult, Action<Task> operation)
         {
             Debug.Assert(antecedentTask != null, "antecedentTask != null");
@@ -709,7 +702,6 @@ namespace Microsoft.OData.Client
         /// <param name="getTaskResult">Func which gets a task result value.</param>
         /// <param name="catchBlock">The operation to follow up with.</param>
         /// <returns>A new Task which wraps both the <paramref name="antecedentTask"/> and the conditional execution of <paramref name="catchBlock"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static Task<TResult> FollowOnFaultAndCatchExceptionWithImplementation<TResult, TExceptionType>(
             Task antecedentTask,
             Func<Task, TResult> getTaskResult,
@@ -790,7 +782,6 @@ namespace Microsoft.OData.Client
         /// This method unlike ContinueWith will return a task which will fail if the antecedent task fails, thus it propagates failures.
         /// Note that the operation may not return any value, since the original result of the antecedent task will be used always.
         /// Also if the operation fails, the resulting task fails. If both tasks fail, the antecedent task failure is reported only.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static Task<TResult> FollowAlwaysWithImplementation<TResult>(this Task antecedentTask, Func<Task, TResult> getTaskResult, Action<Task> operation)
         {
             Debug.Assert(antecedentTask != null, "antecedentTask != null");

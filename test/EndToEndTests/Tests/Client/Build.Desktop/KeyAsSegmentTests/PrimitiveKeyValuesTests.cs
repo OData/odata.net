@@ -23,7 +23,8 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         {
         }
 
-        [TestMethod, Ignore /*Inconsistent reading and writing of key values*/]
+        // github issuse: #896
+        // [TestMethod /*Inconsistent reading and writing of key values*/]
         public void BinaryTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -143,7 +144,8 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             }
         }
 
-        [TestMethod, Ignore /* Incorrect parsing of url with single quote in key literal with KeyAsSegment url conventions */]
+        // github issuse: #896
+        // [TestMethod /* Incorrect parsing of url with single quote in key literal with KeyAsSegment url conventions */]
         public void StringTest_KeyWithSingleQuotes()
         {
             var entitySetName = "EdmStringSet";

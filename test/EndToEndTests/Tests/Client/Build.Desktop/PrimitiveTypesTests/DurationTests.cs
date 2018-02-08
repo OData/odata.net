@@ -180,7 +180,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             }
         }
 
-
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void InsertAndUpdatePropertyValueUsingLinq()
         {
@@ -235,5 +235,6 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             var queryable4 = TestClientContext.Execute<Order>(new Uri("Orders()?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", UriKind.Relative));
             Assert.IsTrue(queryable4.Count() == 0);
         }
+#endif
     }
 }

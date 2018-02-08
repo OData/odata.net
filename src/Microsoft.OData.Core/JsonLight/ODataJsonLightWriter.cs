@@ -35,6 +35,11 @@ namespace Microsoft.OData.JsonLight
         private readonly ODataJsonLightResourceSerializer jsonLightResourceSerializer;
 
         /// <summary>
+        /// The JsonLight value serializer to use for primitive values in an untyped collection.
+        /// </summary>
+        private readonly ODataJsonLightValueSerializer jsonLightValueSerializer;
+
+        /// <summary>
         /// True if the writer was created for writing a parameter; false otherwise.
         /// </summary>
         private readonly bool writingParameter;
@@ -73,11 +78,12 @@ namespace Microsoft.OData.JsonLight
 
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.jsonLightResourceSerializer = new ODataJsonLightResourceSerializer(this.jsonLightOutputContext);
+            this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(this.jsonLightOutputContext);
 
             this.writingParameter = writingParameter;
             this.jsonWriter = this.jsonLightOutputContext.JsonWriter;
             this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
-                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
+                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix, this.jsonLightOutputContext.MessageWriterSettings.Version);
         }
 
         /// <summary>
@@ -94,6 +100,32 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Returns the current JsonLightDeletedResourceScope.
+        /// </summary>
+        private JsonLightDeletedResourceScope CurrentDeletedResourceScope
+        {
+            get
+            {
+                JsonLightDeletedResourceScope currentJsonLightDeletedResourceScope = this.CurrentScope as JsonLightDeletedResourceScope;
+                Debug.Assert(currentJsonLightDeletedResourceScope != null, "Asking for JsonLightResourceScope when the current scope is not an JsonLightResourceScope.");
+                return currentJsonLightDeletedResourceScope;
+            }
+        }
+
+        /// <summary>
+        /// Returns the current JsonLightDeltaLinkScope.
+        /// </summary>
+        private JsonLightDeltaLinkScope CurrentDeltaLinkScope
+        {
+            get
+            {
+                JsonLightDeltaLinkScope jsonLightDeltaLinkScope = this.CurrentScope as JsonLightDeltaLinkScope;
+                Debug.Assert(jsonLightDeltaLinkScope != null, "Asking for JsonLightDeltaLinkScope when the current scope is not an JsonLightDeltaLinkScope.");
+                return jsonLightDeltaLinkScope;
+            }
+        }
+
+        /// <summary>
         /// Returns the current JsonLightResourceSetScope.
         /// </summary>
         private JsonLightResourceSetScope CurrentResourceSetScope
@@ -103,6 +135,19 @@ namespace Microsoft.OData.JsonLight
                 JsonLightResourceSetScope currentJsonLightResourceSetScope = this.CurrentScope as JsonLightResourceSetScope;
                 Debug.Assert(currentJsonLightResourceSetScope != null, "Asking for JsonResourceSetScope when the current scope is not a JsonResourceSetScope.");
                 return currentJsonLightResourceSetScope;
+            }
+        }
+
+        /// <summary>
+        /// Returns the current JsonLightDeltaResourceSetScope.
+        /// </summary>
+        private JsonLightDeltaResourceSetScope CurrentDeltaResourceSetScope
+        {
+            get
+            {
+                JsonLightDeltaResourceSetScope currentJsonLightDeltaResourceSetScope = this.CurrentScope as JsonLightDeltaResourceSetScope;
+                Debug.Assert(currentJsonLightDeltaResourceSetScope != null, "Asking for JsonDeltaResourceSetScope when the current scope is not a JsonDeltaResourceSetScope.");
+                return currentJsonLightDeltaResourceSetScope;
             }
         }
 
@@ -178,6 +223,36 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Place where derived writers can perform custom steps before the deleted resource is written, at the beginning of WriteStartEntryImplementation.
+        /// </summary>
+        /// <param name="resourceScope">The ResourceScope.</param>
+        /// <param name="deletedResource">Deleted resource to write.</param>
+        /// <param name="writingResponse">True if writing response.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        protected override void PrepareDeletedResourceForWriteStart(DeletedResourceScope resourceScope, ODataDeletedResource deletedResource, bool writingResponse, SelectedPropertiesNode selectedProperties)
+        {
+            if (this.jsonLightOutputContext.MessageWriterSettings.Version > ODataVersion.V4)
+            {
+                var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
+                if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
+                {
+                    // 1. NoMetadata level: always enable its NullResourceMetadataBuilder
+                    InnerPrepareResourceForWriteStart(deletedResource, typeContext, selectedProperties);
+                }
+                else
+                {
+                    // 2. Minimal/Full Metadata level: Use ODataConventionalEntityMetadataBuilder for entity, ODataConventionalResourceMetadataBuilder for other cases.
+                    if (this.jsonLightOutputContext.Model.IsUserModel() || resourceScope.SerializationInfo != null)
+                    {
+                        InnerPrepareResourceForWriteStart(deletedResource, typeContext, selectedProperties);
+                    }
+
+                    // 3. Here fallback to the default NoOpResourceMetadataBuilder, when model and serializationInfo are both null.
+                }
+            }
+        }
+
+        /// <summary>
         /// Start writing a resource.
         /// </summary>
         /// <param name="resource">The resource to write.</param>
@@ -186,6 +261,17 @@ namespace Microsoft.OData.JsonLight
             ODataNestedResourceInfo parentNavLink = this.ParentNestedResourceInfo;
             if (parentNavLink != null)
             {
+                // For a null value, write the type as a property annotation
+                if (resource == null)
+                {
+                    if (parentNavLink.TypeAnnotation != null && parentNavLink.TypeAnnotation.TypeName != null)
+                    {
+                        this.jsonLightResourceSerializer.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(parentNavLink.Name, parentNavLink.TypeAnnotation.TypeName);
+                    }
+
+                    this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(parentNavLink.GetInstanceAnnotations(), parentNavLink.Name);
+                }
+
                 // Write the property name of an expanded navigation property to start the value.
                 this.jsonWriter.WriteName(parentNavLink.Name);
             }
@@ -201,7 +287,7 @@ namespace Microsoft.OData.JsonLight
 
             JsonLightResourceScope resourceScope = this.CurrentResourceScope;
 
-            if (this.IsTopLevel)
+            if (this.IsTopLevel && !(this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
             {
                 var contextUriInfo = this.jsonLightResourceSerializer.WriteResourceContextUri(
                         resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse));
@@ -210,6 +296,24 @@ namespace Microsoft.OData.JsonLight
                 if (contextUriInfo != null)
                 {
                     resourceScope.IsUndeclared = contextUriInfo.IsUndeclared.HasValue && contextUriInfo.IsUndeclared.Value;
+                }
+            }
+            else if (this.ParentScope.State == WriterState.DeltaResourceSet && this.ScopeLevel == 3)
+            {
+                DeltaResourceSetScope deltaResourceSetScope = this.ParentScope as DeltaResourceSetScope;
+                Debug.Assert(deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
+
+                string expectedNavigationSource =
+                    deltaResourceSetScope.NavigationSource == null ? null : deltaResourceSetScope.NavigationSource.Name;
+                string currentNavigationSource =
+                    resource.SerializationInfo != null ? resource.SerializationInfo.NavigationSourceName :
+                    resourceScope.NavigationSource == null ? null : resourceScope.NavigationSource.Name;
+
+                if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
+                {
+                    this.jsonLightResourceSerializer.WriteDeltaContextUri(
+                        this.CurrentResourceScope.GetOrCreateTypeContext(true), ODataDeltaKind.Resource,
+                        deltaResourceSetScope.ContextUriInfo);
                 }
             }
 
@@ -259,6 +363,31 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Finish writing a deleted resource.
+        /// </summary>
+        /// <param name="deletedResource">The resource to write.</param>
+        protected override void EndDeletedResource(ODataDeletedResource deletedResource)
+        {
+            if (deletedResource == null)
+            {
+                return;
+            }
+
+            // Get the projected properties
+            // JsonLightResourceScope resourceScope = this.CurrentResourceScope;
+
+            // this.jsonLightResourceSerializer.WriteResourceMetadataProperties(resourceScope);
+
+            // Write custom instance annotations
+            // this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(deletedResource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
+
+            // this.jsonLightResourceSerializer.WriteResourceEndMetadataProperties(resourceScope, resourceScope.DuplicatePropertyNameChecker);
+
+            // Close the object scope
+            this.jsonWriter.EndObjectScope();
+        }
+
+        /// <summary>
         /// Start writing a resource set.
         /// </summary>
         /// <param name="resourceSet">The resource set to write.</param>
@@ -266,7 +395,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            if (this.ParentNestedResourceInfo == null && this.writingParameter)
+            if (this.ParentNestedResourceInfo == null && (this.writingParameter || this.ParentScope.State == WriterState.ResourceSet))
             {
                 // Start array which will hold the entries in the resource set.
                 this.jsonWriter.StartArrayScope();
@@ -297,13 +426,13 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     // Write the inline count if it's available.
-                    this.WriteResourceSetCount(resourceSet, /*propertyName*/null);
+                    this.WriteResourceSetCount(resourceSet.Count, /*propertyName*/null);
 
                     // Write the next link if it's available.
-                    this.WriteResourceSetNextLink(resourceSet, /*propertyName*/null);
+                    this.WriteResourceSetNextLink(resourceSet.NextPageLink, /*propertyName*/null);
 
                     // Write the delta link if it's available.
-                    this.WriteResourceSetDeltaLink(resourceSet);
+                    this.WriteResourceSetDeltaLink(resourceSet.DeltaLink);
                 }
 
                 // Write custom instance annotations
@@ -334,10 +463,10 @@ namespace Microsoft.OData.JsonLight
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
                     // Write the inline count if it's available.
-                    this.WriteResourceSetCount(resourceSet, propertyName);
+                    this.WriteResourceSetCount(resourceSet.Count, propertyName);
 
                     // Write the next link if it's available.
-                    this.WriteResourceSetNextLink(resourceSet, propertyName);
+                    this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
 
                     // Write the odata type.
                     this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, expectedResourceTypeName, isUndeclared);
@@ -384,7 +513,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            if (this.ParentNestedResourceInfo == null && this.writingParameter)
+            if (this.ParentNestedResourceInfo == null && (this.writingParameter || this.ParentScope.State == WriterState.ResourceSet))
             {
                 // End the array which holds the entries in the resource set.
                 this.jsonWriter.EndArrayScope();
@@ -400,10 +529,10 @@ namespace Microsoft.OData.JsonLight
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
                     // Write the next link if it's available.
-                    this.WriteResourceSetNextLink(resourceSet, /*propertyName*/null);
+                    this.WriteResourceSetNextLink(resourceSet.NextPageLink, /*propertyName*/null);
 
                     // Write the delta link if it's available.
-                    this.WriteResourceSetDeltaLink(resourceSet);
+                    this.WriteResourceSetDeltaLink(resourceSet.DeltaLink);
                 }
 
                 // Close the object wrapper.
@@ -428,11 +557,207 @@ namespace Microsoft.OData.JsonLight
                     this.jsonWriter.EndArrayScope();
 
                     // Write the next link if it's available.
-                    this.WriteResourceSetNextLink(resourceSet, propertyName);
+                    this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
                 }
             }
 
             this.jsonLightOutputContext.PropertyCacheHandler.LeaveResourceSetScope();
+        }
+
+        /// <summary>
+        /// Start writing a delta resource set.
+        /// </summary>
+        /// <param name="deltaResourceSet">The delta resource set to write.</param>
+        protected override void StartDeltaResourceSet(ODataDeltaResourceSet deltaResourceSet)
+        {
+            Debug.Assert(deltaResourceSet != null, "resourceSet != null");
+
+            if (this.ParentNestedResourceInfo == null)
+            {
+                this.jsonWriter.StartObjectScope();
+
+                // Write ContextUrl
+                this.CurrentDeltaResourceSetScope.ContextUriInfo = this.jsonLightResourceSerializer.WriteDeltaContextUri(
+                    this.CurrentDeltaResourceSetScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse),
+                    ODataDeltaKind.ResourceSet);
+
+                // Write Count, if available
+                this.WriteResourceSetCount(deltaResourceSet.Count, /*propertyname*/ null);
+
+                // Write NextLink, if available
+                this.WriteResourceSetNextLink(deltaResourceSet.NextPageLink, /*propertyname*/ null);
+
+                // If we haven't written the delta link yet and it's available, write it.
+                this.WriteResourceSetDeltaLink(deltaResourceSet.DeltaLink);
+
+                // Write annotations
+                this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(deltaResourceSet.InstanceAnnotations, this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker);
+
+                // Write Value Start
+                this.jsonWriter.WriteValuePropertyName();
+                this.jsonWriter.StartArrayScope();
+            }
+            else
+            {
+                // Nested Delta
+                Debug.Assert(
+                    this.ParentNestedResourceInfo != null && this.ParentNestedResourceInfo.IsCollection.HasValue && this.ParentNestedResourceInfo.IsCollection.Value,
+                    "We should have verified that resource sets can only be written into IsCollection = true links in requests.");
+
+                string propertyName = this.ParentNestedResourceInfo.Name;
+                if (this.jsonLightOutputContext.WritingResponse)
+                {
+                    // Write the inline count if it's available.
+                    this.WriteResourceSetCount(deltaResourceSet.Count, propertyName);
+
+                    // Write the next link if it's available.
+                    this.WriteResourceSetNextLink(deltaResourceSet.NextPageLink, propertyName);
+
+                    //// Write the odata type.
+                    // this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(deltaResourceSet, propertyName, expectedResourceTypeName, isUndeclared);
+
+                    //// Write the name for the nested delta payload
+                    this.jsonWriter.WritePropertyAnnotationName(propertyName, JsonLightConstants.ODataDeltaPropertyName);
+
+                    // Start array which will hold the entries in the nested delta resource set.
+                    this.jsonWriter.StartArrayScope();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Finish writing a delta resource set.
+        /// </summary>
+        /// <param name="deltaResourceSet">The resource set to write.</param>
+        protected override void EndDeltaResourceSet(ODataDeltaResourceSet deltaResourceSet)
+        {
+            Debug.Assert(deltaResourceSet != null, "deltaResourceSet != null");
+
+            if (this.ParentNestedResourceInfo == null)
+            {
+                // End the array which holds the entries in the resource set.
+                this.jsonWriter.EndArrayScope();
+
+                // Write custom instance annotations
+                this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(deltaResourceSet.InstanceAnnotations, this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker);
+
+                // Write the next link if it's available.
+                this.WriteResourceSetNextLink(deltaResourceSet.NextPageLink, /*propertynamne*/ null);
+
+                // Write the delta link if it's available.
+                this.WriteResourceSetDeltaLink(deltaResourceSet.DeltaLink);
+
+                // Close the object wrapper.
+                this.jsonWriter.EndObjectScope();
+            }
+            else
+            {
+                // End the array which holds the entries in the resource set.
+                this.jsonWriter.EndArrayScope();
+            }
+        }
+
+        /// <summary>
+        /// Start writing a delta deleted resource.
+        /// </summary>
+        /// <param name="resource">The resource to write.</param>
+        protected override void StartDeletedResource(ODataDeletedResource resource)
+        {
+            Debug.Assert(resource != null, "resource != null");
+            Debug.Assert(!this.IsTopLevel, "Delta resource cannot be on top level.");
+            DeletedResourceScope resourceScope = this.CurrentDeletedResourceScope;
+            Debug.Assert(resourceScope != null, "Writing deleted entry and scope is not DeltaResourceScope");
+            ODataNestedResourceInfo parentNavLink = this.ParentNestedResourceInfo;
+            if (parentNavLink != null)
+            {
+                // Writing a nested deleted resource
+                if (this.Version == null || this.Version < ODataVersion.V401)
+                {
+                    throw new ODataException(Strings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
+                }
+                else
+                {
+                    // Write the property name of an expanded navigation property to start the value.
+                    this.jsonWriter.WriteName(parentNavLink.Name);
+                    this.jsonWriter.StartObjectScope();
+                    this.WriteDeletedEntryContents(resource);
+                }
+            }
+            else
+            {
+                // Writing a deleted resource within an entity set
+                DeltaResourceSetScope deltaResourceSetScope = this.ParentScope as DeltaResourceSetScope;
+                Debug.Assert(deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
+
+                this.jsonWriter.StartObjectScope();
+
+                if (this.Version == null || this.Version < ODataVersion.V401)
+                {
+                    // Write ContextUrl
+                    this.jsonLightResourceSerializer.WriteDeltaContextUri(
+                            this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse),
+                            ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
+                    this.WriteV4DeletedEntryContents(resource);
+                }
+                else
+                {
+                    // Only write ContextUrl for V4.01 deleted resource if it is in a top level delta
+                    // resource set and comes from a different entity set
+                    string expectedNavigationSource =
+                        deltaResourceSetScope.NavigationSource == null ? null : deltaResourceSetScope.NavigationSource.Name;
+                    string currentNavigationSource =
+                        resource.SerializationInfo != null ? resource.SerializationInfo.NavigationSourceName :
+                        resourceScope.NavigationSource == null ? null : resourceScope.NavigationSource.Name;
+
+                    if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
+                    {
+                        Debug.Assert(this.ScopeLevel == 3, "Writing a nested deleted resource of the wrong type should already have been caught.");
+
+                        // We are writing a deleted resource in a top level delta resource set
+                        // from a different entity set, so include the context Url
+                        this.jsonLightResourceSerializer.WriteDeltaContextUri(
+                                this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse),
+                                ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
+                    }
+
+                    this.WriteDeletedEntryContents(resource);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Start writing a delta (deleted) link.
+        /// </summary>
+        /// <param name="link">The link to write.</param>
+        protected override void StartDeltaLink(ODataDeltaLinkBase link)
+        {
+            Debug.Assert(link != null, "link != null");
+
+            this.jsonWriter.StartObjectScope();
+
+            if (link is ODataDeltaLink)
+            {
+                this.WriteDeltaLinkContextUri(ODataDeltaKind.Link);
+            }
+            else
+            {
+                Debug.Assert(link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
+                this.WriteDeltaLinkContextUri(ODataDeltaKind.DeletedLink);
+            }
+
+            this.WriteDeltaLinkSource(link);
+            this.WriteDeltaLinkRelationship(link);
+            this.WriteDeltaLinkTarget(link);
+            this.jsonWriter.EndObjectScope();
+        }
+
+        /// <summary>
+        /// Write a primitive type inside an untyped collection.
+        /// </summary>
+        /// <param name="primitiveValue">The nested resource info to write.</param>
+        protected override void WritePrimitiveValue(ODataPrimitiveValue primitiveValue)
+        {
+            this.jsonLightValueSerializer.WritePrimitiveValue(primitiveValue == null ? null : primitiveValue.Value, /*expectedType*/null);
         }
 
         /// <summary>
@@ -570,6 +895,75 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Create a new delta resource set scope.
+        /// </summary>
+        /// <param name="deltaResourceSet">The delta resource set for the new scope.</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
+        /// <returns>The newly create scope.</returns>
+        protected override DeltaResourceSetScope CreateDeltaResourceSetScope(
+            ODataDeltaResourceSet deltaResourceSet,
+            IEdmNavigationSource navigationSource,
+            IEdmStructuredType resourceType,
+            bool skipWriting,
+            SelectedPropertiesNode selectedProperties,
+            ODataUri odataUri,
+            bool isUndeclared)
+        {
+            return new JsonLightDeltaResourceSetScope(deltaResourceSet, navigationSource, resourceType, selectedProperties, odataUri);
+        }
+
+        /// <summary>
+        /// Create a new resource scope.
+        /// </summary>
+        /// <param name="deltaResource">The resource for the new scope.</param>
+        /// <param name="navigationSource">The navigation source we are going to write resources for.</param>
+        /// <param name="resourceType">The entity type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
+        /// <returns>The newly create scope.</returns>
+        protected override DeletedResourceScope CreateDeletedResourceScope(ODataDeletedResource deltaResource, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
+       {
+            return new JsonLightDeletedResourceScope(
+                deltaResource,
+                this.GetResourceSerializationInfo(deltaResource),
+                navigationSource,
+                resourceType,
+                skipWriting,
+                this.jsonLightOutputContext.MessageWriterSettings,
+                selectedProperties,
+                odataUri,
+                isUndeclared);
+        }
+
+        /// <summary>
+        /// Create a new delta link scope.
+        /// </summary>
+        /// <param name="link">The link for the new scope.</param>
+        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <returns>The newly create scope.</returns>
+        protected override DeltaLinkScope CreateDeltaLinkScope(ODataDeltaLinkBase link, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        {
+            return new JsonLightDeltaLinkScope(
+                link is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink,
+                link,
+                this.GetLinkSerializationInfo(link),
+                navigationSource,
+                entityType,
+                selectedProperties,
+                odataUri);
+        }
+
+        /// <summary>
         /// Create a new resource scope.
         /// </summary>
         /// <param name="resource">The resource for the new scope.</param>
@@ -616,20 +1010,38 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resource">Resource to write.</param>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
-        private void InnerPrepareResourceForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
+        private void InnerPrepareResourceForWriteStart(ODataResourceBase resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
         {
-            ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-            Debug.Assert(resourceScope != null, "resourceScope != null");
+            ODataResourceSerializationInfo serializationInfo;
+            IEdmStructuredType resourceType;
+            ODataUri uri;
+
+            if (resource is ODataResource)
+            {
+                ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
+                Debug.Assert(resourceScope != null, "resourceScope != null");
+                serializationInfo = resourceScope.SerializationInfo;
+                resourceType = resourceScope.ResourceType;
+                uri = resourceScope.ODataUri;
+            }
+            else
+            {
+                DeletedResourceScope resourceScope = (DeletedResourceScope)this.CurrentScope;
+                Debug.Assert(resourceScope != null, "resourceScope != null");
+                serializationInfo = resourceScope.SerializationInfo;
+                resourceType = resourceScope.ResourceType;
+                uri = resourceScope.ODataUri;
+            }
 
             ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
                 resource,
                 typeContext,
-                resourceScope.SerializationInfo,
-                resourceScope.ResourceType,
+                serializationInfo,
+                resourceType,
                 selectedProperties,
                 this.jsonLightOutputContext.WritingResponse,
                 this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
-                resourceScope.ODataUri);
+                uri);
 
             if (builder != null)
             {
@@ -658,7 +1070,7 @@ namespace Microsoft.OData.JsonLight
 
             if (parentResourceScope != null)
             {
-                ODataResource resource = parentResourceScope.Item as ODataResource;
+                ODataResourceBase resource = parentResourceScope.Item as ODataResourceBase;
                 if (resource != null)
                 {
                     return resource.MetadataBuilder;
@@ -671,14 +1083,10 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writes the odata.count annotation for a resource set if it has not been written yet (and the count is specified on the resource set).
         /// </summary>
-        /// <param name="resourceSet">The resource set to write the count for.</param>
+        /// <param name="count">The count to write for the resource set.</param>
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
-        private void WriteResourceSetCount(ODataResourceSet resourceSet, string propertyName)
+        private void WriteResourceSetCount(long? count, string propertyName)
         {
-            Debug.Assert(resourceSet != null, "resourceSet != null");
-
-            // If we haven't written the count yet and it's available, write it.
-            long? count = resourceSet.Count;
             if (count.HasValue)
             {
                 if (propertyName == null)
@@ -697,15 +1105,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writes the odata.nextLink annotation for a resource set if it has not been written yet (and the next link is specified on the resource set).
         /// </summary>
-        /// <param name="resourceSet">The resource set to write the next link for.</param>
+        /// <param name="nextPageLink">The nextLink to write, if available.</param>
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
-        private void WriteResourceSetNextLink(ODataResourceSet resourceSet, string propertyName)
+        private void WriteResourceSetNextLink(Uri nextPageLink, string propertyName)
         {
-            Debug.Assert(resourceSet != null, "resourceSet != null");
-
-            // If we haven't written the next link yet and it's available, write it.
-            Uri nextPageLink = resourceSet.NextPageLink;
-            if (nextPageLink != null && !this.CurrentResourceSetScope.NextPageLinkWritten)
+            bool nextPageWritten = this.State == WriterState.ResourceSet ? this.CurrentResourceSetScope.NextPageLinkWritten : this.CurrentDeltaResourceSetScope.NextPageLinkWritten;
+            if (nextPageLink != null && !nextPageWritten)
             {
                 if (propertyName == null)
                 {
@@ -717,26 +1122,190 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 this.jsonWriter.WriteValue(this.jsonLightResourceSerializer.UriToString(nextPageLink));
-                this.CurrentResourceSetScope.NextPageLinkWritten = true;
+
+                if (this.State == WriterState.ResourceSet)
+                {
+                    this.CurrentResourceSetScope.NextPageLinkWritten = true;
+                }
+                else
+                {
+                    this.CurrentDeltaResourceSetScope.NextPageLinkWritten = true;
+                }
             }
         }
 
         /// <summary>
         /// Writes the odata.deltaLink annotation for a resource set if it has not been written yet (and the delta link is specified on the resource set).
         /// </summary>
-        /// <param name="resourceSet">The resource set to write the delta link for.</param>
-        private void WriteResourceSetDeltaLink(ODataResourceSet resourceSet)
+        /// <param name="deltaLink">The delta link to write.</param>
+        private void WriteResourceSetDeltaLink(Uri deltaLink)
         {
-            Debug.Assert(resourceSet != null, "resourceSet != null");
+            if (deltaLink == null)
+            {
+                return;
+            }
 
-            // If we haven't written the delta link yet and it's available, write it.
-            Uri deltaLink = resourceSet.DeltaLink;
-            if (deltaLink != null && !this.CurrentResourceSetScope.DeltaLinkWritten)
+            Debug.Assert(this.State == WriterState.ResourceSet || this.State == WriterState.DeltaResourceSet, "Write ResourceSet Delta Link called when not in ResourceSet or DeltaResourceSet state");
+
+            bool deltaLinkWritten = this.State == WriterState.ResourceSet ? this.CurrentResourceSetScope.DeltaLinkWritten : this.CurrentDeltaResourceSetScope.DeltaLinkWritten;
+            if (!deltaLinkWritten)
             {
                 this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataDeltaLink);
                 this.jsonWriter.WriteValue(this.jsonLightResourceSerializer.UriToString(deltaLink));
-                this.CurrentResourceSetScope.DeltaLinkWritten = true;
+                if (this.State == WriterState.ResourceSet)
+                {
+                    this.CurrentResourceSetScope.DeltaLinkWritten = true;
+                }
+                else
+                {
+                    this.CurrentDeltaResourceSetScope.DeltaLinkWritten = true;
+                }
             }
+        }
+
+        private void WriteV4DeletedEntryContents(ODataDeletedResource resource)
+        {
+            this.WriteDeletedResourceId(resource);
+            this.WriteDeltaResourceReason(resource);
+        }
+
+        private void WriteDeletedEntryContents(ODataDeletedResource resource)
+        {
+            this.odataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataRemoved);
+            this.jsonWriter.StartObjectScope();
+            this.WriteDeltaResourceReason(resource);
+            this.jsonWriter.EndObjectScope();
+
+            JsonLightDeletedResourceScope resourceScope = this.CurrentDeletedResourceScope;
+
+            // Write the metadata
+            this.jsonLightResourceSerializer.WriteResourceStartMetadataProperties(resourceScope);
+            this.jsonLightResourceSerializer.WriteResourceMetadataProperties(resourceScope);
+
+            // Write custom instance annotations
+            this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(resource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
+
+            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
+
+            this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+            this.WriteDeltaResourceProperties(resource.Properties);
+            this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+        }
+
+        /// <summary>
+        /// Writes the odata.id annotation for a delta deleted resource.
+        /// </summary>
+        /// <param name="resource">The resource to write the id for.</param>
+        private void WriteDeletedResourceId(ODataDeletedResource resource)
+        {
+            Debug.Assert(resource != null, "resource != null");
+            if (this.Version == null || this.Version < ODataVersion.V401)
+            {
+                this.jsonWriter.WriteName(JsonLightConstants.ODataIdPropertyName);
+                this.jsonWriter.WriteValue(resource.Id.OriginalString);
+            }
+            else
+            {
+                Uri id;
+                if (resource.MetadataBuilder.TryGetIdForSerialization(out id))
+                {
+                    this.jsonWriter.WriteInstanceAnnotationName(JsonLightConstants.ODataIdPropertyName);
+                    this.jsonWriter.WriteValue(id.OriginalString);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes the properties for a delta resource.
+        /// </summary>
+        /// <param name="properties">The properties to write.</param>
+        private void WriteDeltaResourceProperties(IEnumerable<ODataProperty> properties)
+        {
+            this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+            this.jsonLightResourceSerializer.WriteProperties(
+                this.ResourceType,
+                properties,
+                false /* isComplexValue */,
+                this.DuplicatePropertyNameChecker);
+            this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+        }
+
+        /// <summary>
+        /// Writes the reason annotation for a delta deleted resource.
+        /// </summary>
+        /// <param name="resource">The resource to write the reason for.</param>
+        private void WriteDeltaResourceReason(ODataDeletedResource resource)
+        {
+            Debug.Assert(resource != null, "resource != null");
+
+            if (!resource.Reason.HasValue)
+            {
+                return;
+            }
+
+            this.jsonWriter.WriteName(JsonLightConstants.ODataReasonPropertyName);
+
+            switch (resource.Reason.Value)
+            {
+                case DeltaDeletedEntryReason.Deleted:
+                    this.jsonWriter.WriteValue(JsonLightConstants.ODataReasonDeletedValue);
+                    break;
+                case DeltaDeletedEntryReason.Changed:
+                    this.jsonWriter.WriteValue(JsonLightConstants.ODataReasonChangedValue);
+                    break;
+                default:
+                    Debug.Assert(false, "Unknown reason.");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Writes the context uri for a delta (deleted) link.
+        /// </summary>
+        /// <param name="kind">The delta kind of link.</param>
+        private void WriteDeltaLinkContextUri(ODataDeltaKind kind)
+        {
+            Debug.Assert(kind == ODataDeltaKind.Link || kind == ODataDeltaKind.DeletedLink, "kind must be either DeltaLink or DeltaDeletedLink.");
+            this.jsonLightResourceSerializer.WriteDeltaContextUri(this.CurrentDeltaLinkScope.GetOrCreateTypeContext(), kind);
+        }
+
+        /// <summary>
+        /// Writes the source for a delta (deleted) link.
+        /// </summary>
+        /// <param name="link">The link to write source for.</param>
+        private void WriteDeltaLinkSource(ODataDeltaLinkBase link)
+        {
+            Debug.Assert(link != null, "link != null");
+            Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
+
+            this.jsonWriter.WriteName(JsonLightConstants.ODataSourcePropertyName);
+            this.jsonWriter.WriteValue(UriUtils.UriToString(link.Source));
+        }
+
+        /// <summary>
+        /// Writes the relationship for a delta (deleted) link.
+        /// </summary>
+        /// <param name="link">The link to write relationship for.</param>
+        private void WriteDeltaLinkRelationship(ODataDeltaLinkBase link)
+        {
+            Debug.Assert(link != null, "link != null");
+            Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
+
+            this.jsonWriter.WriteName(JsonLightConstants.ODataRelationshipPropertyName);
+            this.jsonWriter.WriteValue(link.Relationship);
+        }
+
+        /// <summary>
+        /// Writes the target for a delta (deleted) link.
+        /// </summary>
+        /// <param name="link">The link to write target for.</param>
+        private void WriteDeltaLinkTarget(ODataDeltaLinkBase link)
+        {
+            Debug.Assert(link != null, "link != null");
+            Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink, "link must be either DeltaLink or DeltaDeletedLink.");
+
+            this.jsonWriter.WriteName(JsonLightConstants.ODataTargetPropertyName);
+            this.jsonWriter.WriteValue(UriUtils.UriToString(link.Target));
         }
 
         /// <summary>
@@ -829,6 +1398,286 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// A scope for a deleted resource in JSON Light writer.
+        /// </summary>
+        private sealed class JsonLightDeletedResourceScope : DeletedResourceScope, IODataJsonLightWriterResourceState
+        {
+            /// <summary>Bit field of the JSON Light metadata properties written so far.</summary>
+            private int alreadyWrittenMetadataProperties;
+
+            /// <summary>true if the resource set represents a complex property or a singleton navigation property that is undeclared, false otherwise.</summary>
+            private bool isUndeclared;
+
+            /// <summary>
+            /// Constructor to create a new resource scope.
+            /// </summary>
+            /// <param name="resource">The resource for the new scope.</param>
+            /// <param name="serializationInfo">The serialization info for the current resource.</param>
+            /// <param name="navigationSource">The navigation source we are going to write resources for.</param>
+            /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
+            /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
+            /// <param name="selectedProperties">The selected properties of this scope.</param>
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
+            internal JsonLightDeletedResourceScope(
+                ODataDeletedResource resource,
+                ODataResourceSerializationInfo serializationInfo,
+                IEdmNavigationSource navigationSource,
+                IEdmEntityType resourceType,
+                bool skipWriting,
+                ODataMessageWriterSettings writerSettings,
+                SelectedPropertiesNode selectedProperties,
+                ODataUri odataUri,
+                bool isUndeclared)
+                : base(resource, serializationInfo, navigationSource, resourceType, writerSettings, selectedProperties, odataUri)
+            {
+                this.isUndeclared = isUndeclared;
+            }
+
+            /// <summary>
+            /// Enumeration of JSON Light metadata property flags, used to keep track of which properties were already written.
+            /// </summary>
+            [Flags]
+            private enum JsonLightEntryMetadataProperty
+            {
+                /// <summary>The odata.editLink property.</summary>
+                EditLink = 0x1,
+
+                /// <summary>The odata.readLink property.</summary>
+                ReadLink = 0x2,
+
+                /// <summary>The odata.mediaEditLink property.</summary>
+                MediaEditLink = 0x4,
+
+                /// <summary>The odata.mediaReadLink property.</summary>
+                MediaReadLink = 0x8,
+
+                /// <summary>The odata.mediaContentType property.</summary>
+                MediaContentType = 0x10,
+
+                /// <summary>The odata.mediaEtag property.</summary>
+                MediaETag = 0x20,
+            }
+
+            /// <summary>
+            /// The resource being written.
+            /// </summary>
+            ODataResourceBase IODataJsonLightWriterResourceState.Resource
+            {
+                get { return (ODataResourceBase)this.Item; }
+            }
+
+            /// <summary>
+            /// true if the resource set represents a complex property or a singleton navigation property that is undeclared, false otherwise.
+            /// </summary>
+            public bool IsUndeclared
+            {
+                get { return isUndeclared; }
+            }
+
+            /// <summary>
+            /// Flag which indicates that the odata.editLink metadata property has been written.
+            /// </summary>
+            public bool EditLinkWritten
+            {
+                get
+                {
+                    return this.IsMetadataPropertyWritten(JsonLightEntryMetadataProperty.EditLink);
+                }
+
+                set
+                {
+                    Debug.Assert(value == true, "The flag that a metadata property has been written should only ever be set from false to true.");
+                    this.SetWrittenMetadataProperty(JsonLightEntryMetadataProperty.EditLink);
+                }
+            }
+
+            /// <summary>
+            /// Flag which indicates that the odata.readLink metadata property has been written.
+            /// </summary>
+            public bool ReadLinkWritten
+            {
+                get
+                {
+                    return this.IsMetadataPropertyWritten(JsonLightEntryMetadataProperty.ReadLink);
+                }
+
+                set
+                {
+                    Debug.Assert(value == true, "The flag that a metadata property has been written should only ever be set from false to true.");
+                    this.SetWrittenMetadataProperty(JsonLightEntryMetadataProperty.ReadLink);
+                }
+            }
+
+            /// <summary>
+            /// Flag which indicates that the odata.mediaEditLink metadata property has been written.
+            /// </summary>
+            public bool MediaEditLinkWritten
+            {
+                get
+                {
+                    return this.IsMetadataPropertyWritten(JsonLightEntryMetadataProperty.MediaEditLink);
+                }
+
+                set
+                {
+                    Debug.Assert(value == true, "The flag that a metadata property has been written should only ever be set from false to true.");
+                    this.SetWrittenMetadataProperty(JsonLightEntryMetadataProperty.MediaEditLink);
+                }
+            }
+
+            /// <summary>
+            /// Flag which indicates that the odata.mediaReadLink metadata property has been written.
+            /// </summary>
+            public bool MediaReadLinkWritten
+            {
+                get
+                {
+                    return this.IsMetadataPropertyWritten(JsonLightEntryMetadataProperty.MediaReadLink);
+                }
+
+                set
+                {
+                    Debug.Assert(value == true, "The flag that a metadata property has been written should only ever be set from false to true.");
+                    this.SetWrittenMetadataProperty(JsonLightEntryMetadataProperty.MediaReadLink);
+                }
+            }
+
+            /// <summary>
+            /// Flag which indicates that the odata.mediaContentType metadata property has been written.
+            /// </summary>
+            public bool MediaContentTypeWritten
+            {
+                get
+                {
+                    return this.IsMetadataPropertyWritten(JsonLightEntryMetadataProperty.MediaContentType);
+                }
+
+                set
+                {
+                    Debug.Assert(value == true, "The flag that a metadata property has been written should only ever be set from false to true.");
+                    this.SetWrittenMetadataProperty(JsonLightEntryMetadataProperty.MediaContentType);
+                }
+            }
+
+            /// <summary>
+            /// Flag which indicates that the odata.mediaEtag metadata property has been written.
+            /// </summary>
+            public bool MediaETagWritten
+            {
+                get
+                {
+                    return this.IsMetadataPropertyWritten(JsonLightEntryMetadataProperty.MediaETag);
+                }
+
+                set
+                {
+                    Debug.Assert(value == true, "The flag that a metadata property has been written should only ever be set from false to true.");
+                    this.SetWrittenMetadataProperty(JsonLightEntryMetadataProperty.MediaETag);
+                }
+            }
+
+            /// <summary>
+            /// Marks the <paramref name="jsonLightMetadataProperty"/> as written in this resource scope.
+            /// </summary>
+            /// <param name="jsonLightMetadataProperty">The metadta property which was written.</param>
+            private void SetWrittenMetadataProperty(JsonLightEntryMetadataProperty jsonLightMetadataProperty)
+            {
+                Debug.Assert(!this.IsMetadataPropertyWritten(jsonLightMetadataProperty), "Can't write the same metadata property twice.");
+                this.alreadyWrittenMetadataProperties |= (int)jsonLightMetadataProperty;
+            }
+
+            /// <summary>
+            /// Determines if the <paramref name="jsonLightMetadataProperty"/> was already written for this resource scope.
+            /// </summary>
+            /// <param name="jsonLightMetadataProperty">The metadata property to test for.</param>
+            /// <returns>true if the <paramref name="jsonLightMetadataProperty"/> was already written for this resource scope; false otherwise.</returns>
+            private bool IsMetadataPropertyWritten(JsonLightEntryMetadataProperty jsonLightMetadataProperty)
+            {
+                return (this.alreadyWrittenMetadataProperties & (int)jsonLightMetadataProperty) == (int)jsonLightMetadataProperty;
+            }
+        }
+
+        /// <summary>
+        /// A scope for a delta link in JSON Light writer.
+        /// </summary>
+        private sealed class JsonLightDeltaLinkScope : DeltaLinkScope
+        {
+            /// <summary>
+            /// Constructor to create a new delta link scope.
+            /// </summary>
+            /// <param name="state">The writer state of this scope.</param>
+            /// <param name="link">The link for the new scope.</param>
+            /// <param name="serializationInfo">The serialization info for the current resource.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+            /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="selectedProperties">The selected properties of this scope.</param>
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            public JsonLightDeltaLinkScope(WriterState state, ODataItem link, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(state, link, serializationInfo, navigationSource, entityType, selectedProperties, odataUri)
+            {
+            }
+        }
+
+        /// <summary>
+        /// A scope for a JSON lite resource set.
+        /// </summary>
+        private sealed class JsonLightDeltaResourceSetScope : DeltaResourceSetScope
+        {
+            /// <summary>true if the odata.nextLink was already written, false otherwise.</summary>
+            private bool nextLinkWritten;
+
+            /// <summary>true if the odata.deltaLink was already written, false otherwise.</summary>
+            private bool deltaLinkWritten;
+
+            /// <summary>
+            /// Constructor to create a new resource set scope.
+            /// </summary>
+            /// <param name="resourceSet">The resource set for the new scope.</param>
+            /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+            /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="selectedProperties">The selected properties of this scope.</param>
+            /// <param name="odataUri">The ODataUri info of this scope.</param>
+            public JsonLightDeltaResourceSetScope(ODataDeltaResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+                : base(resourceSet, navigationSource, resourceType, selectedProperties, odataUri)
+            {
+            }
+
+            /// <summary>
+            /// true if the odata.nextLink annotation was already written, false otherwise.
+            /// </summary>
+            internal bool NextPageLinkWritten
+            {
+                get
+                {
+                    return this.nextLinkWritten;
+                }
+
+                set
+                {
+                    this.nextLinkWritten = value;
+                }
+            }
+
+            /// <summary>
+            /// true if the odata.deltaLink annotation was already written, false otherwise.
+            /// </summary>
+            internal bool DeltaLinkWritten
+            {
+                get
+                {
+                    return this.deltaLinkWritten;
+                }
+
+                set
+                {
+                    this.deltaLinkWritten = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// A scope for a resource in JSON Light writer.
         /// </summary>
         private sealed class JsonLightResourceScope : ResourceScope, IODataJsonLightWriterResourceState
@@ -894,9 +1743,9 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// The resource being written.
             /// </summary>
-            public ODataResource Resource
+            ODataResourceBase IODataJsonLightWriterResourceState.Resource
             {
-                get { return (ODataResource)this.Item; }
+                get { return (ODataResourceBase)this.Item; }
             }
 
             /// <summary>

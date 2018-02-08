@@ -28,17 +28,41 @@ namespace Microsoft.OData
         private ValidationKinds validations;
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
-        /// with default values.</summary>
-        public ODataMessageReaderSettings()
+        /// with default values for OData 4.0.</summary>
+        public ODataMessageReaderSettings() : this(ODataConstants.ODataDefaultProtocolVersion)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
+        /// with default values for the specified OData version.</summary>
+        /// <param name="odataVersion">OData Version for which to create default settings.</param>
+        public ODataMessageReaderSettings(ODataVersion odataVersion)
         {
             this.ClientCustomTypeResolver = null;
+            this.PrimitiveTypeResolver = null;
             this.EnablePrimitiveTypeConversion = true;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
-            this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
-            Validations = ValidationKinds.All;
+            this.Version = odataVersion;
+
             Validator = new ReaderValidator(this);
+            if (odataVersion < ODataVersion.V401)
+            {
+                Validations = ValidationKinds.All;
+                this.ReadUntypedAsString = true;
+                this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
+            }
+            else
+            {
+                Validations = ValidationKinds.All & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+                this.ReadUntypedAsString = false;
+                this.MaxProtocolVersion = odataVersion;
+            }
         }
+
+        /// <summary>Gets or sets the OData protocol version to be used for reading payloads. </summary>
+        /// <returns>The OData protocol version to be used for reading payloads.</returns>
+        public ODataVersion? Version { get; set; }
 
         /// <summary>
         /// Gets or sets validation settings.
@@ -86,11 +110,20 @@ namespace Microsoft.OData
         /// </summary>
         public Func<IEdmType, string, IEdmType> ClientCustomTypeResolver { get; set; }
 
-        /// <summary>Gets or sets a value that indicates whether to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
+        /// <summary>
+        /// Gets or sets a custom resolver for resolving untyped primitive values
+        /// </summary>
+        public Func<object, string, IEdmTypeReference> PrimitiveTypeResolver { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.
+        /// </summary>
         /// <returns>false if primitive values and report values are not converted; true if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is true.</returns>
         public bool EnablePrimitiveTypeConversion { get; set; }
 
-        /// <summary>Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.</summary>
+        /// <summary>
+        /// Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.
+        /// </summary>
         /// <returns>true if the message stream will be disposed after finishing writing with the message; otherwise false. The default value is true.</returns>
         public bool EnableMessageStreamDisposal { get; set; }
 
@@ -99,7 +132,9 @@ namespace Microsoft.OData
         /// </summary>
         public bool EnableCharactersCheck { get; set; }
 
-        /// <summary>Gets or sets the maximum OData protocol version the reader should accept and understand.</summary>
+        /// <summary>
+        /// Gets or sets the maximum OData protocol version the reader should accept and understand.
+        /// </summary>
         /// <returns>The maximum OData protocol version the reader should accept and understand.</returns>
         /// <remarks>
         /// If the payload to be read has higher OData-Version than the value specified for this property
@@ -129,6 +164,11 @@ namespace Microsoft.OData
                 this.messageQuotas = value;
             }
         }
+
+        /// <summary>
+        /// Whether to read untyped values as a raw string.
+        /// </summary>
+        public bool ReadUntypedAsString { get; set; }
 
         /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
@@ -205,16 +245,19 @@ namespace Microsoft.OData
 
             this.BaseUri = other.BaseUri;
             this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
+            this.PrimitiveTypeResolver = other.PrimitiveTypeResolver;
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.EnablePrimitiveTypeConversion = other.EnablePrimitiveTypeConversion;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.MaxProtocolVersion = other.MaxProtocolVersion;
+            this.ReadUntypedAsString = other.ReadUntypedAsString;
             this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
             this.validations = other.validations;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.Version = other.Version;
         }
     }
 }

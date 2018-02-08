@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,14 +33,13 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// Parse Capabilities Vocabulary Model from CapabilitiesVocabularies.xml
         /// </summary>
-        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         static CapabilitiesVocabularyModel()
         {
             Assembly assembly = typeof(CapabilitiesVocabularyModel).GetAssembly();
 
             // Resource name has leading namespace and folder in .NetStandard dll.
             string[] allResources = assembly.GetManifestResourceNames();
-            string capabilitiesVocabularies = allResources.Where(x => x.Contains("CapabilitiesVocabularies.xml")).FirstOrDefault();
+            string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml"));
             Debug.Assert(capabilitiesVocabularies != null, "CapabilitiesVocabularies.xml: not found.");
 
             using (Stream stream = assembly.GetManifestResourceStream(capabilitiesVocabularies))
@@ -52,6 +50,9 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             }
 
             ChangeTrackingTerm = Instance.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+
+            // It needn't to list all other terms like CoreVocabularyModel.cs, because Capabilities model class is
+            // an internal class. Customers can call FindTerm(qualifiedName) method to get the corresponding term.
         }
     }
 }

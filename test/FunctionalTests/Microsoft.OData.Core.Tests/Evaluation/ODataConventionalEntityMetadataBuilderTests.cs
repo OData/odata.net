@@ -1162,7 +1162,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
     internal class TestEntryMetadataContext : IODataResourceMetadataContext
     {
-        public ODataResource Resource { get; set; }
+        public ODataResourceBase Resource { get; set; }
 
         public IODataResourceTypeContext TypeContext { get; set; }
 

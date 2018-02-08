@@ -15,8 +15,9 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
-    using Microsoft.Test.ModuleCore;
     using System.Security;
+    using System.Text;
+    using Microsoft.Test.ModuleCore;
 
     #endregion Namespaces
 
@@ -172,7 +173,10 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             {
                 if (_databaseName == null)
                 {
-                    _databaseName = String.Format("{0}_{1}_{2}", this.DatabasePrefixName, System.Net.Dns.GetHostName(), Guid.NewGuid().ToString("N"));
+                    _databaseName = String.Format("{0}_{1}_{2}",
+                        this.DatabasePrefixName,
+                        System.Net.Dns.GetHostName().Replace('-', '_'),
+                        Guid.NewGuid().ToString("N"));
                 }
 
                 return _databaseName;
@@ -213,9 +217,13 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             AstoriaTestLog.WriteLineIgnore("-------     DatabaseName: {0}---------", this.DatabaseName);
             AstoriaTestLog.WriteLineIgnore("-------     DatabaseConnectionString: {0}---------", this.DatabaseConnectionString);
             if (IsEmpty)
+            {
                 CreateEmptyDatabase();
+            }
             else
-                AttachDatabase();
+            {
+                CreatePopulatedDatabase();
+            }
         }
 
         public void Dispose()
@@ -232,9 +240,13 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             AstoriaTestLog.WriteLineIgnore("-------     DatabaseConnectionString: {0}---------", this.DatabaseConnectionString);
 
             if (IsEmpty)
+            {
                 CreateEmptyDatabase();
+            }
             else
-                AttachDatabase();
+            {
+                CreatePopulatedDatabase();
+            }
         }
 
         public bool IsEmpty
@@ -276,7 +288,7 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             }
             catch (Exception e)
             {
-                AstoriaTestLog.TraceInfo("Database cleanup failed for " + this.DestinationFolder + this.DatabaseName + ".mdf");
+                AstoriaTestLog.TraceInfo("Database cleanup failed for " + this.DestinationFolder + this.DatabaseName + ".ldf");
             }
         }
 
@@ -307,101 +319,6 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             throw new TestException(TestResult.Failed, "Unable to find '" + name + "' in any of " + string.Join(",", basePaths));
         }
 
-        private void CopyDatabaseFiles()
-        {
-            string sourceMDFFileName = String.Format(@"{0}.mdf", this.DatabasePrefixName);
-            string sourceLDFFileName = String.Format(@"{0}.ldf", this.DatabasePrefixName);
-
-            string destinationMDFFileName = String.Format(@"{0}.mdf", this.DatabaseName);
-            string destinationLDFFileName = String.Format(@"{0}.ldf", this.DatabaseName);
-
-            string destinationMDF = Path.Combine(this.DestinationFolder , destinationMDFFileName);
-            string destinationLDF = Path.Combine(this.DestinationFolder, destinationLDFFileName);
-
-            DeleteDatabaseFiles();
-
-            destinationMDF = ConvertIfIpv6(destinationMDF);
-            destinationLDF = ConvertIfIpv6(destinationLDF);
-
-            FileCopy(FindDatabaseFile(sourceMDFFileName), destinationMDF);
-            FileCopy(FindDatabaseFile(sourceLDFFileName), destinationLDF);
-        }
-
-        /// <summary>Copies an existing file to a new file.</summary>
-        /// <param name="sourcePath">The file to copy.</param>
-        /// <param name="destinationPath">The name of the destination file. This cannot be a directory or an existing file.</param>
-        private static void FileCopy(string sourcePath, string destinationPath)
-        {
-            Debug.Assert(sourcePath != null, "sourcePath != null");
-            Debug.Assert(destinationPath != null, "destinationPath != null");
-            AstoriaTestLog.WriteLineIgnore("Copying \"" + sourcePath + "\" to \"" + destinationPath + "\"...");
-
-            bool impersonate = true;
-            Account account = new Account(null, null, null);
-
-            //If its running local no need to either
-            if (AstoriaTestProperties.DataProviderMachineName.ToLower().Equals("local")) {
-                impersonate = false;
-            }
-
-            ImpersonationWrapper.DoAction(account,impersonate,
-               delegate
-               {
-                   File.Copy(sourcePath, destinationPath);
-                   if (CompactUtil.IsFileCompressed(destinationPath))
-                   {
-                       AstoriaTestLog.WriteLineIgnore("Uncompressing '" + destinationPath + "'...");
-                       CompactUtil.UncompressFile(destinationPath);
-                   }
-               });
-            
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static string ConvertIfIpv6(string path)
-        {
-            if (string.IsNullOrEmpty(path) || !path.StartsWith("\\\\"))
-                return path;
-
-            //
-            //Split string and look for ipv6 portion
-            //
-            string ipv6Address = null;
-            string[] splitPath = path.Split(new Char[] { '\\' });
-            foreach (string s in splitPath)
-            {
-                if (s.Contains(":"))
-                {
-                    ipv6Address = s;
-                    break;
-                }
-            }
-
-            //
-            //  Ensure IpV6 address was actually found to work with
-            //
-            if (string.IsNullOrEmpty(ipv6Address))
-                return path;
-
-            //
-            //  When using ipv6 in an UNC, the ipv6 address needs to be converted to a UNC compatible format
-            //  for example, given an ipv6 address
-            //                          2001:4898:f0:f019:503f:8967:7f95:c381
-            //  it  needs to change to the following
-            //                          2001-4898-f0-f019-503f-8967-7f95-c381.ipv6-literal.net
-            //  Basically, replace all ':' with '-' and append 'ipv6-literal.net' to the address
-            //
-            string firstStringStep = ipv6Address.Replace(":", "-");
-            string lastStringStep = string.Concat(firstStringStep, ".ipv6-literal.net");
-            return (path.Replace(ipv6Address, lastStringStep));
-        }
-
-
         /// <summary>Creates a local login for network services.</summary>
         private void CreateLocalLoginForNetworkService()
         {
@@ -427,6 +344,7 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             CreateLocalLoginForNetworkService();
         }
 
+        /// <summary>Create an empty database.</summary>
         private void CreateEmptyDatabase()
         {
             if (_isLocal)
@@ -449,7 +367,8 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
             }
         }
 
-        private void AttachDatabase()
+        /// <summary>Create a populated database.</summary>
+        private void CreatePopulatedDatabase()
         {
             if (_isLocal)
             {
@@ -458,27 +377,74 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
 
             DropDatabase();
 
-            AstoriaTestLog.WriteLineIgnore("-------AttachDb: {0}---------", this.MachineConnectionString);
+            AstoriaTestLog.WriteLineIgnore("-------CreatePopulatedDb: {0}---------", this.MachineConnectionString);
             using (SqlConnection sqlConn = new SqlConnection(this.MachineConnectionString))
             {
                 sqlConn.Open();
                 using (SqlCommand sqlCmd = sqlConn.CreateCommand())
                 {
                     sqlCmd.CommandTimeout = 0;
-
-                    CopyDatabaseFiles();
-
-                    sqlCmd.CommandText = "sp_attach_db";
-                    sqlCmd.CommandType = CommandType.StoredProcedure;
-                    sqlCmd.Parameters.Add(new SqlParameter("@dbname", this.DatabaseName));
-                    sqlCmd.Parameters.Add(new SqlParameter("@filename1", AttachedMdf));
-                    sqlCmd.Parameters.Add(new SqlParameter("@filename2", AttachedLdf));
+                    sqlCmd.CommandText = String.Format(
+                        "CREATE DATABASE [{0}]\n" +
+                        " CONTAINMENT = NONE\n" +
+                        " ON PRIMARY\n" +
+                        "(NAME = N'{0}', FILENAME = N'{1}', SIZE = 4288KB, MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB)\n" +
+                        " LOG ON\n" +
+                        "(NAME = N'{0}_log', FILENAME = N'{2}', SIZE = 3456KB, MAXSIZE = 2048GB, FILEGROWTH = 10 %)",
+                        this.DatabaseName,
+                        this.AttachedMdf,
+                        this.AttachedLdf);
                     sqlCmd.ExecuteNonQuery();
-                    AstoriaTestLog.WriteLineIgnore(String.Format("Completed Attaching Db {0}", this.DatabaseName));
                 }
+
+                // Note: SSMS will create a file that ends with GO\n. The code
+                // below expects that and won't execute an SQL fragment unless it is
+                // followed by GO\n.
+                String filePath = FindDatabaseFile(this.DatabasePrefixName + ".sql");
+                using (StreamReader reader = new StreamReader(filePath))
+                using (SqlCommand sqlCmd = sqlConn.CreateCommand())
+                {
+                    // Read from the file until it is empty.
+                    StringBuilder sqlStatements = new StringBuilder();
+                    String fileLine = reader.ReadLine();
+                    while (fileLine != null)
+                    {
+                        // If we find a "GO", execute everything we received up
+                        // to this point and ignore the "GO".
+                        if (fileLine == "GO")
+                        {
+                            if (sqlStatements.Length > 0)
+                            {
+                                // Get command and clean buffer.
+                                String sqlStatement = sqlStatements.ToString();
+                                sqlStatements.Clear();
+
+                                // Replace database name if needed.
+                                if (sqlStatement.Contains("{0}"))
+                                {
+                                    sqlStatement = String.Format(sqlStatement, this.DatabaseName);
+                                }
+
+                                // Execute.
+                                sqlCmd.CommandText = sqlStatement;
+                                sqlCmd.CommandTimeout = 0;
+                                sqlCmd.ExecuteNonQuery();
+                            }
+                        }
+                        else if (!String.IsNullOrEmpty(fileLine))
+                        {
+                            // Buffer all statements up until "GO".
+                            sqlStatements.AppendLine(fileLine);
+                        }
+
+                        fileLine = reader.ReadLine();
+                    }
+                }
+
+                AstoriaTestLog.WriteLineIgnore(String.Format("Completed Create Populated Db {0}", this.DatabaseName));
             }
         }
-        
+
         public void DropDatabase()
         {
             // Ensure there are no pooled collections before we drop the database.

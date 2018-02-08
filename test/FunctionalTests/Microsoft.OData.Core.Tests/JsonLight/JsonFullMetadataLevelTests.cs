@@ -44,12 +44,6 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void FullMetadataLevelShouldHaveContextUrlLevelFull()
-        {
-            testSubject.ContextUrlLevel.Should().Be(ODataContextUrlLevel.Full);
-        }
-
-        [Fact]
         public void FullMetadataLevelCreateMetadataBuilderWithoutMetadataDocumentUriShouldThrow()
         {
             var metadataLevelWithoutMetadataDocumentUri = new JsonFullMetadataLevel(/*metadataDocumentUri*/ null, Model);

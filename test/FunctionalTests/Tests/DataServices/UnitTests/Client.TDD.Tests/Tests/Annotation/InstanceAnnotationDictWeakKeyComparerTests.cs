@@ -82,6 +82,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // Net Core 1.0 is missing GC APIs
         [TestMethod]
         public void TestRemoveDeadItem()
         {
@@ -184,6 +186,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 }
             }
         }
+#endif
 
         private void AddKeyObject(WeakDictionary<object, int> dict, int id)
         {
@@ -210,6 +213,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             testAction.ShouldThrow<ArgumentException>();
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // Net Core 1.0 is missing GC APIs
         [TestMethod]
         public void TestCompareObjectRef()
         {
@@ -290,6 +295,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 }
             }
         }
+#endif
 
         private object CreateObj(KeyObject obj, RefType RefType, bool isTupleObject)
         {

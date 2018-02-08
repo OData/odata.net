@@ -63,13 +63,15 @@ namespace Microsoft.OData.JsonLight
         /// <param name="payloadKind">The payload kind we expect the context URI to conform to.</param>
         /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
         /// <param name="needParseFragment">Whether the fragment after $metadata should be parsed, if set to false, only MetadataDocumentUri is parsed.</param>
+        /// <param name="throwIfMetadataConflict">Whether to throw if a type specified in the ContextUri is not found in metadata.</param>
         /// <returns>The result from parsing the context URI.</returns>
         internal static ODataJsonLightContextUriParseResult Parse(
             IEdmModel model,
             string contextUriFromPayload,
             ODataPayloadKind payloadKind,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
-            bool needParseFragment)
+            bool needParseFragment,
+            bool throwIfMetadataConflict = true)
         {
             if (contextUriFromPayload == null)
             {
@@ -89,7 +91,7 @@ namespace Microsoft.OData.JsonLight
             parser.TokenizeContextUri();
             if (needParseFragment)
             {
-                parser.ParseContextUri(payloadKind, clientCustomTypeResolver);
+                parser.ParseContextUri(payloadKind, clientCustomTypeResolver, throwIfMetadataConflict);
             }
 
             return parser.parseResult;
@@ -123,22 +125,47 @@ namespace Microsoft.OData.JsonLight
             this.parseResult.MetadataDocumentUri = uriBuilderWithoutFragment.Uri;
 
             // Get the fragment of the context URI
-            this.parseResult.Fragment = contextUriFromPayload.GetComponents(UriComponents.Fragment, UriFormat.Unescaped);
+            this.parseResult.Fragment = contextUriFromPayload.GetComponents(UriComponents.Fragment, UriFormat.SafeUnescaped);
         }
 
         /// <summary>
         /// Applies the model and validates the context URI against it.
         /// </summary>
         /// <param name="expectedPayloadKind">The payload kind we expect the context URI to conform to.</param>
-        /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
-        private void ParseContextUri(ODataPayloadKind expectedPayloadKind, Func<IEdmType, string, IEdmType> clientCustomTypeResolver)
+        /// <param name="clientCustomTypeResolver">The function of client custom type resolver.</param>
+        /// <param name="throwIfMetadataConflict">Whether to throw if a type specified in the ContextUri is not found in metadata.</param>
+        private void ParseContextUri(ODataPayloadKind expectedPayloadKind, Func<IEdmType, string, IEdmType> clientCustomTypeResolver, bool throwIfMetadataConflict)
         {
-            bool isUndeclared = false;
-            ODataPayloadKind detectedPayloadKind = this.ParseContextUriFragment(this.parseResult.Fragment, clientCustomTypeResolver, out isUndeclared);
+            bool isUndeclared;
+            ODataPayloadKind detectedPayloadKind = this.ParseContextUriFragment(this.parseResult.Fragment, clientCustomTypeResolver, throwIfMetadataConflict, out isUndeclared);
 
             // unsupported payload kind indicates that this is during payload kind detection, so we should not fail.
             bool detectedPayloadKindMatchesExpectation = detectedPayloadKind == expectedPayloadKind || expectedPayloadKind == ODataPayloadKind.Unsupported;
-            if (detectedPayloadKind == ODataPayloadKind.ResourceSet && this.parseResult.EdmType.IsODataComplexTypeKind())
+            IEdmType parseType = this.parseResult.EdmType;
+            if (parseType != null && parseType.TypeKind == EdmTypeKind.Untyped)
+            {
+                if (string.Equals(parseType.FullTypeName(), ODataConstants.ContextUriFragmentUntyped, StringComparison.Ordinal))
+                {
+                    // Anything matches the built-in Edm.Untyped
+                    this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection, ODataPayloadKind.Resource };
+                    detectedPayloadKindMatchesExpectation = true;
+                }
+                else if (expectedPayloadKind == ODataPayloadKind.Property || expectedPayloadKind == ODataPayloadKind.Resource)
+                {
+                    // If we created an untyped type because the name was not resolved it can match any single value
+                    this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Property, ODataPayloadKind.Resource };
+                    detectedPayloadKindMatchesExpectation = true;
+                }
+            }
+            else if (parseType != null && parseType.TypeKind == EdmTypeKind.Collection && ((IEdmCollectionType)parseType).ElementType.TypeKind() == EdmTypeKind.Untyped)
+            {
+                this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection };
+                if (expectedPayloadKind == ODataPayloadKind.ResourceSet || expectedPayloadKind == ODataPayloadKind.Property || expectedPayloadKind == ODataPayloadKind.Collection)
+                {
+                    detectedPayloadKindMatchesExpectation = true;
+                }
+            }
+            else if (detectedPayloadKind == ODataPayloadKind.ResourceSet && parseType.IsODataComplexTypeKind())
             {
                 this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection };
 
@@ -147,7 +174,7 @@ namespace Microsoft.OData.JsonLight
                     detectedPayloadKindMatchesExpectation = true;
                 }
             }
-            else if (detectedPayloadKind == ODataPayloadKind.Resource && this.parseResult.EdmType.IsODataComplexTypeKind())
+            else if (detectedPayloadKind == ODataPayloadKind.Resource && parseType.IsODataComplexTypeKind())
             {
                 this.parseResult.DetectedPayloadKinds = new[] { ODataPayloadKind.Resource, ODataPayloadKind.Property };
                 if (expectedPayloadKind == ODataPayloadKind.Property)
@@ -210,10 +237,11 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="fragment">The fragment to parse</param>
         /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
+        /// <param name="throwIfMetadataConflict">Whether to throw if a type specified in the ContextUri is not found in metadata.</param>
         /// <param name="isUndeclared">Indicates if the fragment is for an unknown path segment</param>
         /// <returns>The detected payload kind based on parsing the fragment.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502", Justification = "Will be moving to non case statements later, no point in investing in reducing this now")]
-        private ODataPayloadKind ParseContextUriFragment(string fragment, Func<IEdmType, string, IEdmType> clientCustomTypeResolver, out bool isUndeclared)
+        private ODataPayloadKind ParseContextUriFragment(string fragment, Func<IEdmType, string, IEdmType> clientCustomTypeResolver, bool throwIfMetadataConflict, out bool isUndeclared)
         {
             bool hasItemSelector = false;
             ODataDeltaKind kind = ODataDeltaKind.None;
@@ -299,7 +327,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     detectedPayloadKind = ODataPayloadKind.ServiceDocument;
                 }
-                else if (fragment.Equals(ODataConstants.EntityReferenceCollectionSegmentName + "(" + ODataConstants.EntityReferenceSegmentName + ")"))
+                else if (fragment.Equals(ODataConstants.CollectionPrefix + "(" + ODataConstants.EntityReferenceSegmentName + ")"))
                 {
                     detectedPayloadKind = ODataPayloadKind.EntityReferenceLinks;
                 }
@@ -321,9 +349,9 @@ namespace Microsoft.OData.JsonLight
                     else
                     {
                         // Property: {schema.type} or Collection({schema.type}) where schema.type is primitive or complex.
-                        detectedPayloadKind = this.ResolveType(fragment, clientCustomTypeResolver);
+                        detectedPayloadKind = this.ResolveType(fragment, clientCustomTypeResolver, throwIfMetadataConflict);
                         Debug.Assert(
-                            this.parseResult.EdmType.TypeKind == EdmTypeKind.Primitive || this.parseResult.EdmType.TypeKind == EdmTypeKind.Enum || this.parseResult.EdmType.TypeKind == EdmTypeKind.TypeDefinition || this.parseResult.EdmType.TypeKind == EdmTypeKind.Complex || this.parseResult.EdmType.TypeKind == EdmTypeKind.Collection || this.parseResult.EdmType.TypeKind == EdmTypeKind.Entity,
+                            this.parseResult.EdmType.TypeKind == EdmTypeKind.Primitive || this.parseResult.EdmType.TypeKind == EdmTypeKind.Enum || this.parseResult.EdmType.TypeKind == EdmTypeKind.TypeDefinition || this.parseResult.EdmType.TypeKind == EdmTypeKind.Complex || this.parseResult.EdmType.TypeKind == EdmTypeKind.Collection || this.parseResult.EdmType.TypeKind == EdmTypeKind.Entity || this.parseResult.EdmType.TypeKind == EdmTypeKind.Untyped,
                             "The first context URI segment must be a set or a non-entity type.");
                     }
                 }
@@ -429,15 +457,30 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="typeName">The type name.</param>
         /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
+        /// <param name="throwIfMetadataConflict">Whether to throw if a type specified in the ContextUri is not found in metadata.</param>
         /// <returns>The resolved Edm type.</returns>
-        private ODataPayloadKind ResolveType(string typeName, Func<IEdmType, string, IEdmType> clientCustomTypeResolver)
+        private ODataPayloadKind ResolveType(string typeName, Func<IEdmType, string, IEdmType> clientCustomTypeResolver, bool throwIfMetadataConflict)
         {
             string typeNameToResolve = EdmLibraryExtensions.GetCollectionItemTypeName(typeName) ?? typeName;
             bool isCollection = typeNameToResolve != typeName;
 
             EdmTypeKind typeKind;
             IEdmType resolvedType = MetadataUtils.ResolveTypeNameForRead(this.model, /*expectedType*/ null, typeNameToResolve, clientCustomTypeResolver, out typeKind);
-            if (resolvedType == null || resolvedType.TypeKind != EdmTypeKind.Primitive && resolvedType.TypeKind != EdmTypeKind.Enum && resolvedType.TypeKind != EdmTypeKind.Complex && resolvedType.TypeKind != EdmTypeKind.Entity && resolvedType.TypeKind != EdmTypeKind.TypeDefinition)
+            if (resolvedType == null && !throwIfMetadataConflict)
+            {
+                string namespaceName;
+                string name;
+                TypeUtils.ParseQualifiedTypeName(typeName, out namespaceName, out name, out isCollection);
+                resolvedType = new EdmUntypedStructuredType(namespaceName, name);
+            }
+
+            if (resolvedType == null ||
+                resolvedType.TypeKind != EdmTypeKind.Primitive
+                && resolvedType.TypeKind != EdmTypeKind.Enum
+                && resolvedType.TypeKind != EdmTypeKind.Complex
+                && resolvedType.TypeKind != EdmTypeKind.Entity
+                && resolvedType.TypeKind != EdmTypeKind.TypeDefinition
+                && resolvedType.TypeKind != EdmTypeKind.Untyped)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName(UriUtils.UriToString(this.parseResult.ContextUri), typeName));
             }

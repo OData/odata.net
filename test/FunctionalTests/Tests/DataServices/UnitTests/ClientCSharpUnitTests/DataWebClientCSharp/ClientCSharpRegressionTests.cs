@@ -28,6 +28,7 @@ namespace AstoriaUnitTests.Tests
     using CustomDataClient = AstoriaUnitTests.Stubs.CustomDataClient;
     using DSClient = Microsoft.OData.Client;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [TestClass]
     public class ClientCSharpRegressionTests
     {
@@ -67,7 +68,7 @@ namespace AstoriaUnitTests.Tests
                     '!', '\t', '\r', '\n' };
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ClientLinqUriInjectionTest()
         {
             // LINQ Uri Security Injection Hack
@@ -90,7 +91,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void DeletePostTunnelingShouldWork()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -194,7 +195,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EnsureClientAttachToGenerateSameIdentityAsServer()
         {
             // Ensure AttachTo on the client generates the same identity as the server
@@ -316,7 +317,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SendingEntityWithNullKey()
         {
             using (TestWebRequest service = TestWebRequest.CreateForInProcessWcf())
@@ -631,7 +632,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SetSaveStreamOnMultipleObjects()
         {
             // Assert when SetSaveStream on multiple objects
@@ -707,7 +708,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SaveChangeOptionsContinueOnErrorShouldWork()
         {
             // Make sure SaveChangeOptions.ContinueOnError is working as we expected, and when we don't continue on error, we fail as expected
@@ -778,7 +779,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void AsyncWithLargePayload()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -872,7 +873,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ClientShouldCheckIdOrEditLinks()
         {
             // Client does not check IDs or Edit links from the server against IDs it is already tracking
@@ -965,7 +966,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void MaterializationOfEntitesIntoComplexTypeShouldNotBeAllowed()
         {
             // Materialization of entities into complex type should not be allowed
@@ -1171,7 +1172,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void VerifyUriAppliedToDescriptorWhenLinkFoldingUsed()
         {
             // Verify URIs are properly applied to descriptors when link folding is used
@@ -1317,7 +1318,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ClientShouldWriteTypeInfoForPrimitiveCollectionProperties()
         {
             // Client does not write any type information for primitive collection properties
@@ -1441,7 +1442,7 @@ namespace AstoriaUnitTests.Tests
 
         #region DeleteLinkAsyncExtraLinkDescriptorTest
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void DeleteLinkAsyncExtraLinkDescriptorTest()
         {
             // Setting a reference link to null asynchronously sometimes returns same operation response twice
@@ -1574,7 +1575,7 @@ namespace AstoriaUnitTests.Tests
         #endregion
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void NullCheckAgainstNonEntityProperty()
         {
             // Client LINQ: NullReferenceException preceded by an Assert: atomProperty.Entry != null -- otherwise a primitive property / complex type is being rewritte with a null check; this is only supported for entities and collection
@@ -1599,7 +1600,7 @@ namespace AstoriaUnitTests.Tests
         #region The setter for OperationResponse.Error property will cause Debug.Assert when the value passed is null.
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void OperationResponseErrorShouldAcceptNull()
         {
             // The setter for OperationResponse.Error property will cause Debug.Assert when the value passed is null.
@@ -1626,7 +1627,7 @@ namespace AstoriaUnitTests.Tests
         #endregion
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void TestLoadDataServiceCollectionFromLoadProperty()
         {
             // NRE when trying to load DataServiceCollection from the result of LoadProperty.
@@ -1680,7 +1681,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EnumerateProjectionIntoComplexTypeShouldThrow()
         {
             // Client Linq : InvalidOperationException when enumerating results of a projection into a complex type
@@ -1827,7 +1828,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadNavigationPropertyToSetNotAssignableFromListOfT()
         {
             // Assert followed by an ArgumentException when loading a navigation property to a set whose type is not assignable from List<T>
@@ -1960,7 +1961,7 @@ namespace AstoriaUnitTests.Tests
         #endregion
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ClientShouldFailIfPrimitiveTypeNotMatch()
         {
             // Making sure in projection, if the primitive type do not match, client fails gracefully
@@ -2027,7 +2028,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ShouldThrowIfUsingJsonLightWithoutModel()
         {
             // InvalidOperationException if client user try to use jsonlight but doesn't provide IEdmModel and the model is used by odatalib
@@ -2054,7 +2055,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ChangeAcceptHeaderToJsonInSendingRequestWithoutModel()
         {
             using (OpenWebDataServiceHelper.MaxProtocolVersion.Restore())

@@ -18,7 +18,12 @@ namespace Microsoft.OData
         /// <summary>
         /// Lazy constructing T for ODataVersion.V4.
         /// </summary>
-        private readonly SimpleLazy<T> v3;
+        private readonly SimpleLazy<T> v4;
+
+        /// <summary>
+        /// Lazy constructing T for ODataVersion.V401.
+        /// </summary>
+        private readonly SimpleLazy<T> v401;
 
         /// <summary>
         /// Constructs an instance of the ODataVersionCache.
@@ -28,7 +33,8 @@ namespace Microsoft.OData
         {
             Debug.Assert(factory != null, "factory != null");
 
-            this.v3 = new SimpleLazy<T>(() => factory(ODataVersion.V4), true /*isThreadSafe*/);
+            this.v4 = new SimpleLazy<T>(() => factory(ODataVersion.V4), true /*isThreadSafe*/);
+            this.v401 = new SimpleLazy<T>(() => factory(ODataVersion.V401), true /*isThreadSafe*/);
         }
 
         /// <summary>
@@ -43,7 +49,10 @@ namespace Microsoft.OData
                 switch (version)
                 {
                     case ODataVersion.V4:
-                        return this.v3.Value;
+                        return this.v4.Value;
+
+                    case ODataVersion.V401:
+                        return this.v401.Value;
 
                     default:
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataVersionCache_UnknownVersion));

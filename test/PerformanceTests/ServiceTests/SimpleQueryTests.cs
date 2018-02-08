@@ -21,6 +21,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void QuerySimpleEntitySet()
         {
             int RequestsPerIteration = 100;
@@ -38,6 +39,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void QueryLargeEntitySet()
         {
             foreach (var iteration in Benchmark.Iterations)
@@ -50,6 +52,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void QuerySingleEntity()
         {
             int RequestsPerIteration = 100;

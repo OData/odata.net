@@ -478,7 +478,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="dictionary">Dictionary</param>
         /// <returns>The url query string of dictionary's key value pairs (URL encoded)</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are property names and not literals.")]
         internal String TranslateParameterAliasNodes(IDictionary<string, SingleValueNode> dictionary)
         {
             String result = null;

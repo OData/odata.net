@@ -183,7 +183,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 property = messageReader.ReadValue(new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), true));
             }
 
-            Assert.AreEqual("SRID=4326;POINT (23.1 32.1)", property);
+            Assert.AreEqual(@"{""type"":""Point"",""coordinates"":[23.1,32.1],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}", property);
         }
 
         [TestMethod]
@@ -590,12 +590,21 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void QueryWithFormat()
         {
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            Dictionary<string, string> testCases = new Dictionary<string, string>()
+            {
+                {"Customers?$format=application/json", "application/json"},
+                {"Customers?$format=application/json;odata.metadata=full", "application/json; odata.metadata=full"},
+                {"Customers?$format=json", "application/json"},
+            };
+#else
             Dictionary<string, string> testCases = new Dictionary<string, string>()
             {
                 {"Customers?$format=application/json", "application/json"},
                 {"Customers?$format=application/json;odata.metadata=full", "application/json;odata.metadata=full"},
                 {"Customers?$format=json", "application/json"},
             };
+#endif
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
             foreach (var testCase in testCases)
@@ -605,7 +614,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 Assert.AreEqual(200, responseMessage.StatusCode);
 
                 string contentType = responseMessage.Headers.FirstOrDefault(x => x.Key.Equals("Content-Type")).Value;
-                Assert.IsTrue(contentType.StartsWith(testCase.Value));
+                Assert.IsTrue(contentType.StartsWith(testCase.Value),
+                    string.Format("contentType is '{0}', when the expected string starts with '{1}'", contentType, testCase.Value));
 
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                 {
@@ -628,6 +638,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void QueryPropertyWithNullValueFromODataClient()
         {
@@ -648,6 +659,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             List<string> enumResult = middleName.ToList();
             Assert.AreEqual(0, enumResult.Count);
         }
+#endif
 
         [TestMethod]
         public void QueryDelta()

@@ -11,25 +11,36 @@ if (($args.Count -eq 0) -or ($args[0] -match 'Nightly'))
     $TestType = 'Nightly'
     $Configuration = 'Release'
 }
+elseif ($args[0] -match 'Quick' -or ($args[0] -match '-q')) 
+{
+    $TestType = "Quick"
+}
 elseif ($args[0] -match 'Rolling')
 {
-    $TestType = "Rolling"
+    # Rolling is a legacy options - run all tests.
+    $TestType = "Nightly"
 }
 elseif ($args[0] -match 'E2E')
 {
-    $TestType = "E2E"
+    # Rolling is a legacy options - run all tests.
+    $TestType = "Nightly"
 }
 elseif ($args[0] -match 'DisableSkipStrongName')
 {
     $TestType = "DisableSkipStrongName"
 }
+elseif ($args[0] -match 'EnableSkipStrongName')
+{
+    $TestType = "EnableSkipStrongName"
+}
 elseif ($args[0] -match 'SkipStrongName')
 {
-    $TestType = "SkipStrongName"
+    # SkipStrongName is a legacy options.
+    $TestType = "EnableSkipStrongName"
 }
 else 
 {
-    Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor $Err
+    Write-Host 'Please choose Nightly Test or Quick Test!' -ForegroundColor $Err
     exit
 }
 
@@ -44,17 +55,36 @@ $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = $ENLISTMENT_ROOT + "\bin"
 
-# Default to use Visual Studio 2015 since the upgrade to .Net Core.
+# Default to use Visual Studio 2015
 $VS14MSBUILD=$PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
 $VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
 $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
 $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
-# Use Visual Studio 2013 compiler for older apps, such as Windows Store for 8.0 (as needed for PCL111/.NET Standard 1.1)
-$VS12MSBUILD=$PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
-$VS12XAMLTARGETFILE=$PROGRAMFILESX86 + "\MSBuild\Microsoft\WindowsXaml\v12.0\Microsoft.Windows.UI.Xaml.CSharp.targets"
+# Use Visual Studio 2017 compiler for .NET Core and .NET Standard. Because VS2017 has different paths for different
+# versions, we have to check for each version. Meanwhile, the dotnet CLI is required to run the .NET Core unit tests in this script.
+$VS15VERSIONS = "Enterprise",
+    "Professional",
+    "Community"
+$VS15MSBUILD = $null
+ForEach ($version in $VS15VERSIONS)
+{
+    $tempMSBuildPath = ($PROGRAMFILESX86 + "\Microsoft Visual Studio\2017\{0}\MSBuild\15.0\Bin\MSBuild.exe") -f $version
+    if([System.IO.File]::Exists($tempMSBuildPath))
+    {
+        $VS15MSBUILD = $tempMSBuildPath
+        break
+    }
+}
+$DOTNETDIR = "C:\Program Files\dotnet\"
+$DOTNETTEST = $null
+if ([System.IO.File]::Exists($DOTNETDIR + "dotnet.exe"))
+{
+    $DOTNETTEST = $DOTNETDIR + "dotnet.exe"
+}
 
+# Other variables
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
 $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
@@ -65,7 +95,7 @@ $NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
 
-$NugetRestoreSolutions = "Microsoft.OData.DotNetStandard.sln"
+$NugetRestoreSolutions = "OData.NetStandard.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -73,15 +103,20 @@ $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.Spatial.dll"
 
-$TestDlls = "Microsoft.OData.Service.Design.T4.dll",
+$XUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll",
+    "Microsoft.OData.Client.Tests.dll"
+
+$NetCoreXUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll"
+
+$TestSupportDlls = "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.OData.Service.dll",
     "Microsoft.OData.Service.Test.Common.dll"
 
-$RollingTestDlls = "Microsoft.OData.Core.Tests.dll",
-    "Microsoft.OData.Edm.Tests.dll",
-    "Microsoft.Spatial.Tests.dll",
-    "Microsoft.OData.Client.Tests.dll",
-    "Microsoft.Test.Data.Services.DDBasics.dll",
+$NightlyTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
     "Microsoft.OData.Client.Design.T4.UnitTests.dll",
     "AstoriaUnitTests.TDDUnitTests.dll",
     "EdmLibTests.dll",
@@ -96,47 +131,35 @@ $RollingTestDlls = "Microsoft.OData.Core.Tests.dll",
     "Microsoft.Data.ServerUnitTests1.UnitTests.dll",
     "Microsoft.Data.ServerUnitTests2.UnitTests.dll",
     "RegressionUnitTests.dll",
-    "Microsoft.Test.OData.PluggableFormat.Tests.dll"
-
-$NetCoreUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
-    "Microsoft.OData.Edm.Tests.dll",
-    "Microsoft.Spatial.Tests.dll"
-    
-$RollingTestSuite = @()
-ForEach($dll in $RollingTestDlls)
-{
-    $RollingTestSuite += $TESTDIR + "\" + $dll
-}
-
-ForEach($dll in $NetCoreUnitTestDlls)
-{
-    # Turn on once we migrate to VS 2017 as there are some technical difficulties
-    # with running .NET Core tests through script for VS 2015
-    # $RollingTestSuite += $NETCORETESTDIR + "\" + $dll
-}
-
-$AdditionalNightlyTestDlls = "Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
+    "Microsoft.Test.OData.PluggableFormat.Tests.dll",
+    "Microsoft.Data.MetadataObjectModel.UnitTests.dll",
     "AstoriaUnitTests.dll",
-    "AstoriaClientUnitTests.dll",
-    "TestCategoryAttributeCheck.dll"
+    "AstoriaClientUnitTests.dll"
 
-ForEach($dll in $AdditionalNightlyTestDlls)
+# .NET Core tests are different and require the dotnet tool. The tool references the .csproj (VS2017) files instead of dlls
+$NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.NetCore.csproj",
+    "\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj"
+
+$QuickTestSuite = @()
+$NightlyTestSuite = @()
+ForEach($dll in $XUnitTestDlls)
 {
-    $AdditionalNightlyTestSuite += $TESTDIR + "\" + $dll
+    $QuickTestSuite += $TESTDIR + "\" + $dll
+    $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
-$NightlyTestSuite = $RollingTestSuite
-ForEach ($test in $AddtionalNightlyTestSuite)
+ForEach($dll in $NightlyTestDlls)
 {
-    $NightlyTestSuite += $test
+    $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
 $E2eTestDlls = @("Microsoft.Test.OData.Tests.Client.dll")
-$E2eTestSuite = @()
-
 ForEach ($dll in $E2eTestDlls)
 {
-    $E2eTestSuite += $TESTDIR + "\" + $dll
+    $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
@@ -163,17 +186,22 @@ Function GetDlls
         $dlls += $PRODUCTDIR + "\" + $dll
     }
 
-    ForEach($dll in $TestDlls)
-    {
-        $dlls += $TESTDIR + "\" + $dll
-    }
-    
-    ForEach($dll in $RollingTestDlls)
+    ForEach($dll in $XUnitTestDlls)
     {
         $dlls += $TESTDIR + "\" + $dll
     }
 
-    ForEach($dll in $AdditionalNightlyTestDlls)
+    ForEach($dll in $NetCoreXUnitTestDlls)
+    {
+        $dlls += $NETCORETESTDIR + "\" + $dll
+    }
+
+    ForEach($dll in $TestSupportDlls)
+    {
+        $dlls += $TESTDIR + "\" + $dll
+    }
+
+    ForEach($dll in $NightlyTestDlls)
     {
         $dlls += $TESTDIR + "\" + $dll
     }
@@ -276,9 +304,9 @@ Function RunBuild ($sln, $vsToolVersion)
     # Default to VS2015
     $MSBUILD = $VS14MSBUILD
     
-    if($vsToolVersion -eq '12.0')
+    if($vsToolVersion -eq '15.0')
     {
-        $MSBUILD=$VS12MSBUILD
+        $MSBUILD=$VS15MSBUILD
     }
     
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
@@ -297,14 +325,8 @@ Function RunBuild ($sln, $vsToolVersion)
     }
 }
 
-Function RestoringFile ($file , $target)
-{
-    Write-Host "Restoring $file"
-    Copy-Item -Path $file -Destination $target -Force
-}
-
 Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
-{    
+{
     Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
     Write-Output "@echo off" | Out-File -Encoding ascii $reruncmd
     Write-Output "cd $TESTDIR" | Out-File -Append -Encoding ascii $reruncmd
@@ -318,7 +340,7 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     }
     else
     {
-        foreach ($dll in $RollingTestSuite) 
+        foreach ($dll in $QuickTestSuite) 
         {
             $rerun += " $dll" 
         }
@@ -338,8 +360,6 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     if ($failedtest1.count -gt 0)
     {
         $rerun += " " + $XUNITADAPTER
-        Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append `
-            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     $rerun = "`"$VSTEST`""
@@ -361,8 +381,6 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     # build the command only if failed tests exist
     if ($failedtest2.count -gt 0)
     {
-        Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append `
-            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     Write-Output "cd $LOGDIR" | Out-File -Append -Encoding ascii $reruncmd
@@ -390,6 +408,7 @@ Function TestSummary
     
     $file = Get-Content -Path $TESTLOG
     $pass = 0
+    $skipped = 0
     $fail = 0
     $trxfile = New-Object -TypeName System.Collections.ArrayList
     $failedtest1 = New-Object -TypeName System.Collections.ArrayList
@@ -397,10 +416,27 @@ Function TestSummary
     $part = 1
     foreach ($line in $file)
     {
-    
-        if ($line -match "^Passed.*") 
+        # Consolidate logic for retrieving number of passed and skipped tests. Failed tests is separate due to the way
+        # VSTest and DotNet (for .NET Core tests) report results differently.
+        if ($line -match "^Total tests: .*") 
         {
-            $pass = $pass + 1
+            # The line is in this format:
+            # Total tests: 5735. Passed: 5735. Failed: 0. Skipped: 0.
+            # We want to extract the total passed and total skipped.
+            
+            # Extract total passed by taking the substring between "Passed: " and "."
+            # The regex first extracts the string after the hardcoded "Passed: " (i.e. "#. Failed: #. Skipped: #.")
+            # Then we tokenize by "." and retrieve the first token which is the number for passed.
+            $pattern = "Passed: (.*)"
+            $extractedNumber = [regex]::match($line, $pattern).Groups[1].Value.Split(".")[0]
+            $pass += $extractedNumber
+            
+            # Extract total skipped by taking the substring between "Skipped: " and "."
+            # The regex first extracts the string after the hardcoded "Skipped: " (i.e. "#.")
+            # Then we tokenize by "." and retrieve the first token which is the number for skipped.
+            $pattern = "Skipped: (.*)"
+            $extractedNumber = [regex]::match($line, $pattern).Groups[1].Value.Split(".")[0]
+            $skipped += $extractedNumber
         }
         elseif ($line -match "^Failed\s+(.*)")
         {
@@ -423,6 +459,12 @@ Function TestSummary
 
     Write-Host "Test summary:" -ForegroundColor $Success
     Write-Host "Passed :`t$pass"  -ForegroundColor $Success
+
+    if ($skipped -ne 0)
+    {
+        Write-Host "Skipped:`t$skipped"  -ForegroundColor $Warning
+    }
+
     $color = $Success
     if ($fail -ne 0)
     {
@@ -446,10 +488,22 @@ Function TestSummary
     }
 }
 
-Function RunTest($title, $testdir)
+Function RunTest($title, $testdir, $framework)
 {
     Write-Host "**********Running $title***********"
-    & $VSTEST $testdir $XUNITADAPTER >> $TESTLOG
+    if ($framework -eq 'dotnet')
+    {
+        foreach($testProj in $testdir)
+        {
+            Write-Host "Launching $testProj..."
+            & $DOTNETTEST "test" ($ENLISTMENT_ROOT + $testProj) "--no-build" >> $TESTLOG
+        }
+    }
+    else
+    {
+        & $VSTEST $testdir $XUNITADAPTER >> $TESTLOG
+    }
+
     if($LASTEXITCODE -ne 0)
     {
         Write-Host "Run $title FAILED" -ForegroundColor $Err
@@ -462,58 +516,42 @@ Function NugetRestoreSolution
     foreach($solution in $NugetRestoreSolutions)
     {
         & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)
-    } 
-}
-
-# Copy any xproj output to the appropriate bin folder. We use this workaround instead of doing it in the
-# xproj file due to xproj appending additional directory paths in its OutputPath parameter.
-# See https://github.com/aspnet/Tooling/issues/383
-Function CopyNetCoreOutput
-{
-    Write-Host '**********Copying NetCore Output Binaries*********'
-
-    $NETCOREUNITTESTROOT = $ENLISTMENT_ROOT + "\test\FunctionalTests\"
-    $UNITTESTFOLDERS = "Microsoft.OData.Core.Tests",
-        "Microsoft.OData.Edm.Tests",
-        "Microsoft.Spatial.Tests"
-
-    ForEach($TEST in $UNITTESTFOLDERS)
-    {
-        Copy-Item ($NETCOREUNITTESTROOT + $TEST + "\bin\$Configuration\*") ($ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable") -Recurse -Force
     }
 }
 
 Function BuildProcess
 {
     Write-Host '**********Start To Build The Project*********'
+    
     $script:BUILD_START_TIME = Get-Date
     if (Test-Path $BUILDLOG)
     {
         rm $BUILDLOG
     }
-    RunBuild ('Microsoft.OData.Lite.sln')
-    RunBuild ('Microsoft.OData.Full.sln')
-    RunBuild ('Microsoft.OData.Net35.sln')
-    RunBuild ('Microsoft.OData.E2E.Portable.sln')
-    RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.Desktop.sln')
-    RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsPhone.sln')
-    # Windows Store builds 8.0 apps which is needed to meet PCL111/.NET Standard 1.1 criteria
-    # Because VS2015 doesn't support 8.0 apps, we need to use VS2013. Skip if VS2013 not installed.
-    if([System.IO.File]::Exists($VS12MSBUILD) -And [System.IO.File]::Exists($VS12XAMLTARGETFILE))
+
+    RunBuild ('OData.Net45.sln')
+
+    if ($TestType -ne 'Quick')
     {
-        RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln') -vsToolVersion '12.0'
+        # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
+        RunBuild ('OData.Tests.E2E.sln')
+        RunBuild ('OData.Net35.sln')
+        # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
+        if($VS15MSBUILD)
+        {
+            Write-Host "Found VS2017 version: $VS15MSBUILD"
+            RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
+            RunBuild ('OData.CodeGen.sln') -vsToolVersion '15.0'
+        }
+        else
+        {
+            Write-Host ('Warning! Skipping build for .NET Core tests because no versions of VS2017 found. ' + `
+            'Building only product in .NET Standard.') -ForegroundColor $Warning
+            RunBuild ('OData.NetStandard.sln')
+        }
+        RunBuild ('OData.Tests.WindowsApps.sln')
     }
-    else
-    {
-        Write-Host 'Skipping Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln because VS2013 not installed or `
-        missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013'
-    }
-    RunBuild ('Microsoft.OData.CodeGen.sln')
-    RunBuild ('Microsoft.OData.E2E.sln')
-    
-    # Requires VS2015 (14.0) due to .NET Core test projects
-    RunBuild ('Microsoft.Test.OData.DotNetStandard.sln')
-    
+
     Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
 }
@@ -527,18 +565,13 @@ Function TestProcess
     }
     $script:TEST_START_TIME = Get-Date
     cd $TESTDIR
-    RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" -target $TESTDIR
     if ($TestType -eq 'Nightly')
     {
         RunTest -title 'NightlyTests' -testdir $NightlyTestSuite
     }
-    elseif ($TestType -eq 'Rolling')
+    elseif ($TestType -eq 'Quick')
     {
-        RunTest -title 'RollingTests' -testdir $RollingTestSuite
-    }
-    elseif ($TestType -eq 'E2E')
-    {
-        # E2E tests run below.
+        RunTest -title 'XUnitTests' -testdir $QuickTestSuite
     }
     else
     {
@@ -546,8 +579,16 @@ Function TestProcess
         Cleanup
         exit
     }
-    RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
-    RunTest -title 'E2ETests' -testdir $E2eTestSuite
+
+    if ($DOTNETTEST)
+    {
+        RunTest -title 'NetCoreTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
+    }
+    else
+    {
+        Write-Host 'The dotnet CLI must be installed to run any .NET Core tests.' -ForegroundColor $Warning
+    }
+
     Write-Host "Test Done" -ForegroundColor $Success
     TestSummary
     $script:TEST_END_TIME = Get-Date
@@ -570,6 +611,7 @@ Function FxCopProcess
     Write-Host "$LOGDIR\ClientFxCopReport.xml"
     Write-Host "FxCop Done" -ForegroundColor $Success
 }
+
 # Main Process
 
 if (! (Test-Path $LOGDIR))
@@ -577,12 +619,11 @@ if (! (Test-Path $LOGDIR))
     mkdir $LOGDIR 1>$null
 }
 
-if ($TestType -eq 'SkipStrongName')
+if ($TestType -eq 'EnableSkipStrongName')
 {
     CleanBeforeScorch
     NugetRestoreSolution
     BuildProcess
-    CopyNetCoreOutput
     SkipStrongName
     Exit
 }
@@ -591,7 +632,6 @@ elseif ($TestType -eq 'DisableSkipStrongName')
     CleanBeforeScorch
     NugetRestoreSolution
     BuildProcess
-    CopyNetCoreOutput
     DisableSkipStrongName
     Exit
 }
@@ -599,7 +639,6 @@ elseif ($TestType -eq 'DisableSkipStrongName')
 CleanBeforeScorch
 NugetRestoreSolution
 BuildProcess
-CopyNetCoreOutput
 SkipStrongName
 TestProcess
 FxCopProcess

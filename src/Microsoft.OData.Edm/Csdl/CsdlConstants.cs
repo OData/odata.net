@@ -174,6 +174,13 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Value_ScaleVariable = EdmConstants.Value_ScaleVariable;
 
         internal const string TypeName_Untyped = "Edm.Untyped";
+        internal const string TypeName_Untyped_Short = "Untyped";
+
+        internal const string TypeName_Entity = "Edm.EntityType";
+        internal const string TypeName_Entity_Short = "EntityType";
+
+        internal const string TypeName_Complex = "Edm.ComplexType";
+        internal const string TypeName_Complex_Short = "ComplexType";
 
         internal const bool Default_Abstract = false;
         internal const bool Default_ContainsTarget = false;

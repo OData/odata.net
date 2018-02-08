@@ -24,48 +24,56 @@ namespace Microsoft.OData.Performance
         private static readonly Stream WriteStream = new MemoryStream(MaxStreamSize);
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeed()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: false, entryCount: 1000, isFullValidation: true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatial()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: true, entryCount: 1000, isFullValidation: true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithExpansions()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: false, entryCount: 100, isFullValidation: true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatialWithExpansions()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: true, entryCount: 100, isFullValidation: true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeed_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: false, entryCount: 1000, isFullValidation: false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatial_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: true, entryCount: 1000, isFullValidation: false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedWithExpansions_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: false, entryCount: 100, isFullValidation: false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatialWithExpansions_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: true, entryCount: 100, isFullValidation: false);

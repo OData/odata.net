@@ -150,7 +150,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>
-        /// Path to the root of the binary tree, typically defined by _nttree in a build environment and 
+        /// Path to the root of the binary tree, typically defined by _nttree in a build environment and
         /// DD_BuiltTarget in a test environment.
         /// </summary>
         internal static string BinarySourcePath
@@ -424,7 +424,7 @@ namespace AstoriaUnitTests.Tests
             serviceContents += "                );\r\n";
             serviceContents += "        }\r\n";
 
-            // We use the standard DataService, so if we in fact wanted 
+            // We use the standard DataService, so if we in fact wanted
             // full access, we can configure the service directly through
             // the generated code.
             if (isTestOpenService)
@@ -564,7 +564,7 @@ namespace AstoriaUnitTests.Tests
         /// <param name="destination">folder to which product binaries need to be copied to.</param>
         public static void CopyProductBinaries(string destination)
         {
-            var binariesToCopy = new string[] 
+            var binariesToCopy = new string[]
             {
                 "Microsoft.Spatial.dll",
                 "Microsoft.OData.Edm.dll",
@@ -687,10 +687,10 @@ namespace AstoriaUnitTests.Tests
                 }
                 return true;
             };
-            
+
             // Search through all windows
             NativeMethods.EnumWindows(callback, IntPtr.Zero);
-            
+
             // Reference the callback to stop it being GC'd before this point.
             GC.KeepAlive(callback);
             return result;
@@ -703,13 +703,13 @@ namespace AstoriaUnitTests.Tests
 
             [DllImport("user32", CharSet = CharSet.Auto)]
             public static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
-            
+
             [DllImport("user32", CharSet = CharSet.Auto)]
             public static extern bool EnumWindows(EnumThreadWindowsCallback callback, IntPtr extraData);
-            
+
             [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
             public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int processId);
-            
+
             [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
             public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 

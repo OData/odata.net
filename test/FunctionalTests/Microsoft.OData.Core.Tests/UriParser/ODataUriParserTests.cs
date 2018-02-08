@@ -46,9 +46,9 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Theory]
-        [InlineData("?filter=&select=&expand=&orderby=&top=&skip=&count=&search=&unknown=&$unknownvalue&skiptoken=&deltatoken=", true)]
-        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=", true)]
-        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=", false)]
+        [InlineData("?filter=&select=&expand=&orderby=&top=&skip=&count=&search=&unknown=&$unknownvalue&skiptoken=&deltatoken=&$compute=", true)]
+        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=&$compute=", true)]
+        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=&$compute=", false)]
         public void EmptyValueQueryOptionShouldWork(string relativeUriString, bool enableNoDollarQueryOptions)
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, relativeUriString));
@@ -76,13 +76,33 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DupilicateNonODataQueryOptionShouldWork()
         {
-            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'foo'&$filter=UserName eq 'bar'")).ParsePath();
-            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
-            var nonODataqueryOptions = uriParser.CustomQueryOptions;
+            ODataUriParser uriParserProcessingDupODataSystemQuery = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot,
+                new Uri(FullUri, "?$filter=UserName eq 'foo'&$filter=UserName eq 'bar'"));
 
-            action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
-            Assert.Equal(nonODataqueryOptions.Count, 2);
-            Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") && nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
+            bool originalValue = uriParserProcessingDupODataSystemQuery.EnableNoDollarQueryOptions;
+            try
+            {
+                // Set the parser option in the static singleton to be $-sign required.
+                uriParserProcessingDupODataSystemQuery.EnableNoDollarQueryOptions = false;
+
+                Action action = () => uriParserProcessingDupODataSystemQuery.ParsePath();
+
+                var uriParserProcessingDupCustomQuery =
+                    new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot,
+                        new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
+                var nonODataqueryOptions = uriParserProcessingDupCustomQuery.CustomQueryOptions;
+
+                action.ShouldThrow<ODataException>()
+                    .WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
+                Assert.Equal(nonODataqueryOptions.Count, 2);
+                Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") &&
+                            nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
+            }
+            finally
+            {
+                // Restore original value
+                uriParserProcessingDupODataSystemQuery.EnableNoDollarQueryOptions = originalValue;
+            }
         }
 
         #region Setter/getter and validation tests
@@ -401,15 +421,28 @@ namespace Microsoft.OData.Tests.UriParser
         public void ParseNoDollarQueryOptionsShouldReturnNullIfNoDollarQueryOptionsIsNotEnabled()
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?filter=MyDog/Color eq 'Brown'&select=ID&expand=MyDog&orderby=ID&top=1&skip=2&count=true&search=FA&$unknown=&$unknownvalue&skiptoken=abc&deltatoken=def", UriKind.Relative));
-            parser.ParseFilter().Should().BeNull();
-            parser.ParseSelectAndExpand().Should().BeNull();
-            parser.ParseOrderBy().Should().BeNull();
-            parser.ParseTop().Should().Be(null);
-            parser.ParseSkip().Should().Be(null);
-            parser.ParseCount().Should().Be(null);
-            parser.ParseSearch().Should().BeNull();
-            parser.ParseSkipToken().Should().BeNull();
-            parser.ParseDeltaToken().Should().BeNull();
+
+            bool originalValue = parser.EnableNoDollarQueryOptions;
+            try
+            {
+                // Ensure $-sign is required.
+                parser.EnableNoDollarQueryOptions = false;
+
+                parser.ParseFilter().Should().BeNull();
+                parser.ParseSelectAndExpand().Should().BeNull();
+                parser.ParseOrderBy().Should().BeNull();
+                parser.ParseTop().Should().Be(null);
+                parser.ParseSkip().Should().Be(null);
+                parser.ParseCount().Should().Be(null);
+                parser.ParseSearch().Should().BeNull();
+                parser.ParseSkipToken().Should().BeNull();
+                parser.ParseDeltaToken().Should().BeNull();
+            }
+            finally
+            {
+                // Restore original value
+                parser.EnableNoDollarQueryOptions = originalValue;
+            }
         }
 
         [Theory]
@@ -422,7 +455,7 @@ namespace Microsoft.OData.Tests.UriParser
         [InlineData("People?$select=ID&select=Name", true, false, "$select", false)]
         [InlineData("People?$select=ID&SELECT=Name", true, false, "$select", false)]
 
-        // 3. Case insensitive, No dollar not enabled, be treated as custom query options.
+        // 3. Case sensitive, No dollar not enabled, be treated as custom query options.
         // Duplication is allowed.
         [InlineData("People?select=ID&select=Name", false, false, "select", false)]
 
@@ -677,7 +710,173 @@ namespace Microsoft.OData.Tests.UriParser
             pathSegmentList[0].ShouldBeOperationImportSegment(getCurrentCustomerImport);
             pathSegmentList[1].ShouldBeNavigationPropertySegment(customerDetail);
         }
+        #endregion
 
+        #region Parse Compute Tests
+
+        [Fact]
+        public void ParseBadComputeWithMissingAs()
+        {
+            Uri url = new Uri("http://host/Paintings?$compute=nonsense");
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, url);
+            Action action = () => parser.ParseCompute();
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_AsExpected(8, "nonsense"));
+        }
+
+        [Fact]
+        public void ParseBadComputeWithMissingAlias()
+        {
+            Uri url = new Uri("http://host/Paintings?$compute=nonsense as");
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, url);
+            Action action = () => parser.ParseCompute();
+            action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null or empty.\r\nParameter name: alias");
+        }
+
+        [Fact]
+        public void ParseComputeAsQueryOption()
+        {
+            // Create model
+            EdmModel model = new EdmModel();
+            EdmEntityType elementType = model.AddEntityType("DevHarness", "Entity");
+            EdmTypeReference typeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            elementType.AddProperty(new EdmStructuralProperty(elementType, "Prop1", typeReference));
+
+            EdmEntityContainer container = model.AddEntityContainer("Default", "Container");
+            container.AddEntitySet("Entities", elementType);
+
+            // Define queries and new up parser.
+            Uri root = new Uri("http://host");
+            Uri url = new Uri("http://host/Entities?$compute=cast(Prop1, 'Edm.String') as Property1AsString, tolower(Prop1) as Property1Lower");
+            ODataUriParser parser = new ODataUriParser(model, root, url);
+
+            // parse and validate
+            ComputeClause clause = parser.ParseCompute();
+            List<ComputeExpression> items = clause.ComputedItems.ToList();
+            items.Count().Should().Be(2);
+            items[0].Alias.ShouldBeEquivalentTo("Property1AsString");
+            items[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            items[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+            items[1].Alias.ShouldBeEquivalentTo("Property1Lower");
+            items[1].Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            items[1].Expression.TypeReference.FullName().ShouldBeEquivalentTo("Edm.String");
+            items[1].Expression.TypeReference.IsNullable.ShouldBeEquivalentTo(true); // tolower is built in function that allows nulls.
+
+            ComputeExpression copy = new ComputeExpression(items[0].Expression, items[0].Alias, null);
+            copy.Expression.Should().NotBeNull();
+            copy.TypeReference.Should().BeNull();
+            ComputeClause varied = new ComputeClause(null);
+        }
+
+        [Fact]
+        public void ParseComputeAsExpandQueryOption()
+        {
+            // Create model
+            EdmModel model = new EdmModel();
+            EdmEntityType elementType = model.AddEntityType("DevHarness", "Entity");
+            EdmEntityType targetType = model.AddEntityType("DevHarness", "Navigation");
+            EdmTypeReference typeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            targetType.AddProperty(new EdmStructuralProperty(targetType, "Prop1", typeReference));
+            EdmNavigationPropertyInfo propertyInfo = new EdmNavigationPropertyInfo();
+            propertyInfo.Name = "Nav1";
+            propertyInfo.Target = targetType;
+            propertyInfo.TargetMultiplicity = EdmMultiplicity.One;
+            EdmProperty navigation = EdmNavigationProperty.CreateNavigationProperty(elementType, propertyInfo);
+            elementType.AddProperty(navigation);
+
+            EdmEntityContainer container = model.AddEntityContainer("Default", "Container");
+            container.AddEntitySet("Entities", elementType);
+
+            // Define queries and new up parser.
+            Uri root = new Uri("http://host");
+            Uri url = new Uri("http://host/Entities?$expand=Nav1($compute=cast(Prop1, 'Edm.String') as NavProperty1AsString)");
+            ODataUriParser parser = new ODataUriParser(model, root, url);
+
+            // parse and validate
+            SelectExpandClause clause = parser.ParseSelectAndExpand();
+            List<SelectItem> items = clause.SelectedItems.ToList();
+            items.Count.Should().Be(1);
+            ExpandedNavigationSelectItem expanded = items[0] as ExpandedNavigationSelectItem;
+            List<ComputeExpression> computes = expanded.ComputeOption.ComputedItems.ToList();
+            computes.Count.Should().Be(1);
+            computes[0].Alias.ShouldBeEquivalentTo("NavProperty1AsString");
+            computes[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            computes[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+        }
+
+        [Fact]
+        public void ParseComputeAsLevel2ExpandQueryOption()
+        {
+            // Create model
+            EdmModel model = new EdmModel();
+            EdmEntityType elementType = model.AddEntityType("DevHarness", "Entity");
+            EdmEntityType targetType = model.AddEntityType("DevHarness", "Navigation");
+            EdmEntityType subTargetType = model.AddEntityType("DevHarness", "SubNavigation");
+
+            EdmTypeReference typeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            elementType.AddProperty(new EdmStructuralProperty(elementType, "Prop1", typeReference));
+            targetType.AddProperty(new EdmStructuralProperty(targetType, "Prop1", typeReference));
+            subTargetType.AddProperty(new EdmStructuralProperty(subTargetType, "Prop1", typeReference));
+
+            EdmNavigationPropertyInfo propertyInfo = new EdmNavigationPropertyInfo();
+            propertyInfo.Name = "Nav1";
+            propertyInfo.Target = targetType;
+            propertyInfo.TargetMultiplicity = EdmMultiplicity.One;
+            EdmProperty navigation = EdmNavigationProperty.CreateNavigationProperty(elementType, propertyInfo);
+            elementType.AddProperty(navigation);
+
+            EdmNavigationPropertyInfo subPropertyInfo = new EdmNavigationPropertyInfo();
+            subPropertyInfo.Name = "SubNav1";
+            subPropertyInfo.Target = subTargetType;
+            subPropertyInfo.TargetMultiplicity = EdmMultiplicity.One;
+            EdmProperty subnavigation = EdmNavigationProperty.CreateNavigationProperty(targetType, subPropertyInfo);
+            targetType.AddProperty(subnavigation);
+
+            EdmEntityContainer container = model.AddEntityContainer("Default", "Container");
+            container.AddEntitySet("Entities", elementType);
+
+            // Define queries and new up parser.
+            string address = "http://host/Entities?$compute=cast(Prop1, 'Edm.String') as Property1AsString, tolower(Prop1) as Property1Lower&" +
+                                                  "$expand=Nav1($compute=cast(Prop1, 'Edm.String') as NavProperty1AsString;" +
+                                                               "$expand=SubNav1($compute=cast(Prop1, 'Edm.String') as SubNavProperty1AsString))";
+            Uri root = new Uri("http://host");
+            Uri url = new Uri(address);
+            ODataUriParser parser = new ODataUriParser(model, root, url);
+
+            // parse
+            ComputeClause computeClause = parser.ParseCompute();
+            SelectExpandClause selectClause = parser.ParseSelectAndExpand();
+
+            // validate top compute
+            List<ComputeExpression> items = computeClause.ComputedItems.ToList();
+            items.Count().Should().Be(2);
+            items[0].Alias.ShouldBeEquivalentTo("Property1AsString");
+            items[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            items[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+            items[1].Alias.ShouldBeEquivalentTo("Property1Lower");
+            items[1].Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            items[1].Expression.TypeReference.FullName().ShouldBeEquivalentTo("Edm.String");
+            items[1].Expression.TypeReference.IsNullable.ShouldBeEquivalentTo(true); // tolower is built in function that allows nulls.
+
+            // validate level 1 expand compute
+            List<SelectItem> selectItems = selectClause.SelectedItems.ToList();
+            selectItems.Count.Should().Be(1);
+            ExpandedNavigationSelectItem expanded = selectItems[0] as ExpandedNavigationSelectItem;
+            List<ComputeExpression> computes = expanded.ComputeOption.ComputedItems.ToList();
+            computes.Count.Should().Be(1);
+            computes[0].Alias.ShouldBeEquivalentTo("NavProperty1AsString");
+            computes[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            computes[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+
+            // validate level 2 expand compute
+            List<SelectItem> subSelectItems = expanded.SelectAndExpand.SelectedItems.ToList();
+            subSelectItems.Count.Should().Be(1);
+            ExpandedNavigationSelectItem subExpanded = subSelectItems[0] as ExpandedNavigationSelectItem;
+            List<ComputeExpression> subComputes = subExpanded.ComputeOption.ComputedItems.ToList();
+            subComputes.Count.Should().Be(1);
+            subComputes[0].Alias.ShouldBeEquivalentTo("SubNavProperty1AsString");
+            subComputes[0].Expression.ShouldBeSingleValueFunctionCallQueryNode();
+            subComputes[0].Expression.TypeReference.ShouldBeEquivalentTo(typeReference);
+        }
         #endregion
     }
 }

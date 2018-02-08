@@ -69,6 +69,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs">
+      <Link>ExceptionUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs">
+      <Link>EdmConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs">
+      <Link>EdmToStockModelConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataExtensionMethods.cs">
+      <Link>MetadataExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs">
+      <Link>MetadataUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs">
+      <Link>TestModels.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs">
+      <Link>ModelBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\AnnotationFilterPatternTests.cs" />
     <Compile Include="..\AnnotationFilterTests.cs" />
     <Compile Include="..\ArgumentValidationUtils.cs" />
@@ -137,6 +158,7 @@
     <Compile Include="..\JsonLight\PayloadValueConverters.cs" />
     <Compile Include="..\JsonLight\ReorderingJsonReaderTests.cs" />
     <Compile Include="..\JsonLight\TestEntityMetadataBuilder.cs" />
+    <Compile Include="..\JsonLight\ODataJsonLightReaderUtilsTests.cs" />
     <Compile Include="..\Json\BufferingJsonReaderTests.cs" />
     <Compile Include="..\Json\JsonLightInstanceAnnotationWriterTests.cs" />
     <Compile Include="..\Json\JsonReaderTests.cs" />
@@ -213,6 +235,12 @@
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataEntryExtensions.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\PrimitiveValuesRoundtripJsonLightTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\SingletonBatchRoundtripJsonLightTests.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchBodyContentTextualAndBinaryValueTests.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchAtomicityGroupTests.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchPayloadTestCase.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchRoundTripTests.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBigBatchRoundTripTests.cs" />
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\MultipartMixedBatchDependsOnIdsTests.cs" />    
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\Utils.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\ContextUrlPathStringTests.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\CountBuilderTests.cs" />
@@ -248,6 +276,7 @@
     <Compile Include="..\ScenarioTests\UriParser\TopAndSkipFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\VerificationHelpers.cs" />
     <Compile Include="..\ScenarioTests\Writer\JsonLight\WriteFeedWithoutNavigationSourceTests.cs" />
+    <Compile Include="..\UriParser\Binders\MetadataBindingTests.cs" />
     <Compile Include="..\UriParser\Binders\MetadataBindingUtilsTests.cs" />
     <Compile Include="..\UriParser\EntitySetNode.cs" />
     <Compile Include="..\UriParser\ExpressionLexerTests.cs" />
@@ -355,6 +384,7 @@
     <Compile Include="..\UriParser\SemanticAst\ODataPathExtensionsTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ODataPathTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ODataSelectPathTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\ODataUnresolvedFunctionParameterAliasTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\DynamicPathSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\OperationImportSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\PathSelectItemTests.cs" />
@@ -382,6 +412,7 @@
     <Compile Include="..\UriParser\Parsers\UriTemplateParserTests.cs" />
     <Compile Include="..\UriParser\TreeNodeKinds\QueryNodeKindTests.cs" />
     <Compile Include="..\UriParser\TypePromotionUtilsTests.cs" />
+    <Compile Include="..\UriParser\UriEdmHelpersTests.cs" />
     <Compile Include="..\UriParser\Visitors\PathSegmentTokenEqualityComparerTests.cs" />
     <Compile Include="..\UriParser\Parsers\SegmentArgumentParserTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectBinderTests.cs" />
@@ -403,15 +434,11 @@
     <Compile Include="..\UriParser\ODataUriParserInjectionTests.cs" />
     <Compile Include="..\UriParser\ODataUrlKeyDelimiterTests.cs" />
     <Compile Include="..\UriParser\SegmentAssertions.cs" />
+    <Compile Include="..\UriParser\Visitors\IsCollectionTranslatorTests.cs" />
     <Compile Include="..\UriParser\Visitors\QueryNodeVisitorTests.cs" />
     <Compile Include="..\UriParser\Visitors\SyntacticTreeVisitorTests.cs" />
     <Compile Include="..\ValidationUtilsTests.cs" />
     <Compile Include="..\WriterUtilsTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
@@ -437,12 +464,10 @@
       <Project>{9037ff4a-4636-41aa-bfa2-0930ef1563ee}</Project>
       <Name>Microsoft.OData.TestCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
-      <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
-      <Name>Microsoft.Test.OData.Utils</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

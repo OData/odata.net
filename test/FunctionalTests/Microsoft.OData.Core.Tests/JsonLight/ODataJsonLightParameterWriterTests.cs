@@ -242,7 +242,7 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteAndValidate(test, "{\"feed\":[{\"ID\":1},{\"@odata.type\":\"#NS.DerivedType\",\"ID\":1,\"Name\":\"TestName\"}]}", writingResponse: false);
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void WriteNullEntryWithOperation()
         {
             EdmEntityType entityType = new EdmEntityType("NS", "Entity");

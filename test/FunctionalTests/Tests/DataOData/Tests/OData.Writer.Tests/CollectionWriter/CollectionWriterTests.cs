@@ -24,7 +24,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     /// <summary>
     /// Tests for writing collections with the ODataMessageWriter.
     /// </summary>
-    [TestClass, TestCase]
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+    // [TestClass, TestCase]
     public class CollectionWriterTests : ODataWriterTestCase
     {
         //// NOTE

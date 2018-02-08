@@ -45,6 +45,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class RegressionUnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/876
         /// <summary>This is a test class for adding regression tests.</summary>
         [DeploymentItem("Workspaces", "Workspaces")]
         [TestClass, TestCase]
@@ -163,7 +164,7 @@ namespace AstoriaUnitTests.Tests
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
             [Ignore] // Remove Atom
-            [TestMethod, Variation("PATCH with the same payload as returned by the GET method")]
+            // [TestMethod, Variation("PATCH with the same payload as returned by the GET method")]
             public void PatchPayloadReturnedByGet_ReflectionProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -205,7 +206,7 @@ namespace AstoriaUnitTests.Tests
 
             // ODataLib now correctly ignores __deferred properties in WCF DS Server.
             [Ignore] // Remove Atom
-            [TestMethod, Variation("PUT with the same payload as returned by the GET method")]
+            // [TestMethod, Variation("PUT with the same payload as returned by the GET method")]
             public void PutPayloadReturnedByGet_EdmProvider()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -251,7 +252,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("xml base + href not forming proper uri's")]
+            // [TestMethod, Variation("xml base + href not forming proper uri's")]
             public void XmlBaseHRefShouldFormProperUri()
             {
                 string atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
@@ -281,7 +282,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Assert when an invalid uri is specified for binding in Json")]
+            // [TestMethod, Variation("Assert when an invalid uri is specified for binding in Json")]
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void ShouldThrowWhenBindingInvalidUriInJson()
             {
@@ -340,7 +341,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Should throw if the link type attribute has invalid value")]
+            // [TestMethod, Variation("Should throw if the link type attribute has invalid value")]
             public void ShouldThrowIfLinkTypeAttributeIsInvalid()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -492,93 +493,6 @@ namespace AstoriaUnitTests.Tests
                 {
                     model.DropDatabase();
                 }
-            }
-
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
-            [Ignore]
-            [TestMethod, Variation("Json Deserializer - all quoted values must work fine and any type requiring a quote should fail if the quote is not specified")]
-            public void TestQuotesInJsonDeserializer()
-            {
-                TypedCustomAllTypesDataContext.ClearHandlers();
-                TypedCustomAllTypesDataContext.ClearValues();
-                TypedCustomAllTypesDataContext.PreserveChanges = true;
-
-                // Get the metadata for the type
-                var model = UnitTestsUtil.LoadMetadataFromDataServiceType(typeof(TypedCustomAllTypesDataContext), null);
-                var entityType = model.FindType(typeof(AllTypes).FullName) as IEdmEntityType;
-
-                // create entity with all default values and insert it
-                AllTypes emptyAllTypes = new AllTypes();
-                emptyAllTypes.ID = 1;
-                string payload = UnitTestsUtil.GetPayload(emptyAllTypes, entityType, UnitTestsUtil.JsonLightMimeType);
-                UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values", new KeyValuePair<string, string[]>[0], typeof(TypedCustomAllTypesDataContext), UnitTestsUtil.JsonLightMimeType, "POST", null, false);
-
-                Dictionary<Type, TypeData> typeToDataMap = new Dictionary<Type, TypeData>();
-                foreach (TypeData typeData in TypeData.Values)
-                {
-                    typeToDataMap.Add(typeData.ClrType, typeData);
-                }
-
-                // build a dictionary for the type to properties
-                TestUtil.RunCombinations(typeof(AllTypes).GetProperties(BindingFlags.Public | BindingFlags.Instance),
-                    (property) =>
-                    {
-                        if (property.Name == "ID")
-                        {
-                            return;
-                        }
-
-                        Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        TypeData typeData = typeToDataMap[propertyType];
-                        string contentType = typeData.DefaultContentType;
-                        string uri = "/Values(1)/" + property.Name;
-                        CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                            new Dimension("SampleValue", typeData.SampleValues));
-                        TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
-                        {
-                            object value = values["SampleValue"];
-                            if (value == null)
-                            {
-                                return;
-                            }
-
-                            string propertyValue = JsonPrimitiveTypesUtil.PrimitiveToString(value, propertyType);
-
-                            // Quoted value for any type must pass.
-                            if (!JsonPrimitiveTypesUtil.IsTypeQuoted(propertyType) &&
-                                !((propertyType == typeof(Double) && (Double.IsInfinity((Double)value) || Double.IsNaN((Double)value))) ||
-                                  (propertyType == typeof(Single) && (Single.IsInfinity((Single)value) || Single.IsNaN((Single)value)))))
-                            {
-                                propertyValue = String.Format("\"{0}\"", propertyValue);
-                            }
-
-                            payload = "{" + String.Format("{0}: {1}", property.Name, propertyValue) + "}";
-                            Trace.WriteLine("Sending payload: " + payload);
-                            var uriAndXPathToVerify = new KeyValuePair<string, string[]>[0];
-                            UnitTestsUtil.SendRequestAndVerifyXPath(payload, uri, uriAndXPathToVerify, typeof(TypedCustomAllTypesDataContext), UnitTestsUtil.JsonLightMimeType, "PUT", null, false);
-
-                            TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, uri, typeof(TypedCustomAllTypesDataContext), null, "GET");
-                            Stream responseStream = request.GetResponseStream();
-                            UnitTestsUtil.ComparePropertyValue(JsonValidator.ConvertToXmlDocument(responseStream), property, UnitTestsUtil.JsonLightMimeType, value);
-
-                            // Unquoting a value that requires quotes should fail.
-                            if (JsonPrimitiveTypesUtil.IsTypeQuoted(propertyType) ||
-                                (propertyType == typeof(Double) && (Double.IsInfinity((Double)value) || Double.IsNaN((Double)value))) ||
-                                (propertyType == typeof(Single) && (Single.IsInfinity((Single)value) || Single.IsNaN((Single)value))))
-                            {
-                                payload = JsonPrimitiveTypesUtil.PrimitiveToString(value, propertyType);
-                                Assert.IsTrue(payload[0] == '"' && payload[payload.Length - 1] == '"', "the value must be quoted");
-                                payload = payload.Substring(1, payload.Length - 2);
-                                Exception exception = TestUtil.RunCatching(delegate ()
-                                {
-                                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, uri, new KeyValuePair<string, string[]>[0], typeof(TypedCustomAllTypesDataContext), UnitTestsUtil.JsonLightMimeType, "PUT", null, false);
-                                });
-                                TestUtil.AssertExceptionExpected(exception, true);
-                            }
-                        });
-                    });
-
-                TypedCustomAllTypesDataContext.PreserveChanges = false;
             }
 
             [TestMethod, Variation("Discovering types in EdmProvider, via the RegisterType mechanism")]
@@ -734,7 +648,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("making sure we discard the previous changes in case of error in batching")]
+            // [TestMethod, Variation("making sure we discard the previous changes in case of error in batching")]
             public void BatchErrorShouldDiscardPreviousChanges()
             {
                 string batchRequestFilePath = Path.Combine(TestUtil.ServerUnitTestSamples, @"tests\BatchRequests\TestBatchError.txt");
@@ -859,7 +773,7 @@ namespace AstoriaUnitTests.Tests
             }
             #endregion
             [Ignore] // Remove Atom
-            [TestMethod, Variation("negative case fires an assert -setting null value to top level resource")]
+            // [TestMethod, Variation("negative case fires an assert -setting null value to top level resource")]
             public void InvalidRequestIfSettingTopLevelResourceToNullValue()
             {
                 string jsonPayload = "null";
@@ -870,7 +784,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyInvalidRequest(atomPayload, "/Customers(1)", typeof(CustomDataContext), UnitTestsUtil.AtomFormat, "PUT", 400);
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Throw BadGateway error on CUD operations on service uri")]
+            // [TestMethod, Variation("Throw BadGateway error on CUD operations on service uri")]
             public void ShouldThrowOnCudOperationsOnServiceUri()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -901,7 +815,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Assert fired for properties of type IList while serializing")]
+            // [TestMethod, Variation("Assert fired for properties of type IList while serializing")]
             public void TestIListPropertiesWhenSerializing()
             {
                 TypedCustomDataContext<TestEntity3>.ValuesRequested += (x, y) =>
@@ -938,7 +852,7 @@ namespace AstoriaUnitTests.Tests
 
             // ODataLib was fixed and reports missing type name as an annotation.
             [Ignore] // Remove Atom
-            [TestMethod, Variation("type information must be required for any type that takes part in inheritance")]
+            // [TestMethod, Variation("type information must be required for any type that takes part in inheritance")]
             public void ShouldRequireTypeInformationInInheritance()
             {
                 // This test also verifies that not able to load metadata for public nested derived types.
@@ -1015,7 +929,7 @@ namespace AstoriaUnitTests.Tests
                 public string Name { get; set; }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("allowing raw binary values in keys for datatypes other than byte[] and Binary")]
+            // [TestMethod, Variation("allowing raw binary values in keys for datatypes other than byte[] and Binary")]
             public void AllowRawBinaryInKeysIfDataTypeNotBinary()
             {
                 DateTime dateTime = DateTime.Now;
@@ -1128,7 +1042,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Make sure the uri in the deferred elements are valid")]
+            // [TestMethod, Variation("Make sure the uri in the deferred elements are valid")]
             public void UriInDeferredElementsShouldBeValid()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -1203,7 +1117,7 @@ namespace AstoriaUnitTests.Tests
 
             // EdmItemCollection cannot read Duration
             [Ignore]
-            [TestMethod, Variation("Updating $value uri should work")]
+            // [TestMethod, Variation("Updating $value uri should work")]
             public void UpdatingValueUriShouldWork()
             {
                 TypedCustomAllTypesDataContext.ClearHandlers();
@@ -1355,7 +1269,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("If the double number has no period in it, json reader fails to read this")]
+            // [TestMethod, Variation("If the double number has no period in it, json reader fails to read this")]
             // Todo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             [Ignore]
             public void JsonShouldReadDoubleNumberWithoutPeriod()
@@ -1373,7 +1287,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values(7E-06)", null, contextType, UnitTestsUtil.JsonLightMimeType, "PATCH", null, false);
             }
 
-            [TestMethod, Variation("If the double number range is greater than int32 range, but fits within the double scale, json reader fails to read this")]
+            // [TestMethod, Variation("If the double number range is greater than int32 range, but fits within the double scale, json reader fails to read this")]
             [Ignore]
             // Todo:Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void JsonShouldReadDoubleNumberGreaterThanInt32Range()
@@ -1418,7 +1332,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Make sure the max object count is honoured")]
+            // [TestMethod, Variation("Make sure the max object count is honoured")]
             public void VerifyMaxObjectCount()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -1801,13 +1715,13 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("filter on custom providers on strongly typed properties not working")]
+            // [TestMethod, Variation("filter on custom providers on strongly typed properties not working")]
             public void FilterOnCustomProvidersOnStrongTypePropertiesShouldWork()
             {
                 UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.AtomFormat, "/Customers?$filter=ID%20eq%201", typeof(CustomRowBasedContext), null, "GET");
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("check whether the conversion is not happening when the typeConversion is set to false")]
+            // [TestMethod, Variation("check whether the conversion is not happening when the typeConversion is set to false")]
             public void ConversionShouldNotHappenWhenTypeConversionSetToFale()
             {
                 foreach (TypeData typeData in TypeData.Values)
@@ -2172,7 +2086,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "POST", 400);
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("xmlns on innererror tag is incorrectly declared")]
+            // [TestMethod, Variation("xmlns on innererror tag is incorrectly declared")]
             public void XmlNsOnInnerErrorTagShouldBeCorrect()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
@@ -2591,7 +2505,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Small number seen as zero")]
+            // [TestMethod, Variation("Small number seen as zero")]
             public void SmallNumberShouldNotBeTreatedAsZero()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -2612,7 +2526,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void ALinqExceptionInSelectCast()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -2678,7 +2592,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Invoking Service Operation which is defined somewhere else other than data service in custom provider")]
+            // [TestMethod, Variation("Invoking Service Operation which is defined somewhere else other than data service in custom provider")]
             public void TestServiceOperationDefinedInCustomProvider()
             {
                 string uri = "/IntServiceOperation";
@@ -2827,7 +2741,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Incorrect token error response should have correct serialization format")]
+            // [TestMethod, Variation("Incorrect token error response should have correct serialization format")]
             [Ignore]
             public void IncorrectTokenErrorResponseShouldHaveCorrectSerializationFormat()
             {
@@ -2854,7 +2768,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Row Count query string should allow heading white spaces")]
+            // [TestMethod, Variation("Row Count query string should allow heading white spaces")]
             public void RowCountQueryStringShouldAllowHeadingWhitespaces()
             {
                 TestUtil.ClearMetadataCache();
@@ -2881,7 +2795,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Cannot invoke Service Op in Batch")]
+            // [TestMethod, Variation("Cannot invoke Service Op in Batch")]
             public void CannotInvokeServiceOpInBatch()
             {
                 TestUtil.ClearMetadataCache();
@@ -2919,7 +2833,7 @@ Content-Length: 0
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("ChangeInterceptor not fired on DELETE $ref")]
+            // [TestMethod, Variation("ChangeInterceptor not fired on DELETE $ref")]
             public void ChangeInterceptorShouldBeFiredOnDeleteRef()
             {
                 var testCases = new[] {
@@ -3113,7 +3027,7 @@ Content-Length: 0
                 TypedCustomDataContext<AllTypes>.PreserveChanges = false;
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("POST in batch operation returns incorrect Location")]
+            // [TestMethod, Variation("POST in batch operation returns incorrect Location")]
             public void PostInBatchOperationsShouldReturnCorrectLocation()
             {
                 TestUtil.ClearMetadataCache();
@@ -3258,7 +3172,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("POST followed by PUT in a single changeset within a batch throws an exception with EF provider")]
+            // [TestMethod, Variation("POST followed by PUT in a single changeset within a batch throws an exception with EF provider")]
             public void PostFollowedByPutInSingleChangesetShouldThrow()
             {
                 Type contextType = typeof(ocs.CustomObjectContext);
@@ -3293,7 +3207,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("In $ref request, we used to force uri element in the metadata namespace, while in GET $ref requests, we wrote uri element in data namespace")]
+            // [TestMethod, Variation("In $ref request, we used to force uri element in the metadata namespace, while in GET $ref requests, we wrote uri element in data namespace")]
             public void ForceUriElementInVariousNamespaces()
             {
                 string atomPayload = "<ref xmlns='http://docs.oasis-open.org/odata/ns/metadata' id='/Orders(0)' />";
@@ -3310,7 +3224,7 @@ Content-Type: application/atom+xml;type=entry
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders/$ref", UnitTestsUtil.AtomFormat, atomPayload, atomUriAndXPaths, false /*verifyETag*/);
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("No etag in response payload when one does $expand")]
+            // [TestMethod, Variation("No etag in response payload when one does $expand")]
             public void VerifyEtagInExpandPayload()
             {
                 string requestUri = "/Customers(0)?$expand=Orders";
@@ -3396,7 +3310,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
 
-            [TestMethod, Variation("Making sure all the etag values are round-trippable")]
+            // [TestMethod, Variation("Making sure all the etag values are round-trippable")]
             [Ignore]
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void AllEtagValuesShouldRoundtrip()
@@ -3489,7 +3403,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Author required on feed where there are no entries")]
+            // [TestMethod, Variation("Author required on feed where there are no entries")]
             public void AtomAuthor()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -3507,7 +3421,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("[Server]Server uses ETag value from payload on PUT response")]
+            // [TestMethod, Variation("[Server]Server uses ETag value from payload on PUT response")]
             public void ETagInPutResponse()
             {
                 using (var conn = ocs.PopulateData.CreateTableAndPopulateData())
@@ -4413,8 +4327,8 @@ Content-Type: application/atom+xml;type=entry
                     return null;
                 }
             }
-            [Ignore] // Remove Atom
-            [TestMethod, Variation("Server IDSP: Trying to access a property on a wrong type")]
+
+            // [TestMethod, Variation("Server IDSP: Trying to access a property on a wrong type")]
             public void TestAs()
             {
                 var response = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.AtomFormat, "/Bset?$filter=ID eq A/ID", typeof(MyProvider));
@@ -4435,7 +4349,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Enforce EntitySetRights.")]
+            // [TestMethod, Variation("Enforce EntitySetRights.")]
             public void EntitySetRightsForNestedQueries()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -4455,7 +4369,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Hidden Nav props do not show error during expand in IDSP/Mest")]
+            // [TestMethod, Variation("Hidden Nav props do not show error during expand in IDSP/Mest")]
             public void ExpandOnHiddenNavPropShouldThrow()
             {
                 ServiceModelData.Northwind.EnsureDependenciesAvailable();
@@ -4695,7 +4609,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Call order: On insert, Query interceptors called twice for PUT to link")]
+            // [TestMethod, Variation("Call order: On insert, Query interceptors called twice for PUT to link")]
             public void DoNotMakeUnnecessaryCallToQueryInterceptor()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(new Dimension("RequestType", new[] { "PUT", "PATCH" }));
@@ -5463,7 +5377,7 @@ Content-Type: application/atom+xml;type=entry
                 UnitTestsUtil.VerifyInvalidRequest(null, "/Customers(1)/Orders/$ref?$select=ID", typeof(CustomDataContext), null, "GET", 400);
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("DELETE request with $select causes null reference exception")]
+            // [TestMethod, Variation("DELETE request with $select causes null reference exception")]
             public void TestDeleteRequestWithSelect()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -5586,7 +5500,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation]
+            // [TestMethod, Variation]
             public void TestSettingContextUriOnDataContext()
             {
                 using (CustomDataContext.CreateChangeScope())
@@ -5642,7 +5556,7 @@ Content-Type: application/atom+xml;type=entry
                     });
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Make sure the server can deserialize what it serializes - <m:properties> is not a required child of <atom:content> element")]
+            // [TestMethod, Variation("Make sure the server can deserialize what it serializes - <m:properties> is not a required child of <atom:content> element")]
             public void ServerShouldRoundtripWhetherPropertiesPresentInContentElement()
             {
                 using (CustomDataContext.CreateChangeScope())
@@ -5675,7 +5589,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Accessing DataServiceHost.RequestHeaders/ResponseHeaders properties when host instance doesn't implement IDataServiceHost2 should throw exception")]
+            // [TestMethod, Variation("Accessing DataServiceHost.RequestHeaders/ResponseHeaders properties when host instance doesn't implement IDataServiceHost2 should throw exception")]
             public void AccessingHeaderWhenHostInstanceNotImplementIDataServiceHost2ShouldThrow()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
@@ -5710,7 +5624,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
 
-            [TestMethod, Variation("Medium trust bug for filter scenarios")]
+            // [TestMethod, Variation("Medium trust bug for filter scenarios")]
             [Ignore]
             public void TestMediumTrustForFilterScenarios()
             {
@@ -6139,7 +6053,7 @@ Content-Type: application/atom+xml;type=entry
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("IDSP: Spaces in a property name causes entity serialization to fail and not respond, but works fine in $metadata serialization")]
+            // [TestMethod, Variation("IDSP: Spaces in a property name causes entity serialization to fail and not respond, but works fine in $metadata serialization")]
             public void SpaceInPropertyNameShouldNotThrowDuringEntitySerialization()
             {
                 DSPMetadata metadata = new DSPMetadata("TestContainer", "TestNamespace");
@@ -6186,7 +6100,7 @@ Content-Type: application/atom+xml;type=entry
 
             #region IDSMP: Server does not respond to service-document request if a type is not marked read-only
             [Ignore] // Remove Atom
-            [TestMethod, Variation("IDSMP: Server does not respond to service-document request if a type is not marked read-only")]
+            // [TestMethod, Variation("IDSMP: Server does not respond to service-document request if a type is not marked read-only")]
             public void ServerShouldRespondToServiceDocRequestIfTypeNotMarkedReadOnly()
             {
                 foreach (string accept in new[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.MimeApplicationXml })
@@ -6446,7 +6360,7 @@ Content-Type: application/atom+xml;type=entry
                     });
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("For EF poco cases (no proxies), the update operation succeeds even if the etag specified is incorrect")]
+            // [TestMethod, Variation("For EF poco cases (no proxies), the update operation succeeds even if the etag specified is incorrect")]
             public void UpdateOperationShouldFailIfEtagIsIncorrect()
             {
                 Type contextType = typeof(AstoriaUnitTests.EFFK.CustomObjectContextPOCO);
@@ -6582,7 +6496,7 @@ Content-Type: application/atom+xml;type=entry
                 public int ID { get; set; }
             }
             [Ignore] // Remove Atom
-            [TestMethod, Variation("Check that the etag is cleared for named streams in the client when the provider doesn't specify an etag value.")]
+            // [TestMethod, Variation("Check that the etag is cleared for named streams in the client when the provider doesn't specify an etag value.")]
             public void EtagShouldBeClearedForNamedStreamsWhenNoEtagValuePresent()
             {
                 TestUtil.RunCombinations(new[] { MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges, MergeOption.NoTracking },

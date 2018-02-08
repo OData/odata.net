@@ -175,12 +175,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Converts a <see cref="ODataResource"/> to a string for use in a Url.
+        /// Converts a <see cref="ODataResourceBase"/> to a string for use in a Url.
         /// </summary>
         /// <param name="resource">Instance to convert.</param>
         /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
         /// <returns>A string representation of <paramref name="resource"/> to be added to a Url.</returns>
-        internal static string ConvertToUriEntityLiteral(ODataResource resource, IEdmModel model)
+        internal static string ConvertToUriEntityLiteral(ODataResourceBase resource, IEdmModel model)
         {
             ExceptionUtils.CheckArgumentNotNull(resource, "resource");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
@@ -190,18 +190,18 @@ namespace Microsoft.OData
                 context =>
             {
                 ODataWriter writer = context.CreateODataUriParameterResourceWriter(null, null);
-                writer.WriteStart(resource);
+                WriteStartResource(writer, resource);
                 writer.WriteEnd();
             });
         }
 
         /// <summary>
-        /// Converts a list of <see cref="ODataResource"/> to a string for use in a Url.
+        /// Converts a list of <see cref="ODataResourceBase"/> to a string for use in a Url.
         /// </summary>
         /// <param name="entries">Instance to convert.</param>
         /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
         /// <returns>A string representation of <paramref name="entries"/> to be added to a Url.</returns>
-        internal static string ConvertToUriEntitiesLiteral(IEnumerable<ODataResource> entries, IEdmModel model)
+        internal static string ConvertToUriEntitiesLiteral(IEnumerable<ODataResourceBase> entries, IEdmModel model)
         {
             ExceptionUtils.CheckArgumentNotNull(entries, "entries");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
@@ -216,7 +216,7 @@ namespace Microsoft.OData
                 // TODO: Write Complex Properties in entry
                 foreach (var resource in entries)
                 {
-                    writer.WriteStart(resource);
+                    WriteStartResource(writer, resource);
                     writer.WriteEnd();
                 }
 
@@ -484,6 +484,25 @@ namespace Microsoft.OData
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Writes an <see cref="ODataResourceBase"/> as either a resource or a deleted resource.
+        /// </summary>
+        /// <param name="writer">The <see cref="ODataWriter"/> to use to write the (deleted) resource.</param>
+        /// <param name="resource">The resource, or deleted resource, to write.</param>
+        private static void WriteStartResource(ODataWriter writer, ODataResourceBase resource)
+        {
+            ODataDeletedResource deletedResource = resource as ODataDeletedResource;
+            if (deletedResource != null)
+            {
+                writer.WriteStart(deletedResource);
+            }
+            else
+            {
+                // will write a null resource if resource is not an ODataResource
+                writer.WriteStart(resource as ODataResource);
+            }
         }
 
         /// <summary>

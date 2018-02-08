@@ -53,7 +53,6 @@ namespace Microsoft.OData.Client
         /// <param name="writer">The odata writer.</param>
         /// <param name="requestPipeline">The request pipeline configuration.</param>
         /// <returns>The odata Writer Wrapper</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1811:'ODataReaderWrapper.CreateForTest(ODataReader)' appears to have no upstream public or protected callers.", Justification = "Method is only used for testing purposes.")]
         internal static ODataWriterWrapper CreateForEntryTest(ODataWriter writer, DataServiceClientRequestPipelineConfiguration requestPipeline)
         {
             return new ODataWriterWrapper(writer, requestPipeline);

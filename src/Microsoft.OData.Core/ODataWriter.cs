@@ -53,6 +53,45 @@ namespace Microsoft.OData
         public abstract Task WriteStartAsync(ODataResourceSet resourceSet);
 #endif
 
+        /// <summary>Starts the writing of a delta resource set.</summary>
+        /// <param name="deltaResourceSet">The resource set or collection to write.</param>
+        public virtual void WriteStart(ODataDeltaResourceSet deltaResourceSet)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Writes a delta resource set.</summary>
+        /// <param name="deltaResourceSet">The delta resource set or collection to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataDeltaResourceSet deltaResourceSet)
+        {
+            WriteStart(deltaResourceSet);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a delta resource set and performs an action in-between.</summary>
+        /// <param name="deltaResourceSet">The delta resource set or collection to write.</param>
+        /// <param name="nestedAction">The action to perform in-between writing the resource set.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataDeltaResourceSet deltaResourceSet, Action nestedAction)
+        {
+            WriteStart(deltaResourceSet);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously start writing a resource set. </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <param name="deltaResourceSet">The resource set or collection to write.</param>
+        public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <summary>Starts the writing of a resource.</summary>
         /// <param name="resource">The resource or item to write.</param>
         public abstract void WriteStart(ODataResource resource);
@@ -79,11 +118,116 @@ namespace Microsoft.OData
             return this;
         }
 
+        /// <summary>Writes a deleted resource.</summary>
+        /// <param name="deletedResource">The deleted resource to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataDeletedResource deletedResource)
+        {
+            WriteStart(deletedResource);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a deleted resource and performs an action in-between.</summary>
+        /// <param name="deletedResource">The deletedresource to write.</param>
+        /// <param name="nestedAction">The action to perform in-between the writing.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataDeletedResource deletedResource, Action nestedAction)
+        {
+            WriteStart(deletedResource);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a delta link.</summary>
+        /// <param name="deltaLink">The delta link to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataDeltaLink deltaLink)
+        {
+            WriteDeltaLink(deltaLink);
+            return this;
+        }
+
+        /// <summary>Writes a deleted link.</summary>
+        /// <param name="deltaDeletedLink">The delta deleted link to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataDeltaDeletedLink deltaDeletedLink)
+        {
+            WriteDeltaDeletedLink(deltaDeletedLink);
+            return this;
+        }
+
 #if PORTABLELIB
         /// <summary> Asynchronously start writing a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="resource">The resource or item to write.</param>
         public abstract Task WriteStartAsync(ODataResource resource);
+#endif
+
+
+        /// <summary> Starts writing a deleted resource.</summary>
+        /// <param name="deletedResource">The deleted resource to write.</param>
+        public virtual void WriteStart(ODataDeletedResource deletedResource)
+        {
+            throw new NotImplementedException();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously writing a delta deleted resource.
+        /// </summary>
+        /// <param name="deletedResource">The deleted resource to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public virtual Task WriteStartAsync(ODataDeletedResource deletedResource)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(deletedResource));
+        }
+
+#endif
+
+        /// <summary>
+        /// Write a delta link.
+        /// </summary>
+        /// <param name="deltaLink">The delta link to write.</param>
+        public virtual void WriteDeltaLink(ODataDeltaLink deltaLink)
+        {
+            throw new NotImplementedException();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously writing a delta link.
+        /// </summary>
+        /// <param name="deltaLink">The delta link to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public virtual Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteDeltaLink(deltaLink));
+        }
+
+#endif
+
+        /// <summary>
+        /// Write a delta deleted link.
+        /// </summary>
+        /// <param name="deltaDeletedLink">The delta deleted link to write.</param>
+        public virtual void WriteDeltaDeletedLink(ODataDeltaDeletedLink deltaDeletedLink)
+        {
+            throw new NotImplementedException();
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously write a delta deleted link.
+        /// </summary>
+        /// <param name="deltaDeletedLink">The delta link to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public virtual Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteDeltaDeletedLink(deltaDeletedLink));
+        }
+
 #endif
 
         /// <summary>Starts the writing of a nested resource info.</summary>
@@ -117,6 +261,32 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="nestedResourceInfo">The nested resource info to writer.</param>
         public abstract Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo);
+#endif
+
+        /// <summary>Writes a primitive value within an untyped collection.</summary>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        public virtual void WritePrimitive(ODataPrimitiveValue primitiveValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Writes a primitive value within an untyped collection.</summary>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataPrimitiveValue primitiveValue)
+        {
+            WritePrimitive(primitiveValue);
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously write a primitive value within an untyped collection. </summary>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        public virtual Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitive(primitiveValue));
+        }
 #endif
 
         /// <summary>Finishes the writing of a resource set, a resource, or a nested resource info.</summary>

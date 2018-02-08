@@ -32,7 +32,6 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""This is the type to use for all tagging terms"" />
   </TypeDefinition>
   <ComplexType Name=""OptionalParameterType"">
-    <Property Name=""IsOptional"" Type=""Edm.Boolean"" DefaultValue=""true"" />
     <Property Name=""DefaultValue"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""Default value for an optional parameter, using the same rules for the default value facet of a property."" />
     </Property>
@@ -40,6 +39,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <EnumType Name=""Permission"" IsFlags=""true"">
     <Member Name=""None"" Value=""0"" />
     <Member Name=""Read"" Value=""1"" />
+    <Member Name=""Write"" Value=""2"" />
     <Member Name=""ReadWrite"" Value=""3"" />
   </EnumType>
   <Term Name=""Description"" Type=""Edm.String"">

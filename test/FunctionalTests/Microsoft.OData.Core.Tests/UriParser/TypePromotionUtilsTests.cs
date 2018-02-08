@@ -313,6 +313,20 @@ namespace Microsoft.OData.Tests.UriParser
             left.ShouldBeEquivalentTo(HardCodedTestModel.GetPersonAddressProp().Type);
             right.ShouldBeEquivalentTo(EdmCoreModel.Instance.GetInt32(true));
         }
+
+        [Fact]
+        public void EqualsOnEnumAndStringIsSupported()
+        {
+            IEdmTypeReference left = HardCodedTestModel.GetPet2PetColorPatternProperty().Type;
+            IEdmTypeReference right = EdmCoreModel.Instance.GetString(true);
+            SingleValueNode leftNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", left));
+            SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
+            var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
+
+            result.Should().BeTrue();
+            left.ShouldBeEquivalentTo(HardCodedTestModel.GetPet2PetColorPatternProperty().Type);
+            right.ShouldBeEquivalentTo(HardCodedTestModel.GetPet2PetColorPatternProperty().Type);
+        }
         #endregion
 
         #region PromoteOperandType Tests (For Unary Operators)

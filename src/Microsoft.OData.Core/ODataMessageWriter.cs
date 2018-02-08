@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -66,10 +67,6 @@ namespace Microsoft.OData
         /// <summary>The <see cref="Encoding"/> of the payload to be written with this writer.</summary>
         /// <remarks>This is either set via the SetHeadersForPayload method or implicitly when one of the write (or writer creation) methods is called.</remarks>
         private Encoding encoding;
-
-        /// <summary>The batch boundary string if the payload to be written is a batch request or response.</summary>
-        /// <remarks>This is either set via the SetHeadersForPayload method or implicitly when the CreateBatchWriter method is called.</remarks>
-        private string batchBoundary;
 
         /// <summary>Flag to prevent writing more than one error to the payload.</summary>
         private bool writeErrorCalled;
@@ -258,12 +255,78 @@ namespace Microsoft.OData
         }
 #endif
 
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
+        /// <returns>The created writer.</returns>
+        public ODataWriter CreateODataDeltaResourceSetWriter()
+        {
+            return CreateODataDeltaResourceSetWriter(/*entitySet*/null, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        public ODataWriter CreateODataDeltaResourceSetWriter(IEdmEntitySetBase entitySet)
+        {
+            return CreateODataDeltaResourceSetWriter(entitySet, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a resource set.
+        /// </summary>
+        /// <returns>The created writer.</returns>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        public ODataWriter CreateODataDeltaResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataDeltaResourceSetWriter(entitySet, resourceType));
+        }
+
+#if PORTABLELIB
+
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync()
+        {
+            return CreateODataDeltaResourceSetWriterAsync(/*entitySet*/null, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet)
+        {
+            return CreateODataDeltaResourceSetWriterAsync(entitySet, /*entityType*/null);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataDeltaResourceSetWriterAsync(entitySet, entityType));
+        }
+#endif
+
         /// <summary>
         /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        [Obsolete("Use CreateODataDeltaResourceSetWriter.", false)]
         public ODataDeltaWriter CreateODataDeltaWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataDeltaWriter();
@@ -279,6 +342,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
+        [Obsolete("Use CreateODataDeltaResourceSetWriterAsync.", false)]
         public Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataResourceSetWriter();
@@ -461,7 +525,7 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataBatchWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.Batch,
-                (context) => context.CreateODataBatchWriter(this.batchBoundary));
+                (context) => context.CreateODataBatchWriter());
         }
 
 #if PORTABLELIB
@@ -472,7 +536,7 @@ namespace Microsoft.OData
             this.VerifyCanCreateODataBatchWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Batch,
-                (context) => context.CreateODataBatchWriterAsync(this.batchBoundary));
+                (context) => context.CreateODataBatchWriterAsync());
         }
 #endif
 
@@ -815,7 +879,7 @@ namespace Microsoft.OData
             if (!string.IsNullOrEmpty(contentType))
             {
                 ODataPayloadKind computedPayloadKind;
-                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.mediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind, out this.batchBoundary);
+                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.mediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind);
                 Debug.Assert(this.writerPayloadKind == computedPayloadKind, "The payload kinds must always match.");
 
                 if (this.settings.HasJsonPaddingFunction())
@@ -834,30 +898,13 @@ namespace Microsoft.OData
                 // we fall back to a default (of null accept headers).
                 this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.mediaTypeResolver, out this.mediaType, out this.encoding);
 
-                if (this.writerPayloadKind == ODataPayloadKind.Batch)
+                IEnumerable<KeyValuePair<string, string>> updatedParameters;
+                contentType = format.GetContentType(this.mediaType, this.encoding, this.writingResponse, out updatedParameters);
+
+                // Re-create the media type if the parameters list is updated.
+                if (this.mediaType.Parameters != updatedParameters)
                 {
-                    // Note that this serves as verification only for now, since we only support a single content type and format for $batch payloads.
-                    Debug.Assert(this.format == ODataFormat.Batch, "$batch should only support batch format since it's format independent.");
-                    Debug.Assert(this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed, "$batch content type is currently only supported to be multipart/mixed.");
-
-                    //// TODO: What about the encoding - should we verify that it's 7bit US-ASCII only?
-
-                    this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
-
-                    // Set the content type header here since all headers have to be set before getting the stream
-                    // Note that the mediaType may have additional parameters, which we ignore here (intentional as per MIME spec).
-                    // Note that we always generate a new boundary string here, even if the accept header contained one.
-                    // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
-                    // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
-                    // and at least in theory security issues.
-                    contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
-                }
-                else
-                {
-                    this.batchBoundary = null;
-
-                    // Compute the content type (incl. charset) and set the Content-Type header on the response message
-                    contentType = HttpUtils.BuildContentType(this.mediaType, this.encoding);
+                    this.mediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, updatedParameters);
                 }
 
                 if (this.settings.HasJsonPaddingFunction())
@@ -1259,7 +1306,6 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeAsyncAction">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
         private Task WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task> writeAsyncAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
@@ -1286,7 +1332,6 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
         private Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task<TResult>> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream

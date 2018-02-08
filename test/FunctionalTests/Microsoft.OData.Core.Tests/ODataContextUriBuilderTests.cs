@@ -27,9 +27,11 @@ namespace Microsoft.OData.Tests
         private Uri metadataDocumentBaseUri;
         private EdmModel edmModel;
         private EdmEntitySet citySet;
+        private EdmEntitySet districtSet;
         private EdmSingleton singletonCity;
         private EdmComplexType addressType;
         private EdmEntityType cityType;
+        private EdmEntityType districtType;
         private EdmEntityType capitolCityType;
         private ODataContextUriBuilder responseContextUriBuilder;
         private ODataContextUriBuilder requestContextUriBuilder;
@@ -101,10 +103,15 @@ namespace Microsoft.OData.Tests
             this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(TotalId)");
         }
 
-        [Fact]
-        public void FeedContextUriWithApplyAggreagateOnDynamicProperty()
+        [Theory]
+        [InlineData("sum")]
+        [InlineData("average")]
+        [InlineData("max")]
+        [InlineData("min")]
+        [InlineData("countdistinct")]
+        public void FeedContextUriWithApplyAggreagateOnDynamicProperty(string method)
         {
-            string applyClause = "aggregate(DynamicProperty with sum as DynamicPropertyTotal)";
+            string applyClause = "aggregate(DynamicProperty with " + method + " as DynamicPropertyTotal)";
 
             this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)");
         }
@@ -350,6 +357,26 @@ namespace Microsoft.OData.Tests
             ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo() { ExpectedTypeName = "People", NavigationSourceEntityTypeName = "People", NavigationSourceName = "Boss", NavigationSourceKind = EdmNavigationSourceKind.Singleton, };
             var requestSingletonTypeContextWithoutModel = ODataResourceTypeContext.Create(serializationInfo, /*navigationSource*/null, /*navigationSourceEntityType*/null, /*expectedEntityType*/null, true);
             this.CreateEntryContextUri(requestSingletonTypeContextWithoutModel).OriginalString.Should().Be(BuildExpectedContextUri("#Boss", false));
+        }
+
+        [Fact]
+        public void ShouldWriteEntryContextUriWithOperationSegment()
+        {
+            var entitySetSegment = new EntitySetSegment(this.citySet);
+            var keys = new[] { new KeyValuePair<string, object>("Id", 123) };
+            var keySegment = new KeySegment(keys, cityType, citySet);
+            var operation = edmModel.SchemaElements.OfType<IEdmFunction>().First(f => f.Name == "GetOneDistrict");
+            OperationSegment operationSegment = new OperationSegment(operation, districtSet);
+
+            ODataPath path = new ODataPath(entitySetSegment, keySegment, operationSegment);
+            ODataUri odataUri = new ODataUri
+            {
+                Path = path
+            };
+            ODataContextUrlInfo info = ODataContextUrlInfo.Create(this.districtSet, "TestModel.District", true, odataUri);
+
+            Uri uri = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Resource, info);
+            uri.OriginalString.Should().Be(BuildExpectedContextUri("#Districts/$entity", false));
         }
 
         #endregion entry context uri
@@ -644,7 +671,7 @@ namespace Microsoft.OData.Tests
             capitolCityType.AddStructuralProperty("CapitolType", EdmCoreModel.Instance.GetString( /*isNullable*/false));
             this.edmModel.AddElement(capitolCityType);
 
-            EdmEntityType districtType = new EdmEntityType("TestModel", "District");
+            this.districtType = new EdmEntityType("TestModel", "District");
             EdmStructuralProperty districtIdProperty = districtType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
             districtType.AddKeys(districtIdProperty);
             districtType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));
@@ -660,9 +687,17 @@ namespace Microsoft.OData.Tests
             capitolCityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "OutlyingDistricts", Target = districtType, TargetMultiplicity = EdmMultiplicity.Many });
 
             this.citySet = defaultContainer.AddEntitySet("Cities", cityType);
-            defaultContainer.AddEntitySet("Districts", districtType);
+            this.districtSet = defaultContainer.AddEntitySet("Districts", districtType);
 
             this.singletonCity = defaultContainer.AddSingleton("SingletonCity", cityType);
+
+            // operations
+            var cityReference = new EdmEntityTypeReference(cityType, true);
+            var districtReference = new EdmEntityTypeReference(districtType, true);
+            IEdmPathExpression path = new EdmPathExpression("binding/Districts");
+            var function = new EdmFunction("TestModel", "GetOneDistrict", districtReference, true, path, true /*isComposable*/);
+            function.AddParameter("binding", cityReference);
+            edmModel.AddElement(function);
         }
 
         private void InitializeTypeContext()

@@ -43,6 +43,7 @@ namespace Microsoft.OData.Tests.UriParser
             uriParser.ParseSkip().Should().Be(null);
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
+            uriParser.ParseCompute().Should().BeNull();
         }
 
         [Fact]
@@ -58,6 +59,7 @@ namespace Microsoft.OData.Tests.UriParser
                 {"$skip"    , ""},
                 {"$count"   , ""},
                 {"$search"  , ""},
+                {"$compute" , ""},
                 {"$unknow"  , ""},
             });
 
@@ -66,6 +68,7 @@ namespace Microsoft.OData.Tests.UriParser
             results.AllSelected.Should().BeTrue();
             results.SelectedItems.Should().HaveCount(0);
             uriParser.ParseOrderBy().Should().BeNull();
+            uriParser.ParseCompute().Should().BeNull();
             Action action = () => uriParser.ParseTop();
             action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
             action = () => uriParser.ParseSkip();
@@ -89,6 +92,7 @@ namespace Microsoft.OData.Tests.UriParser
                 {"$skip"    , null},
                 {"$count"   , null},
                 {"$search"  , null},
+                {"$compute" , null},
                 {"$unknow"  , null},
             });
 
@@ -99,6 +103,7 @@ namespace Microsoft.OData.Tests.UriParser
             uriParser.ParseSkip().Should().Be(null);
             uriParser.ParseCount().Should().Be(null);
             uriParser.ParseSearch().Should().BeNull();
+            uriParser.ParseCompute().Should().BeNull();
         }
     }
 }

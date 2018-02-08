@@ -22,6 +22,7 @@ namespace AstoriaUnitTests.Tests.Server
     using System.IO;
     using ServiceOperation = Microsoft.OData.Service.Providers.ServiceOperation;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     [TestClass]
     public class SpatialTests
     {
@@ -127,7 +128,7 @@ namespace AstoriaUnitTests.Tests.Server
                                      });
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod, Variation("Validate that ServiceOperations with spatial parameters work correctly")]
+        // [TestCategory("Partition2"), TestMethod, Variation("Validate that ServiceOperations with spatial parameters work correctly")]
         public void TestServiceOperationsWithSpatialParameters()
         {
 
@@ -308,7 +309,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod, Variation("Serialize Geodetic properties on entities using the ObjectContextServiceProvider and Atom and Json formats")]
+        // [TestCategory("Partition2"), TestMethod, Variation("Serialize Geodetic properties on entities using the ObjectContextServiceProvider and Atom and Json formats")]
         public void SerializeGeodeticPropertiesInResource()
         {
             var testCases = new[] 
@@ -357,7 +358,7 @@ namespace AstoriaUnitTests.Tests.Server
             return new ResourceVerification(request, payloadFormat, id, defaultValues);
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod, Variation("Insert and update Geodetic properties on entities using the ObjectContextServiceProvider and all supported format")]
+        // [TestCategory("Partition2"), TestMethod, Variation("Insert and update Geodetic properties on entities using the ObjectContextServiceProvider and all supported format")]
         public void InsertAndUpdateGeodeticProperties()
         {
             var testCases = new[] 

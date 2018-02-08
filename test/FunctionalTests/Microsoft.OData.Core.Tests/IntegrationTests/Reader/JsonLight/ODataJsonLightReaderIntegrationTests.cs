@@ -800,7 +800,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
         }
 
-        [Fact(Skip = "Dynmaic property in context uri")]
+        [Fact]
         public void ReadingTopLevelComplexCollection_OpenPropertyContextUri()
         {
             const string payload =

@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class EdmTypeSemantics
     {
-        #region IsCollection, IsEntity, IsComplex, ...
+        #region IsCollection, IsEntity, IsComplex, IsPath...
 
         /// <summary>
         /// Returns true if this reference refers to a collection.
@@ -37,6 +37,17 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.TypeKind() == EdmTypeKind.Entity;
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a path type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a path type.</returns>
+        public static bool IsPath(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.TypeKind() == EdmTypeKind.Path;
         }
 
         /// <summary>
@@ -484,7 +495,24 @@ namespace Microsoft.OData.Edm
         public static bool IsStream(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.PrimitiveKind() == EdmPrimitiveTypeKind.Stream;
+            return type.Definition.IsStream();
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a stream type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a stream type.</returns>
+        public static bool IsStream(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream;
         }
 
         /// <summary>
@@ -685,6 +713,7 @@ namespace Microsoft.OData.Edm
                         case EdmPrimitiveTypeKind.SByte:
                         case EdmPrimitiveTypeKind.Single:
                         case EdmPrimitiveTypeKind.Stream:
+                        case EdmPrimitiveTypeKind.PrimitiveType:
                             return new EdmPrimitiveTypeReference(primitiveDefinition, type.IsNullable);
                         case EdmPrimitiveTypeKind.Binary:
                             return type.AsBinary();
@@ -981,6 +1010,38 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// If this reference is of a path type, this will return a valid path type reference to the type definition.
+        /// Otherwise, it will return a bad path type reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>A valid path type reference if the definition of the reference is of a path type.
+        /// Otherwise a bad path type reference.</returns>
+        public static IEdmPathTypeReference AsPath(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPathTypeReference reference = type as IEdmPathTypeReference;
+            if (reference != null)
+            {
+                return reference;
+            }
+
+            IEdmType typeDefinition = type.Definition;
+            if (typeDefinition.TypeKind == EdmTypeKind.Path)
+            {
+                return new EdmPathTypeReference((IEdmPathType)typeDefinition, type.IsNullable);
+            }
+
+            string typeFullName = type.FullName();
+            List<EdmError> errors = new List<EdmError>(type.Errors());
+            if (errors.Count == 0)
+            {
+                errors.AddRange(ConversionError(type.Location(), typeFullName, EdmConstants.Type_Path));
+            }
+
+            return new BadPathTypeReference(typeFullName, type.IsNullable, errors);
+        }
+
+        /// <summary>
         /// If this reference is of a spatial type, this will return a valid spatial type reference to the type definition. Otherwise, it will return a bad spatial type reference.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
@@ -1108,7 +1169,11 @@ namespace Microsoft.OData.Edm
         /// <returns>The primitive kind of the definition of this reference.</returns>
         public static EdmPrimitiveTypeKind PrimitiveKind(this IEdmTypeReference type)
         {
-            EdmUtil.CheckArgumentNull(type, "type");
+            if (type == null)
+            {
+                return EdmPrimitiveTypeKind.None;
+            }
+
             IEdmType typeDefinition = type.Definition;
             if (typeDefinition.TypeKind != EdmTypeKind.Primitive)
             {
@@ -1207,6 +1272,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.SByte:
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                     return new EdmPrimitiveTypeReference(type, isNullable);
                 case EdmPrimitiveTypeKind.Binary:
                     return new EdmBinaryTypeReference(type, isNullable);
@@ -1264,6 +1330,12 @@ namespace Microsoft.OData.Edm
             if (enumType != null)
             {
                 return new EdmEnumTypeReference(enumType, isNullable);
+            }
+
+            IEdmPathType pathType = type as IEdmPathType;
+            if (pathType != null)
+            {
+                return new EdmPathTypeReference(pathType, isNullable);
             }
 
             throw new InvalidOperationException(Edm.Strings.EdmType_UnexpectedEdmType);

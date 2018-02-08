@@ -57,9 +57,10 @@ namespace Microsoft.OData.UriParser
             IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
             if (childStructuredType == null)
             {
+                SingleValueNode singleValueNode = parent as SingleValueNode;
                 FunctionCallBinder functionCallBinder = new FunctionCallBinder(bindMethod, state);
                 QueryNode functionCallNode;
-                if (functionCallBinder.TryBindDottedIdentifierAsFunctionCall(dottedIdentifierToken, parent as SingleValueNode, out functionCallNode))
+                if (functionCallBinder.TryBindDottedIdentifierAsFunctionCall(dottedIdentifierToken, singleValueNode, out functionCallNode))
                 {
                     return functionCallNode;
                 }
@@ -82,7 +83,15 @@ namespace Microsoft.OData.UriParser
                     IEdmTypeReference edmTypeReference = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver).ToTypeReference();
                     if (edmTypeReference is IEdmPrimitiveTypeReference || edmTypeReference is IEdmEnumTypeReference)
                     {
-                        return new ConstantNode(dottedIdentifierToken.Identifier, dottedIdentifierToken.Identifier);
+                        IEdmPrimitiveType childPrimitiveType = childType as IEdmPrimitiveType;
+                        if (childPrimitiveType != null && dottedIdentifierToken.NextToken != null)
+                        {
+                            return new SingleValueCastNode(singleValueNode, childPrimitiveType);
+                        }
+                        else
+                        {
+                            return new ConstantNode(dottedIdentifierToken.Identifier, dottedIdentifierToken.Identifier);
+                        }
                     }
                     else
                     {

@@ -126,7 +126,7 @@ Partial Public Class ClientModule
                                                                    Nothing)
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextExecute_NullBaseUri_AbsoluteRequestUri_Success()
             Dim context = New DataServiceContext()
             'context.EnableAtom = True
@@ -335,8 +335,7 @@ Partial Public Class ClientModule
             Assert.IsTrue(context.Entities.Single().EditLink.OriginalString.StartsWith(context.BaseUri.OriginalString), "the baseuri is not correct")
         End Sub
 
-        <Ignore>
-        <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub LinqQueryResolvesUriOnExecuteWhenReused()
             ' be sure that a change to the baseUri after one execute is picked up on the next
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -388,7 +387,7 @@ Partial Public Class ClientModule
         '    StringAssert.Contains(q.ToString(), web1.BaseUri, "didn't use the latest baseUri")
         'End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub SetSaveStreamDoesNotCallEntitySetResolverOrBaseUri()
             ' Arange
             Dim ctx = New DataServiceContext(streamingWeb.ServiceRoot)
@@ -449,7 +448,7 @@ Partial Public Class ClientModule
             Return byteList.ToArray()
         End Function
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub LinkEntitiesDoesNotCallEntitySetResolverOrBaseUri()
             Dim newCust As NorthwindSimpleModel.Customers = New NorthwindSimpleModel.Customers() With {.CustomerID = "FOO01", .CompanyName = "Foo Store"}
             Dim newOrder As NorthwindSimpleModel.Orders = New NorthwindSimpleModel.Orders() With {.OrderID = 9999, .OrderDate = DateTime.Now}
@@ -477,7 +476,7 @@ Partial Public Class ClientModule
             northwindCtx.SaveChanges()
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub ExecuteWithAbsoluteUriDoesNotCallEntitySetResolverOrBaseUri()
             Dim ctx = New DataServiceContext()
             'ctx.EnableAtom = True
@@ -489,7 +488,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(2, count, "execute should return the correct number of orders")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub LoadPropertyDoesNotCallEntitySetResolverOrBaseUri()
             Dim cust As NorthwindSimpleModel.Customers = northwindCtx.CreateQuery(Of NorthwindSimpleModel.Customers)("Customers").Execute().First()
             northwindCtx.BaseUri = Nothing
@@ -500,7 +499,7 @@ Partial Public Class ClientModule
             Assert.IsFalse(cust.Orders.Count = 0, "No orders were loaded")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub LinqQueryResolvesUriOnlyOnExecute()
             Const entitySetName As String = "Values"
             'Arange
@@ -534,7 +533,7 @@ Partial Public Class ClientModule
                                                 "foo")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub CaptureUriDuringAddObjectCall()
             'Arrange
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -597,7 +596,7 @@ Partial Public Class ClientModule
             Assert.AreEqual("NewFoo", TypedCustomDataContext(Of MyAllTypes1).CurrentValues.First().StringType, "The update was not saved")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub ExecuteBatchWithRelativeUri()
             ' Arrange
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -623,7 +622,7 @@ Partial Public Class ClientModule
         End Sub
 
         'Remove Atom
-        <Ignore> <TestCategory("Partition3")> <TestMethod()>
+        ' <TestCategory("Partition3")> <TestMethod()>
         Public Sub SimpleCRUDTest()
 
             For Each mode As SaveChangesMode In [Enum].GetValues(GetType(SaveChangesMode))

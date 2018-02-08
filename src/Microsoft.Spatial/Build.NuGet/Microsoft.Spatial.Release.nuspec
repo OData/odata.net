@@ -7,40 +7,23 @@
     <version>$VersionNuGetSemantic$</version>
     <authors>Microsoft Corporation</authors>
     <owners>Microsoft Corporation</owners>
-    <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>Contains classes and methods that facilitate geography and geometry spatial operations. Supports OData v4 only.</summary>
     <description>Contains classes and methods that facilitate geography and geometry spatial operations. Support OData v4 only. Targets .NET Platform Standard 1.1. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
-    <releaseNotes>http://odata.github.io/odata.net/#ODL-$VersionFullSemantic$</releaseNotes>
+    <releaseNotes>http://odata.github.io/odata.net/v7/#ODL-$VersionFullSemantic$</releaseNotes>
+    <copyright>© Microsoft Corporation.  All rights reserved.</copyright>
   </metadata>
   <files>
-    <file src=".NETPortable\v4.5\Microsoft.Spatial.dll" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.Spatial.pdb" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.Spatial.xml" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\2052\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\zh-Hans" />
-    <file src=".NETPortable\v4.5\1028\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\zh-Hant" />
-    <file src=".NETPortable\v4.5\1031\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\de" />
-    <file src=".NETPortable\v4.5\3082\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\es" />
-    <file src=".NETPortable\v4.5\1036\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\fr" />
-    <file src=".NETPortable\v4.5\1040\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\it" />
-    <file src=".NETPortable\v4.5\1041\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\ja" />
-    <file src=".NETPortable\v4.5\1042\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\ko" />
-    <file src=".NETPortable\v4.5\1049\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\ru" />
-    <file src=".NETPortable\v5.0\Microsoft.Spatial.dll" target="lib\netstandard1.1" />
-    <file src=".NETPortable\v5.0\Microsoft.Spatial.pdb" target="lib\netstandard1.1" />
-    <file src=".NETPortable\v5.0\Microsoft.Spatial.xml" target="lib\netstandard1.1" />
-    <file src=".NETPortable\v5.0\2052\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\zh-Hans" />
-    <file src=".NETPortable\v5.0\1028\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\zh-Hant" />
-    <file src=".NETPortable\v5.0\1031\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\de" />
-    <file src=".NETPortable\v5.0\3082\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\es" />
-    <file src=".NETPortable\v5.0\1036\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\fr" />
-    <file src=".NETPortable\v5.0\1040\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\it" />
-    <file src=".NETPortable\v5.0\1041\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\ja" />
-    <file src=".NETPortable\v5.0\1042\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\ko" />
-    <file src=".NETPortable\v5.0\1049\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\ru" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.Spatial.dll" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.Spatial.pdb" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.Spatial.xml" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.Spatial.dll" target="lib\netstandard1.1" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.Spatial.pdb" target="lib\netstandard1.1" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.Spatial.xml" target="lib\netstandard1.1" />
     <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />

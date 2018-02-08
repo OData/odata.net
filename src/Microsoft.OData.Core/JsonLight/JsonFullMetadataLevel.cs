@@ -48,14 +48,6 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Indicates which level of context Url should be used when writing payload.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get { return ODataContextUrlLevel.Full; }
-        }
-
-        /// <summary>
         /// Returns the metadata document URI which has been validated to be non-null.
         /// </summary>
         private Uri NonNullMetadataDocumentUri
@@ -95,7 +87,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
-            ODataResource resource,
+            ODataResourceBase resource,
             IODataResourceTypeContext typeContext,
             ODataResourceSerializationInfo serializationInfo,
             IEdmStructuredType actualResourceType,
@@ -136,7 +128,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resource">The resource to inject the builder.</param>
         /// <param name="builder">The metadata builder to inject.</param>
-        internal override void InjectMetadataBuilder(ODataResource resource, ODataResourceMetadataBuilder builder)
+        internal override void InjectMetadataBuilder(ODataResourceBase resource, ODataResourceMetadataBuilder builder)
         {
             base.InjectMetadataBuilder(resource, builder);
 

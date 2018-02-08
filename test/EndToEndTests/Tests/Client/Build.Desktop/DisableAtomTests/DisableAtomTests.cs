@@ -252,8 +252,8 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             }
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod]
+        // [Ignore] // Remove Atom
+        // [TestMethod] // github issuse: #896
         public void QueryUsingAtomShouldBeFailedClientTest()
         {
             // TestClientContext.Format.UseAtom();
@@ -272,8 +272,9 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             Assert.IsTrue(false);
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod]
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // [Ignore] // Remove Atom
+        // [TestMethod] // github issuse: #896
         public void UpdateUsingAtomShouldBeFailedClientTest()
         {
             TestClientContext.Format.UseJson(Model);
@@ -302,8 +303,8 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             Assert.IsTrue(false);
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod]
+        // [Ignore] // Remove Atom
+        // [TestMethod] // github issuse: #896
         public void InsertUsingAtomShouldBeFailedClientTest()
         {
             // TestClientContext.Format.UseAtom();
@@ -335,6 +336,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
                 return;
             }
         }
+#endif
 
         #endregion
 

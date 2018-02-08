@@ -100,6 +100,12 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\ExceptionUtils.cs">
       <Link>ALinq\UriParser\ExceptionUtils.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ComputeToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\ComputeToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ComputeExpressionToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
+    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ExpandTermToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\ExpandTermToken.cs</Link>
     </Compile>
@@ -135,6 +141,9 @@
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\ISyntacticTreeVisitor.cs">
       <Link>ALinq\UriParser\Visitors\ISyntacticTreeVisitor.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\SyntacticTreeVisitor.cs">
+      <Link>ALinq\UriParser\Visitors\SyntacticTreeVisitor.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\LambdaToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\LambdaToken.cs</Link>
@@ -848,6 +857,9 @@
     </None>
     <Compile Include="..\Annotation\InstanceAnnotationDictWeakKeyComparer.cs">
       <Link>Annotation\InstanceAnnotationDictWeakKeyComparer.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Attribute\IgnoreClientPropertyAttribute.cs">
+      <Link>Attribute\IgnoreClientPropertyAttribute.cs</Link>
     </Compile>
     <Compile Include="..\WeakDictionary.cs">
       <Link>WeakDictionary.cs</Link>

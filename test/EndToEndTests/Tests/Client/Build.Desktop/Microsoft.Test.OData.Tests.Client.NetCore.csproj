@@ -1,0 +1,147 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
+    <RootNamespace>Microsoft.Test.OData.Tests.Client</RootNamespace>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <OutputPath>..\..\..\..\..\bin\AnyCPU\$(Configuration)\Test\.NETPortable</OutputPath>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="AsyncRequestTests\**" />
+    <Compile Remove="CodeGenerationTests\**" />
+    <Compile Remove="ComplexTypeTests\**" />
+    <Compile Remove="ContainmentTest\**" />
+    <Compile Remove="CustomInstanceAnnotationsTests\**" />
+    <Compile Remove="ODataSimplifiedServiceTests\**" />
+    <Compile Remove="OpenTypesTests\**" />
+    <Compile Remove="PayloadValueConverterTests\**" />
+    <Compile Remove="PipelineEventsTests\**" />
+    <Compile Remove="PluggableFormatServiceTests\**" />
+    <Compile Remove="PropertyTrackingTests\**" />
+    <Compile Remove="UrlModifyingTests\**" />
+    <EmbeddedResource Remove="AsyncRequestTests\**" />
+    <EmbeddedResource Remove="CodeGenerationTests\**" />
+    <EmbeddedResource Remove="ComplexTypeTests\**" />
+    <EmbeddedResource Remove="ContainmentTest\**" />
+    <EmbeddedResource Remove="CustomInstanceAnnotationsTests\**" />
+    <EmbeddedResource Remove="ODataSimplifiedServiceTests\**" />
+    <EmbeddedResource Remove="OpenTypesTests\**" />
+    <EmbeddedResource Remove="PayloadValueConverterTests\**" />
+    <EmbeddedResource Remove="PipelineEventsTests\**" />
+    <EmbeddedResource Remove="PluggableFormatServiceTests\**" />
+    <EmbeddedResource Remove="PropertyTrackingTests\**" />
+    <EmbeddedResource Remove="UrlModifyingTests\**" />
+    <None Remove="AsyncRequestTests\**" />
+    <None Remove="CodeGenerationTests\**" />
+    <None Remove="ComplexTypeTests\**" />
+    <None Remove="ContainmentTest\**" />
+    <None Remove="CustomInstanceAnnotationsTests\**" />
+    <None Remove="ODataSimplifiedServiceTests\**" />
+    <None Remove="OpenTypesTests\**" />
+    <None Remove="PayloadValueConverterTests\**" />
+    <None Remove="PipelineEventsTests\**" />
+    <None Remove="PluggableFormatServiceTests\**" />
+    <None Remove="PropertyTrackingTests\**" />
+    <None Remove="UrlModifyingTests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ActionOverloadingTests\ActionOverloadingEndToEndTests.cs" />
+    <Compile Remove="ClientTests\ClientOpenTypeUpdateTests.cs" />
+    <Compile Remove="ClientTests\ClientQueryTests.cs" />
+    <Compile Remove="ClientTests\ClientUpdateTests.cs" />
+    <Compile Remove="ClientWithoutTypeResolverTests\JsonWithoutTypeResolverTests.cs" />
+    <Compile Remove="ClientWithoutTypeResolverTests\MismatchedClientModelWithoutTypeResolverTests.cs" />
+    <Compile Remove="ClientWithoutTypeResolverTests\OpenTypesWithoutTypeResolverTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\ClientEndToEndTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\ClientUrlConventionsTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\DefaultUrlConventionsTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\DollarSegmentTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\LiteralFormatTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\PrimitiveKeyValuesTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\StreamTests.cs" />
+    <Compile Remove="KeyAsSegmentTests\UpdateTests.cs" />
+    <Compile Remove="ModelReferenceTests\ModelReferenceClientTests.cs" />
+    <Compile Remove="ODataWCFServiceTests\AbstractEntityTypeTests.cs" />
+    <Compile Remove="ODataWCFServiceTests\IDReadLinkEditLinkTests.cs" />
+    <Compile Remove="OperationTests\OperationClientTests.cs" />
+    <Compile Remove="OperationTests\OperationT4Tests.cs" />
+    <Compile Remove="QueryCountTests.cs" />
+    <Compile Remove="SingletonTests\SingletonClientTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs" Link="References\ODataItemWrapper.cs" />
+    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs" Link="DisableAtomTests\ODataNestedResourceInfoWrapper.cs" />
+    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs" Link="DisableAtomTests\ODataResourceSetWrapper.cs" />
+    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceWrapper.cs" Link="DisableAtomTests\ODataResourceWrapper.cs" />
+    <Compile Include="..\..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataWriterHelper.cs" Link="DisableAtomTests\ODataWriterHelper.cs" />
+    <Compile Include="..\..\..\Framework\Core\Client\ClientExceptionUtil.cs" Link="ClientTests\ClientExceptionUtil.cs" />
+    <Compile Include="..\..\..\Framework\Core\Client\DataServiceContextWrapper.cs" Link="ServiceWrapper\DataServiceContextWrapper.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\AssemblyResourceLookup.cs" Link="References\AssemblyResourceLookup.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\DataComparisonException.cs" Link="References\DataComparisonException.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\ExceptionUtilities.cs" Link="References\ExceptionUtilities.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\HttpHeaders.cs" Link="ClientTests\HttpHeaders.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\IResourceLookup.cs" Link="References\IResourceLookup.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\MimeTypes.cs" Link="ClientTests\MimeTypes.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\TestFailedException.cs" Link="References\TestFailedException.cs" />
+    <Compile Include="..\..\..\Framework\Core\Common\ToStringConverter.cs" Link="References\ToStringConverter.cs" />
+    <Compile Include="..\..\..\Framework\Core\Server\IServiceWrapper.cs" Link="ServiceWrapper\IServiceWrapper.cs" />
+    <Compile Include="..\..\..\Framework\Core\Verification\IStringResourceVerifier.cs" Link="References\IStringResourceVerifier.cs" />
+    <Compile Include="..\..\..\Framework\Core\Verification\StringResourceUtil.cs" Link="References\StringResourceUtil.cs" />
+    <Compile Include="..\..\..\Framework\Core\Verification\StringResourceVerifier.cs" Link="References\StringResourceVerifier.cs" />
+    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs" />
+    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs" />
+    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs" />
+    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs" />
+    <Compile Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs" />
+    <Compile Include="..\..\..\Services\TestServices\IServiceUriGenerator.cs" Link="ServiceWrapper\IServiceUriGenerator.cs" />
+    <Compile Include="..\..\..\Services\TestServices\OpenTypesServiceClientTypes.cs" Link="ClientWithoutTypeResolverTests\OpenTypesServiceClientTypes.cs" />
+    <Compile Include="..\..\..\Services\TestServices\Service References\ODataWCFModelReferenceServiceReference\Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.cs" Link="References\Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.cs" />
+    <Compile Include="..\..\..\Services\TestServices\T4Clients\OperationService.cs" Link="OperationTests\OperationService.cs" />
+    <Compile Include="..\..\..\Services\TestServices\TestServiceUtil.cs" Link="ServiceWrapper\TestServiceUtil.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" Link="AsynchronousAttribute.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" Link="AsynchronousDelayQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" Link="AsynchronousQueryTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousSingletonClientTest.cs" Link="AsynchronousSingletonClientTest.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsDesktop.cs" Link="References\AsynchronousTestsExtensionMethodsDesktop.cs" />
+    <Compile Include="..\AsynchronousTests\AsynchronousUpdateTests.cs" Link="AsynchronousUpdateTests.cs" />
+    <Compile Include="..\AsynchronousTests\AsyncMethodTests.cs" Link="AsyncMethodTests.cs" />
+    <Compile Include="..\EndToEndTestBase.cs" Link="EndToEndTestBase.cs" />
+    <Compile Include="..\ServiceGeneratorFactory.cs" Link="ServiceGeneratorFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
+    <PackageReference Include="System.Composition" Version="1.1.0" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.4.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.NetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="References\" />
+  </ItemGroup>
+
+</Project>

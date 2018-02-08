@@ -1,0 +1,109 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Core</AssemblyName>
+    <RootNamespace>Microsoft.OData.Core</RootNamespace>
+    <TargetFramework>netstandard1.1</TargetFramework>
+    <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <TransparentAssembly>true</TransparentAssembly>
+    <SecurityMigration>false</SecurityMigration>
+    <DelaySign>True</DelaySign>
+    <SignAssembly>True</SignAssembly>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <DefineConstants>$(DefineConstants);ODATA_CORE;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;SUPPRESS_SECURITY_RULES</DefineConstants>
+    <EnableLocalization>true</EnableLocalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Build.Net35\**" />
+    <Compile Remove="Build.NetStandard\**" />
+    <Compile Remove="Build.NuGet\**" />
+    <EmbeddedResource Remove="Build.Net35\**" />
+    <EmbeddedResource Remove="Build.NetStandard\**" />
+    <EmbeddedResource Remove="Build.NuGet\**" />
+    <None Remove="Build.Net35\**" />
+    <None Remove="Build.NetStandard\**" />
+    <None Remove="Build.NuGet\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.NetStandard.VS2017.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Microsoft.OData.Core.cs" />
+    <Compile Remove="Parameterized.Microsoft.OData.Core.cs" />
+    <Compile Remove="ShippingAssemblyAttributes.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" Link="EdmValueParser.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" Link="EdmValueWriter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+
+  <Import Project="..\Build.props" />
+
+  <ItemGroup>
+    <None Remove="Microsoft.OData.Core.tt" />
+    <None Remove="Microsoft.OData.Core.txt" />
+    <None Remove="Parameterized.Microsoft.OData.Core.tt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Core.txt">
+      <ResFile>Microsoft.OData.Core</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Core.TextRes</FullClassName>
+    </TextStringResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="ShippingAssemblyAttributes.cs">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Microsoft.OData.Core.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Core.cs</LastGenOutput>
+    </None>
+    <Compile Include="Microsoft.OData.Core.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.OData.Core.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <None Include="Parameterized.Microsoft.OData.Core.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Core.cs</LastGenOutput>
+    </None>
+    <Compile Include="Parameterized.Microsoft.OData.Core.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.OData.Core.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

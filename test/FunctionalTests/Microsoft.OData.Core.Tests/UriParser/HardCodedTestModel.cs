@@ -592,6 +592,10 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespaceGetSomeAddressAction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeAddress", FullyQualifiedNamespaceAddressTypeReference, false, null, true /*isComposable*/);
             model.AddElement(FullyQualifiedNamespaceGetSomeAddressAction);
 
+            var FullyQualifiedNamespaceGetSomeAddressFromPersonFunction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeAddressFromPerson", FullyQualifiedNamespaceAddressTypeReference, true, null, true /*isComposable*/);
+            FullyQualifiedNamespaceGetSomeAddressFromPersonFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            model.AddElement(FullyQualifiedNamespaceGetSomeAddressFromPersonFunction);
+
             var FullyQualifiedNamespaceGetSomeNumbersAction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeNumbers", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(true))), false, null, true /*isComposable*/);
             model.AddElement(FullyQualifiedNamespaceGetSomeNumbersAction);
 
@@ -1379,6 +1383,10 @@ namespace Microsoft.OData.Tests.UriParser
         <ReturnType Type=""Edm.Int32"" />
       </Function>
       <Function Name=""GetSomeAddress"" IsComposable=""true"">
+        <ReturnType Type=""Fully.Qualified.Namespace.Address"" />
+      </Function>
+      <Function Name=""GetSomeAddressFromPerson"" IsBound=""true"" IsComposable=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Address"" />
       </Function>
       <Function Name=""GetSomeNumbers"" IsComposable=""true"">

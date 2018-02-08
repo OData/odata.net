@@ -19,7 +19,8 @@ namespace Microsoft.OData
     /// <remarks>As an implementation choice we did not use a second dictionary to maintain a cache of case-insensitive
     /// keys since we don't want to pay the price of an extra dictionary for cases where the looked up keys
     /// match case sensitively (as per spec, should be the default case).</remarks>
-    internal sealed class ODataBatchOperationHeaders : IEnumerable<KeyValuePair<string, string>>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
+    public sealed class ODataBatchOperationHeaders : IEnumerable<KeyValuePair<string, string>>
     {
         /// <summary>The backing dictionary using case-sensitive key comparison.</summary>
         private readonly Dictionary<string, string> caseSensitiveDictionary;

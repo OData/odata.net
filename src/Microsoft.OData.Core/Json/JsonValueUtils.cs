@@ -12,6 +12,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Text;
     using System.Xml;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -34,7 +35,8 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// The NumberFormatInfo used in OData Json format.
         /// </summary>
-        internal static readonly NumberFormatInfo ODataNumberFormatInfo;
+        internal static readonly NumberFormatInfo ODataNumberFormatInfo = InitializeODataNumberFormatInfo();
+
 
         /// <summary>
         /// Const tick value for calculating tick values.
@@ -50,16 +52,6 @@ namespace Microsoft.OData.Json
         /// Map of special characters to strings.
         /// </summary>
         private static readonly string[] SpecialCharToEscapedStringMap = CreateSpecialCharToEscapedStringMap();
-
-        /// <summary>
-        /// Initialize static properties
-        /// </summary>
-        static JsonValueUtils()
-        {
-            ODataNumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
-            ODataNumberFormatInfo.PositiveInfinitySymbol = ODataJsonPositiveInfinitySymbol;
-            ODataNumberFormatInfo.NegativeInfinitySymbol = ODataJsonNegativeInfinitySymbol;
-        }
 
         /// <summary>
         /// Write a boolean value.
@@ -394,6 +386,63 @@ namespace Microsoft.OData.Json
             // Ticks in .NET are in 100-nanoseconds and start at 1.1.0001.
             // Ticks in the JSON date time format are in milliseconds and start at 1.1.1970.
             return (ticks * 10000) + JsonDateTimeMinTimeTicks;
+        }
+
+        /// <summary>
+        /// Convert string to Json-formated string with proper escaped special characters.
+        /// Note that the return value is not enclosed by the top level double-quotes.
+        /// </summary>
+        /// <param name="inputString">string that might contain special characters.</param>
+        /// <returns>A string with special characters escaped properly.</returns>
+        internal static string GetEscapedJsonString(string inputString)
+        {
+            Debug.Assert(inputString != null, "The string value must not be null.");
+
+            StringBuilder builder = new StringBuilder();
+            int startIndex = 0;
+            int inputStringLength = inputString.Length;
+            int subStrLength;
+            for (int currentIndex = 0; currentIndex < inputStringLength; currentIndex++)
+            {
+                char c = inputString[currentIndex];
+
+                // Append the un-handled characters (that do not require special treatment)
+                // to the string builder when special characters are detected.
+                if (SpecialCharToEscapedStringMap[c] == null)
+                {
+                    continue;
+                }
+
+                // Flush out the un-escaped characters we've built so far.
+                subStrLength = currentIndex - startIndex;
+                if (subStrLength > 0)
+                {
+                    builder.Append(inputString.Substring(startIndex, subStrLength));
+                }
+
+                builder.Append(SpecialCharToEscapedStringMap[c]);
+                startIndex = currentIndex + 1;
+            }
+
+            subStrLength = inputStringLength - startIndex;
+            if (subStrLength > 0)
+            {
+                builder.Append(inputString.Substring(startIndex, subStrLength));
+            }
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Initialize static property ODataNumberFormatInfo.
+        /// </summary>
+        /// <returns>The <see cref=" NumberFormatInfo"/> object.</returns>
+        private static NumberFormatInfo InitializeODataNumberFormatInfo()
+        {
+            NumberFormatInfo odataNumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+            odataNumberFormatInfo.PositiveInfinitySymbol = ODataJsonPositiveInfinitySymbol;
+            odataNumberFormatInfo.NegativeInfinitySymbol = ODataJsonNegativeInfinitySymbol;
+            return odataNumberFormatInfo;
         }
 
         /// <summary>

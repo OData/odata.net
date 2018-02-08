@@ -55,14 +55,18 @@ namespace Microsoft.OData.UriParser
                     return new ConvertNode(source, targetTypeReference);
                 }
 
+                ConstantNode constantNode = source as ConstantNode;
+                if (constantNode != null && constantNode.Value != null && source.TypeReference.IsString() && targetTypeReference.IsEnum())
+                {
+                    return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), constantNode.Value.ToString(), targetTypeReference);
+                }
+
                 if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));
                 }
                 else
                 {
-                    ConstantNode constantNode = source as ConstantNode;
-
                     if (source.TypeReference.IsEnum() && constantNode != null)
                     {
                         return new ConstantNode(constantNode.Value, ODataUriUtils.ConvertToUriLiteral(constantNode.Value, ODataVersion.V4), targetTypeReference);

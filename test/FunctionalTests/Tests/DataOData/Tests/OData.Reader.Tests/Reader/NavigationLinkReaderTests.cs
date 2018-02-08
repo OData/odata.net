@@ -32,68 +32,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
-        [Ignore] // Remove Atom
-        [TestMethod, TestCategory("Reader.Links"), Variation(Description = "Test the the reading of deferred links on entry payloads.")]
-        public void DeferredLinkTest()
-        {
-            IEdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel();
-            var cityType = model.FindType("TestModel.CityType");
-            Debug.Assert(cityType != null, "cityType != null");
-
-            // TODO: add test cases that use relative URIs
-
-            // Few hand-crafted payloads
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new PayloadReaderTestDescriptor[]
-            {
-                // Single deferred link
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadDescriptor = new PayloadTestDescriptor(),
-                    PayloadElement = PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).WithTypeAnnotation(cityType)
-                            .NavigationProperty("CityHall", "http://odata.org/CityHall"),
-                    PayloadEdmModel = model
-                },
-
-                // Multiple deferred links
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadDescriptor = new PayloadTestDescriptor(),
-                    PayloadElement = PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).WithTypeAnnotation(cityType)
-                            .NavigationProperty("CityHall", "http://odata.org/CityHall")
-                            .NavigationProperty("DOL", "http://odata.org/DOL"),
-                    PayloadEdmModel = model
-                },
-
-                // Multiple deferred links with primitive properties in between
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadDescriptor = new PayloadTestDescriptor(),
-                    PayloadElement = PayloadBuilder.Entity("TestModel.CityType").WithTypeAnnotation(cityType)
-                            .Property("Id", PayloadBuilder.PrimitiveValue(1))
-                            .NavigationProperty("CityHall", "http://odata.org/CityHall")
-                            .Property("Name", PayloadBuilder.PrimitiveValue("Vienna"))
-                            .NavigationProperty("DOL", "http://odata.org/DOL"),
-                    PayloadEdmModel = model
-                },
-            };
-
-            // Add standard deferred link payloads
-            testDescriptors = testDescriptors.Concat(PayloadReaderTestDescriptorGenerator.CreateDeferredNavigationLinkTestDescriptors(this.Settings, true));
-
-            // Generate interesting payloads around the entry
-            testDescriptors = testDescriptors.SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                // Deferred links are response only.
-                // TODO: Reenable Json Light support
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
-
         [TestMethod, TestCategory("Reader.Links"), Variation(Description = "Test the the reading of entity reference links on entry payloads.")]
         public void EntityReferenceLinkTest()
         {

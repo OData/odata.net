@@ -25,6 +25,7 @@ namespace AstoriaUnitTests.Tests
     using providers = Microsoft.OData.Service.Providers;
     using p=Microsoft.OData.Service.Providers;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     [Ignore] // Remove Atom
     [TestModule]
     public partial class UnitTestModule1
@@ -127,7 +128,7 @@ namespace AstoriaUnitTests.Tests
             #endregion CustomEnumerable
 
             #region Serialization
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies serialization of collection properties in entity and complex types.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies serialization of collection properties in entity and complex types.")]
             public void Collection_CollectionPropertySerialization()
             {
                 // ItemType - type of a single item in the collection, either Type for primitive types, or String - name of the complex type
@@ -399,7 +400,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serialization fails with in-stream error when the value of the collection property is wrong.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serialization fails with in-stream error when the value of the collection property is wrong.")]
             public void Collection_InvalidValues()
             {
                 var testCases = new[]{
@@ -467,7 +468,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verify that if the actual values of items in a collection are a mix of mismatched types, the serializer correctly fails.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify that if the actual values of items in a collection are a mix of mismatched types, the serializer correctly fails.")]
             public void Collection_MismatchOfItemTypes()
             {
                 var testCases = new[] {
@@ -726,7 +727,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serializer correctly detects loops and fails.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serializer correctly detects loops and fails.")]
             public void Collection_EndlessLoop()
             {
                 var testCases = new[] {
@@ -844,7 +845,7 @@ namespace AstoriaUnitTests.Tests
                 public IQueryable<ReflectionEntityType> Entities { get { return entities.AsQueryable(); } }
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verify that serialization works on reflection based collection.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verify that serialization works on reflection based collection.")]
             public void Collection_SerializationOfReflectionBasedCollection()
             {
                 var formats = new[] {
@@ -886,7 +887,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verify that in json light, we write the collection type name in full metadata")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verify that in json light, we write the collection type name in full metadata")]
             public void Collection_VerificationOfCollectionTypeNamesInJsonLightFullMetadata()
             {
                 var testCases = new[] {
@@ -1168,7 +1169,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies failure to deserialize of invalid collection properties payloads.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies failure to deserialize of invalid collection properties payloads.")]
             public void Collection_DeserializationOfInvalidPayloads()
             {
                 var testCases = new DeserializationInvalidTestCase[] {
@@ -1685,7 +1686,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Deserialization
 
             #region Uri parsing and query options
-            [TestCategory("Partition1"), TestMethod, Variation("Verify that uri parsing correctly fails in case collection property is not addressed directly without any query options.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify that uri parsing correctly fails in case collection property is not addressed directly without any query options.")]
             public void Collection_UriParsing()
             {
                 var testCases = new[] {
@@ -1737,7 +1738,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verify that projections work correctly over collection properties.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify that projections work correctly over collection properties.")]
             public void Collection_Projections()
             {
                 var testCases = new[] {
@@ -1762,7 +1763,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verify expression tree shape used for projecting collection properties.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify expression tree shape used for projecting collection properties.")]
             public void Collection_ProjectionExpressionTree()
             {
                 OpenWebDataServiceDefinition service = CreateServiceWithCollectionProperty(false, typeof(int), new List<int> { 1, 2, 3 });
@@ -1823,7 +1824,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Uri parsing and query options
 
             #region Open properties
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that open collection properties are supported.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that open collection properties are supported.")]
             public void Collection_NoOpenCollectionProperties()
             {
                 // Note that we expect these errors because the provider is reporting these types are Collections, not because of their actual CLR types
@@ -1939,7 +1940,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region DBNull handling
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties can correctly handle DBNull values from the provider.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties can correctly handle DBNull values from the provider.")]
             public void Collection_DBNull()
             {
                 object[] itemTypes = new object[] { typeof(int), typeof(string), "Address" };
@@ -2119,7 +2120,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies server generates the right ETag values and uses them correctly even when collections are involved.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies server generates the right ETag values and uses them correctly even when collections are involved.")]
             public void Collection_ETags()
             {
                 string[] requestTypes = new string[] {

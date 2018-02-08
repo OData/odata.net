@@ -440,8 +440,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         #region client test
 
-        [Ignore] // Move to another service, instead of trippin service.
-        [TestMethod]
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // Move to another service, instead of trippin service.
+        // [TestMethod] // github issuse: #896
         public void TestNullableCollection()
         {
             var people = TestClientContext.People.First();
@@ -455,7 +456,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             people.Emails.Add(null);
             TestClientContext.UpdateObject(people);
             TestClientContext.SaveChanges();
-        }
+    }
+#endif
 
         #endregion
 
@@ -570,7 +572,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         #endregion
 
-        #region $serach Tests
+        #region $search Tests
 
         [TestMethod]
         public void BasicSearchTest()
@@ -1308,6 +1310,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         #region ETag other tests
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void AttachToWithEtag()
         {
@@ -1356,6 +1359,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             contextToUpdate.UpdateObject(person1);
             contextToUpdate.UpdateObject(person2);
+
 
             contextToUpdate.SaveChanges();
 
@@ -1424,6 +1428,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(statusCodes[0], statusCodes[1]);
             AssertExceptionsAreEqual(exceptions[0], exceptions[1]);
         }
+#endif
 
         #endregion
 

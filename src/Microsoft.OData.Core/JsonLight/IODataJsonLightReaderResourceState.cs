@@ -20,7 +20,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The resource being read.
         /// </summary>
-        ODataResource Resource { get; }
+        ODataResourceBase Resource { get; }
 
         /// <summary>
         /// The structured type for the resource (if available)

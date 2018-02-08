@@ -103,8 +103,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="entityType">the current entity type to use as the binding type when looking for operations.</param>
         /// <param name="segment">Bound segment if the token was bound to an operation successfully, or null.</param>
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static bool TryBindAsOperation(PathSegmentToken pathToken, IEdmModel model, IEdmStructuredType entityType, out ODataPathSegment segment)
         {
             Debug.Assert(pathToken != null, "pathToken != null");
@@ -182,7 +180,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <param name="segment">Bound segment if the token was bound to a declared property successfully, or null.</param>
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         private static bool TryBindAsDeclaredProperty(PathSegmentToken tokenIn, IEdmStructuredType edmType, ODataUriResolver resolver, out ODataPathSegment segment)
         {
             IEdmProperty prop = resolver.ResolveProperty(edmType, tokenIn.Identifier);

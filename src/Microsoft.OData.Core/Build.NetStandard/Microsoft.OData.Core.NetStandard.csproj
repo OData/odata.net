@@ -290,6 +290,24 @@
     <Compile Include="..\JsonLight\ODataJsonLightOutputContext.cs">
       <Link>JsonLight\ODataJsonLightOutputContext.cs</Link>
     </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs">
+      <Link>JsonLight\ODataJsonLightBatchAtomicGroupCache.cs</Link>
+    </Compile>    
+    <Compile Include="..\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs">
+      <Link>JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchReader.cs">
+      <Link>JsonLight\ODataJsonLightBatchReader.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchWriter.cs">
+      <Link>JsonLight\ODataJsonLightBatchWriter.cs</Link>
+    </Compile>    
+    <Compile Include="..\JsonLight\ODataJsonLightBatchReaderStream.cs">
+      <Link>JsonLight\ODataJsonLightBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs">
+      <Link>JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs</Link>
+    </Compile>    
     <Compile Include="..\JsonLight\ODataJsonLightParameterDeserializer.cs">
       <Link>JsonLight\ODataJsonLightParameterDeserializer.cs</Link>
     </Compile>
@@ -470,6 +488,30 @@
     <Compile Include="..\MimeConstants.cs">
       <Link>MimeConstants.cs</Link>
     </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchFormat.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchInputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>    
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
+    </Compile>    
+    <Compile Include="..\MultipartMixed\DependsOnIdsTracker.cs">
+      <Link>MultipartMixed\DependsOnIdsTracker.cs</Link>
+    </Compile>
     <Compile Include="..\NonDisposingStream.cs">
       <Link>NonDisposingStream.cs</Link>
     </Compile>
@@ -487,9 +529,6 @@
     </Compile>
     <Compile Include="..\ODataAsynchronousWriter.cs">
       <Link>ODataAsynchronousWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataBatchFormat.cs">
-      <Link>ODataBatchFormat.cs</Link>
     </Compile>
     <Compile Include="..\ODataBatchOperationHeaders.cs">
       <Link>ODataBatchOperationHeaders.cs</Link>
@@ -538,9 +577,6 @@
     </Compile>
     <Compile Include="..\ODataBatchWriter.cs">
       <Link>ODataBatchWriter.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataBatchWriterUtils.cs">
-      <Link>ODataBatchWriterUtils.cs</Link>
     </Compile>
     <Compile Include="..\ODataCollectionReader.cs">
       <Link>ODataCollectionReader.cs</Link>
@@ -946,7 +982,7 @@
     </Compile>
     <Compile Include="..\TypeUtils.cs">
       <Link>TypeUtils.cs</Link>
-    </Compile>
+    </Compile>  
     <Compile Include="..\UnknownEntitySet.cs">
       <Link>UnknownEntitySet.cs</Link>
     </Compile>
@@ -1000,6 +1036,9 @@
     </Compile>
     <Compile Include="..\UriParser\Binders\BindingState.cs">
       <Link>UriParser\Binders\BindingState.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\ComputeBinder.cs">
+      <Link>UriParser\Binders\ComputeBinder.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Binders\DottedIdentifierBinder.cs">
       <Link>UriParser\Binders\DottedIdentifierBinder.cs</Link>
@@ -1187,9 +1226,6 @@
     <Compile Include="..\UriParser\Parsers\ODataPathParser.cs">
       <Link>UriParser\Parsers\ODataPathParser.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\OpenTypeMethods.cs">
-      <Link>UriParser\Parsers\OpenTypeMethods.cs</Link>
-    </Compile>
     <Compile Include="..\UriParser\Parsers\PathParserModelUtils.cs">
       <Link>UriParser\Parsers\PathParserModelUtils.cs</Link>
     </Compile>
@@ -1297,6 +1333,12 @@
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceNode.cs">
       <Link>UriParser\SemanticAst\CollectionResourceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeClause.cs">
+      <Link>UriParser\SemanticAst\ComputeClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeExpression.cs">
+      <Link>UriParser\SemanticAst\ComputeExpression.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\ConstantNode.cs">
       <Link>UriParser\SemanticAst\ConstantNode.cs</Link>
@@ -1451,6 +1493,9 @@
     <Compile Include="..\UriParser\SemanticAst\SingleNavigationNode.cs">
       <Link>UriParser\SemanticAst\SingleNavigationNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueCastNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueCastNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\SingleResourceCastNode.cs">
       <Link>UriParser\SemanticAst\SingleResourceCastNode.cs</Link>
     </Compile>
@@ -1498,6 +1543,12 @@
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\BinaryOperatorToken.cs">
       <Link>UriParser\SyntacticAst\BinaryOperatorToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeExpressionToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
       <Link>UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>

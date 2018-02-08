@@ -9,11 +9,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Client;
+    using System.Reflection;
     using Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.AnnotationTargetingOperationTestsProxy;
     using Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.ConstantAnnotationProxy;
-    using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Edm = Microsoft.OData.Edm;
     using OperationProxy = Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.AnnotationTargetingOperationTestsProxy;
 
     [TestClass]
@@ -41,7 +42,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             ETForConstAsAttributePlus entity = new ETForConstAsAttributePlus();
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "BinaryTerm", new byte[] { 0x12, 0x34 });
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "BooleanTerm", false);
-            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DateTerm", new Date(2000, 01, 01));
+            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DateTerm", new Edm.Date(2000, 01, 01));
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DateTimeOffsetTerm", new DateTimeOffset(2000, 1, 1, 16, 0, 0, new TimeSpan(0)));
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DecimalTerm", 2.15m);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DurationTerm", new TimeSpan(0, 0, 0, 0, 0));
@@ -50,7 +51,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "Int32Term", 32L);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "Int64Term", 33L);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "StringTerm", "test2");
-            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "TimeOfDayTerm", new TimeOfDay(20, 45, 0, 0));
+            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "TimeOfDayTerm", new Edm.TimeOfDay(20, 45, 0, 0));
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "EnumMemberHasFlagTerm", AccessLevelPlus.ReadPlus | AccessLevelPlus.WritePlus);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "EnumMemberTerm", ColorPlus.BluePlus);
         }
@@ -63,7 +64,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             ETForConstAsElementPlus entity = new ETForConstAsElementPlus();
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "BinaryTerm", new byte[] { 0x12, 0x34 });
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "BooleanTerm", true);
-            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DateTerm", new Date(2000, 01, 01));
+            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DateTerm", new Edm.Date(2000, 01, 01));
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DateTimeOffsetTerm", new DateTimeOffset(2000, 1, 1, 16, 0, 0, new TimeSpan(0)));
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DecimalTerm", 3.14m);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "DurationTerm", new TimeSpan(0, 0, 0, 0, 0));
@@ -72,7 +73,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "Int32Term", 42L);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "Int64Term", 64L);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "StringTerm", "test");
-            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "TimeOfDayTerm", new TimeOfDay(21, 45, 0, 0));
+            GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "TimeOfDayTerm", new Edm.TimeOfDay(21, 45, 0, 0));
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "EnumMemberHasFlagTerm", AccessLevelPlus.ReadPlus);
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "EnumMemberTerm", ColorPlus.YellowPlus);
         }

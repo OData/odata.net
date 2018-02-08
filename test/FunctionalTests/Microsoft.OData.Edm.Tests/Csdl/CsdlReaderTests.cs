@@ -5,12 +5,14 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Validation;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
 
@@ -308,6 +310,48 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ParsingOptionalParametersShouldSucceed()
+        {
+            string csdl =
+        "<edmx:Edmx xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\" Version=\"4.0\">" +
+          "<edmx:DataServices>" +
+            "<Schema xmlns=\"http://docs.oasis-open.org/odata/ns/edm\" Namespace=\"test\">" +
+              "<Function Name=\"TestFunction\">" +
+                "<Parameter Name = \"requiredParam\" Type=\"Edm.String\"/>" +
+                "<Parameter Name = \"optionalParam\" Type=\"Edm.String\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\"/>" +
+                "</Parameter>" +
+                "<Parameter Name = \"optionalParamWithDefault\" Type=\"Edm.String\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                      "<Record>" +
+                        "<PropertyValue Property=\"DefaultValue\" String=\"Smith\"/>" +
+                      "</Record>" +
+                    "</Annotation>" +
+                "</Parameter>" +
+                "<ReturnType Type=\"Edm.Boolean\"/>" +
+              "</Function>" +
+              "<EntityContainer Name=\"Default\">" +
+                "<FunctionImport Name=\"TestFunction\" Function=\"test.TestFunction\"/>" +
+              "</EntityContainer>" +
+            "</Schema>" +
+          "</edmx:DataServices>" +
+        "</edmx:Edmx>";
+
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var function = model.FindDeclaredOperations("test.TestFunction").FirstOrDefault();
+            Assert.NotNull(function);
+            var requiredParam = function.Parameters.Where(p => p.Name == "requiredParam").FirstOrDefault();
+            Assert.NotNull(requiredParam);
+            Assert.Null(requiredParam as IEdmOptionalParameter);
+            IEdmOptionalParameter optionalParam = function.Parameters.Where(p => p.Name == "optionalParam").FirstOrDefault() as IEdmOptionalParameter;
+            Assert.NotNull(optionalParam);
+            Assert.True(String.IsNullOrEmpty(optionalParam.DefaultValueString));
+            IEdmOptionalParameter optionalParamWithDefault = function.Parameters.Where(p => p.Name == "optionalParamWithDefault").FirstOrDefault() as IEdmOptionalParameter;
+            Assert.NotNull(optionalParamWithDefault);
+            Assert.Equal(optionalParamWithDefault.DefaultValueString, "Smith");
+        }
+
+        [Fact]
         public void ParsingValidXmlWithOneReferencesShouldSucceed()
         {
             this.RunValidTest(r => CsdlReader.Parse(r, EdmCoreModel.Instance));
@@ -347,6 +391,183 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer)).And.Errors.Should().HaveCount(1);
         }
 
+        [Fact]
+        public void ParsingNavigationPropertyWithEdmEntityTypeWorks()
+        {
+            string navigationProperty =
+                @"<NavigationProperty Name=""EntityNavigationProperty"" Type=""Edm.EntityType"" />";
+
+            IEdmModel model = GetEdmModel(properties: navigationProperty);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var navProperty = customer.DeclaredNavigationProperties().FirstOrDefault(c => c.Name == "EntityNavigationProperty");
+            Assert.NotNull(navProperty);
+            Assert.True(navProperty.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetEntityType(), navProperty.Type.Definition);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            navProperty = address.DeclaredNavigationProperties().FirstOrDefault(c => c.Name == "EntityNavigationProperty");
+            Assert.NotNull(navProperty);
+            Assert.True(navProperty.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetEntityType(), navProperty.Type.Definition);
+        }
+
+        [Fact]
+        public void ParsingPropertyWithEdmComplexTypeWorks()
+        {
+            string complexProperty =
+                @"<Property Name=""ComplexProperty"" Type=""Edm.ComplexType"" />";
+
+            IEdmModel model = GetEdmModel(properties: complexProperty);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "ComplexProperty");
+            Assert.NotNull(property);
+            Assert.True(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetComplexType(), property.Type.Definition);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "ComplexProperty");
+            Assert.NotNull(property);
+            Assert.True(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetComplexType(), property.Type.Definition);
+        }
+
+        [Fact]
+        public void ParsingPropertyWithEdmPrimitiveTypeWorks()
+        {
+            string complexProperty =
+                @"<Property Name=""PrimitiveProperty"" Type=""Edm.PrimitiveType"" Nullable=""false"" />";
+
+            IEdmModel model = GetEdmModel(properties: complexProperty);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "PrimitiveProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(), property.Type.Definition);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "PrimitiveProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(), property.Type.Definition);
+        }
+
+        [Fact]
+        public void ParsingTermPropertyWithEdmPathTypeWorks()
+        {
+            string termTypes =
+                @"<ComplexType Name=""SelectType"" >
+                    <Property Name=""DefaultSelect"" Type=""Collection(Edm.PropertyPath)"" />
+                    <Property Name=""DefaultHidden"" Type=""Collection(Edm.NavigationPropertyPath)"" Nullable=""false"" />
+                  </ComplexType>
+                  <Term Name=""MyTerm"" Type=""NS.SelectType"" />";
+
+            IEdmModel model = GetEdmModel(types: termTypes);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var complex = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "SelectType");
+            Assert.NotNull(complex);
+            var property = complex.DeclaredProperties.FirstOrDefault(c => c.Name == "DefaultSelect");
+            Assert.NotNull(property);
+            Assert.True(property.Type.IsNullable);
+            Assert.True(property.Type.IsCollection());
+            Assert.Equal(EdmTypeKind.Path, property.Type.AsCollection().ElementType().TypeKind());
+            Assert.Same(EdmCoreModel.Instance.GetPathType(EdmPathTypeKind.PropertyPath), property.Type.AsCollection().ElementType().Definition);
+
+            property = complex.DeclaredProperties.FirstOrDefault(c => c.Name == "DefaultHidden");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.True(property.Type.IsCollection());
+            Assert.Equal(EdmTypeKind.Path, property.Type.AsCollection().ElementType().TypeKind());
+            Assert.Same(EdmCoreModel.Instance.GetPathType(EdmPathTypeKind.NavigationPropertyPath), property.Type.AsCollection().ElementType().Definition);
+        }
+
+        [Fact]
+        public void ParsingPropertyWithEdmPathTypeWorksButValidationFailed()
+        {
+            string properties =
+                @"<Property Name=""PathProperty"" Type=""Collection(Edm.PropertyPath)"" />";
+
+            IEdmModel model = GetEdmModel(properties: properties);
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "PathProperty");
+            Assert.NotNull(property);
+            Assert.True(property.Type.IsNullable);
+            Assert.True(property.Type.IsCollection());
+            Assert.Equal(EdmTypeKind.Path, property.Type.AsCollection().ElementType().TypeKind());
+            Assert.Same(EdmCoreModel.Instance.GetPathType(EdmPathTypeKind.PropertyPath), property.Type.AsCollection().ElementType().Definition);
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            var error = Assert.Single(errors);
+            Assert.NotNull(error);
+            Assert.Equal(EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty, error.ErrorCode);
+        }
+
+        [Fact]
+        public void ParsingRecursivePropertyWithEdmPathTypeWorksButValidationFailed()
+        {
+            string properties =
+                @"<Property Name=""PathProperty"" Type=""Collection(Edm.PropertyPath)"" />
+                  <Property Name=""ComplexProperty"" Type=""NS.Address"" />";
+
+            IEdmModel model = GetEdmModel(properties: properties);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            var property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "ComplexProperty");
+            Assert.NotNull(property);
+            Assert.True(property.Type.IsNullable);
+            Assert.Equal(EdmTypeKind.Complex, property.Type.TypeKind());
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            var error = Assert.Single(errors);
+            Assert.NotNull(error);
+            Assert.Equal(EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty, error.ErrorCode);
+        }
+
+        [Fact]
+        public void ParsingNavigationPropertyWithEdmPathTypeWorksButValidationFailed()
+        {
+            string properties =
+                @"<NavigationProperty Name=""NavigationProperty"" Type=""Collection(NS.Customer)"" />
+                  <Property Name=""PathProperty"" Type=""Collection(Edm.AnnotationPath)"" />";
+
+            IEdmModel model = GetEdmModel(properties: properties);
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var navProperty = customer.DeclaredNavigationProperties().FirstOrDefault(c => c.Name == "NavigationProperty");
+            Assert.NotNull(navProperty);
+
+            IEnumerable<EdmError> errors;
+            Assert.False(model.Validate(out errors));
+            Assert.NotNull(errors);
+            Assert.Equal(3, errors.Count());
+
+            Assert.Equal(new[] {EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty}, errors.Select(e => e.ErrorCode));
+        }
+
         private void RunValidTest(Func<XmlReader, IEdmModel> parse)
         {
             var result = parse(this.validReader);
@@ -358,6 +579,39 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             Action parseAction = () => parse(this.invalidReader);
             parseAction.ShouldThrow<EdmParseException>().WithMessage(ErrorStrings.EdmParseException_ErrorsEncounteredInEdmx(ErrorMessage)).And.Errors.Should().OnlyContain(e => e.ToString() == ErrorMessage);
+        }
+
+        private static IEdmModel GetEdmModel(string types = "", string properties = "")
+        {
+            const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""Customer"">
+        <Key>
+          <PropertyRef Name=""ID"" />
+        </Key>
+        <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
+        {1}
+      </EntityType>
+      <ComplexType Name=""Address"">
+        <Property Name=""Street"" Type=""Edm.String"" />
+        {1}
+      </ComplexType>
+      {0}
+      <EntityContainer Name =""Default"">
+         <EntitySet Name=""Customers"" EntityType=""NS.Customer"" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+            string modelText = string.Format(template, types, properties);
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
+            Assert.True(result);
+            return model;
         }
     }
 }

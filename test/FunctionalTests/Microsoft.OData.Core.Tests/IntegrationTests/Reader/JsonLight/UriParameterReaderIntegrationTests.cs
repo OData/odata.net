@@ -180,7 +180,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             });
         }
 
-        [Fact(Skip="Not supported")]
+        [Fact]
         public void ReadComplexParameter_Noodatatype_NoExpectedType()
         {
             var payload =
@@ -192,13 +192,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     "}" +
                 "}";
 
-            ReadAndValidate(payload, null, true, (resources, nestedResourceInfos, resourceSets) =>
-            {
-                resources.First().Properties.First().Value.ShouldBeEquivalentTo("Shanghai");
-                resources.First().Properties.Last().Value.ShouldBeEquivalentTo("021");
-                resources.Last().TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
-                nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
-            });
+            // Not supported.
+            Exception ex = Assert.Throws<ODataException>(() =>
+                ReadAndValidate(payload, null, true, (resources, nestedResourceInfos, resourceSets) =>
+                {
+                    resources.First().Properties.First().Value.ShouldBeEquivalentTo("Shanghai");
+                    resources.First().Properties.Last().Value.ShouldBeEquivalentTo("021");
+                    resources.Last().TypeName.ShouldBeEquivalentTo("NS.CompanyAddress");
+                    nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
+                }));
+            Assert.Contains("A resource without a type name was found", ex.Message);
         }
 
         [Fact]
@@ -245,11 +248,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 resources.Last().Properties.Single().Value.ShouldBeEquivalentTo(180);
                 nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City");
             });
-        }
-
-        [Fact(Skip="NotSupport")]
-        public void ReadComplexParameter_withNull()
-        {
         }
 
         [Fact]
@@ -608,7 +606,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             });
         }
 
-        [Fact(Skip="Not supported")]
+        [Fact]
         public void ReadEntityParameter_WithUndeclaredNullResource()
         {
             var payload =
@@ -626,16 +624,19 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"OtherAddresses\":null" +
             "}";
 
-            ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
-            {
-                resources.Count.ShouldBeEquivalentTo(4);
-                nestedResourceInfos.Count.ShouldBeEquivalentTo(3);
+            // Not supported.
+            Exception ex = Assert.Throws<ODataException>(() =>
+                ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
+                {
+                    resources.Count.ShouldBeEquivalentTo(4);
+                    nestedResourceInfos.Count.ShouldBeEquivalentTo(3);
 
-                nestedResourceInfos.ElementAt(2).Name.ShouldBeEquivalentTo("OtherAddresses");
-                nestedResourceInfos.ElementAt(2).IsCollection.ShouldBeEquivalentTo(false);
+                    nestedResourceInfos.ElementAt(2).Name.ShouldBeEquivalentTo("OtherAddresses");
+                    nestedResourceInfos.ElementAt(2).IsCollection.ShouldBeEquivalentTo(false);
 
-                resources.ElementAt(2).Should().BeNull();
-            });
+                    resources.ElementAt(2).Should().BeNull();
+                }));
+            Assert.Contains("A complex property with an 'odata.type' property annotation was found", ex.Message);
         }
 
         [Fact]

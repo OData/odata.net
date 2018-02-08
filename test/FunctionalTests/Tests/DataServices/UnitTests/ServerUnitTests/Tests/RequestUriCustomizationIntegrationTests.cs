@@ -16,9 +16,8 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class RequestUriCustomizationIntegratiotnTests
+    public class RequestUriCustomizationIntegrationTests
     {
-        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void GetSmokeTestWhereRequestAndServiceUriAreCompletelyReplaced()
@@ -28,13 +27,18 @@ namespace AstoriaUnitTests.Tests
                 request.RequestUriString = "/WhoCaresWhatIPutHere/Something/SomethingElse/TotallyIgnored";
                 request.RequestHeaders["MyCustomRequestUri"] = "http://myservicebase/Customers(0)";
                 request.RequestHeaders["MyCustomServiceUri"] = "http://myservicebase/";
-                request.Accept = "application/atom+xml,application/xml";
+                request.Accept = "application/json";
 
-                GetResponseAndVerify(request, 200, "atom:entry[@xml:base='http://myservicebase/']/atom:link[@rel='edit' and @href='Customers(0)']");
+                GetResponseAndVerify(request, 200, new string[] {
+                    "http://myservicebase/$metadata#Customers/$entity",
+                    "\"ID\":0,\"Name\":\"Customer 0\",\"NameAsHtml\":" +
+                    "\"<html><body>Customer 0</body></html>\",\"Address\":" +
+                    "{\"@odata.type\":\"#AstoriaUnitTests.Stubs.Address\",\"StreetAddress\":" +
+                    "\"Line1\",\"City\":\"Redmond\",\"State\":\"WA\",\"PostalCode\":\"98052\""
+                });
             });
         }
 
-        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void GetSmokeTestWhereRequestUriPathIsReversed()
@@ -44,8 +48,15 @@ namespace AstoriaUnitTests.Tests
                 ((InProcessWebRequest)request).CustomServiceBaseUri = "http://host/" + Reverse("path1/path2");
                 request.RequestUriString = "/" + Reverse("Customers(0)");
                 request.RequestHeaders["ReverseUriPaths"] = "true";
-                request.Accept = "application/atom+xml,application/xml";
-                GetResponseAndVerify(request, 200, "atom:entry[@xml:base='http://host/path1/path2/']/atom:link[@rel='edit' and @href='Customers(0)']");
+                request.Accept = "application/json";
+
+                GetResponseAndVerify(request, 200, new string[] {
+                    "http://host/path1/path2/$metadata#Customers/$entity",
+                    "\"ID\":0,\"Name\":\"Customer 0\",\"NameAsHtml\":" +
+                    "\"<html><body>Customer 0</body></html>\",\"Address\":" +
+                    "{\"@odata.type\":\"#AstoriaUnitTests.Stubs.Address\",\"StreetAddress\":" +
+                    "\"Line1\",\"City\":\"Redmond\",\"State\":\"WA\",\"PostalCode\":\"98052\""
+                });
             });
         }
 
@@ -68,107 +79,16 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod]
-        public void BatchSmokeTestWhereRequestAndServiceUriAreCompletelyReplaced()
-        {
-            Run(request =>
-                {
-                    Action<TestWebRequest> configureBatchRequest = r =>
-                                                   {
-                                                       r.RequestUriString = "NotBatchAtAll";
-                                                       r.RequestHeaders["MyCustomRequestUri"] = "http://myservicebase/$batch";
-                                                       r.RequestHeaders["MyCustomServiceUri"] = "http://myservicebase/";
-                                                   };
-                    Action<TestWebRequest> configureInnerRequest = r =>
-                                                   {
-                                                       r.RequestUriString = "SomethingThatWillNotBeUsedAtAll";
-                                                       r.RequestHeaders["MyCustomRequestUri"] = "http://myservicebase/Customers(0)";
-                                                   };
-                    RunBatchTest(request, configureBatchRequest, configureInnerRequest, "atom:entry[@xml:base='http://myservicebase/']/atom:link[@rel='edit' and @href='Customers(0)']");
-                });
-        }
-
-        [Ignore] // Remove Atom
-        [TestMethod]
-        public void BatchSmokeTestWhereRequestAndServiceUriAreReversed()
-        {
-            Run(request =>
-                {
-                    ((InProcessWebRequest)request).CustomServiceBaseUri = "http://host/" + Reverse("path1/path2");
-                    Action<TestWebRequest> configureBatchRequest = r =>
-                                                   {
-                                                       r.RequestUriString = "/hctab$";
-                                                       r.RequestHeaders["ReverseUriPaths"] = "true";
-                                                   };
-                    Action<TestWebRequest> configureInnerRequest = r =>
-                                                   {
-                                                       r.RequestUriString = Reverse("Customers(0)");
-                                                       r.RequestHeaders["ReverseUriPaths"] = "true";
-                                                   };
-                    RunBatchTest(request, configureBatchRequest, configureInnerRequest, "atom:entry[@xml:base='http://host/path1/path2/']/atom:link[@rel='edit' and @href='Customers(0)']");
-                });
-        }
-
-        [Ignore] // Remove Atom
-        [TestMethod]
-        public void BatchSmokeTestWhereRequestUriIsNotRelativeToService()
-        {
-            Run(request =>
-                {
-                    request.HttpMethod = "POST";
-
-                    request.RequestUriString = "NotBatchAtAll";
-                    request.RequestHeaders["MyCustomRequestUri"] = "http://myservicebase/path1/path2/$batch";
-                    request.RequestHeaders["MyCustomServiceUri"] = "http://myservicebase/path1/path2/";
-
-                    var batch = new BatchWebRequest();
-                    var innerRequest = new InMemoryWebRequest();
-
-                    innerRequest.RequestUriString = "SomethingThatWillNotBeUsedAtAll";
-                    innerRequest.RequestHeaders["MyCustomRequestUri"] = "http://myservicebase/path2/Customers(0)";
-
-                    batch.Parts.Add(innerRequest);
-                    batch.SetContentTypeAndRequestStream(request);
-
-                    TestUtil.RunCatching(request.SendRequest);
-                    Assert.AreEqual(202, request.ResponseStatusCode);
-                    batch.ParseResponseFromRequest(request, true);
-                    Assert.AreEqual(400, innerRequest.ResponseStatusCode);
-                    var innerPayload = innerRequest.GetResponseStreamAsXDocument();
-                    UnitTestsUtil.VerifyXPathExists(innerPayload, "adsm:error/adsm:message[text()=\"The URI 'http://myservicebase/path2/Customers(0)' is not valid because it is not based on 'http://myservicebase/path1/path2/'.\"]");
-                });
-        }
-
-        private static void RunBatchTest(TestWebRequest request, Action<TestWebRequest> configureBatchRequest, Action<TestWebRequest> configureInnerRequest, string innerRequestXPath)
-        {
-            request.HttpMethod = "POST";
-
-            var batch = new BatchWebRequest();
-            var innerRequest = new InMemoryWebRequest();
-            innerRequest.Accept = "application/atom+xml,application/xml";
-
-            configureBatchRequest(request);
-            configureInnerRequest(innerRequest);
-
-            batch.Parts.Add(innerRequest);
-            batch.SetContentTypeAndRequestStream(request);
-            TestUtil.RunCatching(request.SendRequest);
-            Assert.AreEqual(202, request.ResponseStatusCode);
-            batch.ParseResponseFromRequest(request, true);
-            Assert.AreEqual(200, innerRequest.ResponseStatusCode);
-            var innerPayload = innerRequest.GetResponseStreamAsXDocument();
-            UnitTestsUtil.VerifyXPathExists(innerPayload, innerRequestXPath);
-        }
-
-        private static void GetResponseAndVerify(TestWebRequest request, int expectedStatusCode, string xpath)
+        private static void GetResponseAndVerify(TestWebRequest request, int expectedStatusCode, string[] verificationStrings)
         {
             TestUtil.RunCatching(request.SendRequest);
-
             Assert.AreEqual(expectedStatusCode, request.ResponseStatusCode);
 
-            var responsePayload = request.GetResponseStreamAsXDocument();
-            UnitTestsUtil.VerifyXPaths(responsePayload, new[] {xpath});
+            string responsePayload = request.GetResponseStreamAsText();
+            foreach (string verifyString in verificationStrings)
+            {
+                Assert.IsTrue(responsePayload.Contains(verifyString));
+            }
         }
 
         private static void Run(Action<TestWebRequest> runTest)

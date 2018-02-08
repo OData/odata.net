@@ -1143,8 +1143,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             CsdlTypeReference type = this.ParseTypeReference(typeName, childValues, element.Location, Optionality.Required);
 
-            // TODO: (mikep) handle out-of-line annotations
-            XmlElementValue optionalAnnotationValue = childValues.Where(c => c is XmlElementValue<CsdlAnnotation> && (c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.ShortQualifiedName() || c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.FullName())).FirstOrDefault();
+            // TODO (Issue #855): handle out-of-line annotations
+            XmlElementValue optionalAnnotationValue = childValues.Where(c =>
+                c is XmlElementValue<CsdlAnnotation> &&
+                    (c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.ShortQualifiedName() ||
+                     c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.FullName())
+            ).FirstOrDefault();
+
             if (optionalAnnotationValue != null)
             {
                 isOptional = true;
@@ -1159,14 +1164,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                             if (property.Property == CsdlConstants.Attribute_DefaultValue)
                             {
                                 defaultValue = propertyValue.Value;
-                            }
-                            else if (property.Property == CoreVocabularyConstants.IsOptional)
-                            {
-                                bool? value;
-                                if (EdmValueParser.TryParseBool(propertyValue.Value, out value))
-                                {
-                                    isOptional = value.Value;
-                                }
                             }
                         }
                     }

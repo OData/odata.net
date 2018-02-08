@@ -27,6 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         {
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void ValidReadReflectionEntity()
         {
@@ -91,6 +92,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsTrue(persons.Any());
             Assert.IsTrue(persons.Any(p => p.PersonId == expectedPerson.PersonId));
         }
+#endif
 
         [TestMethod]
         public void ValidMetadata()

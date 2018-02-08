@@ -552,7 +552,6 @@ namespace Microsoft.OData.Client
             /// Gets the stream to be used to write the request payload.
             /// </summary>
             /// <returns>Stream to which the request payload needs to be written.</returns>
-            [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We don't dispose the memory stream we create")]
             public Stream GetStream()
             {
                 if (this.cachedRequestStream == null)

@@ -124,7 +124,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
-#if !PORTABLELIB
+#if !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override int Timeout 
         { 
             get
@@ -245,13 +245,13 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
         {
             return UnwrapAggregateException(() =>
-                {
-                    var result = ((Task<HttpResponseMessage>)asyncResult).Result;
-                    return ConvertHttpClientResponse(result);
-                });
+            {
+                var result = ((Task<HttpResponseMessage>)asyncResult).Result;
+                return ConvertHttpClientResponse(result);
+            });
         }
 
-#if !PORTABLELIB
+#if !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override IODataResponseMessage GetResponse()
         {
             return UnwrapAggregateException(() =>

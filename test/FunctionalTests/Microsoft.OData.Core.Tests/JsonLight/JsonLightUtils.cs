@@ -4,11 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-using Microsoft.OData.JsonLight;
-
 namespace Microsoft.OData.Tests.JsonLight
 {
+    #region Namespaces
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.OData.JsonLight;
+    #endregion Namespaces
+
     public static class JsonLightUtils
     {
         /// <summary>The default streaming Json Light media type.</summary>
@@ -30,6 +33,33 @@ namespace Microsoft.OData.Tests.JsonLight
         public static string GetPropertyAnnotationName(string propertyName, string annotationName)
         {
             return propertyName + JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotationName;
+        }
+
+
+        /// <summary>
+        /// Get the Json string with special characters escaped.
+        /// </summary>
+        /// <param name="text">The original string containing Json special characters that need to apply the escape rules.</param>
+        /// <returns>The encoded Json string.</returns>
+        public static string GetJsonEncodedString(string text)
+        {
+            return text.Replace("\\", "\\\\")
+                .Replace("\r", "\\r")
+                .Replace("\n", "\\n")
+                .Replace("\f", "\\f")
+                .Replace("\t", "\\t")
+                .Replace("\"", "\\\"")
+                .Replace("\b", "\\b");
+        }
+
+        /// <summary>
+        /// Get the Base64Url encoded string for the binary.
+        /// </summary>
+        /// <param name="bytes">The binary bytes to be encoded.</param>
+        /// <returns>The Base64Url encoded string.</returns>
+        public static string GetBase64UrlEncodedString(byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes).Replace('+', '-').Replace('/', '_');
         }
     }
 }

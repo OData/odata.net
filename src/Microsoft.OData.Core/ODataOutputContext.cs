@@ -82,7 +82,7 @@ namespace Microsoft.OData
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = messageWriterSettings.Validator;
-            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container, messageWriterSettings.Version);
         }
 
         /// <summary>
@@ -197,14 +197,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The Context Url level used when writing.
-        /// </summary>
-        internal virtual ODataContextUrlLevel ContextUrlLevel
-        {
-            get { return ODataContextUrlLevel.OnDemand; }
-        }
-
-        /// <summary>
         /// IDisposable.Dispose() implementation to cleanup unmanaged resources of the context.
         /// </summary>
         public void Dispose()
@@ -234,6 +226,32 @@ namespace Microsoft.OData
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
         public virtual Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>The created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public virtual ODataWriter CreateODataDeltaResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to write entities for.</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        public virtual Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -368,9 +386,9 @@ namespace Microsoft.OData
         /// <summary>
         /// Writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
-        /// <param name="property">The property to write.</param>
+        /// <param name="odataProperty">The OData property to write.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        public virtual void WriteProperty(ODataProperty property)
+        public virtual void WriteProperty(ODataProperty odataProperty)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
@@ -379,10 +397,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
-        /// <param name="property">The property to write</param>
-        /// <returns>A task representing the asynchronous operation of writing the property.</returns>
+        /// <param name="odataProperty">The OData property to write</param>
+        /// <returns>A task representing the asynchronous operation of writing the OData property.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public virtual Task WritePropertyAsync(ODataProperty property)
+        public virtual Task WritePropertyAsync(ODataProperty odataProperty)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
@@ -391,13 +409,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
-        /// <param name="error">The error to write.</param>
+        /// <param name="odataError">The OData error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="odataError"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        public virtual void WriteError(ODataError error, bool includeDebugInformation)
+        public virtual void WriteError(ODataError odataError, bool includeDebugInformation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
@@ -406,14 +424,14 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
-        /// <param name="error">The error to write.</param>
+        /// <param name="odataError">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="odataError"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public virtual Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
+        public virtual Task WriteErrorAsync(ODataError odataError, bool includeDebugInformation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
@@ -515,14 +533,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <returns>The created batch writer.</returns>
         /// <remarks>We don't plan to make this public!</remarks>
         /// <remarks>
         /// The write must flush the output when it's finished (inside the last Write call).
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
+        internal virtual ODataBatchWriter CreateODataBatchWriter()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
@@ -531,14 +548,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
-        /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <returns>A running task for the created batch writer.</returns>
         /// <remarks>We don't plan to make this public!</remarks>
         /// <remarks>
         /// The write must flush the output when it's finished (inside the last Write call).
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
+        internal virtual Task<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
@@ -645,17 +661,6 @@ namespace Microsoft.OData
         internal virtual void WriteMetadataDocument()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.MetadataDocument);
-        }
-
-        /// <summary>
-        /// Creates a context uri builder for the current output context.
-        /// </summary>
-        /// <returns>The context uri builder to use when writing.</returns>
-        internal ODataContextUriBuilder CreateContextUriBuilder()
-        {
-            return ODataContextUriBuilder.Create(
-                this.messageWriterSettings.MetadataDocumentUri,
-                this.writingResponse && this.ContextUrlLevel != ODataContextUrlLevel.None);
         }
 
         /// <summary>

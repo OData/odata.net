@@ -16,8 +16,9 @@ namespace AstoriaUnitTests.Tests
     using Dev10TypeDef = AstoriaUnitTests.Tests.UnitTestModule.Dev10TypeTests;
 
     /// <summary>This is a test class for new types and language constructs in dev 10.</summary>
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [Ignore] // Remove Atom
-    [TestClass]
+    // [TestClass]
     public class Dev10TypeTests
     {
         [TestMethod]

@@ -20,7 +20,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Instance for <see cref="ODataUriResolver"/>.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         private static readonly ODataUriResolver Default = new ODataUriResolver();
 
         /// <summary>
@@ -35,6 +34,14 @@ namespace Microsoft.OData.UriParser
         /// All extensions should look at this property and keep case sensitive behavior consistent.
         /// </remarks>
         public virtual bool EnableCaseInsensitive { get; set; }
+
+        /// <summary>
+        /// Gets and sets the optional-$-sign-prefix for OData system query option.
+        /// </summary>
+        /// <remarks>
+        /// All extensions should look at this property and keep case sensitive behavior consistent.
+        /// </remarks>
+        public virtual bool EnableNoDollarQueryOptions { get; set; }
 
         /// <summary>
         /// Gets and sets promotion rules for type facets.
@@ -134,7 +141,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="model">The model to be used.</param>
         /// <param name="typeName">The type name to be resolved.</param>
         /// <returns>Resolved type.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "IEdmModel.FindType is allowed here and all other places should call this method to get to the type.")]
         public virtual IEdmSchemaType ResolveType(IEdmModel model, string typeName)
         {
             if (EnableCaseInsensitive)

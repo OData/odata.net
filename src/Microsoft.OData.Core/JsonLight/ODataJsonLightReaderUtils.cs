@@ -97,7 +97,6 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="converter">The payload value converter to convert this value.</param>
         /// <returns>Object which is in sync with the property type (modulo the V1 exception of converting numbers to non-compatible target types).</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static object ConvertValue(
             object value,
             IEdmPrimitiveTypeReference primitiveTypeReference,
@@ -222,7 +221,7 @@ namespace Microsoft.OData.JsonLight
                 return EdmLibraryExtensions.GetCollectionTypeFullName(collectionValue.TypeName);
             }
 
-            ODataResource resource = payloadItem as ODataResource;
+            ODataResourceBase resource = payloadItem as ODataResourceBase;
             if (resource != null)
             {
                 return resource.TypeName;

@@ -82,7 +82,10 @@ namespace Microsoft.OData.JsonLight
             CustomInstanceAnnotation,
 
             /// <summary>A metadata reference property was found.</summary>
-            MetadataReferenceProperty
+            MetadataReferenceProperty,
+
+            /// <summary>A property representing a nested delta resoruce set was found.</summary>
+            NestedDeltaResourceSet,
         }
 
         /// <summary>
@@ -251,7 +254,8 @@ namespace Microsoft.OData.JsonLight
                     contextUriAnnotationValue,
                     payloadKind,
                     this.MessageReaderSettings.ClientCustomTypeResolver,
-                    this.JsonLightInputContext.ReadingResponse);
+                    this.JsonLightInputContext.ReadingResponse,
+                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
             }
 
             this.contextUriParseResult = parseResult;
@@ -694,6 +698,15 @@ namespace Microsoft.OData.JsonLight
 
                 string propertyNameFromReader, annotationNameFromReader;
                 bool isPropertyAnnotation = TryParsePropertyAnnotation(nameFromReader, out propertyNameFromReader, out annotationNameFromReader);
+
+                // reading a nested delta resource set
+                if (isPropertyAnnotation && String.CompareOrdinal(this.CompleteSimplifiedODataAnnotation(annotationNameFromReader), ODataAnnotationNames.ODataDelta) == 0)
+                {
+                    // Read over the property name.
+                    this.JsonReader.Read();
+                    parsedPropertyName = propertyNameFromReader;
+                    return PropertyParsingResult.NestedDeltaResourceSet;
+                }
 
                 bool isInstanceAnnotation = false;
                 if (!isPropertyAnnotation)

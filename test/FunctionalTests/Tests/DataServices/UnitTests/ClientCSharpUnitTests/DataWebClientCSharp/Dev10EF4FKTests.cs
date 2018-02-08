@@ -127,6 +127,7 @@ namespace AstoriaUnitTests.Tests
     using EFFK = AstoriaUnitTests.EFFK;
     using EFFKClient = AstoriaUnitTests.EFFK.Client;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/880
     [TestClass]
     public class EFFKTests
     {
@@ -192,7 +193,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_Get_SimpleGet()
         {
             var q = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)");
@@ -207,7 +208,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_Get_ProjectNavOnly()
         {
             var q = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithNavOrder()
@@ -231,7 +232,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_Get_ProjectFKOnly()
         {
             var q = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithFKOrder()
@@ -255,7 +256,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_Update_SimpleUpdate()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)").FirstOrDefault();
@@ -281,7 +282,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_Update_ProjectedUpdate()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.Customer()
@@ -315,7 +316,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_Update_NarrowingUpdate1()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithFKOrder()
@@ -351,7 +352,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_Update_NarrowingUpdate2()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithNavOrder()
@@ -387,7 +388,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_InsertTest()
         {
             var newCust = new EFFKClient.Customer() { ID = 10, Name = "New Cust", EditTimeStamp = new byte[] { 0, 1, 2, 3 } };
@@ -436,7 +437,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_InsertAddRelated()
         {
             var newCust = new EFFKClient.Customer() { ID = 11, EditTimeStamp = new byte[] { 0 } };
@@ -457,7 +458,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_DeleteLinks()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)").FirstOrDefault();
@@ -491,7 +492,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_SettingTheSameRelationshipAgain()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)").FirstOrDefault();
@@ -502,7 +503,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_1To1_BasicInsert_Bind_Delete()
         {
             // Create new office type
@@ -531,7 +532,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_1To1_CascadeDelete_PrincipalToDependent()
         {
             // Create new office type
@@ -556,7 +557,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_1To1_CascadeDelete_DependentToPrincipal()
         {
             // Create new office type
@@ -581,7 +582,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_1To1_DeleteDependent()
         {
             // Create new office type
@@ -609,7 +610,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_1To1_BasicInsertAndBind_Batch()
         {
             // Create new office type
@@ -632,7 +633,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_1To1_BasicInsertAndBind_Batch_ChangedUriCompositionRulesOnServer()
         {
             // Fix URI composition in Astoria for V3 payloads
@@ -659,7 +660,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void EFFK_1To1_UpdateRelationship()
         {
             // Create new office type

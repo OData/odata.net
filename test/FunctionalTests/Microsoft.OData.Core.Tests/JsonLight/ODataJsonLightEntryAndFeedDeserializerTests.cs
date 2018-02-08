@@ -250,13 +250,13 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #region Test ReadAndApplyResourceSetInstanceAnnotationValue
 
-        [Fact(Skip = "We do not check the odata.type for resource set")]
-        public void ReadAndApplyResourceSetInstanceAnnotationValueShouldThrowOnReservedODataAnnotationNamesNotApplicableToFeeds()
-        {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{}");
-            Action action = () => deserializer.ReadAndApplyResourceSetInstanceAnnotationValue("odata.type", new ODataResourceSet(), null /*propertyAndAnnotationCollector*/);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.type"));
-        }
+        //[Fact(Skip = "#834: We do not check the odata.type for resource set")]
+        //public void ReadAndApplyResourceSetInstanceAnnotationValueShouldThrowOnReservedODataAnnotationNamesNotApplicableToFeeds()
+        //{
+        //    var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{}");
+        //    Action action = () => deserializer.ReadAndApplyResourceSetInstanceAnnotationValue("odata.type", new ODataResourceSet(), null /*propertyAndAnnotationCollector*/);
+        //    action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.type"));
+        //}
 
         [Fact]
         public void ReadAndApplyFeedInstanceAnnotationNumericValueShouldSetCountOnFeed()

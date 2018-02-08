@@ -24,13 +24,14 @@ using Microsoft.OData.Client;
 
 namespace AstoriaUnitTests.Tests.Server
 {
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     [TestClass]
     public class ActionTests
     {
         private Version V4 = new Version(4, 0);
 
         [Ignore]
-        [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate service actions")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate service actions")]
         public void InvokeActionTest()
         {
             #region Test Cases
@@ -1881,7 +1882,7 @@ namespace AstoriaUnitTests.Tests.Server
             });
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Variation("Makes sure in Json Light, always bindable actions are omitted in payload.")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Makes sure in Json Light, always bindable actions are omitted in payload.")]
         public void JsonLightOmitAlwaysAvailableActionsInEntry()
         {
             DSPMetadata metadata = new DSPMetadata("ModelWithActions", "AstoriaUnitTests.Tests.Actions");
@@ -2162,7 +2163,7 @@ namespace AstoriaUnitTests.Tests.Server
             });
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Variation("Tests $select on entities with actions.")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Tests $select on entities with actions.")]
         public void ActionSelectExpandTests()
         {
             var testCases = new[]
@@ -2413,7 +2414,7 @@ namespace AstoriaUnitTests.Tests.Server
         }
 
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Variation("Tests the next link with selected actions.")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Tests the next link with selected actions.")]
         public void ActionNextLinkWithSelectExpandTests()
         {
             var testCases = new[]
@@ -4391,7 +4392,7 @@ namespace AstoriaUnitTests.Tests.Server
             Assert.AreEqual(binding.GetValue("ID"), 3);
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Variation("Service action and open type positive tests.")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Service action and open type positive tests.")]
         public void ActionOpenTypeSelectTests()
         {
             var testCases = new[]

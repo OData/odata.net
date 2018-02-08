@@ -23,6 +23,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void PostEntity()
         {
             int RequestsPerIteration = 100;
@@ -76,6 +77,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void DeleteEntity()
         {
             int RequestsPerIteration = 100;
@@ -102,6 +104,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void PutEntity()
         {
             int RequestsPerIteration = 100;
@@ -146,6 +149,7 @@ namespace Microsoft.OData.Performance
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void PatchEntity()
         {
             int RequestsPerIteration = 100;

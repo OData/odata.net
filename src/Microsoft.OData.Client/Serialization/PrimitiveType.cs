@@ -268,7 +268,6 @@ namespace Microsoft.OData.Client
         /// <param name="clrType">The clr type</param>
         /// <param name="edmTypeName">The edm type name to remove, or null</param>
         /// <remarks>This is a test clean up hook. MUST NOT BE CALLED FROM PRODUCT CODE.</remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Test hook")]
         internal static void DeleteKnownType(Type clrType, String edmTypeName)
         {
             // This is not thread safe. Product code should never modify clrMapping dictionary after initialization.

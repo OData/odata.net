@@ -694,7 +694,10 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         InvalidNavigationPropertyType = 258,
 
-        // unused 259
+        /// <summary>
+        /// Edm.PrimitiveType cannot be used as the type of a key property of an entity type.
+        /// </summary>
+        KeyPropertyTypeCannotBeEdmPrimitiveType = 259,
 
         // unused 260
 
@@ -782,6 +785,11 @@ namespace Microsoft.OData.Edm.Validation
         /// Operation with an EntitySetPath has an invalid return type. The return type must be an entity type or collection of entity type.
         /// </summary>
         OperationWithEntitySetPathReturnTypeInvalid = 256,
+
+        /// <summary>
+        /// Collection(Edm.PrimitiveType) and Collection(Edm.ComplexType) cannot be used as the return type of a function.
+        /// </summary>
+        OperationWithCollectionOfAbstractReturnTypeInvalid = 257,
 
         /// <summary>
         /// Max length is out of range.
@@ -1096,6 +1104,11 @@ namespace Microsoft.OData.Edm.Validation
         PropertyMustNotHaveKindOfNone = 336,
 
         /// <summary>
+        /// A property type cannot be collection of Edm.Primitive or Edm.ComplexType.
+        /// </summary>
+        PropertyTypeCannotBeCollectionOfAbstractType = 337,
+
+        /// <summary>
         /// A schema element without other errors must not have kind of none.
         /// </summary>
         SchemaElementMustNotHaveKindOfNone = 338,
@@ -1303,6 +1316,46 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// A required parameter followed an optional parameter.
         /// </summary>
-        RequiredParametersMustPrecedeOptional = 379
+        RequiredParametersMustPrecedeOptional = 379,
+
+        /// <summary>
+        /// The enum type is not valid for the requested type.
+        /// </summary>
+        ExpressionEnumKindNotValidForAssertedType = 380,
+
+        /// <summary>
+        /// The underlying type of a type definition type cannot be Edm.PrimitiveType.
+        /// </summary>
+        TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType = 381,
+
+        /// <summary>
+        /// The base type of an entity type cannot be Edm.EntityType.
+        /// </summary>
+        EntityTypeBaseTypeCannotBeEdmEntityType = 382,
+
+        /// <summary>
+        /// The base type of a complex type cannot be Edm.ComplexType.
+        /// </summary>
+        ComplexTypeBaseTypeCannotBeEdmComplexType = 383,
+
+        /// <summary>
+        /// Edm.EntityType cannot be used as the type of a singleton in an entity container.
+        /// </summary>
+        EntityTypeOfSingletonCannotBeEdmEntityType = 384,
+
+        /// <summary>
+        /// Edm.EntityType cannot be used as the type of an entity set in an entity container.
+        /// </summary>
+        EntityTypeOfEntitySetCannotBeEdmEntityType = 385,
+
+        /// <summary>
+        /// The dclaring type of navigation source cannot have path type property.
+        /// </summary>
+        DeclaringTypeOfNavigationSourceCannotHavePathProperty = 386,
+
+        /// <summary>
+        /// The type of navigation property cannot have path type property.
+        /// </summary>
+        TypeOfNavigationPropertyCannotHavePathProperty = 387
     }
 }

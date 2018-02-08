@@ -25,13 +25,40 @@ namespace Microsoft.OData.Tests
             Assert.True((settings.Validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0, "The ThrowOnDuplicatePropertyNames should be true by default");
             Assert.Null(settings.BaseUri);
             Assert.Null(settings.ClientCustomTypeResolver);
+            Assert.Null(settings.PrimitiveTypeResolver);
             Assert.True(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion should be true by default.");
             Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
             Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");                        
-            Assert.Null(settings.ShouldIncludeAnnotation);            
+            Assert.Null(settings.ShouldIncludeAnnotation);
+            Assert.True(settings.ReadUntypedAsString, "ReadUntypedAsString should be true by default for OData 4.0.");
             Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType should be true by default.");
-            Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
+            Assert.True(ODataVersion.V4 == settings.Version, "Version should be 4.0.");
+            Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V4.");
+            Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
+            Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
+            Assert.True(100 == settings.MessageQuotas.MaxNestingDepth, "The MaxNestingDepth should be set to 100 by default.");
+            Assert.True(1024 * 1024 == settings.MessageQuotas.MaxReceivedMessageSize, "The MaxMessageSize should be set to 1024 * 1024 by default.");
+        }
+
+        [Fact]
+        public void DefaultValuesTest401()
+        {
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings(ODataVersion.V401);
+
+            Assert.True((settings.Validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0, "The ThrowOnDuplicatePropertyNames should be true by default");
+            Assert.Null(settings.BaseUri);
+            Assert.Null(settings.ClientCustomTypeResolver);
+            Assert.Null(settings.PrimitiveTypeResolver);
+            Assert.True(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion should be true by default.");
+            Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
+            Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
+            Assert.False(settings.ReadUntypedAsString, "ReadUntypedAsString should be false by default for OData 4.01.");
+            Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");
+            Assert.Null(settings.ShouldIncludeAnnotation);
+            Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) == 0, "ThrowOnUndeclaredPropertyForNonOpenType should be false by default for OData 4.01.");
+            Assert.True(ODataVersion.V401 == settings.Version, "Version should be 4.01.");
+            Assert.True(ODataVersion.V401 == settings.MaxProtocolVersion, "MaxProtocolVersion should be 4.01.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
             Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
             Assert.True(100 == settings.MessageQuotas.MaxNestingDepth, "The MaxNestingDepth should be set to 100 by default.");
@@ -166,6 +193,7 @@ namespace Microsoft.OData.Tests
             Assert.True(Uri.Compare(expected.BaseUri, actual.BaseUri, UriComponents.AbsoluteUri, UriFormat.Unescaped, StringComparison.CurrentCulture) == 0,
                 "BaseUri does not match");
             Assert.True(expected.ClientCustomTypeResolver == actual.ClientCustomTypeResolver, "ClientCustomTypeResolver does not match");
+            Assert.True(expected.PrimitiveTypeResolver == actual.PrimitiveTypeResolver, "PrimitiveTypeResolver does not match");
             Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
             Assert.True(expected.EnablePrimitiveTypeConversion == actual.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion does not match");
             Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
@@ -179,7 +207,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void ShouldSkipAnnotationsByDefaultForV3()
+        public void ShouldSkipAnnotationsByDefaultForV4()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings();
             readerSettings.MaxProtocolVersion = ODataVersion.V4;
@@ -187,7 +215,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void ShouldHonorAnnotationFilterForV3()
+        public void ShouldHonorAnnotationFilterForV4()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings();
             readerSettings.MaxProtocolVersion = ODataVersion.V4;

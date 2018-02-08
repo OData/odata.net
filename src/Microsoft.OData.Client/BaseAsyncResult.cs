@@ -117,7 +117,6 @@ namespace Microsoft.OData.Client
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public System.Threading.WaitHandle AsyncWaitHandle
         {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "WaitHandle is disposed during EndXXX(IAsyncResult) method")]
             get
             {
                 if (null == this.asyncWait)
@@ -371,7 +370,6 @@ namespace Microsoft.OData.Client
         /// time limit.  Also then cancel the operation, to make sure its stopped, to avoid
         /// multi-threading if your wait time limit was just too short.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void HandleCompleted()
         {
             // TODO: even if background thread of async operation encounters
@@ -527,7 +525,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle request.BeginGetRequestStream with request.EndGetRequestStream and then write out request stream</summary>
         /// <param name="asyncResult">async result</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected void AsyncEndGetRequestStream(IAsyncResult asyncResult)
         {
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
@@ -737,7 +734,6 @@ namespace Microsoft.OData.Client
         /// and in case of synchronous also the next BeginRead.
         /// </summary>
         /// <param name="asyncResult">The asynchronous result associated with the completed operation.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncRequestContentEndRead(IAsyncResult asyncResult)
 #endif
         {
@@ -852,7 +848,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle requestStream.BeginWrite with requestStream.EndWrite then BeginGetResponse.</summary>
         /// <param name="asyncResult">async result</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndWrite(IAsyncResult asyncResult)
 #endif
         {
@@ -1092,7 +1087,6 @@ namespace Microsoft.OData.Client
             /// <summary>
             /// dispose of the request object
             /// </summary>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
             internal void Dispose()
             {
                 if (this.isDisposed)

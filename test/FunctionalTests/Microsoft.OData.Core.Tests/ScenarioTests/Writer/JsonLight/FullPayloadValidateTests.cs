@@ -911,7 +911,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 {
                     new ODataProperty { Name = "ID", Value = 102 },
                     new ODataProperty { Name = "Name", Value = "Bob" },
-                    new ODataProperty { Name = "Prop1", Value = "Var1" }
+                    new ODataProperty { Name = "Prop1", Value = "Var1" },
+                    new ODataProperty { Name = "UntypedProperty", Value = new ODataUntypedValue {RawValue="\"rawValue\"" } }
                 },
             };
 
@@ -920,7 +921,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string expectedPayload =
                                   "{\"" +
                                     "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
-                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
+                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\",\"UntypedProperty\":\"rawValue\"" +
                                   "}";
 
             string result = this.GetWriterOutputForContentTypeAndKnobValue(
@@ -944,7 +945,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             result.Should().Be(expectedPayload);
         }
 
-        [Fact(Skip = "Ignore this until writing nested context URL is supported")]
+        [Fact]
         public void ShouldWriteNestedContextUrlIfCanNotBeInferred()
         {
             var entryWithOnlyData2WithSerializationInfo = new ODataResource

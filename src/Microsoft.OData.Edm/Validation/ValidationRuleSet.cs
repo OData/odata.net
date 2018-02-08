@@ -103,11 +103,20 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.AnnotationInaccessibleTerm,
                 ValidationRules.ElementDirectValueAnnotationFullNameMustBeUnique,
                 ValidationRules.VocabularyAnnotationInaccessibleTarget,
-                ValidationRules.NavigationPropertyEntityMustNotIndirectlyContainItself,
                 ValidationRules.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet,
                 ValidationRules.NavigationPropertyMappingMustPointToValidTargetForProperty,
                 ValidationRules.DirectValueAnnotationHasXmlSerializableName,
                 ValidationRules.FunctionMustHaveReturnType,
+                ValidationRules.EntitySetTypeCannotBeEdmEntityType,
+                ValidationRules.SingletonTypeCannotBeEdmEntityType,
+                ValidationRules.OperationReturnTypeCannotBeCollectionOfAbstractType,
+                ValidationRules.PropertyTypeCannotBeCollectionOfAbstractType,
+                ValidationRules.EntityTypeKeyTypeCannotBeEdmPrimitiveType,
+                ValidationRules.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                ValidationRules.EnumUnderlyingTypeCannotBeEdmPrimitiveType,
+                ValidationRules.StructuredTypeBaseTypeCannotBeAbstractType,
+                ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
+                ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty
             });
 
         private static readonly ValidationRuleSet V4RuleSet =

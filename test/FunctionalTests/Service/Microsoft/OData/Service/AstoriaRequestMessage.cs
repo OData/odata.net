@@ -380,6 +380,8 @@ namespace Microsoft.OData.Service
                     return this.requestAcceptCharSet;
                 case XmlConstants.HttpPrefer:
                     return this.GetCustomHeaderIfAvailable(headerName);
+                case XmlConstants.HttpAccept:
+                    return this.requestAccept;
                 default:
                     Debug.Assert(false, "Invalid header name encountered: " + headerName);
                     throw new DataServiceException(500, Strings.DataServiceException_GeneralError);

@@ -16,8 +16,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// Tests for ODataSimplified service
     /// </summary>
-    [Ignore] // Issues: #623
-    [TestClass]
+    // [Ignore] // Issues: #623
+    // [TestClass] // github issuse: #896
     public class ODataSimplifiedServiceQueryTests : ODataWCFServiceTestsBase<ODataSimplifiedService>
     {
         public ODataSimplifiedServiceQueryTests()

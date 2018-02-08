@@ -42,15 +42,16 @@ namespace AstoriaUnitTests.Tests
                 currentCode.Insert(currentCode.ToString().IndexOf("public byte[] Body { get; set; }"), "[Required()]\n");
                 currentCode.Insert(currentCode.ToString().IndexOf("public int? Age { get; set; }"), "[Required()]\n");
 
-                return currentCode;             
+                return currentCode;
             };
 
-            service = new DSPUnitTestServiceDefinition(metadata, providerKind, defaultData);           
-            service.Writable = true;                                    
+            service = new DSPUnitTestServiceDefinition(metadata, providerKind, defaultData);
+            service.Writable = true;
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
         [Ignore] // Remove Atom
-        [TestCategory("Partition2"), TestMethod]
+        // [TestCategory("Partition2"), TestMethod]
         public void NonNullableComplexPropertyTest()
         {
             test.TestUtil.RunCombinations(

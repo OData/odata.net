@@ -34,14 +34,14 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     [DeploymentItem(@"VBDSCReferences\", "VBDSCReferences")]
     [DeploymentItem(@"VBReferences\", "VBReferences")]
 #if !WIN8 && !WINDOWSPHONE
-    [DeploymentItem(@"EntityFramework.5.0.0\lib\net40\EntityFramework.dll")]
+    [DeploymentItem(@"EntityFramework.dll")]
 #endif
     [TestClass]
     public class T4CodeGenerationTests
     {
         private const string NameSpacePrefixReference = "Microsoft.Test.OData.Services.TestServices.";
         private const string NameSpacePrefixCodeGenerationTests = "CodeGenerationTests.";
-        private const string T4Version = "2.4.0";
+        private const string T4Version = "#VersionNumber#";
         private const string SystemIO = "System.IO.dll";
         private const string SystemRuntime = "System.Runtime.dll";
         private const string SystemXmlReaderWriter = "System.Xml.ReaderWriter.dll";

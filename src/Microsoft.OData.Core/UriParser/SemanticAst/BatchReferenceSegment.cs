@@ -42,7 +42,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="entitySet">The resulting entity set</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input edmType of contentID is null.</exception>
         /// <exception cref="ODataException">Throws if the contentID is not in the right format.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public BatchReferenceSegment(string contentId, IEdmType edmType, IEdmEntitySetBase entitySet)
         {
             ExceptionUtils.CheckArgumentNotNull(edmType, "resultingType");

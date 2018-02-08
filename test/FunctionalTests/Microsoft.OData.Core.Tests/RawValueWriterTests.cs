@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
@@ -107,7 +108,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             var value = GeographyPoint.Create(22.2, 22.2);
             target.WriteRawValue(value);
-            this.StreamAsString(target).Should().Be("SRID=4326;POINT (22.2 22.2)");
+            this.StreamAsString(target).Should().Be(@"{""type"":""Point"",""coordinates"":[22.2,22.2],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}");
         }
 
         /// <summary>
@@ -117,9 +118,9 @@ namespace Microsoft.OData.Tests
         public void WriteRawValueWritesGeometryValue()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            var value2 = GeometryPoint.Create(1.2, 3.16);
-            target.WriteRawValue(value2);
-            this.StreamAsString(target).Should().Be("SRID=0;POINT (1.2 3.16)");
+            var value = GeometryPoint.Create(1.2, 3.16);
+            target.WriteRawValue(value);
+            this.StreamAsString(target).Should().Be(@"{""type"":""Point"",""coordinates"":[1.2,3.16],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:0""}}}");
         }
 
         private string StreamAsString(RawValueWriter target)

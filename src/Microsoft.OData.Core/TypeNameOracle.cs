@@ -65,7 +65,10 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ValidationUtils_UnrecognizedTypeName(typeName));
             }
 
-            writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, expectStructuredType, resolvedType);
+            if (resolvedType.TypeKind != EdmTypeKind.Untyped)
+            {
+                writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, expectStructuredType, resolvedType);
+            }
 
             return resolvedType;
         }
@@ -86,11 +89,16 @@ namespace Microsoft.OData
             }
 
             // TODO: Clean up handling of expected types/sets during writing
-            var typeFromResource = (IEdmStructuredType)ResolveAndValidateTypeName(model, typeName, EdmTypeKind.None, /* expectStructuredType */ true, writerValidator);
+            IEdmType typeFromResource = ResolveAndValidateTypeName(model, typeName, EdmTypeKind.None, /* expectStructuredType */ true, writerValidator);
             IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(
                 expectedType.ToTypeReference(),
                 typeFromResource == null ? null : typeFromResource.ToTypeReference(),
                 writerValidator);
+
+            if (typeReferenceFromValue != null && typeReferenceFromValue.IsUntyped())
+            {
+                return new EdmUntypedStructuredType();
+            }
 
             return typeReferenceFromValue == null ? null : typeReferenceFromValue.ToStructuredType();
         }

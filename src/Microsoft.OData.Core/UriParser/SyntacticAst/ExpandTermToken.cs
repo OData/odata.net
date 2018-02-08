@@ -66,6 +66,11 @@ namespace Microsoft.OData.UriParser
         private readonly SelectToken selectOption;
 
         /// <summary>
+        /// the compute option for this expand term.
+        /// </summary>
+        private readonly ComputeToken computeOption;
+
+        /// <summary>
         /// the expand option for this expand term.
         /// </summary>
         private readonly ExpandToken expandOption;
@@ -104,6 +109,36 @@ namespace Microsoft.OData.UriParser
         /// <param name="selectOption">the select option for this expand term</param>
         /// <param name="expandOption">the expand option for this expand term</param>
         public ExpandTermToken(PathSegmentToken pathToNavigationProp, QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, long? levelsOption, QueryToken searchOption, SelectToken selectOption, ExpandToken expandOption)
+            : this(pathToNavigationProp, filterOption, orderByOptions, topOption, skipOption, countQueryOption, levelsOption, searchOption, selectOption, expandOption, null)
+        {
+        }
+
+        /// <summary>
+        /// Create an expand term token
+        /// </summary>
+        /// <param name="pathToNavigationProp">the nav prop for this expand term</param>
+        /// <param name="filterOption">the filter option for this expand term</param>
+        /// <param name="orderByOptions">the orderby options for this expand term</param>
+        /// <param name="topOption">the top option for this expand term</param>
+        /// <param name="skipOption">the skip option for this expand term</param>
+        /// <param name="countQueryOption">the query count option for this expand term</param>
+        /// <param name="levelsOption">the levels option for this expand term</param>
+        /// <param name="searchOption">the search option for this expand term</param>
+        /// <param name="selectOption">the select option for this expand term</param>
+        /// <param name="expandOption">the expand option for this expand term</param>
+        /// <param name="computeOption">the compute option for this expand term.</param>
+        public ExpandTermToken(
+            PathSegmentToken pathToNavigationProp,
+            QueryToken filterOption,
+            IEnumerable<OrderByToken> orderByOptions,
+            long? topOption,
+            long? skipOption,
+            bool? countQueryOption,
+            long? levelsOption,
+            QueryToken searchOption,
+            SelectToken selectOption,
+            ExpandToken expandOption,
+            ComputeToken computeOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProp, "property");
 
@@ -116,6 +151,7 @@ namespace Microsoft.OData.UriParser
             this.levelsOption = levelsOption;
             this.searchOption = searchOption;
             this.selectOption = selectOption;
+            this.computeOption = computeOption;
             this.expandOption = expandOption;
         }
 
@@ -189,6 +225,14 @@ namespace Microsoft.OData.UriParser
         public SelectToken SelectOption
         {
             get { return this.selectOption; }
+        }
+
+        /// <summary>
+        /// the compute option for this expand term.
+        /// </summary>
+        public ComputeToken ComputeOption
+        {
+            get { return this.computeOption; }
         }
 
         /// <summary>
