@@ -26,7 +26,20 @@ namespace Microsoft.OData.Tests
                 typeFromValue, 
                 /* isOpenProperty*/ false);
             result.Should().Be("Edm.GeographyPoint");
-            WriterUtils.RemoveEdmPrefixFromTypeName(result).Should().Be("GeographyPoint");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4).Should().Be("#GeographyPoint");
+        }
+
+        [Fact]
+        public void TypeNameShouldBeWrittenIfSpatialValueIsMoreDerivedThanMetadataType_401()
+        {
+            var typeFromMetadata = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, true);
+            var typeFromValue = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false);
+            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(Microsoft.Spatial.GeographyPoint.Create(42, 42)),
+                typeFromMetadata,
+                typeFromValue,
+                /* isOpenProperty*/ false);
+            result.Should().Be("Edm.GeographyPoint");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401).Should().Be("GeographyPoint");
         }
 
         [Fact]
@@ -79,7 +92,19 @@ namespace Microsoft.OData.Tests
                 typeFromValue,
                 /* isOpenProperty*/ true);
             result.Should().Be("Collection(Edm.String)");
-            WriterUtils.RemoveEdmPrefixFromTypeName(result).Should().Be("Collection(String)");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4).Should().Be("#Collection(String)");
+        }
+
+        [Fact]
+        public void TypeNameShouldBeWrittenForUndeclaredCollectionProperty_401()
+        {
+            var typeFromValue = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false));
+            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(String)" },
+                null,
+                typeFromValue,
+                /* isOpenProperty*/ true);
+            result.Should().Be("Collection(Edm.String)");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401).Should().Be("Collection(String)");
         }
 
         [Fact]

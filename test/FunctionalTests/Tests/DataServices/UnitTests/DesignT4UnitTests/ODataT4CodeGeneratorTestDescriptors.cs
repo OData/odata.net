@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
         private const string ExpectedCSharp = "ExpectedCSharp";
         private const string ExpectedVBUseDSC = "ExpectedVBUseDSC";
         private const string ExpectedVB = "ExpectedVB";
-        private const string T4Version = "2.4.0";
+        private const string T4Version = "#VersionNumber#";
 
         public class ODataT4CodeGeneratorTestsDescriptor
         {

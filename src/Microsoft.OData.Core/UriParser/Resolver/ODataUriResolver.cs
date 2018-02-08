@@ -36,6 +36,14 @@ namespace Microsoft.OData.UriParser
         public virtual bool EnableCaseInsensitive { get; set; }
 
         /// <summary>
+        /// Gets and sets the optional-$-sign-prefix for OData system query option.
+        /// </summary>
+        /// <remarks>
+        /// All extensions should look at this property and keep case sensitive behavior consistent.
+        /// </remarks>
+        public virtual bool EnableNoDollarQueryOptions { get; set; }
+
+        /// <summary>
         /// Gets and sets promotion rules for type facets.
         /// </summary>
         public TypeFacetsPromotionRules TypeFacetsPromotionRules

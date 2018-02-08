@@ -535,6 +535,13 @@ public enum Microsoft.OData.Edm.EdmOnDeleteAction : int {
 	None = 0
 }
 
+public enum Microsoft.OData.Edm.EdmPathTypeKind : int {
+	AnnotationPath = 1
+	NavigationPropertyPath = 3
+	None = 0
+	PropertyPath = 2
+}
+
 public enum Microsoft.OData.Edm.EdmPrimitiveTypeKind : int {
 	Binary = 1
 	Boolean = 2
@@ -565,6 +572,7 @@ public enum Microsoft.OData.Edm.EdmPrimitiveTypeKind : int {
 	Int32 = 9
 	Int64 = 10
 	None = 0
+	PrimitiveType = 34
 	SByte = 11
 	Single = 12
 	Stream = 14
@@ -594,6 +602,7 @@ public enum Microsoft.OData.Edm.EdmTypeKind : int {
 	EntityReference = 5
 	Enum = 6
 	None = 0
+	Path = 9
 	Primitive = 1
 	TypeDefinition = 7
 	Untyped = 8
@@ -849,6 +858,13 @@ public interface Microsoft.OData.Edm.IEdmOptionalParameter : IEdmElement, IEdmNa
 public interface Microsoft.OData.Edm.IEdmPathExpression : IEdmElement, IEdmExpression {
 	string Path  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] PathSegments  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.IEdmPathType : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
+	Microsoft.OData.Edm.EdmPathTypeKind PathKind  { public abstract get; }
+}
+
+public interface Microsoft.OData.Edm.IEdmPathTypeReference : IEdmElement, IEdmTypeReference {
 }
 
 public interface Microsoft.OData.Edm.IEdmPrimitiveType : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
@@ -1150,6 +1166,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.IEdmPathTypeReference AsPath (Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmPrimitiveTypeReference AsPrimitive (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
@@ -1326,6 +1347,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	ExtensionAttribute(),
 	]
 	public static bool IsOrInheritsFrom (Microsoft.OData.Edm.IEdmType thisType, Microsoft.OData.Edm.IEdmType otherType)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsPath (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
 	ExtensionAttribute(),
@@ -2260,7 +2286,7 @@ public class Microsoft.OData.Edm.EdmComplexTypeReference : Microsoft.OData.Edm.E
 	public EdmComplexTypeReference (Microsoft.OData.Edm.IEdmComplexType complexType, bool isNullable)
 }
 
-public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmModel, IEdmValidCoreModelElement {
+public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, IEdmCoreModelElement, IEdmElement, IEdmModel {
 	public static readonly Microsoft.OData.Edm.EdmCoreModel Instance = Microsoft.OData.Edm.EdmCoreModel
 
 	System.Collections.Generic.IEnumerable`1[[System.String]] DeclaredNamespaces  { public virtual get; }
@@ -2279,24 +2305,36 @@ public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, 
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] FindDeclaredVocabularyAnnotations (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuredType]] FindDirectlyDerivedTypes (Microsoft.OData.Edm.IEdmStructuredType baseType)
 	public System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperationImport]] FindOperationImportsByNameNonBindingParameterType (string operationImportName, System.Collections.Generic.IEnumerable`1[[System.String]] parameterNames)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetAnnotationPath (bool isNullable)
 	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isNullable)
 	public Microsoft.OData.Edm.IEdmBinaryTypeReference GetBinary (bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetBoolean (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetByte (bool isNullable)
 	public static Microsoft.OData.Edm.IEdmCollectionTypeReference GetCollection (Microsoft.OData.Edm.IEdmTypeReference elementType)
+	public Microsoft.OData.Edm.IEdmComplexType GetComplexType ()
+	public Microsoft.OData.Edm.IEdmComplexTypeReference GetComplexType (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDate (bool isNullable)
 	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDateTimeOffset (bool isNullable)
 	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (bool isNullable)
 	public Microsoft.OData.Edm.IEdmDecimalTypeReference GetDecimal (System.Nullable`1[[System.Int32]] precision, System.Nullable`1[[System.Int32]] scale, bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetDouble (bool isNullable)
 	public Microsoft.OData.Edm.IEdmTemporalTypeReference GetDuration (bool isNullable)
+	public Microsoft.OData.Edm.IEdmEntityType GetEntityType ()
+	public Microsoft.OData.Edm.IEdmEntityTypeReference GetEntityType (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetGuid (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt16 (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt32 (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetInt64 (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetNavigationPropertyPath (bool isNullable)
+	public Microsoft.OData.Edm.IEdmPathType GetPathType (Microsoft.OData.Edm.EdmPathTypeKind kind)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetPathType (Microsoft.OData.Edm.EdmPathTypeKind kind, bool isNullable)
+	public Microsoft.OData.Edm.EdmPathTypeKind GetPathTypeKind (string typeName)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetPrimitive (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
+	public Microsoft.OData.Edm.IEdmPrimitiveType GetPrimitiveType ()
 	public Microsoft.OData.Edm.IEdmPrimitiveType GetPrimitiveType (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind)
+	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetPrimitiveType (bool isNullable)
 	public Microsoft.OData.Edm.EdmPrimitiveTypeKind GetPrimitiveTypeKind (string typeName)
+	public Microsoft.OData.Edm.IEdmPathTypeReference GetPropertyPath (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSByte (bool isNullable)
 	public Microsoft.OData.Edm.IEdmPrimitiveTypeReference GetSingle (bool isNullable)
 	public Microsoft.OData.Edm.IEdmSpatialTypeReference GetSpatial (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, bool isNullable)
@@ -2506,6 +2544,10 @@ public class Microsoft.OData.Edm.EdmPathExpression : Microsoft.OData.Edm.EdmElem
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 	string Path  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] PathSegments  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmPathTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmPathTypeReference, IEdmTypeReference {
+	public EdmPathTypeReference (Microsoft.OData.Edm.IEdmPathType definition, bool isNullable)
 }
 
 public class Microsoft.OData.Edm.EdmPrimitiveTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
@@ -2831,12 +2873,14 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	CannotAssertPrimitiveExpressionAsNonPrimitiveType = 311
 	CannotInferEntitySetWithMultipleSetsPerType = 356
 	CollectionExpressionNotValidForNonCollectionType = 315
+	ComplexTypeBaseTypeCannotBeEdmComplexType = 383
 	ComplexTypeMustHaveComplexBaseType = 238
 	ComplexTypeMustHaveProperties = 264
 	ConcurrencyRedefinedOnSubtypeOfEntitySetType = 145
 	ConstructibleEntitySetTypeInvalidFromEntityTypeRemoval = 231
 	ContainerElementContainerNameIncorrect = 328
 	DeclaringTypeMustBeCorrect = 245
+	DeclaringTypeOfNavigationSourceCannotHavePathProperty = 386
 	DependentPropertiesMustBelongToDependentEntity = 244
 	DuplicateActions = 367
 	DuplicateAlias = 321
@@ -2858,6 +2902,9 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	EntitySetCanOnlyHaveSingleNavigationPropertyWithContainment = 343
 	EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet = 223
 	EntitySetTypeMustBeCollectionOfEntityType = 370
+	EntityTypeBaseTypeCannotBeEdmEntityType = 382
+	EntityTypeOfEntitySetCannotBeEdmEntityType = 385
+	EntityTypeOfSingletonCannotBeEdmEntityType = 384
 	EnumMemberMustHaveValue = 206
 	EnumMemberValueOutOfRange = 292
 	EnumMustHaveIntegerUnderlyingType = 351
@@ -2933,6 +2980,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull = 298
 	KeyMissingOnEntityType = 159
 	KeyPropertyMustBelongToEntity = 242
+	KeyPropertyTypeCannotBeEdmPrimitiveType = 259
 	MaxLengthOutOfRange = 272
 	MetadataDocumentCannotHaveMoreThanOneEntityContainer = 365
 	MismatchNumberOfPropertiesInRelationshipConstraint = 114
@@ -2964,6 +3012,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	OperationImportReturnsEntitiesButDoesNotSpecifyEntitySet = 148
 	OperationImportSpecifiesEntitySetButDoesNotReturnEntityType = 150
 	OperationImportUnsupportedReturnType = 146
+	OperationWithCollectionOfAbstractReturnTypeInvalid = 257
 	OperationWithEntitySetPathAndReturnTypeTypeNotAssignable = 253
 	OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType = 254
 	OperationWithEntitySetPathResolvesToEntityTypeMismatchesCollectionEntityTypeReturnType = 255
@@ -2975,6 +3024,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	PrimitiveConstantExpressionNotValidForNonPrimitiveType = 329
 	PrimitiveTypeMustNotHaveKindOfNone = 335
 	PropertyMustNotHaveKindOfNone = 336
+	PropertyTypeCannotBeCollectionOfAbstractType = 337
 	QualifierMustBeSimpleName = 359
 	RecordExpressionHasExtraProperties = 318
 	RecordExpressionMissingRequiredProperty = 317
@@ -2994,8 +3044,10 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	TextNotAllowed = 11
 	TypeAnnotationHasExtraProperties = 348
 	TypeAnnotationMissingRequiredProperty = 347
+	TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType = 381
 	TypeMismatchRelationshipConstraint = 112
 	TypeMustNotHaveKindOfNone = 334
+	TypeOfNavigationPropertyCannotHavePathProperty = 387
 	TypeSemanticsCouldNotConvertTypeReference = 230
 	UnboundFunctionOverloadHasIncorrectReturnType = 219
 	UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261
@@ -3086,6 +3138,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityReferenceType]] EntityReferenceTypeInaccessibleEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityReferenceType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntitySet]] EntitySetCanOnlyBeContainedByASingleNavigationProperty = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntitySet]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntitySet]] EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntitySet]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntitySet]] EntitySetTypeCannotBeEdmEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntitySet]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntitySet]] EntitySetTypeMustBeCollectionOfEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntitySet]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeDuplicatePropertyNameSpecifiedInEntityKey = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeEntityKeyMustBeScalar = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
@@ -3093,9 +3146,11 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeInvalidKeyNullablePart = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeKeyMissingOnEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeKeyPropertyMustBelongToEntity = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeKeyTypeCannotBeEdmPrimitiveType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumMember]] EnumMemberValueMustHaveSameTypeAsUnderlyingType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumMember]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumType]] EnumMustHaveIntegerUnderlyingType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumType]] EnumTypeEnumMemberNameAlreadyDefined = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumType]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumType]] EnumUnderlyingTypeCannotBeEdmPrimitiveType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]] FunctionApplicationExpressionParametersMatchAppliedFunction = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunctionImport]] FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunctionImport]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunction]] FunctionMustHaveReturnType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunction]
@@ -3121,10 +3176,12 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationSource]] NavigationPropertyMappingsMustBeUnique = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyPartnerPathShouldBeResolvable = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyPrincipalEndMultiplicity = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyTypeCannotHavePathTypeProperty = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyTypeMismatchRelationshipConstraint = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyWithRecursiveContainmentTargetMustBeOptional = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationSource]] NavigationSourceDeclaringTypeCannotHavePathTypeProperty = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationSource]] NavigationSourceInaccessibleEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationSource]] NavigationSourceTypeHasNoKeys = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmComplexType]] OpenComplexTypeCannotHaveClosedDerivedComplexType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmComplexType]
@@ -3133,12 +3190,14 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperationImport]] OperationImportEntitySetExpressionIsInvalid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperationImport]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperationImport]] OperationImportEntityTypeDoesNotMatchEntitySet = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperationImport]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationParameterNameAlreadyDefinedDuplicate = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationReturnTypeCannotBeCollectionOfAbstractType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationReturnTypeEntityTypeMustBeValid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationUnsupportedReturnType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OptionalParametersMustComeAfterRequiredParameters = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmPrimitiveType]] PrimitiveTypeMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmPrimitiveType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue]] PrimitiveValueValidForType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmProperty]] PropertyMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmProperty]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmProperty]] PropertyTypeCannotBeCollectionOfAbstractType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmPropertyValueBinding]] PropertyValueBindingValueIsCorrectType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmPropertyValueBinding]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmRecordExpression]] RecordExpressionPropertiesMatchType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmRecordExpression]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElementMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSchemaElement]
@@ -3146,16 +3205,19 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElementNamespaceIsTooLong = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSchemaElement]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElementNamespaceMustNotBeEmptyOrWhiteSpace = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSchemaElement]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSchemaElement]] SchemaElementSystemNamespaceEncountered = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSchemaElement]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSingleton]] SingletonTypeCannotBeEdmEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSingleton]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmSingleton]] SingletonTypeMustBeEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmSingleton]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStringTypeReference]] StringTypeReferenceStringMaxLengthNegative = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStringTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStringTypeReference]] StringTypeReferenceStringUnboundedNotValidForMaxLength = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStringTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] StructuralPropertyInvalidPropertyType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuralProperty]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypeBaseTypeCannotBeAbstractType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypeBaseTypeMustBeSameKindAsDerivedKind = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypeInaccessibleBaseType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypeInvalidMemberNameMatchesTypeName = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypePropertiesDeclaringTypeMustBeCorrect = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] StructuredTypePropertyNameAlreadyDefined = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmTemporalTypeReference]] TemporalTypeReferencePrecisionOutOfRange = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmTemporalTypeReference]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmTypeDefinition]] TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmTypeDefinition]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmType]] TypeMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmTypeReference]] TypeReferenceInaccessibleSchemaType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmTypeReference]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmModel]] UnBoundFunctionOverloadsMustHaveIdenticalReturnTypes = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmModel]
@@ -4577,6 +4639,7 @@ ExtensionAttribute(),
 ]
 public sealed class Microsoft.OData.ODataUtils {
 	public static string AppendDefaultHeaderValue (string headerName, string headerValue)
+	public static string AppendDefaultHeaderValue (string headerName, string headerValue, Microsoft.OData.ODataVersion version)
 	public static System.Func`2[[System.String],[System.Boolean]] CreateAnnotationFilter (string annotationFilter)
 	[
 	ExtensionAttribute(),
@@ -5013,6 +5076,7 @@ public sealed class Microsoft.OData.ODataMessageReader : IDisposable {
 
 public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	public ODataMessageReaderSettings ()
+	public ODataMessageReaderSettings (Microsoft.OData.ODataVersion odataVersion)
 
 	System.Uri BaseUri  { public get; public set; }
 	System.Func`3[[Microsoft.OData.Edm.IEdmType],[System.String],[Microsoft.OData.Edm.IEdmType]] ClientCustomTypeResolver  { public get; public set; }
@@ -5779,6 +5843,7 @@ public class Microsoft.OData.UriParser.ODataUriResolver {
 	public ODataUriResolver ()
 
 	bool EnableCaseInsensitive  { public virtual get; public virtual set; }
+	bool EnableNoDollarQueryOptions  { public virtual get; public virtual set; }
 	Microsoft.OData.UriParser.TypeFacetsPromotionRules TypeFacetsPromotionRules  { public get; public set; }
 
 	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.UriParser.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.UriParser.SingleValueNode& leftNode, Microsoft.OData.UriParser.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)

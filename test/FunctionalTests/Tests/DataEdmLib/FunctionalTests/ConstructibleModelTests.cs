@@ -1395,7 +1395,7 @@ namespace EdmLibTests.FunctionalTests
         {
             Assert.AreEqual("Edm", EdmCoreModel.Namespace, "Correct Namespace");
 #if !(SILVERLIGHT || ORCAS)
-            Assert.AreEqual((Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Length) - 1, EdmCoreModel.Instance.SchemaElements.Count(), "Core model has one of every type except none.");
+            Assert.AreEqual(40, EdmCoreModel.Instance.SchemaElements.Count(), "Core model has one of every type except none.");
 #endif
             Assert.AreEqual(0, EdmCoreModel.Instance.VocabularyAnnotations.Count(), "Core model has no annotations.");
             Assert.AreEqual(0, EdmCoreModel.Instance.ReferencedModels.Count(), "Core model has no references.");

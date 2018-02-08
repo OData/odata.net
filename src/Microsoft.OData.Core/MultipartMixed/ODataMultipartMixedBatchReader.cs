@@ -98,7 +98,7 @@ namespace Microsoft.OData.MultipartMixed
                 requestUri,
                 headers,
                 this.currentContentId,
-                ODataMultipartMixedBatchWriterUtils.GetChangeSetIdFromBoundary(this.batchStream.ChangeSetBoundary),
+                this.batchStream.ChangeSetBoundary,
                 this.dependsOnIdsTracker.GetDependsOnIds(), /*dependsOnIdsValidationRequired*/false);
 
             if (this.currentContentId != null)

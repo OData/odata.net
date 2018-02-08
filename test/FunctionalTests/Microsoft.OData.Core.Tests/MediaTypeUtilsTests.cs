@@ -10,6 +10,7 @@ using FluentAssertions;
 using FluentAssertions.Primitives;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
+using System.Linq;
 
 namespace Microsoft.OData.Tests
 {
@@ -18,19 +19,49 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void StreamingAcceptShouldResolveToStreamingResponse()
         {
-            TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;odata.streaming=true", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;odata.streaming=true", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.BeStreaming().And.SpecifyDefaultMetadata();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "odata.metadata").Should().BeTrue();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "odata.streaming").Should().BeTrue();
+        }
+
+        [Fact]
+        public void StreamingAcceptShouldResolveToStreamingResponse_Without_Prefix()
+        {
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;metadata=minimal;streaming=true", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.BeStreaming();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "metadata").Should().BeTrue();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "streaming").Should().BeTrue();
         }
 
         [Fact]
         public void NonStreamingAcceptShouldResolveToNonStreamingResponse()
         {
-            TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;odata.streaming=false", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;odata.streaming=false", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.NotBeStreaming();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "odata.metadata").Should().BeTrue();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "odata.streaming").Should().BeTrue();
+        }
+
+        [Fact]
+        public void NonStreamingAcceptShouldResolveToNonStreamingResponse_Without_Prefix()
+        {
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;metadata=minimal;streaming=false", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.NotBeStreaming();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "metadata").Should().BeTrue();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "streaming").Should().BeTrue();
         }
 
         [Fact]
         public void UnspecifiedAcceptShouldResolveToStreamingResponse()
         {
             TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
+        }
+
+        [Fact]
+        public void UnspecifiedAcceptShouldResolveToStreamingResponse_Without_Prefix()
+        {
+            TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;metadata=minimal", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
         }
 
         [Fact]
@@ -112,9 +143,21 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void StreamingContentTypeShouldParseCorrectly_Without_Prefix()
+        {
+            TestMediaTypeWithFormat.ParseContentType("application/json;metadata=minimal;streaming=true", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
+        }
+
+        [Fact]
         public void NonStreamingContentTypeShouldParseCorrectly()
         {
             TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=minimal;odata.streaming=false", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
+        }
+
+        [Fact]
+        public void NonStreamingContentTypeShouldParseCorrectly_Without_Prefix()
+        {
+            TestMediaTypeWithFormat.ParseContentType("application/json;metadata=minimal;streaming=false", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
         }
 
         [Fact]
@@ -160,9 +203,21 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void MetadataAllContentTypeShouldSucceed_Without_Prefix()
+        {
+            TestMediaTypeWithFormat.ParseContentType("application/json;metadata=full", ODataVersion.V4).Should().BeJsonLight().And.SpecifyAllMetadata();
+        }
+
+        [Fact]
         public void MetadataNoneContentTypeShouldSucceed()
         {
             TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=none", ODataVersion.V4).Should().BeJsonLight().And.SpecifyNoMetadata();
+        }
+
+        [Fact]
+        public void MetadataNoneContentTypeShouldSucceed_Without_Prefix()
+        {
+            TestMediaTypeWithFormat.ParseContentType("application/json;metadata=none", ODataVersion.V4).Should().BeJsonLight().And.SpecifyNoMetadata();
         }
 
         [Fact]
@@ -172,15 +227,43 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void DefaultMetadataContentTypeShouldSucceed_Without_Prefix()
+        {
+            TestMediaTypeWithFormat.ParseContentType("application/json;metadata=minimal", ODataVersion.V4).Should().BeJsonLight().And.SpecifyDefaultMetadata();
+        }
+
+        [Fact]
         public void MetadataAllAcceptShouldSucceed()
         {
-            TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=full", ODataVersion.V4).Should().BeJsonLight().And.SpecifyAllMetadata();
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=full", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.SpecifyAllMetadata();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "odata.metadata").Should().BeTrue();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "metadata").Should().BeFalse();
+        }
+
+        [Fact]
+        public void MetadataAllAcceptShouldSucceed_Without_Prefix()
+        {
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;metadata=full", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.SpecifyAllMetadata();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "metadata").Should().BeTrue();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "odata.metadata").Should().BeFalse();
         }
 
         [Fact]
         public void UnspecifiedAcceptShouldResolveToDefault()
         {
-            TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json", ODataVersion.V4).Should().BeJsonLight().And.SpecifyDefaultMetadata();
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.SpecifyDefaultMetadata();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "odata.metadata").Should().BeTrue();
+        }
+
+        [Fact]
+        public void UnspecifiedAcceptShouldResolveToDefault_401()
+        {
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json", ODataVersion.V401);
+            mediaTypeWithFormat.Should().BeJsonLight().And.SpecifyDefaultMetadata();
+            TestMediaTypeWithFormat.MediaTypeContains(mediaTypeWithFormat.MediaType, "metadata").Should().BeTrue();
         }
 
         [Fact]
@@ -234,10 +317,18 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void StreamingParameterShouldBeCaseInsensitive()
         {
-            TestMediaTypeWithFormat.GetResponseTypeFromAccept("appLICatIOn/jSOn;OdAtA.sTrEaMinG=TrUe", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
-            TestMediaTypeWithFormat.GetResponseTypeFromAccept("APpLiCAtIOn/jSoN;oDaTa.stReAMinG=fAlSe", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
             TestMediaTypeWithFormat.ParseContentType("appLICatIOn/jSOn;OdAtA.sTrEaMinG=TrUe", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
             TestMediaTypeWithFormat.ParseContentType("APpLiCAtIOn/jSoN;oDaTa.stReAMinG=fAlSe", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
+            TestMediaTypeWithFormat.ParseContentType("appLICatIOn/jSOn;sTrEaMinG=TrUe", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
+            TestMediaTypeWithFormat.ParseContentType("APpLiCAtIOn/jSoN;stReAMinG=fAlSe", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
+
+            var mediaTypeWithFormat = TestMediaTypeWithFormat.GetResponseTypeFromAccept("appLICatIOn/jSOn;OdAtA.sTrEaMinG=TrUe", ODataVersion.V4);
+            mediaTypeWithFormat.Should().BeJsonLight().And.BeStreaming();
+            
+            TestMediaTypeWithFormat.GetResponseTypeFromAccept("APpLiCAtIOn/jSoN;oDaTa.stReAMinG=fAlSe", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
+
+            TestMediaTypeWithFormat.GetResponseTypeFromAccept("appLICatIOn/jSOn;sTrEaMinG=TrUe", ODataVersion.V4).Should().BeJsonLight().And.BeStreaming();
+            TestMediaTypeWithFormat.GetResponseTypeFromAccept("APpLiCAtIOn/jSoN;stReAMinG=fAlSe", ODataVersion.V4).Should().BeJsonLight().And.NotBeStreaming();
         }
 
         [Fact]
@@ -387,6 +478,11 @@ namespace Microsoft.OData.Tests
             return GetResponseType(version, s => s.SetContentType(format));
         }
 
+        internal static bool MediaTypeContains(ODataMediaType mediaType, string parameterName)
+        {
+            return mediaType.Parameters != null && mediaType.Parameters.Any(p => String.Compare(p.Key, parameterName, StringComparison.OrdinalIgnoreCase) == 0);
+        }
+
         private static TestMediaTypeWithFormat GetResponseType(ODataVersion version, Action<ODataMessageWriterSettings> configureSettings)
         {
             var settings = new ODataMessageWriterSettings { Version = version };
@@ -425,7 +521,7 @@ namespace Microsoft.OData.Tests
 
         public AndConstraint<MediaTypeAssertions> BeUnspecifiedJson()
         {
-            return this.HaveFullTypeName("application/json").And.NotHaveParameter("odata.metadata");
+            return this.HaveFullTypeName("application/json").And.NotHaveParameter("odata.metadata").And.NotHaveParameter("metadata");
         }
 
         public AndConstraint<MediaTypeAssertions> BeStreaming()
@@ -454,22 +550,28 @@ namespace Microsoft.OData.Tests
 
         public AndConstraint<MediaTypeAssertions> SpecifyNoMetadata()
         {
-            return this.HaveParameterValue("odata.metadata", "none");
+            return this.HaveParameterValue(new string[] { "odata.metadata", "metadata" }, "none");
         }
 
         public AndConstraint<MediaTypeAssertions> SpecifyDefaultMetadata()
         {
-            return this.HaveParameterValue("odata.metadata", "minimal");
+            return this.HaveParameterValue(new string[] { "odata.metadata", "metadata" }, "minimal");
         }
 
         public AndConstraint<MediaTypeAssertions> SpecifyAllMetadata()
         {
-            return this.HaveParameterValue("odata.metadata", "full");
+            return this.HaveParameterValue(new string[] { "odata.metadata", "metadata" }, "full");
         }
 
         public AndConstraint<MediaTypeAssertions> HaveParameterValue(string parameterName, string parameterValue)
         {
             this.MediaType.MediaTypeHasParameterWithValue(parameterName, parameterValue).Should().BeTrue();
+            return new AndConstraint<MediaTypeAssertions>(this);
+        }
+
+        public AndConstraint<MediaTypeAssertions> HaveParameterValue(string[] parameterNames, string parameterValue)
+        {
+            parameterNames.Any(p => this.MediaType.MediaTypeHasParameterWithValue(p, parameterValue)).Should().BeTrue();
             return new AndConstraint<MediaTypeAssertions>(this);
         }
 

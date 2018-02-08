@@ -83,7 +83,7 @@ namespace Microsoft.OData.JsonLight
             this.writingParameter = writingParameter;
             this.jsonWriter = this.jsonLightOutputContext.JsonWriter;
             this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
-                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
+                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix, this.jsonLightOutputContext.MessageWriterSettings.Version);
         }
 
         /// <summary>

@@ -81,7 +81,7 @@ Simply open the shortcut `OData.sln` at the root level folder to launch a soluti
 
 Here is the usage of each solution file (the `OData.sln` shortcut opens the one marked default):
 
-- OData.CodeGen.sln - OData T4 client code generator product source and tests.
+- OData.CodeGen.sln - OData T4 client code generator product source.
 - OData.Net35.sln - Product source built with .Net Framework 3.5.
 - OData.Net45.sln (default) - Product source built with .Net Framework Portable 4.5 and contains corresponding unit tests. _Recommended_ for doing general bug fixes and feature development.
 - OData.NetStandard.sln - Product source built with .Net Standard 1.1.
