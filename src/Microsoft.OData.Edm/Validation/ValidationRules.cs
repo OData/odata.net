@@ -2589,7 +2589,7 @@ namespace Microsoft.OData.Edm.Validation
                 (context, annotatable) =>
                 {
                     HashSetInternal<string> annotationSet = new HashSetInternal<string>();
-                    foreach (IEdmVocabularyAnnotation annotation in annotatable.VocabularyAnnotations(context.Model))
+                    foreach (IEdmVocabularyAnnotation annotation in context.Model.FindDeclaredVocabularyAnnotations(annotatable))
                     {
                         if (!annotationSet.Add(annotation.Term.FullName() + ":" + annotation.Qualifier))
                         {
