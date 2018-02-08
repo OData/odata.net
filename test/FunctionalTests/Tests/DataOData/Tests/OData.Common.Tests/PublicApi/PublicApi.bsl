@@ -3872,6 +3872,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
 	public static string Immutable = "Org.OData.Core.V1.Immutable"
 	public static string IsLanguageDependent = "Org.OData.Core.V1.IsLanguageDependent"
 	public static string IsMediaType = "Org.OData.Core.V1.IsMediaType"
+	public static string IsOptional = "IsOptional"
 	public static string IsURL = "Org.OData.Core.V1.IsURL"
 	public static string LongDescription = "Org.OData.Core.V1.LongDescription"
 	public static string MediaType = "Org.OData.Core.V1.MediaType"
