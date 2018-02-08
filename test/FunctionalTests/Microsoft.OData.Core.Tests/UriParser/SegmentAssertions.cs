@@ -24,6 +24,12 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<CountSegment>(segment.As<CountSegment>());
         }
 
+        public static AndConstraint<FilterSegment> ShouldBeFilterSegment(this ODataPathSegment segment)
+        {
+            segment.Should().BeOfType<FilterSegment>();
+            return new AndConstraint<FilterSegment>(segment.As<FilterSegment>());
+        }
+
         public static AndConstraint<BatchSegment> ShouldBeBatchSegment(this ODataPathSegment segment)
         {
             segment.Should().BeOfType<BatchSegment>();

@@ -74,7 +74,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                {
                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPersonByDTO()).And.Parameters.First().ShouldHaveParameterAliasNode("dto", "@p1", EdmCoreModel.Instance.GetDateTimeOffset(false));
                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new DateTimeOffset(2014, 9, 19, 7, 13, 14, new TimeSpan(0)));
-
                });
         }
 
@@ -114,9 +113,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseUriAndVerify(
                 new Uri("http://gobbledygook/GetPet4(id=@p!1)?@p!1=1.01M"),
-                  (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
-                  {
-                  });
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter("!", 5, "id=@p!1"));
         }
 
@@ -125,11 +124,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ParseUriAndVerify(
                 new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=null"),
-                  (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
-                  {
-                      oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
-                      aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
-                  });
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
+                });
         }
 
         [Fact]
@@ -334,6 +333,452 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     filterClause.Expression.As<SingleValueFunctionCallNode>().Parameters.First().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
                 });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasAsFirstSegment()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/$filter=@p1&@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$filter=@p1&@p1=true"));
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasAsBoolean()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(2);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasAsExpression()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=ID eq 42"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(2);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(42);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasAsNestedExpression()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=ID eq @p2&@p2=9001"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(2);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
+                        .And.Right.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetInt32(false));
+                    aliasNodes["@p2"].ShouldBeConstantQueryNode(9001);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_InvalidAliasName()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p!1?@p!1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter("!", 2, "@p!1"));
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasAsNonBoolean()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_FilterExpressionNotSingleValue);
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasAsNull()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=null"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(2);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", null);
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].Should().BeNull();
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasWithCircleReference()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=@p2&@p2=@p1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AliasIsItself()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=@p1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_WithoutValue()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(2);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", null);
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].Should().BeNull();
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_ValueAsExpression()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=ID eq @p1?@p1=1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_ValueAsBoolean()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_ValueAsFunction()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?@p1=Fully.Qualified.Namespace.AllHaveDog(inOffice=true)"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(2);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters());
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_MultipleFilterSegments()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1/$filter=@p2?@p1=true&@p2=false"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(3);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(2);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterSegments[1].Alias.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[1].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[1].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+                    aliasNodes["@p2"].ShouldBeConstantQueryNode(false);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_WithFilterQueryOption()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1?$filter=@p2&@p1=SSN eq 'num'&@p2=ID eq 1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(2);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Expression.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetBoolean(false));
+                    filterClause.ItemType.Definition.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("num");
+                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_NavigationProperty()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/1/MyDog/$filter=@p1?@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(4);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    var str = filterSegments[0].TargetEdmType.ToString();
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetDogType().ToString());
+                    filterSegments[0].SingleResult.Should().BeTrue();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_WithRef()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/1/MyDog/$filter=@p1/$ref?@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(4);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetDogType().ToString());
+                    filterSegments[0].SingleResult.Should().BeTrue();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_RefThenFilterSegment()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/1/MyDog/$ref/$filter=@p1?@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(
+                ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$ref"));
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_WithCount()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1/$count?@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(3);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_CountThenFilterSegment()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$count/$filter=@p1?@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(
+                ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$count"));
+        }
+
+        // NOTE: Per OData 4.01 spec, the $filter query option must not be used in conjunction with both
+        // a $count path segment and a $filter path segment. Currently, we are consciously allowing this syntactically.
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_WithCountAndFilterQueryOption()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1/$count?$filter=@p2&@p1=true&@p2=ID eq 1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(3);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Expression.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetBoolean(false));
+                    filterClause.ItemType.Definition.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_AppliedOnBoundFunctionResults()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$filter=@p1?@p1=true"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(3);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_FilterSegmentThenBoundFunctionThenFilterSegment()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$filter=@p2?@p1=ID eq 1&@p2=SSN eq 'num'"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(4);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(2);
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+                    filterSegments[1].Alias.ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetBoolean(true));
+                    filterSegments[1].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[1].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                    aliasNodes["@p2"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode("num");
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_FilterSegmentThenBoundAction()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/$filter=@p1/Fully.Qualified.Namespace.AdoptShibaInu?@p1=ID eq 1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.Count.Should().Be(3);
+
+                    List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
+                    filterSegments.Count.Should().Be(1);
+                    filterSegments[0].Alias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
+                    filterSegments[0].SingleResult.Should().BeFalse();
+
+                    filterClause.Should().BeNull();
+                    aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeConstantQueryNode(1);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasInFilterPathSegment_FilterSegmentAfterNonComposableOperation()
+        {
+            Action parse = () => ParseUriAndVerify(
+                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.AdoptShibaInu/$filter=@p1?@p1=ID eq 1"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                });
+            parse.ShouldThrow<ODataException>().WithMessage(
+                ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.AdoptShibaInu"));
         }
         #endregion
 

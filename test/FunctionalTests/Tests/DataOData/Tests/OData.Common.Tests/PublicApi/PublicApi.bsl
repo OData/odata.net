@@ -5502,6 +5502,7 @@ public abstract class Microsoft.OData.UriParser.PathSegmentHandler {
 	public virtual void Handle (Microsoft.OData.UriParser.CountSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.DynamicPathSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.EntitySetSegment segment)
+	public virtual void Handle (Microsoft.OData.UriParser.FilterSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.KeySegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.MetadataSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.NavigationPropertyLinkSegment segment)
@@ -5536,6 +5537,7 @@ public abstract class Microsoft.OData.UriParser.PathSegmentTranslator`1 {
 	public virtual T Translate (Microsoft.OData.UriParser.CountSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.DynamicPathSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.EntitySetSegment segment)
+	public virtual T Translate (Microsoft.OData.UriParser.FilterSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.KeySegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.MetadataSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.NavigationPropertyLinkSegment segment)
@@ -6181,6 +6183,18 @@ public sealed class Microsoft.OData.UriParser.FilterClause {
 	Microsoft.OData.UriParser.SingleValueNode Expression  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
 	Microsoft.OData.UriParser.RangeVariable RangeVariable  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.FilterSegment : Microsoft.OData.UriParser.ODataPathSegment {
+	public FilterSegment (Microsoft.OData.UriParser.ParameterAliasNode alias, Microsoft.OData.UriParser.RangeVariable rangeVariable, Microsoft.OData.Edm.IEdmType bindingType, bool singleResult)
+
+	Microsoft.OData.UriParser.ParameterAliasNode Alias  { public get; }
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
+	Microsoft.OData.UriParser.RangeVariable RangeVariable  { public get; }
+
+	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
 }
 
 public sealed class Microsoft.OData.UriParser.FunctionCallToken : Microsoft.OData.UriParser.QueryToken {

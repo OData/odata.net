@@ -5358,6 +5358,26 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "There are no navigation sources found to apply $filter."
+        /// </summary>
+        internal static string RequestUriProcessor_NoNavigationSourceFoundForFilter
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFoundForFilter);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The $filter path segment must contain a single parameter alias. In other words, it must have the form '$filter=@...', where the alias name goes in the ellipsis."
+        /// </summary>
+        internal static string RequestUriProcessor_FilterPathSegmentRequiresParameterAlias
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+            }
+        }
+
+        /// <summary>
         /// A string like "Empty segment encountered in request URL. Please make sure that a valid request URL is specified."
         /// </summary>
         internal static string RequestUriProcessor_EmptySegmentInRequestUrl {
@@ -5376,12 +5396,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The request URI is not valid, the segment $count cannot be applied to the root of the service."
+        /// A string like "The request URI is not valid, the segment {0} cannot be applied to the root of the service."
         /// </summary>
-        internal static string RequestUriProcessor_CountOnRoot {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CountOnRoot);
-            }
+        internal static string RequestUriProcessor_NotAllowedOnRoot(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NotAllowedOnRoot, p0);
         }
 
         /// <summary>

@@ -240,7 +240,7 @@
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchPayloadTestCase.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBatchRoundTripTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBigBatchRoundTripTests.cs" />
-    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\MultipartMixedBatchDependsOnIdsTests.cs" />    
+    <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\MultipartMixedBatchDependsOnIdsTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\Utils.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\ContextUrlPathStringTests.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\CountBuilderTests.cs" />
@@ -367,6 +367,7 @@
     <Compile Include="..\UriParser\SemanticAst\CountSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\FilterSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\EntitySetNodeTests.cs" />

@@ -86,7 +86,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The ',' to use as the separator for the function parameters.</summary>
         internal const char FunctionParameterSeparatorChar = ',';
 
-        /// <summary> THe "=@" to use as the separator for the function parameter in target.</summary>
+        /// <summary> The "=@" to use as the separator for the function parameter in target.</summary>
         internal const string FunctionParameterAssignment = "=@";
 
         /// <summary> The kind name of the service document singleton element. </summary>

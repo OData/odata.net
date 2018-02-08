@@ -170,6 +170,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate a FilterSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(FilterSegment segment)
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Visit a NavigationPropertyLinkSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>

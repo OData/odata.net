@@ -86,6 +86,7 @@
     <Compile Include="UriParser\SemanticAst\ComputeClause.cs" />
     <Compile Include="UriParser\SemanticAst\ComputeExpression.cs" />
     <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />
+    <Compile Include="UriParser\SemanticAst\FilterSegment.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />

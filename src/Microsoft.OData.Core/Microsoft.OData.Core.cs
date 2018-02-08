@@ -764,9 +764,11 @@ namespace Microsoft.OData {
         internal const string CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists = "CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists";
         internal const string RequestUriProcessor_InvalidValueForEntitySegment = "RequestUriProcessor_InvalidValueForEntitySegment";
         internal const string RequestUriProcessor_InvalidValueForKeySegment = "RequestUriProcessor_InvalidValueForKeySegment";
+        internal const string RequestUriProcessor_NoNavigationSourceFoundForFilter = "RequestUriProcessor_NoNavigationSourceFoundForFilter";
+        internal const string RequestUriProcessor_FilterPathSegmentRequiresParameterAlias = "RequestUriProcessor_FilterPathSegmentRequiresParameterAlias";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";
         internal const string RequestUriProcessor_SyntaxError = "RequestUriProcessor_SyntaxError";
-        internal const string RequestUriProcessor_CountOnRoot = "RequestUriProcessor_CountOnRoot";
+        internal const string RequestUriProcessor_NotAllowedOnRoot = "RequestUriProcessor_NotAllowedOnRoot";
         internal const string RequestUriProcessor_MustBeLeafSegment = "RequestUriProcessor_MustBeLeafSegment";
         internal const string RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment = "RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment";
         internal const string RequestUriProcessor_MissingSegmentAfterLink = "RequestUriProcessor_MissingSegmentAfterLink";
