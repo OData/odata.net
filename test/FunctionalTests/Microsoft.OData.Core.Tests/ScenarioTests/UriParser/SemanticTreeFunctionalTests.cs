@@ -336,8 +336,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CountQueryWithDuplicateCount()
         {
-            Action test = () => HardCodedTestModel.ParseUri("Dogs?$count=true&$count=true", this.edmModel);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$count"));
+            string input = "Dogs?$count=true&$count=true";
+            var serviceBaseUri = new Uri("http://server/service/");
+            var queryUri = new Uri(serviceBaseUri, input);
+            ODataUriParser parser = new ODataUriParser(this.edmModel, serviceBaseUri, queryUri);
+            Action test = () => parser.ParseUri();
+
+            bool originalValue = parser.EnableNoDollarQueryOptions;
+            try
+            {
+                //Ensure $-sign is required.
+                parser.EnableNoDollarQueryOptions = false;
+                test.ShouldThrow<ODataException>()
+                    .WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$count"));
+            }
+            finally
+            {
+                parser.EnableNoDollarQueryOptions = originalValue;
+            }
         }
 
         [Fact]

@@ -77,13 +77,33 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DupilicateNonODataQueryOptionShouldWork()
         {
-            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'foo'&$filter=UserName eq 'bar'")).ParsePath();
-            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
-            var nonODataqueryOptions = uriParser.CustomQueryOptions;
+            ODataUriParser uriParserProcessingDupODataSystemQuery = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot,
+                new Uri(FullUri, "?$filter=UserName eq 'foo'&$filter=UserName eq 'bar'"));
 
-            action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
-            Assert.Equal(nonODataqueryOptions.Count, 2);
-            Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") && nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
+            bool originalValue = uriParserProcessingDupODataSystemQuery.EnableNoDollarQueryOptions;
+            try
+            {
+                // Set the parser option in the static singleton to be $-sign required.
+                uriParserProcessingDupODataSystemQuery.EnableNoDollarQueryOptions = false;
+
+                Action action = () => uriParserProcessingDupODataSystemQuery.ParsePath();
+
+                var uriParserProcessingDupCustomQuery =
+                    new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot,
+                        new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
+                var nonODataqueryOptions = uriParserProcessingDupCustomQuery.CustomQueryOptions;
+
+                action.ShouldThrow<ODataException>()
+                    .WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
+                Assert.Equal(nonODataqueryOptions.Count, 2);
+                Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") &&
+                            nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
+            }
+            finally
+            {
+                // Restore original value
+                uriParserProcessingDupODataSystemQuery.EnableNoDollarQueryOptions = originalValue;
+            }
         }
 
         #region Setter/getter and validation tests
@@ -470,15 +490,28 @@ namespace Microsoft.OData.Tests.UriParser
         public void ParseNoDollarQueryOptionsShouldReturnNullIfNoDollarQueryOptionsIsNotEnabled()
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?filter=MyDog/Color eq 'Brown'&select=ID&expand=MyDog&orderby=ID&top=1&skip=2&count=true&search=FA&$unknown=&$unknownvalue&skiptoken=abc&deltatoken=def", UriKind.Relative));
-            parser.ParseFilter().Should().BeNull();
-            parser.ParseSelectAndExpand().Should().BeNull();
-            parser.ParseOrderBy().Should().BeNull();
-            parser.ParseTop().Should().Be(null);
-            parser.ParseSkip().Should().Be(null);
-            parser.ParseCount().Should().Be(null);
-            parser.ParseSearch().Should().BeNull();
-            parser.ParseSkipToken().Should().BeNull();
-            parser.ParseDeltaToken().Should().BeNull();
+
+            bool originalValue = parser.EnableNoDollarQueryOptions;
+            try
+            {
+                // Ensure $-sign is required.
+                parser.EnableNoDollarQueryOptions = false;
+
+                parser.ParseFilter().Should().BeNull();
+                parser.ParseSelectAndExpand().Should().BeNull();
+                parser.ParseOrderBy().Should().BeNull();
+                parser.ParseTop().Should().Be(null);
+                parser.ParseSkip().Should().Be(null);
+                parser.ParseCount().Should().Be(null);
+                parser.ParseSearch().Should().BeNull();
+                parser.ParseSkipToken().Should().BeNull();
+                parser.ParseDeltaToken().Should().BeNull();
+            }
+            finally
+            {
+                // Restore original value
+                parser.EnableNoDollarQueryOptions = originalValue;
+            }
         }
 
         [Theory]
@@ -490,7 +523,7 @@ namespace Microsoft.OData.Tests.UriParser
         // 2. Case insensitive, No dollar not enabled.
         [InlineData("People?$select=ID&select=Name", true, false, "$select", false)]
         [InlineData("People?$select=ID&SELECT=Name", true, false, "$select", false)]
-        // 3. Case insensitive, No dollar not enabled, be treated as custom query options.
+        // 3. Case sensitive, No dollar not enabled, be treated as custom query options.
         // Duplication is allowed.
         [InlineData("People?select=ID&select=Name", false, false, "select", false)]
         // 4. Should throw duplicate query options exception.

@@ -1500,7 +1500,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
 
-            var primitiveType = type as EdmCoreModel.EdmValidCoreModelPrimitiveType;
+            var primitiveType = type as EdmCoreModelPrimitiveType;
             if (primitiveType != null)
             {
                 return primitiveType.FullName;
