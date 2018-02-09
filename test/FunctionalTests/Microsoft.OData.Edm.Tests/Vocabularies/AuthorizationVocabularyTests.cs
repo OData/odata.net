@@ -158,14 +158,6 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
             Assert.Equal("Collection(Org.OData.Authorization.V1.Authorization)", term.Type.Definition.FullTypeName());
 
-            // Core.Description
-            var annotations = this._authorizationModel.FindDeclaredVocabularyAnnotations(term).ToList();
-            Assert.Equal(1, annotations.Count());
-            var description =
-                annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "Description");
-            Assert.NotNull(description);
-            Assert.Equal("Org.OData.Core.V1", description.Term.Namespace);
-
             Assert.Equal("EntityContainer EntitySet Singleton NavigationProperty Action Function", term.AppliesTo);
         }
 
