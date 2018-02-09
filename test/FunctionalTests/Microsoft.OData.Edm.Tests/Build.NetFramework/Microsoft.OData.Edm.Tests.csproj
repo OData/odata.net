@@ -106,6 +106,7 @@
     <Compile Include="..\Vocabularies\AlternateKeysVocabularyTests.cs" />
     <Compile Include="..\Vocabularies\CapabilitiesVocabularyTests.cs" />
     <Compile Include="..\Vocabularies\CoreVocabularyTests.cs" />
+    <Compile Include="..\Vocabularies\AuthorizationVocabularyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\packages.config" />
