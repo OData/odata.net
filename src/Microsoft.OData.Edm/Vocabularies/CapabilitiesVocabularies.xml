@@ -242,17 +242,18 @@ Overview:
         <Annotation Term="Core.Description" String="Supports key values according to OData URL conventions" />
       </Term>
 
+      <Term Name="KeyAsSegmentSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
+        <Annotation Term="Core.Description" String="Supports key as segment" />
+      </Term>
       <Term Name="TopSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports $top" />
       </Term>
       <Term Name="SkipSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntitySet">
         <Annotation Term="Core.Description" String="Supports $skip" />
       </Term>
-
       <Term Name="BatchSupported" Type="Core.Tag" DefaultValue="true" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Supports $batch requests" />
       </Term>
-
       <Term Name="FilterFunctions" Type="Collection(Edm.String)" AppliesTo="EntityContainer EntitySet">
         <Annotation Term="Core.Description" String="List of functions supported in $filter" />
       </Term>

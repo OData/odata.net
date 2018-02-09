@@ -180,6 +180,11 @@ namespace Microsoft.OData.Edm
         /// Represents a TimeOfDay type
         /// </summary>
         TimeOfDay,
+
+        /// <summary>
+        /// Represents a Primitive type
+        /// </summary>
+        PrimitiveType,
     }
 
     /// <summary>
