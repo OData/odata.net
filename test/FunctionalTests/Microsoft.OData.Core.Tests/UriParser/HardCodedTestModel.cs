@@ -2360,5 +2360,14 @@ namespace Microsoft.OData.Tests.UriParser
             return TestModel.FindType("Fully.Qualified.Namespace.Heartbeat") as IEdmComplexType;
         }
 
+        public static IEdmTerm GetPrimitiveAnnotationTerm()
+        {
+            return TestModel.FindTerm("Fully.Qualified.Namespace.PrimitiveTerm") as IEdmTerm;
+        }
+
+        public static IEdmTerm GetComplexAnnotationTerm()
+        {
+            return TestModel.FindTerm("Fully.Qualified.Namespace.ComplexTerm") as IEdmTerm;
+        }
     }
 }

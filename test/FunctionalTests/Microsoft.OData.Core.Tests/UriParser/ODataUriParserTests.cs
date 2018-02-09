@@ -398,37 +398,37 @@ namespace Microsoft.OData.Tests.UriParser
             parser.ParseDeltaToken().Should().Be("def");
         }
 
-        [Fact]
-        public void ParseSelectPrimitiveAnnotationShouldWork()
+        [Theory]
+        [InlineData("People?$select=@Fully.Qualified.Namespace.PrimitiveTerm", "Fully.Qualified.Namespace.PrimitiveTerm", "Edm.String", false)]
+        [InlineData("People?$select=@FuLly.quAlIfIeD.naMesPaCE.PRImiTIveTErm", "Fully.Qualified.Namespace.PrimitiveTerm", "Edm.String", true)]
+        [InlineData("People?$select=@Fully.Qualified.Namespace.ComplexTerm", "Fully.Qualified.Namespace.ComplexTerm", "Fully.Qualified.Namespace.Address", false)]
+        [InlineData("People?$select=@fUllY.QUalIFieD.NAMespaCe.compLExTerm", "Fully.Qualified.Namespace.ComplexTerm", "Fully.Qualified.Namespace.Address", true)]
+        [InlineData("People?$select=@Org.OData.Core.V1.Description", "Org.OData.Core.V1.Description", "Edm.String", false)]
+        [InlineData("People?$select=@ORg.oDAta.cOrE.V1.dEscrIPtioN", "Org.OData.Core.V1.Description", "Edm.String", true)]
+        [InlineData("People?$select=@Fully.Qualified.Namespace.UnknownTerm", "Fully.Qualified.Namespace.UnknownTerm", "Edm.Untyped", false)]
+        [InlineData("People?$select=@fuLLy.quaLIfied.NAMespACe.uNKNownTerm", "fuLLy.quaLIfied.NAMespACe.uNKNownTerm", "Edm.Untyped", true)]
+        public void ParseSelectAnnotationShouldWork(string relativeUriString, string termName, string typeName, bool caseInsensitive)
         {
-            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.PrimitiveTerm";
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.Resolver.EnableCaseInsensitive = caseInsensitive;
             var selectExpand = parser.ParseSelectAndExpand();
             selectExpand.Should().NotBeNull();
             PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
             selectItem.Should().NotBeNull();
             AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
             annotationSegment.Should().NotBeNull();
-            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.PrimitiveTerm");
-            annotationSegment.Term.Type.TypeKind().Should().Be(EdmTypeKind.Primitive);
+            annotationSegment.Term.FullName().Should().Be(termName);
+            annotationSegment.Term.Type.FullName().Should().Be(typeName);
         }
 
-        [Fact]
-        public void ParseSelectODataControlInformationShouldFail()
+        [Theory]
+        [InlineData("People?$select=@odata.type", "@odata.type")]
+        [InlineData("People?$select=@odata.unknown", "@odata.unknown")]
+        public void ParseSelectODataControlInformationShouldFail(string relativeUriString, string term)
         {
-            string relativeUriString = "People?$select=@odata.type";
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             Action action = () => parser.ParseSelectAndExpand();
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid("@odata.type"));
-        }
-
-        [Fact]
-        public void ParseSelectUnknownODataControlInformationShouldFail()
-        {
-            string relativeUriString = "People?$select=@odata.unknown";
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
-            Action action = () => parser.ParseSelectAndExpand();
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid("@odata.unknown"));
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid(term));
         }
 
         [Fact]
@@ -450,19 +450,6 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void ParseSelectComplexAnnotationShouldWork()
-        {
-            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.ComplexTerm";
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
-            var selectExpand = parser.ParseSelectAndExpand();
-            selectExpand.Should().NotBeNull();
-            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
-            AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
-            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.ComplexTerm");
-            annotationSegment.Term.Type.FullName().Should().Be("Fully.Qualified.Namespace.Address");
-        }
-
-        [Fact]
         public void ParseSelectComplexAnnotationWithPathShouldWork()
         {
             string relativeUriString = "People?$select=@Fully.Qualified.Namespace.ComplexTerm/Street";
@@ -477,19 +464,6 @@ namespace Microsoft.OData.Tests.UriParser
             annotationSegment.Term.Type.FullName().Should().Be("Fully.Qualified.Namespace.Address");
             PropertySegment propertySegment = segments[1] as PropertySegment;
             propertySegment.Property.Name.Should().Be("Street");
-        }
-
-        [Fact]
-        public void ParseSelectOpenAnnotationShouldWork()
-        {
-            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.UnknownTerm";
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
-            var selectExpand = parser.ParseSelectAndExpand();
-            selectExpand.Should().NotBeNull();
-            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
-            AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
-            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.UnknownTerm");
-            annotationSegment.Term.Type.FullName().Should().Be("Edm.Untyped");
         }
 
         [Fact]
@@ -516,11 +490,9 @@ namespace Microsoft.OData.Tests.UriParser
         // 2. Case insensitive, No dollar not enabled.
         [InlineData("People?$select=ID&select=Name", true, false, "$select", false)]
         [InlineData("People?$select=ID&SELECT=Name", true, false, "$select", false)]
-
         // 3. Case insensitive, No dollar not enabled, be treated as custom query options.
         // Duplication is allowed.
         [InlineData("People?select=ID&select=Name", false, false, "select", false)]
-
         // 4. Should throw duplicate query options exception.
         [InlineData("People?$select=ID&$select=Name", false, false, "$select", true)]
         [InlineData("People?select=ID&$select=Name", false, true, "select", true)]

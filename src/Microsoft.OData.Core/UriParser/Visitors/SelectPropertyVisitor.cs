@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
         public override void Visit(SystemToken tokenIn)
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
-            throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(tokenIn.Identifier));
+            throw new ODataException(ODataErrorStrings.SelectPropertyVisitor_SystemTokenInSelect(tokenIn.Identifier));
         }
 
         /// <summary>

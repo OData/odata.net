@@ -134,7 +134,7 @@ namespace Microsoft.OData.UriParser
         public override string Translate(AnnotationSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
-            return "/" + segment.Term.Name;
+            return "/" + segment.Term.FullName();
         }
 
         /// <summary>
