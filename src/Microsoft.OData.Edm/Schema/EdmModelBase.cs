@@ -55,6 +55,11 @@ namespace Microsoft.OData.Edm
                 this.referencedEdmModels.Add(AlternateKeysVocabularyModel.Instance);
             }
 
+            if (AuthorizationVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(AuthorizationVocabularyModel.Instance);
+            }
+
             this.annotationsManager = annotationsManager;
         }
 
