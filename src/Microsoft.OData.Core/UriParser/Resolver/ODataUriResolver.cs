@@ -184,7 +184,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEnumerable<IEdmOperation> ResolveBoundOperations(IEdmModel model, string identifier, IEdmType bindingType)
         {
             IEnumerable<IEdmOperation> results = model.FindBoundOperations(identifier, bindingType);
-            if (results.Any() | !EnableCaseInsensitive)
+            if (results.Any() || !EnableCaseInsensitive)
             {
                 return results;
             }
@@ -205,7 +205,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEnumerable<IEdmOperation> ResolveUnboundOperations(IEdmModel model, string identifier)
         {
             IEnumerable<IEdmOperation> results = model.FindOperations(identifier);
-            if (results.Any() | !EnableCaseInsensitive)
+            if (results.Any() || !EnableCaseInsensitive)
             {
                 return results;
             }
@@ -223,7 +223,7 @@ namespace Microsoft.OData.UriParser
         public virtual IEnumerable<IEdmOperationImport> ResolveOperationImports(IEdmModel model, string identifier)
         {
             IEnumerable<IEdmOperationImport> results = model.FindDeclaredOperationImports(identifier);
-            if (results.Any() | !EnableCaseInsensitive)
+            if (results.Any() || !EnableCaseInsensitive)
             {
                 return results;
             }

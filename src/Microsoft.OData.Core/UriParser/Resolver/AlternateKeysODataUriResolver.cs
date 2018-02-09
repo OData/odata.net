@@ -101,7 +101,7 @@ namespace Microsoft.OData.UriParser
                     return false;
                 }
 
-                if (String.IsNullOrEmpty(valueText))
+                if (valueText == null)
                 {
                     var list = namedValues.Keys.Where(key => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase)).ToList();
                     if (list.Count > 1)
