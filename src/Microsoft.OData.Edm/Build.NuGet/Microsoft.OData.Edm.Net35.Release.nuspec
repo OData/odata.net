@@ -14,11 +14,12 @@
     <summary>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only.</summary>
     <description>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only. Targets .NET Lib with support for .NET 3.5.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
+    <copyright>© Microsoft Corporation.  All rights reserved.</copyright>
   </metadata>
   <files>
-    <file src="Net35\Microsoft.OData.Edm.NetFX35.dll" target="lib\net35" />
-    <file src="Net35\Microsoft.OData.Edm.NetFX35.pdb" target="lib\net35" />
-    <file src="Net35\Microsoft.OData.Edm.NetFX35.xml" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Edm.NetFX35.dll" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Edm.NetFX35.pdb" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Edm.NetFX35.xml" target="lib\net35" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />

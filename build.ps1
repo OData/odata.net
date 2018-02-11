@@ -11,25 +11,36 @@ if (($args.Count -eq 0) -or ($args[0] -match 'Nightly'))
     $TestType = 'Nightly'
     $Configuration = 'Release'
 }
+elseif ($args[0] -match 'Quick' -or ($args[0] -match '-q')) 
+{
+    $TestType = "Quick"
+}
 elseif ($args[0] -match 'Rolling')
 {
-    $TestType = "Rolling"
+    # Rolling is a legacy options - run all tests.
+    $TestType = "Nightly"
 }
 elseif ($args[0] -match 'E2E')
 {
-    $TestType = "E2E"
+    # Rolling is a legacy options - run all tests.
+    $TestType = "Nightly"
 }
 elseif ($args[0] -match 'DisableSkipStrongName')
 {
     $TestType = "DisableSkipStrongName"
 }
+elseif ($args[0] -match 'EnableSkipStrongName')
+{
+    $TestType = "EnableSkipStrongName"
+}
 elseif ($args[0] -match 'SkipStrongName')
 {
-    $TestType = "SkipStrongName"
+    # SkipStrongName is a legacy options.
+    $TestType = "EnableSkipStrongName"
 }
 else 
 {
-    Write-Host 'Please choose Nightly Test or Rolling Test!' -ForegroundColor $Err
+    Write-Host 'Please choose Nightly Test or Quick Test!' -ForegroundColor $Err
     exit
 }
 
@@ -73,15 +84,20 @@ $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.Spatial.dll"
 
-$TestDlls = "Microsoft.OData.Service.Design.T4.dll",
+$XUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll",
+    "Microsoft.OData.Client.Tests.dll"
+
+$NetCoreXUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll"
+
+$TestSupportDlls = "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.OData.Service.dll",
     "Microsoft.OData.Service.Test.Common.dll"
 
-$RollingTestDlls = "Microsoft.OData.Core.Tests.dll",
-    "Microsoft.OData.Edm.Tests.dll",
-    "Microsoft.Spatial.Tests.dll",
-    "Microsoft.OData.Client.Tests.dll",
-    "Microsoft.Test.Data.Services.DDBasics.dll",
+$NightlyTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
     "Microsoft.OData.Client.Design.T4.UnitTests.dll",
     "AstoriaUnitTests.TDDUnitTests.dll",
     "EdmLibTests.dll",
@@ -96,36 +112,35 @@ $RollingTestDlls = "Microsoft.OData.Core.Tests.dll",
     "Microsoft.Data.ServerUnitTests1.UnitTests.dll",
     "Microsoft.Data.ServerUnitTests2.UnitTests.dll",
     "RegressionUnitTests.dll",
-    "Microsoft.Test.OData.PluggableFormat.Tests.dll"
-
-$RollingTestSuite = @()
-ForEach($dll in $RollingTestDlls)
-{
-    $RollingTestSuite += $TESTDIR + "\" + $dll
-}
-
-$AdditionalNightlyTestDlls = "Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
+    "Microsoft.Test.OData.PluggableFormat.Tests.dll",
+    "Microsoft.Data.MetadataObjectModel.UnitTests.dll",
     "AstoriaUnitTests.dll",
-    "AstoriaClientUnitTests.dll",
-    "TestCategoryAttributeCheck.dll"
+    "AstoriaClientUnitTests.dll"
 
-ForEach($dll in $AdditionalNightlyTestDlls)
+$QuickTestSuite = @()
+$NightlyTestSuite = @()
+ForEach($dll in $XUnitTestDlls)
 {
-    $AdditionalNightlyTestSuite += $TESTDIR + "\" + $dll
+    $QuickTestSuite += $TESTDIR + "\" + $dll
+    $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
-$NightlyTestSuite = $RollingTestSuite
-ForEach ($test in $AddtionalNightlyTestSuite)
+ForEach($dll in $NetCoreXUnitTestDlls)
 {
-    $NightlyTestSuite += $test
+    # Turn on once we migrate to VS 2017 as there are some technical difficulties
+    # with running .NET Core tests through script for VS 2015
+    # $NightlyTestSuite += $NETCORETESTDIR + "\" + $dll
+}
+
+ForEach($dll in $NightlyTestDlls)
+{
+    $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
 $E2eTestDlls = @("Microsoft.Test.OData.Tests.Client.dll")
-$E2eTestSuite = @()
-
 ForEach ($dll in $E2eTestDlls)
 {
-    $E2eTestSuite += $TESTDIR + "\" + $dll
+    $NightlyTestSuite += $TESTDIR + "\" + $dll
 }
 
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
@@ -152,17 +167,22 @@ Function GetDlls
         $dlls += $PRODUCTDIR + "\" + $dll
     }
 
-    ForEach($dll in $TestDlls)
-    {
-        $dlls += $TESTDIR + "\" + $dll
-    }
-    
-    ForEach($dll in $RollingTestDlls)
+    ForEach($dll in $XUnitTestDlls)
     {
         $dlls += $TESTDIR + "\" + $dll
     }
 
-    ForEach($dll in $AdditionalNightlyTestDlls)
+    ForEach($dll in $NetCoreXUnitTestDlls)
+    {
+        $dlls += $TESTDIR + "\" + $dll
+    }
+
+    ForEach($dll in $TestSupportDlls)
+    {
+        $dlls += $TESTDIR + "\" + $dll
+    }
+
+    ForEach($dll in $NightlyTestDlls)
     {
         $dlls += $TESTDIR + "\" + $dll
     }
@@ -278,12 +298,6 @@ Function RunBuild ($sln)
     }
 }
 
-Function RestoringFile ($file , $target)
-{
-    Write-Host "Restoring $file"
-    Copy-Item -Path $file -Destination $target -Force
-}
-
 Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
 {    
     Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
@@ -299,7 +313,7 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     }
     else
     {
-        foreach ($dll in $RollingTestSuite) 
+        foreach ($dll in $QuickTestSuite) 
         {
             $rerun += " $dll" 
         }
@@ -319,8 +333,6 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     if ($failedtest1.count -gt 0)
     {
         $rerun += " " + $XUNITADAPTER
-        Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append `
-            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     $rerun = "`"$VSTEST`""
@@ -342,8 +354,6 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     # build the command only if failed tests exist
     if ($failedtest2.count -gt 0)
     {
-        Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append `
-            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     Write-Output "cd $LOGDIR" | Out-File -Append -Encoding ascii $reruncmd
@@ -371,6 +381,7 @@ Function TestSummary
     
     $file = Get-Content -Path $TESTLOG
     $pass = 0
+    $skipped = 0
     $fail = 0
     $trxfile = New-Object -TypeName System.Collections.ArrayList
     $failedtest1 = New-Object -TypeName System.Collections.ArrayList
@@ -382,6 +393,10 @@ Function TestSummary
         if ($line -match "^Passed.*") 
         {
             $pass = $pass + 1
+        }
+        elseif ($line -match "^Skipped.*") 
+        {
+            $skipped = $skipped + 1
         }
         elseif ($line -match "^Failed\s+(.*)")
         {
@@ -404,6 +419,12 @@ Function TestSummary
 
     Write-Host "Test summary:" -ForegroundColor $Success
     Write-Host "Passed :`t$pass"  -ForegroundColor $Success
+
+    if ($skipped -ne 0)
+    {
+        Write-Host "Skipped:`t$skipped"  -ForegroundColor $Warning
+    }
+
     $color = $Success
     if ($fail -ne 0)
     {
@@ -446,13 +467,18 @@ Function BuildProcess
         rm $BUILDLOG
     }
     RunBuild ('Microsoft.OData.Lite.sln')
-    RunBuild ('Microsoft.OData.Full.sln')
-    RunBuild ('Microsoft.OData.Net35.sln')
-    RunBuild ('Microsoft.OData.Net45.sln')
-    RunBuild ('Microsoft.OData.Portable45.sln')
-    RunBuild ('Microsoft.OData.Portable45.Profile111.sln')
-    RunBuild ('Microsoft.OData.CodeGen.sln')
-    RunBuild ('Microsoft.OData.E2E.sln')
+
+    if ($TestType -ne 'Quick')
+    {
+        RunBuild ('Microsoft.OData.Full.sln')
+        RunBuild ('Microsoft.OData.Net35.sln')
+        RunBuild ('Microsoft.OData.Net45.sln')
+        RunBuild ('Microsoft.OData.Portable45.sln')
+        RunBuild ('Microsoft.OData.Portable45.Profile111.sln')
+        RunBuild ('Microsoft.OData.CodeGen.sln')
+        RunBuild ('Microsoft.OData.E2E.sln')
+    }
+
     Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
 }
@@ -466,18 +492,13 @@ Function TestProcess
     }
     $script:TEST_START_TIME = Get-Date
     cd $TESTDIR
-    RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" -target $TESTDIR
     if ($TestType -eq 'Nightly')
     {
         RunTest -title 'NightlyTests' -testdir $NightlyTestSuite
     }
-    elseif ($TestType -eq 'Rolling')
+    elseif ($TestType -eq 'Quick')
     {
-        RunTest -title 'RollingTests' -testdir $RollingTestSuite
-    }
-    elseif ($TestType -eq 'E2E')
-    {
-        # E2E tests run below.
+        RunTest -title 'XUnitTests' -testdir $QuickTestSuite
     }
     else
     {
@@ -485,8 +506,7 @@ Function TestProcess
         Cleanup
         exit
     }
-    RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
-    RunTest -title 'E2ETests' -testdir $E2eTestSuite
+
     Write-Host "Test Done" -ForegroundColor $Success
     TestSummary
     $script:TEST_END_TIME = Get-Date
@@ -516,7 +536,7 @@ if (! (Test-Path $LOGDIR))
     mkdir $LOGDIR 1>$null
 }
 
-if ($TestType -eq 'SkipStrongName')
+if ($TestType -eq 'EnableSkipStrongName')
 {
     CleanBeforeScorch 
     BuildProcess
