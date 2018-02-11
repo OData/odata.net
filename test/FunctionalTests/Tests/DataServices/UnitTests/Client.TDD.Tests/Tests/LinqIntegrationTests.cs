@@ -891,6 +891,28 @@ namespace AstoriaUnitTests.Tests.Client
 
             Assert.AreEqual(rootUrl + "Test?$filter=second(timeOfDayProperty) ne 59", query);
         }
+        [TestMethod]
+        public void WhereClauseWithDateOfDateTimeOffsetShouldReturnUrlWithDateFunction()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date == (DateTime.MinValue)).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=date(dateTimeOffsetProperty) eq 0001-01-01T00:00:00Z", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndHourOfDateTimeOffsetShouldReturnUrlWithDateAndHourFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Hour == 12).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=hour(date(dateTimeOffsetProperty)) eq 12", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndYearOfDateTimeOffsetShouldReturnUrlWithDateAndYearFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Year == 2014).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=year(date(dateTimeOffsetProperty)) eq 2014", query);
+        }
+
         #endregion
     }
 }
