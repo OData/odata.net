@@ -65,17 +65,21 @@
         </Collection>
       </Annotation>
 
-      <Term Name="Authorizations" Type="Collection(Auth.Authorization)" AppliesTo="EntityContainer EntitySet Singleton NavigationProperty Action Function">
+      <Term Name="Authorizations" Type="Collection(Auth.Authorization)" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Lists the methods available to authorize access to the annotated resource" />
       </Term>
+      
+      <Term Name="SecuritySchemes" Type="Collection(Auth.SecurityScheme)" AppliesTo="EntityContainer"> 
+        <Annotation Term="Core.Description" String="At least one of the specified security schemes are required to make a request against the service."/> 
+      </Term>       
 
       <ComplexType Name="Authorization" Abstract="true">
         <Annotation Term="Core.Description" String="Base type for all Authorization types" />
-        <Property Name="Description" Type="Edm.String">
-          <Annotation Term="Core.Description" String="Description of the authorization method" />
-        </Property>
         <Property Name="Name" Type="Edm.String">
           <Annotation Term="Core.Description" String="Name that can be used to reference the authorization flow."/>
+        </Property>
+        <Property Name="Description" Type="Edm.String">
+          <Annotation Term="Core.Description" String="Description of the authorization method" />
         </Property>
       </ComplexType>
 
@@ -122,7 +126,7 @@
 
       <ComplexType Name="OAuth2Password" BaseType="Auth.OAuthAuthorization">
         <Property Name="TokenUrl" Type="Edm.String" Nullable="false">
-          <Annotation Term="Core.Description" String="Token Url" />
+         <Annotation Term="Core.Description" String="Token Url" />
           <Annotation Term="Core.IsURL" Bool="true"/>
         </Property>
       </ComplexType>
