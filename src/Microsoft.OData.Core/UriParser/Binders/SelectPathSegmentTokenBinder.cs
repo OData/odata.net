@@ -11,6 +11,7 @@ namespace Microsoft.OData.UriParser
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Edm.Vocabularies;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
@@ -33,6 +34,27 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
             ODataPathSegment nextSegment;
+            if (UriParserHelper.IsAnnotation(tokenIn.Identifier))
+            {
+                if (TryBindAsDeclaredTerm(tokenIn, model, resolver, out nextSegment))
+                {
+                    return nextSegment;
+                }
+
+                string qualifiedTermName = tokenIn.Identifier.Remove(0, 1);
+                int separator = qualifiedTermName.LastIndexOf(".", StringComparison.Ordinal);
+                string namespaceName = qualifiedTermName.Substring(0, separator);
+                string termName = qualifiedTermName.Substring(separator == 0 ? 0 : separator + 1);
+
+                // Don't allow selecting odata control information
+                if (String.Compare(namespaceName, ODataConstants.ODataPrefix, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(tokenIn.Identifier));
+                }
+
+                return new AnnotationSegment(new EdmTerm(namespaceName, termName, EdmCoreModel.Instance.GetUntyped()));
+            }
+
             if (TryBindAsDeclaredProperty(tokenIn, edmType, resolver, out nextSegment))
             {
                 return nextSegment;
@@ -202,6 +224,33 @@ namespace Microsoft.OData.UriParser
             }
 
             throw new ODataException(ODataErrorStrings.SelectExpandBinder_UnknownPropertyType(prop.Name));
+        }
+
+        /// <summary>
+        /// Tries to bind a given token as a declared annotation term.
+        /// </summary>
+        /// <param name="tokenIn">Token to bind.</param>
+        /// <param name="model">The model to search for this term</param>
+        /// <param name="resolver">Resolver for uri parser.</param>
+        /// <param name="segment">Bound segment if the token was bound to a declared term successfully, or null.</param>
+        /// <returns>True if the token was bound successfully, or false otherwise.</returns>
+        private static bool TryBindAsDeclaredTerm(PathSegmentToken tokenIn, IEdmModel model, ODataUriResolver resolver, out ODataPathSegment segment)
+        {
+            if (!UriParserHelper.IsAnnotation(tokenIn.Identifier))
+            {
+                segment = null;
+                return false;
+            }
+
+            IEdmTerm term = resolver.ResolveTerm(model, tokenIn.Identifier.Remove(0, 1));
+            if (term == null)
+            {
+                segment = null;
+                return false;
+            }
+
+            segment = new AnnotationSegment(term);
+            return true;
         }
     }
 }

@@ -44,27 +44,6 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
-        /// Extract the changeset id from the change set boundary string.
-        /// This is the reversal method of <code>CreateChangeSetBoundary(bool, string)</code>.
-        /// </summary>
-        /// <param name="changesetBoundary">Change set boundary string previous constructed by <code>CreateChangeSetBoundary</code>.
-        /// Can be null.</param>
-        /// <returns>The change set id or null.</returns>
-        internal static string GetChangeSetIdFromBoundary(string changesetBoundary)
-        {
-            if (changesetBoundary == null)
-            {
-                return null;
-            }
-
-            // The changeset boundary can be for either request or response, which are both constructed from templates.
-            // Change set id is the remainder after first char of '_'.
-            int idx = changesetBoundary.IndexOf('_');
-            ExceptionUtils.CheckIntegerNotNegative(idx, "idxOfSeparator");
-            return changesetBoundary.Substring(idx + 1);
-        }
-
-        /// <summary>
         /// Creates the multipart/mixed content type with the specified boundary (if any).
         /// </summary>
         /// <param name="boundary">The boundary to be used for this operation or null if no boundary should be included.</param>

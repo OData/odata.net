@@ -261,6 +261,16 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
+        /// <summary>
+        /// Determines whether or not an identifier is an annotation term name
+        /// </summary>
+        /// <param name="identifier">The identifer that may be an annotation term name</param>
+        /// <returns>True if the identifier is an annotation term, otherwise false</returns>
+        internal static bool IsAnnotation(string identifier)
+        {
+            return !string.IsNullOrEmpty(identifier) && identifier[0] == UriQueryConstants.AnnotationPrefix && identifier.Contains(".");
+        }
+
         #endregion
 
         #region Private Methods

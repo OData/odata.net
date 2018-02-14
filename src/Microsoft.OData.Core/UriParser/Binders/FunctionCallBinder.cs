@@ -540,7 +540,7 @@ namespace Microsoft.OData.UriParser
                 IEdmOperationParameter functionParameter = operation.FindParameter(paraToken.ParameterName);
                 if (enableCaseInsensitive && functionParameter == null)
                 {
-                    functionParameter = ODataUriResolver.ResolveOpearationParameterNameCaseInsensitive(operation, paraToken.ParameterName);
+                    functionParameter = ODataUriResolver.ResolveOperationParameterNameCaseInsensitive(operation, paraToken.ParameterName);
 
                     // The functionParameter can not be null here, else this method won't be called.
                     funcParaToken = new FunctionParameterToken(functionParameter.Name, paraToken.ValueToken);

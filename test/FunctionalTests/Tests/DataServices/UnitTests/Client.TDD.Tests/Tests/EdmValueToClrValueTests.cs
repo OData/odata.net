@@ -63,7 +63,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 .OnlyContain(k => k == "None"
                     || k == "Stream"
                     || k.StartsWith("Geometry")
-                    || k.StartsWith("Geography"));
+                    || k.StartsWith("Geography")
+                    || k == "PrimitiveType");
         }
 
         [TestMethod]

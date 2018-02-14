@@ -661,7 +661,7 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
-                    if (this.parsingFunctionParameters && this.ch == '@')
+                    if (this.ch == '@')
                     {
                         this.NextChar();
 
@@ -680,7 +680,10 @@ namespace Microsoft.OData.UriParser
                         }
 
                         this.ParseIdentifier();
-                        t = ExpressionTokenKind.ParameterAlias;
+                        t = this.parsingFunctionParameters
+                            && !(this.ExpressionText[0] == UriQueryConstants.AnnotationPrefix
+                                && this.ExpressionText.Contains("."))
+                            ? ExpressionTokenKind.ParameterAlias : ExpressionTokenKind.Identifier;
                         break;
                     }
 
@@ -1195,7 +1198,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>Parses an identifier by advancing the current character.</summary>
         private void ParseIdentifier()
         {
-            Debug.Assert(this.IsValidStartingCharForIdentifier, "Expected valid starting char for identifier");
+            Debug.Assert(this.IsValidStartingCharForIdentifier || this.ch == UriQueryConstants.AnnotationPrefix, "Expected valid starting char for identifier");
             do
             {
                 this.NextChar();

@@ -116,6 +116,17 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(AnnotationSegment segment)
+        {
+            Debug.Assert(segment != null, "segment != null");
+            return "/" + segment.Term.FullName();
+        }
+
+        /// <summary>
         /// Translate a OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
