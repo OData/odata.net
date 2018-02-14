@@ -891,6 +891,56 @@ namespace AstoriaUnitTests.Tests.Client
 
             Assert.AreEqual(rootUrl + "Test?$filter=second(timeOfDayProperty) ne 59", query);
         }
+        [TestMethod]
+        public void WhereClauseWithDateOfDateTimeOffsetShouldReturnUrlWithDateFunction()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date == (DateTimeOffset.MinValue)).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=cast(date(dateTimeOffsetProperty),'Edm.DateTimeOffset') eq 0001-01-01T00:00:00Z", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndHourOfDateTimeOffsetShouldReturnUrlWithDateAndHourFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Hour == 12).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=hour(date(dateTimeOffsetProperty)) eq 12", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndMinuteOfDateTimeOffsetShouldReturnUrlWithDateAndMinuteFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Minute == 30).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=minute(date(dateTimeOffsetProperty)) eq 30", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndSecondOfDateTimeOffsetShouldReturnUrlWithDateAndSecondFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Second == 30).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=second(date(dateTimeOffsetProperty)) eq 30", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndYearOfDateTimeOffsetShouldReturnUrlWithDateAndYearFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Year == 2014).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=year(date(dateTimeOffsetProperty)) eq 2014", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndMonthOfDateTimeOffsetShouldReturnUrlWithDateAndMonthFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Month == 9).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=month(date(dateTimeOffsetProperty)) eq 9", query);
+        }
+        [TestMethod]
+        public void WhereClauseWithDateAndDayOfDateTimeOffsetShouldReturnUrlWithDateAndDayFunctions()
+        {
+            query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Day == 9).ToString();
+
+            Assert.AreEqual(rootUrl + "Test?$filter=day(date(dateTimeOffsetProperty)) eq 9", query);
+        }
+
         #endregion
     }
 }
