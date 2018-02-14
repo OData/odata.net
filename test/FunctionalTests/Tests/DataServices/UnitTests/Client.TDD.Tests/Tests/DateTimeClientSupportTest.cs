@@ -34,6 +34,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 ""value"":[{""Id"":""0001-01-01T00:00:00Z""},{""Id"":""2016-11-29T18:07:16-08:00""}],
 ""@odata.nextLink"":""EdmDateTimeSet?$skiptoken=2016-11-02T16%3A08%3A16-08%3A00""}";
 
+        const string FeedEntityPayloadWithDateTimeResponseSingleResult = @"{
+""@odata.context"":""http://odataService/$metadata#EdmDateTimeSet"",
+""value"":[{""Id"":""0001-01-01T00:00:00Z""}]}";
+
         const string ReturnCollectionResponse = @"{
 ""@odata.context"":""http://odataService/$metadata#EdmDateTimeSet(0001-01-01T00%3A00%3A00Z)/DateTimeCollection"",
 ""value"":[""0001-01-01T00:00:00Z"",""2016-11-29T18:07:16-08:00"",""9999-12-31T23:59:59.9999999Z""]
@@ -60,6 +64,25 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 ""value"":""2016-11-29T18:07:16-08:00""
 }";
         private DateTime fixedDateTimeUtc = new DateTime(2016, 11, 30, 02, 07, 16, DateTimeKind.Utc);
+
+        [TestMethod]
+        public void TestClientLibDateTimeSupportGetDate()
+        {
+            TestDateTime(FeedEntityPayloadWithDateTimeResponseSingleResult, () =>
+            {
+                var queryResult = ((DataServiceQuery<pkr.EdmDateTime>)dsc_dateTime.EdmDateTimeSet.Where(e => e.Id.Date == (DateTime.MinValue)));
+                var result = queryResult.ToArray();
+                Assert.AreEqual(1, result.Count(), "Expected a single result");
+                Assert.AreEqual(result[0].Id, DateTime.MinValue);
+            });
+            TestDateTime(FeedEntityPayloadWithDateTimeResponseSingleResult, () =>
+            {
+                var queryResult = ((DataServiceQuery<pkr.EdmDateTime>)dsc_dateTime.EdmDateTimeSet.Where(e => e.Id.Date.Hour == 0));
+                var result = queryResult.ToArray();
+                Assert.AreEqual(1, result.Count(), "Expected a single result");
+                Assert.AreEqual(result[0].Id, DateTime.MinValue);
+            });
+        }
 
         [TestMethod]
         public void TestClientLibDateTimeSupport()
