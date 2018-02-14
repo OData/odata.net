@@ -250,7 +250,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private IEnumerable<EdmError> ValidateStructure(object item)
         {
-            if (item is IEdmValidCoreModelElement || this.visited.Contains(item) || (this.skipVisitation != null && this.skipVisitation.Contains(item)))
+            if (item is IEdmCoreModelElement || this.visited.Contains(item) || (this.skipVisitation != null && this.skipVisitation.Contains(item)))
             {
                 // If we already visited this object, then errors (if any) have already been reported.
                 return Enumerable.Empty<EdmError>();
@@ -329,7 +329,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private void CollectReference(object reference)
         {
-            if (!(reference is IEdmValidCoreModelElement) &&
+            if (!(reference is IEdmCoreModelElement) &&
                 !this.visited.Contains(reference) &&
                 (this.skipVisitation == null || !this.skipVisitation.Contains(reference)))
             {
@@ -734,6 +734,14 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
+        private sealed class VisitorOfIEdmPathType : VisitorOfT<IEdmPathType>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmPathType type, List<object> followup, List<object> references)
+            {
+                return null;
+            }
+        }
+
         private sealed class VisitorOfIEdmEnumType : VisitorOfT<IEdmEnumType>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmEnumType type, List<object> followup, List<object> references)
@@ -1110,6 +1118,18 @@ namespace Microsoft.OData.Edm.Validation
             protected override IEnumerable<EdmError> VisitT(IEdmUntypedTypeReference typeRef, List<object> followup, List<object> references)
             {
                 return (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Untyped)
+                    ?
+                    new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) }
+                    :
+                    null;
+            }
+        }
+
+        private sealed class VisitorOfIEdmPathTypeReference : VisitorOfT<IEdmPathTypeReference>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmPathTypeReference typeRef, List<object> followup, List<object> references)
+            {
+                return (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Path)
                     ?
                     new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) }
                     :

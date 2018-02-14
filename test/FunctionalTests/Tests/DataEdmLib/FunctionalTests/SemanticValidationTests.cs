@@ -1637,17 +1637,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void TestBidirectionalContainment()
-        {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
-                {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
-            };
-            this.VerifySemanticValidation(ValidationTestModelBuilder.BidirectionalContainmentModel(), expectedErrors);
-        }
-
-        [TestMethod]
         public void TestNavigationPropertyContainTargetBeforeV3()
         {
             this.VerifySemanticValidation(ValidationTestModelBuilder.ModelWithNavigationPropertyWithContainsTarget(), EdmVersion.V40, null);

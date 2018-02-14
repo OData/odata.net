@@ -25,6 +25,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "Unexpected path type kind."
+        /// </summary>
+        internal static string EdmPath_UnexpectedKind {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmPath_UnexpectedKind);
+            }
+        }
+
+        /// <summary>
         /// A string like "Annotations in the 'Documentation' namespace must implement 'IEdmDocumentation', but '{0}' does not."
         /// </summary>
         internal static string Annotations_DocumentationPun(object p0) {
@@ -634,6 +643,20 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The 'Edm.PrimitiveType' cannot be used as the type of a key property '{0}' of an entity type '{1}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The 'Edm.PrimitiveType' cannot be used as the underlying type of '{0}' type '{1}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The dependent property '{0}' must belong to the dependent entity '{1}'."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity(object p0, object p1) {
@@ -1152,6 +1175,55 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton(object p0, object p1) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' cannot be the base type of an '{1}' type '{2}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' cannot be used as the type of a property '{1}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' cannot be used as the return type of a function '{1}'."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType(object p0, object p1) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The type 'Edm.EntityType' cannot be used as the type of a singleton '{0}' in an entity container."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton, p0);
+        }
+
+        /// <summary>
+        /// A string like "The type 'Edm.EntityType' cannot be used as the type of an entity set '{0}' in an entity container."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet, p0);
+        }
+
+        /// <summary>
+        /// A string like "The declaring type '{0}' of {1} '{2}' cannot include path type property."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, p0, p1, p2);
+        }
+
+        /// <summary>
+        /// A string like "The type '{0}' of navigation property '{1}' on declaring type '{2}' cannot include path type property."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty(object p0, object p1, object p2) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty, p0, p1, p2);
         }
 
         /// <summary>

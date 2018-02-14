@@ -681,7 +681,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void ExpressionLexerShouldFailByDefaultForAtSymbol()
         {
             Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimeter: false);
-            lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter("@", 0, "@"));
+            lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
         }
 
         [Fact]

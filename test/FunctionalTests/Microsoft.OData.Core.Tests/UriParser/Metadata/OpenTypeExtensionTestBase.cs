@@ -141,8 +141,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             Uri originalCase = new Uri(originalStr, UriKind.Relative);
             Uri caseInsensitiveCase = new Uri(caseInsensitiveStr, UriKind.Relative);
             TestExtension(
-                () => new ODataUriParser(model, originalCase),
-                () => new ODataUriParser(model, caseInsensitiveCase),
+                () => new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } },
+                () => new ODataUriParser(model, caseInsensitiveCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } },
                 parse,
                 verify,
                 errorMessage,
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             if (verify != null)
             {
                 // Original case should pass
-                ODataUriParser parser = new ODataUriParser(model, originalCase);
+                ODataUriParser parser = new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
                 verify(parse(parser));
             }
 
@@ -217,12 +217,12 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             Uri originalCase = new Uri(originalStr, UriKind.Relative);
 
             // Original case should fail with message
-            ODataUriParser parser = new ODataUriParser(model, originalCase);
+            ODataUriParser parser = new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
             Action action = () => parse(parser);
             action.ShouldThrow<ODataException>().WithMessage(message);
 
             // Original case should fail with CaseInsensitive parser with same errorMessage
-            parser = new ODataUriParser(model, originalCase);
+            parser = new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = true } };
             parserSet(parser);
             action = () => parse(parser);
             action.ShouldThrow<ODataException>().WithMessage(message);

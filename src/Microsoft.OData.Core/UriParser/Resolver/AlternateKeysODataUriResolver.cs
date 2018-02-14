@@ -95,7 +95,13 @@ namespace Microsoft.OData.UriParser
             {
                 string valueText;
 
-                if (EnableCaseInsensitive)
+                if (!namedValues.TryGetValue(kvp.Key, out valueText) && !EnableCaseInsensitive)
+                {
+                    convertedPairs = null;
+                    return false;
+                }
+
+                if (valueText == null)
                 {
                     var list = namedValues.Keys.Where(key => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase)).ToList();
                     if (list.Count > 1)
@@ -109,11 +115,6 @@ namespace Microsoft.OData.UriParser
                     }
 
                     valueText = namedValues[list.Single()];
-                }
-                else if (!namedValues.TryGetValue(kvp.Key, out valueText))
-                {
-                    convertedPairs = null;
-                    return false;
                 }
 
                 object convertedValue = convertFunc(kvp.Value.Type, valueText);
