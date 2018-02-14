@@ -125,7 +125,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Binds a an end path token into a PropertyAccessToken, OpenPropertyToken, or FunctionCallToken.
+        /// Binds an end path token into a PropertyAccessToken, OpenPropertyToken, or FunctionCallToken.
         /// </summary>
         /// <param name="endPathToken">The property access token to bind.</param>
         /// <returns>A Query node representing this endpath token, bound to metadata.</returns>
@@ -158,7 +158,6 @@ namespace Microsoft.OData.UriParser
 
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
             }
-
 
             // Now that we have the parent type, can find its corresponding EDM type
             IEdmStructuredTypeReference structuredParentType =

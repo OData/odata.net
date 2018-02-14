@@ -144,6 +144,9 @@ namespace Microsoft.OData
         /// <summary>A segment name in a URI that indicates metadata is being requested.</summary>
         internal const string UriMetadataSegment = "$metadata";
 
+        /// <summary>The OData prefix</summary>
+        internal const string ODataPrefix = "odata";
+
         #region Context URL
 
         /// <summary>

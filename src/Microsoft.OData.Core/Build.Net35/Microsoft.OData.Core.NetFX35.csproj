@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AllowCrossTargeting>true</AllowCrossTargeting>
@@ -1631,6 +1631,9 @@
     </Compile>
     <Compile Include="..\UriParser\Resolver\UnqualifiedODataUriResolver.cs">
       <Link>Microsoft\OData\Core\UriParser\Resolver\UnqualifiedODataUriResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\AnnotationSegment.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\AnnotationSegment.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionComplexNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionComplexNode.cs</Link>

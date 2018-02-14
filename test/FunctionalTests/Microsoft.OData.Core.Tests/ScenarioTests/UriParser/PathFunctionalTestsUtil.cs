@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         internal static void RunParseErrorPath(string path, string expectedMessage)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldygook/" + path));
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldygook/" + path)) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
             Action parse = () => parser.ParsePath();
             parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
         }

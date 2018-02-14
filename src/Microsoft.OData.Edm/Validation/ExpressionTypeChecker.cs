@@ -492,8 +492,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsEnum())
             {
-                discoveredErrors = new EdmError[]
-                {
+                discoveredErrors = new EdmError[] {
                     new EdmError(expression.Location(),
                     EdmErrorCode.ExpressionEnumKindNotValidForAssertedType,
                     Edm.Strings.EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType)

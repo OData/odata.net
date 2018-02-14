@@ -29,12 +29,8 @@ namespace Microsoft.OData.UriParser
                 return base.ResolveUnboundOperations(model, identifier);
             }
 
-            return model.SchemaElements.OfType<IEdmOperation>()
-                    .Where(operation => string.Equals(
-                            identifier,
-                            operation.Name,
-                            this.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal)
-                    && !operation.IsBound);
+            return FindAcrossModels<IEdmOperation>(model, identifier, this.EnableCaseInsensitive)
+                    .Where(operation => !operation.IsBound);
         }
 
         /// <summary>
@@ -51,13 +47,27 @@ namespace Microsoft.OData.UriParser
                 return base.ResolveBoundOperations(model, identifier, bindingType);
             }
 
-            return model.SchemaElements.OfType<IEdmOperation>()
-                .Where(operation => string.Equals(
-                        identifier,
-                        operation.Name,
-                        this.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal)
-                    && operation.IsBound && operation.Parameters.Any()
+            return FindAcrossModels<IEdmOperation>(model, identifier, this.EnableCaseInsensitive)
+                .Where(operation =>
+                    operation.IsBound
+                    && operation.Parameters.Any()
                     && operation.HasEquivalentBindingType(bindingType));
+        }
+
+        private static IEnumerable<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
+        {
+            Func<IEdmModel, IEnumerable<T>> finder = (refModel) =>
+                refModel.SchemaElements.OfType<T>()
+                .Where(e => string.Equals(qualifiedName, e.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
+
+            IEnumerable<T> results = finder(model);
+
+            foreach (IEdmModel reference in model.ReferencedModels)
+            {
+                results.Concat(finder(reference));
+            }
+
+            return results;
         }
     }
 }

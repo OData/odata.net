@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             ICollection<FunctionParameterToken> splitParameters;
             parsedSegementParameters = null;
-            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { ParameterAliasValueAccessor = paramAliasAccessor };
+            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { ParameterAliasValueAccessor = paramAliasAccessor, EnableCaseInsensitiveUriFunctionIdentifier = false };
             if (FunctionParameterParser.TrySplitOperationParameters(parenthesisExpression, configuration, out splitParameters))
             {
                 parsedSegementParameters = FunctionCallBinder.BindSegmentParameters(configuration, operation, splitParameters);
