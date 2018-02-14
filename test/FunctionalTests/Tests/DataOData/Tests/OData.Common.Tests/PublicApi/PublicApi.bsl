@@ -5561,6 +5561,7 @@ public abstract class Microsoft.OData.UriParser.ODataPathSegment {
 public abstract class Microsoft.OData.UriParser.PathSegmentHandler {
 	protected PathSegmentHandler ()
 
+	public virtual void Handle (Microsoft.OData.UriParser.AnnotationSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.BatchReferenceSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.BatchSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.CountSegment segment)
