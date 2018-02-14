@@ -379,6 +379,7 @@
     <Compile Include="Uri\ODataUriUtils.cs" />
     <Compile Include="Uri\ODataUrlKeyDelimiter.cs" />
     <Compile Include="Uri\SelectExpandClauseToStringBuilder.cs" />
+    <Compile Include="Uri\ApplyClauseToStringBuilder.cs" />
     <Compile Include="UriParser\Binders\BinaryOperatorBinder.cs" />
     <Compile Include="UriParser\Binders\BinderBase.cs" />
     <Compile Include="UriParser\Binders\BindingState.cs" />
@@ -591,6 +592,7 @@
     <Compile Include="UriParser\Aggregation\FilterTransformationNode.cs" />
     <Compile Include="UriParser\Aggregation\TransformationNode.cs" />
     <Compile Include="UriParser\Aggregation\AggregateTransformationNode.cs" />
+    <Compile Include="UriParser\Aggregation\ComputeTransformationNode.cs" />
     <Compile Include="UriParser\Aggregation\AggregateExpression.cs" />
     <Compile Include="UriParser\Aggregation\ApplyClause.cs" />
     <Compile Include="UriParser\Aggregation\GroupByTransformationNode.cs" />
