@@ -10,6 +10,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -73,6 +74,14 @@ namespace Microsoft.OData.Tests.UriParser
             PropertySegment propertySegment = segment.As<PropertySegment>();
             propertySegment.Property.Should().Be(expectedProperty);
             return new AndConstraint<PropertySegment>(propertySegment);
+        }
+
+        public static AndConstraint<AnnotationSegment> ShouldBeAnnotationSegment(this ODataPathSegment segment, IEdmTerm expectedTerm)
+        {
+            segment.Should().BeOfType<AnnotationSegment>();
+            AnnotationSegment annotationSegment = segment.As<AnnotationSegment>();
+            annotationSegment.Term.Should().Be(expectedTerm);
+            return new AndConstraint<AnnotationSegment>(annotationSegment);
         }
 
         public static AndConstraint<NavigationPropertySegment> ShouldBeNavigationPropertySegment(this ODataPathSegment segment, IEdmNavigationProperty navigationProperty)

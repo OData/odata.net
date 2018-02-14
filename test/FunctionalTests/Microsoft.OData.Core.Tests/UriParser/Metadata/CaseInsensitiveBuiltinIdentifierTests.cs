@@ -255,21 +255,6 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         }
 
         [Fact]
-        public void CaseInsensitiveSelectExpandConflicts()
-        {
-            this.TestConflict("People?$select=Name&$selecT=Name",
-                uriParser => uriParser.ParseSelectAndExpand(), 
-                clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
-                    new ODataPathSegment[]
-                    {
-                        new PropertySegment(HardCodedTestModel.GetPersonNameProp()), 
-                    })),
-                Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$select"),
-                HardCodedTestModel.TestModel,
-                new ODataUriResolver() { EnableCaseInsensitive = true });
-        }
-
-        [Fact]
         public void CaseInsensitiveSkipTokenShouldWork()
         {
             this.TestCaseInsensitiveBuiltIn(
@@ -747,8 +732,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             string errorMessage)
         {
             this.TestExtension(
-                () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), original),
-                () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), caseInsensitive),
+                () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), original) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } },
+                () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), caseInsensitive) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } },
                 parse, verify, errorMessage, HardCodedTestModel.TestModel, (parser) => parser.Resolver = new ODataUriResolver { EnableCaseInsensitive = true });
         }
     }

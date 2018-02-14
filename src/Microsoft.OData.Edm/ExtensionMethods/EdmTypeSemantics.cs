@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class EdmTypeSemantics
     {
-        #region IsCollection, IsEntity, IsComplex, ...
+        #region IsCollection, IsEntity, IsComplex, IsPath...
 
         /// <summary>
         /// Returns true if this reference refers to a collection.
@@ -37,6 +37,17 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.TypeKind() == EdmTypeKind.Entity;
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a path type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a path type.</returns>
+        public static bool IsPath(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.TypeKind() == EdmTypeKind.Path;
         }
 
         /// <summary>
@@ -702,6 +713,7 @@ namespace Microsoft.OData.Edm
                         case EdmPrimitiveTypeKind.SByte:
                         case EdmPrimitiveTypeKind.Single:
                         case EdmPrimitiveTypeKind.Stream:
+                        case EdmPrimitiveTypeKind.PrimitiveType:
                             return new EdmPrimitiveTypeReference(primitiveDefinition, type.IsNullable);
                         case EdmPrimitiveTypeKind.Binary:
                             return type.AsBinary();
@@ -1260,6 +1272,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.SByte:
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                     return new EdmPrimitiveTypeReference(type, isNullable);
                 case EdmPrimitiveTypeKind.Binary:
                     return new EdmBinaryTypeReference(type, isNullable);
@@ -1317,6 +1330,12 @@ namespace Microsoft.OData.Edm
             if (enumType != null)
             {
                 return new EdmEnumTypeReference(enumType, isNullable);
+            }
+
+            IEdmPathType pathType = type as IEdmPathType;
+            if (pathType != null)
+            {
+                return new EdmPathTypeReference(pathType, isNullable);
             }
 
             throw new InvalidOperationException(Edm.Strings.EdmType_UnexpectedEdmType);

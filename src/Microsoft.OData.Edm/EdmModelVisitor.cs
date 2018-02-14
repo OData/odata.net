@@ -312,6 +312,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
                 case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                 case EdmPrimitiveTypeKind.None:
                     this.ProcessPrimitiveTypeReference(reference);
                     break;

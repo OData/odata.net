@@ -154,6 +154,8 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind = "EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind";
         internal const string EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen = "EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen";
         internal const string EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity = "EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity";
+        internal const string EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey = "EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey";
+        internal const string EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType = "EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType";
         internal const string EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity = "EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity";
         internal const string EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect = "EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect";
         internal const string EdmModel_Validator_Semantic_InaccessibleType = "EdmModel_Validator_Semantic_InaccessibleType";
@@ -223,6 +225,13 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType = "EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType";
         internal const string EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType = "EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType";
         internal const string EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton = "EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton";
+        internal const string EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType = "EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType";
+        internal const string EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType = "EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType";
+        internal const string EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType = "EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType";
+        internal const string EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton = "EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton";
+        internal const string EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet = "EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet";
+        internal const string EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty = "EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty";
+        internal const string EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty = "EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty";
         internal const string EdmModel_Validator_Syntactic_MissingName = "EdmModel_Validator_Syntactic_MissingName";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong = "EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong";
         internal const string EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed = "EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed";
