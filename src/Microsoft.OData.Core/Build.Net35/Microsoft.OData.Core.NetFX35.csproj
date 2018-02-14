@@ -1485,6 +1485,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\ApplyClause.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\ApplyClause.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\ComputeTransformationNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\ComputeTransformationNode.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\GroupByTransformationNode.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\GroupByTransformationNode.cs</Link>
     </Compile>
@@ -1715,6 +1718,9 @@
     </Compile>
     <Compile Include="..\Uri\SelectExpandClauseToStringBuilder.cs">
       <Link>Microsoft\OData\Core\Uri\SelectExpandClauseToStringBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ApplyClauseToStringBuilder.cs">
+      <Link>Microsoft\OData\Core\Uri\ApplyClauseToStringBuilder.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\CustomUriLiteralPrefixes.cs">
       <Link>Microsoft\OData\Core\UriParser\CustomUriLiteralPrefixes.cs</Link>
