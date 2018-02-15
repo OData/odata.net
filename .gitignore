@@ -48,6 +48,10 @@ test/FunctionalTests/Framework/AstoriaTestFramework.xml
 
 # Downloaded Nuget packages
 sln/packages/
+test/PackageTests/packages/
+
+# Packages under tests
+test/PackageTests/TestPackages
 
 # Test artifacts
 test/FunctionalTests/Tests/Data/Northwind/Northwind.csdl1.csdl
