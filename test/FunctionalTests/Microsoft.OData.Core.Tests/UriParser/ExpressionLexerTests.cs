@@ -586,7 +586,7 @@ namespace Microsoft.OData.Tests.UriParser
                CommaToken,
                OpenParenToken,
                CloseParenToken,
-               EqualsToken, 
+               EqualsToken,
                //SemiColonToken,
                MinusToken,
                SlashToken,
@@ -607,9 +607,9 @@ namespace Microsoft.OData.Tests.UriParser
         ///  The following are allowed by EDM:
         ///     For staring char: [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}].
         ///     For other chars   [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]
-        ///     
+        ///
         /// Note: Letters: \p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm} should already be covered.
-        /// 
+        ///
         /// </summary>
         [Fact]
         public void EdmValidNamesNotAllowedInUri_1()
@@ -702,6 +702,15 @@ namespace Microsoft.OData.Tests.UriParser
         public void ExpressionLexerShouldParseValidAliasCorrectly()
         {
             ValidateTokenSequence("@foo", true /*parsingFunctionParameters*/, ParameterAliasToken("@foo"));
+        }
+
+        [Fact]
+        public void ExpressionLexerShouldParseValidAliasWithDotInExpressionCorrectly()
+        {
+            ValidateTokenSequence("@foo eq 1.23", true /*parsingFunctionParameters*/,
+                ParameterAliasToken("@foo"),
+                IdentifierToken("eq"),
+                SingleLiteralToken("1.23"));
         }
 
         [Fact]
@@ -981,6 +990,11 @@ namespace Microsoft.OData.Tests.UriParser
         private static ExpressionToken ParameterAliasToken(string text)
         {
             return new ExpressionToken() { Kind = ExpressionTokenKind.ParameterAlias, Text = text };
+        }
+
+        private static ExpressionToken SingleLiteralToken(string singleString )
+        {
+            return new ExpressionToken() { Kind = ExpressionTokenKind.SingleLiteral, Text = singleString };
         }
 
         private static ExpressionToken SpatialLiteralToken(string literal, bool geography = true)

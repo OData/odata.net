@@ -679,11 +679,22 @@ namespace Microsoft.OData.UriParser
                             break;
                         }
 
+                        int start = this.textPos;
                         this.ParseIdentifier();
+
+                        // Extract the identifier from expression.
+                        string leftToken = ExpressionText.Substring(start, this.textPos - start);
+
+
                         t = this.parsingFunctionParameters
-                            && !(this.ExpressionText[0] == UriQueryConstants.AnnotationPrefix
-                                && this.ExpressionText.Contains("."))
+                            && !(leftToken[0] == UriQueryConstants.AnnotationPrefix
+                                && leftToken.Contains("."))
                             ? ExpressionTokenKind.ParameterAlias : ExpressionTokenKind.Identifier;
+
+                        //                        t = this.parsingFunctionParameters
+                        //                            && !(this.ExpressionText[0] == UriQueryConstants.AnnotationPrefix
+                        //                                && this.ExpressionText.Contains("."))
+                        //                            ? ExpressionTokenKind.ParameterAlias : ExpressionTokenKind.Identifier;
                         break;
                     }
 
