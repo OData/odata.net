@@ -6823,6 +6823,7 @@ public enum Microsoft.OData.UriParser.Aggregation.AggregationMethod : int {
 
 public enum Microsoft.OData.UriParser.Aggregation.TransformationNodeKind : int {
 	Aggregate = 0
+	Compute = 3
 	Filter = 2
 	GroupBy = 1
 }
@@ -6895,6 +6896,13 @@ public sealed class Microsoft.OData.UriParser.Aggregation.ApplyClause {
 	public ApplyClause (System.Collections.Generic.IList`1[[Microsoft.OData.UriParser.Aggregation.TransformationNode]] transformations)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.TransformationNode]] Transformations  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.ComputeTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
+	public ComputeTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpression]] expressions)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpression]] Expressions  { public get; }
+	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.FilterTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
