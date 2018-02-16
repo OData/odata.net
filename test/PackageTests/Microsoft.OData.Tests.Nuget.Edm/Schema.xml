@@ -52,7 +52,7 @@
         <Property Name="City" Type="Edm.String"/>
         <Property Name="State" Type="Edm.String"/>
         <Property Name="ZipCode" Type="Edm.String"/>
-        <Property Name="Country" Type="Edm.String"/>
+        <Property Name="CountryRegion" Type="Edm.String"/>
       </ComplexType>
       <EntityType Name="Person">
         <Key>
