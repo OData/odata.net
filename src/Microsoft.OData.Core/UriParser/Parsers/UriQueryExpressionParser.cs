@@ -302,7 +302,6 @@ namespace Microsoft.OData.UriParser
                         transformationTokens.Add(ParseGroupBy());
                         break;
                     case ExpressionConstants.KeywordCompute:
-                        //transformationTokens.Add(ParseCompute("LifeTime mul MyDog/LionWhoAteMe/AngerLevel as lifeAngerLevel"));
                         transformationTokens.Add(ParseCompute());
                         break;
                     default:
