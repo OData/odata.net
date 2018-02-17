@@ -707,10 +707,18 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpressionLexerShouldParseValidAliasWithDotInExpressionCorrectly()
         {
-            ValidateTokenSequence("@foo eq 1.23", true /*parsingFunctionParameters*/,
-                ParameterAliasToken("@foo"),
-                IdentifierToken("eq"),
-                SingleLiteralToken("1.23"));
+            foreach (string expr in new string[]
+                {
+                    "@foo eq 1.23",
+                    "  @foo  eq  1.23  " // with arbitrary paddings.
+                }
+            )
+            {
+                ValidateTokenSequence(expr, true /*parsingFunctionParameters*/,
+                    ParameterAliasToken("@foo"),
+                    IdentifierToken("eq"),
+                    SingleLiteralToken("1.23"));
+            }
         }
 
         [Fact]
