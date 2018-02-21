@@ -501,6 +501,15 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Cannot write the value 'null' in top level property; return 204 instead."
+        /// </summary>
+        internal static string ODataMessageWriter_CannotWriteTopLevelNull {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_CannotWriteTopLevelNull);
+            }
+        }
+
+        /// <summary>
         /// A string like "Cannot write the value 'null' in raw format."
         /// </summary>
         internal static string ODataMessageWriter_CannotWriteNullInRawFormat {

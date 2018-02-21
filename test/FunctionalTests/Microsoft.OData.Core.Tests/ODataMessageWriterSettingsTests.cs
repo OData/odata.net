@@ -119,6 +119,12 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void LibraryCompatibilityShouldBeLatestByDefault()
+        {
+            this.settings.LibraryCompatibility.Should().Be(ODataLibraryCompatibility.Latest);
+        }
+
+        [Fact]
         public void VersionShouldBeNullByDefault()
         {
             this.settings.Version.Should().BeNull();
@@ -233,6 +239,13 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void CopyConstructorShouldCopyLibraryCompatibility()
+        {
+            this.settings.LibraryCompatibility = ODataLibraryCompatibility.Version6;
+            this.settings.Clone().LibraryCompatibility.Should().Be(ODataLibraryCompatibility.Version6);
+        }
+
+        [Fact]
         public void CopyConstructorShouldCopyAnnotationFilter()
         {
             Func<string, bool> filter = name => true;
@@ -315,6 +328,7 @@ namespace Microsoft.OData.Tests
             const int maxOperationsPerChangeset = 43;
             const int maxNestingDepth = 44;
             const ODataVersion version = ODataVersion.V4;
+            const ODataLibraryCompatibility library = ODataLibraryCompatibility.Version6;
 
             this.settings = new ODataMessageWriterSettings()
             {
@@ -329,6 +343,7 @@ namespace Microsoft.OData.Tests
                     MaxNestingDepth = maxNestingDepth,
                 },
                 Version = version,
+                LibraryCompatibility = library,
             };
 
             this.settings.ThrowOnDuplicatePropertyNames.Should().BeFalse();
@@ -339,6 +354,7 @@ namespace Microsoft.OData.Tests
             this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(maxOperationsPerChangeset);
             this.settings.MessageQuotas.MaxNestingDepth.Should().Be(maxNestingDepth);
             this.settings.Version.Should().Be(version);
+            this.settings.LibraryCompatibility.Should().Be(library);
         }
 
         [Fact]

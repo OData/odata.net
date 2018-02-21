@@ -176,6 +176,9 @@ namespace Microsoft.OData
         /// <summary>The "," used to split properties of Select and Expand fragment a context URI.</summary>
         internal const string ContextUriProjectionPropertySeparator = ",";
 
+        /// <summary>The token that indicates the payload is a property with null value.</summary>
+        internal const string ContextUriFragmentNull = "Edm.Null";
+
         /// <summary>The token that indicates the payload is a property with an untyped value.</summary>
         internal const string ContextUriFragmentUntyped = "Edm.Untyped";
 
