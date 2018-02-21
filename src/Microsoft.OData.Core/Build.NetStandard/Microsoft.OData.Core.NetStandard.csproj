@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Core</AssemblyName>
@@ -292,7 +292,7 @@
     </Compile>
     <Compile Include="..\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs">
       <Link>JsonLight\ODataJsonLightBatchAtomicGroupCache.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="..\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs">
       <Link>JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs</Link>
     </Compile>
@@ -301,13 +301,13 @@
     </Compile>
     <Compile Include="..\JsonLight\ODataJsonLightBatchWriter.cs">
       <Link>JsonLight\ODataJsonLightBatchWriter.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="..\JsonLight\ODataJsonLightBatchReaderStream.cs">
       <Link>JsonLight\ODataJsonLightBatchReaderStream.cs</Link>
     </Compile>
     <Compile Include="..\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs">
       <Link>JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="..\JsonLight\ODataJsonLightParameterDeserializer.cs">
       <Link>JsonLight\ODataJsonLightParameterDeserializer.cs</Link>
     </Compile>
@@ -499,7 +499,7 @@
     </Compile>
     <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReader.cs">
       <Link>MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
       <Link>MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
     </Compile>
@@ -508,7 +508,7 @@
     </Compile>
     <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
       <Link>MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="..\MultipartMixed\DependsOnIdsTracker.cs">
       <Link>MultipartMixed\DependsOnIdsTracker.cs</Link>
     </Compile>
@@ -706,6 +706,9 @@
     </Compile>
     <Compile Include="..\ODataJsonDateTimeFormat.cs">
       <Link>ODataJsonDateTimeFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataLibraryCompatibility.cs">
+      <Link>ODataLibraryCompatibility.cs</Link>
     </Compile>
     <Compile Include="..\ODataMediaType.cs">
       <Link>ODataMediaType.cs</Link>
@@ -982,7 +985,7 @@
     </Compile>
     <Compile Include="..\TypeUtils.cs">
       <Link>TypeUtils.cs</Link>
-    </Compile>  
+    </Compile>
     <Compile Include="..\UnknownEntitySet.cs">
       <Link>UnknownEntitySet.cs</Link>
     </Compile>
