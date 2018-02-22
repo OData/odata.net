@@ -1,27 +1,33 @@
-﻿using Microsoft.OData.UriParser;
-using Microsoft.OData.UriParser.Aggregation;
+﻿//---------------------------------------------------------------------
+// <copyright file="ApplyClauseToStringBuilder.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
 using System.Text;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 
 namespace Microsoft.OData
 {
     internal sealed class ApplyClauseToStringBuilder
     {
-        private readonly NodeToStringBuilder _nodeToStringBuilder;
-        private readonly StringBuilder _query;
+        private readonly NodeToStringBuilder nodeToStringBuilder;
+        private readonly StringBuilder query;
 
         public ApplyClauseToStringBuilder()
         {
-            _nodeToStringBuilder = new NodeToStringBuilder();
-            _query = new StringBuilder();
+            nodeToStringBuilder = new NodeToStringBuilder();
+            query = new StringBuilder();
         }
 
         public string TranslateApplyClause(ApplyClause applyClause)
         {
             ExceptionUtils.CheckArgumentNotNull(applyClause, nameof(applyClause));
 
-            _query.Append(ExpressionConstants.QueryOptionApply);
-            _query.Append(ExpressionConstants.SymbolEqual);
+            query.Append(ExpressionConstants.QueryOptionApply);
+            query.Append(ExpressionConstants.SymbolEqual);
 
             bool appendSlash = false;
             foreach (TransformationNode transformation in applyClause.Transformations)
@@ -30,33 +36,39 @@ namespace Microsoft.OData
                 Translate(transformation);
             }
 
-            return appendSlash ? _query.ToString() : string.Empty;
+            return appendSlash ? query.ToString() : string.Empty;
         }
 
         private bool AppendComma(bool appendComma)
         {
             if (appendComma)
-                _query.Append(ExpressionConstants.SymbolComma);
+            {
+                query.Append(ExpressionConstants.SymbolComma);
+            }
+
             return true;
         }
 
         private void AppendExpression(SingleValueNode expression)
         {
-            string text = Uri.EscapeDataString(_nodeToStringBuilder.TranslateNode(expression));
-            _query.Append(text);
+            string text = Uri.EscapeDataString(nodeToStringBuilder.TranslateNode(expression));
+            query.Append(text);
         }
 
         private bool AppendSlash(bool appendSlash)
         {
             if (appendSlash)
-                _query.Append(ExpressionConstants.SymbolForwardSlash);
+            {
+                query.Append(ExpressionConstants.SymbolForwardSlash);
+            }
+
             return true;
         }
 
         private void AppendWord(string word)
         {
-            _query.Append(word);
-            _query.Append(ExpressionConstants.SymbolEscapedSpace);
+            query.Append(word);
+            query.Append(ExpressionConstants.SymbolEscapedSpace);
         }
 
         private static string GetAggregationMethodName(AggregateExpression aggExpression)
@@ -92,13 +104,13 @@ namespace Microsoft.OData
                 if (aggExpression.Method != AggregationMethod.VirtualPropertyCount)
                 {
                     AppendExpression(aggExpression.Expression);
-                    _query.Append(ExpressionConstants.SymbolEscapedSpace);
+                    query.Append(ExpressionConstants.SymbolEscapedSpace);
                     AppendWord(ExpressionConstants.KeywordWith);
                 }
 
                 AppendWord(GetAggregationMethodName(aggExpression));
                 AppendWord(ExpressionConstants.KeywordAs);
-                _query.Append(aggExpression.Alias);
+                query.Append(aggExpression.Alias);
             }
         }
 
@@ -110,9 +122,9 @@ namespace Microsoft.OData
                 appendComma = AppendComma(appendComma);
 
                 AppendExpression(computeExpression.Expression);
-                _query.Append(ExpressionConstants.SymbolEscapedSpace);
+                query.Append(ExpressionConstants.SymbolEscapedSpace);
                 AppendWord(ExpressionConstants.KeywordAs);
-                _query.Append(computeExpression.Alias);
+                query.Append(computeExpression.Alias);
             }
         }
 
@@ -127,15 +139,19 @@ namespace Microsoft.OData
             foreach (GroupByPropertyNode node in transformation.GroupingProperties)
             {
                 if (appendComma)
+                {
                     AppendComma(appendComma);
+                }
                 else
                 {
                     appendComma = true;
-                    _query.Append(ExpressionConstants.SymbolOpenParen);
+                    query.Append(ExpressionConstants.SymbolOpenParen);
                 }
 
                 if (node.Expression != null)
+                {
                     AppendExpression(node.Expression);
+                }
 
                 bool appendSlash = false;
                 foreach (GroupByPropertyNode childNode in node.ChildTransformations)
@@ -144,8 +160,11 @@ namespace Microsoft.OData
                     AppendExpression(childNode.Expression);
                 }
             }
+
             if (appendComma)
-                _query.Append(ExpressionConstants.SymbolClosedParen);
+            {
+                query.Append(ExpressionConstants.SymbolClosedParen);
+            }
 
             if (transformation.ChildTransformations != null)
             {
@@ -159,39 +178,49 @@ namespace Microsoft.OData
             switch (transformation.Kind)
             {
                 case TransformationNodeKind.Aggregate:
-                    _query.Append(ExpressionConstants.KeywordAggregate);
+                    query.Append(ExpressionConstants.KeywordAggregate);
                     break;
                 case TransformationNodeKind.GroupBy:
-                    _query.Append(ExpressionConstants.KeywordGroupBy);
+                    query.Append(ExpressionConstants.KeywordGroupBy);
                     break;
                 case TransformationNodeKind.Filter:
-                    _query.Append(ExpressionConstants.KeywordFilter);
+                    query.Append(ExpressionConstants.KeywordFilter);
                     break;
                 case TransformationNodeKind.Compute:
-                    _query.Append(ExpressionConstants.KeywordCompute);
+                    query.Append(ExpressionConstants.KeywordCompute);
                     break;
                 default:
                     throw new NotSupportedException("unknown TransformationNodeKind value " + transformation.Kind.ToString());
             }
 
-            _query.Append(ExpressionConstants.SymbolOpenParen);
+            query.Append(ExpressionConstants.SymbolOpenParen);
 
             GroupByTransformationNode groupByTransformation;
             AggregateTransformationNode aggTransformation;
             FilterTransformationNode filterTransformation;
             ComputeTransformationNode computeTransformation;
             if ((groupByTransformation = transformation as GroupByTransformationNode) != null)
+            {
                 Translate(groupByTransformation);
+            }
             else if ((aggTransformation = transformation as AggregateTransformationNode) != null)
+            {
                 Translate(aggTransformation);
+            }
             else if ((filterTransformation = transformation as FilterTransformationNode) != null)
+            {
                 Translate(filterTransformation);
+            }
             else if ((computeTransformation = transformation as ComputeTransformationNode) != null)
+            {
                 Translate(computeTransformation);
+            }
             else
+            {
                 throw new NotSupportedException("unknown TransformationNode type " + transformation.GetType().Name);
+            }
 
-            _query.Append(ExpressionConstants.SymbolClosedParen);
+            query.Append(ExpressionConstants.SymbolClosedParen);
         }
     }
 }

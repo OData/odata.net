@@ -211,11 +211,13 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordCompute), "token identifier is compute");
 
             lexer.NextToken();
+
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
+
             lexer.NextToken();
 
             List<ComputeExpressionToken> transformationTokens = new List<ComputeExpressionToken>();
@@ -237,6 +239,7 @@ namespace Microsoft.OData.UriParser
             {
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
+
             this.lexer.NextToken();
 
             return new ComputeToken(transformationTokens);
