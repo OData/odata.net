@@ -890,7 +890,8 @@ public class CodeGenerationContext
             if (tmp is EdmCoreModel ||
                 tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null ||
                 tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
-                tmp.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null)
+                tmp.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null ||
+                tmp.FindDeclaredTerm("Org.OData.Authorization.V1.Authorizations") != null)
             {
                 continue;
             }

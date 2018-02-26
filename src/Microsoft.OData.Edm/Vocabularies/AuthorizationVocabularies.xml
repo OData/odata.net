@@ -71,7 +71,7 @@
       
       <Term Name="SecuritySchemes" Type="Collection(Auth.SecurityScheme)" AppliesTo="EntityContainer"> 
         <Annotation Term="Core.Description" String="At least one of the specified security schemes are required to make a request against the service."/> 
-      </Term>       
+      </Term>
 
       <ComplexType Name="Authorization" Abstract="true">
         <Annotation Term="Core.Description" String="Base type for all Authorization types" />
