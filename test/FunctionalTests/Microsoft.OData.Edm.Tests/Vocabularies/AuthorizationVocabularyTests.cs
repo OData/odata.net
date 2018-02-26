@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
@@ -29,11 +28,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Authorization.V1"" Alias=""Auth"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <ComplexType Name=""Authorization"" Abstract=""true"">
-    <Property Name=""Description"" Type=""Edm.String"">
-      <Annotation Term=""Core.Description"" String=""Description of the authorization method"" />
-    </Property>
     <Property Name=""Name"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""Name that can be used to reference the authorization flow."" />
+    </Property>
+    <Property Name=""Description"" Type=""Edm.String"">
+      <Annotation Term=""Core.Description"" String=""Description of the authorization method"" />
     </Property>
     <Annotation Term=""Core.Description"" String=""Base type for all Authorization types"" />
   </ComplexType>
@@ -123,8 +122,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""API Key is passed as a cookie"" />
     </Member>
   </EnumType>
-  <Term Name=""Authorizations"" Type=""Collection(Auth.Authorization)"" AppliesTo=""EntityContainer EntitySet Singleton NavigationProperty Action Function"">
+  <Term Name=""Authorizations"" Type=""Collection(Auth.Authorization)"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""Lists the methods available to authorize access to the annotated resource"" />
+  </Term>
+  <Term Name=""SecuritySchemes"" Type=""Collection(Auth.SecurityScheme)"" AppliesTo=""EntityContainer"">
+    <Annotation Term=""Core.Description"" String=""At least one of the specified security schemes are required to make a request against the service."" />
   </Term>
 </Schema>";
 
@@ -158,11 +160,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
             Assert.Equal("Collection(Org.OData.Authorization.V1.Authorization)", term.Type.Definition.FullTypeName());
 
-            Assert.Equal("EntityContainer EntitySet Singleton NavigationProperty Action Function", term.AppliesTo);
+            Assert.Equal("EntityContainer", term.AppliesTo);
         }
 
         [Theory]
-        [InlineData("Authorization", null, "Description|Name", true)]
+        [InlineData("Authorization", null, "Name|Description", true)]
         [InlineData("OpenIDConnect", "Authorization", "IssuerUrl", false)]
         [InlineData("Http", "Authorization", "Scheme|BearerFormat", false)]
         [InlineData("OAuthAuthorization", "Authorization", "Scopes|RefreshUrl", true)]
