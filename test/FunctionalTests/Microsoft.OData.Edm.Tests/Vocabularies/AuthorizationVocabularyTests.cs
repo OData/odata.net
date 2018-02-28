@@ -163,6 +163,19 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Equal("EntityContainer", term.AppliesTo);
         }
 
+        [Fact]
+        public void TestAuthorizationVocabularySecuritySchemesTerm()
+        {
+            var term = this._authorizationModel.FindDeclaredTerm("Org.OData.Authorization.V1.SecuritySchemes");
+            Assert.NotNull(term);
+
+            Assert.NotNull(term.Type);
+            Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
+            Assert.Equal("Collection(Org.OData.Authorization.V1.SecurityScheme)", term.Type.Definition.FullTypeName());
+
+            Assert.Equal("EntityContainer", term.AppliesTo);
+        }
+
         [Theory]
         [InlineData("Authorization", null, "Name|Description", true)]
         [InlineData("OpenIDConnect", "Authorization", "IssuerUrl", false)]
