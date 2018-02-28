@@ -164,7 +164,7 @@
         <Property Name="AuthorizationSchemeName" Type="Edm.String">
           <Annotation Term="Core.Description" String="The name of a required authorization scheme"/>
         </Property>
-        <Property Name="RequiredScopes" Type="Collection(Edm.String">
+        <Property Name="RequiredScopes" Type="Collection(Edm.String)">
           <Annotation Term="Core.Description" String="The names of scopes required from this authorization scheme."/>
         </Property>
       </ComplexType>
