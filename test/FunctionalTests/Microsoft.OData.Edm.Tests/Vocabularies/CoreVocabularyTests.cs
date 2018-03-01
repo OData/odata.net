@@ -10,7 +10,6 @@ using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
@@ -21,7 +20,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     /// </summary>
     public class CoreVocabularyTests
     {
-        private readonly IEdmModel coreVocModel = CoreVocabularyModel.Instance;
+        private readonly IEdmModel _coreVocModel = CoreVocabularyModel.Instance;
 
         [Fact]
         public void TestBaseCoreVocabularyModel()
@@ -35,6 +34,35 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""DefaultValue"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""Default value for an optional parameter, using the same rules for the default value facet of a property."" />
     </Property>
+  </ComplexType>
+  <ComplexType Name=""HttpRequest"">
+    <Property Name=""Description"" Type=""Edm.String"" />
+    <Property Name=""Method"" Type=""Edm.String"" />
+    <Property Name=""CustomQueryOptions"" Type=""Collection(Core.CustomParameter)"" />
+    <Property Name=""CustomHeaders"" Type=""Collection(Core.CustomParameter)"" />
+    <Property Name=""HttpResponses"" Type=""Collection(Core.HttpResponse)"" />
+    <Property Name=""SecuritySchemes"" Type=""Collection(Auth.SecurityScheme)"" />
+  </ComplexType>
+  <ComplexType Name=""HttpResponse"">
+    <Property Name=""ResponseCode"" Type=""Edm.String"" />
+    <Property Name=""Examples"" Type=""Collection(Core.Example)"" />
+    <Property Name=""Description"" Type=""Edm.String"" />
+  </ComplexType>
+  <ComplexType Name=""CustomParameter"">
+    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" />
+    <Property Name=""Description"" Type=""Edm.String"" />
+    <Property Name=""DocumentationURL"" Type=""Edm.String"" />
+    <Property Name=""Required"" Type=""Edm.Boolean"" Nullable=""false"" />
+    <Property Name=""ExampleValues"" Type=""Collection(Core.Example)"" Nullable=""false"" />
+  </ComplexType>
+  <ComplexType Name=""Example"" Abstract=""true"">
+    <Property Name=""Description"" Type=""Edm.String"" Nullable=""false"" />
+  </ComplexType>
+  <ComplexType Name=""ExternalExample"" BaseType=""Core.Example"">
+    <Property Name=""ExternalValue"" Type=""Edm.String"" Nullable=""false"" />
+  </ComplexType>
+  <ComplexType Name=""InlineExample"" BaseType=""Core.Example"">
+    <Property Name=""InlineValue"" Type=""Edm.String"" Nullable=""false"" />
   </ComplexType>
   <EnumType Name=""Permission"" IsFlags=""true"">
     <Member Name=""None"" Value=""0"" />
@@ -98,9 +126,13 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""OptionalParameter"" Type=""Core.OptionalParameterType"" AppliesTo=""Parameter"">
     <Annotation Term=""Core.Description"" String=""Supplying a value for the parameter is optional."" />
   </Term>
+  <Term Name=""HttpRequests"" Type=""Collection(Core.HttpRequest)"" AppliesTo=""EntitySet Singleton ActionImport FunctionImport Action Function"">
+    <Annotation Term=""Core.Description"" String=""Describes possible HTTP requests"" />
+    <Annotation Term=""Core.LongDescription"" String=""The list need not be complete. It may be used to generate API documentation, so restricting it to the most common and most important responses may increase readability."" />
+  </Term>
 </Schema>";
 
-            var s = coreVocModel.FindDeclaredTerm("Org.OData.Core.V1.OptimisticConcurrency");
+            var s = _coreVocModel.FindDeclaredTerm("Org.OData.Core.V1.OptimisticConcurrency");
             Assert.NotNull(s);
             Assert.Equal("Org.OData.Core.V1", s.Namespace);
             Assert.Equal("OptimisticConcurrency", s.Name);
@@ -109,19 +141,19 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Equal("Collection(Edm.PropertyPath)", type.FullName());
             Assert.Equal(EdmTypeKind.Collection, type.Definition.TypeKind);
 
-            var descriptionTerm = coreVocModel.FindTerm("Org.OData.Core.V1.Description");
+            var descriptionTerm = _coreVocModel.FindTerm("Org.OData.Core.V1.Description");
             Assert.NotNull(descriptionTerm);
             var descriptionType = descriptionTerm.Type.Definition as IEdmPrimitiveType;
             Assert.NotNull(descriptionType);
             Assert.Equal(EdmPrimitiveTypeKind.String, descriptionType.PrimitiveKind);
 
-            var longDescriptionTerm = coreVocModel.FindTerm("Org.OData.Core.V1.LongDescription");
+            var longDescriptionTerm = _coreVocModel.FindTerm("Org.OData.Core.V1.LongDescription");
             Assert.NotNull(longDescriptionTerm);
             var longDescriptionType = longDescriptionTerm.Type.Definition as IEdmPrimitiveType;
             Assert.NotNull(longDescriptionType);
             Assert.Equal(EdmPrimitiveTypeKind.String, longDescriptionType.PrimitiveKind);
 
-            var isLanguageDependentTerm = coreVocModel.FindTerm("Org.OData.Core.V1.IsLanguageDependent");
+            var isLanguageDependentTerm = _coreVocModel.FindTerm("Org.OData.Core.V1.IsLanguageDependent");
             Assert.NotNull(isLanguageDependentTerm);
             var isLanguageDependentType = isLanguageDependentTerm.Type.Definition as IEdmTypeDefinition;
             Assert.NotNull(isLanguageDependentType);
@@ -134,7 +166,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             IEnumerable<EdmError> errors;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            coreVocModel.TryWriteSchema(xw, out errors);
+            _coreVocModel.TryWriteSchema(xw, out errors);
             xw.Flush();
 #if NETCOREAPP1_0
             xw.Dispose();
@@ -144,6 +176,55 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             string output = sw.ToString();
             Assert.False(errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);
+        }
+
+        [Fact]
+        public void TestCoreVocabularyHttpRequestsTerm()
+        {
+            var term = this._coreVocModel.FindDeclaredTerm("Org.OData.Core.V1.HttpRequests");
+            Assert.NotNull(term);
+
+            Assert.NotNull(term.Type);
+            Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
+            Assert.Equal("Collection(Org.OData.Core.V1.HttpRequest)", term.Type.Definition.FullTypeName());
+
+            Assert.Equal("EntitySet Singleton ActionImport FunctionImport Action Function", term.AppliesTo);
+        }
+
+        [Theory]
+        [InlineData("HttpRequest", null, "Description|Method|CustomQueryOptions|CustomHeaders|HttpResponses|SecuritySchemes", false)]
+        [InlineData("HttpResponse", null, "ResponseCode|Examples|Description", false)]
+        [InlineData("CustomParameter", null, "Name|Description|DocumentationURL|Required|ExampleValues", false)]
+        [InlineData("Example", null, "Description", true)]
+        [InlineData("ExternalExample", "Example", "ExternalValue", false)]
+        [InlineData("InlineExample", "Example", "InlineValue", false)]
+        public void TestCoreVocabularyComplexType(string typeName, string baseName, string properties,
+            bool isAbstract)
+        {
+            var schemaType = this._coreVocModel.FindDeclaredType("Org.OData.Core.V1." + typeName);
+            Assert.NotNull(schemaType);
+
+            Assert.Equal(EdmTypeKind.Complex, schemaType.TypeKind);
+            IEdmComplexType complex = (IEdmComplexType)(schemaType);
+
+            Assert.Equal(isAbstract, complex.IsAbstract);
+            Assert.False(complex.IsOpen);
+
+            if (baseName != null)
+            {
+                Assert.NotNull(complex.BaseType);
+                var baseType = this._coreVocModel.FindDeclaredType("Org.OData.Core.V1." + baseName);
+                Assert.NotNull(baseType);
+                Assert.Same(baseType, complex.BaseType);
+            }
+            else
+            {
+                Assert.Null(complex.BaseType);
+            }
+
+            Assert.NotEmpty(complex.DeclaredProperties);
+            Assert.Equal(properties, string.Join("|", complex.DeclaredProperties.Select(e => e.Name)));
+            Assert.Empty(complex.DeclaredNavigationProperties());
         }
     }
 }

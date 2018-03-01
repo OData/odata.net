@@ -101,4 +101,41 @@
     </Property>
   </ComplexType>
 
-  </Schema>
+  <Term Name="HttpRequests" Type="Collection(Core.HttpRequest)" AppliesTo="EntitySet Singleton ActionImport FunctionImport Action Function">
+    <Annotation Term="Core.Description" String="Describes possible HTTP requests" />
+    <Annotation Term="Core.LongDescription" String="The list need not be complete. It may be used to generate API documentation, so restricting it to the most common and most important responses may increase readability." />
+  </Term>
+  <ComplexType Name="HttpRequest">
+    <Property Name="Description" Type="Edm.String" />
+    <!-- text such as "For a specific user:" to describe the http request-->
+    <Property Name="Method" Type="Edm.String" />
+    <Property Name="CustomQueryOptions" Type="Collection(Core.CustomParameter)" />
+    <Property Name="CustomHeaders" Type="Collection(Core.CustomParameter)" />
+    <!-- Map to Parameter in Operation as Header object.-->
+    <Property Name="HttpResponses" Type="Collection(Core.HttpResponse)" />
+    <!--  Map to Response object in Operation.     -->
+    <Property Name="SecuritySchemes" Type="Collection(Auth.SecurityScheme)"/>
+  </ComplexType>
+  <ComplexType Name="HttpResponse">
+    <Property Name="ResponseCode" Type="Edm.String" />
+    <Property Name="Examples" Type="Collection(Core.Example)" />
+    <Property Name="Description" Type="Edm.String" />
+  </ComplexType>
+  <ComplexType Name="CustomParameter">
+    <Property Name="Name" Type="Edm.String" Nullable="false" />
+    <Property Name="Description" Type="Edm.String" />
+    <Property Name="DocumentationURL" Type="Edm.String" />
+    <Property Name="Required" Type="Edm.Boolean" Nullable="false" />
+    <Property Name="ExampleValues" Type="Collection(Core.Example)" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="Example" Abstract="true">
+    <Property Name="Description" Type="Edm.String" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="ExternalExample" BaseType="Core.Example">
+    <Property Name="ExternalValue" Type="Edm.String" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="InlineExample" BaseType="Core.Example">
+    <Property Name="InlineValue" Type="Edm.String" Nullable="false" />
+  </ComplexType>
+
+</Schema>
