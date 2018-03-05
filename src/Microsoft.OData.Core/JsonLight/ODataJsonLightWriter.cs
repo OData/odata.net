@@ -331,6 +331,7 @@ namespace Microsoft.OData.JsonLight
                 this.ResourceType,
                 resource.Properties,
                 false /* isComplexValue */,
+                this.ShouldOmitNullValues(),
                 this.DuplicatePropertyNameChecker);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -1228,6 +1229,7 @@ namespace Microsoft.OData.JsonLight
                 this.ResourceType,
                 properties,
                 false /* isComplexValue */,
+                false /* omitNullValues */,
                 this.DuplicatePropertyNameChecker);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
         }

@@ -127,7 +127,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 {
                     DebugDescription = "TypeName at the beginning, ID and ETag at the end, ID and ETag are not written and are ignored at the end",
                     Items = new[] { new ODataResource() { TypeName = "TestModel.NonMLEType" }
-                        .WithAnnotation(new WriteEntryCallbacksAnnotation 
+                        .WithAnnotation(new WriteEntryCallbacksAnnotation
                             {
                                 BeforeWriteStartCallback = (entry) => { entry.Id = null; entry.ETag = null; },
                                 BeforeWriteEndCallback = (entry) => { entry.Id = new Uri("urn:id"); entry.ETag = "etag"; }
@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Everything at the beginning",
-                    Items = new[] { new ODataResource() { 
+                    Items = new[] { new ODataResource() {
                         TypeName = "TestModel.MLEType",
                         Id = new Uri("urn:id"),
                         ETag = "etag",
@@ -183,7 +183,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName, Id, ETag and ReadLinks at the beginning, the rest at the end",
-                    Items = new[] { new ODataResource() { 
+                    Items = new[] { new ODataResource() {
                         TypeName = "TestModel.MLEType",
                         Id = new Uri("urn:id"),
                         ETag = "etag",
@@ -432,8 +432,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 });
         }
 
-        [TestMethod, Variation(Description = "Test skipping null values when writing JSON Lite entries with IgnoreNullValues = true.")]
-        public void IgnoreNullPropertiesInEntryTest()
+        [TestMethod, Variation(Description = "Test skipping null values when writing JSON Lite entries with OmitNullValues = true.")]
+        public void OmitNullPropertiesInEntryTest()
         {
             EdmModel model = new EdmModel();
             var container = new EdmEntityContainer("TestModel", "TestContainer");
@@ -517,7 +517,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
                 (testDescriptor, testConfiguration) =>
                 {
-                    testConfiguration.MessageWriterSettings.IgnoreNullValues = true;
+                    testConfiguration.MessageWriterSettings.OmitNullValues = true;
                     TestWriterUtils.WriteAndVerifyODataEdmPayload(testDescriptor, testConfiguration, this.Assert, this.Logger);
                 });
         }
@@ -545,9 +545,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open primitive property.",
-                    Items = new[] { new ODataResource() 
-                    { 
-                        TypeName = "TestModel.OpenCustomerType", 
+                    Items = new[] { new ODataResource()
+                    {
+                        TypeName = "TestModel.OpenCustomerType",
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Age", Value = (long)42 }
@@ -563,9 +563,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open spatial property.",
-                    Items = new[] { new ODataResource() 
-                    { 
-                        TypeName = "TestModel.OpenCustomerType", 
+                    Items = new[] { new ODataResource()
+                    {
+                        TypeName = "TestModel.OpenCustomerType",
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Location", Value = pointValue }
@@ -659,9 +659,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with spatial property (expected and payload type don't match).",
-                    Items = new[] { new ODataResource() 
-                    { 
-                        TypeName = "TestModel.CustomerType", 
+                    Items = new[] { new ODataResource()
+                    {
+                        TypeName = "TestModel.CustomerType",
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Location1", Value = pointValue }
@@ -687,9 +687,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with spatial property (expected and payload type match).",
-                    Items = new[] { new ODataResource() 
-                    { 
-                        TypeName = "TestModel.CustomerType", 
+                    Items = new[] { new ODataResource()
+                    {
+                        TypeName = "TestModel.CustomerType",
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Location2", Value = pointValue }
@@ -776,7 +776,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(
-                            CultureInfo.InvariantCulture, 
+                            CultureInfo.InvariantCulture,
                             testCase.Json,
                             JsonLightWriterUtils.GetMetadataUrlPropertyForProperty(testCase.EntityType.FullTypeName()) + ","),
                         FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
@@ -796,7 +796,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 {
                     TestWriterUtils.WriteAndVerifyODataEdmPayload(testDescriptor, testConfiguration, this.Assert, this.Logger);
                 });
- 
+
         }
         private sealed class EntryPayloadTestCase
         {

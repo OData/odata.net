@@ -203,6 +203,11 @@ namespace Microsoft.OData
         internal bool ThrowOnUndeclaredPropertyForNonOpenType { get; private set; }
 
         /// <summary>
+        /// True if null values are omitted, per the omit-values parameter in Preference header of the message.
+        /// </summary>
+        internal bool NullValuesOmitted { get; set; }
+
+        /// <summary>
         /// Creates a shallow copy of this <see cref="ODataMessageReaderSettings"/>.
         /// </summary>
         /// <returns>A shallow copy of this <see cref="ODataMessageReaderSettings"/>.</returns>
@@ -259,6 +264,7 @@ namespace Microsoft.OData
             this.MaxProtocolVersion = other.MaxProtocolVersion;
             this.ReadUntypedAsString = other.ReadUntypedAsString;
             this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
+            this.NullValuesOmitted = other.NullValuesOmitted;
             this.validations = other.validations;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;

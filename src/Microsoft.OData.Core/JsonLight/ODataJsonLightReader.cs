@@ -2232,6 +2232,9 @@ namespace Microsoft.OData.JsonLight
 
             if (this.State == ODataReaderState.ResourceStart)
             {
+                // For non-delta response, need to restore omitted null values as required.
+                RestoreOmittedNullValues();
+
                 this.EndEntry(
                     new JsonLightResourceScope(
                         ODataReaderState.ResourceEnd,
@@ -2253,6 +2256,91 @@ namespace Microsoft.OData.JsonLight
                         this.CurrentResourceState.PropertyAndAnnotationCollector,
                         this.CurrentResourceState.SelectedProperties,
                         this.CurrentScope.ODataUri));
+            }
+        }
+
+        /// <summary>
+        /// For response de-serialization, restore the null values for properties that are omitted
+        /// by the omit-values=nulls preference header.
+        /// </summary>
+        private void RestoreOmittedNullValues()
+        {
+            // Restore omitted null value only when processing response and when
+            // Preference header omit-values=nulls is specified.
+            if (this.jsonLightInputContext.ReadingResponse
+                && this.jsonLightInputContext.MessageReaderSettings.NullValuesOmitted)
+            {
+                IODataJsonLightReaderResourceState resourceState = this.CurrentResourceState;
+                IEdmStructuredType edmStructuredType = resourceState.ResourceType;
+
+                if (resourceState.SelectedProperties == SelectedPropertiesNode.Empty)
+                {
+                    return;
+                }
+                else
+                {
+                    if (resourceState.Resource != null && edmStructuredType != null)
+                    {
+                        ODataResourceBase resource = resourceState.Resource;
+
+                        IEnumerable<IEdmProperty> selectedProperties;
+                        if (resourceState.SelectedProperties == SelectedPropertiesNode.EntireSubtree)
+                        {
+                            selectedProperties = edmStructuredType.DeclaredProperties;
+                        }
+                        else
+                        { // Partial subtree. Combine navigation properties and selected properties at the node with distinct.
+                            selectedProperties =
+                                resourceState.SelectedProperties.GetSelectedNavigationProperties(edmStructuredType)
+                                as IEnumerable<IEdmProperty>;
+                            selectedProperties = selectedProperties.Concat(
+                                resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType).Values)
+                                .Distinct();
+                        }
+
+                        foreach (IEdmProperty currentProperty in selectedProperties)
+                        {
+                            Debug.Assert(currentProperty.Type != null, "currentProperty.Type != null");
+                            if (!currentProperty.Type.IsNullable)
+                            {
+                                // Skip declared properties that are not null-able types.
+                                continue;
+                            }
+
+                            // Response should be generated using case sensitive, matching EDM defined by metadata.
+                            // In order to find potential omitted properties, need to check
+                            // resource properties read and navigation properties read.
+                            if (!resource.Properties.Any(
+                                p => p.Name.Equals(currentProperty.Name, StringComparison.Ordinal))
+                                && !resourceState.NavigationPropertiesRead.Contains(currentProperty.Name))
+                            {
+                                // Add null value to omitted property declared in the type
+                                ODataProperty property = new ODataProperty
+                                {
+                                    Name = currentProperty.Name,
+                                    Value = new ODataNullValue()
+                                };
+
+                                // Mark as processed, will throw if duplicate is detected.
+                                resourceState.PropertyAndAnnotationCollector.MarkPropertyAsProcessed(property.Name);
+
+                                ReadOnlyEnumerable<ODataProperty> readonlyEnumerable =
+                                    resource.Properties as ReadOnlyEnumerable<ODataProperty>;
+                                if (readonlyEnumerable != null)
+                                {
+                                    // For non-entity resource, add the property underneath the read-only enumerable.
+                                    resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+                                }
+                                else
+                                {
+                                    // For entity resource, concatenate the property to original enumerable.
+                                    resource.Properties =
+                                        resource.Properties.Concat(new List<ODataProperty>() {property});
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

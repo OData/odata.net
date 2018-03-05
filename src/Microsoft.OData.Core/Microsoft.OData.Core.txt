@@ -242,6 +242,8 @@ HttpHeaderValueLexer_FailedToReadTokenOrQuotedString=An error occurred when pars
 HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString=An error occurred when parsing the HTTP header '{0}'. The header value '{1}' is incorrect at position '{2}' because '{3}' is not a valid separator after a quoted-string.
 HttpHeaderValueLexer_EndOfFileAfterSeparator=An error occurred when parsing the HTTP header '{0}'. The header value '{1}' is incorrect at position '{2}' because the header value should not end with the separator '{3}'.
 
+HttpPreferenceHeader_InvalidValueForToken=The value '{0}' is not a valid value for OData token '{1}' in HTTP Prefer or Preference-Applied headers.
+
 MediaType_EncodingNotSupported=The character set '{0}' is not supported.
 
 MediaTypeUtils_DidNotFindMatchingMediaType=A supported MIME type could not be found that matches the acceptable MIME types for the request. The supported type(s) '{0}' do not match any of the acceptable MIME types '{1}'.

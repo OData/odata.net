@@ -4719,6 +4719,7 @@ public class Microsoft.OData.ODataPreferenceHeader {
 	string AnnotationFilter  { public get; public set; }
 	bool ContinueOnError  { public get; public set; }
 	System.Nullable`1[[System.Int32]] MaxPageSize  { public get; public set; }
+	string OmitValues  { public get; public set; }
 	bool RespondAsync  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] ReturnContent  { public get; public set; }
 	bool TrackChanges  { public get; public set; }
@@ -5189,11 +5190,11 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	System.Uri BaseUri  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableMessageStreamDisposal  { public get; public set; }
-	bool IgnoreNullValues  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
+	bool OmitNullValues  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 

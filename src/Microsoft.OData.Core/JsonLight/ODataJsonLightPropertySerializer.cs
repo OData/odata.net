@@ -84,6 +84,7 @@ namespace Microsoft.OData.JsonLight
                         null /*owningType*/,
                         true /* isTopLevel */,
                         false /* allowStreamProperty */,
+                        false /*omitNullValues */,
                         this.CreateDuplicatePropertyNameChecker());
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -92,7 +93,8 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Writes property names and value pairs.
+        /// This is the backward-compatible method to write property names and value pairs
+        /// without omitting null property values.
         /// </summary>
         /// <param name="owningType">The <see cref="IEdmStructuredType"/> of the resource (or null if not metadata is available).</param>
         /// <param name="properties">The enumeration of properties to write out.</param>
@@ -107,6 +109,27 @@ namespace Microsoft.OData.JsonLight
             bool isComplexValue,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
+            this.WriteProperties(owningType, properties, isComplexValue, /*omitNullValues*/ false, duplicatePropertyNameChecker);
+        }
+
+        /// <summary>
+        /// Writes property names and value pairs.
+        /// </summary>
+        /// <param name="owningType">The <see cref="IEdmStructuredType"/> of the resource (or null if not metadata is available).</param>
+        /// <param name="properties">The enumeration of properties to write out.</param>
+        /// <param name="isComplexValue">
+        /// Whether the properties are being written for complex value. Also used for detecting whether stream properties
+        /// are allowed as named stream properties should only be defined on ODataResource instances
+        /// </param>
+        /// <param name="omitNullValues">Whether to omit null property values.</param>
+        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        internal void WriteProperties(
+            IEdmStructuredType owningType,
+            IEnumerable<ODataProperty> properties,
+            bool isComplexValue,
+            bool omitNullValues,
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        {
             if (properties == null)
             {
                 return;
@@ -119,6 +142,7 @@ namespace Microsoft.OData.JsonLight
                     owningType,
                     false /* isTopLevel */,
                     !isComplexValue,
+                    omitNullValues,
                     duplicatePropertyNameChecker);
             }
         }
@@ -171,6 +195,7 @@ namespace Microsoft.OData.JsonLight
             IEdmStructuredType owningType,
             bool isTopLevel,
             bool allowStreamProperty,
+            bool omitNullValues,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
@@ -229,7 +254,7 @@ namespace Microsoft.OData.JsonLight
 
             if (value is ODataNullValue || value == null)
             {
-                this.WriteNullProperty(property);
+                this.WriteNullProperty(property, omitNullValues);
                 return;
             }
 
@@ -357,7 +382,8 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="property">The property to write out.</param>
         private void WriteNullProperty(
-            ODataProperty property)
+            ODataProperty property,
+            bool omitNullValues)
         {
             this.WriterValidator.ValidateNullPropertyValue(
                 this.currentPropertyInfo.MetadataType.TypeReference, property.Name,
@@ -382,7 +408,7 @@ namespace Microsoft.OData.JsonLight
                     throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
                 }
             }
-            else if (!this.MessageWriterSettings.IgnoreNullValues)
+            else if (!omitNullValues)
             {
                 this.JsonWriter.WriteName(property.Name);
                 this.JsonLightValueSerializer.WriteNullValue();

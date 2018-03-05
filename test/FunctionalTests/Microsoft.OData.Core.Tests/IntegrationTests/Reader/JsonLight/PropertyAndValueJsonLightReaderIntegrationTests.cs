@@ -20,6 +20,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 {
     public class PropertyAndValueJsonLightReaderIntegrationTests
     {
+        private static string omitValuesNulls = "omit-values=" + ODataConstants.OmitValuesNulls;
+
         [Fact]
         public void ReadingPayloadInt64SingleDoubleDecimalWithoutSuffix()
         {
@@ -106,7 +108,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
-        public void ReadNullableCollectionValue()
+        public void ReadNullableCollectionValueExpanded()
         {
             EdmModel model = new EdmModel();
             EdmEntityType entityType = new EdmEntityType("NS", "MyTestEntity");
@@ -128,25 +130,30 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataResource entry = null;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            Assert.NotNull(entry);
 
-            var intCollection = entry.Properties.FirstOrDefault(
-                s => string.Equals(
-                    s.Name,
-                    "NullableIntNumbers",
-                    StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
-            var list = new List<int?>();
-            foreach (var val in intCollection.Items)
+            foreach (bool isNullValuesOmitted in new bool[] {false, true})
             {
-                list.Add(val as int?);
-            }
+                ODataResource entry = null;
+                this.ReadEntryPayload(mainModel, payload, entitySet, entityType,
+                    reader => { entry = entry ?? reader.Item as ODataResource; }, isNullValuesOmitted);
+                Assert.NotNull(entry);
 
-            Assert.Equal(0, list[0]);
-            Assert.Null(list[1]);
-            Assert.Equal(1, (int)list[2]);
-            Assert.Equal(2, (int)list[3]);
+                var intCollection = entry.Properties.FirstOrDefault(
+                    s => string.Equals(
+                        s.Name,
+                        "NullableIntNumbers",
+                        StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+                var list = new List<int?>();
+                foreach (var val in intCollection.Items)
+                {
+                    list.Add(val as int?);
+                }
+
+                Assert.Equal(0, list[0]);
+                Assert.Null(list[1]);
+                Assert.Equal(1, (int) list[2]);
+                Assert.Equal(2, (int) list[3]);
+            }
         }
 
         [Fact]
@@ -176,53 +183,60 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
-            ODataResource entry = null;
-            List<ODataResource> complexCollection = new List<ODataResource>();
-            ODataNestedResourceInfo nestedOpenCollection = null;
-            bool startComplexCollection = false;
-            this.ReadEntryPayload(mainModel, payload, entitySet, entityType,
-                reader =>
-                {
-                    switch (reader.State)
+
+            foreach (bool isNullValuesOmitted in new bool[] {false, true})
+            {
+                ODataResource entry = null;
+                List<ODataResource> complexCollection = new List<ODataResource>();
+                ODataNestedResourceInfo nestedOpenCollection = null;
+                bool startComplexCollection = false;
+                this.ReadEntryPayload(mainModel, payload, entitySet, entityType,
+                    reader =>
                     {
-                        case ODataReaderState.NestedResourceInfoStart:
-                            startComplexCollection = true;
-                            break;
-                        case ODataReaderState.ResourceEnd:
-                            if(startComplexCollection)
-                            {
-                                complexCollection.Add(reader.Item as ODataResource);
-                            }
-                            entry = reader.Item as ODataResource;
-                            break;
-                        case ODataReaderState.NestedResourceInfoEnd:
-                            startComplexCollection = false;
-                            nestedOpenCollection = reader.Item as ODataNestedResourceInfo;
-                            break;
-                    }
-                });
-            Assert.NotNull(entry);
+                        switch (reader.State)
+                        {
+                            case ODataReaderState.NestedResourceInfoStart:
+                                startComplexCollection = true;
+                                break;
+                            case ODataReaderState.ResourceEnd:
+                                if (startComplexCollection)
+                                {
+                                    complexCollection.Add(reader.Item as ODataResource);
+                                }
+                                entry = reader.Item as ODataResource;
+                                break;
+                            case ODataReaderState.NestedResourceInfoEnd:
+                                startComplexCollection = false;
+                                nestedOpenCollection = reader.Item as ODataNestedResourceInfo;
+                                break;
+                        }
+                    },
+                    nullValuesOmitted: isNullValuesOmitted);
+                Assert.NotNull(entry);
 
-            var intCollection = entry.Properties.FirstOrDefault(
-                s => string.Equals(
-                    s.Name,
-                    "OpenPrimitiveCollection",
-                    StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
-            var list = new List<int?>();
-            foreach (var val in intCollection.Items)
-            {
-                list.Add(val as int?);
-            }
+                var intCollection = entry.Properties.FirstOrDefault(
+                    s => string.Equals(
+                        s.Name,
+                        "OpenPrimitiveCollection",
+                        StringComparison.OrdinalIgnoreCase)).Value.As<ODataCollectionValue>();
+                var list = new List<int?>();
+                foreach (var val in intCollection.Items)
+                {
+                    list.Add(val as int?);
+                }
 
-            Assert.Equal(0, list[0]);
-            Assert.Equal(1, (int)list[1]);
-            Assert.Equal(2, (int)list[2]);
+                Assert.Equal(0, list[0]);
+                Assert.Equal(1, (int) list[1]);
+                Assert.Equal(2, (int) list[2]);
 
-            Assert.Equal("OpenComplexTypeCollection", nestedOpenCollection.Name);
+                Assert.Equal("OpenComplexTypeCollection", nestedOpenCollection.Name);
 
-            foreach (var val in complexCollection)
-            {
-                val.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
+                foreach (var val in complexCollection)
+                {
+                    val.Properties.FirstOrDefault(
+                        s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase))
+                        .Value.ShouldBeEquivalentTo(1L, "value should be in correct type.");
+                }
             }
         }
 
@@ -351,6 +365,64 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             navigationLink.Name.Should().Be("Address");
             var address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+        }
+
+        [Fact]
+        public void ReadingTypeDefinitionPayloadJsonLightWithOmittedNullValues()
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            const string payload = @"
+{
+                ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity"",
+                ""@odata.id"":""http://mytest"",
+                ""Id"":0,
+                ""Weight"":60.5,
+                ""Address"":{""CountryRegion"":""US"", ""City"":""Redmond""}
+}";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                nullValuesOmitted: true);
+
+            Assert.Equal(2, entries.Count);
+
+            ODataResource person = entries[0];
+            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                .Value.Should().Be(0);
+            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal))
+                .Value.Should().Be(60.5);
+            // omitted value should be restored to null.
+            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                .Value.Should().BeNull();
+
+            ODataResource address = entries[1];
+            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.Ordinal))
+                .Value.Should().Be("US");
+            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.Ordinal))
+                .Value.Should().Be("Redmond");
+            // Omitted value should be restored to null.
+            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "ZipCode", StringComparison.Ordinal))
+                .Value.Should().BeNull();
+
+            navigationLink.Name.Should().Be("Address");
         }
 
         [Fact]
@@ -774,6 +846,246 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValues()
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            const string payload =@"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity"",
+                    ""@odata.id"":""http://mytest"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1}
+                }";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                nullValuesOmitted: true);
+
+            Assert.Equal(2, entries.Count);
+
+            ODataResource edu = entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+            edu.Should().NotBeNull();
+            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal)).Value.Should().Be(1);
+            // null-able collection should be restored.
+            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Value.Should().BeNull();
+            // null-able property value should be restored.
+            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Value.Should().BeNull();
+
+            ODataResource person = entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
+            person.Should().NotBeNull();
+            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal)).Value.Should().Be(0);
+            // omitted null-able property should be restored as null.
+            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Value.Should().BeNull();
+            // missing non-null-able property should not be restored.
+            person.Properties.Any(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal)).Should().BeFalse();
+        }
+
+        [Fact]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesEntireSubTree()
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            // null-able property Height is not selected, thus should not be restored.
+            // null-able property Address is selected, thus should be restored.
+            // Property Education is null-able.
+            const string payloadWithQueryOption = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,Education,Address)/$entity"",
+                    ""@odata.id"":""http://mytest"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1}
+                }";
+            const string payloadWithWildcardInQueryOption = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,Education/*,Address)/$entity"",
+                    ""@odata.id"":""http://mytest"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1}
+                }";
+
+            foreach (string payload in new string[] {payloadWithQueryOption, payloadWithWildcardInQueryOption})
+            {
+                List<ODataResource> entries = new List<ODataResource>();
+                List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
+                this.ReadEntryPayload(model, payload, entitySet, entityType,
+                    reader =>
+                    {
+                        switch (reader.State)
+                        {
+                            case ODataReaderState.ResourceStart:
+                                entries.Add(reader.Item as ODataResource);
+                                break;
+                            case ODataReaderState.NestedResourceInfoStart:
+                                navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    nullValuesOmitted: true);
+
+                entries.Count.Should().Be(2);
+                navigationLinks.Count.Should().Be(1);
+                navigationLinks.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                    .Should().NotBeNull();
+
+                // Education
+                ODataResource edu =
+                    entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+                edu.Should().NotBeNull();
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                    .Value.Should().Be(1);
+                // null-able collection should be restored.
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+                // null-able property value should be restored.
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+
+                // Person
+                ODataResource person =
+                    entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
+                person.Should().NotBeNull();
+                person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                    .Value.Should().Be(0);
+                // selected null-able property/navigationLink should be restored as null.
+                person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Address", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+                // null-able but not selected properties and not-null-able properties should not be restored.
+                person.Properties.Any(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Should().BeFalse();
+                person.Properties.Any(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal)).Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesPartialSubTree()
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            // null-able property Height is not selected, thus should not be restored.
+            // null-able property Address is selected, thus should be restored.
+            // Property Education is null-able.
+            const string payloadWithWildcardInQueryOption = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20Education/Id,%20Education/SchoolName,%20Address)/$entity"",
+                    ""@odata.id"":""http://mytest"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1}
+                }";
+
+            foreach (string payload in new string[] { payloadWithWildcardInQueryOption })
+            {
+                List<ODataResource> entries = new List<ODataResource>();
+                List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
+                this.ReadEntryPayload(model, payload, entitySet, entityType,
+                    reader =>
+                    {
+                        switch (reader.State)
+                        {
+                            case ODataReaderState.ResourceStart:
+                                entries.Add(reader.Item as ODataResource);
+                                break;
+                            case ODataReaderState.NestedResourceInfoStart:
+                                navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    nullValuesOmitted: true);
+
+                entries.Count.Should().Be(2);
+                navigationLinks.Count.Should().Be(1);
+                navigationLinks.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                    .Should().NotBeNull();
+
+                // Education
+                ODataResource edu =
+                    entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+                edu.Should().NotBeNull();
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                    .Value.Should().Be(1);
+                // null-able property value should be restored.
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+                // not selected property should not be restored.
+                edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesPartialSubTreeAndBaseTypeProperty()
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            // null-able property Height is not selected, thus should not be restored.
+            // null-able property Address is selected, thus should be restored.
+            // Property Education is null-able.
+            const string payloadWithWildcardInQueryOption = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20Education/Id,%20Education/OrgId,%20Address)/$entity"",
+                    ""@odata.id"":""http://mytest"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1}
+                }";
+
+            foreach (string payload in new string[] { payloadWithWildcardInQueryOption })
+            {
+                List<ODataResource> entries = new List<ODataResource>();
+                List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
+                this.ReadEntryPayload(model, payload, entitySet, entityType,
+                    reader =>
+                    {
+                        switch (reader.State)
+                        {
+                            case ODataReaderState.ResourceStart:
+                                entries.Add(reader.Item as ODataResource);
+                                break;
+                            case ODataReaderState.NestedResourceInfoStart:
+                                navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    nullValuesOmitted: true);
+
+                entries.Count.Should().Be(2);
+                navigationLinks.Count.Should().Be(1);
+                navigationLinks.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                    .Should().NotBeNull();
+
+                // Education
+                ODataResource edu =
+                    entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+                edu.Should().NotBeNull();
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                    .Value.Should().Be(1);
+                // selected null-able property from base type should be restored to null if omitted.
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "OrgId", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+                // not selected property should not be restored.
+                edu.Properties.Any(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Should().BeFalse();
+                edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+            }
+        }
+
+        [Fact]
         public void ReadingNullValueForDynamicCollectionPropertyInOpenStructuralTypeShouldWork()
         {
             EdmModel model = new EdmModel();
@@ -840,13 +1152,23 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
         }
 
-        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider container = null)
+        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType,
+            Action<ODataReader> action,
+            bool isIeee754Compatible = true,
+            IServiceProvider container = null,
+            bool nullValuesOmitted = false)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), Container = container};
             string contentType = isIeee754Compatible
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";
             message.SetHeader("Content-Type", contentType);
+
+            if (nullValuesOmitted)
+            {
+                message.SetHeader("Preference-Applied", omitValuesNulls);
+            }
+
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             readerSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
@@ -857,6 +1179,67 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     action(reader);
                 }
             }
+        }
+
+        private EdmModel BuildEdmModelForOmittedNullValuesTestCases(out EdmEntityType entityType, out EdmEntitySet entitySet)
+        {
+            EdmModel model = new EdmModel();
+
+            entityType = new EdmEntityType("NS", "Person");
+            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+
+            EdmTypeDefinition weightType = new EdmTypeDefinition("NS", "Wgt", EdmPrimitiveTypeKind.Double);
+            EdmTypeDefinitionReference weightTypeRef = new EdmTypeDefinitionReference(weightType, false);
+            entityType.AddStructuralProperty("Weight", weightTypeRef);
+
+            EdmTypeDefinition heightType = new EdmTypeDefinition("NS", "Ht", EdmPrimitiveTypeKind.Double);
+            EdmTypeDefinitionReference heightTypeRef = new EdmTypeDefinitionReference(heightType, true);
+            entityType.AddStructuralProperty("Height", heightTypeRef);
+
+            EdmComplexType addressType = new EdmComplexType("NS", "OpnAddr");
+            EdmComplexTypeReference addressTypeRef = new EdmComplexTypeReference(addressType, true);
+
+            EdmTypeDefinition countryRegionType = new EdmTypeDefinition("NS", "CR", EdmPrimitiveTypeKind.String);
+            EdmTypeDefinitionReference countryRegionTypeRef = new EdmTypeDefinitionReference(countryRegionType, false);
+            addressType.AddStructuralProperty("CountryRegion", countryRegionTypeRef);
+
+            // Address/City
+            EdmTypeDefinition cityType = new EdmTypeDefinition("NS", "Cty", EdmPrimitiveTypeKind.String);
+            EdmTypeDefinitionReference cityTypeRef = new EdmTypeDefinitionReference(cityType, false);
+            addressType.AddStructuralProperty("City", cityTypeRef);
+
+            EdmTypeDefinition zipCodeType = new EdmTypeDefinition("NS", "ZC", EdmPrimitiveTypeKind.String);
+            EdmTypeDefinitionReference zipCodeTypeRef = new EdmTypeDefinitionReference(zipCodeType, true);
+            addressType.AddStructuralProperty("ZipCode", zipCodeTypeRef);
+
+            entityType.AddStructuralProperty("Address", addressTypeRef);
+
+            // Education
+            EdmComplexType organizationType = new EdmComplexType("NS", "Org");
+            organizationType.AddStructuralProperty("OrgId", EdmPrimitiveTypeKind.Int32);
+            organizationType.AddStructuralProperty("OrgCategory", EdmPrimitiveTypeKind.String);
+
+            EdmComplexType educationType = new EdmComplexType("NS", "Edu", organizationType);
+            EdmComplexTypeReference educationTypeRef = new EdmComplexTypeReference(educationType, true);
+
+            // top level null-able complex type properties
+            educationType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32); // same property name but inside different type.
+            educationType.AddStructuralProperty("Campuses",
+                new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+            educationType.AddStructuralProperty("SchoolName", EdmPrimitiveTypeKind.String);
+
+            entityType.AddStructuralProperty("Education", educationTypeRef);
+
+            model.AddElement(weightType);
+            model.AddElement(heightType);
+            model.AddElement(addressType);
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
+            entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            return model;
         }
     }
 }

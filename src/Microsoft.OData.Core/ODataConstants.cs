@@ -205,6 +205,19 @@ namespace Microsoft.OData
 
         /// <summary>The $deletedLink token indicates delta deleted link.</summary>
         internal const string ContextUriDeletedLink = UriSegmentSeparator + DeletedLink;
+
         #endregion Context URL
+
+        #region Preference Headers
+            /// <summary>
+            /// Valid value for <code>OmitValuesPreferenceToken</code> indicating nulls are omitted.
+            /// </summary>
+            internal const string OmitValuesNulls = "nulls";
+
+            /// <summary>
+            /// Valid value for <code>OmitValuesPreferenceToken</code> indicating defaults are omitted.
+            /// </summary>
+            internal const string OmitValuesDefaults = "defaults";
+        #endregion Preference Headers
     }
 }

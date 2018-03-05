@@ -38,6 +38,9 @@ namespace Microsoft.OData
         /// <summary>An empty set of navigation properties to return when nothing is selected.</summary>
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
 
+        /// <summary>An empty dictionary of EDM properties to return when nothing is selected.</summary>
+        private static readonly Dictionary<string, IEdmProperty> EmptyEdmProperties = new Dictionary<string, IEdmProperty>(StringComparer.Ordinal);
+
         /// <summary>The type of the current node.</summary>
         private SelectionType selectionType = SelectionType.PartialSubtree;
 
@@ -442,10 +445,42 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Gets all selected properties at the current node.
+        /// </summary>
+        /// <param name="structuredType">The current structured type.</param>
+        /// <returns>The selected properties at this node level.</returns>
+        internal IDictionary<string, IEdmProperty> GetSelectedProperties(IEdmStructuredType structuredType)
+        {
+            if (this.selectionType == SelectionType.Empty)
+            {
+                return EmptyEdmProperties;
+            }
+
+            // We cannot determine the selected properties without the user model. This means we won't be computing the missing properties.
+            if (structuredType == null)
+            {
+                return EmptyEdmProperties;
+            }
+
+            if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
+            {
+                return structuredType.DeclaredProperties.ToDictionary(sp => sp.Name, StringComparer.Ordinal);
+            }
+
+            Debug.Assert(this.selectedProperties != null, "selectedProperties != null");
+
+            IDictionary<string, IEdmProperty> selectedEdmProperties = this.selectedProperties
+                .Select(structuredType.FindProperty)
+                .ToDictionary(p => p.Name, StringComparer.Ordinal);
+
+            return selectedEdmProperties;
+        }
+
+        /// <summary>
         /// Gets the selected stream properties for the current node.
         /// </summary>
         /// <param name="entityType">The current entity type.</param>
-        /// <returns>The selected stream properties.</returns>
+        /// <returns>The selected stream properties at this node level.</returns>
         internal IDictionary<string, IEdmStructuralProperty> GetSelectedStreamProperties(IEdmEntityType entityType)
         {
             if (this.selectionType == SelectionType.Empty)
