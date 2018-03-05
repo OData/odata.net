@@ -1,0 +1,32 @@
+Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":42,"Hobby":"Hiking"}
+
+Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":42,"Hobby":"Hiking"}
+
+Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":42,"Hobby":"Hiking"}
+
+Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":42,"Hobby":"Hiking"}
+
+Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":44}
+
+Combination: 6; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":44}
+
+Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":44}
+
+Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#CustomerSet/$entity","ID":44}
+

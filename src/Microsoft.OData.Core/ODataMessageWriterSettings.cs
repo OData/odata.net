@@ -178,6 +178,14 @@ namespace Microsoft.OData
         internal bool ThrowOnDuplicatePropertyNames { get; private set; }
 
         /// <summary>
+        /// Don't serialize null values
+        /// </summary>
+        /// <remarks>
+        /// Default valus is false, that means serialize null values.
+        /// </remarks>
+        public bool IgnoreNullValues { get; set; }
+
+        /// <summary>
         /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.
         /// </summary>
         internal bool ThrowOnUndeclaredPropertyForNonOpenType { get; private set; }
@@ -398,6 +406,7 @@ namespace Microsoft.OData
             this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
+            this.IgnoreNullValues = other.IgnoreNullValues;
 
             this.validations = other.validations;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;

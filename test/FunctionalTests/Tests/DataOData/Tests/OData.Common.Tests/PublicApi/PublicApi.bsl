@@ -5166,6 +5166,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	System.Uri BaseUri  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableMessageStreamDisposal  { public get; public set; }
+	bool IgnoreNullValues  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
