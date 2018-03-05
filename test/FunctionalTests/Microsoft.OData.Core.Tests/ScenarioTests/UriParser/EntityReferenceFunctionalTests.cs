@@ -47,14 +47,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityReferenceCannotAppearAfterAnEntitySet()
         {
-            // TODO: We can improve error message drastically when we refactor path parsing
-            PathFunctionalTestsUtil.RunParseErrorPath("People/$ref", ODataErrorStrings.PathParser_EntityReferenceNotSupported("People"));
+            var path = PathFunctionalTestsUtil.RunParsePath("People/$ref");
         }
 
         [Fact]
         public void EntityReferenceCannotAppearAfterAComplexProperty()
         {
             PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/$ref", ODataErrorStrings.PathParser_EntityReferenceNotSupported("MyAddress"));
+        }
+
+        [Fact]
+        public void EntityReferenceCanAppearAfterCastedType()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("People/Fully.Qualified.Namespace.Employee/$ref");
         }
 
         [Fact]

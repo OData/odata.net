@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// A segment representing $ref
+    /// A segment representing $ref (backwards compatibility version for below ODL 7.4.x)
     /// </summary>
     public sealed class NavigationPropertyLinkSegment : ODataPathSegment
     {
@@ -24,9 +24,9 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationProperty navigationProperty;
 
         /// <summary>
-        /// Build a segment to represnt $ref on a Nav prop
+        /// Build a segment to represent $ref on a Nav prop
         /// </summary>
-        /// <param name="navigationProperty">The navigaiton property this link or ref acts on</param>
+        /// <param name="navigationProperty">The navigation property this link or ref acts on</param>
         /// <param name="navigationSource">The navigation source of entities linked to by this <see cref="NavigationPropertyLinkSegment"/>. This can be null.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty is null.</exception>
         public NavigationPropertyLinkSegment(IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)

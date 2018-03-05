@@ -300,14 +300,14 @@ namespace Microsoft.OData.Service
         /// <summary>A segment name in a URI that indicates that this is a count operation.</summary>
         internal const string UriCountSegment = "$count";
 
-        /// <summary>A segment name in a URI that indicates that this is a filter operation.</summary>
-        internal const string UriFilterSegment = "$filter";
-
         /// <summary>A const value for query parameter $count to set counting mode to true </summary>
         internal const string UriCountTrueOption = "true";
 
         /// <summary>A const value for query parameter $count to set counting mode to false </summary>
         internal const string UriCountFalseOption = "false";
+
+        /// <summary>A segment name in a URI that indicates that this is a filter operation.</summary>
+        internal const string UriFilterSegment = "$filter";
 
         /// <summary>Uri method name for Enumerable.Any().</summary>
         internal const string AnyMethodName = "any";

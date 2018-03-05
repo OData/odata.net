@@ -95,6 +95,18 @@ namespace Microsoft.OData.UriParser
         public override bool Translate(FilterSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return true;
+        }
+
+        /// <summary>
+        /// Translate a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>UserDefinedValue</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override bool Translate(ReferenceSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return false;
         }
 
@@ -153,6 +165,18 @@ namespace Microsoft.OData.UriParser
         /// <returns>UserDefinedValue</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
         public override bool Translate(MetadataSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return false;
+        }
+
+        /// <summary>
+        /// Translate a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>UserDefinedValue</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override bool Translate(PathTemplateSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return false;

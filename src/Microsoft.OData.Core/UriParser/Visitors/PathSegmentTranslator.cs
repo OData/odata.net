@@ -125,6 +125,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(ReferenceSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visit a NavigationPropertyLinkSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>

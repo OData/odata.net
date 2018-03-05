@@ -266,7 +266,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent(functionCallToken.Name));
             }
 
-            string functionCallTokenName = this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier ? functionCallToken.Name.ToLowerInvariant() : functionCallToken.Name;
+            string functionCallTokenName = this.state.Configuration.EnableCaseInsensitive ? functionCallToken.Name.ToLowerInvariant() : functionCallToken.Name;
 
             // There are some functions (IsOf and Cast for example) that don't necessarily need to be bound to a function signature,
             // for these, we just Bind them directly to a SingleValueFunctionCallNode

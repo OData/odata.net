@@ -5358,17 +5358,23 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "There are no navigation sources found to apply $filter."
+        /// A string like "$filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'."
         /// </summary>
-        internal static string RequestUriProcessor_NoNavigationSourceFoundForFilter
+        internal static string RequestUriProcessor_CannotApplyFilterOnSingleEntities(object p0)
         {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFoundForFilter);
-            }
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CannotApplyFilterOnSingleEntities, p0);
         }
 
         /// <summary>
-        /// A string like "The $filter path segment must contain a single parameter alias. In other words, it must have the form '$filter=@...', where the alias name goes in the ellipsis."
+        /// A string like "There are no navigation sources found to apply '{0}'."
+        /// </summary>
+        internal static string RequestUriProcessor_NoNavigationSourceFound(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFound, p0);
+        }
+
+        /// <summary>
+        /// A string like "The $filter path segment must contain a single parameter alias in the form $filter=@alias."
         /// </summary>
         internal static string RequestUriProcessor_FilterPathSegmentRequiresParameterAlias
         {
@@ -5396,10 +5402,23 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The request URI is not valid, the segment {0} cannot be applied to the root of the service."
+        /// A string like "The request URI is not valid, the segment $count cannot be applied to the root of the service."
         /// </summary>
-        internal static string RequestUriProcessor_NotAllowedOnRoot(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NotAllowedOnRoot, p0);
+        internal static string RequestUriProcessor_CountOnRoot {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CountOnRoot);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The request URI is not valid, the segment $filter cannot be applied to the root of the service."
+        /// </summary>
+        internal static string RequestUriProcessor_FilterOnRoot {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterOnRoot);
+            }
         }
 
         /// <summary>

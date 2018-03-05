@@ -184,6 +184,17 @@ namespace Microsoft.OData.UriParser
         public override string Translate(FilterSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
+            return "/" + segment.FullSegment;
+        }
+
+        /// <summary>
+        /// Translate a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(ReferenceSegment segment)
+        {
+            Debug.Assert(segment != null, "segment != null");
             return "/" + segment.Identifier;
         }
 
@@ -237,6 +248,17 @@ namespace Microsoft.OData.UriParser
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
         public override string Translate(MetadataSegment segment)
+        {
+            Debug.Assert(segment != null, "segment != null");
+            return "/" + segment.Identifier;
+        }
+
+        /// <summary>
+        /// Translate a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(PathTemplateSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
             return "/" + segment.Identifier;

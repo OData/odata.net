@@ -147,7 +147,19 @@ namespace Microsoft.OData.UriParser
         public override IEdmNavigationSource Translate(FilterSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
-            return null;
+            return segment.TargetEdmNavigationSource;
+        }
+
+        /// <summary>
+        /// Determine the NavigationSource of a ReferenceSegment
+        /// </summary>
+        /// <param name="segment">The ReferenceSegment to look in.</param>
+        /// <returns>null, since $filter doesn't have an navigation source</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(ReferenceSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return segment.TargetEdmNavigationSource;
         }
 
         /// <summary>
@@ -205,6 +217,18 @@ namespace Microsoft.OData.UriParser
         /// <returns>null, since $batch doesn't have an navigation source</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
         public override IEdmNavigationSource Translate(MetadataSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return null;
+        }
+
+        /// <summary>
+        /// Determine the NavigationSource of a PathTemplateSegment
+        /// </summary>
+        /// <param name="segment">The PathTemplateSegment to look in.</param>
+        /// <returns>null, since $batch doesn't have an navigation source</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(PathTemplateSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return null;

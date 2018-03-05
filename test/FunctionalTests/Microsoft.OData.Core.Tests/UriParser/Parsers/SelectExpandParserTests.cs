@@ -274,7 +274,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
             };
             var parentEntityType = configuration.Resolver.ResolveNavigationSource(model, entitySetType).EntityType();
-            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, parentEntityType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, parentEntityType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitive)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,
@@ -294,7 +294,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
             };
 
-            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, null, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, null, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitive)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,

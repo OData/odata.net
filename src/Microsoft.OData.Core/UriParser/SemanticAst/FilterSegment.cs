@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The filter path segment's alias.
         /// </summary>
-        private readonly ParameterAliasNode alias;
+        private readonly ParameterAliasNode parameterAlias;
 
         /// <summary>
         /// The parameter for the alias which represents a single value from the collection.
@@ -31,35 +31,50 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmType bindingType;
 
         /// <summary>
+        /// String representing "$filter=@alias".
+        /// </summary>
+        private readonly string fullSegment;
+
+        /// <summary>
         /// Build a segment representing $filter.
         /// </summary>
-        /// <param name="alias">Corresponding parameter alias for the $filter path segment.</param>
+        /// <param name="parameterAlias">Corresponding parameter alias for the $filter path segment.</param>
         /// <param name="rangeVariable">An expression that represents a single value from the collection.</param>
-        /// <param name="bindingType">The type that this segment is bound to.</param>
-        /// <param name="singleResult">Whether the segment targets a single result.</param>
+        /// <param name="navigationSource">The navigation source that this filter applies to.</param>
         /// <exception cref="System.ArgumentNullException">Throws if any input parameter is null.</exception>
-        public FilterSegment(ParameterAliasNode alias, RangeVariable rangeVariable, IEdmType bindingType, bool singleResult)
+        /// <remarks>$filter should not be applied on singletons or single entities.</remarks>
+        public FilterSegment(ParameterAliasNode parameterAlias, RangeVariable rangeVariable, IEdmNavigationSource navigationSource)
         {
-            ExceptionUtils.CheckArgumentNotNull(alias, "alias");
+            ExceptionUtils.CheckArgumentNotNull(parameterAlias, "parameterAlias");
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
-            ExceptionUtils.CheckArgumentNotNull(bindingType, "bindingType");
-
-            this.alias = alias;
-            this.rangeVariable = rangeVariable;
-            this.bindingType = bindingType;
+            ExceptionUtils.CheckArgumentNotNull(navigationSource, "navigationSource");
 
             this.Identifier = UriQueryConstants.FilterSegment;
-            this.SingleResult = singleResult; // !!! Check during review
-            this.TargetKind = RequestTargetKind.Resource; // !!! Check during review
-            this.TargetEdmType = this.rangeVariable.TypeReference.Definition; // !!! Check during review
+            this.SingleResult = false;
+            this.TargetEdmNavigationSource = navigationSource;
+            this.TargetKind = RequestTargetKind.Resource;
+            this.TargetEdmType = rangeVariable.TypeReference.Definition;
+
+            this.parameterAlias = parameterAlias;
+            this.rangeVariable = rangeVariable;
+            this.bindingType = navigationSource.Type;
+            this.fullSegment = UriQueryConstants.FilterSegment + "=" + parameterAlias.Alias;
         }
 
         /// <summary>
         /// Gets the filter path segment's alias.
         /// </summary>
-        public ParameterAliasNode Alias
+        public ParameterAliasNode ParameterAlias
         {
-            get { return this.alias; }
+            get { return this.parameterAlias; }
+        }
+
+        /// <summary>
+        /// Gets the string representing "$filter=@alias".
+        /// </summary>
+        public string FullSegment
+        {
+            get { return this.fullSegment; }
         }
 
         /// <summary>
@@ -122,8 +137,8 @@ namespace Microsoft.OData.UriParser
             FilterSegment otherSegment = other as FilterSegment;
 
             return otherSegment != null &&
-                otherSegment.EdmType == this.EdmType &&
-                otherSegment.Alias == this.Alias &&
+                otherSegment.TargetEdmNavigationSource == this.TargetEdmNavigationSource &&
+                otherSegment.ParameterAlias == this.ParameterAlias &&
                 otherSegment.ItemType == this.ItemType &&
                 otherSegment.RangeVariable == this.RangeVariable;
         }
