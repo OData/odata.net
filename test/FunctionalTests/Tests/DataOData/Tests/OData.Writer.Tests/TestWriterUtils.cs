@@ -511,6 +511,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 }
 
                 responseMessage.StatusCode = 200;
+
+                if (testConfiguration.MessageWriterSettings.OmitNullValues)
+                {
+                    responseMessage.PreferenceAppliedHeader().OmitValues = Microsoft.OData.ODataConstants.OmitValuesNulls;
+                }
+
                 message = responseMessage;
             }
 

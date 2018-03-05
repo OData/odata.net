@@ -1150,11 +1150,8 @@ namespace Microsoft.OData
         /// <returns>Return true to omit null-value properties; false otherwise.</returns>
         protected bool ShouldOmitNullValues()
         {
-            // Omit null values preference should only affect response payload, and should not
-            // be applied to writing delta payload.
-            return this.outputContext.WritingResponse
-                   && !this.writingDelta
-                   && this.outputContext.MessageWriterSettings.OmitNullValues;
+            // Per protocol, omitNullValues doesn't affect delta payload.
+            return !this.writingDelta && this.outputContext.ShouldOmitNullValues();
         }
 
         /// <summary>

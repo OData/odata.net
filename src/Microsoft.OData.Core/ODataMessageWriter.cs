@@ -151,12 +151,12 @@ namespace Microsoft.OData
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
-            // Set the Preference-Applied header's parameter omit-values=nulls per writer settings.
-            // For response writing, source of specifying omit-null-values preference is the settings object
-            // from caller(the OData service).
-            if (this.settings.OmitNullValues)
+            // Set the writer settings per Preference-Applied header's parameter omit-values.
+            // For response writing, source of specifying omit-null-values preference is the Preference-Applied header.
+            if (string.Equals(responseMessage.PreferenceAppliedHeader().OmitValues, ODataConstants.OmitValuesNulls,
+                StringComparison.OrdinalIgnoreCase))
             {
-                responseMessage.PreferenceAppliedHeader().OmitValues = ODataConstants.OmitValuesNulls;
+                this.settings.OmitNullValues = true;
             }
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter

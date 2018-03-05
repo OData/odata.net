@@ -4552,6 +4552,7 @@ public sealed class Microsoft.OData.ODataConstants {
 	public static string MethodPost = "POST"
 	public static string MethodPut = "PUT"
 	public static string ODataVersionHeader = "OData-Version"
+	public static string OmitValuesNulls = "nulls"
 }
 
 [
@@ -5194,7 +5195,6 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
-	bool OmitNullValues  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 

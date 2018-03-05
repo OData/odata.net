@@ -260,7 +260,7 @@ namespace Microsoft.OData
             get
             {
                 HttpHeaderValueElement omitValues = this.Get(OmitValuesPreferenceToken);
-                return omitValues?.Value;
+                return omitValues != null ? omitValues.Value : null;
             }
 
             [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Need lower case string here.")]
@@ -273,14 +273,8 @@ namespace Microsoft.OData
                 {
                     this.Set(new HttpHeaderValueElement(OmitValuesPreferenceToken, ODataConstants.OmitValuesNulls, EmptyParameters));
                 }
-                else if (string.Equals(normalizedValue, ODataConstants.OmitValuesDefaults, StringComparison.Ordinal))
-                {
-                    throw new NotSupportedException("omit-values=defaults is not supported yet.");
-                }
-                else
-                {
-                    throw new ODataException(Strings.HttpPreferenceHeader_InvalidValueForToken(value, OmitValuesPreferenceToken));
-                }
+
+                // No-ops for other preference values, including "defaults" which is in the OData protocol but not implemented yet.
             }
         }
 

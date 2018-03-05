@@ -189,7 +189,7 @@ namespace Microsoft.OData
         /// <remarks>
         /// Default value is false, that means serialize null values.
         /// </remarks>
-        public bool OmitNullValues { get; set; }
+        internal bool OmitNullValues { get; set; }
 
         /// <summary>
         /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.

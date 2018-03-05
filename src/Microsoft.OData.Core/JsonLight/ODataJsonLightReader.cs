@@ -2335,7 +2335,7 @@ namespace Microsoft.OData.JsonLight
                                 {
                                     // For entity resource, concatenate the property to original enumerable.
                                     resource.Properties =
-                                        resource.Properties.Concat(new List<ODataProperty>() {property});
+                                        resource.Properties.Concat(new List<ODataProperty>() { property });
                                 }
                             }
                         }

@@ -59,6 +59,19 @@ namespace Microsoft.OData
         /// </summary>
         public const string ContentIdHeader = "Content-ID";
 
+        #region Preference Headers
+        /// <summary>
+        /// Valid value for <code>OmitValuesPreferenceToken</code> indicating nulls are omitted.
+        /// </summary>
+        public const string OmitValuesNulls = "nulls";
+
+        /// <summary>
+        /// Valid value for <code>OmitValuesPreferenceToken</code> indicating defaults are omitted.
+        /// Internal access only since "defaults" is not supported yet.
+        /// </summary>
+        internal const string OmitValuesDefaults = "defaults";
+        #endregion Preference Headers
+
         /// <summary>
         /// Name of the Content-Length HTTP header.
         /// </summary>
@@ -207,17 +220,5 @@ namespace Microsoft.OData
         internal const string ContextUriDeletedLink = UriSegmentSeparator + DeletedLink;
 
         #endregion Context URL
-
-        #region Preference Headers
-            /// <summary>
-            /// Valid value for <code>OmitValuesPreferenceToken</code> indicating nulls are omitted.
-            /// </summary>
-            internal const string OmitValuesNulls = "nulls";
-
-            /// <summary>
-            /// Valid value for <code>OmitValuesPreferenceToken</code> indicating defaults are omitted.
-            /// </summary>
-            internal const string OmitValuesDefaults = "defaults";
-        #endregion Preference Headers
     }
 }

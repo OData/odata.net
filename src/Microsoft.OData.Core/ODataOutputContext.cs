@@ -438,6 +438,15 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
+        /// Returns whether properties of null values should be omitted when serializing the payload.
+        /// </summary>
+        /// <returns>Return true to omit null-value properties; false otherwise.</returns>
+        internal bool ShouldOmitNullValues()
+        {
+            return this.WritingResponse && this.MessageWriterSettings.OmitNullValues;
+        }
+
+        /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
         /// <param name="error">The error to write.</param>
