@@ -1,158 +1,56 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="FilterSegmentTests.cs" company="Microsoft">
+// <copyright file="ReferenceSegmentTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
-    public class FilterSegmentTests
+    public class ReferenceSegmentTests
     {
         #region Test Cases
         [Fact]
-        public void FilterSegmentConstructWithNullParameterAliasShouldThrowException()
+        public void ReferenceSegmentConstructWithNullNavigationSourceShouldThrowException()
         {
-            const string filterExpression = "@a1";
-
-            FilterClause filterClause = CreateFilterClause(filterExpression);
-
-            Action create = () => new FilterSegment(null, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: parameterAlias");
-        }
-
-        [Fact]
-        public void FilterSegmentConstructWithNullRangeVariableShouldThrowException()
-        {
-            const string filterExpression = "@a1";
-
-            FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-
-            Action create = () => new FilterSegment(alias, null, HardCodedTestModel.GetPet1Set());
-            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: rangeVariable");
-        }
-
-        [Fact]
-        public void FilterSegmentConstructWithNullNavigationSourceShouldThrowException()
-        {
-            const string filterExpression = "@a1";
-
-            FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-
-            Action create = () => new FilterSegment(alias, filterClause.RangeVariable, null);
+            Action create = () => new ReferenceSegment(null);
             create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: navigationSource");
         }
 
         [Fact]
-        public void FilterSegmentWithAllParametersSuccessfully()
+        public void ReferenceSegmentWithNavigationSourceConstructsSuccessfully()
         {
-            const string filterExpression = "@a1";
+            ReferenceSegment referenceSegment = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
 
-            FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-
-            filterSegment.ParameterAlias.Equals(alias).Should().BeTrue();
-            filterSegment.RangeVariable.Equals(filterClause.RangeVariable).Should().BeTrue();
+            referenceSegment.Identifier.Should().Be(UriQueryConstants.RefSegment);
+            referenceSegment.SingleResult.Should().BeFalse();
+            referenceSegment.TargetEdmNavigationSource.Should().Be(HardCodedTestModel.GetPet1Set());
+            referenceSegment.TargetKind.Should().Be(RequestTargetKind.Resource);
+            referenceSegment.EdmType.Should().BeNull();
         }
 
         [Fact]
-        public void FilterSegmentShouldNotBeSingleResult()
+        public void ReferenceSegmentsWithSameNavigationSourcesShouldBeEqual()
         {
-            const string filterExpression = "@a1";
+            ReferenceSegment referenceSegment1 = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
+            ReferenceSegment referenceSegment2 = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
 
-            FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-
-            filterSegment.SingleResult.Should().BeFalse();
+            referenceSegment1.Equals(referenceSegment2).Should().BeTrue();
+            referenceSegment2.Equals(referenceSegment1).Should().BeTrue();
         }
 
         [Fact]
-        public void FilterSegmentShouldHaveSameTypeAsRangeVariableTypeDefinition()
+        public void ReferenceSegmentsWithDifferenceNavigationSourcesShouldNotBeEqual()
         {
-            const string filterExpression = "@a1";
+            ReferenceSegment referenceSegment1 = new ReferenceSegment(HardCodedTestModel.GetPeopleSet());
+            ReferenceSegment referenceSegment2 = new ReferenceSegment(HardCodedTestModel.GetPet1Set());
 
-            FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-
-            filterSegment.EdmType.Equals(filterClause.RangeVariable.TypeReference.Definition).Should().BeFalse();
-        }
-
-        [Fact]
-        public void FilterSegmentsWithSameExpressionShouldBeEqual()
-        {
-            const string filterExpression = "@a1";
-
-            FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment1 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-            FilterSegment filterSegment2 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-
-            filterSegment1.Equals(filterSegment2).Should().BeTrue();
-            filterSegment2.Equals(filterSegment1).Should().BeTrue();
-        }
-
-        [Fact]
-        public void FilterSegmentsWithDifferentExpressionsShouldNotBeEqual()
-        {
-            const string filterExpression1 = "@a1";
-            const string filterExpression2 = "@a2";
-
-            FilterClause filterClause1 = CreateFilterClause(filterExpression1);
-            FilterClause filterClause2 = CreateFilterClause(filterExpression2);
-            ParameterAliasNode alias1 = filterClause1.Expression as ParameterAliasNode;
-            ParameterAliasNode alias2 = filterClause2.Expression as ParameterAliasNode;
-            FilterSegment filterSegment1 = new FilterSegment(alias1, filterClause1.RangeVariable, HardCodedTestModel.GetPet1Set());
-            FilterSegment filterSegment2 = new FilterSegment(alias2, filterClause2.RangeVariable, HardCodedTestModel.GetPet1Set());
-
-            filterSegment1.Equals(filterSegment2).Should().BeFalse();
-            filterSegment2.Equals(filterSegment1).Should().BeFalse();
-        }
-
-        [Fact]
-        public void FilterSegmentsWithDifferentNavigationSourcesShouldNotBeEqual()
-        {
-            const string filterExpression1 = "@a1";
-
-            FilterClause filterClause = CreateFilterClause(filterExpression1);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment1 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-            FilterSegment filterSegment2 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPeopleSet());
-
-            filterSegment1.Equals(filterSegment2).Should().BeFalse();
-            filterSegment2.Equals(filterSegment1).Should().BeFalse();
-        }
-        #endregion
-
-        #region Helper Functions
-        private FilterClause CreateFilterClause(string filterExpression)
-        {
-            const string uriBase = "http://service/";
-
-            Uri uri = new Uri(uriBase + "Pet1Set?$filter=" + filterExpression);
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(uriBase), uri);
-            IEdmEntitySet entitySet = HardCodedTestModel.GetPet1Set();
-
-            Dictionary<string, string> queryOptions = new Dictionary<string, string>()
-            {
-                { "$filter", filterExpression }
-            };
-
-            // Use query option parser to help create the filter because it takes care of a bunch of instantiations
-            ODataQueryOptionParser queryOptionParser =
-                new ODataQueryOptionParser(HardCodedTestModel.TestModel, entitySet.EntityType(), entitySet, queryOptions);
-
-            return queryOptionParser.ParseFilter();
+            referenceSegment1.Equals(referenceSegment2).Should().BeFalse();
+            referenceSegment2.Equals(referenceSegment1).Should().BeFalse();
         }
         #endregion
     }
