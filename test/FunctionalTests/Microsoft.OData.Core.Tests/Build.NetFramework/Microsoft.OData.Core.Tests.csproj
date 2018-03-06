@@ -368,9 +368,7 @@
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\FilterSegmentTests.cs" />
-    <Compile Include="..\UriParser\SemanticAst\ReferenceSegmentTests.cs">
-      <Link>ReferenceSegmentTests.cs</Link>
-    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ReferenceSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\EntitySetNodeTests.cs" />
