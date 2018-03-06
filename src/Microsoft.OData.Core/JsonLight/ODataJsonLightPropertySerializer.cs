@@ -79,7 +79,7 @@ namespace Microsoft.OData.JsonLight
 
                     if (!(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
                     {
-                        ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
+                        ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.MessageWriterSettings.Version ?? ODataVersion.V4, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
                         this.WriteContextUriProperty(kind, () => contextInfo);
                     }
 

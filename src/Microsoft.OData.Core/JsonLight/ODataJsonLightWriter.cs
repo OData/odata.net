@@ -792,7 +792,9 @@ namespace Microsoft.OData.JsonLight
                                                 this.CurrentScope.NavigationSource,
                                                 this.CurrentScope.ResourceType.FullTypeName(),
                                                 containedEntitySet.NavigationProperty.Type.TypeKind() != EdmTypeKind.Collection,
-                                                this.CurrentScope.ODataUri);
+                                                this.CurrentScope.ODataUri,
+                                                this.jsonLightOutputContext.MessageWriterSettings.Version ?? ODataVersion.V4);
+
                     this.jsonLightResourceSerializer.WriteNestedResourceInfoContextUrl(nestedResourceInfo, info);
                 }
 

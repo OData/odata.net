@@ -61,7 +61,8 @@ namespace Microsoft.OData.Edm
         /// <returns>The list of bindings for current navigation property.</returns>
         public override IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
         {
-            return this.parentNavigationSource.FindNavigationPropertyBindings(navigationProperty);
+            IEnumerable<IEdmNavigationPropertyBinding> bindings = base.FindNavigationPropertyBindings(navigationProperty);
+            return bindings ?? this.parentNavigationSource.FindNavigationPropertyBindings(navigationProperty);
         }
 
         /// <summary>

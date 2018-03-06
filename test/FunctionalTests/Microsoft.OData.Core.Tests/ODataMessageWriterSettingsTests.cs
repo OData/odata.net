@@ -88,8 +88,11 @@ namespace Microsoft.OData.Tests
             setting.ODataUri = new ODataUri() { SelectAndExpand = result };
             setting.MetadataDocumentUri.Should().Equals(ServiceDocumentUri + "/$metadata");
             string select, expand;
-            setting.SelectExpandClause.GetSelectExpandPaths(out select, out expand);
-            select.Should().Be("*");
+            foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+            {
+                setting.SelectExpandClause.GetSelectExpandPaths(version, out select, out expand);
+                select.Should().Be("*");
+            }
         }
         #endregion metadata document uri tests
 
@@ -301,8 +304,11 @@ namespace Microsoft.OData.Tests
             newSetting.IsIndividualProperty.Should().BeTrue();
 
             string select, expand;
-            newSetting.SelectExpandClause.GetSelectExpandPaths(out select, out expand);
-            select.Should().Be("*");
+            foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+            {
+                newSetting.SelectExpandClause.GetSelectExpandPaths(version, out select, out expand);
+                select.Should().Be("*");
+            }
         }
         #endregion Copy constructor tests
 

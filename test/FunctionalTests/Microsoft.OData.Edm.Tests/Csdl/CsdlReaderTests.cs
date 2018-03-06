@@ -17,6 +17,7 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
+using System.IO;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
@@ -162,6 +163,81 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
             var setA = model.FindDeclaredNavigationSource("SetA");
             Assert.True(setA.NavigationPropertyBindings.First().NavigationProperty is UnresolvedNavigationPropertyPath);
+        }
+
+        [Fact]
+        public void ValidateNavigationPropertyBindingPathTraversesContainmentNavigationProperties()
+        {
+            var csdl
+                = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                      "<edmx:DataServices>" +
+                        "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                          "<EntityType Name=\"RootEntity\">" +
+                            "<NavigationProperty Name=\"SetA\" Type=\"Collection(NS.EntityA)\" ContainsTarget=\"true\" />" +
+                            "<NavigationProperty Name=\"SetB\" Type=\"Collection(NS.EntityB)\" ContainsTarget=\"true\" />" +
+                          "</EntityType>" +
+                          "<EntityType Name=\"EntityA\">" +
+                            "<NavigationProperty Name=\"EntityAToB\" Type=\"Collection(NS.EntityB)\" />" +
+                          "</EntityType>" +
+                          "<EntityType Name=\"EntityB\"/>" +
+                          "<EntityContainer Name=\"Container\">" +
+                            "<Singleton Name=\"Root\" Type=\"NS.RootEntity\">" +
+                              "<NavigationPropertyBinding Path=\"EntityA/EntityAToB\" Target=\"Root/SetB\" />" +
+                            "</Singleton>" +
+                          "</EntityContainer>" +
+                        "</Schema>" +
+                      "</edmx:DataServices>" +
+                    "</edmx:Edmx>";
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            //var setA = model.FindDeclaredNavigationSource("SetA");
+            //Assert.True(setA.NavigationPropertyBindings.First().NavigationProperty is UnresolvedNavigationPropertyPath);
+        }
+
+        [Fact]
+        public void ValidateEducationModel()
+        {
+            var csdl
+                = "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "  <edmx:DataServices>" +
+                  "    <Schema Namespace=\"Test.NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "      <EntityType Name=\"educationRoot\">" +
+                  "        <NavigationProperty Name=\"classes\" Type=\"Collection(Test.NS.class)\" ContainsTarget=\"true\"/>" +
+                  "        <NavigationProperty Name=\"users\" Type=\"Collection(Test.NS.user)\" ContainsTarget=\"true\"/>" +
+                  "      </EntityType>" +
+                  "      <EntityType Name=\"user\">" +
+                  "        <Key><PropertyRef Name=\"name\"/></Key>" +
+                  "        <Property Name =\"name\" Type=\"Edm.String\" Nullable=\"False\"/>" +
+                  "        <NavigationProperty Name=\"classes\" Type=\"Collection(Test.NS.class)\"/>" +
+                  "      </EntityType>" +
+                  "      <EntityType Name=\"class\">" +
+                  "        <Key><PropertyRef Name=\"classNumber\"/></Key>" +
+                  "        <Property Name=\"classNumber\" Type=\"Edm.String\" Nullable=\"False\"/>" +
+                  "        <Property Name=\"displayName\" Type=\"Edm.String\"/>" +
+                  "        <Property Name=\"description\" Type=\"Edm.String\"/>" +
+                  "        <Property Name=\"period\" Type=\"Edm.String\"/>" +
+                  "        <NavigationProperty Name=\"members\" Type=\"Collection(Test.NS.user)\"/>" +
+                  "      </EntityType>" +
+                  "      <EntityContainer Name=\"EducationService\">" +
+                  "        <Singleton Name=\"education\" Type=\"Test.NS.educationRoot\">" +
+                  "          <NavigationPropertyBinding Path=\"classes/members\" Target=\"education/users\" />" +
+                  "        </Singleton>" +
+                  "      </EntityContainer>" +
+                  "    </Schema>" +
+                  "  </edmx:DataServices>" +
+                  "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors).Should().BeTrue();
+            errors.Count().Should().Be(0);
+            model.Validate(out errors);
+            errors.Count().Should().Be(0);
+
+            var educationSingleton = model.FindDeclaredNavigationSource("education");
+            var navPropBinding = educationSingleton.NavigationPropertyBindings.First();
+            var target = navPropBinding.Target;
+            target.Should().NotBeNull();
         }
 
         [Fact]

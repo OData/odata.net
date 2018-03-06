@@ -619,7 +619,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(container);
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
-            Assert.Equal(2, errors.Count());
+            Assert.Equal(1, errors.Count());
 
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);

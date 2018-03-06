@@ -13,6 +13,7 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
+using System.Linq;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
@@ -60,6 +61,25 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
           <NavigationPropertyBinding Path=""Test.DerivedEntityType/DerivedNavigation"" Target=""EntitySet2"" />
         </EntitySet>
       </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+
+        private const string navPropBindingtemplate = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""Test"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityContainer Name=""Container"">
+        <EntitySet Name=""EntitySet"" EntityType=""Test.EntityType"">
+          {0}
+        </EntitySet>
+      </EntityContainer>
+      <EntityType Name=""EntityType"">
+        <Key>
+          <PropertyRef Name=""ID""/>
+        </Key>
+        <Property Name=""ID"" Nullable=""false"" Type=""Edm.Int32""/>
+        <NavigationProperty Name=""Navigation"" Type=""Collection(Test.EntityType)"" />
+      </EntityType>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
@@ -218,15 +238,6 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                 @"<NavigationPropertyBinding Path=""Navigation"" Target=""NonExistent"" />",
                 EdmErrorCode.BadUnresolvedEntitySet,
                 ErrorStrings.Bad_UnresolvedEntitySet("NonExistent"));
-        }
-
-        [Fact]
-        public void ValidationShouldFailIfAContainerQualifiedNameIsUsedForTheTargetOfABinding()
-        {
-            this.ValidateBindingWithExpectedErrors(
-                @"<NavigationPropertyBinding Path=""Navigation"" Target=""Container.EntitySet"" />",
-                EdmErrorCode.BadUnresolvedEntitySet,
-                ErrorStrings.Bad_UnresolvedEntitySet("Container.EntitySet"));
         }
 
         [Fact]
@@ -466,7 +477,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void ValidationShouldFailIfEnumMemberIsSpecifiedButCannotBeFound()
         {
-            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.UnknownColor/Blue</EnumMember>");
+            IEdmModel model = GetEnumAnnotationModel(@"<EnumMember>TestNS2.UnknownColor/Blue</EnumMember>");
             IEnumerable<EdmError> errors;
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(1);
@@ -474,9 +485,16 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         }
 
         [Fact]
+        public void ValidationShouldSucceedIfAContainerQualifiedNameIsUsedForTheTargetOfABinding()
+        {
+            this.ValidateNavigationBindingSucceeds(
+                @"<NavigationPropertyBinding Path=""Navigation"" Target=""Container.EntitySet"" />");
+        }
+
+        [Fact]
         public void ValidationShouldFailIfEnumMemberIsSpecifiedButCannotBeFoundTheMember()
         {
-            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.Color/UnknownMember</EnumMember>");
+            IEdmModel model = GetEnumAnnotationModel(@"<EnumMember>TestNS2.Color/UnknownMember</EnumMember>");
             IEnumerable<EdmError> errors;
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(2);
@@ -485,14 +503,14 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         }
 
         [Fact]
-        public void ValidationShouldSuccessIfEnumMemberIsSpecifiedWithCorrectType()
+        public void ValidationShouldSucceedIfEnumMemberIsSpecifiedWithCorrectType()
         {
-            IEdmModel model = GetEdmModel(@"<EnumMember>TestNS2.Color/Blue</EnumMember>");
+            IEdmModel model = GetEnumAnnotationModel(@"<EnumMember>TestNS2.Color/Blue</EnumMember>");
             IEnumerable<EdmError> errors;
             model.Validate(out errors).Should().BeTrue();
         }
 
-        private IEdmModel GetEdmModel(string bindingText)
+        private IEdmModel GetEnumAnnotationModel(string enumText)
         {
             const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
@@ -516,7 +534,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            string modelText = string.Format(template, bindingText);
+            string modelText = string.Format(template, enumText);
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
@@ -526,25 +544,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
         private void ValidateBindingWithExpectedErrors(string bindingText, EdmErrorCode errorCode, params string[] messages)
         {
-            const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:DataServices>
-    <Schema Namespace=""Test"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <EntityContainer Name=""Container"">
-        <EntitySet Name=""EntitySet"" EntityType=""Test.EntityType"">
-          {0}
-        </EntitySet>
-      </EntityContainer>
-      <EntityType Name=""EntityType"">
-        <Key>
-          <PropertyRef Name=""ID""/>
-        </Key>
-        <Property Name=""ID"" Nullable=""false"" Type=""Edm.Int32""/>
-        <NavigationProperty Name=""Navigation"" Type=""Collection(Test.EntityType)"" />
-      </EntityType>
-    </Schema>
-  </edmx:DataServices>
-</edmx:Edmx>";
-            string modelText = string.Format(template, bindingText);
+            string modelText = string.Format(navPropBindingtemplate, bindingText);
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
@@ -556,6 +556,18 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             {
                 errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
             }
+        }
+
+        private void ValidateNavigationBindingSucceeds(string bindingText)
+        {
+            string modelText = string.Format(navPropBindingtemplate, bindingText);
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+
+            model.Validate(out errors).Should().BeTrue();
+            errors.ToList().Count.Should().Be(0);
         }
 
         private void ValidateReferentialConstraintWithExpectedErrors(string referentialConstraintText, EdmErrorCode errorCode, params string[] messages)
