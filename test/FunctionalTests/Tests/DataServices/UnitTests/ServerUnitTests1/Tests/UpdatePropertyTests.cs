@@ -709,7 +709,6 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore]
-            // TODO: Change the payload of null top-level properties #645
             // [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateMergePrimitivePropertyToNull()
             {

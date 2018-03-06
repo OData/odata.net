@@ -290,6 +290,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 var singleValueNode = (SingleValueNode)bindMethod(statementToken.Expression);
                 statements.Add(new ComputeExpression(singleValueNode, statementToken.Alias, singleValueNode.TypeReference));
             }
+
             return new ComputeTransformationNode(statements);
         }
     }

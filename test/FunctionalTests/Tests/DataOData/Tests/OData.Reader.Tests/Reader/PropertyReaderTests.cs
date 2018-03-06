@@ -163,7 +163,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         }
 
         [TestMethod, TestCategory("Reader.Properties"), Variation(Description = "Test reading of non-nullable property payloads with 'null' value and metadata.")]
-        // TODO: Change the payload of null top-level properties #645
         public void NonNullablePropertiesWithNullValuesTest()
         {
             IEnumerable<NonNullablePropertyTest> testCases = new NonNullablePropertyTest[]

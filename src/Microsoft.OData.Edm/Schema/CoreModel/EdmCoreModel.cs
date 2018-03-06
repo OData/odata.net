@@ -21,22 +21,22 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public static readonly EdmCoreModel Instance = new EdmCoreModel();
 
-        private readonly IDictionary<string, EdmPrimitiveTypeKind> _primitiveTypeKinds = new Dictionary<string, EdmPrimitiveTypeKind>();
-        private readonly IDictionary<EdmPrimitiveTypeKind, EdmCoreModelPrimitiveType> _primitiveTypesByKind = new Dictionary<EdmPrimitiveTypeKind, EdmCoreModelPrimitiveType>();
+        private readonly IDictionary<string, EdmPrimitiveTypeKind> primitiveTypeKinds = new Dictionary<string, EdmPrimitiveTypeKind>();
+        private readonly IDictionary<EdmPrimitiveTypeKind, EdmCoreModelPrimitiveType> primitiveTypesByKind = new Dictionary<EdmPrimitiveTypeKind, EdmCoreModelPrimitiveType>();
 
-        private readonly IDictionary<string, EdmPathTypeKind> _pathTypeKinds = new Dictionary<string, EdmPathTypeKind>();
-        private readonly IDictionary<EdmPathTypeKind, EdmCoreModelPathType> _pathTypesByKind = new Dictionary<EdmPathTypeKind, EdmCoreModelPathType>();
+        private readonly IDictionary<string, EdmPathTypeKind> pathTypeKinds = new Dictionary<string, EdmPathTypeKind>();
+        private readonly IDictionary<EdmPathTypeKind, EdmCoreModelPathType> pathTypesByKind = new Dictionary<EdmPathTypeKind, EdmCoreModelPathType>();
 
-        private readonly IEdmDirectValueAnnotationsManager _annotationsManager = new EdmDirectValueAnnotationsManager();
+        private readonly IEdmDirectValueAnnotationsManager annotationsManager = new EdmDirectValueAnnotationsManager();
 
-        private readonly IList<IEdmSchemaElement> _coreSchemaElements = new List<IEdmSchemaElement>();
+        private readonly IList<IEdmSchemaElement> coreSchemaElements = new List<IEdmSchemaElement>();
 
-        private readonly IDictionary<string, IEdmSchemaType> _coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
+        private readonly IDictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
 
-        private readonly EdmCoreModelComplexType _complexType = EdmCoreModelComplexType.Instance;
-        private readonly EdmCoreModelEntityType _entityType = EdmCoreModelEntityType.Instance;
-        private readonly EdmCoreModelUntypedType _untypedType = EdmCoreModelUntypedType.Instance;
-        private readonly EdmCoreModelPrimitiveType _primitiveType = new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.PrimitiveType);
+        private readonly EdmCoreModelComplexType complexType = EdmCoreModelComplexType.Instance;
+        private readonly EdmCoreModelEntityType entityType = EdmCoreModelEntityType.Instance;
+        private readonly EdmCoreModelUntypedType untypedType = EdmCoreModelUntypedType.Instance;
+        private readonly EdmCoreModelPrimitiveType primitiveType = new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.PrimitiveType);
 
         private EdmCoreModel()
         {
@@ -76,32 +76,32 @@ namespace Microsoft.OData.Edm
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPolygon),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiLineString),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPoint),
-                _primitiveType, // Edm.PrimitiveType
+                primitiveType, // Edm.PrimitiveType
             };
 
             foreach (var primitive in primitiveTypes)
             {
-                _primitiveTypeKinds[primitive.Name] = primitive.PrimitiveKind;
-                _primitiveTypeKinds[primitive.Namespace + '.' + primitive.Name] = primitive.PrimitiveKind;
-                 _primitiveTypesByKind[primitive.PrimitiveKind] = primitive;
+                primitiveTypeKinds[primitive.Name] = primitive.PrimitiveKind;
+                primitiveTypeKinds[primitive.Namespace + '.' + primitive.Name] = primitive.PrimitiveKind;
+                primitiveTypesByKind[primitive.PrimitiveKind] = primitive;
 
-                _coreSchemaTypes[primitive.Namespace + '.' + primitive.Name] = primitive;
-                _coreSchemaTypes[primitive.Name] = primitive;
+                coreSchemaTypes[primitive.Namespace + '.' + primitive.Name] = primitive;
+                coreSchemaTypes[primitive.Name] = primitive;
 
-                _coreSchemaElements.Add(primitive);
+                coreSchemaElements.Add(primitive);
             }
 
-            _coreSchemaElements.Add(_complexType); // Edm.ComplexType
-            _coreSchemaTypes[_complexType.Namespace + '.' + _complexType.Name] = _complexType;
-            _coreSchemaTypes[_complexType.Name] = _complexType;
+            coreSchemaElements.Add(complexType); // Edm.ComplexType
+            coreSchemaTypes[complexType.Namespace + '.' + complexType.Name] = complexType;
+            coreSchemaTypes[complexType.Name] = complexType;
 
-            _coreSchemaElements.Add(_entityType); // Edm.EntityType
-            _coreSchemaTypes[_entityType.Namespace + '.' + _entityType.Name] = _entityType;
-            _coreSchemaTypes[_entityType.Name] = _entityType;
+            coreSchemaElements.Add(entityType); // Edm.EntityType
+            coreSchemaTypes[entityType.Namespace + '.' + entityType.Name] = entityType;
+            coreSchemaTypes[entityType.Name] = entityType;
 
-            _coreSchemaElements.Add(_untypedType); // Edm.Untyped
-            _coreSchemaTypes[_untypedType.Namespace + '.' + _untypedType.Name] = _untypedType;
-            _coreSchemaTypes[_untypedType.Name] = _untypedType;
+            coreSchemaElements.Add(untypedType); // Edm.Untyped
+            coreSchemaTypes[untypedType.Namespace + '.' + untypedType.Name] = untypedType;
+            coreSchemaTypes[untypedType.Name] = untypedType;
 
             EdmCoreModelPathType[] pathTypes =
             {
@@ -112,14 +112,14 @@ namespace Microsoft.OData.Edm
 
             foreach (var pathType in pathTypes)
             {
-                _pathTypeKinds[pathType.Name] = pathType.PathKind;
-                _pathTypeKinds[pathType.Namespace + '.' + pathType.Name] = pathType.PathKind;
-                _pathTypesByKind[pathType.PathKind] = pathType;
+                pathTypeKinds[pathType.Name] = pathType.PathKind;
+                pathTypeKinds[pathType.Namespace + '.' + pathType.Name] = pathType.PathKind;
+                pathTypesByKind[pathType.PathKind] = pathType;
 
-                _coreSchemaTypes[pathType.Namespace + '.' + pathType.Name] = pathType;
-                _coreSchemaTypes[pathType.Name] = pathType;
+                coreSchemaTypes[pathType.Namespace + '.' + pathType.Name] = pathType;
+                coreSchemaTypes[pathType.Name] = pathType;
 
-                _coreSchemaElements.Add(pathType);
+                coreSchemaElements.Add(pathType);
             }
         }
 
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public IEnumerable<IEdmSchemaElement> SchemaElements
         {
-            get { return _coreSchemaElements; }
+            get { return coreSchemaElements; }
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager
         {
-            get { return this._annotationsManager; }
+            get { return this.annotationsManager; }
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Edm
         public IEdmSchemaType FindDeclaredType(string qualifiedName)
         {
             IEdmSchemaType element;
-            if (_coreSchemaTypes.TryGetValue(qualifiedName, out element))
+            if (coreSchemaTypes.TryGetValue(qualifiedName, out element))
             {
                 return element;
             }
@@ -275,7 +275,7 @@ namespace Microsoft.OData.Edm
         /// <returns>IEdmPrimitiveType type definition.</returns>
         public IEdmPrimitiveType GetPrimitiveType()
         {
-            return this._primitiveType;
+            return this.primitiveType;
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Edm
         /// <returns>IEdmComplexType type definition.</returns>
         public IEdmComplexType GetComplexType()
         {
-            return this._complexType;
+            return this.complexType;
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Edm
         /// <returns>IEdmEntityType type definition.</returns>
         public IEdmEntityType GetEntityType()
         {
-            return this._entityType;
+            return this.entityType;
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace Microsoft.OData.Edm
         /// <returns>IEdmUntypedType type definition.</returns>
         public IEdmUntypedType GetUntypedType()
         {
-            return this._untypedType;
+            return this.untypedType;
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Edm
         public IEdmPathType GetPathType(EdmPathTypeKind kind)
         {
             EdmCoreModelPathType definition;
-            return _pathTypesByKind.TryGetValue(kind, out definition) ? definition : null;
+            return pathTypesByKind.TryGetValue(kind, out definition) ? definition : null;
         }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Edm
         public EdmPrimitiveTypeKind GetPrimitiveTypeKind(string typeName)
         {
             EdmPrimitiveTypeKind kind;
-            return _primitiveTypeKinds.TryGetValue(typeName, out kind) ? kind : EdmPrimitiveTypeKind.None;
+            return primitiveTypeKinds.TryGetValue(typeName, out kind) ? kind : EdmPrimitiveTypeKind.None;
         }
 
         /// <summary>
@@ -354,7 +354,7 @@ namespace Microsoft.OData.Edm
         public EdmPathTypeKind GetPathTypeKind(string typeName)
         {
             EdmPathTypeKind kind;
-            return _pathTypeKinds.TryGetValue(typeName, out kind) ? kind : EdmPathTypeKind.None;
+            return pathTypeKinds.TryGetValue(typeName, out kind) ? kind : EdmPathTypeKind.None;
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Edm
         /// <returns>A new Edm.EntityType type reference.</returns>
         public IEdmEntityTypeReference GetEntityType(bool isNullable)
         {
-            return new EdmEntityTypeReference(this._entityType, isNullable);
+            return new EdmEntityTypeReference(this.entityType, isNullable);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Edm
         /// <returns>A new Edm.ComplexType type reference.</returns>
         public IEdmComplexTypeReference GetComplexType(bool isNullable)
         {
-            return new EdmComplexTypeReference(this._complexType, isNullable);
+            return new EdmComplexTypeReference(this.complexType, isNullable);
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace Microsoft.OData.Edm
         /// <returns>A new Edm.PrimitiveType type reference.</returns>
         public IEdmPrimitiveTypeReference GetPrimitiveType(bool isNullable)
         {
-            return new EdmPrimitiveTypeReference(this._primitiveType, isNullable);
+            return new EdmPrimitiveTypeReference(this.primitiveType, isNullable);
         }
 
         /// <summary>
@@ -787,7 +787,7 @@ namespace Microsoft.OData.Edm
         private EdmCoreModelPrimitiveType GetCoreModelPrimitiveType(EdmPrimitiveTypeKind kind)
         {
             EdmCoreModelPrimitiveType definition;
-            return _primitiveTypesByKind.TryGetValue(kind, out definition) ? definition : null;
+            return primitiveTypesByKind.TryGetValue(kind, out definition) ? definition : null;
         }
     }
 }

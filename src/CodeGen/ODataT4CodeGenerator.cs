@@ -695,7 +695,8 @@ public class CodeGenerationContext
             if (!this.modelHasInheritance.HasValue)
             {
                 Debug.Assert(this.EdmModel != null, "this.EdmModel != null");
-                this.modelHasInheritance = this.EdmModel.SchemaElementsAcrossModels().OfType<IEdmStructuredType>().Any(t => t.BaseType != null);
+                this.modelHasInheritance = this.EdmModel.SchemaElementsAcrossModels()
+                            .OfType<IEdmStructuredType>().Any(t => !t.FullTypeName().StartsWith("Org.OData.Authorization.V1") && t.BaseType != null);
             }
 
             return this.modelHasInheritance.Value;
@@ -994,7 +995,8 @@ public class CodeGenerationContext
             if (tmp is EdmCoreModel ||
                 tmp.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency) != null ||
                 tmp.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
-                tmp.FindDeclaredTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null)
+                tmp.FindDeclaredTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null ||
+                tmp.FindDeclaredTerm("Org.OData.Authorization.V1.Authorizations") != null)
             {
                 continue;
             }
@@ -6813,8 +6815,8 @@ this.Write(" to its derived type ");
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeFullName));
 
 this.Write("\r\n        \'\'\' </summary>\r\n        \'\'\' <param name=\"source\">source entity</param>\r" +
-        "\n        <Global.System.Runtime.CompilerServices.Extension()>\r\n        Public " +
-        "Function CastTo");
+        "\n        <Global.System.Runtime.CompilerServices.Extension()>\r\n        Public Fu" +
+        "nction CastTo");
 
 this.Write(this.ToStringHelper.ToStringWithCulture(derivedTypeName));
 

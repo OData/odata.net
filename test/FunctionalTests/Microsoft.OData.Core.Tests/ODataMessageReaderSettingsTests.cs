@@ -39,6 +39,7 @@ namespace Microsoft.OData.Tests
             Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
             Assert.True(100 == settings.MessageQuotas.MaxNestingDepth, "The MaxNestingDepth should be set to 100 by default.");
             Assert.True(1024 * 1024 == settings.MessageQuotas.MaxReceivedMessageSize, "The MaxMessageSize should be set to 1024 * 1024 by default.");
+            Assert.True(ODataLibraryCompatibility.Latest == settings.LibraryCompatibility, "The LibraryCompatibility should be set to ODataLibraryCompatibility.Latest by default.");
         }
 
         [Fact]
@@ -63,6 +64,7 @@ namespace Microsoft.OData.Tests
             Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
             Assert.True(100 == settings.MessageQuotas.MaxNestingDepth, "The MaxNestingDepth should be set to 100 by default.");
             Assert.True(1024 * 1024 == settings.MessageQuotas.MaxReceivedMessageSize, "The MaxMessageSize should be set to 1024 * 1024 by default.");
+            Assert.True(ODataLibraryCompatibility.Latest == settings.LibraryCompatibility, "The LibraryCompatibility should be set to ODataLibraryCompatibility.Latest by default.");
         }
 
         [Fact]
@@ -137,9 +139,11 @@ namespace Microsoft.OData.Tests
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting rest of the values 
-            settings.EnableMessageStreamDisposal = false;            
+            settings.EnableMessageStreamDisposal = false;
             settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
-            settings.MaxProtocolVersion = ODataVersion.V4;
+            settings.Version = ODataVersion.V401;
+            settings.MaxProtocolVersion = ODataVersion.V401;
+            settings.LibraryCompatibility = ODataLibraryCompatibility.Version6;
             settings.MessageQuotas.MaxPartsPerBatch = 100;
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;
             settings.MessageQuotas.MaxNestingDepth = 20;
