@@ -1093,116 +1093,136 @@ namespace Microsoft.OData.JsonLight
             object propertyValue = missingPropertyValue;
             var customInstanceAnnotations = new Collection<ODataInstanceAnnotation>();
 
-            string payloadTypeName = null;
-            if (this.ReadingComplexProperty(propertyAndAnnotationCollector, expectedPropertyTypeReference, out payloadTypeName))
+            // Check for the special top-level OData 3.0 null marker in order to accommodate
+            // the responses written by 6.x version of this library.
+            if (this.IsTopLevel6xNullValue())
             {
-                // Figure out whether we are reading a complex property or not; complex properties are not wrapped while all others are.
-                // Since we don't have metadata in all cases (open properties), we have to detect the type in some cases.
-                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-
-                // Now read the property value
-                propertyValue = this.ReadNonEntityValue(
-                    payloadTypeName,
+                // NOTE: when reading a null value we will never ask the type resolver (if present) to resolve the
+                //       type; we always fall back to the expected type.
+                this.ReaderValidator.ValidateNullValue(
                     expectedPropertyTypeReference,
-                    propertyAndAnnotationCollector,
-                    /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
-                    /*isTopLevelPropertyValue*/ true,
-                    /*insideComplexValue*/ true,
-                    /*propertyName*/ null);
+                    /*propertyName*/ null,
+                    null);
+
+                // We don't allow properties or non-custom annotations in the null payload.
+                this.ValidateNoPropertyInNullPayload(propertyAndAnnotationCollector);
+
+                propertyValue = null;
             }
             else
             {
-                bool isReordering = this.JsonReader is ReorderingJsonReader;
-
-                Func<string, object> propertyAnnotationReaderForTopLevelProperty =
-                    annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName)); };
-
-                // Read through all top-level properties, ignore the ones with reserved names (i.e., reserved
-                // characters in their name) and throw if we find none or more than one properties without reserved name.
-                while (this.JsonReader.NodeType == JsonNodeType.Property)
+                string payloadTypeName = null;
+                if (this.ReadingComplexProperty(propertyAndAnnotationCollector, expectedPropertyTypeReference, out payloadTypeName))
                 {
-                    this.ProcessProperty(
+                    // Figure out whether we are reading a complex property or not; complex properties are not wrapped while all others are.
+                    // Since we don't have metadata in all cases (open properties), we have to detect the type in some cases.
+                    this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+
+                    // Now read the property value
+                    propertyValue = this.ReadNonEntityValue(
+                        payloadTypeName,
+                        expectedPropertyTypeReference,
                         propertyAndAnnotationCollector,
-                        propertyAnnotationReaderForTopLevelProperty,
-                        (propertyParsingResult, propertyName) =>
-                        {
-                            switch (propertyParsingResult)
+                        /*collectionValidator*/ null,
+                        /*validateNullValue*/ true,
+                        /*isTopLevelPropertyValue*/ true,
+                        /*insideComplexValue*/ true,
+                        /*propertyName*/ null);
+                }
+                else
+                {
+                    bool isReordering = this.JsonReader is ReorderingJsonReader;
+
+                    Func<string, object> propertyAnnotationReaderForTopLevelProperty =
+                        annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName)); };
+
+                    // Read through all top-level properties, ignore the ones with reserved names (i.e., reserved
+                    // characters in their name) and throw if we find none or more than one properties without reserved name.
+                    while (this.JsonReader.NodeType == JsonNodeType.Property)
+                    {
+                        this.ProcessProperty(
+                            propertyAndAnnotationCollector,
+                            propertyAnnotationReaderForTopLevelProperty,
+                            (propertyParsingResult, propertyName) =>
                             {
-                                case PropertyParsingResult.ODataInstanceAnnotation:
-                                    if (string.CompareOrdinal(ODataAnnotationNames.ODataType, propertyName) == 0)
-                                    {
-                                        // When we are not using the reordering reader we have to ensure that the 'odata.type' property appears before
-                                        // the 'value' property; otherwise we already scanned ahead and read the type name and have to now
-                                        // ignore it (even if it is after the 'value' property).
-                                        if (isReordering)
+                                switch (propertyParsingResult)
+                                {
+                                    case PropertyParsingResult.ODataInstanceAnnotation:
+                                        if (string.CompareOrdinal(ODataAnnotationNames.ODataType, propertyName) == 0)
                                         {
-                                            this.JsonReader.SkipValue();
+                                            // When we are not using the reordering reader we have to ensure that the 'odata.type' property appears before
+                                            // the 'value' property; otherwise we already scanned ahead and read the type name and have to now
+                                            // ignore it (even if it is after the 'value' property).
+                                            if (isReordering)
+                                            {
+                                                this.JsonReader.SkipValue();
+                                            }
+                                            else
+                                            {
+                                                if (!object.ReferenceEquals(missingPropertyValue, propertyValue))
+                                                {
+                                                    throw new ODataException(
+                                                        ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_TypePropertyAfterValueProperty(ODataAnnotationNames.ODataType, JsonLightConstants.ODataValuePropertyName));
+                                                }
+
+                                                payloadTypeName = this.ReadODataTypeAnnotationValue();
+                                            }
                                         }
                                         else
                                         {
-                                            if (!object.ReferenceEquals(missingPropertyValue, propertyValue))
-                                            {
-                                                throw new ODataException(
-                                                    ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_TypePropertyAfterValueProperty(ODataAnnotationNames.ODataType, JsonLightConstants.ODataValuePropertyName));
-                                            }
-
-                                            payloadTypeName = this.ReadODataTypeAnnotationValue();
+                                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
                                         }
-                                    }
-                                    else
-                                    {
-                                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
-                                    }
 
-                                    break;
-                                case PropertyParsingResult.CustomInstanceAnnotation:
-                                    ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
-                                    Debug.Assert(
-                                        !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
-                                        "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                                    var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, propertyName);
-                                    customInstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, customInstanceAnnotationValue.ToODataValue()));
-                                    break;
+                                        break;
+                                    case PropertyParsingResult.CustomInstanceAnnotation:
+                                        ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
+                                        Debug.Assert(
+                                            !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
+                                            "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
+                                        var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, propertyName);
+                                        customInstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, customInstanceAnnotationValue.ToODataValue()));
+                                        break;
 
-                                case PropertyParsingResult.PropertyWithoutValue:
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(propertyName));
+                                    case PropertyParsingResult.PropertyWithoutValue:
+                                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(propertyName));
 
-                                case PropertyParsingResult.PropertyWithValue:
-                                    if (string.CompareOrdinal(JsonLightConstants.ODataValuePropertyName, propertyName) == 0)
-                                    {
-                                        // Now read the property value
-                                        propertyValue = this.ReadNonEntityValue(
-                                            payloadTypeName,
-                                            expectedPropertyTypeReference,
-                                            /*propertyAndAnnotationCollector*/ null,
-                                            /*collectionValidator*/ null,
-                                            /*validateNullValue*/ true,
-                                            /*isTopLevelPropertyValue*/ true,
-                                            /*insideComplexValue*/ false,
-                                            /*propertyName*/ propertyName);
-                                    }
-                                    else
-                                    {
-                                        throw new ODataException(
-                                            ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName(propertyName, JsonLightConstants.ODataValuePropertyName));
-                                    }
+                                    case PropertyParsingResult.PropertyWithValue:
+                                        if (string.CompareOrdinal(JsonLightConstants.ODataValuePropertyName, propertyName) == 0)
+                                        {
+                                            // Now read the property value
+                                            propertyValue = this.ReadNonEntityValue(
+                                                    payloadTypeName,
+                                                    expectedPropertyTypeReference,
+                                                    /*propertyAndAnnotationCollector*/ null,
+                                                    /*collectionValidator*/ null,
+                                                    /*validateNullValue*/ true,
+                                                    /*isTopLevelPropertyValue*/ true,
+                                                    /*insideComplexValue*/ false,
+                                                    /*propertyName*/ propertyName);
+                                        }
+                                        else
+                                        {
+                                            throw new ODataException(
+                                                ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName(propertyName, JsonLightConstants.ODataValuePropertyName));
+                                        }
 
-                                    break;
+                                        break;
 
-                                case PropertyParsingResult.EndOfObject:
-                                    break;
+                                    case PropertyParsingResult.EndOfObject:
+                                        break;
 
-                                case PropertyParsingResult.MetadataReferenceProperty:
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
-                            }
-                        });
-                }
+                                    case PropertyParsingResult.MetadataReferenceProperty:
+                                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                }
+                            });
+                    }
 
-                if (object.ReferenceEquals(missingPropertyValue, propertyValue))
-                {
-                    // No property found; there should be exactly one property in the top-level property wrapper that does not have a reserved name.
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
+                    if (object.ReferenceEquals(missingPropertyValue, propertyValue))
+                    {
+                        // No property found; there should be exactly one property in the top-level property wrapper that does not have a reserved name.
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
+                    }
                 }
             }
 
@@ -1740,6 +1760,72 @@ namespace Microsoft.OData.JsonLight
             }
 
             return readingComplexProperty;
+        }
+
+        /// <summary>
+        /// Tries to read a top-level null value from the JSON reader.
+        /// </summary>
+        /// <returns>true if a null value could be read from the JSON reader; otherwise false.</returns>
+        /// <remarks>If the method detects the odata.null annotation, it will read it; otherwise the reader does not move.</remarks>
+        private bool IsTopLevel6xNullValue()
+        {
+            bool odataNullAnnotationInPayload = this.JsonReader.NodeType == JsonNodeType.Property && string.CompareOrdinal(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataNull, JsonReader.GetPropertyName()) == 0;
+            if (odataNullAnnotationInPayload)
+            {
+                // If we found the expected annotation read over the property name
+                this.JsonReader.ReadNext();
+
+                // Now check the value of the annotation
+                object nullAnnotationValue = this.JsonReader.ReadPrimitiveValue();
+                if (!(nullAnnotationValue is bool) || (bool)nullAnnotationValue == false)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation(ODataAnnotationNames.ODataNull, JsonLightConstants.ODataNullAnnotationTrueValue));
+                }
+            }
+
+            return odataNullAnnotationInPayload;
+        }
+
+        /// <summary>
+        /// Make sure that we don't find any other odata.* annotations or properties after reading a payload with the odata.null annotation.
+        /// </summary>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use.</param>
+        private void ValidateNoPropertyInNullPayload(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
+        {
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
+
+            // we use the ParseProperty method to ignore custom annotations.
+            Func<string, object> propertyAnnotationReaderForTopLevelNull = annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName)); };
+            while (this.JsonReader.NodeType == JsonNodeType.Property)
+            {
+                this.ProcessProperty(
+                propertyAndAnnotationCollector,
+                propertyAnnotationReaderForTopLevelNull,
+                (propertyParsingResult, propertyName) =>
+                {
+                    switch (propertyParsingResult)
+                    {
+                        case PropertyParsingResult.ODataInstanceAnnotation:
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+
+                        case PropertyParsingResult.CustomInstanceAnnotation:
+                            this.JsonReader.SkipValue();
+                            break;
+
+                        case PropertyParsingResult.PropertyWithoutValue:
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(propertyName));
+
+                        case PropertyParsingResult.PropertyWithValue:
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload(propertyName));
+
+                        case PropertyParsingResult.EndOfObject:
+                            break;
+
+                        case PropertyParsingResult.MetadataReferenceProperty:
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                    }
+                });
+            }
         }
 
         /// <summary>

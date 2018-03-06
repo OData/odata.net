@@ -695,7 +695,6 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
 
-                // TODO: Change the payload of null top-level properties #645
                 if (property.PropertyKind == PayloadBuilderPropertyKind.Primitive || property.Value == null)
                 {
                     // Write primitive property value

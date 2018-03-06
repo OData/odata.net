@@ -34,7 +34,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of collection values")]
-        // TODO: Change the payload of null top-level properties #645
         public void CollectionValueTest()
         {
             EdmModel model = new EdmModel();

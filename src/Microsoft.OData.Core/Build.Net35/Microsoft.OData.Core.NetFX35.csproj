@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AllowCrossTargeting>true</AllowCrossTargeting>
@@ -308,26 +308,26 @@
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightWriterUtils.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ReorderingJsonReader.cs">
-      <Link>Microsoft\OData\Core\JsonLight\ReorderingJsonReader.cs</Link>  
-    </Compile>        
+      <Link>Microsoft\OData\Core\JsonLight\ReorderingJsonReader.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchReader.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchReader.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchWriter.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchWriter.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchReaderStream.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchReaderStream.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\BufferingJsonReader.cs">
       <Link>Microsoft\OData\Core\Json\BufferingJsonReader.cs</Link>
     </Compile>
@@ -453,13 +453,13 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchInputContext.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchInputContext.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReader.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
     </Compile>
@@ -471,7 +471,7 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MultipartMixed\DependsOnIdsTracker.cs">
       <Link>Microsoft\OData\Core\MultipartMixed\DependsOnIdsTracker.cs</Link>
-    </Compile>    
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\NonDisposingStream.cs">
       <Link>Microsoft\OData\Core\NonDisposingStream.cs</Link>
     </Compile>
@@ -1356,7 +1356,7 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\QueryTokenKind.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\QueryTokenKind.cs</Link>
-    </Compile>	
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\RangeVariableToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\RangeVariableToken.cs</Link>
     </Compile>
@@ -1553,6 +1553,9 @@
     </Compile>
     <Compile Include="..\ODataEdmPropertyAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataEdmPropertyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataLibraryCompatibility.cs">
+      <Link>Microsoft\OData\Core\ODataLibraryCompatibility.cs</Link>
     </Compile>
     <Compile Include="..\ODataNestedResourceInfoSerializationInfo.cs">
       <Link>Microsoft\OData\Core\ODataNestedResourceInfoSerializationInfo.cs</Link>

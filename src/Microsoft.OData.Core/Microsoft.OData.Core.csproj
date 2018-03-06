@@ -53,6 +53,7 @@
     <Compile Include="JsonLight\ODataJsonLightBatchReader.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchReaderStream.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchWriter.cs" />
+    <Compile Include="ODataLibraryCompatibility.cs" />
     <Compile Include="MultipartMixed\DependsOnIdsTracker.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchFormat.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchInputContext.cs" />

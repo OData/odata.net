@@ -317,6 +317,12 @@ namespace Microsoft.OData
                 return null;
             }
 
+            // special identifier for null values.
+            if (value.IsNullValue)
+            {
+                return ODataConstants.ContextUriFragmentNull;
+            }
+
             if (value.TypeAnnotation != null && !string.IsNullOrEmpty(value.TypeAnnotation.TypeName))
             {
                 return value.TypeAnnotation.TypeName;
