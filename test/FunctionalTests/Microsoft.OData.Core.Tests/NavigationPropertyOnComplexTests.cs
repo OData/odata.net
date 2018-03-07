@@ -1154,7 +1154,6 @@ namespace Microsoft.OData.Tests
                 "\"ID\":\"abc\"," +
                 "\"Complex\":{" +
                     "\"Prop1\":123," +
-                    "\"ContainedUnderComplex@odata.context\":\"http://host/$metadata#Entities1('abc')/Complex/ContainedUnderComplex\"," +
                     "\"ContainedUnderComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex/$ref\"," +
                     "\"ContainedUnderComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex\"," +
                     "\"ContainedUnderComplex\":[{" +
@@ -1197,7 +1196,6 @@ namespace Microsoft.OData.Tests
                 writer.WriteEnd();
             }, false, isFullMetadata: true);
 
-            Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.context\":\"http://host/$metadata#Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex/$entity\""));
             Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex/$ref\"," +
                                         "\"ContainedUnderDerivedComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex\""));
         }

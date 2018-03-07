@@ -1347,7 +1347,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         private static string ConvertSelectToString(SelectExpandClause selectExpandClause)
         {
             string selectClause, expandClause;
-            // todo (mikep): run this for each version
+            // todo: run this for each version
             selectExpandClause.GetSelectExpandPaths(ODataVersion.V4, out selectClause, out expandClause);
             return selectClause;
         }
@@ -1356,7 +1356,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         private static string ConvertExpandToString(SelectExpandClause selectExpandClause)
         {
             string selectClause, expandClause;
-            // todo (mikep): run this for each OData version
+            // todo: run this for each OData version
             selectExpandClause.GetSelectExpandPaths(ODataVersion.V4, out selectClause, out expandClause);
             return expandClause;
         }

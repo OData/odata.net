@@ -2735,6 +2735,12 @@ namespace Microsoft.OData.Edm
 
                     navigationProperties[navigationProperty] = new EdmPathExpression(paths);
 
+                    // In 7.4.1, FindNavigationTarget expected a binding path that included the path
+                    // to the contained entity set. In 7.4.2 FindNavigationTarget was fixed to work off
+                    // of the path from the contained entity set, but retained the old behavior as well
+                    // for backward compatibility. In the next breaking change we should remove that
+                    // behavior in FindNavigationTarget and remove this special handling of containsTarget
+                    // by always clearing the path.
                     if (!navigationProperty.ContainsTarget)
                     {
                         paths.Clear();
@@ -2843,13 +2849,15 @@ namespace Microsoft.OData.Edm
             }
 
             // Subsequent segments may be single-valued complex or containment nav props
-            // todo (mikep): handle error cases, complex properties
+            List<string> subPathSegments = new List<string>();
             for (int i = 1; i < pathSegments.Length && navigationSource != null; i++)
             {
+                subPathSegments.Add(pathSegments[i]);
                 IEdmNavigationProperty navProp = navigationSource.EntityType().FindProperty(pathSegments[i]) as IEdmNavigationProperty;
                 if (navProp != null)
                 {
-                    navigationSource = navigationSource.FindNavigationTarget(navProp);
+                    navigationSource = navigationSource.FindNavigationTarget(navProp, new EdmPathExpression(subPathSegments));
+                    subPathSegments.Clear();
                 }
             }
 

@@ -183,14 +183,12 @@ namespace Microsoft.OData.Tests
         private readonly static string containmentPayload = "{" +
                               "\"@odata.context\":\"http://host/$metadata#EntitySet/$entity\"," +
                               "\"ID\":\"TopEntity\"," +
-                              "\"ContainedNav1@odata.context\":\"http://host/$metadata#EntitySet('TopEntity')/ContainedNav1/$entity\"," +
                               "\"ContainedNav1\":{" +
                                 "\"ID\":\"ContainedNav1\"," +
                                 "\"NavOnContained\":{" +
                                     "\"ID\":\"NavEntity1\"" +
                                 "}" +
                               "}," +
-                              "\"ContainedNav2@odata.context\":\"http://host/$metadata#EntitySet('TopEntity')/ContainedNav2/$entity\"," +
                               "\"ContainedNav2\":{" +
                                 "\"ID\":\"ContainedNav2\"," +
                                 "\"NavOnContained\":{" +

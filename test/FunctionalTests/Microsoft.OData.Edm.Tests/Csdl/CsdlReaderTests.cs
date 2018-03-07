@@ -190,8 +190,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                       "</edmx:DataServices>" +
                     "</edmx:Edmx>";
             var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
-            //var setA = model.FindDeclaredNavigationSource("SetA");
-            //Assert.True(setA.NavigationPropertyBindings.First().NavigationProperty is UnresolvedNavigationPropertyPath);
+            var setA = model.FindDeclaredNavigationSource("Root");
+            var navSource = setA.NavigationPropertyBindings.First().Target;
+            Assert.True(navSource is IEdmContainedEntitySet);
+            navSource.Name.Should().Be("SetB");
         }
 
         [Fact]
@@ -238,8 +240,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var navPropBinding = educationSingleton.NavigationPropertyBindings.First();
             var target = navPropBinding.Target;
             target.Should().NotBeNull();
+            Assert.True(target is IEdmContainedEntitySet);
+            target.Name.Should().Be("users");
         }
-
+        
         [Fact]
         public void ReadNavigationPropertyPartnerTypeHierarchyTest()
         {

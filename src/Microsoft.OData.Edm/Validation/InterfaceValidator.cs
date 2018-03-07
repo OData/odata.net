@@ -314,6 +314,22 @@ namespace Microsoft.OData.Edm.Validation
                 }
             }
 
+            // Out-of-line annotations are found through the model visitor, but inline annotations
+            // are not found through normal traversal, so add in-line annotations here.
+            IEdmVocabularyAnnotatable annotatable = item as IEdmVocabularyAnnotatable;
+            if (this.model != null && annotatable != null)
+            {
+                foreach (IEdmVocabularyAnnotation annotation in annotatable.VocabularyAnnotations(this.model))
+                {
+                    // Inline annotations have a null target.
+                    if (annotation.Target == null)
+                    {
+                        // Target must be set for validation, so create a new EdmVocabularyAnnotation with the target set
+                        followupErrors.AddRange(this.ValidateStructure(new EdmVocabularyAnnotation(annotatable, annotation.Term, annotation.Qualifier, annotation.Value)));
+                    }
+                }
+            }
+
             foreach (object followupItem in followup)
             {
                 followupErrors.AddRange(this.ValidateStructure(followupItem));
