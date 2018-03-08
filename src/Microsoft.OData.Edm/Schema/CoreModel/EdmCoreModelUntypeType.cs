@@ -21,22 +21,34 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the Edm type kind of this type.
         /// </summary>
-        public override EdmTypeKind TypeKind => EdmTypeKind.Untyped;
+        public override EdmTypeKind TypeKind
+        {
+            get { return EdmTypeKind.Untyped; }
+        }
 
         /// <summary>
         /// Gets the scheme element type kind of this type.
         /// </summary>
-        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
+        public EdmSchemaElementKind SchemaElementKind
+        {
+            get { return EdmSchemaElementKind.TypeDefinition; }
+        }
 
         /// <summary>
         /// Gets the name of this type.
         /// </summary>
-        public string Name => CsdlConstants.TypeName_Untyped_Short;
+        public string Name
+        {
+            get { return CsdlConstants.TypeName_Untyped_Short; }
+        }
 
         /// <summary>
         /// Gets the namespace of this type.
         /// </summary>
-        public string Namespace => EdmConstants.EdmNamespace;
+        public string Namespace
+        {
+            get { return EdmConstants.EdmNamespace; }
+        }
 
         /// <summary>
         /// Private constructor.

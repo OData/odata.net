@@ -47,7 +47,6 @@ namespace Microsoft.OData.UriParser
             }
 
             this.EnableUriTemplateParsing = false;
-            this.EnableCaseInsensitive = false;
         }
 
         /// <summary>
