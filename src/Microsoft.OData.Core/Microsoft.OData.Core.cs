@@ -128,6 +128,7 @@ namespace Microsoft.OData {
         internal const string ODataMessageWriter_MetadataDocumentInRequest = "ODataMessageWriter_MetadataDocumentInRequest";
         internal const string ODataMessageWriter_DeltaInRequest = "ODataMessageWriter_DeltaInRequest";
         internal const string ODataMessageWriter_AsyncInRequest = "ODataMessageWriter_AsyncInRequest";
+        internal const string ODataMessageWriter_CannotWriteTopLevelNull = "ODataMessageWriter_CannotWriteTopLevelNull";
         internal const string ODataMessageWriter_CannotWriteNullInRawFormat = "ODataMessageWriter_CannotWriteNullInRawFormat";
         internal const string ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind = "ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind";
         internal const string ODataMessageWriter_IncompatiblePayloadKinds = "ODataMessageWriter_IncompatiblePayloadKinds";

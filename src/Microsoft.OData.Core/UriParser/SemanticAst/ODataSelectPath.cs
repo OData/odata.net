@@ -68,7 +68,7 @@ namespace Microsoft.OData.UriParser
                         throw new ODataException(ODataErrorStrings.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
                     }
                 }
-                else if (segment is DynamicPathSegment || segment is PropertySegment || segment is TypeSegment)
+                else if (segment is DynamicPathSegment || segment is PropertySegment || segment is TypeSegment || segment is AnnotationSegment)
                 {
                     index++;
                     continue;

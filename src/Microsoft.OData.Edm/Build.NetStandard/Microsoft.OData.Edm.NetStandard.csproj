@@ -1204,6 +1204,9 @@
     <Compile Include="..\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Vocabularies\AlternateKeysVocabularyModel.cs</Link>
     </Compile>
+    <Compile Include="..\Vocabularies\AuthorizationVocabularyModel.cs">
+      <Link>Vocabularies\AuthorizationVocabularyModel.cs</Link>
+    </Compile>
     <Compile Include="..\Vocabularies\Annotations\EdmDirectValueAnnotation.cs">
       <Link>Vocabularies\Annotations\EdmDirectValueAnnotation.cs</Link>
     </Compile>
@@ -1533,6 +1536,9 @@
   <ItemGroup>
     <EmbeddedResource Include="..\Vocabularies\AlternateKeysVocabularies.xml">
       <Link>Vocabularies\AlternateKeysVocabularies.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Vocabularies\AuthorizationVocabularies.xml">
+      <Link>Vocabularies\AuthorizationVocabularies.xml</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\Vocabularies\CapabilitiesVocabularies.xml">
       <Link>Vocabularies\CapabilitiesVocabularies.xml</Link>

@@ -20,6 +20,13 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The separator of property annotations.</summary>
         internal const char ODataPropertyAnnotationSeparatorChar = '@';
 
+        /// <summary>
+        /// The 'null' property name for the Json Light value property.
+        /// This is an OData 3.0 protocol element used for compatibility
+        /// with 6.x library version.
+        /// </summary>
+        internal const string ODataNullPropertyName = "null";
+
         /// <summary>The value 'true' for the OData null annotation.</summary>
         internal const string ODataNullAnnotationTrueValue = "true";
 

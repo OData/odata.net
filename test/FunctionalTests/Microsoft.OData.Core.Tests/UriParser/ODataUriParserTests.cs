@@ -13,6 +13,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -304,7 +305,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DefaultEnableCaseInsensitiveBuiltinIdentifierShouldBeFalse()
         {
-            new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).Resolver.EnableCaseInsensitive.Should().BeFalse();
+            new ODataUriResolver().EnableCaseInsensitive.Should().BeFalse();
         }
 
         [Fact]
@@ -417,6 +418,74 @@ namespace Microsoft.OData.Tests.UriParser
             parser.ParseDeltaToken().Should().Be("def");
         }
 
+        [Theory]
+        [InlineData("People?$select=@Fully.Qualified.Namespace.PrimitiveTerm", "Fully.Qualified.Namespace.PrimitiveTerm", "Edm.String", false)]
+        [InlineData("People?$select=@FuLly.quAlIfIeD.naMesPaCE.PRImiTIveTErm", "Fully.Qualified.Namespace.PrimitiveTerm", "Edm.String", true)]
+        [InlineData("People?$select=@Fully.Qualified.Namespace.ComplexTerm", "Fully.Qualified.Namespace.ComplexTerm", "Fully.Qualified.Namespace.Address", false)]
+        [InlineData("People?$select=@fUllY.QUalIFieD.NAMespaCe.compLExTerm", "Fully.Qualified.Namespace.ComplexTerm", "Fully.Qualified.Namespace.Address", true)]
+        [InlineData("People?$select=@Org.OData.Core.V1.Description", "Org.OData.Core.V1.Description", "Edm.String", false)]
+        [InlineData("People?$select=@ORg.oDAta.cOrE.V1.dEscrIPtioN", "Org.OData.Core.V1.Description", "Edm.String", true)]
+        [InlineData("People?$select=@Fully.Qualified.Namespace.UnknownTerm", "Fully.Qualified.Namespace.UnknownTerm", "Edm.Untyped", false)]
+        [InlineData("People?$select=@fuLLy.quaLIfied.NAMespACe.uNKNownTerm", "fuLLy.quaLIfied.NAMespACe.uNKNownTerm", "Edm.Untyped", true)]
+        public void ParseSelectAnnotationShouldWork(string relativeUriString, string termName, string typeName, bool caseInsensitive)
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.Resolver.EnableCaseInsensitive = caseInsensitive;
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            selectItem.Should().NotBeNull();
+            AnnotationSegment annotationSegment = selectItem.SelectedPath.FirstSegment as AnnotationSegment;
+            annotationSegment.Should().NotBeNull();
+            annotationSegment.Term.FullName().Should().Be(termName);
+            annotationSegment.Term.Type.FullName().Should().Be(typeName);
+        }
+
+        [Theory]
+        [InlineData("People?$select=@odata.type", "@odata.type")]
+        [InlineData("People?$select=@odata.unknown", "@odata.unknown")]
+        public void ParseSelectODataControlInformationShouldFail(string relativeUriString, string term)
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            Action action = () => parser.ParseSelectAndExpand();
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriSelectParser_TermIsNotValid(term));
+        }
+
+        [Fact]
+        public void ParseSelectPropertyAnnotationShouldWork()
+        {
+            string relativeUriString = "People?$select=Name/@Fully.Qualified.Namespace.PrimitiveTerm";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            selectItem.Should().NotBeNull();
+            List<ODataPathSegment> segments = selectItem.SelectedPath.ToList();
+            segments.Count.Should().Be(2);
+            PropertySegment propertySegment = segments[0] as PropertySegment;
+            propertySegment.Property.Name.Should().Be("Name");
+            AnnotationSegment annotationSegment = segments[1] as AnnotationSegment;
+            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.PrimitiveTerm");
+            annotationSegment.Term.Type.TypeKind().Should().Be(EdmTypeKind.Primitive);
+        }
+
+        [Fact]
+        public void ParseSelectComplexAnnotationWithPathShouldWork()
+        {
+            string relativeUriString = "People?$select=@Fully.Qualified.Namespace.ComplexTerm/Street";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            var selectExpand = parser.ParseSelectAndExpand();
+            selectExpand.Should().NotBeNull();
+            PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;
+            List<ODataPathSegment> segments = selectItem.SelectedPath.ToList();
+            segments.Count.Should().Be(2);
+            AnnotationSegment annotationSegment = segments[0] as AnnotationSegment;
+            annotationSegment.Term.FullName().Should().Be("Fully.Qualified.Namespace.ComplexTerm");
+            annotationSegment.Term.Type.FullName().Should().Be("Fully.Qualified.Namespace.Address");
+            PropertySegment propertySegment = segments[1] as PropertySegment;
+            propertySegment.Property.Name.Should().Be("Street");
+        }
+
         [Fact]
         public void ParseNoDollarQueryOptionsShouldReturnNullIfNoDollarQueryOptionsIsNotEnabled()
         {
@@ -454,11 +523,9 @@ namespace Microsoft.OData.Tests.UriParser
         // 2. Case insensitive, No dollar not enabled.
         [InlineData("People?$select=ID&select=Name", true, false, "$select", false)]
         [InlineData("People?$select=ID&SELECT=Name", true, false, "$select", false)]
-
         // 3. Case sensitive, No dollar not enabled, be treated as custom query options.
         // Duplication is allowed.
         [InlineData("People?select=ID&select=Name", false, false, "select", false)]
-
         // 4. Should throw duplicate query options exception.
         [InlineData("People?$select=ID&$select=Name", false, false, "$select", true)]
         [InlineData("People?select=ID&$select=Name", false, true, "select", true)]

@@ -1903,7 +1903,8 @@ namespace Microsoft.OData.Edm.Validation
                     if (elementType.Definition == EdmCoreModelComplexType.Instance ||
                         elementType.Definition == EdmCoreModel.Instance.GetPrimitiveType())
                     {
-                        context.AddError(operation.Location(),
+                        context.AddError(
+                            operation.Location(),
                             EdmErrorCode.OperationWithCollectionOfAbstractReturnTypeInvalid,
                             Strings.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType(operation.ReturnType.FullName(), operation.FullName()));
                     }

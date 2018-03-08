@@ -240,8 +240,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             Uri originalCase = new Uri(originalStr, UriKind.Relative);
             Uri caseInsensitiveCase = new Uri(caseInsensitiveStr, UriKind.Relative);
             TestExtension(
-                () => new ODataUriParser(model, originalCase),
-                () => new ODataUriParser(model, caseInsensitiveCase),
+                () => new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } },
+                () => new ODataUriParser(model, caseInsensitiveCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } },
                 parse,
                 verify,
                 errorMessage,
@@ -297,7 +297,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             if (verify != null)
             {
                 // Original case should pass
-                ODataUriParser parser = new ODataUriParser(model, originalCase);
+                ODataUriParser parser = new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
                 verify(parse(parser));
             }
 
@@ -306,6 +306,29 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             action.ShouldThrow<ODataException>().WithMessage(conflictMessage);
         }
 
+        protected void TestConflictWithExactMatch<TResult>(
+            string originalStr,
+            string caseInsensitiveString,
+            Func<ODataUriParser, TResult> parse,
+            Action<TResult> verify,
+            string conflictMessage,
+            IEdmModel model,
+            ODataUriResolver resolver)
+        {
+            Uri originalCase = new Uri(originalStr, UriKind.Relative);
+            Uri insensitiveCase = new Uri(caseInsensitiveString, UriKind.Relative);
+
+            // Original string should pass case sensitive
+            ODataUriParser parser = new ODataUriParser(model, originalCase) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
+            verify(parse(parser));
+
+            // Original string should pass case insensitive
+            verify(parse(new ODataUriParser(model, originalCase) { Resolver = resolver }));
+
+            // Insensitive case should fail with case insensitive parser with errorMessage
+            Action action = () => parse(new ODataUriParser(model, insensitiveCase) { Resolver = resolver });
+            action.ShouldThrow<ODataException>().WithMessage(conflictMessage);
+        }
 
         protected void TestNotExist<TResult>(
             string originalStr,

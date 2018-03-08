@@ -63,6 +63,18 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>UserDefinedValue</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override bool Translate(AnnotationSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return false;
+        }
+
+        /// <summary>
         /// Translate an OpenPropertySegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
