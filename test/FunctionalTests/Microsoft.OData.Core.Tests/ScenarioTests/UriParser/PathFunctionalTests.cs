@@ -797,6 +797,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void EntityReferenceCannotAppearAfterBatchReference()
+        {
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$42/$ref"));
+            parser.BatchReferenceCallback = contentId =>
+            {
+                contentId.Should().Be("$42");
+                return new BatchReferenceSegment(contentId, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
+            };
+
+            Action parse = () => parser.ParsePath();
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.PathParser_EntityReferenceNotSupported("$42"));
+        }
+
+        [Fact]
         public void EntitySetKeyWithOpertionalSuffix()
         {
             // long

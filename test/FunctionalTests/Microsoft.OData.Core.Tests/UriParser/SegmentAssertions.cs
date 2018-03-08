@@ -89,6 +89,14 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<NavigationPropertySegment>(navPropSegment);
         }
 
+        public static AndConstraint<ReferenceSegment> ShouldBeReferenceSegment(this ODataPathSegment segment, IEdmNavigationSource navigationSource)
+        {
+            segment.Should().BeOfType<ReferenceSegment>();
+            ReferenceSegment referenceSegment = segment.As<ReferenceSegment>();
+            referenceSegment.TargetEdmNavigationSource.Should().Be(navigationSource);
+            return new AndConstraint<ReferenceSegment>(referenceSegment);
+        }
+
         public static AndConstraint<DynamicPathSegment> ShouldBeDynamicPathSegment(this ODataPathSegment segment, string identifier)
         {
             segment.Should().BeOfType<DynamicPathSegment>();
