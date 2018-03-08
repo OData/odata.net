@@ -147,7 +147,7 @@
     <Compile Include="Schema\BadPathTypeReference.cs" />
     <Compile Include="Schema\CoreModel\EdmCoreModelComplexType.cs" />
     <Compile Include="Schema\CoreModel\EdmCoreModelPrimitiveType.cs" />
-    <Compile Include="Schema\CoreModel\EdmCoreModelUntypeType.cs" />
+    <Compile Include="Schema\CoreModel\EdmCoreModelUntypedType.cs" />
     <Compile Include="Schema\CoreModel\IEdmCoreModelElement.cs" />
     <Compile Include="Schema\CoreModel\EdmCoreModelEntityType.cs" />
     <Compile Include="Schema\CoreModel\EdmCoreModelPathType.cs" />

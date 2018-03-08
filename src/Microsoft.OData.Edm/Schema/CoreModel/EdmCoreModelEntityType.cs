@@ -21,6 +21,13 @@ namespace Microsoft.OData.Edm
         public static readonly EdmCoreModelEntityType Instance = new EdmCoreModelEntityType();
 
         /// <summary>
+        /// Private constructor.
+        /// </summary>
+        private EdmCoreModelEntityType()
+        {
+        }
+
+        /// <summary>
         /// Gets the kind of this type.
         /// </summary>
         public override EdmTypeKind TypeKind
@@ -111,13 +118,9 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">The name of the property being found.</param>
         /// <returns>The Edm.EntityType is always without any declared properties.</returns>
-        public IEdmProperty FindProperty(string name) => null;
-
-        /// <summary>
-        /// Private constructor.
-        /// </summary>
-        private EdmCoreModelEntityType()
+        public IEdmProperty FindProperty(string name)
         {
+            return null;
         }
     }
 }

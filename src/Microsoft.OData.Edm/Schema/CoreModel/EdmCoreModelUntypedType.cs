@@ -19,6 +19,13 @@ namespace Microsoft.OData.Edm
         public static readonly EdmCoreModelUntypedType Instance = new EdmCoreModelUntypedType();
 
         /// <summary>
+        /// Private constructor.
+        /// </summary>
+        private EdmCoreModelUntypedType()
+        {
+        }
+
+        /// <summary>
         /// Gets the Edm type kind of this type.
         /// </summary>
         public override EdmTypeKind TypeKind
@@ -48,13 +55,6 @@ namespace Microsoft.OData.Edm
         public string Namespace
         {
             get { return EdmConstants.EdmNamespace; }
-        }
-
-        /// <summary>
-        /// Private constructor.
-        /// </summary>
-        private EdmCoreModelUntypedType()
-        {
         }
     }
 }

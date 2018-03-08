@@ -21,6 +21,19 @@ namespace Microsoft.OData.Edm
         public static readonly EdmCoreModelComplexType Instance = new EdmCoreModelComplexType();
 
         /// <summary>
+        /// Gets the base type of this type.
+        /// The Edm.ComplexType is always without base type.
+        /// </summary>
+        public IEdmStructuredType BaseType = null;
+
+        /// <summary>
+        /// private constructor.
+        /// </summary>
+        private EdmCoreModelComplexType()
+        {
+        }
+
+        /// <summary>
         /// Gets the kind of this type.
         /// </summary>
         public override EdmTypeKind TypeKind
@@ -71,12 +84,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the base type of this type.
-        /// The Edm.ComplexType is always without base type.
-        /// </summary>
-        public IEdmStructuredType BaseType = null;
-
-        /// <summary>
         /// Gets the properties declared immediately within this type.
         /// The Edm.ComplexType is always without any declared properties.
         /// </summary>
@@ -99,13 +106,9 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">The name of the property being found.</param>
         /// <returns>The Edm.ComplexType is always without any declared properties.</returns>
-        public IEdmProperty FindProperty(string name) => null;
-
-        /// <summary>
-        /// private constructor.
-        /// </summary>
-        private EdmCoreModelComplexType()
+        public IEdmProperty FindProperty(string name)
         {
+            return null;
         }
     }
 }
