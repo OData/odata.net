@@ -13,6 +13,7 @@ using FluentAssertions;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
 
@@ -867,6 +868,58 @@ namespace Microsoft.OData.Tests.JsonLight
             property.InstanceAnnotations.Count.Should().Be(0);
         }
 
+        [Fact]
+        public void ParsingPrimitiveTypePropertyInsideComplextPropertyShouldSucceed()
+        {
+            EdmModel model = this.CreateEdmModelWithEntity();
+
+            // Add complex type to model.
+            EdmComplexType complexType = new EdmComplexType("TestNamespace", "Addr");
+            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
+            IEdmComplexTypeReference complexTypeReference = new EdmComplexTypeReference(complexType, true);
+
+            EdmEntityType entityType = model.GetEntityType("TestNamespace.Customer");
+            entityType.AddStructuralProperty("Address", complexTypeReference);
+
+            IEdmTypeReference primitiveTypeRef =
+                ((IEdmComplexTypeReference) (entityType.GetProperty("Address").Type)).FindProperty(
+                    "CountryRegion").Type;
+
+            string payload = @"{
+                ""@odata.context"":""http://odata.org/test/$metadata#Customers(1)/Address/CountryRegion"",
+                ""value"":""US""
+            }";
+
+            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext(payload, model));
+            ODataProperty property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
+            property.Value.Should().Be("US");
+        }
+
+        [Fact]
+        public void ParsingTopLevelComplextPropertyShouldFail()
+        {
+            EdmModel model = this.CreateEdmModelWithEntity();
+
+            // Add complex type to model.
+            EdmComplexType complexType = new EdmComplexType("TestNamespace", "Addr");
+            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
+            IEdmComplexTypeReference complexTypeReference = new EdmComplexTypeReference(complexType, true);
+
+            EdmEntityType entityType = model.GetEntityType("TestNamespace.Customer");
+            entityType.AddStructuralProperty("Address", complexTypeReference);
+
+            string payload = @"{
+                ""@odata.context"":""http://odata.org/test/$metadata#Customers(1)/Address"",
+                ""value"":{""CountryRegion"":""US""}
+            }";
+
+            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext(payload, model));
+
+            // Currently using de-serializer to read top-level complex property directly is not supported. Need to use ODataReader.Read API instead.
+            Action action = () => deserializer.ReadTopLevelProperty(complexTypeReference);
+            action.ShouldThrow<ODataException>().WithMessage(
+                "An internal error 'ODataJsonLightPropertyAndValueDeserializer_ReadPropertyValue' occurred.");
+        }
         #endregion
 
         #region Complex properties instance annotation
@@ -1078,7 +1131,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             var odataReader = this.CreateJsonLightInputContext("\"CountryRegion\":\"China\"", model, false)
                 .CreateResourceReader(null, complexType);
-            Action action = () => 
+            Action action = () =>
             {
                 while (odataReader.Read())
                 {

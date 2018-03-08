@@ -2284,26 +2284,29 @@ namespace Microsoft.OData.JsonLight
                         ODataResourceBase resource = resourceState.Resource;
 
                         IEnumerable<IEdmProperty> selectedProperties;
+
                         if (resourceState.SelectedProperties == SelectedPropertiesNode.EntireSubtree)
                         {
-                            selectedProperties = edmStructuredType.DeclaredProperties;
+                            selectedProperties = GetSelfAndBaseTypeProperties(edmStructuredType);
                         }
                         else
-                        { // Partial subtree. Combine navigation properties and selected properties at the node with distinct.
+                        {
+                            // Partial subtree. Combine navigation properties and selected properties at the node with distinct.
                             selectedProperties =
                                 resourceState.SelectedProperties.GetSelectedNavigationProperties(edmStructuredType)
                                 as IEnumerable<IEdmProperty>;
                             selectedProperties = selectedProperties.Concat(
-                                resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType).Values)
+                                resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType))
                                 .Distinct();
                         }
 
                         foreach (IEdmProperty currentProperty in selectedProperties)
                         {
                             Debug.Assert(currentProperty.Type != null, "currentProperty.Type != null");
-                            if (!currentProperty.Type.IsNullable)
+                            if (!currentProperty.Type.IsNullable || currentProperty.PropertyKind == EdmPropertyKind.Navigation)
                             {
-                                // Skip declared properties that are not null-able types.
+                                // Skip declared properties that are not null-able types, and declared navigation properties
+                                // which are specified using odata.navigationlink annotations whose absence stand for null values.
                                 continue;
                             }
 
@@ -2342,6 +2345,21 @@ namespace Microsoft.OData.JsonLight
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Get all properties defined by the EDM structural type and its base types.
+        /// </summary>
+        /// <param name="edmStructuredType">The EDM structural type.</param>
+        /// <returns>All the properties of this type.</returns>
+        private static IEnumerable<IEdmProperty> GetSelfAndBaseTypeProperties(IEdmStructuredType edmStructuredType)
+        {
+            if (edmStructuredType == null)
+            {
+                return Enumerable.Empty<IEdmProperty>();
+            }
+
+            return edmStructuredType.DeclaredProperties.Concat(GetSelfAndBaseTypeProperties(edmStructuredType.BaseType));
         }
 
         /// <summary>

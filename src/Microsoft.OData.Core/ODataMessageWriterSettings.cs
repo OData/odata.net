@@ -414,6 +414,7 @@ namespace Microsoft.OData
             this.Version = other.Version;
             this.OmitNullValues = other.OmitNullValues;
             this.LibraryCompatibility = other.LibraryCompatibility;
+
             this.validations = other.validations;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;

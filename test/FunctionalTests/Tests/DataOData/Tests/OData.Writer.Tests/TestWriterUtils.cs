@@ -175,9 +175,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         assert.IsTrue(testMessage is TestResponseMessage, "Expected response message type.");
                         ODataPreferenceHeader preferenceAppliedHeader =
                             new ODataPreferenceHeader((TestResponseMessage) testMessage);
-                        assert.IsNotNull(preferenceAppliedHeader, "Expected to find non-null Preference-Applied header.");
+                        assert.IsNotNull(preferenceAppliedHeader, "Expect to find non-null Preference-Applied header.");
                         assert.AreEqual(Microsoft.OData.ODataConstants.OmitValuesNulls,
-                            preferenceAppliedHeader.OmitValues, "Expected omit-values value to be 'nulls'");
+                            preferenceAppliedHeader.OmitValues, "Expect omit-values value to be 'nulls'");
                     }
                     else
                     {
@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         ODataPreferenceHeader preferHeader =
                             new ODataPreferenceHeader((TestRequestMessage) testMessage);
                         assert.IsNull(preferHeader.OmitValues,
-                            "Expected omit-value preference is not found in the Prefer header");
+                            "Expect omit-value preference not be found in the Prefer header");
                     }
                 }
             }

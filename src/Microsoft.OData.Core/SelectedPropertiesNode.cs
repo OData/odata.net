@@ -38,8 +38,8 @@ namespace Microsoft.OData
         /// <summary>An empty set of navigation properties to return when nothing is selected.</summary>
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
 
-        /// <summary>An empty dictionary of EDM properties to return when nothing is selected.</summary>
-        private static readonly Dictionary<string, IEdmProperty> EmptyEdmProperties = new Dictionary<string, IEdmProperty>(StringComparer.Ordinal);
+        /// <summary>An empty enumeration of EDM properties to return when nothing is selected.</summary>
+        private static readonly IEnumerable<IEdmProperty> EmptyEdmProperties = Enumerable.Empty<IEdmProperty>();
 
         /// <summary>The type of the current node.</summary>
         private SelectionType selectionType = SelectionType.PartialSubtree;
@@ -449,7 +449,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="structuredType">The current structured type.</param>
         /// <returns>The selected properties at this node level.</returns>
-        internal IDictionary<string, IEdmProperty> GetSelectedProperties(IEdmStructuredType structuredType)
+        internal IEnumerable<IEdmProperty> GetSelectedProperties(IEdmStructuredType structuredType)
         {
             if (this.selectionType == SelectionType.Empty)
             {
@@ -464,16 +464,13 @@ namespace Microsoft.OData
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
             {
-                return structuredType.DeclaredProperties.ToDictionary(sp => sp.Name, StringComparer.Ordinal);
+                return structuredType.DeclaredProperties;
             }
 
             Debug.Assert(this.selectedProperties != null, "selectedProperties != null");
 
-            IDictionary<string, IEdmProperty> selectedEdmProperties = this.selectedProperties
-                .Select(structuredType.FindProperty)
-                .ToDictionary(p => p.Name, StringComparer.Ordinal);
-
-            return selectedEdmProperties;
+            // Get declared properties selected, and filter out unrecognized properties.
+            return this.selectedProperties.Select(structuredType.FindProperty).OfType<IEdmProperty>();
         }
 
         /// <summary>

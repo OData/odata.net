@@ -181,6 +181,8 @@ namespace Microsoft.OData.JsonLight
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
 
+            ODataValue value = property.ODataValue;
+
             string propertyName = property.Name;
 
             if (this.JsonLightOutputContext.MessageWriterSettings.Validations != ValidationKinds.None)
@@ -197,6 +199,19 @@ namespace Microsoft.OData.JsonLight
                 this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(propertyName, owningType);
             }
 
+            // Optimization for null values:
+            // If no validation is required, we don't need property serialization info and could try to skip writing null property right away
+            // If this property is top-level, we cannot optimize here due to backward-compatibility requirement for OData-6.x.
+            // For very wide and sparse outputs it allows to avoid a lot of dictionary lookups
+            bool isNullValue = (value == null || value is ODataNullValue);
+            if (isNullValue && omitNullValues)
+            {
+                if (!this.currentPropertyInfo.IsTopLevel && !this.MessageWriterSettings.ThrowIfTypeConflictsWithMetadata)
+                {
+                    return;
+                }
+            }
+
             WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
 
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
@@ -207,8 +222,6 @@ namespace Microsoft.OData.JsonLight
             }
 
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
-
-            ODataValue value = property.ODataValue;
 
             // handle ODataUntypedValue
             ODataUntypedValue untypedValue = value as ODataUntypedValue;
@@ -233,7 +246,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            if (value is ODataNullValue || value == null)
+            if (isNullValue)
             {
                 this.WriteNullProperty(property, omitNullValues);
                 return;

@@ -592,7 +592,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
         internal AndConstraint<SelectedPropertiesNodeAssertions> HaveProperties(IEdmEntityType entityType, params string[] propertyNames)
         {
-            this.Subject.As<SelectedPropertiesNode>().GetSelectedProperties(entityType).Keys.Should().BeEquivalentTo(propertyNames);
+            this.Subject.As<SelectedPropertiesNode>().GetSelectedProperties(entityType).Select(p => p.Name).Should().BeEquivalentTo(propertyNames);
             return new AndConstraint<SelectedPropertiesNodeAssertions>(this);
         }
 

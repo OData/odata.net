@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Tests.JsonLight;
@@ -367,24 +368,26 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
         }
 
-        [Fact]
-        public void ReadingTypeDefinitionPayloadJsonLightWithOmittedNullValues()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingTypeDefinitionPayloadJsonLightWithOmittedNullValues(bool bNullValuesOmitted)
         {
             EdmEntityType entityType;
             EdmEntitySet entitySet;
             EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
 
             const string payload = @"
-{
+            {
                 ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity"",
                 ""@odata.id"":""http://mytest"",
                 ""Id"":0,
                 ""Weight"":60.5,
                 ""Address"":{""CountryRegion"":""US"", ""City"":""Redmond""}
-}";
+            }";
 
             List<ODataResource> entries = new List<ODataResource>();
-            ODataNestedResourceInfo navigationLink = null;
+            List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
             this.ReadEntryPayload(model, payload, entitySet, entityType,
                 reader =>
                 {
@@ -394,13 +397,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             entries.Add(reader.Item as ODataResource);
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
-                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            nestedResourceInfos.Add((ODataNestedResourceInfo)reader.Item);
                             break;
                         default:
                             break;
                     }
                 },
-                nullValuesOmitted: true);
+                nullValuesOmitted: bNullValuesOmitted);
 
             Assert.Equal(2, entries.Count);
 
@@ -409,20 +412,38 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 .Value.Should().Be(0);
             person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal))
                 .Value.Should().Be(60.5);
-            // omitted value should be restored to null.
-            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
-                .Value.Should().BeNull();
+            if (bNullValuesOmitted)
+            {
+                // Omitted value should be restored to null.
+                person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+            }
+            else
+            {
+                person.Properties.Any(s => string.Equals(s.Name, "Education",StringComparison.Ordinal)).Should().BeFalse();
+            }
 
             ODataResource address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.Ordinal))
                 .Value.Should().Be("US");
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.Ordinal))
                 .Value.Should().Be("Redmond");
-            // Omitted value should be restored to null.
-            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "ZipCode", StringComparison.Ordinal))
-                .Value.Should().BeNull();
 
-            navigationLink.Name.Should().Be("Address");
+            if (bNullValuesOmitted)
+            {
+                // Omitted value should be restored to null.
+                address.Properties.FirstOrDefault(s => string.Equals(s.Name, "ZipCode", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+            }
+            else
+            {
+                address.Properties.Any(s => string.Equals(s.Name, "ZipCode", StringComparison.Ordinal)).Should().BeFalse();
+            }
+
+            nestedResourceInfos.Count().Should().Be(2);
+            nestedResourceInfos[0].Name.Should().Be("Address");
+            // Navigation link missing from payload.
+            nestedResourceInfos[1].Name.Should().Be("Company");
         }
 
         [Fact]
@@ -845,8 +866,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             read.ShouldThrow<ODataException>().WithMessage("A null value was found for the property named 'CountriesOrRegions', which has the expected type 'Collection(Edm.String)[Nullable=False]'. The expected type 'Collection(Edm.String)[Nullable=False]' does not allow null values.");
         }
 
-        [Fact]
-        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValues()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValues(
+            bool bNullValuesOmitted)
         {
             EdmEntityType entityType;
             EdmEntitySet entitySet;
@@ -872,29 +896,55 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                             break;
                     }
                 },
-                nullValuesOmitted: true);
+                nullValuesOmitted: bNullValuesOmitted);
 
             Assert.Equal(2, entries.Count);
 
             ODataResource edu = entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
             edu.Should().NotBeNull();
             edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal)).Value.Should().Be(1);
-            // null-able collection should be restored.
-            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Value.Should().BeNull();
-            // null-able property value should be restored.
-            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Value.Should().BeNull();
+
+            if (bNullValuesOmitted)
+            {
+                // null-able collection should be restored.
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Value.Should().BeNull();
+                // null-able property value should be restored.
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Value.Should().BeNull();
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "OrgId", StringComparison.Ordinal)).Value.Should().BeNull();
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "OrgCategory", StringComparison.Ordinal)).Value.Should().BeNull();
+
+            }
+            else
+            {
+                edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+                edu.Properties.Any(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Should().BeFalse();
+                edu.Properties.Any(s => string.Equals(s.Name, "OrgId", StringComparison.Ordinal)).Should().BeFalse();
+                edu.Properties.Any(s => string.Equals(s.Name, "OrgCategory", StringComparison.Ordinal)).Should().BeFalse();
+            }
 
             ODataResource person = entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
             person.Should().NotBeNull();
             person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal)).Value.Should().Be(0);
-            // omitted null-able property should be restored as null.
-            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Value.Should().BeNull();
+
+            if (bNullValuesOmitted)
+            {
+                // omitted null-able property should be restored as null.
+                person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Value.Should().BeNull();
+            }
+            else
+            {
+                person.Properties.Any(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Should().BeFalse();
+            }
+
             // missing non-null-able property should not be restored.
             person.Properties.Any(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal)).Should().BeFalse();
         }
 
-        [Fact]
-        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesEntireSubTree()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesEntireSubTree(
+            bool bNullValuesOmitted)
         {
             EdmEntityType entityType;
             EdmEntitySet entitySet;
@@ -904,13 +954,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             // null-able property Address is selected, thus should be restored.
             // Property Education is null-able.
             const string payloadWithQueryOption = @"{
-                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,Education,Address)/$entity"",
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,UnknownPropX,Education,Address)/$entity"",
                     ""@odata.id"":""http://mytest"",
                     ""Id"":0,
                     ""Education"":{""Id"":1}
                 }";
             const string payloadWithWildcardInQueryOption = @"{
-                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,Education/*,Address)/$entity"",
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,UnknownPropX,Education/*,Address)/$entity"",
                     ""@odata.id"":""http://mytest"",
                     ""Id"":0,
                     ""Education"":{""Id"":1}
@@ -919,7 +969,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             foreach (string payload in new string[] {payloadWithQueryOption, payloadWithWildcardInQueryOption})
             {
                 List<ODataResource> entries = new List<ODataResource>();
-                List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
+                List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
                 this.ReadEntryPayload(model, payload, entitySet, entityType,
                     reader =>
                     {
@@ -929,17 +979,17 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                                 entries.Add(reader.Item as ODataResource);
                                 break;
                             case ODataReaderState.NestedResourceInfoStart:
-                                navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
+                                nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
                                 break;
                             default:
                                 break;
                         }
                     },
-                    nullValuesOmitted: true);
+                    nullValuesOmitted: bNullValuesOmitted);
 
                 entries.Count.Should().Be(2);
-                navigationLinks.Count.Should().Be(1);
-                navigationLinks.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                nestedResourceInfos.Count.Should().Be(1);
+                nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
                     .Should().NotBeNull();
 
                 // Education
@@ -948,30 +998,54 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 edu.Should().NotBeNull();
                 edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
                     .Value.Should().Be(1);
-                // null-able collection should be restored.
-                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal))
-                    .Value.Should().BeNull();
-                // null-able property value should be restored.
-                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal))
-                    .Value.Should().BeNull();
+                if (bNullValuesOmitted)
+                {
+                    // null-able collection should be restored.
+                    edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal))
+                        .Value.Should().BeNull();
+                    // null-able property value should be restored.
+                    edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal))
+                        .Value.Should().BeNull();
+                }
+                else
+                {
+                    edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+                    edu.Properties.Any(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Should().BeFalse();
+                }
 
                 // Person
                 ODataResource person =
                     entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
                 person.Should().NotBeNull();
+
+                // Verify that unknown property doesn't cause anomaly and is not restored.
+                person.Properties.Any(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Should().BeFalse();
+
                 person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
                     .Value.Should().Be(0);
-                // selected null-able property/navigationLink should be restored as null.
-                person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Address", StringComparison.Ordinal))
-                    .Value.Should().BeNull();
+
+                if (bNullValuesOmitted)
+                {
+                    // selected null-able property should be restored as null.
+                    person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Address", StringComparison.Ordinal))
+                        .Value.Should().BeNull();
+                }
+                else
+                {
+                    person.Properties.Any(s => string.Equals(s.Name, "Address", StringComparison.Ordinal)).Should().BeFalse();
+                }
+
                 // null-able but not selected properties and not-null-able properties should not be restored.
                 person.Properties.Any(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Should().BeFalse();
                 person.Properties.Any(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal)).Should().BeFalse();
             }
         }
 
-        [Fact]
-        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesPartialSubTree()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesPartialSubTree(
+            bool bNullValuesOmitted)
         {
             EdmEntityType entityType;
             EdmEntitySet entitySet;
@@ -980,74 +1054,260 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             // null-able property Height is not selected, thus should not be restored.
             // null-able property Address is selected, thus should be restored.
             // Property Education is null-able.
-            const string payloadWithWildcardInQueryOption = @"{
-                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20Education/Id,%20Education/SchoolName,%20Address)/$entity"",
+            const string payloadWithSelectedPropertiesPartialSubTreeInQueryOption = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20Education/Id,%20Education/SchoolName,%20Education/UnknownPropX,%20Address)/$entity"",
                     ""@odata.id"":""http://mytest"",
                     ""Id"":0,
                     ""Education"":{""Id"":1}
                 }";
 
-            foreach (string payload in new string[] { payloadWithWildcardInQueryOption })
-            {
-                List<ODataResource> entries = new List<ODataResource>();
-                List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
-                this.ReadEntryPayload(model, payload, entitySet, entityType,
-                    reader =>
+            List<ODataResource> entries = new List<ODataResource>();
+            List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+            this.ReadEntryPayload(model, payloadWithSelectedPropertiesPartialSubTreeInQueryOption, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
                     {
-                        switch (reader.State)
-                        {
-                            case ODataReaderState.ResourceStart:
-                                entries.Add(reader.Item as ODataResource);
-                                break;
-                            case ODataReaderState.NestedResourceInfoStart:
-                                navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
-                                break;
-                            default:
-                                break;
-                        }
-                    },
-                    nullValuesOmitted: true);
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                nullValuesOmitted: bNullValuesOmitted);
 
-                entries.Count.Should().Be(2);
-                navigationLinks.Count.Should().Be(1);
-                navigationLinks.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
-                    .Should().NotBeNull();
+            entries.Count.Should().Be(2);
+            nestedResourceInfos.Count.Should().Be(1);
+            nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                .Should().NotBeNull();
 
-                // Education
-                ODataResource edu =
-                    entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
-                edu.Should().NotBeNull();
-                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
-                    .Value.Should().Be(1);
+            // Education
+            ODataResource edu =
+                entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+            edu.Should().NotBeNull();
+            edu.Properties.Any(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Should().BeFalse();
+
+            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                .Value.Should().Be(1);
+            if (bNullValuesOmitted)
+            {
                 // null-able property value should be restored.
                 edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal))
                     .Value.Should().BeNull();
-                // not selected property should not be restored.
-                edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
             }
+            else
+            {
+                edu.Properties.Any(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Should().BeFalse();
+            }
+
+            // not selected property should not be restored.
+            edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
         }
 
-        [Fact]
-        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesPartialSubTreeAndBaseTypeProperty()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingPropertyInTopLevelOrInComplexTypeShouldRestoreOmittedNullValuesWithSelectedPropertiesPartialSubTreeAndBaseTypeProperty(
+            bool bNullValuesOmitted)
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            // null-able property Address is selected, thus should be restored.
+            // Property Education is null-able.
+            const string payloadWithWildcardInQueryOption = @"{
+                ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20Education/Id,%20Education/OrgId,%20Address)/$entity"",
+                ""@odata.id"":""http://mytest"",
+                ""Id"":0,
+                ""Education"":{""Id"":1}
+            }";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+            this.ReadEntryPayload(model, payloadWithWildcardInQueryOption, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                nullValuesOmitted: bNullValuesOmitted);
+
+            entries.Count.Should().Be(2);
+            nestedResourceInfos.Count.Should().Be(1);
+            nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                .Should().NotBeNull();
+
+            // Education
+            ODataResource edu =
+                entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+            edu.Should().NotBeNull();
+            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                .Value.Should().Be(1);
+
+            // selected null-able property from base type should be restored to null if omitted.
+            if (bNullValuesOmitted)
+            {
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "OrgId", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+            }
+            else
+            {
+                edu.Properties.Any(s => string.Equals(s.Name, "OrgId", StringComparison.Ordinal)).Should().BeFalse();
+            }
+
+            // not selected property should not be restored.
+            edu.Properties.Any(s => string.Equals(s.Name, "OrgCategory", StringComparison.Ordinal)).Should().BeFalse();
+            edu.Properties.Any(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Should().BeFalse();
+            edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingWithSelectExpandClauseShouldRestoreOmittedNullValuesWithSelectedPropertiesPartialSubTree(
+            bool bNullValuesOmitted)
         {
             EdmEntityType entityType;
             EdmEntitySet entitySet;
             EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
 
             // null-able property Height is not selected, thus should not be restored.
-            // null-able property Address is selected, thus should be restored.
             // Property Education is null-able.
-            const string payloadWithWildcardInQueryOption = @"{
-                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20Education/Id,%20Education/OrgId,%20Address)/$entity"",
-                    ""@odata.id"":""http://mytest"",
+            const string payloadWithSelectExpandClauseInQueryOption = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,Education/Id,Education/SchoolName,Company/Id,Company/Name)/$entity"",
+                    ""@odata.id"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(0)"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1},
+                    ""Company"":{
+                        ""@odata.id"":""http://www.example.com/$metadata#EntityNs.MyContainer.Companies(11)"",
+                        ""Id"":11}
+                }";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+            this.ReadEntryPayload(model, payloadWithSelectExpandClauseInQueryOption, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                nullValuesOmitted: bNullValuesOmitted);
+
+            nestedResourceInfos.Count.Should().Be(2);
+            ODataNestedResourceInfo eduNestedResouce =
+                nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal));
+
+            // Edu is complex type, its Url should be null.
+            eduNestedResouce.Should().NotBeNull();
+            eduNestedResouce.Url.Should().BeNull();
+            // Navigation link for Company entity should be non-null.
+            ODataNestedResourceInfo companyLink =
+                nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Company", StringComparison.Ordinal));
+            companyLink.Should().NotBeNull();
+            companyLink.Url.Should().NotBeNull();
+
+            entries.Count.Should().Be(3);
+            // Education
+            ODataResource edu =
+                entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+            edu.Should().NotBeNull();
+
+            edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                .Value.Should().Be(1);
+            if (bNullValuesOmitted)
+            {
+                // null-able property value should be restored.
+                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+            }
+            else
+            {
+                edu.Properties.Any(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Should().BeFalse();
+            }
+            // not selected property should not be restored.
+            edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+
+            // Company
+            ODataResource company =
+                entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Cmpny", StringComparison.Ordinal));
+            company.Should().NotBeNull();
+            company.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                .Value.Should().Be(11);
+            if (bNullValuesOmitted)
+            {
+                company.Properties.FirstOrDefault(s => string.Equals(s.Name, "Name", StringComparison.Ordinal))
+                    .Value.Should().BeNull();
+            }
+            else
+            {
+                company.Properties.Any(s => string.Equals(s.Name, "Name", StringComparison.Ordinal)).Should().BeFalse();
+            }
+
+            // Person
+            ODataResource person =
+                entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
+            person.Should().NotBeNull();
+            person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
+                .Value.Should().Be(0);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingWithSelectExpandClauseShouldHaveNoContentForNullNavigationProperty(
+            bool bNullValuesOmitted)
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            // Context URL with subtree of navigation entity selected.
+            const string payloadWithSelectExpandClauseInQueryOption1 = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,Education/Id,Education/SchoolName,Company/Id,Company/Name)/$entity"",
+                    ""@odata.id"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(0)"",
                     ""Id"":0,
                     ""Education"":{""Id"":1}
                 }";
 
-            foreach (string payload in new string[] { payloadWithWildcardInQueryOption })
+            // Context URL with entire navigation entity selected.
+            const string payloadWithSelectExpandClauseInQueryOption2 = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,Education/Id,Education/SchoolName,Company)/$entity"",
+                    ""@odata.id"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(0)"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1}
+                }";
+
+            foreach (string payload in new string[]
+            {
+                payloadWithSelectExpandClauseInQueryOption1,
+                payloadWithSelectExpandClauseInQueryOption2
+            })
             {
                 List<ODataResource> entries = new List<ODataResource>();
-                List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
+                List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
                 this.ReadEntryPayload(model, payload, entitySet, entityType,
                     reader =>
                     {
@@ -1057,31 +1317,27 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                                 entries.Add(reader.Item as ODataResource);
                                 break;
                             case ODataReaderState.NestedResourceInfoStart:
-                                navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
+                                nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
                                 break;
                             default:
                                 break;
                         }
                     },
-                    nullValuesOmitted: true);
+                    nullValuesOmitted: bNullValuesOmitted);
 
                 entries.Count.Should().Be(2);
-                navigationLinks.Count.Should().Be(1);
-                navigationLinks.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
-                    .Should().NotBeNull();
+                // Expanded Company entity via null navigation link is not restored.
+                // see example: http://services.odata.org/V4/TripPinService/People('ronaldmundy')?$expand=Photo
+                entries.Any(s => string.Equals(s.TypeName, "NS.Cmpny", StringComparison.Ordinal)).Should().BeFalse();
 
-                // Education
-                ODataResource edu =
-                    entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
-                edu.Should().NotBeNull();
-                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
-                    .Value.Should().Be(1);
-                // selected null-able property from base type should be restored to null if omitted.
-                edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "OrgId", StringComparison.Ordinal))
-                    .Value.Should().BeNull();
-                // not selected property should not be restored.
-                edu.Properties.Any(s => string.Equals(s.Name, "SchoolName", StringComparison.Ordinal)).Should().BeFalse();
-                edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+                nestedResourceInfos.Count.Should().Be(2);
+                // There should be a navigation link reported as missing from payload.
+                ODataNestedResourceInfo companyLink =
+                    nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Company", StringComparison.Ordinal));
+                companyLink.Should().NotBeNull();
+                // Reported missing/un-processed navigation link has URL constructed from metadata and
+                // @odata.id annotation of navigation source.
+                companyLink.Url.Should().NotBeNull();
             }
         }
 
@@ -1186,7 +1442,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             EdmModel model = new EdmModel();
 
             entityType = new EdmEntityType("NS", "Person");
-            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
 
             EdmTypeDefinition weightType = new EdmTypeDefinition("NS", "Wgt", EdmPrimitiveTypeKind.Double);
             EdmTypeDefinitionReference weightTypeRef = new EdmTypeDefinitionReference(weightType, false);
@@ -1230,13 +1486,35 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             entityType.AddStructuralProperty("Education", educationTypeRef);
 
+            // Company entity type.
+            EdmEntityType companyEntityType = new EdmEntityType("NS", "Cmpny");
+            entityType.AddKeys(companyEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            companyEntityType.AddStructuralProperty("Name",
+                new EdmTypeDefinitionReference(
+                    new EdmTypeDefinition("NS", "CmpyName", EdmPrimitiveTypeKind.String),
+                    true));
+            companyEntityType.AddStructuralProperty("Address", addressTypeRef);
+
+            EdmNavigationPropertyInfo companyNav = new EdmNavigationPropertyInfo()
+            {
+                Name = "Company",
+                ContainsTarget = true,
+                Target = companyEntityType,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne
+            };
+
+            // Add navigation link from Person to Company.
+            entityType.AddUnidirectionalNavigation(companyNav);
+
             model.AddElement(weightType);
             model.AddElement(heightType);
             model.AddElement(addressType);
             model.AddElement(entityType);
+            model.AddElement(companyEntityType);
 
             EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
             entitySet = container.AddEntitySet("People", entityType);
+            container.AddEntitySet("Companies", companyEntityType);
             model.AddElement(container);
 
             return model;
