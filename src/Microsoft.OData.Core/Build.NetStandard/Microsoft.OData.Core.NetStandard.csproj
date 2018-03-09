@@ -1361,6 +1361,9 @@
     <Compile Include="..\UriParser\SemanticAst\CountVirtualPropertyNode.cs">
       <Link>UriParser\SemanticAst\CountVirtualPropertyNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\EachSegment.cs">
+      <Link>UriParser\SemanticAst\EachSegment.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\FilterSegment.cs">
       <Link>UriParser\SemanticAst\FilterSegment.cs</Link>
     </Compile>
