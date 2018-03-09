@@ -29,6 +29,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>A segment name in a URI that indicates that a filter is being applied to a collection.</summary>
         internal const string FilterSegment = "$filter";
 
+        /// <summary>A segment name in a URI that indicates that a set-based operation is being applied to a collection.</summary>
+        internal const string EachSegment = "$each";
+
         /// <summary>A filter query option name.</summary>
         internal const string FilterQueryOption = "$filter";
 

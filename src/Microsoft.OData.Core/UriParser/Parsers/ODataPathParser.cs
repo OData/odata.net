@@ -152,16 +152,9 @@ namespace Microsoft.OData.UriParser
                 throw;
             }
 
-            List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);
-            foreach (var segment in this.parsedSegments)
-            {
-#if DEBUG
-                segment.AssertValid();
-#endif
-                validatedSegments.Add(segment);
-            }
-
+            List<ODataPathSegment> validatedSegments = CreateValidatedPathSegments();
             this.parsedSegments.Clear();
+
             return validatedSegments;
         }
 
@@ -574,6 +567,45 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Try to handle the segment as $each.
+        /// </summary>
+        /// <param name="identifier">The identifier that was parsed from this raw segment.</param>
+        /// <param name="parenthesisExpression">The query portion was parsed from this raw segment.
+        /// This value can be null if there is no query portion.</param>
+        /// <returns>Whether the segment was $each.</returns>
+        private bool TryCreateEachSegment(string identifier, string parenthesisExpression)
+        {
+            if (!IdentifierIs(UriQueryConstants.EachSegment, identifier))
+            {
+                return false;
+            }
+
+            // $each is not supposed to have parenthesis expressions after it.
+            if (parenthesisExpression != null)
+            {
+                throw ExceptionUtil.CreateSyntaxError();
+            }
+
+            ODataPathSegment prevSegment = this.parsedSegments.Last();
+            if (lastNavigationSource == null)
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_NoNavigationSourceFound(UriQueryConstants.EachSegment));
+            }
+
+            if (lastNavigationSource is IEdmSingleton || prevSegment is KeySegment)
+            {
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyEachOnSingleEntities(lastNavigationSource.Name));
+            }
+
+            EachSegment eachSegment = new EachSegment(
+                lastNavigationSource,
+                prevSegment is TypeSegment || prevSegment is FilterSegment ? prevSegment.TargetEdmType : null);
+            this.parsedSegments.Add(eachSegment);
+
+            return true;
+        }
+
+        /// <summary>
         /// Tries to handle the segment as $ref. If it is $ref, then the rest of the path will be parsed/validated in this call.
         /// </summary>
         /// <param name="identifier">The identifier that was parsed from this raw segment.</param>
@@ -845,6 +877,12 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_FilterOnRoot);
             }
 
+            if (this.IdentifierIs(UriQueryConstants.EachSegment, identifier))
+            {
+                // $each on root: throw
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EachOnRoot);
+            }
+
             if (this.configuration.BatchReferenceCallback != null && ContentIdRegex.IsMatch(identifier))
             {
                 if (parenthesisExpression != null)
@@ -970,7 +1008,12 @@ namespace Microsoft.OData.UriParser
         private bool TryCreateSegmentForOperation(ODataPathSegment previousSegment, string identifier, string parenthesisExpression)
         {
             // Parse Arguments syntactically
-            var bindingType = previousSegment == null ? null : previousSegment.EdmType;
+            IEdmType bindingType = null;
+            if (previousSegment != null)
+            {
+                // Use TargetEdmType for EachSegment to represent a pseudo-single entity.
+                bindingType = (previousSegment is EachSegment) ? previousSegment.TargetEdmType : previousSegment.EdmType;
+            }
 
             ICollection<OperationSegmentParameter> resolvedParameters;
             IEdmOperation singleOperation;
@@ -1064,6 +1107,12 @@ namespace Microsoft.OData.UriParser
 
             // $filter
             if (this.TryCreateFilterSegment(text))
+            {
+                return;
+            }
+
+            // $each
+            if (this.TryCreateEachSegment(identifier, parenthesisExpression))
             {
                 return;
             }
@@ -1338,6 +1387,57 @@ namespace Microsoft.OData.UriParser
                 expected,
                 identifier,
                 this.configuration.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Validates the existing parsed segments and returns a list of validated segments.
+        /// </summary>
+        /// <returns>List of validated path segments.</returns>
+        private List<ODataPathSegment> CreateValidatedPathSegments()
+        {
+            List<ODataPathSegment> validatedSegments = new List<ODataPathSegment>(this.parsedSegments.Count);
+            for (int index = 0, segmentCount = this.parsedSegments.Count; index < segmentCount; ++index)
+            {
+                CheckDollarEachSegmentRestrictions(index);
+#if DEBUG
+                this.parsedSegments[index].AssertValid();
+#endif
+                validatedSegments.Add(this.parsedSegments[index]);
+            }
+
+            return validatedSegments;
+        }
+
+        /// <summary>
+        /// Per OData 4.01 spec, GET operation and functions may proceed $each, but we are limiting the scope of that spec
+        /// by permitting only ONE action segment to follow $each. As such, at most one $each segment can exist in the URI.
+        /// This function enforces those restrictions and throws if any of them are violated.
+        /// </summary>
+        /// <param name="index">Index of path segment to examine in the list of parsed segments.</param>
+        /// <exception cref="ODataException">Throws if there's a violation of $each restrictions.</exception>
+        /// <remarks>Should the restrictions on the $each be removed, this function can be deleted.</remarks>
+        private void CheckDollarEachSegmentRestrictions(int index)
+        {
+            Debug.Assert(index < this.parsedSegments.Count, "index < this.parsedSegments.Count");
+
+            int numOfSegmentsAfterDollarEach = this.parsedSegments.Count - index - 1;
+
+            // Perform restriction checks only if the current segment being examined is $each and there are subsequent segments.
+            if (this.parsedSegments[index] is EachSegment && numOfSegmentsAfterDollarEach > 0)
+            {
+                // Only one segment is allowed after $each...
+                if (numOfSegmentsAfterDollarEach > 1)
+                {
+                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
+                }
+
+                // And if there exists a single segment after $each, then it must be an action.
+                OperationSegment operationSegment = this.parsedSegments[index + 1] as OperationSegment;
+                if (operationSegment == null || !(operationSegment.Operations.All(a => a is IEdmAction)))
+                {
+                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
+                }
+            }
         }
     }
 }

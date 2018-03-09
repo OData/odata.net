@@ -128,6 +128,17 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate an EachSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(EachSegment segment)
+        {
+            Debug.Assert(segment != null, "segment != null");
+            return segment.Identifier;
+        }
+
+        /// <summary>
         /// Translate a PathTemplateSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>

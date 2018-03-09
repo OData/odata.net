@@ -123,6 +123,18 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate a EachSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>UserDefinedValue</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override bool Translate(EachSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return false;
+        }
+
+        /// <summary>
         /// Translate a NavigationPropertyLinkSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>

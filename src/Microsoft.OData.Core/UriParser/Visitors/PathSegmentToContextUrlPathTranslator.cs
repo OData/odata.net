@@ -201,6 +201,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate a EachSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(EachSegment segment)
+        {
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Visit a NavigationPropertyLinkSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>

@@ -5375,6 +5375,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "$each set-based operation cannot be applied on single entities or singletons. Entity type: '{0}'."
+        /// </summary>
+        internal static string RequestUriProcessor_CannotApplyEachOnSingleEntities(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_CannotApplyEachOnSingleEntities, p0);
+        }
+
+        /// <summary>
         /// A string like "There are no navigation sources found to apply '{0}'."
         /// </summary>
         internal static string RequestUriProcessor_NoNavigationSourceFound(object p0)
@@ -5389,6 +5397,17 @@ namespace Microsoft.OData {
         {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Only a single action can proceed $each."
+        /// </summary>
+        internal static string RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment);
             }
         }
 
@@ -5427,6 +5446,17 @@ namespace Microsoft.OData {
             get
             {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterOnRoot);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The request URI is not valid, the segment $each cannot be applied to the root of the service."
+        /// </summary>
+        internal static string RequestUriProcessor_EachOnRoot
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_EachOnRoot);
             }
         }
 

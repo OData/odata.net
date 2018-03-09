@@ -163,6 +163,18 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Determine the NavigationSource of a EachSegment
+        /// </summary>
+        /// <param name="segment">The FilterSegment to look in.</param>
+        /// <returns>null, since $filter doesn't have an navigation source</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(EachSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return segment.TargetEdmNavigationSource;
+        }
+
+        /// <summary>
         /// Determine the NavigationSource of a OpenPropertySegment
         /// </summary>
         /// <param name="segment">The OpenPropertySegment to look in.</param>

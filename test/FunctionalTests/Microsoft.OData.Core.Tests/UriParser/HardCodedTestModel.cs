@@ -461,6 +461,10 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceAdoptShibaInuAction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
             model.AddElement(FullyQualifiedNamespaceAdoptShibaInuAction);
 
+            var FullyQualifiedNamespaceSummonPuppiesAction = new EdmFunction("Fully.Qualified.Namespace", "SummonPuppies", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespaceDogTypeReference)), true, null, true);
+            FullyQualifiedNamespaceSummonPuppiesAction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            model.AddElement(FullyQualifiedNamespaceSummonPuppiesAction);
+
             var FullyQualifiedNamespaceFireAllAction = new EdmAction("Fully.Qualified.Namespace", "FireAll", EdmCoreModel.Instance.GetBoolean(true), true, null);
             FullyQualifiedNamespaceFireAllAction.AddParameter("employees", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
             model.AddElement(FullyQualifiedNamespaceFireAllAction);
@@ -1255,6 +1259,10 @@ namespace Microsoft.OData.Tests.UriParser
         <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <ReturnType Type=""Edm.Boolean"" />
       </Action>
+      <Action Name=""SummonPuppies"" IsBound=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
+        <ReturnType Type=""Collection(Fully.Qualified.Namespace.Dog)"" />
+      </Action>
       <Action Name=""FireAll"" IsBound=""true"">
         <Parameter Name=""employees"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <ReturnType Type=""Edm.Boolean"" />
@@ -2013,6 +2021,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmOperationImport GetAdoptShibaInuActionImport()
         {
             return TestModel.EntityContainer.FindOperationImports("AdoptShibaInu").Single();
+        }
+
+        public static IEdmOperationImport GetSummonPuppiesActionImport()
+        {
+            return TestModel.EntityContainer.FindOperationImports("SummonPuppies").Single();
         }
 
         public static IEdmOperationImport GetFunctionImportForGetCoolestPerson()
