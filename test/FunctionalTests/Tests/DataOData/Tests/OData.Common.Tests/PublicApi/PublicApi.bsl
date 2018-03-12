@@ -5574,6 +5574,7 @@ public abstract class Microsoft.OData.UriParser.PathSegmentHandler {
 	public virtual void Handle (Microsoft.OData.UriParser.BatchSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.CountSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.DynamicPathSegment segment)
+	public virtual void Handle (Microsoft.OData.UriParser.EachSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.EntitySetSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.FilterSegment segment)
 	public virtual void Handle (Microsoft.OData.UriParser.KeySegment segment)
@@ -5611,6 +5612,7 @@ public abstract class Microsoft.OData.UriParser.PathSegmentTranslator`1 {
 	public virtual T Translate (Microsoft.OData.UriParser.BatchSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.CountSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.DynamicPathSegment segment)
+	public virtual T Translate (Microsoft.OData.UriParser.EachSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.EntitySetSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.FilterSegment segment)
 	public virtual T Translate (Microsoft.OData.UriParser.KeySegment segment)
@@ -6191,6 +6193,15 @@ public sealed class Microsoft.OData.UriParser.DottedIdentifierToken : Microsoft.
 public sealed class Microsoft.OData.UriParser.DynamicPathSegment : Microsoft.OData.UriParser.ODataPathSegment {
 	public DynamicPathSegment (string identifier)
 	public DynamicPathSegment (string identifier, Microsoft.OData.Edm.IEdmType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, bool singleResult)
+
+	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+
+	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
+	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.UriParser.EachSegment : Microsoft.OData.UriParser.ODataPathSegment {
+	public EachSegment (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmType targetEdmType)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
 
