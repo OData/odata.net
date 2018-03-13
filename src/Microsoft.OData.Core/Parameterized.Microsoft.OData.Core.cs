@@ -5367,7 +5367,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "$filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'."
+        /// A string like "The $filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'."
         /// </summary>
         internal static string RequestUriProcessor_CannotApplyFilterOnSingleEntities(object p0)
         {
@@ -5377,9 +5377,9 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "There are no navigation sources found to apply '{0}'."
         /// </summary>
-        internal static string RequestUriProcessor_NoNavigationSourceFound(object p0)
+        internal static string RequestUriProcessor_NavigationSourceNotFound(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoNavigationSourceFound, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NavigationSourceNotFound, p0);
         }
 
         /// <summary>

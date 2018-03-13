@@ -541,7 +541,7 @@ namespace Microsoft.OData.UriParser
             // 3) Extract the parameter alias and perform the rest of the validations on it.
             if (lastNavigationSource == null)
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_NoNavigationSourceFound(UriQueryConstants.FilterSegment));
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_NavigationSourceNotFound(UriQueryConstants.FilterSegment));
             }
 
             if (lastNavigationSource is IEdmSingleton || this.parsedSegments.Last() is KeySegment)

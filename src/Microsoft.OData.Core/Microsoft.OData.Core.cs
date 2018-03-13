@@ -766,7 +766,7 @@ namespace Microsoft.OData {
         internal const string RequestUriProcessor_InvalidValueForEntitySegment = "RequestUriProcessor_InvalidValueForEntitySegment";
         internal const string RequestUriProcessor_InvalidValueForKeySegment = "RequestUriProcessor_InvalidValueForKeySegment";
         internal const string RequestUriProcessor_CannotApplyFilterOnSingleEntities = "RequestUriProcessor_CannotApplyFilterOnSingleEntities";
-        internal const string RequestUriProcessor_NoNavigationSourceFound = "RequestUriProcessor_NoNavigationSourceFound";
+        internal const string RequestUriProcessor_NavigationSourceNotFound = "RequestUriProcessor_NavigationSourceNotFound";
         internal const string RequestUriProcessor_FilterPathSegmentRequiresParameterAlias = "RequestUriProcessor_FilterPathSegmentRequiresParameterAlias";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";
         internal const string RequestUriProcessor_SyntaxError = "RequestUriProcessor_SyntaxError";

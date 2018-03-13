@@ -842,8 +842,8 @@ CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists=The given f
 RequestUriProcessor_InvalidValueForEntitySegment=The ODataPathSegment provided (Id = {0}) is not an EntitySetSegment.
 RequestUriProcessor_InvalidValueForKeySegment=The KeySegment provided (Id = {0}) is either null, having no keys, or does not target a single resource.
 
-RequestUriProcessor_CannotApplyFilterOnSingleEntities=$filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'.
-RequestUriProcessor_NoNavigationSourceFound=There are no navigation sources found to apply '{0}'.
+RequestUriProcessor_CannotApplyFilterOnSingleEntities=The $filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'.
+RequestUriProcessor_NavigationSourceNotFound=There are no navigation sources found to apply '{0}'.
 RequestUriProcessor_FilterPathSegmentRequiresParameterAlias=The $filter path segment must contain a single parameter alias in the form $filter=@alias.
 
 ; Copied from the server, will be incrementally replaced.
