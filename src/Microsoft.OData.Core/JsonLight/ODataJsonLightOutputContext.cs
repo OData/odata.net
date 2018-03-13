@@ -147,7 +147,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.typeNameOracle == null)
                 {
-                    this.typeNameOracle = this.MetadataLevel.GetTypeNameOracle();
+                    this.typeNameOracle = this.MetadataLevel.GetTypeNameOracle(this.MessageWriterSettings.LibraryCompatibility);
                 }
 
                 return this.typeNameOracle;

@@ -103,8 +103,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             foreach (var mimeType in this.mimeTypes)
             {
-                var settings = new ODataMessageWriterSettings();
-                settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
+                var settings = new ODataMessageWriterSettings
+                {
+                    ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri },
+                    LibraryCompatibility = ODataLibraryCompatibility.Version6
+                };
+
                 string outputWithModel = null;
                 string outputWithoutModel = null;
 

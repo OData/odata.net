@@ -16,6 +16,14 @@ namespace Microsoft.OData.JsonLight
     internal abstract class JsonLightTypeNameOracle : TypeNameOracle
     {
         /// <summary>
+        /// Constructor for JsonLightTypeNameOracle
+        /// </summary>
+        /// <param name="compatibility">OData Library compatibility setting</param>
+        protected JsonLightTypeNameOracle(ODataLibraryCompatibility compatibility) : base(compatibility)
+        {
+        }
+
+        /// <summary>
         /// Determines the resource set type name to write to the payload.
         /// </summary>
         /// <param name="expectedResourceTypeName">The expected resource type name of the items in the resource set.</param>

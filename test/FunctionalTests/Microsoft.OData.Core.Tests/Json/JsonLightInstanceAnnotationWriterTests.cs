@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.Json
             // Version will be V3+ in production since it's JSON Light only
             var stream = new MemoryStream();
             this.valueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter));
-            this.jsonLightInstanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(this.valueWriter, new JsonMinimalMetadataTypeNameOracle());
+            this.jsonLightInstanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(this.valueWriter, new JsonMinimalMetadataTypeNameOracle(valueWriter.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility));
         }
 
         [Fact]
@@ -758,7 +758,7 @@ namespace Microsoft.OData.Tests.Json
 
             // The JSON Writer will complain if there is no active scope, so start an object scope.
             valueSerializer.JsonWriter.StartObjectScope();
-            var instanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(valueSerializer, new JsonMinimalMetadataTypeNameOracle());
+            var instanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(valueSerializer, new JsonMinimalMetadataTypeNameOracle(outputContext.MessageWriterSettings.LibraryCompatibility));
 
             // The method under test.
             instanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
@@ -801,7 +801,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var stream = new MemoryStream();
             var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
-            var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
+            var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle(defaultValueWriter.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility));
 
             var annotations = new Collection<ODataInstanceAnnotation>();
             annotations.Add(new ODataInstanceAnnotation("term.one", new ODataPrimitiveValue(123)));
@@ -820,7 +820,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var stream = new MemoryStream();
             var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
-            var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
+            var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle(defaultValueWriter.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility));
 
             var annotations = new Collection<ODataInstanceAnnotation>();
             annotations.Add(new ODataInstanceAnnotation("term.one", new ODataPrimitiveValue(123)));
@@ -839,7 +839,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var stream = new MemoryStream();
             var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
-            var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
+            var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle(defaultValueWriter.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility));
 
             var annotations = new Collection<ODataInstanceAnnotation>();
             annotations.Add(new ODataInstanceAnnotation("term.one", new ODataPrimitiveValue(123)));

@@ -17,6 +17,10 @@ namespace Microsoft.OData.JsonLight
     /// </summary>
     internal sealed class JsonFullMetadataTypeNameOracle : JsonLightTypeNameOracle
     {
+        internal JsonFullMetadataTypeNameOracle(ODataLibraryCompatibility compatibility) : base(compatibility)
+        {
+        }
+
         /// <summary>
         /// Determines the resource set type name to write to the payload.
         /// </summary>
@@ -33,7 +37,12 @@ namespace Microsoft.OData.JsonLight
                 return resourceSet.TypeAnnotation.TypeName;
             }
 
-            return resourceSet.TypeName;
+            if (isUndeclared || string.IsNullOrEmpty(expectedResourceTypeName) || this.Compatibility == ODataLibraryCompatibility.Version6)
+            {
+                return resourceSet.TypeName;
+            }
+
+            return null;
         }
 
         /// <summary>

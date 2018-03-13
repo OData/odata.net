@@ -13,7 +13,7 @@ namespace Microsoft.OData.Tests
 {
     public class WriterUtilsTests
     {
-        private readonly JsonLightTypeNameOracle typeNameOracle = new JsonMinimalMetadataTypeNameOracle();
+        private readonly JsonLightTypeNameOracle typeNameOracle = new JsonMinimalMetadataTypeNameOracle(ODataLibraryCompatibility.Latest);
 
         #region JSON Light ODataValue type name tests
         [Fact]
