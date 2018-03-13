@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.NetFX35", "..\src\Microsoft.OData.Core\Build.Net35\Microsoft.OData.Core.NetFX35.csproj", "{E7B15F0C-0442-458D-9D16-69F3272420BF}"
 EndProject
@@ -85,5 +85,8 @@ Global
 		{E7B15F0C-0442-458D-9D16-69F3272420BF} = {026B0134-EBEC-44F7-88D7-EA18BF385826}
 		{69A15676-2469-4315-9617-F0FFC04D310D} = {026B0134-EBEC-44F7-88D7-EA18BF385826}
 		{1104C2E4-076F-47AA-8121-03015AE70630} = {026B0134-EBEC-44F7-88D7-EA18BF385826}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E0151AB-B077-470B-8029-66F8EE1E9542}
 	EndGlobalSection
 EndGlobal

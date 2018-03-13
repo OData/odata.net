@@ -55,34 +55,41 @@ $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = $ENLISTMENT_ROOT + "\bin"
 
-# Default to use Visual Studio 2015
-$VS14MSBUILD=$PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
-$VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-$FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
-$SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
-$SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
-
 # Use Visual Studio 2017 compiler for .NET Core and .NET Standard. Because VS2017 has different paths for different
 # versions, we have to check for each version. Meanwhile, the dotnet CLI is required to run the .NET Core unit tests in this script.
 $VS15VERSIONS = "Enterprise",
     "Professional",
     "Community"
-$VS15MSBUILD = $null
+$VS15Base = $null
 ForEach ($version in $VS15VERSIONS)
 {
-    $tempMSBuildPath = ($PROGRAMFILESX86 + "\Microsoft Visual Studio\2017\{0}\MSBuild\15.0\Bin\MSBuild.exe") -f $version
-    if([System.IO.File]::Exists($tempMSBuildPath))
+    $tempVSBasePath = ($PROGRAMFILESX86 + "\Microsoft Visual Studio\2017\{0}") -f $version
+    if(Test-Path $tempVSBasePath)
     {
-        $VS15MSBUILD = $tempMSBuildPath
+        $VS15Base = $tempVSBasePath
         break
     }
 }
+
+if ($VS15Base -eq $null)
+{
+    Write-Host 'Error : No versions of Visual Studio 2017 found.' -ForegroundColor $Err
+    exit
+}
+
+$VS15MSBUILD = $VS15Base + "\MSBuild\15.0\Bin\MSBuild.exe"
 $DOTNETDIR = "C:\Program Files\dotnet\"
 $DOTNETTEST = $null
 if ([System.IO.File]::Exists($DOTNETDIR + "dotnet.exe"))
 {
     $DOTNETTEST = $DOTNETDIR + "dotnet.exe"
 }
+
+# Tools
+$VSTEST = $VS15Base + "\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+$FXCOPDIR = $VS15Base + "\Team Tools\Static Analysis Tools\FxCop"
+$SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
+$SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
 # Other variables
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
@@ -301,13 +308,8 @@ Function RunBuild ($sln, $vsToolVersion)
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
     $Conf = "/p:Configuration=" + "$Configuration"
 
-    # Default to VS2015
-    $MSBUILD = $VS14MSBUILD
-    
-    if($vsToolVersion -eq '15.0')
-    {
-        $MSBUILD=$VS15MSBUILD
-    }
+    # Default to VS2017
+    $MSBUILD = $VS15MSBUILD
     
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
@@ -491,22 +493,28 @@ Function TestSummary
 Function RunTest($title, $testdir, $framework)
 {
     Write-Host "**********Running $title***********"
-    if ($framework -eq 'dotnet')
+
+    foreach($testProj in $testdir)
     {
-        foreach($testProj in $testdir)
+        Write-Host "Launching $testProj..."
+        
+        if ($framework -eq 'dotnet')
         {
-            Write-Host "Launching $testProj..."
             & $DOTNETTEST "test" ($ENLISTMENT_ROOT + $testProj) "--no-build" >> $TESTLOG
         }
+        else
+        {
+            & $VSTEST $testProj $XUNITADAPTER >> $TESTLOG
+        }
     }
-    else
-    {
-        & $VSTEST $testdir $XUNITADAPTER >> $TESTLOG
-    }
-
+    
     if($LASTEXITCODE -ne 0)
     {
         Write-Host "Run $title FAILED" -ForegroundColor $Err
+    }
+    else
+    {
+        Write-Host "**********Finished $title***********"
     }
 }
 
@@ -533,22 +541,12 @@ Function BuildProcess
 
     if ($TestType -ne 'Quick')
     {
+        RunBuild ('OData.Net35.sln')
+        RunBuild ('OData.CodeGen.sln')
+        
         # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
         RunBuild ('OData.Tests.E2E.sln')
-        RunBuild ('OData.Net35.sln')
-        # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
-        if($VS15MSBUILD)
-        {
-            Write-Host "Found VS2017 version: $VS15MSBUILD"
-            RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
-            RunBuild ('OData.CodeGen.sln') -vsToolVersion '15.0'
-        }
-        else
-        {
-            Write-Host ('Warning! Skipping build for .NET Core tests because no versions of VS2017 found. ' + `
-            'Building only product in .NET Standard.') -ForegroundColor $Warning
-            RunBuild ('OData.NetStandard.sln')
-        }
+        RunBuild ('OData.Tests.E2E.NetCore.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
     }
 

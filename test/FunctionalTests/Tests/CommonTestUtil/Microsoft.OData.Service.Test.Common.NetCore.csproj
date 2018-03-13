@@ -26,9 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.NetStandard.VS2017.csproj" />
-    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.NetStandard.VS2017.csproj" />
-    <ProjectReference Include="..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.NetStandard.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.NetStandard.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.NetStandard.csproj" />
   </ItemGroup>
 
 </Project>

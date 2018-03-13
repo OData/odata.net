@@ -9,6 +9,17 @@
     <OutputType>Library</OutputType>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
+  <PropertyGroup>
+    <ProgramFilesPath Condition="Exists('$(PROGRAMFILES) (x86)')">$(PROGRAMFILES) (x86)</ProgramFilesPath>
+    <ProgramFilesPath Condition="$(ProgramFilesPath) == ''">$(PROGRAMFILES)</ProgramFilesPath>
+    
+    <VisualStudioBasePath>$(ProgramFilesPath)\Microsoft Visual Studio\2017</VisualStudioBasePath>
+    <VisualStudioFxCopSuffixPath>Team Tools\Static Analysis Tools\FxCop</VisualStudioFxCopSuffixPath>
+    
+    <VisualStudioFxCopLocation Condition="$(VisualStudioFxCopLocation) == '' And Exists('$(VisualStudioBasePath)\Enterprise')">$(VisualStudioBasePath)\Enterprise\$(VisualStudioFxCopSuffixPath)</VisualStudioFxCopLocation>
+    <VisualStudioFxCopLocation Condition="$(VisualStudioFxCopLocation) == '' And Exists('$(VisualStudioBasePath)\Professional')">$(VisualStudioBasePath)\Professional\$(VisualStudioFxCopSuffixPath)</VisualStudioFxCopLocation>
+    <VisualStudioFxCopLocation Condition="$(VisualStudioFxCopLocation) == '' And Exists('$(VisualStudioBasePath)\Community')">$(VisualStudioBasePath)\Community\$(VisualStudioFxCopSuffixPath)</VisualStudioFxCopLocation>
+  </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft\OData\Service\Serializers\PayloadMetadataKind.cs">
@@ -43,8 +54,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="$(VisualStudioInstallLocation)PrivateAssemblies\FxCopSdk.dll" />
-    <Reference Include="$(VisualStudioInstallLocation)PrivateAssemblies\Microsoft.Cci.dll" />
+    <Reference Include="$(VisualStudioFxCopLocation)\FxCopSdk.dll" />
+    <Reference Include="$(VisualStudioFxCopLocation)\Microsoft.Cci.dll" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataWebRules.ruleset">

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Performance.ComponentTests", "..\test\PerformanceTests\ComponentTests\Microsoft.OData.Performance.ComponentTests.csproj", "{7D98AD3B-6685-498A-834C-F18F7FAE9138}"
 EndProject
@@ -207,5 +207,8 @@ Global
 		{6120E0DE-DE46-49C7-B517-15E449D17BAC} = {2CCDC07F-FAFD-4D00-AA73-991CD2AB9DC7}
 		{90DC3112-A209-499B-8A43-FFFF83A216C3} = {2CCDC07F-FAFD-4D00-AA73-991CD2AB9DC7}
 		{50AA23B2-56EF-4C51-A270-8D5BD0C899B6} = {6120E0DE-DE46-49C7-B517-15E449D17BAC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {459D23DE-BCD1-4C2E-AA83-82C80B3AE390}
 	EndGlobalSection
 EndGlobal

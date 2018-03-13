@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.NetStandard.csproj" />
   </ItemGroup>
 
 </Project>
