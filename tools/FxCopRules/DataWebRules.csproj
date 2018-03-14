@@ -16,6 +16,10 @@
     <VisualStudioBasePath>$(ProgramFilesPath)\Microsoft Visual Studio\2017</VisualStudioBasePath>
     <VisualStudioFxCopSuffixPath>Team Tools\Static Analysis Tools\FxCop</VisualStudioFxCopSuffixPath>
     
+    <!--VS2015 and below-->
+    <VisualStudioFxCopLocation Condition="$(VisualStudioFxCopLocation) == '' And Exists('$(VisualStudioInstallLocation)PrivateAssemblies">$(VisualStudioInstallLocation)PrivateAssemblies</VisualStudioFxCopLocation>
+    
+    <!--VS2017-->
     <VisualStudioFxCopLocation Condition="$(VisualStudioFxCopLocation) == '' And Exists('$(VisualStudioBasePath)\Enterprise')">$(VisualStudioBasePath)\Enterprise\$(VisualStudioFxCopSuffixPath)</VisualStudioFxCopLocation>
     <VisualStudioFxCopLocation Condition="$(VisualStudioFxCopLocation) == '' And Exists('$(VisualStudioBasePath)\Professional')">$(VisualStudioBasePath)\Professional\$(VisualStudioFxCopSuffixPath)</VisualStudioFxCopLocation>
     <VisualStudioFxCopLocation Condition="$(VisualStudioFxCopLocation) == '' And Exists('$(VisualStudioBasePath)\Community')">$(VisualStudioBasePath)\Community\$(VisualStudioFxCopSuffixPath)</VisualStudioFxCopLocation>
