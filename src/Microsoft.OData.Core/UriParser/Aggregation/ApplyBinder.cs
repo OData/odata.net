@@ -114,12 +114,12 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 case QueryTokenKind.PropertyAggregateExpression:
                 {
-                        AggregateToken token = aggregateToken as AggregateToken;
+                    AggregateToken token = aggregateToken as AggregateToken;
                     SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
-                    IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.Method);
+                    IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
 
                     // TODO: Determine source
-                    return new AggregateExpression(expression, token.Method, token.Alias, typeReference);
+                    return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
                 }
 
                 case QueryTokenKind.EntitySetAggregateExpression:
@@ -136,7 +136,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             }
         }
 
-        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethod withVerb)
+        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethodDefinition method)
         {
             IEdmTypeReference expressionType = expression.TypeReference;
             if (expressionType == null && aggregateExpressionsCache != null)
@@ -148,7 +148,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
             }
 
-            switch (withVerb)
+            switch (method.MethodKind)
             {
                 case AggregationMethod.Average:
                     EdmPrimitiveTypeKind expressionPrimitiveKind = expressionType.PrimitiveKind();

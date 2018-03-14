@@ -5401,7 +5401,7 @@ public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
-	PropertyAggregateExpression = 26
+	PropertyAggregateExpression = 25
 	RangeVariable = 18
 	Select = 10
 	Star = 11
@@ -7814,7 +7814,7 @@ public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
-	PropertyAggregateExpression = 26
+	PropertyAggregateExpression = 25
 	RangeVariable = 18
 	Select = 10
 	Star = 11

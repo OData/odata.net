@@ -160,6 +160,11 @@ namespace Microsoft.OData.UriParser
                     return boundFunction;
                 }
 
+                if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
+                {
+                    return new CountVirtualPropertyNode();
+                }
+
                 return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);
             }
 
@@ -185,11 +190,6 @@ namespace Microsoft.OData.UriParser
                 {
                     return new AggregatedCollectionPropertyNode(collectionParent, property);
                 }
-            }
-
-            if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
-            {
-                return new CountVirtualPropertyNode();
             }
 
             if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
