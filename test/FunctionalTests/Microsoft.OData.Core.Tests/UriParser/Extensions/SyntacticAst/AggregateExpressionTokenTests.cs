@@ -55,7 +55,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         public void KindIsSetCorrectly()
         {
             AggregateToken token = new AggregateToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
-            token.Kind.Should().Be(QueryTokenKind.PropertyAggregateExpression);
+            token.Kind.Should().Be(QueryTokenKind.AggregateExpression);
         }
     }
 }

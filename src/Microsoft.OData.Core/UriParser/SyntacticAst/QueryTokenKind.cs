@@ -124,7 +124,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// $apply aggregate statement to a property token
         /// </summary>
-        PropertyAggregateExpression = 25,
+        AggregateExpression = 25,
 
         /// <summary>
         /// $apply groupby token

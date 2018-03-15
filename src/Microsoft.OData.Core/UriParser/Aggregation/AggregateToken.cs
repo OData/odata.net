@@ -59,7 +59,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// </summary>
         public override QueryTokenKind Kind
         {
-            get { return QueryTokenKind.PropertyAggregateExpression; }
+            get { return QueryTokenKind.AggregateExpression; }
         }
 
         /// <summary>

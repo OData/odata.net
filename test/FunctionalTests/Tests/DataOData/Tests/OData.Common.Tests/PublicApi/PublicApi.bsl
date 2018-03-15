@@ -5383,6 +5383,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 
 public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	Aggregate = 24
+	AggregateExpression = 25
 	AggregateGroupBy = 26
 	All = 19
 	Any = 15
@@ -5401,7 +5402,6 @@ public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
-	PropertyAggregateExpression = 25
 	RangeVariable = 18
 	Select = 10
 	Star = 11
@@ -7796,6 +7796,7 @@ public sealed class Microsoft.OData.Client.WritingNestedResourceInfoArgs {
 
 public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	Aggregate = 24
+	AggregateExpression = 25
 	AggregateGroupBy = 26
 	All = 19
 	Any = 15
@@ -7814,7 +7815,6 @@ public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
-	PropertyAggregateExpression = 25
 	RangeVariable = 18
 	Select = 10
 	Star = 11

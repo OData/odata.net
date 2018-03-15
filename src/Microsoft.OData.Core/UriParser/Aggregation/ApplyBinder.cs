@@ -97,7 +97,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                         break;
                     }
 
-                    case QueryTokenKind.PropertyAggregateExpression:
+                    case QueryTokenKind.AggregateExpression:
                     {
                         mergedTokens.Add(token);
                         break;
@@ -112,7 +112,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         {
             switch (aggregateToken.Kind)
             {
-                case QueryTokenKind.PropertyAggregateExpression:
+                case QueryTokenKind.AggregateExpression:
                 {
                     AggregateToken token = aggregateToken as AggregateToken;
                     SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
