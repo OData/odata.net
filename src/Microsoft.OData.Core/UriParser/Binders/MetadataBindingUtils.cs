@@ -6,7 +6,9 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Diagnostics;
+    using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.OData.Metadata;
@@ -58,7 +60,16 @@ namespace Microsoft.OData.UriParser
                 ConstantNode constantNode = source as ConstantNode;
                 if (constantNode != null && constantNode.Value != null && source.TypeReference.IsString() && targetTypeReference.IsEnum())
                 {
-                    return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), constantNode.Value.ToString(), targetTypeReference);
+                    string memberName = constantNode.Value.ToString();
+                    IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
+                    if (enumType.Members.Any(m => string.Compare(m.Name, memberName, StringComparison.Ordinal) == 0))
+                    {
+                        return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), constantNode.Value.ToString(), targetTypeReference);
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(memberName));
+                    }
                 }
 
                 if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
