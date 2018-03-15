@@ -563,9 +563,9 @@ Function BuildProcess
         if ($IsVS15 -eq $true)
         {
             RunBuild ('OData.Tests.E2E.NetCore.sln')
+            RunBuild ('OData.CodeGen.sln')
         }
         
-        RunBuild ('OData.CodeGen.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
     }
 
