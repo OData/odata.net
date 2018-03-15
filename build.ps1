@@ -1,3 +1,7 @@
+###############################
+# VARIABLE DECLARATIONS
+###############################
+
 # Default to Debug
 $Configuration = 'Debug'
 
@@ -60,24 +64,31 @@ $LOGDIR = $ENLISTMENT_ROOT + "\bin"
 $VS15VERSIONS = "Enterprise",
     "Professional",
     "Community"
-$VS15Base = $null
+$VSBASE = $null
 ForEach ($version in $VS15VERSIONS)
 {
     $tempVSBasePath = ($PROGRAMFILESX86 + "\Microsoft Visual Studio\2017\{0}") -f $version
     if(Test-Path $tempVSBasePath)
     {
-        $VS15Base = $tempVSBasePath
+        $VSBASE = $tempVSBasePath
         break
     }
 }
 
-if ($VS15Base -eq $null)
+$MSBUILD = $null
+$IsVS15 = $true
+if ($VSBASE -eq $null)
 {
-    Write-Host 'Error : No versions of Visual Studio 2017 found.' -ForegroundColor $Err
-    exit
+    Write-Host 'Warning : No versions of Visual Studio 2017 found. Falling back to Visual Studio 2015.' -ForegroundColor $Warning
+    $VSBASE = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0"
+    $MSBUILD = $PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
+    $IsVS15 = $false
+}
+else
+{
+    $MSBUILD = $VSBASE + "\MSBuild\15.0\Bin\MSBuild.exe"
 }
 
-$VS15MSBUILD = $VS15Base + "\MSBuild\15.0\Bin\MSBuild.exe"
 $DOTNETDIR = "C:\Program Files\dotnet\"
 $DOTNETTEST = $null
 if ([System.IO.File]::Exists($DOTNETDIR + "dotnet.exe"))
@@ -86,8 +97,9 @@ if ([System.IO.File]::Exists($DOTNETDIR + "dotnet.exe"))
 }
 
 # Tools
-$VSTEST = $VS15Base + "\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-$FXCOPDIR = $VS15Base + "\Team Tools\Static Analysis Tools\FxCop"
+$VSTEST = $VSBASE + "\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+$FXCOPDIR = $VSBASE + "\Team Tools\Static Analysis Tools\FxCop"
+
 $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
@@ -183,6 +195,10 @@ $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
     "/ruleid:-Microsoft.Design#CA2210",
     "/ruleid:-Microsoft.Performance#CA1814"
 $DataWebRulesOption = "/rule:$TESTDIR\DataWebRules.dll"
+
+###############################
+# FUNCTION DEFINITIONS
+###############################
 
 Function GetDlls
 {
@@ -302,15 +318,12 @@ Function CleanBeforeScorch
 }
 
 # Incremental build and rebuild
-Function RunBuild ($sln, $vsToolVersion)
+Function RunBuild ($sln)
 {
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
     $Conf = "/p:Configuration=" + "$Configuration"
 
-    # Default to VS2017
-    $MSBUILD = $VS15MSBUILD
-    
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
     if($LASTEXITCODE -eq 0)
@@ -537,16 +550,22 @@ Function BuildProcess
         rm $BUILDLOG
     }
 
-    RunBuild ('OData.Net45.sln')
-
-    if ($TestType -ne 'Quick')
+    if ($TestType -eq 'Quick')
+    {
+        RunBuild ('OData.Net45.sln')
+    }
+    else
     {
         RunBuild ('OData.Net35.sln')
-        RunBuild ('OData.CodeGen.sln')
         
         # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
         RunBuild ('OData.Tests.E2E.sln')
-        RunBuild ('OData.Tests.E2E.NetCore.sln')
+        if ($IsVS15 -eq $true)
+        {
+            RunBuild ('OData.Tests.E2E.NetCore.sln')
+        }
+        
+        RunBuild ('OData.CodeGen.sln')
         RunBuild ('OData.Tests.WindowsApps.sln')
     }
 
@@ -610,7 +629,9 @@ Function FxCopProcess
     Write-Host "FxCop Done" -ForegroundColor $Success
 }
 
-# Main Process
+###############################
+# MAIN PROCESS
+###############################
 
 if (! (Test-Path $LOGDIR))
 {
