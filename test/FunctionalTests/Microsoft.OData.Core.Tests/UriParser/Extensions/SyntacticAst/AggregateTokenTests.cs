@@ -20,21 +20,21 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         [Fact]
         public void StatementsCannotBeNull()
         {
-            Action action = () => new AggregateTransformationToken(null);
+            Action action = () => new AggregateToken(null);
             action.ShouldThrow<Exception>(Error.ArgumentNull("statements").ToString());
         }
 
         [Fact]
         public void StatementsSetCorrectly()
         {
-            AggregateTransformationToken token = new AggregateTransformationToken(statements);
+            AggregateToken token = new AggregateToken(statements);
             ((object)token.Expressions).Should().Be(statements);
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
-            AggregateTransformationToken token = new AggregateTransformationToken(statements);
+            AggregateToken token = new AggregateToken(statements);
             token.Kind.Should().Be(QueryTokenKind.Aggregate);
         }
     }

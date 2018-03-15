@@ -302,12 +302,12 @@ namespace Microsoft.OData.UriParser
         }
 
         // parses $apply aggregate tranformation (.e.g. aggregate(UnitPrice with sum as TotalUnitPrice))
-        internal AggregateTransformationToken ParseAggregate()
+        internal AggregateToken ParseAggregate()
         {
             Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordAggregate), "token identifier is aggregate");
             lexer.NextToken();
 
-            return new AggregateTransformationToken(ParseAggregateExpressions());
+            return new AggregateToken(ParseAggregateExpressions());
         }
 
         internal List<AggregateTokenBase> ParseAggregateExpressions()
@@ -384,7 +384,7 @@ namespace Microsoft.OData.UriParser
                 // "as" alias
                 StringLiteralToken alias = this.ParseAggregateAs();
 
-                return new AggregateToken(expression, verb, alias.Text);
+                return new AggregateExpressionToken(expression, verb, alias.Text);
             }
             finally
             {

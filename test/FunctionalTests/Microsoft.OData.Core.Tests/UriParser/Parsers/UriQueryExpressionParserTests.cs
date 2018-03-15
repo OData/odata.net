@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => !e.Message.Contains("with reason"));
         }   
         
-        private static void VerifyAggregateExpressionToken(string expectedEndPathIdentifier, AggregationMethodDefinition expectedVerb, string expectedAlias, AggregateToken actual)
+        private static void VerifyAggregateExpressionToken(string expectedEndPathIdentifier, AggregationMethodDefinition expectedVerb, string expectedAlias, AggregateExpressionToken actual)
         {
             actual.Expression.Should().NotBeNull();
 
@@ -140,11 +140,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             actual.Should().NotBeNull();
             actual.Should().HaveCount(1);
 
-            AggregateTransformationToken aggregate = actual.First() as AggregateTransformationToken;
+            AggregateToken aggregate = actual.First() as AggregateToken;
             aggregate.Should().NotBeNull();
             aggregate.Expressions.Should().HaveCount(1);
 
-            VerifyAggregateExpressionToken("UnitPrice", AggregationMethodDefinition.Sum, "TotalPrice", aggregate.Expressions.First() as AggregateToken);
+            VerifyAggregateExpressionToken("UnitPrice", AggregationMethodDefinition.Sum, "TotalPrice", aggregate.Expressions.First() as AggregateExpressionToken);
             
         }
 
@@ -157,11 +157,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             actual.Should().NotBeNull();
             actual.Should().HaveCount(1);
 
-            AggregateTransformationToken aggregate = actual.First() as AggregateTransformationToken;
+            AggregateToken aggregate = actual.First() as AggregateToken;
             aggregate.Should().NotBeNull();
             aggregate.Expressions.Should().HaveCount(1);
 
-            VerifyAggregateExpressionToken("UnitPrice", AggregationMethodDefinition.Custom("Custom.Aggregate"), "CustomAggregate", aggregate.Expressions.First() as AggregateToken);
+            VerifyAggregateExpressionToken("UnitPrice", AggregationMethodDefinition.Custom("Custom.Aggregate"), "CustomAggregate", aggregate.Expressions.First() as AggregateExpressionToken);
         }
 
         [Fact]
@@ -173,14 +173,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             actual.Should().NotBeNull();
             actual.Should().HaveCount(1);
 
-            AggregateTransformationToken aggregate = actual.First() as AggregateTransformationToken;
+            AggregateToken aggregate = actual.First() as AggregateToken;
             aggregate.Should().NotBeNull();
             aggregate.Expressions.Should().HaveCount(2);
 
             List<AggregateTokenBase> statements = aggregate.Expressions.ToList();
             
-            VerifyAggregateExpressionToken("CustomerId", AggregationMethodDefinition.Sum, "Total", statements[0] as AggregateToken);
-            VerifyAggregateExpressionToken("SharePrice", AggregationMethodDefinition.CountDistinct, "SharePriceDistinctCount", statements[1] as AggregateToken);        
+            VerifyAggregateExpressionToken("CustomerId", AggregationMethodDefinition.Sum, "Total", statements[0] as AggregateExpressionToken);
+            VerifyAggregateExpressionToken("SharePrice", AggregationMethodDefinition.CountDistinct, "SharePriceDistinctCount", statements[1] as AggregateExpressionToken);        
         }
 
         [Fact]
@@ -192,11 +192,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             actual.Should().NotBeNull();
             actual.Should().HaveCount(1);
 
-            AggregateTransformationToken aggregate = actual.First() as AggregateTransformationToken;
+            AggregateToken aggregate = actual.First() as AggregateToken;
             aggregate.Should().NotBeNull();
             aggregate.Expressions.Should().HaveCount(1);
 
-            VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", aggregate.Expressions.First() as AggregateToken);
+            VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", aggregate.Expressions.First() as AggregateExpressionToken);
         }
 
         [Fact]
@@ -217,14 +217,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             actual.Should().NotBeNull();
             actual.Should().HaveCount(1);
 
-            AggregateTransformationToken aggregate = actual.First() as AggregateTransformationToken;
+            AggregateToken aggregate = actual.First() as AggregateToken;
             aggregate.Should().NotBeNull();
             aggregate.Expressions.Should().HaveCount(2);
 
             List<AggregateTokenBase> statements = aggregate.Expressions.ToList();
 
-            VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", aggregate.Expressions.First() as AggregateToken);
-            VerifyAggregateExpressionToken("SharePrice", AggregationMethodDefinition.CountDistinct, "SharePriceDistinctCount", statements[1] as AggregateToken);        
+            VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", aggregate.Expressions.First() as AggregateExpressionToken);
+            VerifyAggregateExpressionToken("SharePrice", AggregationMethodDefinition.CountDistinct, "SharePriceDistinctCount", statements[1] as AggregateExpressionToken);        
         }
 
         [Fact]
@@ -370,10 +370,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             groupBy.Child.Should().NotBeNull();
 
-            AggregateTransformationToken aggregate = groupBy.Child as AggregateTransformationToken;
+            AggregateToken aggregate = groupBy.Child as AggregateToken;
             aggregate.Expressions.Should().HaveCount(1);
 
-            VerifyAggregateExpressionToken("SalesPrice", AggregationMethodDefinition.Average, "RetailPrice", aggregate.Expressions.First() as AggregateToken);      
+            VerifyAggregateExpressionToken("SalesPrice", AggregationMethodDefinition.Average, "RetailPrice", aggregate.Expressions.First() as AggregateExpressionToken);      
         }
 
         [Fact]
@@ -514,9 +514,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             groupBy.Properties.Should().HaveCount(1);
             groupBy.Child.Should().NotBeNull();
 
-            AggregateTransformationToken groupByAggregate = groupBy.Child as AggregateTransformationToken;
+            AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
             groupByAggregate.Expressions.Should().HaveCount(1);
-            VerifyAggregateExpressionToken("SalesPrice", AggregationMethodDefinition.Average, "RetailPrice", groupByAggregate.Expressions.First() as AggregateToken);
+            VerifyAggregateExpressionToken("SalesPrice", AggregationMethodDefinition.Average, "RetailPrice", groupByAggregate.Expressions.First() as AggregateExpressionToken);
 
             // verify filter
             BinaryOperatorToken filter = transformations[1] as BinaryOperatorToken;
@@ -524,14 +524,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             VerifyBinaryOperatorToken<int>("UnitPrice", BinaryOperatorKind.Equal, 5, filter);
 
             // verify aggregate
-            AggregateTransformationToken aggregate = transformations[2] as AggregateTransformationToken;
+            AggregateToken aggregate = transformations[2] as AggregateToken;
             aggregate.Should().NotBeNull();
             aggregate.Expressions.Should().HaveCount(2);
 
             List<AggregateTokenBase> aggregateExpressions = aggregate.Expressions.ToList();
 
-            VerifyAggregateExpressionToken("CustomerId", AggregationMethodDefinition.Sum, "Total", aggregateExpressions[0] as AggregateToken);
-            VerifyAggregateExpressionToken("SharePrice", AggregationMethodDefinition.CountDistinct, "SharePriceDistinctCount", aggregateExpressions[1] as AggregateToken);
+            VerifyAggregateExpressionToken("CustomerId", AggregationMethodDefinition.Sum, "Total", aggregateExpressions[0] as AggregateExpressionToken);
+            VerifyAggregateExpressionToken("SharePrice", AggregationMethodDefinition.CountDistinct, "SharePriceDistinctCount", aggregateExpressions[1] as AggregateExpressionToken);
         }
 
         [Fact]

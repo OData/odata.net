@@ -149,14 +149,14 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="tokenIn">The AggregateTransformationToken to bind</param>
         /// <returns>A T node bound to this AggregateTransformationToken</returns>
-        T Visit(AggregateTransformationToken tokenIn);
+        T Visit(AggregateToken tokenIn);
 
         /// <summary>
         /// Visits a AggregateToken
         /// </summary>
         /// <param name="tokenIn">The AggregateTokenBase to bind</param>
         /// <returns>A T node bound to this AggregateTokenBase</returns>
-        T Visit(AggregateToken tokenIn);
+        T Visit(AggregateExpressionToken tokenIn);
 
         /// <summary>
         /// Visits a EntitySetAggregateToken

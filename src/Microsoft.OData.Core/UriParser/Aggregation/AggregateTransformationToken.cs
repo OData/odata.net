@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser.Aggregation
     /// <summary>
     /// Query token representing an Aggregate token.
     /// </summary>
-    public sealed class AggregateTransformationToken : ApplyTransformationToken
+    public sealed class AggregateToken : ApplyTransformationToken
     {
         private readonly IEnumerable<AggregateTokenBase> expressions;
 
@@ -24,7 +24,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// Create an AggregateTransformationToken.
         /// </summary>
         /// <param name="expressions">The aggregate expressions.</param>
-        public AggregateTransformationToken(IEnumerable<AggregateTokenBase> expressions)
+        public AggregateToken(IEnumerable<AggregateTokenBase> expressions)
         {
             ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
             this.expressions = expressions;

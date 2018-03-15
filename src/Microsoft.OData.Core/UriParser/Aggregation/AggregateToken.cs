@@ -17,7 +17,7 @@ namespace Microsoft.OData.UriParser.Aggregation
     /// <summary>
     /// Query token representing an Aggregate expression.
     /// </summary>
-    public sealed class AggregateToken : AggregateTokenBase
+    public sealed class AggregateExpressionToken : AggregateTokenBase
     {
         private readonly QueryToken expression;
 
@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <param name="expression">The aggregate expression.</param>
         /// <param name="method">The aggregation method.</param>
         /// <param name="alias">The alias for this query token.</param>
-        public AggregateToken(QueryToken expression, AggregationMethod method, string alias)
+        public AggregateExpressionToken(QueryToken expression, AggregationMethod method, string alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
@@ -48,7 +48,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <param name="expression">The aggregate expression.</param>
         /// <param name="methodDefinition">The aggregate method definition.</param>
         /// <param name="alias">The alias for this query token.</param>
-        public AggregateToken(QueryToken expression, AggregationMethodDefinition methodDefinition, string alias)
+        public AggregateExpressionToken(QueryToken expression, AggregationMethodDefinition methodDefinition, string alias)
             : this(expression, methodDefinition.MethodKind, alias)
         {
             this.methodDefinition = methodDefinition;

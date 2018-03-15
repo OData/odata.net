@@ -145,7 +145,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         public void AggregateOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateTransformationToken(new List<AggregateTokenBase>()));
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateToken(new List<AggregateTokenBase>()));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         public void AggregateExpressionOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateToken(new EndPathToken("Identifier", null), AggregationMethodDefinition.Sum, "Alias"));
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateExpressionToken(new EndPathToken("Identifier", null), AggregationMethodDefinition.Sum, "Alias"));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 

@@ -39,7 +39,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 switch (token.Kind)
                 {
                     case QueryTokenKind.Aggregate:
-                        AggregateTransformationNode aggregate = BindAggregateToken((AggregateTransformationToken)(token));
+                        AggregateTransformationNode aggregate = BindAggregateToken((AggregateToken)(token));
                         transformations.Add(aggregate);
                         aggregateExpressionsCache = aggregate.AggregateExpressions;
                         state.AggregatedPropertyNames =
@@ -60,7 +60,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             return new ApplyClause(transformations);
         }
 
-        private AggregateTransformationNode BindAggregateToken(AggregateTransformationToken token)
+        private AggregateTransformationNode BindAggregateToken(AggregateToken token)
         {
             IEnumerable<AggregateTokenBase> aggregateTokens = MergeEntitySetAggregates(token.Expressions);
             List<AggregateExpressionBase> statements = new List<AggregateExpressionBase>();
@@ -114,7 +114,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 case QueryTokenKind.AggregateExpression:
                 {
-                    AggregateToken token = aggregateToken as AggregateToken;
+                    AggregateExpressionToken token = aggregateToken as AggregateExpressionToken;
                     SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
                     IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
 
@@ -238,7 +238,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 if (token.Child.Kind == QueryTokenKind.Aggregate)
                 {
-                    aggregate = BindAggregateToken((AggregateTransformationToken)token.Child);
+                    aggregate = BindAggregateToken((AggregateToken)token.Child);
                     aggregateExpressionsCache = ((AggregateTransformationNode)aggregate).AggregateExpressions;
                     state.AggregatedPropertyNames =
                         aggregateExpressionsCache.Select(statement => statement.Alias).ToList();
