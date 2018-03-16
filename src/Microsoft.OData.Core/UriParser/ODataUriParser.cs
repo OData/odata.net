@@ -306,14 +306,12 @@ namespace Microsoft.OData.UriParser
             InitQueryOptionDic();
             string idQuery = null;
 
-            if (!this.Resolver.EnableCaseInsensitive)
+            if (!this.queryOptionDic.TryGetValue(UriQueryConstants.IdQueryOption, out idQuery) && !this.Resolver.EnableCaseInsensitive)
             {
-                if (!this.queryOptionDic.TryGetValue(UriQueryConstants.IdQueryOption, out idQuery))
-                {
-                    return null;
-                }
+                return null;
             }
-            else
+
+            if (idQuery == null && this.Resolver.EnableCaseInsensitive)
             {
                 var list = this.queryOptionDic
                     .Where(pair => string.Equals(UriQueryConstants.IdQueryOption, pair.Key, StringComparison.OrdinalIgnoreCase))

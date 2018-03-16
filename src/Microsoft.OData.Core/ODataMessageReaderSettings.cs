@@ -44,6 +44,7 @@ namespace Microsoft.OData
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.Version = odataVersion;
+            this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
 
             Validator = new ReaderValidator(this);
             if (odataVersion < ODataVersion.V401)
@@ -59,6 +60,11 @@ namespace Microsoft.OData
                 this.MaxProtocolVersion = odataVersion;
             }
         }
+
+        /// <summary>
+        /// Gets or sets library compatibility version. Default value is <see cref="T:ODataLibraryCompatibilityLevel.Latest"/>,
+        /// </summary>
+        public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 
         /// <summary>Gets or sets the OData protocol version to be used for reading payloads. </summary>
         /// <returns>The OData protocol version to be used for reading payloads.</returns>
@@ -257,6 +263,7 @@ namespace Microsoft.OData
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
         }
     }

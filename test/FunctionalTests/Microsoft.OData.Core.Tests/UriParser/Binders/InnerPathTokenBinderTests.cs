@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
     public class InnerPathTokenBinderTests
     {
         private static readonly ODataUriParserConfiguration Configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
-        private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
+        private static readonly ODataUriResolver DefaultUriResolver = new ODataUriResolver();
 
         #region Short-span integration tests on BindInnerPathSegment
         [Fact]

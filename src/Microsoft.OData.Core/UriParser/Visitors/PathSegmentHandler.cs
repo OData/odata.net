@@ -77,6 +77,15 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Handle an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(AnnotationSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Handle an OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>

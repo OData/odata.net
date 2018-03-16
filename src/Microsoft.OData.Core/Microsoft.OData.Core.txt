@@ -79,6 +79,7 @@ ODataMessageWriter_ServiceDocumentInRequest=A service document cannot be written
 ODataMessageWriter_MetadataDocumentInRequest=A metadata document cannot be written to request payloads. Metadata documents are only supported in responses.
 ODataMessageWriter_DeltaInRequest=Cannot write delta in request payload.
 ODataMessageWriter_AsyncInRequest=Cannot write async in request payload.
+ODataMessageWriter_CannotWriteTopLevelNull=Cannot write the value 'null' in top level property; return 204 instead.
 ODataMessageWriter_CannotWriteNullInRawFormat=Cannot write the value 'null' in raw format.
 ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind=Cannot set message headers for the invalid payload kind '{0}'.
 ODataMessageWriter_IncompatiblePayloadKinds=The payload kind '{0}' used in the last call to ODataUtils.SetHeadersForPayload is incompatible with the payload being written, which is of kind '{1}'.

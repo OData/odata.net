@@ -210,6 +210,9 @@ namespace Microsoft.OData
         /// <summary>"groupby" keyword for $apply.</summary>
         internal const string KeywordGroupBy = "groupby";
 
+        /// <summary>"compute" keyword for $apply.</summary>
+        internal const string KeywordCompute = "compute";
+
         /// <summary>"sum" keyword for expressions.</summary>
         internal const string KeywordSum = "sum";
 

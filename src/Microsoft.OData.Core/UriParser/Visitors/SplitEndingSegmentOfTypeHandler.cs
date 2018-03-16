@@ -113,6 +113,15 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Handle an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public override void Handle(AnnotationSegment segment)
+        {
+            CommonHandler(segment);
+        }
+
+        /// <summary>
         /// Handle an OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>

@@ -219,8 +219,9 @@ namespace Microsoft.OData.UriParser
                                 pathString.Append(pathSegment);
                             }
                         }
-                        else if (operationSegment.EntitySet != null) // Is it correct to check EntitySet?
+                        else if (operationSegment.EntitySet != null)
                         {
+                            // Is it correct to check EntitySet?
                             pathString = new StringBuilder(operationSegment.EntitySet.Name);
                         }
                         else

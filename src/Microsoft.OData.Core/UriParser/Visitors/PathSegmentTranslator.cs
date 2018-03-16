@@ -75,6 +75,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(AnnotationSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Translate a OperationImportSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>

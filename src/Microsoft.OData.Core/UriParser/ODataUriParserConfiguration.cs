@@ -47,7 +47,6 @@ namespace Microsoft.OData.UriParser
             }
 
             this.EnableUriTemplateParsing = false;
-            this.EnableCaseInsensitiveUriFunctionIdentifier = false;
         }
 
         /// <summary>
@@ -122,11 +121,15 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Whether no dollar query options is enabled.
+        /// Gets or Sets an option whether no dollar query options is enabled.
         /// If it is enabled, the '$' prefix of system query options becomes optional.
         /// For example, "select" and "$select" are equivalent in this case.
         /// </summary>
-        internal bool EnableNoDollarQueryOptions { get; set; }
+        internal bool EnableNoDollarQueryOptions
+        {
+            get { return this.Resolver.EnableNoDollarQueryOptions; }
+            set { this.Resolver.EnableNoDollarQueryOptions = value; }
+        }
 
         /// <summary>
         /// Whether Uri template parsing is enabled. See <see cref="UriTemplateExpression"/> class for detail.

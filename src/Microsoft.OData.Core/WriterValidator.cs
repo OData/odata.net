@@ -197,13 +197,24 @@ namespace Microsoft.OData
         /// <param name="expectedPropertyTypeReference">The expected property type or null if we
         /// don't have any.</param>
         /// <param name="propertyName">The name of the property.</param>
+        /// <param name="isTopLevel">true if the property is top-level.</param>
         /// <param name="model">The model used to get the OData version.</param>
         public void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference,
-                                              string propertyName, IEdmModel model)
+                                              string propertyName, bool isTopLevel, IEdmModel model)
         {
             if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 WriterValidationUtils.ValidateNullPropertyValue(expectedPropertyTypeReference, propertyName, model);
+            }
+
+            if (isTopLevel && this.settings.LibraryCompatibility >= ODataLibraryCompatibility.Version7)
+            {
+                // From the spec:
+                // 11.2.3 Requesting Individual Properties
+                // ...
+                // If the property is single-valued and has the null value, the service responds with 204 No Content.
+                // ...
+                throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
             }
         }
 

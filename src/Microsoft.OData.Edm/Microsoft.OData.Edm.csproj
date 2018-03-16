@@ -143,9 +143,21 @@
     <Compile Include="PrimitiveValueConverters\DefaultPrimitiveValueConverter.cs" />
     <Compile Include="EdmLocation.cs" />
     <Compile Include="ExtensionMethods\EdmElementComparer.cs" />
+    <Compile Include="Schema\BadPathType.cs" />
+    <Compile Include="Schema\BadPathTypeReference.cs" />
+    <Compile Include="Schema\CoreModel\EdmCoreModelComplexType.cs" />
+    <Compile Include="Schema\CoreModel\EdmCoreModelPrimitiveType.cs" />
+    <Compile Include="Schema\CoreModel\EdmCoreModelUntypeType.cs" />
+    <Compile Include="Schema\CoreModel\IEdmCoreModelElement.cs" />
+    <Compile Include="Schema\CoreModel\EdmCoreModelEntityType.cs" />
+    <Compile Include="Schema\CoreModel\EdmCoreModelPathType.cs" />
+    <Compile Include="Schema\CoreModel\EdmCoreModel.cs" />
     <Compile Include="Schema\EdmUntypedStructuredType.cs" />
     <Compile Include="Schema\EdmUntypedStructuredTypeReference.cs" />
+    <Compile Include="Schema\EdmPathTypeReference.cs" />
     <Compile Include="Schema\EdmUntypedTypeReference.cs" />
+    <Compile Include="Schema\Interfaces\IEdmPathTypeReference.cs" />
+    <Compile Include="Schema\Interfaces\IEdmPathType.cs" />
     <Compile Include="Schema\Interfaces\IEdmUntypedType.cs" />
     <Compile Include="Schema\Interfaces\IEdmUntypedTypeReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmTypeDefinitionReference.cs" />
@@ -246,6 +258,7 @@
     <Compile Include="Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmVocabularyAnnotation.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyConstants.cs" />
+    <Compile Include="Vocabularies\AuthorizationVocabularyModel.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyModel.cs" />
     <Compile Include="Vocabularies\AlternateKeysVocabularyConstants.cs" />
     <Compile Include="Vocabularies\AlternateKeysVocabularyModel.cs" />
@@ -461,7 +474,6 @@
     <Compile Include="Schema\EdmConstants.cs" />
     <Compile Include="Schema\EdmDecimalTypeReference.cs" />
     <Compile Include="Schema\EdmEntityTypeReference.cs" />
-    <Compile Include="Schema\EdmCoreModel.cs" />
     <Compile Include="Schema\EdmPrimitiveTypeReference.cs" />
     <Compile Include="Schema\EdmStringTypeReference.cs" />
     <Compile Include="Schema\EdmTemporalTypeReference.cs" />
@@ -524,6 +536,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Vocabularies\CapabilitiesVocabularies.xml">
       <LogicalName>CapabilitiesVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\AuthorizationVocabularies.xml">
+      <LogicalName>AuthorizationVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\CoreVocabularies.xml">

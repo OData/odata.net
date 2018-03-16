@@ -40,7 +40,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public EntityModelSchemaToEdmModelConverter EntityModelSchemaToEdmModelConverter { get; set; }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of top-level property payloads")]
-        // TODO: Change the payload of null top-level properties #645
         public void TopLevelPropertyTest()
         {
             var injectedProperties = new[]
@@ -329,7 +328,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of top-level open properties.")]
-        // TODO: Change the payload of null top-level properties #645
         public void OpenTopLevelPropertiesTest()
         {
             IEdmModel model = TestModels.BuildTestModel();
