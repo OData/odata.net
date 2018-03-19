@@ -231,7 +231,11 @@ namespace Microsoft.OData.Edm
             foreach (IEdmOperationParameter parameter in operation.Parameters)
             {
                 string typeName = "";
-                if (parameter.Type.IsCollection())
+                if (parameter.Type == null)
+                {
+                    typeName = CsdlConstants.TypeName_Untyped;
+                }
+                else if (parameter.Type.IsCollection())
                 {
                     typeName = CsdlConstants.Value_Collection + "(" + parameter.Type.AsCollection().ElementType().FullName() + ")";
                 }

@@ -72,16 +72,17 @@ namespace Microsoft.OData
         /// Create ODataContextUrlInfo for OdataValue.
         /// </summary>
         /// <param name="value">The ODataValue to be used.</param>
+        /// <param name="version">OData Version.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <param name="model">The model used to handle unsigned int conversions.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
-        internal static ODataContextUrlInfo Create(ODataValue value, ODataUri odataUri = null, IEdmModel model = null)
+        internal static ODataContextUrlInfo Create(ODataValue value, ODataVersion version, ODataUri odataUri = null, IEdmModel model = null)
         {
             return new ODataContextUrlInfo()
             {
                 TypeName = GetTypeNameForValue(value, model),
                 ResourcePath = ComputeResourcePath(odataUri),
-                QueryClause = ComputeQueryClause(odataUri),
+                QueryClause = ComputeQueryClause(odataUri, version),
                 IsUndeclared = ComputeIfIsUndeclared(odataUri)
             };
         }
@@ -117,8 +118,9 @@ namespace Microsoft.OData
         /// <param name="expectedEntityTypeName">The expectedEntity for current element.</param>
         /// <param name="isSingle">Whether target is single item.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
+        /// <param name="version">The OData Version of the response.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
-        internal static ODataContextUrlInfo Create(IEdmNavigationSource navigationSource, string expectedEntityTypeName, bool isSingle, ODataUri odataUri)
+        internal static ODataContextUrlInfo Create(IEdmNavigationSource navigationSource, string expectedEntityTypeName, bool isSingle, ODataUri odataUri, ODataVersion version)
         {
             EdmNavigationSourceKind kind = navigationSource.NavigationSourceKind();
             string navigationSourceEntityType = navigationSource.EntityType().FullName();
@@ -131,7 +133,7 @@ namespace Microsoft.OData
                 IncludeFragmentItemSelector = isSingle && kind != EdmNavigationSourceKind.Singleton,
                 NavigationPath = ComputeNavigationPath(kind, odataUri, navigationSource.Name),
                 ResourcePath = ComputeResourcePath(odataUri),
-                QueryClause = ComputeQueryClause(odataUri),
+                QueryClause = ComputeQueryClause(odataUri, version),
                 IsUndeclared = ComputeIfIsUndeclared(odataUri)
             };
         }
@@ -140,10 +142,11 @@ namespace Microsoft.OData
         /// Create ODataContextUrlInfo from ODataResourceTypeContext
         /// </summary>
         /// <param name="typeContext">The ODataResourceTypeContext to be used.</param>
+        /// <param name="version">The OData Version of the response</param>
         /// <param name="isSingle">Whether target is single item.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
-        internal static ODataContextUrlInfo Create(ODataResourceTypeContext typeContext, bool isSingle, ODataUri odataUri = null)
+        internal static ODataContextUrlInfo Create(ODataResourceTypeContext typeContext, ODataVersion version, bool isSingle, ODataUri odataUri = null)
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 
@@ -172,7 +175,7 @@ namespace Microsoft.OData
                 IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                 NavigationPath = ComputeNavigationPath(typeContext.NavigationSourceKind, odataUri, typeContext.NavigationSourceName),
                 ResourcePath = ComputeResourcePath(odataUri),
-                QueryClause = ComputeQueryClause(odataUri),
+                QueryClause = ComputeQueryClause(odataUri, version),
                 IsUndeclared = ComputeIfIsUndeclared(odataUri)
             };
         }
@@ -181,10 +184,11 @@ namespace Microsoft.OData
         /// Create contextUrlInfo for delta
         /// </summary>
         /// <param name="typeContext">The ODataResourceTypeContext to be used.</param>
+        /// <param name="version">The OData version of the response.</param>
         /// <param name="kind">The delta kind.</param>
         /// <param name="odataUri">The odata uri info for current query.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
-        internal static ODataContextUrlInfo Create(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataUri odataUri = null)
+        internal static ODataContextUrlInfo Create(ODataResourceTypeContext typeContext, ODataVersion version, ODataDeltaKind kind, ODataUri odataUri = null)
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 
@@ -205,7 +209,7 @@ namespace Microsoft.OData
                 contextUriInfo.NavigationPath = ComputeNavigationPath(typeContext.NavigationSourceKind, odataUri,
                     typeContext.NavigationSourceName);
                 contextUriInfo.ResourcePath = ComputeResourcePath(odataUri);
-                contextUriInfo.QueryClause = ComputeQueryClause(odataUri);
+                contextUriInfo.QueryClause = ComputeQueryClause(odataUri, version);
                 contextUriInfo.IsUndeclared = ComputeIfIsUndeclared(odataUri);
             }
 
@@ -272,7 +276,7 @@ namespace Microsoft.OData
             return string.Empty;
         }
 
-        private static string ComputeQueryClause(ODataUri odataUri)
+        private static string ComputeQueryClause(ODataUri odataUri, ODataVersion version)
         {
             if (odataUri != null)
             {
@@ -283,7 +287,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
+                    return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand, version);
                 }
             }
 
@@ -311,6 +315,12 @@ namespace Microsoft.OData
             if (value == null)
             {
                 return null;
+            }
+
+            // special identifier for null values.
+            if (value.IsNullValue)
+            {
+                return ODataConstants.ContextUriFragmentNull;
             }
 
             if (value.TypeAnnotation != null && !string.IsNullOrEmpty(value.TypeAnnotation.TypeName))
@@ -369,13 +379,14 @@ namespace Microsoft.OData
         /// Build the expand clause for a given level in the selectExpandClause
         /// </summary>
         /// <param name="selectExpandClause">the current level select expand clause</param>
+        /// <param name="version">OData Version of the response</param>
         /// <returns>the select and expand segment for context url in this level.</returns>
-        private static string CreateSelectExpandContextUriSegment(SelectExpandClause selectExpandClause)
+        private static string CreateSelectExpandContextUriSegment(SelectExpandClause selectExpandClause, ODataVersion version)
         {
             if (selectExpandClause != null)
             {
                 string contextUri;
-                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out contextUri);
+                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, version, out contextUri);
                 if (!string.IsNullOrEmpty(contextUri))
                 {
                     return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
@@ -388,10 +399,12 @@ namespace Microsoft.OData
         /// <summary>Process sub expand node, contact with subexpand result</summary>
         /// <param name="expandNode">The current expanded node.</param>
         /// <param name="subExpand">Generated sub expand node.</param>
+        /// <param name="version">OData Version of the generated response.</param>
         /// <returns>The generated expand string.</returns>
-        private static string ProcessSubExpand(string expandNode, string subExpand)
+        private static string ProcessSubExpand(string expandNode, string subExpand, ODataVersion version)
         {
-            return string.IsNullOrEmpty(subExpand) ? null : expandNode + ODataConstants.ContextUriProjectionStart + subExpand + ODataConstants.ContextUriProjectionEnd;
+            return string.IsNullOrEmpty(subExpand) && version <= ODataVersion.V4 ? null :
+                expandNode + ODataConstants.ContextUriProjectionStart + subExpand + ODataConstants.ContextUriProjectionEnd;
         }
 
         /// <summary>Create combined result string using selected items list and expand items list.</summary>
@@ -401,8 +414,13 @@ namespace Microsoft.OData
         private static string CombineSelectAndExpandResult(IList<string> selectList, IList<string> expandList)
         {
             string currentExpandClause = string.Empty;
+
             if (selectList.Any())
             {
+                // https://github.com/OData/odata.net/issues/1104
+                // If the user explicitly selects and expands a nav prop, we should include both forms in contextUrl
+                // We can't, though, because SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary adds all of
+                // the expanded items to the select before it gets here, so we can't tell what is explicitly selected by the user.
                 foreach (var item in expandList)
                 {
                     string expandNode = item.Substring(0, item.IndexOf(ODataConstants.ContextUriProjectionStart));

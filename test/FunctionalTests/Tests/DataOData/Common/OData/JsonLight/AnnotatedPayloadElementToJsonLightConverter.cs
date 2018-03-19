@@ -253,11 +253,6 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                 if (isTopLevel)
                 {
-                    if (payloadElement.Value.IsNull)
-                    {
-                        // TODO: Change the payload of null top-level properties #645
-                    }
-
                     JsonValue complexValue = this.Recurse(payloadElement.Value);
 
                     // NOTE: top-level complex properties don't use a wrapper object.
@@ -644,7 +639,6 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 bool needsWrapping = this.CurrentElementIsRoot();
 
                 string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
-                // TODO: Change the payload of null top-level properties #645
                 JsonProperty jsonProperty = new JsonProperty(propertyName, null);
                 jsonProperty.Value = this.Recurse(payloadElement.Value, jsonProperty);
 

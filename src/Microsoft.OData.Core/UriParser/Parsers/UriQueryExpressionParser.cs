@@ -205,6 +205,46 @@ namespace Microsoft.OData.UriParser
             }
         }
 
+        // parses $apply compute expression (.e.g. compute(UnitPrice mul SalesPrice as computePrice)
+        internal ComputeToken ParseCompute()
+        {
+            Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordCompute), "token identifier is compute");
+
+            lexer.NextToken();
+
+            // '('
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            lexer.NextToken();
+
+            List<ComputeExpressionToken> transformationTokens = new List<ComputeExpressionToken>();
+
+            while (true)
+            {
+                ComputeExpressionToken computed = this.ParseComputeExpression();
+                transformationTokens.Add(computed);
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken();
+            }
+
+            // ")"
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
+            {
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            this.lexer.NextToken();
+
+            return new ComputeToken(transformationTokens);
+        }
+
         // parses $compute query option.
         internal ComputeToken ParseCompute(string compute)
         {
@@ -263,6 +303,9 @@ namespace Microsoft.OData.UriParser
                         break;
                     case ExpressionConstants.KeywordGroupBy:
                         transformationTokens.Add(ParseGroupBy());
+                        break;
+                    case ExpressionConstants.KeywordCompute:
+                        transformationTokens.Add(ParseCompute());
                         break;
                     default:
                         throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));

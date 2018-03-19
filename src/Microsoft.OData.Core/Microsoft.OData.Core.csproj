@@ -53,6 +53,7 @@
     <Compile Include="JsonLight\ODataJsonLightBatchReader.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchReaderStream.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchWriter.cs" />
+    <Compile Include="ODataLibraryCompatibility.cs" />
     <Compile Include="MultipartMixed\DependsOnIdsTracker.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchFormat.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchInputContext.cs" />
@@ -379,6 +380,7 @@
     <Compile Include="Uri\ODataUriUtils.cs" />
     <Compile Include="Uri\ODataUrlKeyDelimiter.cs" />
     <Compile Include="Uri\SelectExpandClauseToStringBuilder.cs" />
+    <Compile Include="Uri\ApplyClauseToStringBuilder.cs" />
     <Compile Include="UriParser\Binders\BinaryOperatorBinder.cs" />
     <Compile Include="UriParser\Binders\BinderBase.cs" />
     <Compile Include="UriParser\Binders\BindingState.cs" />
@@ -591,6 +593,7 @@
     <Compile Include="UriParser\Aggregation\FilterTransformationNode.cs" />
     <Compile Include="UriParser\Aggregation\TransformationNode.cs" />
     <Compile Include="UriParser\Aggregation\AggregateTransformationNode.cs" />
+    <Compile Include="UriParser\Aggregation\ComputeTransformationNode.cs" />
     <Compile Include="UriParser\Aggregation\AggregateExpression.cs" />
     <Compile Include="UriParser\Aggregation\ApplyClause.cs" />
     <Compile Include="UriParser\Aggregation\GroupByTransformationNode.cs" />

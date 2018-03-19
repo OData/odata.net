@@ -49,6 +49,10 @@ namespace Microsoft.OData.UriParser.Aggregation
                         var groupBy = BindGroupByToken((GroupByToken)(token));
                         transformations.Add(groupBy);
                         break;
+                    case QueryTokenKind.Compute:
+                        var compute = BindComputeToken((ComputeToken)token);
+                        transformations.Add(compute);
+                        break;
                     default:
                         var filterClause = this.filterBinder.BindFilter(token);
                         var filterNode = new FilterTransformationNode(filterClause);
@@ -276,6 +280,18 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 throw new NotSupportedException();
             }
+        }
+
+        private ComputeTransformationNode BindComputeToken(ComputeToken token)
+        {
+            var statements = new List<ComputeExpression>();
+            foreach (ComputeExpressionToken statementToken in token.Expressions)
+            {
+                var singleValueNode = (SingleValueNode)bindMethod(statementToken.Expression);
+                statements.Add(new ComputeExpression(singleValueNode, statementToken.Alias, singleValueNode.TypeReference));
+            }
+
+            return new ComputeTransformationNode(statements);
         }
     }
 }

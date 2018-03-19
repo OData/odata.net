@@ -3966,6 +3966,12 @@ public enum Microsoft.OData.ODataDeltaReaderState : int {
 	Start = 0
 }
 
+public enum Microsoft.OData.ODataLibraryCompatibility : int {
+	Latest = 2147483647
+	Version6 = 60000
+	Version7 = 70000
+}
+
 public enum Microsoft.OData.ODataNullValueBehaviorKind : int {
 	Default = 0
 	DisableValidation = 2
@@ -5083,6 +5089,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableMessageStreamDisposal  { public get; public set; }
 	bool EnablePrimitiveTypeConversion  { public get; public set; }
+	Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	System.Func`3[[System.Object],[System.String],[Microsoft.OData.Edm.IEdmTypeReference]] PrimitiveTypeResolver  { public get; public set; }
@@ -5167,6 +5174,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableMessageStreamDisposal  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
+	Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
@@ -6824,6 +6832,7 @@ public enum Microsoft.OData.UriParser.Aggregation.AggregationMethod : int {
 
 public enum Microsoft.OData.UriParser.Aggregation.TransformationNodeKind : int {
 	Aggregate = 0
+	Compute = 3
 	Filter = 2
 	GroupBy = 1
 }
@@ -6896,6 +6905,13 @@ public sealed class Microsoft.OData.UriParser.Aggregation.ApplyClause {
 	public ApplyClause (System.Collections.Generic.IList`1[[Microsoft.OData.UriParser.Aggregation.TransformationNode]] transformations)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.TransformationNode]] Transformations  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.ComputeTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
+	public ComputeTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpression]] expressions)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ComputeExpression]] Expressions  { public get; }
+	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.FilterTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {

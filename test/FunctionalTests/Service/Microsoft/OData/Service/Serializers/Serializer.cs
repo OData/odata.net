@@ -1072,7 +1072,7 @@ namespace Microsoft.OData.Service.Serializers
             {
                 // Build a string containing all the $expand and $select for the current node and children
                 StringBuilder projectionPaths, expansionPaths;
-                expandedProjectionNode.SelectExpandClause.GetSelectExpandPaths(out projectionPaths, out expansionPaths);
+                expandedProjectionNode.SelectExpandClause.GetSelectExpandPaths(ODataVersion.V4, out projectionPaths, out expansionPaths);
 
                 Debug.Assert(projectionPaths != null, "projectionPaths != null");
                 Debug.Assert(expansionPaths != null, "expansionPaths != null");

@@ -290,13 +290,11 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void VocabularyValidationDuplicateError()
+        public void ValidateVocabularyWithIncorrectType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
-                { "(EdmLibTests.StubEdm.StubEdmEntityType)", EdmErrorCode.KeyMissingOnEntityType },
-                { "(EdmLibTests.StubEdm.StubEdmEntityType)", EdmErrorCode.KeyMissingOnEntityType },
-                { "(EdmLibTests.VocabularyStubs.StubTypeTerm)", EdmErrorCode.KeyMissingOnEntityType }
+                {null, null, EdmErrorCode.ExpressionNotValidForTheAssertedType }
             };
             this.VerifySemanticValidation(VocabularyTestModelBuilder.StructuredVocabularyAnnotation(), this.EdmVersion, expectedErrors);
         }
@@ -423,6 +421,152 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> actualErrors = null;
             var validationResult = modelWithAnnotations.Validate(ruleSet, out actualErrors);
             Assert.IsTrue(validationResult, "Expected no validation errors from annotation with targets in an external model.");
+        }
+
+        [TestMethod]
+        public void ValidateUnresolvedInlineAnnotationTargets()
+        {
+            // Test that unresolved annotation terms don't cause a validation failure
+            const string csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <Term Name=""CommonValueTerm"" Type=""Edm.String"" />
+  <EntityContainer Name=""SomeContainer"">
+    <EntitySet Name=""SomeEntitySet"" EntityType=""NS.SomeEntityType"">
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""NS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </EntitySet>
+    <ActionImport Name=""SomeFunctionImport"" Action=""NS.SomeFunction"" >
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </ActionImport>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"">
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </Annotation>
+    <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+  </EntityContainer>
+  <EntityType Name=""SomeEntityType"">
+    <Key>
+      <PropertyRef Name=""ID"" />
+    </Key>
+    <Property Name=""ID"" Type=""Edm.String"" Nullable=""false"">
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </Property>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+  </EntityType>
+  <Action Name=""SomeFunction"">
+    <ReturnType Type=""Edm.Int32""/>
+    <Parameter Name=""SomeFunctionImportParameter"" Type=""Edm.String"" >
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </Parameter>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+  </Action>
+</Schema>";
+
+            var model = this.GetParserResult(new List<string> { csdl });
+
+            // Note: we don't currently appear to support annotations on annotations, which is why the count
+            // is 21 when in fact there are 23 in the payload.
+            Assert.AreEqual(21, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
+
+            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
+
+            IEnumerable<EdmError> actualErrors = null;
+            var validationResult = model.Validate(ruleSet, out actualErrors);
+            Assert.IsTrue(validationResult, "Expected no validation errors from annotation with unresolved terms.");
+        }
+
+
+        [TestMethod]
+        public void ValidateUnresolvedInlineAnnotationTargetsWithUnresolvedTypes()
+        {
+            // Test that unresolved annotation term types load and raise appropriate validation failures
+            const string csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <Term Name=""CommonValueTerm"" Type=""Edm.String"" />
+  <EntityContainer Name=""SomeContainer"">
+    <EntitySet Name=""SomeEntitySet"" EntityType=""NS.SomeEntityType"">
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <ActionImport Name=""SomeFunctionImport"" Action=""NS.SomeFunction"" >
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </ActionImport>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"">
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </Annotation>
+    <Annotation Term=""RefNS.UnknownValueTerm"">
+      <Record Type=""RefNs.UnknownType"">
+        <PropertyValue Property=""Property"" String=""PropertyValue"" />
+      </Record>
+    </Annotation>
+  </EntityContainer>
+  <EntityType Name=""SomeEntityType"">
+    <Key>
+      <PropertyRef Name=""ID"" />
+    </Key>
+    <Property Name=""ID"" Type=""Edm.String"" Nullable=""false"">
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </Property>
+    <Annotation Term=""RefNS.UnknownValueTerm"">
+      <Record Type=""RefNs.UnknownType"">
+        <PropertyValue Property=""Property"" String=""PropertyValue"" />
+      </Record>
+    </Annotation>
+  </EntityType>
+  <Action Name=""SomeFunction""><ReturnType Type=""Edm.Int32""/>
+    <Parameter Name=""SomeFunctionImportParameter"" Type=""Edm.String"" >
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </Parameter>
+    <Annotation Term=""RefNS.UnknownValueTerm"">
+      <Record Type=""RefNs.UnknownType"">
+        <PropertyValue Property=""Property"" String=""PropertyValue"" />
+      </Record>
+    </Annotation>
+  </Action>
+</Schema>";
+
+            var model = this.GetParserResult(new List<string> { csdl });
+
+            // Note: we don't currently appear to support annotations on annotations, which is why the count
+            // is 8 when in fact there are 9 in the payload.
+            Assert.AreEqual(8, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
+
+            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
+
+            IEnumerable<EdmError> actualErrors = null;
+            var validationResult = model.Validate(ruleSet, out actualErrors);
+            Assert.AreEqual(7, actualErrors.Count(), "Expected errors for unresolved types.");
         }
 
         [TestMethod]

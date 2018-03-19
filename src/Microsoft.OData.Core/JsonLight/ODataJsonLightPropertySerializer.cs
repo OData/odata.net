@@ -65,12 +65,6 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(property != null, "property != null");
             Debug.Assert(!(property.Value is ODataStreamReferenceValue), "!(property.Value is ODataStreamReferenceValue)");
 
-            if (property.ODataValue == null || property.ODataValue.IsNullValue)
-            {
-                // TODO: Enable updating top-level properties to null #645
-                throw new ODataException("A null top-level property is not allowed to be serialized.");
-            }
-
             this.WriteTopLevelPayload(
                 () =>
                 {
@@ -79,7 +73,7 @@ namespace Microsoft.OData.JsonLight
 
                     if (!(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
                     {
-                        ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
+                        ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.MessageWriterSettings.Version ?? ODataVersion.V4, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
                         this.WriteContextUriProperty(kind, () => contextInfo);
                     }
 
@@ -366,12 +360,27 @@ namespace Microsoft.OData.JsonLight
             ODataProperty property)
         {
             this.WriterValidator.ValidateNullPropertyValue(
-                this.currentPropertyInfo.MetadataType.TypeReference, property.Name, this.Model);
+                this.currentPropertyInfo.MetadataType.TypeReference, property.Name,
+                this.currentPropertyInfo.IsTopLevel, this.Model);
 
             if (this.currentPropertyInfo.IsTopLevel)
             {
-                // TODO: Enable updating top-level properties to null #645
-                throw new ODataException("A null top-level property is not allowed to be serialized.");
+                if (this.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility <
+                    ODataLibraryCompatibility.Version7)
+                {
+                    // The 6.x library used an OData 3.0 protocol element in this case: @odata.null=true
+                    this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
+                    this.JsonWriter.WriteValue(true);
+                }
+                else
+                {
+                    // From the spec:
+                    // 11.2.3 Requesting Individual Properties
+                    // ...
+                    // If the property is single-valued and has the null value, the service responds with 204 No Content.
+                    // ...
+                    throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
+                }
             }
             else
             {
