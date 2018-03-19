@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     internal class EdmContainedEntitySet : EdmEntitySetBase, IEdmContainedEntitySet
     {
-        internal readonly IEdmPathExpression NavigationPath;
+        private readonly IEdmPathExpression navigationPath;
         private readonly IEdmNavigationSource parentNavigationSource;
         private readonly IEdmNavigationProperty navigationProperty;
         private IEdmPathExpression path;
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Edm
 
             this.parentNavigationSource = parentNavigationSource;
             this.navigationProperty = navigationProperty;
-            this.NavigationPath = navigationPath;
+            this.navigationPath = navigationPath;
         }
 
         /// <summary>
@@ -67,6 +67,36 @@ namespace Microsoft.OData.Edm
         public IEdmNavigationProperty NavigationProperty
         {
             get { return this.navigationProperty; }
+        }
+
+        internal IEdmPathExpression NavigationPath
+        {
+            get
+            {
+                return this.navigationPath;
+            }
+        }
+
+        private string FullNavigationPath
+        {
+            get
+            {
+                if (this.fullPath == null)
+                {
+                    List<string> fullPath = new List<string>();
+                    EdmContainedEntitySet currentSource = this;
+                    while (currentSource != null)
+                    {
+                        fullPath.AddRange(currentSource.NavigationPath.PathSegments);
+                        currentSource = currentSource.ParentNavigationSource as EdmContainedEntitySet;
+                    }
+
+                    fullPath.Reverse();
+                    this.fullPath = new EdmPathExpression(fullPath).Path;
+                }
+
+                return this.fullPath;
+            }
         }
 
         /// <summary>
@@ -121,9 +151,9 @@ namespace Microsoft.OData.Edm
             // source matches a valid path to the target of the contained source.
             if (bindingPath != null)
             {
-                if (bindingPath.Path.Length > this.fullNavigationPath.Length && bindingPath.Path.StartsWith(this.fullNavigationPath, System.StringComparison.Ordinal))
+                if (bindingPath.Path.Length > this.FullNavigationPath.Length && bindingPath.Path.StartsWith(this.FullNavigationPath, System.StringComparison.Ordinal))
                 {
-                    bindingPath = new EdmPathExpression(bindingPath.Path.Substring(this.fullNavigationPath.Length + 1));
+                    bindingPath = new EdmPathExpression(bindingPath.Path.Substring(this.FullNavigationPath.Length + 1));
                 }
             }
 
@@ -140,7 +170,6 @@ namespace Microsoft.OData.Edm
             return navigationTarget;
         }
 
-
         private IEdmPathExpression ComputePath()
         {
             IEdmType targetType = this.navigationProperty.DeclaringType.AsElementType();
@@ -152,28 +181,6 @@ namespace Microsoft.OData.Edm
 
             newPath.Concat(this.NavigationPath.PathSegments);
             return new EdmPathExpression(newPath.ToArray());
-        }
-
-        private string fullNavigationPath
-        {
-            get
-            {
-                if (this.fullPath == null)
-                {
-                    List<string> fullPath = new List<string>();
-                    EdmContainedEntitySet currentSource = this;
-                    while (currentSource != null)
-                    {
-                        fullPath.AddRange(currentSource.NavigationPath.PathSegments);
-                        currentSource = currentSource.ParentNavigationSource as EdmContainedEntitySet;
-                    }
-
-                    fullPath.Reverse();
-                    this.fullPath = new EdmPathExpression(fullPath).Path;
-                }
-
-                return this.fullPath;
-            }
         }
     }
 }

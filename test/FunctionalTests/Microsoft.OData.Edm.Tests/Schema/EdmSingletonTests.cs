@@ -9,8 +9,6 @@ using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
-using System;
-using System.IO;
 
 namespace Microsoft.OData.Edm.Tests.Library
 {

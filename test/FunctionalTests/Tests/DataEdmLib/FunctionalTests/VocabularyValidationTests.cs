@@ -461,7 +461,8 @@ namespace EdmLibTests.FunctionalTests
     <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
     <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
   </EntityType>
-  <Action Name=""SomeFunction""><ReturnType Type=""Edm.Int32""/>
+  <Action Name=""SomeFunction"">
+    <ReturnType Type=""Edm.Int32""/>
     <Parameter Name=""SomeFunctionImportParameter"" Type=""Edm.String"" >
       <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
       <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />

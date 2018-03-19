@@ -17,7 +17,6 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
-using System.IO;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {

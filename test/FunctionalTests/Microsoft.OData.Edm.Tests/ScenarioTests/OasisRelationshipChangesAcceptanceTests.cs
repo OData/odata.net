@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -13,7 +14,6 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
-using System.Linq;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
