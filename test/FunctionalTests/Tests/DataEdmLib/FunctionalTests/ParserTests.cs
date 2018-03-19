@@ -226,8 +226,6 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 { 4, 10, EdmErrorCode.NavigationSourceTypeHasNoKeys },
-                { 7, 6, EdmErrorCode.KeyMissingOnEntityType },
-                { 5, 10, EdmErrorCode.NavigationSourceTypeHasNoKeys },
             };
 
             IEnumerable<EdmError> actualErrors = null;

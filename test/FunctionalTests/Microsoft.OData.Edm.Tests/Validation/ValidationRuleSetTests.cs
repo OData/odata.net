@@ -22,7 +22,9 @@ namespace Microsoft.OData.Edm.Tests.Validation
         public void NewValidationRulesShouldBeInTheRuleSetExceptBaselinedExceptionRules()
         {
             var validationRules = new Dictionary<object, string>();
-            var items = typeof(ValidationRules).GetFields().Where(f => f.Name != "NavigationPropertyEntityMustNotIndirectlyContainItself")
+            var items = typeof(ValidationRules).GetFields().Where(f =>
+                f.Name != "NavigationPropertyEntityMustNotIndirectlyContainItself" &&
+                f.Name != "EntityTypeKeyMissingOnEntityType")
                 .Select(f=> new KeyValuePair<object, string>(f.GetValue(null), f.Name));
             foreach (var item in items)
             {

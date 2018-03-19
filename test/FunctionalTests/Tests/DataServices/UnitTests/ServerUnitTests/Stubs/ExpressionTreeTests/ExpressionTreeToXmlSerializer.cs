@@ -63,7 +63,7 @@ namespace AstoriaUnitTests.Stubs
         public static String SerializeToString(Expression expression)
         {
             outputText = new StringBuilder();
-            writer = XmlTextWriter.Create(outputText);
+            writer = XmlWriter.Create(outputText);
 
             new ExpressionTreeToXmlSerializer().Visit(expression);
 

@@ -5,14 +5,14 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Xunit;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -34,6 +34,21 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void ShouldBeAbleToWrite6xNullPropertyResponseWithoutModel()
+        {
+            ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
+            WriteAndValidate(outputContext => outputContext.WriteProperty(property), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Null\",\"@odata.null\":true}", writingResponse: true, use6x: true);
+        }
+
+        [Fact]
+        public void ThrowsOnWriteNullPropertyResponseWithoutModel()
+        {
+            ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
+            Action test = () => WriteAndValidate(outputContext => outputContext.WriteProperty(property), "", writingResponse: true);
+            test.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull);
+        }
+
+        [Fact]
         public void ShouldBeAbleToWritePropertyRequestWithoutModelAsync()
         {
             ODataProperty property = new ODataProperty { Name = "Prop", Value = Guid.Empty };
@@ -45,6 +60,21 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             ODataProperty property = new ODataProperty { Name = "Prop", Value = Guid.Empty };
             WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Guid\",\"@odata.type\":\"#Guid\",\"value\":\"00000000-0000-0000-0000-000000000000\"}", writingResponse: false, synchronous: false);
+        }
+
+        [Fact]
+        public void ShouldBeAbleToWrite6xNullPropertyResponseWithoutModelAsync()
+        {
+            ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
+            WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.Null\",\"@odata.null\":true}", writingResponse: false, synchronous: false, use6x: true);
+        }
+
+        [Fact]
+        public void ThrowsOnWriteNullPropertyResponseWithoutModelAsync()
+        {
+            ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
+            Action test = () => WriteAndValidate(outputContext => outputContext.WritePropertyAsync(property).Wait(), "", writingResponse: false, synchronous: false);
+            test.ShouldThrow<AggregateException>().WithInnerMessage(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull);
         }
 
         [Fact]
@@ -315,10 +345,15 @@ namespace Microsoft.OData.Tests.JsonLight
         #endregion async
         #endregion WriteEntityReferenceLinks
 
-        private static void WriteAndValidate(Action<ODataJsonLightOutputContext> test, string expectedPayload, bool writingResponse = true, bool synchronous = true)
+        private static void WriteAndValidate(
+            Action<ODataJsonLightOutputContext> test,
+            string expectedPayload,
+            bool writingResponse = true,
+            bool synchronous = true,
+            bool use6x = false)
         {
             MemoryStream stream = new MemoryStream();
-            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous);
+            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous, use6x);
             test(outputContext);
             ValidateWrittenPayload(stream, expectedPayload);
         }
@@ -330,7 +365,11 @@ namespace Microsoft.OData.Tests.JsonLight
             payload.Should().Be(expectedPayload);
         }
 
-        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(
+            MemoryStream stream,
+            bool writingResponse = true,
+            bool synchronous = true,
+            bool use6x = false)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -345,6 +384,11 @@ namespace Microsoft.OData.Tests.JsonLight
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            
+            if (use6x)
+            {
+                settings.LibraryCompatibility = ODataLibraryCompatibility.Version6;
+            }
 
             return new ODataJsonLightOutputContext(messageInfo, settings);
         }

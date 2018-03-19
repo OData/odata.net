@@ -279,13 +279,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         private void ParseAndExtract(string expandClauseText = null, string selectClauseText = null, string expectedExpandClauseFromOM = null, string expectedSelectClauseFromOM = null)
         {
-            var expandClause = new ODataQueryOptionParser(this.model, this.baseType, this.entitySet, new Dictionary<string, string> { { "$expand", expandClauseText }, { "$select", selectClauseText } }).ParseSelectAndExpand();
+            foreach (ODataVersion version in new ODataVersion[]{ ODataVersion.V4, ODataVersion.V401})
+            {
+                var expandClause = new ODataQueryOptionParser(this.model, this.baseType, this.entitySet, new Dictionary<string, string> { { "$expand", expandClauseText }, { "$select", selectClauseText } }).ParseSelectAndExpand();
 
-            // Verify that the extension method gets the same result as the path extractor.
-            string selectTextFromOM, expandTextFromOM;
-            expandClause.GetSelectExpandPaths(out selectTextFromOM, out expandTextFromOM);
-            selectTextFromOM.Should().Be(expectedSelectClauseFromOM ?? (selectClauseText ?? string.Empty));
-            expandTextFromOM.Should().Be(expectedExpandClauseFromOM ?? (expandClauseText ?? string.Empty));
+                // Verify that the extension method gets the same result as the path extractor.
+                string selectTextFromOM, expandTextFromOM;
+                expandClause.GetSelectExpandPaths(version, out selectTextFromOM, out expandTextFromOM);
+                selectTextFromOM.Should().Be(expectedSelectClauseFromOM ?? (selectClauseText ?? string.Empty));
+                expandTextFromOM.Should().Be(expectedExpandClauseFromOM ?? (expandClauseText ?? string.Empty));
+            }
         }
     }
 }

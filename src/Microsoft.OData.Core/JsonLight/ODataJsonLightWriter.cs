@@ -786,13 +786,15 @@ namespace Microsoft.OData.JsonLight
             {
                 // Write @odata.context annotation for navigation property
                 var containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
-                if (containedEntitySet != null)
+                if (containedEntitySet != null && this.jsonLightOutputContext.MessageWriterSettings.LibraryCompatibility < ODataLibraryCompatibility.Version7)
                 {
                     ODataContextUrlInfo info = ODataContextUrlInfo.Create(
                                                 this.CurrentScope.NavigationSource,
                                                 this.CurrentScope.ResourceType.FullTypeName(),
                                                 containedEntitySet.NavigationProperty.Type.TypeKind() != EdmTypeKind.Collection,
-                                                this.CurrentScope.ODataUri);
+                                                this.CurrentScope.ODataUri,
+                                                this.jsonLightOutputContext.MessageWriterSettings.Version ?? ODataVersion.V4);
+
                     this.jsonLightResourceSerializer.WriteNestedResourceInfoContextUrl(nestedResourceInfo, info);
                 }
 

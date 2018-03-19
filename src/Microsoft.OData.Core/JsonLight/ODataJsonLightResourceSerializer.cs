@@ -338,7 +338,7 @@ namespace Microsoft.OData.JsonLight
         internal ODataContextUrlInfo WriteDeltaContextUri(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            return this.WriteContextUriProperty(ODataPayloadKind.Delta, () => ODataContextUrlInfo.Create(typeContext, kind, odataUri), parentContextUrlInfo);
+            return this.WriteContextUriProperty(ODataPayloadKind.Delta, () => ODataContextUrlInfo.Create(typeContext, this.MessageWriterSettings.Version ?? ODataVersion.V4, kind, odataUri), parentContextUrlInfo);
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace Microsoft.OData.JsonLight
         internal ODataContextUrlInfo WriteResourceContextUri(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            return this.WriteContextUriProperty(ODataPayloadKind.Resource, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri), parentContextUrlInfo);
+            return this.WriteContextUriProperty(ODataPayloadKind.Resource, () => ODataContextUrlInfo.Create(typeContext, this.MessageWriterSettings.Version ?? ODataVersion.V4, /* isSingle */ true, odataUri), parentContextUrlInfo);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace Microsoft.OData.JsonLight
         internal ODataContextUrlInfo WriteResourceSetContextUri(ODataResourceTypeContext typeContext)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            return this.WriteContextUriProperty(ODataPayloadKind.ResourceSet, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ false, odataUri));
+            return this.WriteContextUriProperty(ODataPayloadKind.ResourceSet, () => ODataContextUrlInfo.Create(typeContext, this.MessageWriterSettings.Version ?? ODataVersion.V4, /* isSingle */ false, odataUri));
         }
 
         /// <summary>

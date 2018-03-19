@@ -149,7 +149,6 @@ namespace AstoriaUnitTests.Tests
                         if (requestMDSV != null) request.RequestMaxVersion = requestMDSV.ToString();                           
                            
                         request.RequestContentType = format;
-                        // TODO: Change the payload of null top-level properties #645
                         request.SetRequestStreamAsText(@"{ ""value"" : null }");
 
                         IDisposable dispose = null;

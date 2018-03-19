@@ -207,7 +207,6 @@ namespace EdmLibTests.FunctionalTests
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.TypeMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.SchemaElementMustNotHaveKindOfNone },
-                { "(namespace.type)", EdmErrorCode.KeyMissingOnEntityType },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", EdmErrorCode.PrimitiveTypeMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", EdmErrorCode.SchemaElementMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", EdmErrorCode.TypeMustNotHaveKindOfNone },
