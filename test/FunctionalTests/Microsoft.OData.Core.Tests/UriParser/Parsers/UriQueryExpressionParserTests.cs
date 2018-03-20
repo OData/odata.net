@@ -535,6 +535,115 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void ParseApplyWithNestedAggregation()
+        {
+            string apply = "groupby((UnitPrice), aggregate(Sales($count as Count)))";
+
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            List<QueryToken> transformations = actual.ToList();
+
+            // verify groupby
+            GroupByToken groupBy = transformations[0] as GroupByToken;
+            groupBy.Should().NotBeNull();
+
+            VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
+
+            groupBy.Properties.Should().HaveCount(1);
+            groupBy.Child.Should().NotBeNull();
+
+            AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
+            groupByAggregate.Expressions.Should().HaveCount(1);
+
+            EntitySetAggregateToken entitySetAggregate = groupByAggregate.Expressions.First() as EntitySetAggregateToken;
+            entitySetAggregate.Should().NotBeNull();
+
+            entitySetAggregate.EntitySet.ShouldBeEndPathToken("Sales");
+            VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", entitySetAggregate.Expressions.First() as AggregateExpressionToken);
+        }
+
+        [Fact]
+        public void ParseApplyWithNestedAggregationAndFunction()
+        {
+            string apply = "groupby((UnitPrice), aggregate(Sales($count as Count),  cast(SalesPrice, Edm.Decimal)  with average as RetailPrice))";
+
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            List<QueryToken> transformations = actual.ToList();
+
+            // verify groupby
+            GroupByToken groupBy = transformations[0] as GroupByToken;
+            groupBy.Should().NotBeNull();
+
+            VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
+
+            groupBy.Properties.Should().HaveCount(1);
+            groupBy.Child.Should().NotBeNull();
+
+            AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
+            groupByAggregate.Expressions.Should().HaveCount(2);
+
+            EntitySetAggregateToken entitySetAggregate = groupByAggregate.Expressions.First() as EntitySetAggregateToken;
+            entitySetAggregate.Should().NotBeNull();
+
+            entitySetAggregate.EntitySet.ShouldBeEndPathToken("Sales");
+            VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", entitySetAggregate.Expressions.First() as AggregateExpressionToken);
+
+            AggregateExpressionToken funcAggregate = groupByAggregate.Expressions.Last() as AggregateExpressionToken;
+            funcAggregate.Should().NotBeNull();
+            funcAggregate.Alias.ShouldBeEquivalentTo("RetailPrice");
+            funcAggregate.Method.Should().Equals(AggregationMethodDefinition.Average);
+
+            FunctionCallToken funcToken = funcAggregate.Expression as FunctionCallToken;
+            funcToken.Should().NotBeNull();
+            funcToken.Name.ShouldBeEquivalentTo("cast");
+        }
+
+        [Fact]
+        public void ParseApplyWithNestedFunctionAggregation()
+        {
+            string apply = "groupby((UnitPrice), aggregate(Sales($count as Count,  cast(SalesPrice, Edm.Decimal)  with average as RetailPrice)))";
+
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            List<QueryToken> transformations = actual.ToList();
+
+            // verify groupby
+            GroupByToken groupBy = transformations[0] as GroupByToken;
+            groupBy.Should().NotBeNull();
+
+            VerifyGroupByTokenProperties(new string[] { "UnitPrice" }, groupBy);
+
+            groupBy.Properties.Should().HaveCount(1);
+            groupBy.Child.Should().NotBeNull();
+
+            AggregateToken groupByAggregate = groupBy.Child as AggregateToken;
+            groupByAggregate.Expressions.Should().HaveCount(1);
+
+            EntitySetAggregateToken entitySetAggregate = groupByAggregate.Expressions.First() as EntitySetAggregateToken;
+            entitySetAggregate.Should().NotBeNull();
+
+            entitySetAggregate.EntitySet.ShouldBeEndPathToken("Sales");
+            entitySetAggregate.Expressions.Should().HaveCount(2);
+            VerifyAggregateExpressionToken("$count", AggregationMethodDefinition.VirtualPropertyCount, "Count", entitySetAggregate.Expressions.First() as AggregateExpressionToken);
+
+            AggregateExpressionToken funcAggregate = entitySetAggregate.Expressions.Last() as AggregateExpressionToken;
+            funcAggregate.Should().NotBeNull();
+            funcAggregate.Alias.ShouldBeEquivalentTo("RetailPrice");
+            funcAggregate.Method.Should().Equals(AggregationMethodDefinition.Average);
+
+            FunctionCallToken funcToken = funcAggregate.Expression as FunctionCallToken;
+            funcToken.Should().NotBeNull();
+            funcToken.Name.ShouldBeEquivalentTo("cast");
+        }
+
+        [Fact]
         public void ParseComputeWithMathematicalOperations()
         {
             string compute = "Prop1 mul Prop2 as Product,Prop1 div Prop2 as Ratio,Prop2 mod Prop2 as Remainder";
