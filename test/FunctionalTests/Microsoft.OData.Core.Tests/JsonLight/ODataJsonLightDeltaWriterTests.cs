@@ -931,7 +931,6 @@ namespace Microsoft.OData.Tests.JsonLight
                                     "\"@odata.id\":\"http://host/service/Product(1)\"," +
                                     "\"Id\":1," +
                                     "\"Name\":\"Car\"," +
-                                    "\"Details@odata.context\":\"http://host/service/$metadata#Products(1)/Details\"," +
                                     "\"Details\":" +
                                     "[" +
                                         "{" +
@@ -1209,7 +1208,6 @@ namespace Microsoft.OData.Tests.JsonLight
                                 "\"@odata.id\":\"http://host/service/Product(1)\"," +
                                 "\"Id\":1," +
                                 "\"Name\":\"Car\"," +
-                                "\"Details@odata.context\":\"http://host/service/$metadata#Products(1)/Details\"," +
                                 "\"Details\":" +
                                 "[" +
                                     "{" +

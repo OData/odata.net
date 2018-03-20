@@ -17,8 +17,6 @@ namespace Microsoft.OData.Edm
     {
         private readonly Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>>();
 
-        private readonly Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet> containedNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet>();
-
         private readonly Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
 
         private readonly Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> navigationTargetsCache = new Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>>();
@@ -130,7 +128,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "property");
 
-            bool isDerived = !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
+            bool isDerived = !(navigationProperty.DeclaringType.AsElementType() is IEdmComplexType) && !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
 
             IEdmPathExpression bindingPath = isDerived
                 ? new EdmPathExpression(navigationProperty.DeclaringType.FullTypeName(), navigationProperty.Name)
@@ -149,21 +147,26 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
 
-            if (!navigationProperty.ContainsTarget && bindingPath != null)
+            bindingPath = bindingPath ?? new EdmPathExpression(navigationProperty.Name);
+            Dictionary<string, IEdmNavigationPropertyBinding> result;
+            IEdmNavigationPropertyBinding binding;
+            if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result) && result.TryGetValue(bindingPath.Path, out binding))
             {
-                Dictionary<string, IEdmNavigationPropertyBinding> result;
-                IEdmNavigationPropertyBinding binding;
-                if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result) && result.TryGetValue(bindingPath.Path, out binding))
-                {
-                    return binding.Target;
-                }
+                return binding.Target;
             }
-            else if (navigationProperty.ContainsTarget)
+
+            if (navigationProperty.ContainsTarget)
             {
-                return EdmUtil.DictionaryGetOrUpdate(
-                    this.containedNavigationPropertyCache,
-                    navigationProperty,
-                    navProperty => new EdmContainedEntitySet(this, navProperty));
+                IEdmContainedEntitySet containedSet = new EdmContainedEntitySet(this, navigationProperty, bindingPath);
+                if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
+                {
+                    this.navigationPropertyMappings.Add(navigationProperty, new Dictionary<string, IEdmNavigationPropertyBinding>());
+                }
+
+                this.navigationPropertyMappings[navigationProperty][bindingPath.Path] =
+                    new EdmNavigationPropertyBinding(navigationProperty, containedSet);
+
+                return containedSet;
             }
 
             return EdmUtil.DictionaryGetOrUpdate(

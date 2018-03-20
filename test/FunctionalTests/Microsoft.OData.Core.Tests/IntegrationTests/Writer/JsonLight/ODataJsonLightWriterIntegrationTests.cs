@@ -89,6 +89,141 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         }
 
         [Fact]
+        public void WriteDeeplyNestedContainedEntitySet()
+        {
+            // Build model
+            EdmModel model = new EdmModel();
+            var sType = model.AddEntityType("TestNS", "sType");
+            var aType = model.AddEntityType("TestNS", "aType");
+            aType.AddKeys(aType.AddStructuralProperty("key", EdmPrimitiveTypeKind.Int32));
+            var bType = model.AddEntityType("TestNS", "bType");
+            bType.AddKeys(bType.AddStructuralProperty("key", EdmPrimitiveTypeKind.Int32));
+            var cType = model.AddEntityType("TestNS", "cType");
+            cType.AddKeys(cType.AddStructuralProperty("key", EdmPrimitiveTypeKind.Int32));
+            var dType = model.AddEntityType("TestNS", "dType", bType);
+            dType.AddKeys(dType.AddStructuralProperty("key", EdmPrimitiveTypeKind.Int32));
+
+            var a1 = new EdmNavigationPropertyInfo()
+            {
+                Name = "a1",
+                Target = aType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                ContainsTarget = true
+            };
+
+            var a2 = new EdmNavigationPropertyInfo()
+            {
+                Name = "a2",
+                Target = aType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                ContainsTarget = true
+            };
+
+            var b = new EdmNavigationPropertyInfo()
+            {
+                Name = "b",
+                Target = bType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                ContainsTarget = true
+            };
+
+            var c = new EdmNavigationPropertyInfo()
+            {
+                Name = "c",
+                Target = cType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                ContainsTarget = false
+            };
+
+            var stoa1NavProp = sType.AddUnidirectionalNavigation(a1);
+            var stoa2NavProp = sType.AddUnidirectionalNavigation(a2);
+            var atobNavProp = aType.AddUnidirectionalNavigation(b);
+            var stocNavProp = sType.AddUnidirectionalNavigation(c);
+            var btocNavProp = bType.AddUnidirectionalNavigation(c);
+            sType.AddUnidirectionalNavigation(b);
+            dType.AddUnidirectionalNavigation(a1);
+
+            var container = model.AddEntityContainer("TestNS", "container");
+            var s = container.AddSingleton("s", sType);
+            var sc = container.AddEntitySet("sc", cType);
+            var sbc = container.AddEntitySet("sbc", cType);
+            var sa1bc = container.AddEntitySet("sa1bc", cType);
+            var sa2bc = container.AddEntitySet("sa2bc", cType);
+            var sa2bda1bc = container.AddEntitySet("sa2bda1bc", cType);
+
+            s.AddNavigationTarget(stocNavProp, sc, new EdmPathExpression("c"));
+            s.AddNavigationTarget(btocNavProp, sbc, new EdmPathExpression("b/c"));
+            s.AddNavigationTarget(btocNavProp, sa1bc, new EdmPathExpression("a1/b/c"));
+            s.AddNavigationTarget(btocNavProp, sa2bc, new EdmPathExpression("a2/b/c"));
+            s.AddNavigationTarget(btocNavProp, sa2bda1bc, new EdmPathExpression("a2/b/TestNS.dType/a1/b/c"));
+
+            var containedSet = s.FindNavigationTarget(stoa2NavProp).FindNavigationTarget(atobNavProp);
+
+            // Now write an expanded nested path
+            var requestUri = new Uri("http://temp.org/s/a2(123)/b(123)/TestNS.dType/a1(321)/b?$expand=c");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+            odataUri.ServiceRoot = new Uri("http://testsvc");
+            var stream = new MemoryStream();
+            var message = new InMemoryMessage { Stream = stream };
+            var settings = new ODataMessageWriterSettings
+            {
+                ODataUri = odataUri,
+            };
+            settings.SetContentType("application/json;odata.metadata=full", null);
+
+            ODataMessageWriter messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+            ODataWriter writer = messageWriter.CreateODataResourceSetWriter(containedSet as IEdmEntitySetBase);
+            writer.WriteStart(new ODataResourceSet());
+            writer.WriteStart(new ODataResource
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty {Name="key", Value=1 }
+                }
+            });
+            writer.WriteStart(new ODataNestedResourceInfo
+            {
+                Name = "c",
+                IsCollection = true,
+            });
+            writer.WriteStart(new ODataResourceSet());
+            writer.WriteStart(new ODataResource
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty {Name="key", Value=1 }
+                }
+            });
+            writer.WriteEnd(); // nested resource
+            writer.WriteEnd(); // nested resource set
+            writer.WriteEnd(); // nested inf
+            writer.WriteEnd(); // resource
+            writer.WriteEnd(); // resource set
+
+            writer.Flush();
+            stream.Flush();
+            string actual = Encoding.UTF8.GetString(stream.ToArray());
+            string expected = 
+                "{" +
+                    @"""@odata.context"":""http://testsvc/$metadata#s/a2(123)/b(123)/TestNS.dType/a1(321)/b""," +
+                    @"""value"":[{" +
+                        @"""@odata.id"":""s/a2(123)/b(123)/TestNS.dType/a1(321)/b(1)""," +
+                        @"""@odata.editLink"":""s/a2(123)/b(123)/TestNS.dType/a1(321)/b(1)""," +
+                        @"""key"":1,"+
+                        @"""c@odata.associationLink"":""http://testsvc/s/a2(123)/b(123)/TestNS.dType/a1(321)/b(1)/c/$ref""," +
+                        @"""c@odata.navigationLink"":""http://testsvc/s/a2(123)/b(123)/TestNS.dType/a1(321)/b(1)/c""," +
+                        @"""c"":[{" +
+                            @"""@odata.id"":""sa2bda1bc(1)""," +
+                            @"""@odata.editLink"":""sa2bda1bc(1)""," +
+                            @"""key"":1" +
+                @"}]}]}";
+
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
         public void WriteContainedEntitySetWithoutODataUriShouldThrow()
         {
             EdmModel model = new EdmModel();
@@ -265,7 +400,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var expected = "{\"@odata.context\":\"http://temp.org/$metadata#FakeSet/$entity\",\"@odata.id\":\"FakeSet('son')\",\"@odata.editLink\":\"FakeSet('son')\",\"Key\":\"son\",\"ComplexP\":{\"P1\":\"cv\"}}";
 
             Assert.Equal(expected, actual);
-
         }
 
         [Fact]
