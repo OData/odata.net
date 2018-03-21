@@ -179,7 +179,7 @@ namespace Microsoft.OData.Edm
                 newPath.Add(targetType.FullTypeName());
             }
 
-            newPath.Concat(this.NavigationPath.PathSegments);
+            newPath.AddRange(this.NavigationPath.PathSegments);
             return new EdmPathExpression(newPath.ToArray());
         }
     }
