@@ -247,7 +247,35 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             scecondAggregate.Should().NotBeNull();
         }
 
-        private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
+        [Fact]
+        public void BindApplyWithEntitySetAggregationReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "groupby((LifeTime),aggregate(MyPaintings($count as Count)))");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            GroupByTransformationNode groupBy = actual.Transformations.First() as GroupByTransformationNode;
+            groupBy.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+
+            AggregateTransformationNode aggregate = groupBy.ChildTransformations as AggregateTransformationNode;
+            aggregate.Should().NotBeNull();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
+
+            EntitySetAggregateExpression entitySetAggregate = aggregate.AggregateExpressions.First() as EntitySetAggregateExpression;
+            entitySetAggregate.Should().NotBeNull();
+        }
+
+    private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
 
         private static SingleValueNode BindMethodReturnsBooleanPrimitive(QueryToken token)
         {
