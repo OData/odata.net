@@ -21,6 +21,11 @@ namespace Microsoft.OData.Tests.JsonLight
         private readonly ODataResource entryWithTypeAnnotationAndTypeName = new ODataResource { TypeName = "TypeNameFromOM" };
         private readonly ODataResource entryWithTypeAnnotationWithoutTypeName = new ODataResource();
 
+        private readonly ODataResourceSet resourceSetWithoutTypeName = new ODataResourceSet();
+        private readonly ODataResourceSet resourceSetWithTypeName = new ODataResourceSet { TypeName = "TypeNameFromOM" };
+        private readonly ODataResourceSet resourceSetWithTypeAnnotationAndTypeName = new ODataResourceSet { TypeName = "TypeNameFromOM" };
+        private readonly ODataResourceSet resourceSetWithTypeAnnotationWithoutTypeName = new ODataResourceSet();
+
         private readonly EdmComplexTypeReference complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("Namespace", "ComplexTypeName"), false);
         private const string ComplexTypeName = "Namespace.ComplexTypeName";
         private readonly IEdmSpatialTypeReference geographyTypeReference = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false);
@@ -32,7 +37,40 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             entryWithTypeAnnotationAndTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
             entryWithTypeAnnotationWithoutTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
+            resourceSetWithTypeAnnotationAndTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
+            resourceSetWithTypeAnnotationWithoutTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
         }
+
+        #region Full metadata entity set type name tests
+        [Fact]
+        public void WhenAnnotationIsSetEntitySetTypeNameShouldAlwaysComeFromAnnotation()
+        {
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithTypeAnnotationAndTypeName, false).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceSetTypeNameForWriting(null, this.resourceSetWithTypeAnnotationAndTypeName, false).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithTypeAnnotationWithoutTypeName, false).Should().Be("TypeNameFromSTNA");
+            this.testSubject.GetResourceSetTypeNameForWriting(null, this.resourceSetWithTypeAnnotationWithoutTypeName, false).Should().Be("TypeNameFromSTNA");
+        }
+
+        [Fact]
+        public void WhenAnnotationIsNotSetEntitySetTypeNameShouldAlwaysComeFromObjectModel()
+        {
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
+            this.testSubject.GetResourceSetTypeNameForWriting(null, this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithoutTypeName, false).Should().BeNull();
+        }
+
+        [Fact]
+        public void TypeNameShouldNotBeOmittedWhenEntitySetTypeNameFromAnnotationMatchesExpectedTypeName()
+        {
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromSTNA", this.resourceSetWithTypeAnnotationAndTypeName, false).Should().Be("TypeNameFromSTNA");
+        }
+
+        [Fact]
+        public void TypeNameShouldNotBeOmittedWhenEntitySetTypeNameFromObjectModelMatchesExpectedTypeName()
+        {
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromOM", this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
+        }
+        #endregion Full metadata entity set type name tests
 
         #region Full metadata entry type name tests
         [Fact]
