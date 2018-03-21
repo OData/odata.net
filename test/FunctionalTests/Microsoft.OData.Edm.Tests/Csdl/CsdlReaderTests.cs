@@ -190,9 +190,17 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</edmx:Edmx>";
             var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
             var setA = model.FindDeclaredNavigationSource("Root");
-            var navSource = setA.NavigationPropertyBindings.First().Target;
-            Assert.True(navSource is IEdmContainedEntitySet);
-            navSource.Name.Should().Be("SetB");
+            var target = setA.NavigationPropertyBindings.First().Target;
+            Assert.True(target is IEdmContainedEntitySet);
+            target.Name.Should().Be("SetB");
+            var targetSegments = target.Path.PathSegments.ToList();
+            targetSegments.Count().Should().Be(2);
+            targetSegments[0].Should().Be("Root");
+            targetSegments[1].Should().Be("SetB");
+            var pathSegments = setA.NavigationPropertyBindings.First().Path.PathSegments.ToList();
+            pathSegments.Count().Should().Be(2);
+            pathSegments[0].Should().Be("EntityA");
+            pathSegments[1].Should().Be("EntityAToB");
         }
 
         [Fact]
@@ -241,8 +249,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             target.Should().NotBeNull();
             Assert.True(target is IEdmContainedEntitySet);
             target.Name.Should().Be("users");
+            var targetSegments = target.Path.PathSegments.ToList();
+            targetSegments.Count().Should().Be(2);
+            targetSegments[0].Should().Be("education");
+            targetSegments[1].Should().Be("users");
+            var pathSegments = navPropBinding.Path.PathSegments.ToList();
+            pathSegments.Count().Should().Be(2);
+            pathSegments[0].Should().Be("classes");
+            pathSegments[1].Should().Be("members");
         }
-        
+
         [Fact]
         public void ReadNavigationPropertyPartnerTypeHierarchyTest()
         {
