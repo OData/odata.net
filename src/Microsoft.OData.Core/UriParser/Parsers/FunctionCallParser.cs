@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -100,19 +101,10 @@ namespace Microsoft.OData.UriParser
                 this.Lexer.NextToken();
             }
 
-            try
+            FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList(() => lexer.RestorePosition(position));
+            if (arguments != null)
             {
-                FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList();
                 result = new FunctionCallToken(functionName, arguments, parent);
-            }
-            catch (ODataException e)
-            {
-                if (!restoreStateIfFail)
-                {
-                    throw e;
-                }
-
-                lexer.RestorePosition(position);
             }
 
             return result != null;
@@ -122,10 +114,15 @@ namespace Microsoft.OData.UriParser
         /// Parses argument lists or entity key value list.
         /// </summary>
         /// <returns>The lexical tokens representing the arguments.</returns>
-        public FunctionParameterToken[] ParseArgumentListOrEntityKeyList()
+        public FunctionParameterToken[] ParseArgumentListOrEntityKeyList(Action restoreAction = null)
         {
             if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
+                if (restoreStateIfFail && restoreAction != null)
+                {
+                    restoreAction();
+                    return null;
+                }
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
@@ -142,6 +139,11 @@ namespace Microsoft.OData.UriParser
 
             if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
+                if (restoreStateIfFail && restoreAction != null)
+                {
+                    restoreAction();
+                    return null;
+                }
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
