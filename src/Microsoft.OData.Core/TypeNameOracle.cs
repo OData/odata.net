@@ -19,20 +19,6 @@ namespace Microsoft.OData
     internal class TypeNameOracle
     {
         /// <summary>
-        /// Constructor for TypeNameOracle
-        /// </summary>
-        /// <param name="compatibility">OData Library compatibility setting</param>
-        internal TypeNameOracle(ODataLibraryCompatibility compatibility)
-        {
-            this.Compatibility = compatibility;
-        }
-
-        /// <summary>
-        /// OData Library compatibility setting
-        /// </summary>
-        protected ODataLibraryCompatibility Compatibility { get; private set; }
-
-        /// <summary>
         /// Validates a type name to ensure that it's not an empty string and resolves it against the provided <paramref name="model"/>.
         /// </summary>
         /// <param name="model">The model to use.</param>

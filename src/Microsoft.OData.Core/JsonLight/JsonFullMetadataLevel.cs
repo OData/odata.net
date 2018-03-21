@@ -66,11 +66,10 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
-        /// <param name="compatibility">OData Library Compatibility</param>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
-        internal override JsonLightTypeNameOracle GetTypeNameOracle(ODataLibraryCompatibility compatibility)
+        internal override JsonLightTypeNameOracle GetTypeNameOracle()
         {
-            return new JsonFullMetadataTypeNameOracle(compatibility);
+            return new JsonFullMetadataTypeNameOracle();
         }
 
         /// <summary>

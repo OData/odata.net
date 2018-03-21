@@ -1857,7 +1857,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             const string selectClause = "StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink";
             const string expandClause = "ExpandedNavLink($select=StreamProp1,Namespace.AlwaysBindableAction1;$expand=ExpandedNavLink($select=StreamProp2,Namespace.AlwaysBindableAction1))";
-            this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, edmModel: Model, edmEntitySet: null, edmEntityType: EntityType, selectClause: selectClause, expandClause: expandClause, compatibility: ODataLibraryCompatibility.Version6)
+            this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, edmModel: Model, edmEntitySet: null, edmEntityType: EntityType, selectClause: selectClause, expandClause: expandClause)
                 .Should().Be(expectedPayload);
         }
 
@@ -1971,7 +1971,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             const string selectClause = "StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink";
             const string expandClause = "ExpandedNavLink($select=StreamProp1,Namespace.AlwaysBindableAction1;$expand=ExpandedNavLink($select=StreamProp2,Namespace.AlwaysBindableAction1))";
-            this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, edmModel: Model, edmEntitySet: null, edmEntityType: EntityType, selectClause: selectClause, expandClause: expandClause, compatibility: ODataLibraryCompatibility.Version6)
+            this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, edmModel: Model, edmEntitySet: null, edmEntityType: EntityType, selectClause: selectClause, expandClause: expandClause)
                 .Should().Be(expectedPayload);
         }
 
@@ -2350,7 +2350,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadata, itemsToWrite, Model, EntitySet, EntityType, selectClause);
         }
 
-        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadata, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool enableWritingODataAnnotationWithoutPrefix = false, ODataLibraryCompatibility compatibility = ODataLibraryCompatibility.Latest)
+        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadata, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool enableWritingODataAnnotationWithoutPrefix = false)
         {
             MemoryStream outputStream = new MemoryStream();
             var container = ContainerBuilderHelper.BuildContainer(null);
@@ -2358,11 +2358,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
 
             message.SetHeader("Content-Type", contentType);
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
-            {
-                LibraryCompatibility = compatibility
-            };
-
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$select", selectClause }, { "$expand", expandClause } }).ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()

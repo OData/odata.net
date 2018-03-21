@@ -19,14 +19,6 @@ namespace Microsoft.OData.JsonLight
     internal sealed class JsonMinimalMetadataTypeNameOracle : JsonLightTypeNameOracle
     {
         /// <summary>
-        /// Constructor for JsonMinimalMetadataTypeNameOracle
-        /// </summary>
-        /// <param name="compatibility">OData Library compatibility setting</param>
-        internal JsonMinimalMetadataTypeNameOracle(ODataLibraryCompatibility compatibility) : base(compatibility)
-        {
-        }
-
-        /// <summary>
         /// Determines the resource set type name to write to the payload.
         /// </summary>
         /// <param name="expectedResourceTypeName">The expected resource type name of the items in the resource set.</param>

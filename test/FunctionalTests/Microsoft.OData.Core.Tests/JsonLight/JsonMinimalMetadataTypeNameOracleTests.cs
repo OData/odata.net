@@ -15,7 +15,7 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonMinimalMetadataTypeNameOracleTests
     {
-        private readonly JsonMinimalMetadataTypeNameOracle testSubject = new JsonMinimalMetadataTypeNameOracle(ODataLibraryCompatibility.Latest);
+        private readonly JsonMinimalMetadataTypeNameOracle testSubject = new JsonMinimalMetadataTypeNameOracle();
         private readonly ODataResource entryWithoutTypeName = new ODataResource();
         private readonly ODataResource entryWithTypeName = new ODataResource { TypeName = "TypeNameFromOM" };
         private readonly ODataResource entryWithTypeAnnotationAndTypeName = new ODataResource { TypeName = "TypeNameFromOM" };

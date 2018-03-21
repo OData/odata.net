@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void FullMetadataLevelShouldReturnFullMetadataTypeOracleWhenKnobIsSet()
         {
-            testSubject.GetTypeNameOracle(ODataLibraryCompatibility.Latest).Should().BeOfType<JsonFullMetadataTypeNameOracle>();
+            testSubject.GetTypeNameOracle().Should().BeOfType<JsonFullMetadataTypeNameOracle>();
         }
 
         [Fact]

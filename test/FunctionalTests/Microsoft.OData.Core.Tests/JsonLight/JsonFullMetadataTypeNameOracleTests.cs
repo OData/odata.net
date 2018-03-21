@@ -15,8 +15,7 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonFullMetadataTypeNameOracleTests
     {
-        private readonly JsonFullMetadataTypeNameOracle testSubject = new JsonFullMetadataTypeNameOracle(ODataLibraryCompatibility.Latest);
-        private readonly JsonFullMetadataTypeNameOracle testSubjectVersion6 = new JsonFullMetadataTypeNameOracle(ODataLibraryCompatibility.Version6);
+        private readonly JsonFullMetadataTypeNameOracle testSubject = new JsonFullMetadataTypeNameOracle();
         private readonly ODataResource entryWithoutTypeName = new ODataResource();
         private readonly ODataResource entryWithTypeName = new ODataResource { TypeName = "TypeNameFromOM" };
         private readonly ODataResource entryWithTypeAnnotationAndTypeName = new ODataResource { TypeName = "TypeNameFromOM" };
@@ -55,8 +54,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void WhenAnnotationIsNotSetEntitySetTypeNameShouldAlwaysComeFromObjectModel()
         {
-            this.testSubjectVersion6.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
-            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithTypeName, false).Should().BeNull();
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
             this.testSubject.GetResourceSetTypeNameForWriting(null, this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
             this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromMetadata", this.resourceSetWithoutTypeName, false).Should().BeNull();
         }
@@ -68,15 +66,9 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void TypeNameShouldNotBeOmittedWhenEntitySetTypeNameFromObjectModelMatchesExpectedTypeNameVersion6()
+        public void TypeNameShouldNotBeOmittedWhenEntitySetTypeNameFromObjectModelMatchesExpectedTypeName()
         {
-            this.testSubjectVersion6.GetResourceSetTypeNameForWriting("TypeNameFromOM", this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
-        }
-
-        [Fact]
-        public void TypeNameShouldBeOmittedWhenEntitySetTypeNameFromObjectModelMatchesExpectedTypeName()
-        {
-            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromOM", this.resourceSetWithTypeName, false).Should().BeNull();
+            this.testSubject.GetResourceSetTypeNameForWriting("TypeNameFromOM", this.resourceSetWithTypeName, false).Should().Be("TypeNameFromOM");
         }
         #endregion Full metadata entity set type name tests
 
