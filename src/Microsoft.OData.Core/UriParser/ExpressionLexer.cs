@@ -680,7 +680,9 @@ namespace Microsoft.OData.UriParser
                         }
 
                         int start = this.textPos;
-                        this.ParseIdentifier();
+
+                        // Include dots for the case of annotation.
+                        this.ParseIdentifier(true /*includingDots*/);
 
                         // Extract the identifier from expression.
                         string leftToken = ExpressionText.Substring(start, this.textPos - start);
@@ -1201,14 +1203,15 @@ namespace Microsoft.OData.UriParser
 
 
         /// <summary>Parses an identifier by advancing the current character.</summary>
-        private void ParseIdentifier()
+        /// <param name="includingDots">Optional flag for whether to include dots as part of the identifier.</param>
+        private void ParseIdentifier(bool includingDots = false)
         {
             Debug.Assert(this.IsValidStartingCharForIdentifier || this.ch == UriQueryConstants.AnnotationPrefix, "Expected valid starting char for identifier");
             do
             {
                 this.NextChar();
             }
-            while (this.IsValidNonStartingCharForIdentifier);
+            while (this.IsValidNonStartingCharForIdentifier || (includingDots && this.ch == '.'));
         }
 
         /// <summary>Sets the text position.</summary>
