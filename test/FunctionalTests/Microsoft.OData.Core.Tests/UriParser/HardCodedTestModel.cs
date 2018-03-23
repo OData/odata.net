@@ -769,19 +769,19 @@ namespace Microsoft.OData.Tests.UriParser
                 IEdmModel parsedModel;
                 if (CsdlReader.TryParse(XmlReader.Create(new StringReader(HardCodedTestModelXml.MainModelXml)), (Uri uri) =>
                 {
-                    if (string.Equals(uri.AbsoluteUri, "http://submodel1/"))
+                    if (string.Equals(uri.AbsoluteUri, "http://submodel1/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml1));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel2/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel2/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml2));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel3/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel3/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml3));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel4/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel4/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml4));
                     }
