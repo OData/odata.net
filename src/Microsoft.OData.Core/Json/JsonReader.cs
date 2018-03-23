@@ -656,7 +656,7 @@ namespace Microsoft.OData.Json
             // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
             string token = this.ParseName();
 
-            if (!string.Equals(token, JsonConstants.JsonNullLiteral))
+            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
             {
                 throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedToken(token));
             }
@@ -678,12 +678,12 @@ namespace Microsoft.OData.Json
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
             string token = this.ParseName();
 
-            if (string.Equals(token, JsonConstants.JsonFalseLiteral))
+            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
             {
                 return false;
             }
 
-            if (string.Equals(token, JsonConstants.JsonTrueLiteral))
+            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
             {
                 return true;
             }
