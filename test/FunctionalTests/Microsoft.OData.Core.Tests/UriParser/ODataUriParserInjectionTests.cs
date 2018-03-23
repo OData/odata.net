@@ -154,12 +154,12 @@ namespace Microsoft.OData.Tests.UriParser
 
         public ODataUriParserInjectionTests()
         {
-            folderType = oneDriveModel.SchemaElements.OfType<IEdmComplexType>().Single(e => string.Equals(e.Name, "folder"));
-            itemType = oneDriveModel.SchemaElements.OfType<IEdmEntityType>().Single(e => string.Equals(e.Name, "item"));
-            specialItemType = oneDriveModel.SchemaElements.OfType<IEdmEntityType>().Single(e => string.Equals(e.Name, "specialItem"));
+            folderType = oneDriveModel.SchemaElements.OfType<IEdmComplexType>().Single(e => string.Equals(e.Name, "folder", StringComparison.Ordinal));
+            itemType = oneDriveModel.SchemaElements.OfType<IEdmEntityType>().Single(e => string.Equals(e.Name, "item", StringComparison.Ordinal));
+            specialItemType = oneDriveModel.SchemaElements.OfType<IEdmEntityType>().Single(e => string.Equals(e.Name, "specialItem", StringComparison.Ordinal));
             folderProp = itemType.FindProperty("folder") as IEdmStructuralProperty;
             sizeProp = itemType.FindProperty("size") as IEdmStructuralProperty;
-            driveType = oneDriveModel.SchemaElements.OfType<IEdmEntityType>().Single(e => string.Equals(e.Name, "drive"));
+            driveType = oneDriveModel.SchemaElements.OfType<IEdmEntityType>().Single(e => string.Equals(e.Name, "drive", StringComparison.Ordinal));
             itemsNavProp = driveType.DeclaredNavigationProperties().FirstOrDefault(p => p.Name == "items");
             childrenNavProp = itemType.DeclaredNavigationProperties().FirstOrDefault(p => p.Name == "children");
             thumbnailsNavProp = itemType.DeclaredNavigationProperties().FirstOrDefault(p => p.Name == "thumbnails");
