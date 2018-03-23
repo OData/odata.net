@@ -630,7 +630,10 @@ namespace Microsoft.OData
         private static bool IsValidSearchWord(string text)
         {
             Match match = SearchLexer.InvalidWordPattern.Match(text);
-            if (match.Success || String.Equals(text, "AND") || String.Equals(text, "OR") || String.Equals(text, "NOT"))
+            if (match.Success ||
+                String.Equals(text, "AND", StringComparison.Ordinal) ||
+                String.Equals(text, "OR", StringComparison.Ordinal) ||
+                String.Equals(text, "NOT", StringComparison.Ordinal))
             {
                 return false;
             }
