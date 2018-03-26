@@ -4,10 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData.UriParser
 {
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using Microsoft.OData.Edm;
 
@@ -56,7 +57,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert((typeReference == null) || (modelWhenNoTypeReference == null), "((typeReference == null) || (modelWhenNoTypeReference == null)");
 
             // validate typeReference but allow type name not found in model for delayed throwing.
-            if ((typeReference != null) && !string.Equals(namespaceAndType, typeReference.FullName()))
+            if ((typeReference != null) && !string.Equals(namespaceAndType, typeReference.FullName(), StringComparison.Ordinal))
             {
                 return false;
             }

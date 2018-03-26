@@ -52,7 +52,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
             // Write the "@odata.type": "#typename"
-            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceSetTypeNameForForWriting(
+            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceSetTypeNameForWriting(
                 expectedResourceTypeName,
                 resourceSet,
                 isUndeclared);
