@@ -4,16 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
 namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Query token representing an Entity Set Aggregate expression.
     /// </summary>

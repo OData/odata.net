@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace Microsoft.OData.UriParser.Aggregation
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents an aggregate expression that aggregates an entity set.
     /// An example of a OData query that generates it can be found in example 59 of OData Extension for Data Aggregation Version 4.0.

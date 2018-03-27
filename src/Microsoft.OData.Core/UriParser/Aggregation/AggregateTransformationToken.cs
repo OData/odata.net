@@ -11,7 +11,6 @@ namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
     using System.Collections.Generic;
-    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Query token representing an Aggregate token.

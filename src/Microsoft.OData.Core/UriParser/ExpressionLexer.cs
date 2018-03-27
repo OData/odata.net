@@ -466,27 +466,22 @@ namespace Microsoft.OData.UriParser
         /// <remarks>
         /// The specified position must have been retrieved by GetPostion on this instance.
         /// </remarks>
-        internal void RestorePosition(object position)
+        internal void RestorePosition(ExpressionLexerPosition position)
         {
-            ExpressionLexerPosition pos = position as ExpressionLexerPosition;
-            if (pos == null)
-            {
-                throw new ArgumentException("Position is not valid for ExpressionLexer.", "position");
-            }
 
-            if (pos.Lexer != this)
+            if (position.Lexer != this)
             {
                 throw new ArgumentException("Position was not taken from this ExpressionLexer instance.", "position");
             }
 
-            if (pos.TextPos.HasValue)
+            if (position.TextPos.HasValue)
             {
-                SetTextPos(pos.TextPos.Value);
+                SetTextPos(position.TextPos.Value);
             }
 
-            if (pos.Token.HasValue)
+            if (position.Token.HasValue)
             {
-                this.token = pos.Token.Value;
+                this.token = position.Token.Value;
             }
         }
 

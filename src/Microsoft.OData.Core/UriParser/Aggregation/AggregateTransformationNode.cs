@@ -36,12 +36,12 @@ namespace Microsoft.OData.UriParser.Aggregation
         {
             get
             {
-                return expressions.Select(x => GetAggregateExpressionOrThrow(x));
+                return expressions.OfType<AggregateExpression>();
             }
         }
 
         /// <summary>
-        /// Property that returns a list of all <see cref="AggregateExpressionBase"/>s of this tranformation node.
+        /// Property that returns a list of all <see cref="AggregateExpressionBase"/>s of this transformation node.
         /// Should be used over <see cref="Expressions"/> property.
         /// </summary>
         public IEnumerable<AggregateExpressionBase> AggregateExpressions
@@ -61,23 +61,6 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 return TransformationNodeKind.Aggregate;
             }
-        }
-
-        /// <summary>
-        /// Tries to get a <see cref="AggregateExpression"/> from it's base class.
-        /// If it fails, throws an <see cref="ODataException"/>
-        /// </summary>
-        /// <param name="expression">The object that is going to be cast.</param>
-        /// <returns>Returns a <see cref="AggregateExpression"/> or throws an <see cref="ODataException"/>.</returns>
-        private static AggregateExpression GetAggregateExpressionOrThrow(AggregateExpressionBase expression)
-        {
-            AggregateExpression aggregateExpression = expression as AggregateExpression;
-            if (aggregateExpression != null)
-            {
-                return aggregateExpression;
-            }
-
-            throw new ODataException(Strings.AggregateTransformationNode_UnsupportedAggregateExpressions());
         }
     }
 }

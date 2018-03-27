@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Linq;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Metadata;
-using ODataErrorStrings = Microsoft.OData.Strings;
-
 namespace Microsoft.OData.UriParser
 {
+    using System.Linq;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
+
     /// <summary>
     /// Class that knows how to bind an end path token, which could be several things.
     /// </summary>
