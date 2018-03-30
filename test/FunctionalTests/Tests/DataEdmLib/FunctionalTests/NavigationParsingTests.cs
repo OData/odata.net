@@ -206,7 +206,7 @@ namespace EdmLibTests.FunctionalTests
             // Assert.IsNull(petSet.FindNavigationTarget(personToPet), "Not expecting to find entity set.");
 
             // Assert.IsNull(homeSet.FindNavigationTarget(homeToPet), "Not expecting to find entity set.");
-            Assert.IsTrue(petSet.FindNavigationTarget(petToHome) is IEdmUnknownEntitySet, "Not expecting to find entity set.");
+            Assert.AreEqual(petSet.FindNavigationTarget(petToHome), homeSet, "Invalid entity set navigation target.");
         }
 
         [TestMethod]
@@ -426,12 +426,13 @@ namespace EdmLibTests.FunctionalTests
             var officeToEmployee = model.FindEntityType("NS.Office").NavigationProperties().Where(n => n.Name.Equals("ToEmployee")).First();
             this.CheckNavigationContainment(officeToEmployee, false, true);
             this.CheckNavigationsArePartners(employeeToOffice, officeToEmployee);
-
             var container = model.EntityContainer;
             var personSet = container.FindEntitySet("PersonSet");
             var homeSet = container.FindEntitySet("HomeSet");
+            var officeSet = container.FindEntitySet("OfficeSet");
 
-            Assert.AreEqual(homeSet.FindNavigationTarget(employeeToOffice.Partner), personSet, "Invalid entity set navigation target.");
+            Assert.AreEqual(officeSet.FindNavigationTarget(employeeToOffice.Partner), personSet, "Invalid entity set navigation target.");
+            Assert.AreEqual(homeSet.FindNavigationTarget(homeToPerson), personSet, "Invalid entity set navigation target.");
 
             // Contained entity set is generated dynamically.
             // Assert.AreEqual(personSet.FindNavigationTarget(officeToEmployee.Partner), homeSet, "Invalid entity set navigation target.");

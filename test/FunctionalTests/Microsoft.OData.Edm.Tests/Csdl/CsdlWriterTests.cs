@@ -137,9 +137,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "/ComplexType>" +
                 "<EntityContainer Name=\"Container\">" +
                 "<EntitySet Name=\"People\" EntityType=\"DefaultNs.Person\">" +
-                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
-                    "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/CountryOrRegion\" Target=\"CountryOrRegion\" />" +
+                    "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"City\" />" +
+                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                 "</EntitySet>" +
                 "<EntitySet Name=\"City\" EntityType=\"DefaultNs.City\" />" +
                 "<EntitySet Name=\"CountryOrRegion\" EntityType=\"DefaultNs.CountryOrRegion\" />" +

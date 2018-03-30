@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public abstract class EdmNavigationSource : EdmNamedElement, IEdmNavigationSource
     {
-        private readonly Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>>();
+        private readonly ConcurrentDictionary<IEdmNavigationProperty, ConcurrentDictionary<string, IEdmNavigationPropertyBinding>> navigationPropertyMappings = new ConcurrentDictionary<IEdmNavigationProperty, ConcurrentDictionary<string, IEdmNavigationPropertyBinding>>();
 
         private readonly Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
 
@@ -59,6 +60,13 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
             EdmUtil.CheckArgumentNull(target, "navigation target");
 
+            // It doesn't make sense to bind a containment navigation property. This should really error,
+            // but doing so would be a breaking change, so just ignore the binding.
+            if (navigationProperty.ContainsTarget)
+            {
+                return;
+            }
+
             string path = navigationProperty.Name;
 
             if (!this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType))
@@ -68,7 +76,7 @@ namespace Microsoft.OData.Edm
 
             if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
             {
-                this.navigationPropertyMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
+                this.navigationPropertyMappings[navigationProperty] = new ConcurrentDictionary<string, IEdmNavigationPropertyBinding>();
             }
 
             this.navigationPropertyMappings[navigationProperty][path] = new EdmNavigationPropertyBinding(navigationProperty, target, new EdmPathExpression(path));
@@ -87,6 +95,13 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(target, "navigation target");
             EdmUtil.CheckArgumentNull(bindingPath, "binding path");
 
+            // It doesn't make sense to bind a containment navigation property. This should really error,
+            // but doing so would be a breaking change, so just ignore the binding.
+            if (navigationProperty.ContainsTarget)
+            {
+                return;
+            }
+
             if (navigationProperty.Name != bindingPath.PathSegments.Last())
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
@@ -94,7 +109,7 @@ namespace Microsoft.OData.Edm
 
             if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
             {
-                this.navigationPropertyMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
+                this.navigationPropertyMappings[navigationProperty] = new ConcurrentDictionary<string, IEdmNavigationPropertyBinding>();
             }
 
             this.navigationPropertyMappings[navigationProperty][bindingPath.Path] = new EdmNavigationPropertyBinding(navigationProperty, target, bindingPath);
@@ -110,7 +125,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
 
-            Dictionary<string, IEdmNavigationPropertyBinding> result;
+            ConcurrentDictionary<string, IEdmNavigationPropertyBinding> result;
             if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result))
             {
                 return result.Select(item => item.Value);
@@ -148,7 +163,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
 
             bindingPath = bindingPath ?? new EdmPathExpression(navigationProperty.Name);
-            Dictionary<string, IEdmNavigationPropertyBinding> result;
+            ConcurrentDictionary<string, IEdmNavigationPropertyBinding> result;
             IEdmNavigationPropertyBinding binding;
             if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result) && result.TryGetValue(bindingPath.Path, out binding))
             {
@@ -160,7 +175,7 @@ namespace Microsoft.OData.Edm
                 IEdmContainedEntitySet containedSet = new EdmContainedEntitySet(this, navigationProperty, bindingPath);
                 if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
                 {
-                    this.navigationPropertyMappings.Add(navigationProperty, new Dictionary<string, IEdmNavigationPropertyBinding>());
+                    this.navigationPropertyMappings[navigationProperty] = new ConcurrentDictionary<string, IEdmNavigationPropertyBinding>();
                 }
 
                 this.navigationPropertyMappings[navigationProperty][bindingPath.Path] =
@@ -178,11 +193,14 @@ namespace Microsoft.OData.Edm
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
         {
             List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
-            foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
+            foreach (KeyValuePair<IEdmNavigationProperty, ConcurrentDictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
             {
-                foreach (KeyValuePair<string, IEdmNavigationPropertyBinding> kv in mapping.Value)
+                if (!mapping.Key.ContainsTarget)
                 {
-                    result.Add(kv.Value);
+                    foreach (KeyValuePair<string, IEdmNavigationPropertyBinding> kv in mapping.Value)
+                    {
+                        result.Add(kv.Value);
+                    }
                 }
             }
 
