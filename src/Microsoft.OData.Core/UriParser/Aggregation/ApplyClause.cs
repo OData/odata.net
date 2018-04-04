@@ -106,7 +106,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
             if (computeExpressions != null)
             {
-                string computeProperties = string.Join(",", computeExpressions.Select(e => e.Alias));
+                string computeProperties = string.Join(",", computeExpressions.Select(e => e.Alias).ToArray());
                 if (!string.IsNullOrEmpty(computeProperties))
                     result = string.IsNullOrEmpty(result)
                         ? computeProperties
