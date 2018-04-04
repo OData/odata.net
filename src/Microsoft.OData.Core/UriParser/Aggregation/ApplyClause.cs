@@ -108,9 +108,11 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 string computeProperties = string.Join(",", computeExpressions.Select(e => e.Alias).ToArray());
                 if (!string.IsNullOrEmpty(computeProperties))
+                {
                     result = string.IsNullOrEmpty(result)
                         ? computeProperties
                         : string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, computeProperties);
+                }
             }
 
             return string.IsNullOrEmpty(result)
