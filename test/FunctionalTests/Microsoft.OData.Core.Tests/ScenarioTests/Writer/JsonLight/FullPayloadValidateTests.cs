@@ -961,6 +961,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             result.Should().Be(expectedPayload);
         }
 
+        [Fact]
+        public void WriteContextMetadataEntityApplyComputeProperties()
+        {
+            ODataItem[] itemsToWrite = new ODataItem[]
+            {
+                new ODataResourceSet(), this.entryWithOnlyData2
+            };
+
+            IEdmNavigationProperty containedNavProp = EntityType.FindProperty("ContainedCollectionNavProp") as IEdmNavigationProperty;
+            IEdmEntitySetBase contianedEntitySet = EntitySet.FindNavigationTarget(containedNavProp) as IEdmEntitySetBase;
+            string resourcePath = "EntitySet(123)/ContainedCollectionNavProp";
+            string applyClause = "compute(ID mul 2 as idMul2,length(Name) as nameLenght)";
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, contianedEntitySet, EntityType, null, null, resourcePath, applyClause);
+
+            result.Should().StartWith("{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedCollectionNavProp(idMul2,nameLenght)");
+        }
+
         #region Help Methods
         private string GetWriterOutputForContentTypeAndKnobValue(
             string contentType,
@@ -972,6 +989,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string selectClause = null,
             string expandClause = null,
             string resourcePath = null,
+            string applyClause = null,
             bool enableBasicValidation = true)
         {
             MemoryStream outputStream = new MemoryStream();
@@ -982,13 +1000,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 Validations = (enableBasicValidation ? ValidationKinds.All : ValidationKinds.None),
             };
 
-            var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();
+            var parser = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause }, { "$apply", applyClause } });
+            var result = parser.ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()
             {
                 ServiceRoot = new Uri("http://example.org/odata.svc"),
-                SelectAndExpand = result
-            };
+                SelectAndExpand = parser.ParseSelectAndExpand(),
+                Apply = parser.ParseApply()
+        };
 
             if (resourcePath != null)
             {
