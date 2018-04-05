@@ -67,7 +67,8 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         internal string GetContextUri()
         {
-            return CreatePropertiesUriSegment(lastGroupByPropertyNodes, lastAggregateExpressions);
+            IEnumerable<ComputeExpression> computeExpressions = transformations.OfType<ComputeTransformationNode>().SelectMany(n => n.Expressions);
+            return CreatePropertiesUriSegment(lastGroupByPropertyNodes, lastAggregateExpressions, computeExpressions);
         }
 
         internal List<string> GetLastAggregatedPropertyNames()
@@ -82,13 +83,14 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private string CreatePropertiesUriSegment(
             IEnumerable<GroupByPropertyNode> groupByPropertyNodes,
-            IEnumerable<AggregateExpression> aggregateExpressions)
+            IEnumerable<AggregateExpression> aggregateExpressions,
+            IEnumerable<ComputeExpression> computeExpressions)
         {
             string result = string.Empty;
             if (groupByPropertyNodes != null)
             {
                 var groupByPropertyArray =
-                    groupByPropertyNodes.Select(prop => prop.Name + CreatePropertiesUriSegment(prop.ChildTransformations, null))
+                    groupByPropertyNodes.Select(prop => prop.Name + CreatePropertiesUriSegment(prop.ChildTransformations, null, null))
                         .ToArray();
                 result = string.Join(",", groupByPropertyArray);
                 result = aggregateExpressions == null
@@ -100,6 +102,17 @@ namespace Microsoft.OData.UriParser.Aggregation
                 result = aggregateExpressions == null
                     ? string.Empty
                     : CreateAggregatePropertiesUriSegment(aggregateExpressions);
+            }
+
+            if (computeExpressions != null)
+            {
+                string computeProperties = string.Join(",", computeExpressions.Select(e => e.Alias).ToArray());
+                if (!string.IsNullOrEmpty(computeProperties))
+                {
+                    result = string.IsNullOrEmpty(result)
+                        ? computeProperties
+                        : string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, computeProperties);
+                }
             }
 
             return string.IsNullOrEmpty(result)
