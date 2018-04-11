@@ -3825,7 +3825,24 @@ this.Write(@""")]
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, getReferencedModelFromMap);
+                    global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings edmxReaderSettings = new global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings()
+                    {
+                        GetReferencedModelReaderFunc = getReferencedModelFromMap,
+                        IgnoreUnexpectedAttributesAndElements = ");
+this.Write(this.context.IgnoreUnexpectedElementsAndAttributes.ToString().ToLower());
+this.Write(@"
+                    };
+                    
+                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
+                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.IEdmModel> references = global::System.Linq.Enumerable.Empty<global::Microsoft.OData.Edm.IEdmModel>();
+                    global::Microsoft.OData.Edm.IEdmModel edmModel;
+                    
+                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, references, edmxReaderSettings, out edmModel, out errors))
+                    {
+                        throw new global::System.InvalidOperationException(""Error while parsing CSDL."");
+                    }
+
+                    return edmModel;
                 }
                 finally
                 {
@@ -3833,8 +3850,6 @@ this.Write(@""")]
                 }
             }
 ");
-
-
         }
         else
         {
@@ -3850,7 +3865,23 @@ this.Write(@""")]
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
+                    global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings edmxReaderSettings = new global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings()
+                    {
+                        IgnoreUnexpectedAttributesAndElements = ");
+this.Write(this.context.IgnoreUnexpectedElementsAndAttributes.ToString().ToLower());
+this.Write(@"
+                    };
+                    
+                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
+                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.IEdmModel> references = global::System.Linq.Enumerable.Empty<global::Microsoft.OData.Edm.IEdmModel>();
+                    global::Microsoft.OData.Edm.IEdmModel edmModel;
+                    
+                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, references, edmxReaderSettings, out edmModel, out errors))
+                    {
+                        throw new global::System.InvalidOperationException(""Error while parsing CSDL."");
+                    }
+
+                    return edmModel;
                 }
                 finally
                 {

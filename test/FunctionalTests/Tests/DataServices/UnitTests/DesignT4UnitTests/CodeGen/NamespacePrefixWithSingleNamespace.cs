@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 4/10/2018 2:46:45 PM
+// Generation date: 4/10/2018 4:02:38 PM
 namespace NamespacePrefixWithSingleNamespace
 {
     /// <summary>
