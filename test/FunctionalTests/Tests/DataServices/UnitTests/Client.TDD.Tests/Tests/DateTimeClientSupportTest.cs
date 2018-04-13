@@ -136,6 +136,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             });
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void TestClientLibDateTimeSupport_Post()
         {
@@ -168,6 +169,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 }
             });
         }
+#endif
 
         [TestMethod]
         public void WriteEntryAsBodyOperationParameter()
@@ -251,6 +253,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             VerifyMessageBody(requestMessage3, parameterString3);
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void WriteDateAndTimeUriOperationParametersToUriShouldReturnUri()
         {
@@ -402,6 +405,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Assert.AreEqual(result[2], DateTime.MaxValue);
             });
         }
+#endif
 
         private ODataRequestMessageWrapper CreateRequestMessageForPost(RequestInfo requestInfo)
         {
@@ -420,7 +424,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             Assert.AreEqual(expected, body);
         }
 
-        #region private methods
+#region private methods
         private void TestDateTime(string response, Action testAction)
         {
             SetDateTimeResponse(response);
@@ -444,6 +448,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 return responseMessage;
             };
         }
-        #endregion private methods
+#endregion private methods
     }
 }
