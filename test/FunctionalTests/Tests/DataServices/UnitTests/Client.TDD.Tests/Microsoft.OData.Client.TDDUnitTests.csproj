@@ -60,6 +60,7 @@
     <Compile Include="..\ClientExtensions\TestDataServiceClientRequestMessage.cs">
       <Link>TestDataServiceClientRequestMessage.cs</Link>
     </Compile>
+    <Compile Include="DateTimePrimitiveTypeReference.cs" />
     <Compile Include="Tests\Annotation\AnnotationTargetingOperationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientAnnotationTests.cs" />
     <Compile Include="Tests\CustomizedHttpWebRequestMessage.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Tests\ClientPropertyTrackingTests.cs" />
     <Compile Include="Tests\ClientSingletonTest.cs" />
     <Compile Include="Tests\DataServiceRequestTests.cs" />
+    <Compile Include="Tests\DateTimeClientSupportTest.cs" />
     <Compile Include="Tests\EntityParameter\EntityParameterProxy.cs" />
     <Compile Include="Tests\EntityParameter\EntityParameterTests.cs" />
     <Compile Include="Tests\EntityParameter\EntityParameterRequestMessage.cs" />

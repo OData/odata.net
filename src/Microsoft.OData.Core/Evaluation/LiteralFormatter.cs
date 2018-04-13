@@ -156,12 +156,17 @@ namespace Microsoft.OData.Evaluation
                 return XmlConvert.ToString((byte)value);
             }
 
-#if ODATA_SERVICE
+#if ODATA_SERVICE || ODATA_CLIENT
             if (value is DateTime)
             {
                 // Since the server/client supports DateTime values, convert the DateTime value
                 // to DateTimeOffset and use XmlCOnvert to convert to String.
+                // If datetime kind is unspecified, then treat it as UTC.
+#if ODATA_SERVICE
                 DateTimeOffset dto = WebUtil.ConvertDateTimeToDateTimeOffset((DateTime)value);
+#elif ODATA_CLIENT
+                DateTimeOffset dto = PlatformHelper.ConvertDateTimeToDateTimeOffset((DateTime)value);
+#endif
                 return XmlConvert.ToString(dto);
             }
 #endif
