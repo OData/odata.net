@@ -167,6 +167,7 @@ namespace Microsoft.OData.Evaluation
 #elif ODATA_CLIENT
                 DateTimeOffset dto = PlatformHelper.ConvertDateTimeToDateTimeOffset((DateTime)value);
 #endif
+
                 return XmlConvert.ToString(dto);
             }
 #endif
