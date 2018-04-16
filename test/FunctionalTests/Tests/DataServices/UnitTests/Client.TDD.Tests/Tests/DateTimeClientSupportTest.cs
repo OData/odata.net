@@ -61,6 +61,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 }";
         private DateTime fixedDateTimeUtc = new DateTime(2016, 11, 30, 02, 07, 16, DateTimeKind.Utc);
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void TestClientLibDateTimeSupport()
         {
@@ -136,7 +137,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             });
         }
 
-#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void TestClientLibDateTimeSupport_Post()
         {
