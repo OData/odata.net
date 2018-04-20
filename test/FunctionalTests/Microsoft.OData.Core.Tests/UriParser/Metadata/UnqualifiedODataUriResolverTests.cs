@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -116,6 +117,40 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=FindPencilsCon",
                 parser => parser.ParseOrderBy(),
                 Strings.FunctionOverloadResolver_NoSingleMatchFound("FindPencilsCon", ""));
+        }
+
+        [Fact]
+        public void Parse_MatchedCountOfKeys()
+        {
+            this.TestUriParserExtension(
+                "PetSet(key1=1, key2='aStr')",
+                "PetSet(KeY1=1, KeY2='aStr')",
+                parser => parser.ParsePath(),
+                _ => { /*no-op*/ },
+                Strings.RequestUriProcessor_SyntaxError,
+                Model,
+                parser => parser.Resolver = new UnqualifiedODataUriResolver() {EnableCaseInsensitive = true});
+        }
+
+        [Fact]
+        public void CannotParse_UnmatchedCountOfKeysUsingUnqualifiedResolver()
+        {
+            Uri uriUnmatchedKeysCount = new Uri("PetSet(key1=1, key2='aStr', nonExistingKey='bStr')", UriKind.Relative);
+            ODataUriParser parser = new ODataUriParser(Model, uriUnmatchedKeysCount)
+            {
+                Resolver = new UnqualifiedODataUriResolver() {EnableCaseInsensitive = false}
+            };
+            Action action = () => parser.ParsePath();
+            action.ShouldThrow<ODataException>().WithMessage(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
+        }
+
+        [Fact]
+        public void CannotParse_UnmatchedCountOfKeysUsingODataUriResolver()
+        {
+            Uri uriUnmatchedKeysCount = new Uri("PetSet(key1=1, key2='aStr', nonExistingKey='bStr')", UriKind.Relative);
+            ODataUriParser parser = new ODataUriParser(Model, uriUnmatchedKeysCount);
+            Action action = () => parser.ParsePath();
+            action.ShouldThrow<ODataException>().WithMessage(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
         }
 
         private void TestUnqualified<TResult>(
