@@ -380,6 +380,18 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void CompositeAlternateKeyShouldFailOnlyWithInvalidAlternateKey()
+        {
+            Uri fullUri = new Uri("http://host/People(NameAlias='anyName', FirstNameAlias='anyFirst', extraAltKey='any')");
+            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), fullUri)
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            action.ShouldThrow<ODataException>().WithMessage("Bad Request - Error in query syntax.");
+        }
+
+        [Fact]
         public void AlternateKeyShouldFailWithDefaultUriResolver()
         {
             Uri fullUri = new Uri("http://host/People(SocialSN = \'1\')");

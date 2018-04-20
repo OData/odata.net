@@ -89,6 +89,14 @@ namespace Microsoft.OData.UriParser
         /// <returns>True if resolve succeeded.</returns>
         private bool TryResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, IDictionary<string, IEdmProperty> keyProperties, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
         {
+            if (namedValues.Count != keyProperties.Count)
+            {
+                // Count of name value pair does not match the alias count in this set of
+                // alternative keys ==> Unresolvable for this set.
+                convertedPairs = null;
+                return false;
+            }
+
             Dictionary<string, object> pairs = new Dictionary<string, object>(StringComparer.Ordinal);
 
             foreach (KeyValuePair<string, IEdmProperty> kvp in keyProperties)
