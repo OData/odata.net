@@ -163,8 +163,9 @@ namespace Microsoft.OData.UriParser
                     key = KeyFinder.FindAndUseKeysFromRelatedSegment(key, keyProperties, currentNavPropSegment.NavigationProperty, previousKeySegment);
                 }
 
-                // if we still didn't find any keys, then throw an error.
-                if (keyProperties.Count != key.ValueCount && resolver.GetType() == typeof(ODataUriResolver))
+                // If we still didn't find any keys, throw an error, except for case of
+                // AlternateKeysODataUriResolver which can handle alternate keys and can throw later for unresolvable case.
+                if (keyProperties.Count != key.ValueCount && !(resolver is AlternateKeysODataUriResolver))
                 {
                     throw ExceptionUtil.CreateBadRequestError(ErrorStrings.BadRequest_KeyCountMismatch(targetEntityType.FullName()));
                 }
