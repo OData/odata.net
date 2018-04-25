@@ -372,17 +372,24 @@ namespace Microsoft.OData.UriParser
         /// <summary>Finds the best fitting function for the specified arguments.</summary>
         /// <param name="functions">Functions to consider.</param>
         /// <param name="argumentNodes">Nodes of the arguments for the function, can be new {null,null}.</param>
+        /// <param name="matchedIndex">Output for the index of the matched signature.</param>
         /// <returns>The best fitting function; null if none found or ambiguous.</returns>
-        internal static FunctionSignatureWithReturnType FindBestFunctionSignature(FunctionSignatureWithReturnType[] functions, SingleValueNode[] argumentNodes)
+        internal static FunctionSignatureWithReturnType FindBestFunctionSignature(FunctionSignatureWithReturnType[] functions,
+            SingleValueNode[] argumentNodes, out int matchedIndex)
         {
+            matchedIndex = -1;
             IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
             Debug.Assert(functions != null, "functions != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
             List<FunctionSignatureWithReturnType> applicableFunctions = new List<FunctionSignatureWithReturnType>(functions.Length);
 
-            // Build a list of applicable functions (and cache their promoted arguments).
-            foreach (FunctionSignatureWithReturnType candidate in functions)
+            // Cache of offsets for applicable functions in the filtered-by-name 'functions' list.
+            List<int> offsetsOfApplicableFunctions = new List<int>();
+
+            // Build a list of applicable functions (and cache their promoted arguments and offsets).
+            for (int offset = 0; offset < functions.Length; offset++)
             {
+                FunctionSignatureWithReturnType candidate = functions[offset];
                 if (candidate.ArgumentTypes.Length != argumentTypes.Length)
                 {
                     continue;
@@ -401,6 +408,7 @@ namespace Microsoft.OData.UriParser
                 if (argumentsMatch)
                 {
                     applicableFunctions.Add(candidate);
+                    offsetsOfApplicableFunctions.Add(offset);
                 }
             }
 
@@ -408,10 +416,12 @@ namespace Microsoft.OData.UriParser
             if (applicableFunctions.Count == 0)
             {
                 // No matching function.
+                Debug.Assert(matchedIndex == -1, "matchedIndex == -1");
                 return null;
             }
             else if (applicableFunctions.Count == 1)
             {
+                matchedIndex = offsetsOfApplicableFunctions[0];
                 return applicableFunctions[0];
             }
             else
@@ -439,6 +449,7 @@ namespace Microsoft.OData.UriParser
                         else
                         {
                             // This means there were at least 2 equally matching functions.
+                            Debug.Assert(matchedIndex == -1, "matchedIndex == -1");
                             return null;
                         }
                     }
@@ -446,9 +457,12 @@ namespace Microsoft.OData.UriParser
 
                 if (bestFunctionIndex == -1)
                 {
+                    Debug.Assert(matchedIndex == -1, "matchedIndex == -1");
                     return null;
                 }
 
+                // Best match found. Need to convert back to the original offset in the overall functions list.
+                matchedIndex = offsetsOfApplicableFunctions[bestFunctionIndex];
                 return applicableFunctions[bestFunctionIndex];
             }
         }
