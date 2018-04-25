@@ -142,18 +142,70 @@ namespace Microsoft.OData.UriParser
         #region Internal Methods
 
         /// <summary>
-        /// Returns a list of signatures for a function name.
+        /// Returns a list of matched names and a list of signatures for a function name.
         /// </summary>
         /// <param name="name">The name of the function to look for.</param>
-        /// <param name="signatures">The list of signatures available for the function name.</param>
+        /// <param name="customNames">
+        /// Output for the list of target names matched, in same sequential order of the matching 'signatures' output;
+        /// null if no matches found./// </param>
+        /// <param name="signatures">
+        /// Output for the list of signatures for matched function names, in same sequential order of the matching 'customNames' output;
+        /// null if no matches found.
+        /// </param>
+        /// <param name="enableCaseInsensitive">Whether to perform case-insensitive match for function name.</param>
         /// <returns>true if the function was found, or false otherwise.</returns>
-        internal static bool TryGetCustomFunction(string name, out FunctionSignatureWithReturnType[] signatures)
+        internal static bool TryGetCustomFunction(string name, out string[] customNames, out FunctionSignatureWithReturnType[] signatures,
+            bool enableCaseInsensitive = false)
         {
             Debug.Assert(name != null, "name != null");
 
             lock (Locker)
             {
-                return CustomFunctions.TryGetValue(name, out signatures);
+                bool found = false;
+                IList<string> matchedNames = new List<string>();
+                IList<FunctionSignatureWithReturnType> matchedSignatures = new List<FunctionSignatureWithReturnType>();
+
+                // Do case-sensitive search first.
+                if (CustomFunctions.ContainsKey(name))
+                {
+                    FunctionSignatureWithReturnType[] signatureGroup = null;
+                    CustomFunctions.TryGetValue(name, out signatureGroup);
+
+                    Debug.Assert(signatureGroup != null, "signatureGroup != null");
+
+                    foreach (FunctionSignatureWithReturnType sig in signatureGroup)
+                    {
+                        matchedNames.Add(name);
+                        matchedSignatures.Add(sig);
+                    }
+
+                    found = true;
+                }
+
+                // Continue to search for match, if case-insensitive is enabled.
+                if (enableCaseInsensitive)
+                {
+                    foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> pair in CustomFunctions)
+                    {
+                        if (pair.Key.Equals(name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            foreach (FunctionSignatureWithReturnType sig in pair.Value)
+                            {
+                                matchedNames.Add(pair.Key);
+                                matchedSignatures.Add(sig);
+                            }
+
+                            found = true;
+                        }
+                    }
+                }
+
+                // Setup the output values.
+                customNames = found ? matchedNames.ToArray() : null;
+                signatures = found ? matchedSignatures.ToArray() : null;
+
+                Debug.Assert(!found || customNames.Length == signatures.Length);
+                return found;
             }
         }
 
