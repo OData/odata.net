@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         [Fact]
         public void EnsureFunctionImportFunctionPropertyIsUnresolvedFunction()
         {
-            var functionImport = new CsdlFunctionImport("GetStuff", "FQ.NS.GetStuff", null /*entitySet*/, true /*includeInServiceDocument*/, null /*documentation*/, testLocation);
+            var functionImport = new CsdlFunctionImport("GetStuff", "FQ.NS.GetStuff", null /*entitySet*/, true /*includeInServiceDocument*/, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", operationImports: new CsdlOperationImport[] {functionImport});
             var schema = CsdlBuilder.Schema("FQ.NS", csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer });
             var csdlModel = new CsdlModel();
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         [Fact]
         public void EnsureActionImportActionPropertyIsUnresolvedAction()
         {
-            var actionImport = new CsdlActionImport("Action", "FQ.NS.Action", null /*entitySet*/, null /*documentation*/, testLocation);
+            var actionImport = new CsdlActionImport("Action", "FQ.NS.Action", null /*entitySet*/, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", operationImports: new CsdlOperationImport[] { actionImport });
             var schema = CsdlBuilder.Schema("FQ.NS", csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer });
             var csdlModel = new CsdlModel();

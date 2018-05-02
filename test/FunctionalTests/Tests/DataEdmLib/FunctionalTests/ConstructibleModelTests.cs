@@ -157,21 +157,6 @@ namespace EdmLibTests.FunctionalTests
             bool caught = false;
             try
             {
-                model.SetAnnotationValue(f11, "http://schemas.microsoft.com/ado/2011/04/edm/documentation", "Documentation", "Crud");
-            }
-            catch (InvalidOperationException e)
-            {
-                if (e.Message.Contains("IEdmDocumentation") && e.Message.Contains("String"))
-                {
-                    caught = true;
-                }
-            }
-
-            Assert.IsTrue(caught, "Documentation pun.");
-
-            caught = false;
-            try
-            {
                 model.GetAnnotationValue<Boxed<int>>(f11, "Grumble", "Tumble");
             }
             catch (InvalidOperationException e)

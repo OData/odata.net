@@ -18,7 +18,6 @@ namespace Microsoft.OData.Edm.Tests
             CsdlEntitySet[] entitySets = default(CsdlEntitySet[]),
             CsdlSingleton[] singletons = default(CsdlSingleton[]),
             CsdlOperationImport[] operationImports = default(CsdlOperationImport[]),
-            CsdlDocumentation documentation = null,
             CsdlLocation location = null)
         {
             if (entitySets == null)
@@ -42,7 +41,6 @@ namespace Microsoft.OData.Edm.Tests
                 entitySets,
                 singletons,
                 operationImports,
-                documentation,
                 location);
         }
 
@@ -55,7 +53,6 @@ namespace Microsoft.OData.Edm.Tests
             CsdlKey csdlKey = null,
             CsdlProperty[] properties = default(CsdlProperty[]),
             CsdlNavigationProperty[] navProps = default(CsdlNavigationProperty[]),
-            CsdlDocumentation documentation = null,
             CsdlLocation location = null)
         {
             if (properties == null)
@@ -77,17 +74,15 @@ namespace Microsoft.OData.Edm.Tests
                 csdlKey, 
                 properties, 
                 navProps, 
-                documentation, 
                 location);
         }
 
         internal static CsdlOperationParameter Parameter(
             string name,
             string fullTypeReferenceName,
-            CsdlDocumentation documentation = null,
             CsdlLocation location = null)
         {
-            return new CsdlOperationParameter(name, new CsdlNamedTypeReference(fullTypeReferenceName, true, null), documentation, location);
+            return new CsdlOperationParameter(name, new CsdlNamedTypeReference(fullTypeReferenceName, true, null), location);
         }
 
         internal static CsdlFunction Function(
@@ -97,7 +92,6 @@ namespace Microsoft.OData.Edm.Tests
             bool isBound = false, 
             string entitySetPath = null, 
             bool isComposable = false,
-            CsdlDocumentation documentation = null, 
             CsdlLocation location = null)
         {
             if (parameters == null)
@@ -112,7 +106,6 @@ namespace Microsoft.OData.Edm.Tests
                 isBound,
                 entitySetPath,
                 isComposable,
-                documentation,
                 location);
         }
 
@@ -122,7 +115,6 @@ namespace Microsoft.OData.Edm.Tests
             CsdlTypeReference typeReference = null,
             bool isBound = false,
             string entitySetPath = null,
-            CsdlDocumentation documentation = null,
             CsdlLocation location = null)
 
         {
@@ -137,7 +129,6 @@ namespace Microsoft.OData.Edm.Tests
                 typeReference,
                 isBound,
                 entitySetPath,
-                documentation,
                 location);
         }
 
@@ -152,7 +143,6 @@ namespace Microsoft.OData.Edm.Tests
             CsdlEntityContainer[] csdlEntityContainers = default(CsdlEntityContainer[]),
             CsdlAnnotations[] csdlAnnotations = default(CsdlAnnotations[]),
             CsdlTypeDefinition[] csdlTypeDefinitions = default(CsdlTypeDefinition[]),
-            CsdlDocumentation documentation = null,
             CsdlLocation location = null)
         {
             if (csdlStructuredTypes == null)
@@ -201,7 +191,6 @@ namespace Microsoft.OData.Edm.Tests
                 csdlEntityContainers,
                 csdlAnnotations,
                 csdlTypeDefinitions,
-                documentation /*documentation*/,
                 location /*location*/);
 
             return csdlSchema;
