@@ -14,8 +14,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly CsdlTypeReference type;
         private readonly string defaultValue;
 
-        public CsdlProperty(string name, CsdlTypeReference type, string defaultValue, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlProperty(string name, CsdlTypeReference type, string defaultValue, CsdlLocation location)
+            : base(name, location)
         {
             this.type = type;
             this.defaultValue = defaultValue;

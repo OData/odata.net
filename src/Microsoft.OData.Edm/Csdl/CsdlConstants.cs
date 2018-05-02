@@ -115,7 +115,6 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_Date = "Date";
         internal const string Element_DateTimeOffset = "DateTimeOffset";
         internal const string Element_Decimal = "Decimal";
-        internal const string Element_Documentation = "Documentation";
         internal const string Element_EntityContainer = "EntityContainer";
         internal const string Element_EntitySet = "EntitySet";
         internal const string Element_EntitySetReference = "EntitySetReference";

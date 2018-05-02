@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         public void EnsureEntitySetResolvesToEdmPathExpression()
         {
             var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "Nav1/Nav2" /*entitySet*/, null /*documentation*/, testLocation);
+            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "Nav1/Nav2" /*entitySet*/, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
 
             var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         public void CsdlSemanticsActionImportPropertiesShouldBeInitializedCorrectly()
         {
             var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", null, null /*documentation*/, testLocation);
+            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", null, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
 
             var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             // Added to ensure this is filtered out
             var function = CsdlBuilder.Function("GetStuff");
             
-            var functionImport = new CsdlFunctionImport("GetStuff", "FQ.NS.GetStuff", null /*entitySet*/, true /*includeInServiceDocument*/, null /*documentation*/, testLocation);
+            var functionImport = new CsdlFunctionImport("GetStuff", "FQ.NS.GetStuff", null /*entitySet*/, true /*includeInServiceDocument*/, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
 
             var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, function);
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
         private static CsdlSemanticsSchema CreateCsdlSemanticsSchema(CsdlEntityContainer csdlEntityContainer, params CsdlOperation[] operations)
         {
-            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, new Collection<CsdlProperty>(), new System.Collections.Generic.List<CsdlNavigationProperty>(), null, null);
+            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, new Collection<CsdlProperty>(), new System.Collections.Generic.List<CsdlNavigationProperty>(), null);
             var schema = CsdlBuilder.Schema("FQ.NS", csdlOperations: operations, csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer }, csdlStructuredTypes: new CsdlStructuredType[] { csdlEntityType });
             var csdlModel = new CsdlModel();
             csdlModel.AddSchema(schema);

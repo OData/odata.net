@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         private readonly CsdlLocation testLocation;
         public CsdlSemanticsOperationTests()
         {
-            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null, null);
+            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null);
 
             var csdlSchema = CsdlBuilder.Schema("FQ.NS", csdlStructuredTypes: new[] { this.csdlEntityType });
             
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         [Fact]
         public void NonBoundCsdlSemanticsOperationPropertiesShouldBeCorrect()
         {
-            var function = new CsdlFunction("Checkout", Enumerable.Empty<CsdlOperationParameter>(), new CsdlNamedTypeReference("Edm.String", false, testLocation), false /*isBound*/, null /*entitySetPath*/, true /*isComposable*/, null /*documentation*/, testLocation);
+            var function = new CsdlFunction("Checkout", Enumerable.Empty<CsdlOperationParameter>(), new CsdlNamedTypeReference("Edm.String", false, testLocation), false /*isBound*/, null /*entitySetPath*/, true /*isComposable*/, testLocation);
             var semanticFunction = new CsdlSemanticsFunction(this.semanticSchema, function);
             semanticFunction.IsBound.Should().BeFalse();
             semanticFunction.Location().Should().Be(testLocation);
@@ -56,11 +56,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             var action = new CsdlAction(
                 "Checkout",
-                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), null, testLocation) }, 
+                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), testLocation) }, 
                 new CsdlNamedTypeReference("Edm.String", false, testLocation), 
-                true /*isBound*/, 
-                "entity/FakePath", 
-                null /*documentation*/, 
+                true /*isBound*/,
+                "entity/FakePath",
                 testLocation);
 
             var semanticAction = new CsdlSemanticsAction(this.semanticSchema, action);
