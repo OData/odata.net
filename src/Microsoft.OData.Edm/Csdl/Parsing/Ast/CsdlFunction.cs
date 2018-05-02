@@ -22,7 +22,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// <param name="isBound">if set to <c>true</c> [is bound].</param>
         /// <param name="entitySetPath">The entity set path.</param>
         /// <param name="isComposable">if set to <c>true</c> [is composable].</param>
-        /// <param name="documentation">The documentation.</param>
         /// <param name="location">The location in the csdl document of the function.</param>
         public CsdlFunction(
             string name,
@@ -31,9 +30,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             bool isBound,
             string entitySetPath,
             bool isComposable,
-            CsdlDocumentation documentation,
             CsdlLocation location)
-            : base(name, parameters, returnType, isBound, entitySetPath, documentation, location)
+            : base(name, parameters, returnType, isBound, entitySetPath, location)
         {
             this.IsComposable = isComposable;
         }

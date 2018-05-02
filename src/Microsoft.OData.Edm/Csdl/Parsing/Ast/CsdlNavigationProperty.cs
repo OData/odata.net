@@ -20,8 +20,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly CsdlOnDelete onDelete;
         private readonly IEnumerable<CsdlReferentialConstraint> referentialConstraints;
 
-        public CsdlNavigationProperty(string name, string type, bool? nullable, string partner, bool containsTarget, CsdlOnDelete onDelete, IEnumerable<CsdlReferentialConstraint> referentialConstraints, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlNavigationProperty(string name, string type, bool? nullable, string partner, bool containsTarget, CsdlOnDelete onDelete, IEnumerable<CsdlReferentialConstraint> referentialConstraints, CsdlLocation location)
+            : base(name, location)
         {
             this.type = type;
             this.nullable = nullable;

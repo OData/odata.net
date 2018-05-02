@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly string underlyingTypeName;
 
         public CsdlTypeDefinition(string name, string underlyingTypeName, CsdlLocation location)
-            : base(name, /*documentation*/null, location)
+            : base(name, location)
         {
             this.underlyingTypeName = underlyingTypeName;
         }

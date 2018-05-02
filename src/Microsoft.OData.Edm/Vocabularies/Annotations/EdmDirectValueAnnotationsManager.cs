@@ -191,11 +191,6 @@ namespace Microsoft.OData.Edm.Vocabularies
                 }
             }
 
-            if (namespaceName == EdmConstants.DocumentationUri && value != null && !(value is IEdmDocumentation))
-            {
-                throw new InvalidOperationException(Edm.Strings.Annotations_DocumentationPun(value.GetType().Name));
-            }
-
             IEdmDirectValueAnnotation newAnnotation = value != null ?
                 new EdmDirectValueAnnotation(namespaceName, localName, value) :
                 new EdmDirectValueAnnotation(namespaceName, localName);

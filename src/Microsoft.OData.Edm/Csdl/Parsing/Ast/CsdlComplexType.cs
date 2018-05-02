@@ -13,8 +13,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlComplexType : CsdlNamedStructuredType
     {
-        public CsdlComplexType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> structuralProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, baseTypeName, isAbstract, isOpen, structuralProperties, navigationProperties, documentation, location)
+        public CsdlComplexType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> structuralProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlLocation location)
+            : base(name, baseTypeName, isAbstract, isOpen, structuralProperties, navigationProperties, location)
         {
         }
     }

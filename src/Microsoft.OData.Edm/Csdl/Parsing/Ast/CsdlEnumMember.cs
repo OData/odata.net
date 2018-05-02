@@ -11,8 +11,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlEnumMember : CsdlNamedElement
     {
-        public CsdlEnumMember(string name, long? value, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlEnumMember(string name, long? value, CsdlLocation location)
+            : base(name, location)
         {
             this.Value = value;
         }

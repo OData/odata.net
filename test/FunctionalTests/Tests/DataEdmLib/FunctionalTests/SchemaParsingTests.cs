@@ -551,42 +551,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SchemaReadParseDocumentation()
-        {
-            //Only parse, do not do validation here.
-            const string csdl =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""Hot"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <EntityType Name=""Person"">
-    <Key>
-      <PropertyRef Name=""Id"" />
-    </Key>
-    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Address"" Type=""Edm.String"" MaxLength=""100"">
-      <Documentation>
-        <LongDescription>Just some silly property</LongDescription>
-      </Documentation>
-    </Property>
-    <Documentation>
-      <Summary>Summarize this</Summary>
-      <LongDescription>Or at length</LongDescription>
-    </Documentation>
-  </EntityType>
-</Schema>";
-
-            IEdmModel model;
-            IEnumerable<EdmError> errors;
-            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-            Assert.IsTrue(parsed, "parsed");
-            Assert.IsTrue(errors.Count() == 0, "No errors");
-
-            IEdmEntityType person = (IEdmEntityType)model.SchemaElements.First();
-            // Test the structural objects.
-
-            IEdmProperty address = person.DeclaredStructuralProperties().Last();
-        }
-
-        [TestMethod]
         public void SchemaReadAssociationAndNavigationProperty()
         {
             const string csdl =
@@ -1660,36 +1624,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsFalse(operationImports[10].TryGetStaticEntitySet(model, out eset), "operationImports[10].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[10].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[10].TryGetStaticEntitySet");
         }
-
-        [TestMethod]
-        public void SimpleOperationWithDocumentation()
-        {
-            const string csdl =
-@"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <EntityType Name=""Person"">
-    <Key>
-      <PropertyRef Name=""Id"" />
-    </Key>
-    <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
-    <Property Name=""Birthday"" Type=""DateTimeOffset"" />
-  </EntityType>
-  <Function Name=""GetAge""><ReturnType Type=""Edm.Int32""/>
-      <Documentation>
-        <LongDescription>Function Documentation!!!</LongDescription>
-      </Documentation>
-    <Parameter Name=""Person"" Type=""foo.Person"" />
-    </Function>
-</Schema>";
-
-            IEdmModel model;
-            IEnumerable<EdmError> errors;
-            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-            Assert.IsTrue(parsed, "parsed");
-            Assert.IsTrue(errors.Count() == 0, "No errors");
-
-            IEdmOperation getAge = (IEdmOperation)model.FindOperations("foo.GetAge").First();
-        }
-
         #endregion
 
         [TestMethod]
