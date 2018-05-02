@@ -15,8 +15,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     {
         private readonly List<CsdlNavigationPropertyBinding> navigationPropertyBindings;
 
-        public CsdlAbstractNavigationSource(string name, IEnumerable<CsdlNavigationPropertyBinding> navigationPropertyBindings, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlAbstractNavigationSource(string name, IEnumerable<CsdlNavigationPropertyBinding> navigationPropertyBindings, CsdlLocation location)
+            : base(name, location)
         {
             this.navigationPropertyBindings = new List<CsdlNavigationPropertyBinding>(navigationPropertyBindings);
         }

@@ -15,8 +15,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly string appliesTo;
         private readonly string defaultValue;
 
-        public CsdlTerm(string name, CsdlTypeReference type, string appliesTo, string defaultValue, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlTerm(string name, CsdlTypeReference type, string appliesTo, string defaultValue, CsdlLocation location)
+            : base(name, location)
         {
             this.type = type;
             this.appliesTo = appliesTo;

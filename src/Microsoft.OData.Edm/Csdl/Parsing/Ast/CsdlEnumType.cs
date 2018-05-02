@@ -17,8 +17,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly bool isFlags;
         private readonly List<CsdlEnumMember> members;
 
-        public CsdlEnumType(string name, string underlyingTypeName, bool isFlags, IEnumerable<CsdlEnumMember> members, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlEnumType(string name, string underlyingTypeName, bool isFlags, IEnumerable<CsdlEnumMember> members, CsdlLocation location)
+            : base(name, location)
         {
             this.underlyingTypeName = underlyingTypeName;
             this.isFlags = isFlags;

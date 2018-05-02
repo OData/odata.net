@@ -30,16 +30,6 @@ namespace Microsoft.OData.Edm
         internal const string XmlNamespacePrefix = "xmlns";
 
         /// <summary>
-        /// The URI of annotations that will be serialized as documentation elements.
-        /// </summary>
-        internal const string DocumentationUri = "http://schemas.microsoft.com/ado/2011/04/edm/documentation";
-
-        /// <summary>
-        /// The local name of annotations that will be serialized as documentation elements.
-        /// </summary>
-        internal const string DocumentationAnnotation = "Documentation";
-
-        /// <summary>
         /// The URI of annotations that are internal and will not be serialized.
         /// </summary>
         internal const string InternalUri = "http://schemas.microsoft.com/ado/2011/04/edm/internal";

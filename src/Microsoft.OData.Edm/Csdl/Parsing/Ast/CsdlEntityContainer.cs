@@ -18,8 +18,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly List<CsdlSingleton> singletons;
         private readonly List<CsdlOperationImport> operationImports;
 
-        public CsdlEntityContainer(string name, string extends, IEnumerable<CsdlEntitySet> entitySets, IEnumerable<CsdlSingleton> singletons, IEnumerable<CsdlOperationImport> operationImports, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlEntityContainer(string name, string extends, IEnumerable<CsdlEntitySet> entitySets, IEnumerable<CsdlSingleton> singletons, IEnumerable<CsdlOperationImport> operationImports, CsdlLocation location)
+            : base(name, location)
         {
             this.extends = extends;
             this.entitySets = new List<CsdlEntitySet>(entitySets);

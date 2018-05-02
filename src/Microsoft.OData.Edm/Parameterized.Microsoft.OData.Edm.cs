@@ -34,13 +34,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Annotations in the 'Documentation' namespace must implement 'IEdmDocumentation', but '{0}' does not."
-        /// </summary>
-        internal static string Annotations_DocumentationPun(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Annotations_DocumentationPun, p0);
-        }
-
-        /// <summary>
         /// A string like "Annotation of type '{0}' cannot be interpreted as '{1}'."
         /// </summary>
         internal static string Annotations_TypeMismatch(object p0, object p1) {

@@ -9,12 +9,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Common base class for all named CSDL elements.
     /// </summary>
-    internal abstract class CsdlNamedElement : CsdlElementWithDocumentation
+    internal abstract class CsdlNamedElement : CsdlElement
     {
         private readonly string name;
 
-        protected CsdlNamedElement(string name, CsdlDocumentation documentation, CsdlLocation location)
-            : base(documentation, location)
+        protected CsdlNamedElement(string name, CsdlLocation location)
+            : base(location)
         {
             this.name = name;
         }

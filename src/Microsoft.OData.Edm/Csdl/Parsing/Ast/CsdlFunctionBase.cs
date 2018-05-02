@@ -16,8 +16,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly List<CsdlOperationParameter> parameters;
         private readonly CsdlTypeReference returnType;
 
-        protected CsdlFunctionBase(string name, IEnumerable<CsdlOperationParameter> parameters, CsdlTypeReference returnType, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        protected CsdlFunctionBase(string name, IEnumerable<CsdlOperationParameter> parameters, CsdlTypeReference returnType, CsdlLocation location)
+            : base(name, location)
         {
             this.parameters = new List<CsdlOperationParameter>(parameters);
             this.returnType = returnType;

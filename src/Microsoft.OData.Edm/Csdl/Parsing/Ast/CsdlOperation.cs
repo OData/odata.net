@@ -21,7 +21,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// <param name="returnType">Type of the return.</param>
         /// <param name="isBound">if set to <c>true</c> [is bound].</param>
         /// <param name="entitySetPath">The entity set path.</param>
-        /// <param name="documentation">The documentation.</param>
         /// <param name="location">The location.</param>
         public CsdlOperation(
             string name,
@@ -29,9 +28,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             CsdlTypeReference returnType,
             bool isBound,
             string entitySetPath,
-            CsdlDocumentation documentation,
             CsdlLocation location)
-            : base(name, parameters, returnType, documentation, location)
+            : base(name, parameters, returnType, location)
         {
             this.IsBound = isBound;
             this.EntitySetPath = entitySetPath;
