@@ -194,34 +194,60 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 .PrimitiveProperty("Name", "Austria")
                                 .PrimitiveProperty("CountryRegionCode", "AUT")));
 
+                    Func<string, string, ExpectedException> expectedResponseDescriptor =
+                        (propertyName, type) =>
+                        {
+                            switch (behaviorKind)
+                            {
+                                case TestODataBehaviorKind.Default:
+                                    // Default behaviour has configured not to ignore metadata issues 
+                                    // (ODataMessageReaderSettings.Validations flagged with ValidationKinds.ThrowIfTypeConflictsWithMetadata)
+                                    return ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType",
+                                                                                  propertyName, type);
+                                case TestODataBehaviorKind.WcfDataServicesClient:
+                                case TestODataBehaviorKind.WcfDataServicesServer:
+                                    // No exceptions are expected whenever these two behaviour kind combinations are executed since 
+                                    // they are configured to ignore metadata issues
+                                    // (ODataMessageReaderSettings.Validations not flagged with ValidationKinds.ThrowIfTypeConflictsWithMetadata)
+                                    return null;
+                                default:
+                                    throw new ArgumentOutOfRangeException(nameof(behaviorKind), 
+                                                                          "New behaviorkind, the rules for it must be specified explicit here");
+                            }
+                        };
+
                     var testCases = new[]
                     {
-                        // Complex types that are not nullable should not allow null values.
-                        // Null primitive property in the payload and non-nullable property in the model
-                        new IgnoreNullValueTestCase
-                        {
-                            PropertyName = "Street",
-                            ExpectedResponseException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "Street", "Edm.String"),
-                        },
-                         // Null complex property in the payload and non-nullable property in the model
+                        // Null complex property in the payload and non-nullable property in the model
+                        // Always expected exception since it is a complex type
                         new IgnoreNullValueTestCase
                         {
                             PropertyName = "CountryRegion",
-                            ExpectedResponseException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "CountryRegion", "TestModel.CountryRegion"),
+                            ExpectedResponseException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType",
+                                                                                               "CountryRegion", "TestModel.CountryRegion"),
+                        },
+                        // Null primitive property in the payload and non-nullable property in the model
+                        // Expected exception when behaviorKind is Default, otherwise no exception
+                        new IgnoreNullValueTestCase
+                        {
+                            PropertyName = "Street",
+                            ExpectedResponseException = expectedResponseDescriptor("Street", "Edm.String"),
                         },
                         // Null collection property in the payload and non-nullable property in the model
+                        // Expected exception when behaviorKind is Default, otherwise no exception
                         new IgnoreNullValueTestCase
                         {
                             PropertyName = "Numbers",
-                            ExpectedResponseException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "Numbers", "Collection(Edm.Int32)"),
+                            ExpectedResponseException = expectedResponseDescriptor("Numbers", "Collection(Edm.Int32)"),
                         },
-                        // Complex types that are nullable should allow null values.
                         // Null primitive property in the payload and nullable property in the model
+                        // No exception expected
                         new IgnoreNullValueTestCase
                         {
                             PropertyName = "StreetNull",
                         },
                         // Null complex property in the payload and nullable property in the model
+                        // No exception expected
                         new IgnoreNullValueTestCase
                         {
                             PropertyName = "CountryRegionNull",
