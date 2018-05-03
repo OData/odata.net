@@ -206,8 +206,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                                                                   propertyName, type);
                                 case TestODataBehaviorKind.WcfDataServicesClient:
                                 case TestODataBehaviorKind.WcfDataServicesServer:
-                                    //No exceptions are expected whenever these two behaviour kind combinations are executed since 
-                                    //they are configured to ignore metadata issues
+                                    // No exceptions are expected whenever these two behaviour kind combinations are executed since 
+                                    // they are configured to ignore metadata issues
                                     // (ODataMessageReaderSettings.Validations not flagged with ValidationKinds.ThrowIfTypeConflictsWithMetadata)
                                     return null;
                                 default:
