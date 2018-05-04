@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -88,33 +89,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Overloaded function for 'MatchSignatureToUriFunction' without utilizing output parameter 'matchedIndex'.
-        /// </summary>
-        /// <param name="functionName">The name of the function</param>
-        /// <param name="argumentNodes">The nodes of the arguments, can be new {null,null}.</param>
-        /// <param name="signatures">The signatures to match against</param>
-        /// <returns>Returns the matching signature or throws</returns>
-        internal static FunctionSignatureWithReturnType MatchSignatureToUriFunction(string functionName,
-            SingleValueNode[] argumentNodes,
-            FunctionSignatureWithReturnType[] signatures)
-        {
-            int matchedIndexNotUsed = int.MinValue;
-            return MatchSignatureToUriFunction(functionName, argumentNodes, signatures, out matchedIndexNotUsed);
-        }
-
-        /// <summary>
         /// Finds the signature that best matches the arguments
         /// </summary>
-        /// <param name="functionName">The name of the function</param>
+        /// <param name="functionCallToken">The name of the function</param>
         /// <param name="argumentNodes">The nodes of the arguments, can be new {null,null}.</param>
-        /// <param name="signatures">The signatures to match against</param>
-        /// <param name="matchedIndex">Output for the index of the matched signature.</param>
+        /// <param name="nameSignatures">The name-signature pairs to match against</param>
         /// <returns>Returns the matching signature or throws</returns>
-        internal static FunctionSignatureWithReturnType MatchSignatureToUriFunction(string functionName, SingleValueNode[] argumentNodes,
-            FunctionSignatureWithReturnType[] signatures, out int matchedIndex)
+        internal static KeyValuePair<string, FunctionSignatureWithReturnType> MatchSignatureToUriFunction(string functionCallToken, SingleValueNode[] argumentNodes,
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
         {
-            FunctionSignatureWithReturnType signature = null;
-            matchedIndex = -1;
+            KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature;
 
             IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
 
@@ -125,53 +109,32 @@ namespace Microsoft.OData.UriParser
                 // we specifically want to find just the first function that matches the number of arguments, we don't care about
                 // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
                 // those arguments are.
-                for (int i = 0; i < signatures.Count(); i++)
+                var found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Count() == argumentCount);
+                if (found.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
-                    if (signatures[i].ArgumentTypes.Count() == argumentCount)
-                    {
-                        // found matching arguments count.
-                        matchedIndex = i;
-                        break;
-                    }
-                }
-
-                if (matchedIndex == -1)
-                {
-                    throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionName, argumentTypes.Count()));
+                    throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionCallToken, argumentTypes.Count()));
                 }
                 else
                 {
                     // in this case we can't assert the return type, we can only assert that a function exists... so
                     // we need to set the return type to null.
-                    signature = new FunctionSignatureWithReturnType(null, signatures[matchedIndex].ArgumentTypes);
+                    nameSignature = new KeyValuePair<string, FunctionSignatureWithReturnType>(
+                        found.Key, new FunctionSignatureWithReturnType(null, found.Value.ArgumentTypes));
                 }
             }
             else
             {
-                signature = TypePromotionUtils.FindBestFunctionSignature(signatures, argumentNodes, out matchedIndex);
-                if (signature == null)
+                nameSignature =
+                    TypePromotionUtils.FindBestFunctionSignature(nameSignatures, argumentNodes, functionCallToken);
+                if (nameSignature.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
-                        functionName,
-                        UriFunctionsHelper.BuildFunctionSignatureListDescription(functionName, signatures)));
+                        functionCallToken,
+                        UriFunctionsHelper.BuildFunctionSignatureListDescription(functionCallToken, nameSignatures.Select(sig => sig.Value))));
                 }
             }
 
-            return signature;
-        }
-
-        /// <summary>
-        /// Overloaded function with case insensitive matching disabled and output candidateNames ignored.
-        /// Finds all signatures for the given function name.
-        /// Search in both BuiltIn uri functions and Custom uri functions.
-        /// Combine and return the signatures overloads of the results.
-        /// </summary>
-        /// <param name="functionName">The function to get the signatures for.</param>
-        /// <returns>The signatures which match the supplied function name.</returns>
-        internal static FunctionSignatureWithReturnType[] GetUriFunctionSignatures(string functionName)
-        {
-            string[] candidateNames = null;
-            return GetUriFunctionSignatures(functionName, out candidateNames, /*enableCaseInsensitive*/false);
+            return nameSignature;
         }
 
         /// <summary>
@@ -179,20 +142,18 @@ namespace Microsoft.OData.UriParser
         /// Search in both BuiltIn uri functions and Custom uri functions.
         /// Combine and return the signatures overloads of the results.
         /// </summary>
-        /// <param name="functionName">The function to get the signatures for.</param>
-        /// <param name="candicateNames">The target function names matching the supplied function name.</param>
-        /// <param name="enableCaseInsensitive">Whether case insensitive match is enabled.</param>
+        /// <param name="functionCallToken">The function call token to get the signatures for.</param>
+        /// <param name="enableCaseInsensitive">Optional flag for whether case insensitive match is enabled.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for built-in functions.")]
-        internal static FunctionSignatureWithReturnType[] GetUriFunctionSignatures(string functionName, out string[] candicateNames, bool enableCaseInsensitive)
+        internal static IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(string functionCallToken, bool enableCaseInsensitive = false)
         {
-            string[] customNames = null;
-            FunctionSignatureWithReturnType[] customUriFunctionsSignatures = null;
-            string[] builtInNames = null;
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionsNameSignatures = null;
             FunctionSignatureWithReturnType[] builtInUriFunctionsSignatures = null;
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> builtInUriFunctionsNameSignatures = null;
 
             // Try to find the function in the user custom functions
-            bool customFound = CustomUriFunctions.TryGetCustomFunction(functionName, out customNames, out customUriFunctionsSignatures,
+            bool customFound = CustomUriFunctions.TryGetCustomFunction(functionCallToken, out customUriFunctionsNameSignatures,
                 enableCaseInsensitive);
 
             // And find in our built-in functions
@@ -201,38 +162,42 @@ namespace Microsoft.OData.UriParser
             // => For case-insensitive searching, it is more efficient to convert the search key to lower case first
             //    and then do a case-sensitive match.
             string nameKey = enableCaseInsensitive
-                ? functionName.ToLowerInvariant()
-                : functionName;
+                ? functionCallToken.ToLowerInvariant()
+                : functionCallToken;
             bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(nameKey, out builtInUriFunctionsSignatures);
 
             // Populate the matched names found for built-in function
             if (builtInFound)
             {
-                builtInNames = Enumerable.Repeat(nameKey, builtInUriFunctionsSignatures.Length).ToArray();
+                builtInUriFunctionsNameSignatures =
+                    builtInUriFunctionsSignatures.Select(sig => new KeyValuePair<string, FunctionSignatureWithReturnType>(nameKey, sig)).ToList();
             }
 
             if (!customFound && !builtInFound)
             {
                 // Not found in both built-in and custom.
-                throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionName));
+                throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionCallToken));
             }
 
             if (!customFound)
             {
-                Debug.Assert(builtInUriFunctionsSignatures != null, "No Built-in functions found");
-                candicateNames = builtInNames.ToArray();
-                return builtInUriFunctionsSignatures;
+                Debug.Assert(builtInUriFunctionsNameSignatures != null, "No Built-in functions found");
+                return builtInUriFunctionsNameSignatures;
             }
 
             if (!builtInFound)
             {
-                Debug.Assert(customUriFunctionsSignatures != null, "No Custom functions found");
-                candicateNames = customNames.ToArray();
-                return customUriFunctionsSignatures;
+                Debug.Assert(customUriFunctionsNameSignatures != null, "No Custom functions found");
+                return customUriFunctionsNameSignatures;
             }
 
-            candicateNames = builtInNames.Concat(customNames).ToArray();
-            return builtInUriFunctionsSignatures.Concat(customUriFunctionsSignatures).ToArray();
+            return builtInUriFunctionsNameSignatures.Concat(customUriFunctionsNameSignatures).ToArray();
+        }
+
+        internal static FunctionSignatureWithReturnType[] ExtractSignatures(
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
+        {
+            return nameSignatures.Select(nameSig => nameSig.Value).ToArray();
         }
 
         /// <summary>
@@ -341,17 +306,15 @@ namespace Microsoft.OData.UriParser
             }
 
             // Do some validation and get potential Uri functions that could match what we saw
-            string[] candicateNames = null;
-            FunctionSignatureWithReturnType[] signatures = GetUriFunctionSignatures(functionCallToken.Name, out candicateNames,
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(functionCallToken.Name,
                 this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier);
-            Debug.Assert(candicateNames.Count() == signatures.Count());
 
             SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallToken.Name, argumentNodes);
-            int matchedIndex;
-            FunctionSignatureWithReturnType signature = MatchSignatureToUriFunction(functionCallToken.Name, argumentNodeArray, signatures, out matchedIndex);
-            Debug.Assert(signature != null, "signature != null");
+            KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature = MatchSignatureToUriFunction(functionCallToken.Name, argumentNodeArray, nameSignatures);
+            Debug.Assert(nameSignature.Key != null, "nameSignature.Key != null");
 
-            string matchedName = matchedIndex == -1 ? null : candicateNames[matchedIndex];
+            string canonicalName = nameSignature.Key;
+            FunctionSignatureWithReturnType signature = nameSignature.Value;
             if (signature.ReturnType != null)
             {
                 TypePromoteArguments(signature, argumentNodes);
@@ -359,10 +322,10 @@ namespace Microsoft.OData.UriParser
 
             if (signature.ReturnType != null && signature.ReturnType.IsStructured())
             {
-                return new SingleResourceFunctionCallNode(matchedName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType.AsStructured(), null);
+                return new SingleResourceFunctionCallNode(canonicalName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType.AsStructured(), null);
             }
 
-            return new SingleValueFunctionCallNode(matchedName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType);
+            return new SingleValueFunctionCallNode(canonicalName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType);
         }
 
         /// <summary>
