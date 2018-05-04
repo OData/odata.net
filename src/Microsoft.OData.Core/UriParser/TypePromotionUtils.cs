@@ -29,6 +29,12 @@ namespace Microsoft.OData.UriParser
     /// </remarks>
     internal static class TypePromotionUtils
     {
+        /// <summary>
+        /// Struct constant for not found result of name-signature search.
+        /// </summary>
+        internal static readonly KeyValuePair<string, FunctionSignatureWithReturnType> NotFoundKeyValuePair =
+            new KeyValuePair<string, FunctionSignatureWithReturnType>();
+
         /// <summary>Function signatures for logical operators (and, or).</summary>
         private static readonly FunctionSignature[] logicalSignatures = new FunctionSignature[]
         {
@@ -370,35 +376,33 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>Finds the best fitting function for the specified arguments.</summary>
-        /// <param name="functions">Functions to consider.</param>
+        /// <param name="nameFunctions">Functions with names to consider.</param>
         /// <param name="argumentNodes">Nodes of the arguments for the function, can be new {null,null}.</param>
-        /// <param name="matchedIndex">Output for the index of the matched signature.</param>
+        /// <param name="functionCallToken">Function call token used for case-sensitive matching to resolve ambiguous cases.</param>
         /// <returns>The best fitting function; null if none found or ambiguous.</returns>
-        internal static FunctionSignatureWithReturnType FindBestFunctionSignature(FunctionSignatureWithReturnType[] functions,
-            SingleValueNode[] argumentNodes, out int matchedIndex)
+        internal static KeyValuePair<string, FunctionSignatureWithReturnType> FindBestFunctionSignature(
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameFunctions,
+            SingleValueNode[] argumentNodes, string functionCallToken)
         {
-            matchedIndex = -1;
             IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
-            Debug.Assert(functions != null, "functions != null");
+            Debug.Assert(nameFunctions != null, "functions != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
-            List<FunctionSignatureWithReturnType> applicableFunctions = new List<FunctionSignatureWithReturnType>(functions.Length);
+            Debug.Assert(functionCallToken != null, "functionCallToken != null");
+            IList<KeyValuePair<string,FunctionSignatureWithReturnType>> applicableNameFunctions
+                = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(nameFunctions.Count);
 
-            // Cache of offsets for applicable functions in the filtered-by-name 'functions' list.
-            List<int> offsetsOfApplicableFunctions = new List<int>();
-
-            // Build a list of applicable functions (and cache their promoted arguments and offsets).
-            for (int offset = 0; offset < functions.Length; offset++)
+            // Build a list of applicable functions (and cache their promoted arguments).
+            foreach (KeyValuePair<string, FunctionSignatureWithReturnType> candidate in nameFunctions)
             {
-                FunctionSignatureWithReturnType candidate = functions[offset];
-                if (candidate.ArgumentTypes.Length != argumentTypes.Length)
+                if (candidate.Value.ArgumentTypes.Length != argumentTypes.Length)
                 {
                     continue;
                 }
 
                 bool argumentsMatch = true;
-                for (int i = 0; i < candidate.ArgumentTypes.Length; i++)
+                for (int i = 0; i < candidate.Value.ArgumentTypes.Length; i++)
                 {
-                    if (!CanPromoteNodeTo(argumentNodes[i], argumentTypes[i], candidate.ArgumentTypes[i]))
+                    if (!CanPromoteNodeTo(argumentNodes[i], argumentTypes[i], candidate.Value.ArgumentTypes[i]))
                     {
                         argumentsMatch = false;
                         break;
@@ -407,33 +411,31 @@ namespace Microsoft.OData.UriParser
 
                 if (argumentsMatch)
                 {
-                    applicableFunctions.Add(candidate);
-                    offsetsOfApplicableFunctions.Add(offset);
+                    applicableNameFunctions.Add(candidate);
                 }
             }
 
             // Return the best applicable function.
-            if (applicableFunctions.Count == 0)
+            if (applicableNameFunctions.Count == 0)
             {
                 // No matching function.
-                Debug.Assert(matchedIndex == -1, "matchedIndex == -1");
-                return null;
+                return NotFoundKeyValuePair;
             }
-            else if (applicableFunctions.Count == 1)
+            else if (applicableNameFunctions.Count == 1)
             {
-                matchedIndex = offsetsOfApplicableFunctions[0];
-                return applicableFunctions[0];
+                return applicableNameFunctions[0];
             }
             else
             {
                 // Find a single function which is better than all others.
-                int bestFunctionIndex = -1;
-                for (int i = 0; i < applicableFunctions.Count; i++)
+                IList<KeyValuePair<string, FunctionSignatureWithReturnType>> equallyArgumentsMatchingNameFunctions =
+                    new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+                for (int i = 0; i < applicableNameFunctions.Count; i++)
                 {
                     bool betterThanAllOthers = true;
-                    for (int j = 0; j < applicableFunctions.Count; j++)
+                    for (int j = 0; j < applicableNameFunctions.Count; j++)
                     {
-                        if (i != j && MatchesArgumentTypesBetterThan(argumentTypes, applicableFunctions[j].ArgumentTypes, applicableFunctions[i].ArgumentTypes))
+                        if (i != j && MatchesArgumentTypesBetterThan(argumentTypes, applicableNameFunctions[j].Value.ArgumentTypes, applicableNameFunctions[i].Value.ArgumentTypes))
                         {
                             betterThanAllOthers = false;
                             break;
@@ -442,28 +444,39 @@ namespace Microsoft.OData.UriParser
 
                     if (betterThanAllOthers)
                     {
-                        if (bestFunctionIndex == -1)
-                        {
-                            bestFunctionIndex = i;
-                        }
-                        else
-                        {
-                            // This means there were at least 2 equally matching functions.
-                            Debug.Assert(matchedIndex == -1, "matchedIndex == -1");
-                            return null;
-                        }
+                        // cache equally matching functions for case-sensitive resolution based on null/non-null function call token.
+                        equallyArgumentsMatchingNameFunctions.Add(applicableNameFunctions[i]);
                     }
                 }
 
-                if (bestFunctionIndex == -1)
+                KeyValuePair<string, FunctionSignatureWithReturnType> result;
+                if (equallyArgumentsMatchingNameFunctions.Count == 0)
                 {
-                    Debug.Assert(matchedIndex == -1, "matchedIndex == -1");
-                    return null;
+                    // Best match count = 0.
+                    result = NotFoundKeyValuePair;
+                }
+                else if (equallyArgumentsMatchingNameFunctions.Count == 1)
+                {
+                    // Best match count = 1.
+                    result = equallyArgumentsMatchingNameFunctions[0];
+                }
+                else
+                {
+                    // For multiple best matches based on argument types
+                    if (equallyArgumentsMatchingNameFunctions.Count(
+                            _ => _.Key.Equals(functionCallToken, StringComparison.Ordinal)) == 1)
+                    {
+                        // There is only one case-sensitive function name match among the equally argument-types matching functions.
+                        result = equallyArgumentsMatchingNameFunctions.First(_ => _.Key.Equals(functionCallToken, StringComparison.Ordinal));
+                    }
+                    else
+                    {
+                        // Ambiguous cases of zero or multiple case-sensitive function name matches.
+                        result = NotFoundKeyValuePair;
+                    }
                 }
 
-                // Best match found. Need to convert back to the original offset in the overall functions list.
-                matchedIndex = offsetsOfApplicableFunctions[bestFunctionIndex];
-                return applicableFunctions[bestFunctionIndex];
+                return result;
             }
         }
 
