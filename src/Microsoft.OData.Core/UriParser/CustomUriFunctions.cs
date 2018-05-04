@@ -142,70 +142,62 @@ namespace Microsoft.OData.UriParser
         #region Internal Methods
 
         /// <summary>
-        /// Returns a list of matched names and a list of signatures for a function name.
+        /// Returns a list of name-signature pairs for a function name.
         /// </summary>
-        /// <param name="name">The name of the function to look for.</param>
-        /// <param name="customNames">
-        /// Output for the list of target names matched, in same sequential order of the matching 'signatures' output;
-        /// null if no matches found./// </param>
-        /// <param name="signatures">
-        /// Output for the list of signatures for matched function names, in same sequential order of the matching 'customNames' output;
+        /// <param name="functionCallToken">The name of the function to look for.</param>
+        /// <param name="nameSignatures">
+        /// Output for the list of signature objects for matched function names, with canonical name of the function;
         /// null if no matches found.
         /// </param>
         /// <param name="enableCaseInsensitive">Whether to perform case-insensitive match for function name.</param>
         /// <returns>true if the function was found, or false otherwise.</returns>
-        internal static bool TryGetCustomFunction(string name, out string[] customNames, out FunctionSignatureWithReturnType[] signatures,
+        internal static bool TryGetCustomFunction(string functionCallToken, out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures,
             bool enableCaseInsensitive = false)
         {
-            Debug.Assert(name != null, "name != null");
+            Debug.Assert(functionCallToken != null, "name != null");
 
             lock (Locker)
             {
-                bool found = false;
-                IList<string> matchedNames = new List<string>();
-                IList<FunctionSignatureWithReturnType> matchedSignatures = new List<FunctionSignatureWithReturnType>();
+                IList<KeyValuePair<string, FunctionSignatureWithReturnType>> bufferedKeyValuePairs
+                    = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
 
                 // Do case-sensitive search first.
-                if (CustomFunctions.ContainsKey(name))
+                if (CustomFunctions.ContainsKey(functionCallToken))
                 {
                     FunctionSignatureWithReturnType[] signatureGroup = null;
-                    CustomFunctions.TryGetValue(name, out signatureGroup);
+                    CustomFunctions.TryGetValue(functionCallToken, out signatureGroup);
 
                     Debug.Assert(signatureGroup != null, "signatureGroup != null");
 
                     foreach (FunctionSignatureWithReturnType sig in signatureGroup)
                     {
-                        matchedNames.Add(name);
-                        matchedSignatures.Add(sig);
+                        // case-sensitive match: canonical name is just the function token name.
+                        bufferedKeyValuePairs.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(functionCallToken, sig));
                     }
-
-                    found = true;
                 }
 
                 // Continue to search for match, if case-insensitive is enabled.
                 if (enableCaseInsensitive)
                 {
-                    foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> pair in CustomFunctions)
+                    foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> func in CustomFunctions)
                     {
-                        if (pair.Key.Equals(name, StringComparison.OrdinalIgnoreCase))
+                        if (func.Key.Equals(functionCallToken, StringComparison.OrdinalIgnoreCase)
+                            /* Skip the exact match above to avoid double-counting. */
+                            && !func.Key.Equals(functionCallToken, StringComparison.Ordinal))
                         {
-                            foreach (FunctionSignatureWithReturnType sig in pair.Value)
+                            foreach (FunctionSignatureWithReturnType sig in func.Value)
                             {
-                                matchedNames.Add(pair.Key);
-                                matchedSignatures.Add(sig);
+                                // case-insensitive match: canonical name is the one from the CustomFunctions dictionary.
+                                bufferedKeyValuePairs.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(func.Key, sig));
                             }
-
-                            found = true;
                         }
                     }
                 }
 
                 // Setup the output values.
-                customNames = found ? matchedNames.ToArray() : null;
-                signatures = found ? matchedSignatures.ToArray() : null;
+                nameSignatures = bufferedKeyValuePairs.Count != 0 ? bufferedKeyValuePairs : null;
 
-                Debug.Assert(!found || customNames.Length == signatures.Length);
-                return found;
+                return nameSignatures != null;
             }
         }
 
