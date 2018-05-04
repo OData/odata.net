@@ -16,8 +16,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly CsdlKey key;
         private readonly bool hasStream;
 
-        public CsdlEntityType(string name, string baseTypeName, bool isAbstract, bool isOpen, bool hasStream, CsdlKey key, IEnumerable<CsdlProperty> structualProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, baseTypeName, isAbstract, isOpen, structualProperties, navigationProperties, documentation, location)
+        public CsdlEntityType(string name, string baseTypeName, bool isAbstract, bool isOpen, bool hasStream, CsdlKey key, IEnumerable<CsdlProperty> structualProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlLocation location)
+            : base(name, baseTypeName, isAbstract, isOpen, structualProperties, navigationProperties, location)
         {
             this.key = key;
             this.hasStream = hasStream;

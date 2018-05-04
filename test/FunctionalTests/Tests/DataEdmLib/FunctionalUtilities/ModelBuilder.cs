@@ -1008,12 +1008,7 @@ namespace EdmLibTests.FunctionalUtilities
       <PropertyRef Name=""IDC"" />
     </Key>
     <Property Name=""IDC"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" Unicode=""true"" p3:Stumble=""Rumble"" p3:Tumble=""Bumble"" xmlns:p3=""Grumble"">
-      <Documentation>
-        <Summary>Foolishness rules.</Summary>
-        <LongDescription>Wisdom drools.</LongDescription>
-      </Documentation>
-    </Property>
+    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" Unicode=""true"" p3:Stumble=""Rumble"" p3:Tumble=""Bumble"" xmlns:p3=""Grumble"" />
     <Property Name=""Address"" Type=""Edm.String"" Unicode=""true"" />
     <NavigationProperty Name=""Orders"" Type=""Collection(Westwind.Order)"" Partner=""Customer""  />
   </EntityType>

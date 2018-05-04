@@ -322,9 +322,7 @@
     <Compile Include="Csdl\Parsing\Ast\CsdlBinaryTypeReference.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlComplexType.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs" />
-    <Compile Include="Csdl\Parsing\Ast\CsdlDocumentation.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlElement.cs" />
-    <Compile Include="Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEntityContainer.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEntityReferenceType.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEntitySet.cs" />
@@ -363,7 +361,6 @@
     <Compile Include="Csdl\Semantics\CsdlSemanticsBinaryTypeReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsComplexTypeDefinition.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs" />
-    <Compile Include="Csdl\Semantics\CsdlSemanticsDocumentation.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntityContainer.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntityReferenceTypeDefinition.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntitySet.cs" />
@@ -414,7 +411,6 @@
     <Compile Include="CacheHelper.cs" />
     <Compile Include="EdmUtil.cs" />
     <Compile Include="Schema\Interfaces\IEdmComplexTypeReference.cs" />
-    <Compile Include="Schema\Interfaces\IEdmDocumentation.cs" />
     <Compile Include="Schema\Interfaces\IEdmElement.cs" />
     <Compile Include="Schema\Interfaces\IEdmEntityContainer.cs" />
     <Compile Include="Schema\Interfaces\IEdmEntityContainerElement.cs" />
@@ -440,7 +436,6 @@
     <Compile Include="TupleInternal.cs" />
     <Compile Include="Schema\Date.cs" />
     <Compile Include="Schema\EdmComplexType.cs" />
-    <Compile Include="Schema\EdmDocumentation.cs" />
     <Compile Include="Schema\EdmEntityContainer.cs" />
     <Compile Include="Schema\EdmEntityReferenceType.cs" />
     <Compile Include="Schema\EdmEntitySet.cs" />

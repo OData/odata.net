@@ -18,8 +18,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         protected bool isOpen;
         protected string name;
 
-        protected CsdlNamedStructuredType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> structuralproperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
-            : base(structuralproperties, navigationProperties, documentation, location)
+        protected CsdlNamedStructuredType(string name, string baseTypeName, bool isAbstract, bool isOpen, IEnumerable<CsdlProperty> structuralproperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlLocation location)
+            : base(structuralproperties, navigationProperties, location)
         {
             this.isAbstract = isAbstract;
             this.isOpen = isOpen;

@@ -153,10 +153,10 @@ namespace Microsoft.OData
                     AppendExpression(node.Expression);
                 }
 
-                bool appendSlash = false;
+                bool appendCommaChild = false;
                 foreach (GroupByPropertyNode childNode in node.ChildTransformations)
                 {
-                    appendSlash = AppendSlash(appendSlash);
+                    appendCommaChild = AppendComma(appendCommaChild);
                     AppendExpression(childNode.Expression);
                 }
             }

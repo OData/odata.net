@@ -386,10 +386,10 @@ namespace EdmLibTests.FunctionalTests
         {
             var model = NavigationTestModelBuilder.TwoContainmentNavigationWithSameEnd();
 
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
+            //};
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
@@ -397,10 +397,10 @@ namespace EdmLibTests.FunctionalTests
         public void ValidateTwoContainmentNavigationWithSameEndAddedDifferently()
         {
             var model = NavigationTestModelBuilder.TwoContainmentNavigationWithSameEndAddedDifferently();
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
+            //};
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
@@ -423,10 +423,10 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateRecursiveOneContainmentNavigationInheritedSelfPointingEntitySet()
         {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
+            //};
             var model = NavigationTestModelBuilder.RecursiveOneContainmentNavigationInheritedSelfPointingEntitySet();
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
@@ -434,10 +434,10 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateRecursiveOneContainmentNavigationWithTwoEntitySet()
         {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
+            //};
 
             var model = NavigationTestModelBuilder.RecursiveOneContainmentNavigationWithTwoEntitySet();
 
@@ -504,10 +504,8 @@ namespace EdmLibTests.FunctionalTests
 
             var expectedErrors = new EdmLibTestErrors()
             {
-                { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
                 { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
                 { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
-                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
             };
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }

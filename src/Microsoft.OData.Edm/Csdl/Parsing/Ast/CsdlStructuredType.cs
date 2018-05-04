@@ -11,13 +11,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Common base class for CSDL entity and complex Types.
     /// </summary>
-    internal abstract class CsdlStructuredType : CsdlElementWithDocumentation
+    internal abstract class CsdlStructuredType : CsdlElement
     {
         protected List<CsdlProperty> structuralProperties;
         protected List<CsdlNavigationProperty> navigationProperties;
 
-        protected CsdlStructuredType(IEnumerable<CsdlProperty> structuralProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
-            : base(documentation, location)
+        protected CsdlStructuredType(IEnumerable<CsdlProperty> structuralProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlLocation location)
+            : base(location)
         {
             this.structuralProperties = new List<CsdlProperty>(structuralProperties);
             this.navigationProperties = new List<CsdlNavigationProperty>(navigationProperties);

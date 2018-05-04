@@ -242,6 +242,7 @@
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBigBatchRoundTripTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\MultipartMixedBatchDependsOnIdsTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\Utils.cs" />
+    <Compile Include="..\ScenarioTests\UriBuilder\ApplyBuilderTest.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\ContextUrlPathStringTests.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\CountBuilderTests.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\FilterAndOrderByBuilderTests.cs" />

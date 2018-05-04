@@ -15,14 +15,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly bool isOptional = false;
         private readonly string defaultValue;
 
-        public CsdlOperationParameter(string name, CsdlTypeReference type, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, documentation, location)
+        public CsdlOperationParameter(string name, CsdlTypeReference type, CsdlLocation location)
+            : base(name, location)
         {
             this.type = type;
         }
 
-        public CsdlOperationParameter(string name, CsdlTypeReference type, CsdlDocumentation documentation, CsdlLocation location, bool isOptional, string defaultValue)
-            : this(name, type, documentation, location)
+        public CsdlOperationParameter(string name, CsdlTypeReference type, CsdlLocation location, bool isOptional, string defaultValue)
+            : this(name, type, location)
         {
             this.isOptional = isOptional;
             this.defaultValue = defaultValue;

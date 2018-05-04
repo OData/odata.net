@@ -2764,34 +2764,6 @@ namespace Microsoft.OData.Edm
             return (segmentType.IsCollection() ? segmentType.AsCollection().ElementType() : segmentType).AsEntity().EntityDefinition();
         }
 
-        /// <summary>
-        /// Gets documentation for a specified element.
-        /// </summary>
-        /// <param name="model">The model containing the documentation.</param>
-        /// <param name="element">The element.</param>
-        /// <returns>Documentation that exists on the element. Otherwise, null.</returns>
-        internal static IEdmDocumentation GetDocumentation(this IEdmModel model, IEdmElement element)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(element, "element");
-
-            return (IEdmDocumentation)model.GetAnnotationValue(element, EdmConstants.DocumentationUri, EdmConstants.DocumentationAnnotation);
-        }
-
-        /// <summary>
-        /// Sets documentation for a specified element.
-        /// </summary>
-        /// <param name="model">The model containing the documentation.</param>
-        /// <param name="element">The element.</param>
-        /// <param name="documentation">Documentation to set.</param>
-        internal static void SetDocumentation(this IEdmModel model, IEdmElement element, IEdmDocumentation documentation)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(element, "element");
-
-            model.SetAnnotationValue(element, EdmConstants.DocumentationUri, EdmConstants.DocumentationAnnotation, documentation);
-        }
-
         internal static IEnumerable<IEdmEntityContainerElement> AllElements(this IEdmEntityContainer container, int depth = ContainerExtendsMaxDepth)
         {
             if (depth <= 0)

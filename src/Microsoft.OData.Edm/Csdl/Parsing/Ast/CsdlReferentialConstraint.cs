@@ -9,13 +9,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Represents a CSDL referential constraint.
     /// </summary>
-    internal class CsdlReferentialConstraint : CsdlElementWithDocumentation
+    internal class CsdlReferentialConstraint : CsdlElement
     {
         private readonly string propertyName;
         private readonly string referencedPropertyName;
 
-        public CsdlReferentialConstraint(string propertyName, string referencedPropertyName, CsdlDocumentation documentation, CsdlLocation location)
-            : base(documentation, location)
+        public CsdlReferentialConstraint(string propertyName, string referencedPropertyName, CsdlLocation location)
+            : base(location)
         {
             this.propertyName = propertyName;
             this.referencedPropertyName = referencedPropertyName;
