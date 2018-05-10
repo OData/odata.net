@@ -1524,8 +1524,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateTokenBase.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateTokenBase.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateTransformationToken.cs">
-      <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateTransformationToken.cs</Link>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateExpressionToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateExpressionToken.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs</Link>

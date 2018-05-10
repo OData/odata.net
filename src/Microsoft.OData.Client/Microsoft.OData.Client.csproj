@@ -199,8 +199,8 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateTokenBase.cs">
       <Link>ALinq\UriParser\SyntacticAst\AggregateTokenBase.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateTransformationToken.cs">
-      <Link>ALinq\UriParser\SyntacticAst\AggregateTransformationToken.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\AggregateExpressionToken.cs</Link>
     </Compile>
     <Compile Include="Annotation\AnnotationHelper.cs" />
     <Compile Include="Annotation\InstanceAnnotationDictWeakKeyComparer.cs" />

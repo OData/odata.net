@@ -604,7 +604,7 @@
     <Compile Include="UriParser\Aggregation\ApplyClause.cs" />
     <Compile Include="UriParser\Aggregation\GroupByTransformationNode.cs" />
     <Compile Include="UriParser\Aggregation\GroupByPropertyNode.cs" />
-    <Compile Include="UriParser\Aggregation\AggregateTransformationToken.cs" />
+    <Compile Include="UriParser\Aggregation\AggregateExpressionToken.cs" />
     <Compile Include="UriParser\Aggregation\AggregateToken.cs" />
     <Compile Include="UriParser\Aggregation\GroupByToken.cs" />
     <Compile Include="UriParser\Aggregation\AggregationMethod.cs" />

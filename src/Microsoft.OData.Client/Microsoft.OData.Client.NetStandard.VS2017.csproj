@@ -95,7 +95,7 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\EntitySetAggregateToken.cs" Link="ALinq\UriParser\Aggregation\EntitySetAggregateToken.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionBase.cs" Link="ALinq\UriParser\Aggregation\AggregateExpressionBase.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateTokenBase.cs" Link="ALinq\UriParser\Aggregation\AggregateTokenBase.cs" />
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateTransformationToken.cs" Link="ALinq\UriParser\Aggregation\AggregateTransformationToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs" Link="ALinq\UriParser\Aggregation\AggregateExpressionToken.cs" />
     <!-- <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs" Link="ALinq\UriParser\SyntSemanticAstacticAst\AggregatedCollectionPropertyNode.cs" /> -->
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\AllToken.cs" Link="ALinq\UriParser\SyntacticAst\AllToken.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\AnyToken.cs" Link="ALinq\UriParser\SyntacticAst\AnyToken.cs" />

@@ -6,52 +6,27 @@
 
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
-{
-    using Microsoft.OData.UriParser.Aggregation;
 #else
 namespace Microsoft.OData.UriParser.Aggregation
-{
 #endif
-    using Microsoft.OData.UriParser;
+{
+    using System.Collections.Generic;
 
     /// <summary>
-    /// Query token representing an Aggregate expression.
+    /// Query token representing an Aggregate token.
     /// </summary>
-    public sealed class AggregateExpressionToken : AggregateTokenBase
+    public sealed class AggregateToken : ApplyTransformationToken
     {
-        private readonly QueryToken expression;
-
-        private readonly AggregationMethod method;
-        private readonly AggregationMethodDefinition methodDefinition;
-
-        private readonly string alias;
+        private readonly IEnumerable<AggregateTokenBase> expressions;
 
         /// <summary>
-        /// Create an AggregateExpressionToken.
+        /// Create an AggregateTransformationToken.
         /// </summary>
-        /// <param name="expression">The aggregate expression.</param>
-        /// <param name="method">The aggregation method.</param>
-        /// <param name="alias">The alias for this query token.</param>
-        public AggregateExpressionToken(QueryToken expression, AggregationMethod method, string alias)
+        /// <param name="expressions">The aggregate expressions.</param>
+        public AggregateToken(IEnumerable<AggregateTokenBase> expressions)
         {
-            ExceptionUtils.CheckArgumentNotNull(expression, "expression");
-            ExceptionUtils.CheckArgumentNotNull(alias, "alias");
-
-            this.expression = expression;
-            this.method = method;
-            this.alias = alias;
-        }
-
-        /// <summary>
-        /// Create an AggregateExpressionToken.
-        /// </summary>
-        /// <param name="expression">The aggregate expression.</param>
-        /// <param name="methodDefinition">The aggregate method definition.</param>
-        /// <param name="alias">The alias for this query token.</param>
-        public AggregateExpressionToken(QueryToken expression, AggregationMethodDefinition methodDefinition, string alias)
-            : this(expression, methodDefinition.MethodKind, alias)
-        {
-            this.methodDefinition = methodDefinition;
+            ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
+            this.expressions = expressions;
         }
 
         /// <summary>
@@ -59,42 +34,19 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// </summary>
         public override QueryTokenKind Kind
         {
-            get { return QueryTokenKind.AggregateExpression; }
+            get { return QueryTokenKind.Aggregate; }
         }
 
         /// <summary>
-        /// Gets the AggregationMethod of this token.
+        /// Create an AggregateToken.
         /// </summary>
-        public AggregationMethod Method
-        {
-            get { return this.method; }
-        }
-
-        /// <summary>
-        /// Gets the expression.
-        /// </summary>
-        public QueryToken Expression
-        {
-            get { return this.expression; }
-        }
-
-        /// <summary>
-        /// Gets the aggregate method definition.
-        /// </summary>
-        public AggregationMethodDefinition MethodDefinition
+        /// <param name="expressions">The list of AggregateExpressionToken.</param>
+        public IEnumerable<AggregateTokenBase> Expressions
         {
             get
             {
-                return methodDefinition;
+                return expressions;
             }
-        }
-
-        /// <summary>
-        /// Gets the alias.
-        /// </summary>
-        public string Alias
-        {
-            get { return this.alias; }
         }
 
         /// <summary>
