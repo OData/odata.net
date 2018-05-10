@@ -377,7 +377,6 @@ namespace Microsoft.OData.UriParser
                 this.lexer.NextToken();
             }
 
-
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {

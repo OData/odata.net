@@ -102,8 +102,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Visits an AggregateTransformationToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateTransformationToken to visit</param>
-        /// <returns>A T bound to this AggregateTransformationToken</returns>
+        /// <param name="tokenIn">The AggregateToken to visit</param>
+        /// <returns>A T bound to this AggregateToken</returns>
         public virtual T Visit(AggregateToken tokenIn)
         {
             throw new NotImplementedException();
@@ -122,8 +122,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Visits an AggregateToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateToken to visit</param>
-        /// <returns>A T bound to this AggregateToken</returns>
+        /// <param name="tokenIn">The AggregateExpressionToken to visit</param>
+        /// <returns>A T bound to this AggregateExpressionToken</returns>
         public virtual T Visit(AggregateExpressionToken tokenIn)
         {
             throw new NotImplementedException();
