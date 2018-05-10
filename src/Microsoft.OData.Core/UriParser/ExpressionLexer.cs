@@ -16,7 +16,6 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
-    using System.Diagnostics.CodeAnalysis;
 
     #endregion Namespaces
 
@@ -468,11 +467,7 @@ namespace Microsoft.OData.UriParser
         /// </remarks>
         internal void RestorePosition(ExpressionLexerPosition position)
         {
-
-            if (position.Lexer != this)
-            {
-                throw new ArgumentException("Position was not taken from this ExpressionLexer instance.", "position");
-            }
+            Debug.Assert(position.Lexer == this, "Position was not taken from this ExpressionLexer instance.");
 
             if (position.TextPos.HasValue)
             {

@@ -131,7 +131,6 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(parent != null, "parent should never be null");
 
             SingleValueNode singleValueParent = parent as SingleValueNode;
-            CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
 
             if (singleValueParent == null)
             {
@@ -140,6 +139,8 @@ namespace Microsoft.OData.UriParser
                 {
                     return boundFunction;
                 }
+
+                CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
 
                 if (collectionParent != null)
                 {
@@ -153,8 +154,6 @@ namespace Microsoft.OData.UriParser
 
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(segmentToken.Identifier));
             }
-
-            
 
             // Using the parent and name of this token, we try to get the IEdmProperty it represents
             IEdmProperty property = BindProperty(singleValueParent.TypeReference, segmentToken.Identifier, this.Resolver);
