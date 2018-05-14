@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         public void StatementsSetCorrectly()
         {
             AggregateToken token = new AggregateToken(statements);
-            ((object)token.Expressions).Should().Be(statements);
+            ((object)token.AggregateExpressions).Should().Be(statements);
         }
 
         [Fact]

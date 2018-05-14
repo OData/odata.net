@@ -10,7 +10,9 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Query token representing an Aggregate token.
@@ -41,7 +43,16 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// Create an AggregateToken.
         /// </summary>
         /// <param name="expressions">The list of AggregateExpressionToken.</param>
-        public IEnumerable<AggregateTokenBase> Expressions
+        [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
+        public IEnumerable<AggregateExpressionToken> Expressions
+        {
+            get
+            {
+                return expressions.OfType<AggregateExpressionToken>();
+            }
+        }
+
+        public IEnumerable<AggregateTokenBase> AggregateExpressions
         {
             get
             {

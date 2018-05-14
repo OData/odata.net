@@ -6907,7 +6907,12 @@ public sealed class Microsoft.OData.UriParser.Aggregation.AggregateExpressionTok
 public sealed class Microsoft.OData.UriParser.Aggregation.AggregateToken : Microsoft.OData.UriParser.Aggregation.ApplyTransformationToken {
 	public AggregateToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateTokenBase]] expressions)
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateTokenBase]] Expressions  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateTokenBase]] AggregateExpressions  { public get; }
+	[
+	ObsoleteAttribute(),
+	]
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionToken]] Expressions  { public get; }
+
 	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
@@ -6917,7 +6922,11 @@ public sealed class Microsoft.OData.UriParser.Aggregation.AggregateTransformatio
 	public AggregateTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] expressions)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] AggregateExpressions  { public get; }
+	[
+	ObsoleteAttribute(),
+	]
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpression]] Expressions  { public get; }
+
 	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
 }
 
@@ -8013,7 +8022,12 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionTo
 public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateToken : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
 	public AggregateToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] expressions)
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] Expressions  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] AggregateExpressions  { public get; }
+	[
+	ObsoleteAttribute(),
+	]
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken]] Expressions  { public get; }
+
 	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)

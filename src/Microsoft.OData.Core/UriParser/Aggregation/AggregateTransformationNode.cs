@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser.Aggregation
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using ODataErrorStrings = Microsoft.OData.Strings;
@@ -30,8 +31,8 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         /// <summary>
         /// Property that only return <see cref="AggregateExpression"/>s.
-        /// Exists for backward compatibility.
         /// </summary>
+        [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
         public IEnumerable<AggregateExpression> Expressions
         {
             get
@@ -42,7 +43,6 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         /// <summary>
         /// Property that returns a list of all <see cref="AggregateExpressionBase"/>s of this transformation node.
-        /// Should be used over <see cref="Expressions"/> property.
         /// </summary>
         public IEnumerable<AggregateExpressionBase> AggregateExpressions
         {

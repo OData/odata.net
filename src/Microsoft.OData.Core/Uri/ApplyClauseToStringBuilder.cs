@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Text;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
@@ -97,7 +98,7 @@ namespace Microsoft.OData
         private void Translate(AggregateTransformationNode transformation)
         {
             bool appendComma = false;
-            foreach (AggregateExpression aggExpression in transformation.Expressions)
+            foreach (AggregateExpression aggExpression in transformation.AggregateExpressions.OfType<AggregateExpression>())
             {
                 appendComma = AppendComma(appendComma);
 

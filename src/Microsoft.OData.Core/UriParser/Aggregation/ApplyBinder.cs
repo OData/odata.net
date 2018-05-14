@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private AggregateTransformationNode BindAggregateToken(AggregateToken token)
         {
-            IEnumerable<AggregateTokenBase> aggregateTokens = MergeEntitySetAggregates(token.Expressions);
+            IEnumerable<AggregateTokenBase> aggregateTokens = MergeEntitySetAggregates(token.AggregateExpressions);
             List<AggregateExpressionBase> statements = new List<AggregateExpressionBase>();
 
             foreach (AggregateTokenBase statementToken in aggregateTokens)
