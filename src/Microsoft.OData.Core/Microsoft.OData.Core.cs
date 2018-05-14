@@ -272,9 +272,6 @@ namespace Microsoft.OData {
         internal const string HttpHeaderValueLexer_FailedToReadTokenOrQuotedString = "HttpHeaderValueLexer_FailedToReadTokenOrQuotedString";
         internal const string HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString = "HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString";
         internal const string HttpHeaderValueLexer_EndOfFileAfterSeparator = "HttpHeaderValueLexer_EndOfFileAfterSeparator";
-
-        internal const string HttpPreferenceHeader_InvalidValueForToken = "HttpPreferenceHeader_InvalidValueForToken";
-
         internal const string MediaType_EncodingNotSupported = "MediaType_EncodingNotSupported";
         internal const string MediaTypeUtils_DidNotFindMatchingMediaType = "MediaTypeUtils_DidNotFindMatchingMediaType";
         internal const string MediaTypeUtils_CannotDetermineFormatFromContentType = "MediaTypeUtils_CannotDetermineFormatFromContentType";

@@ -13,6 +13,7 @@ using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Tests.Evaluation;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -412,16 +413,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 .Value.Should().Be(0);
             person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal))
                 .Value.Should().Be(60.5);
-            if (bNullValuesOmitted)
-            {
-                // Omitted value should be restored to null.
-                person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
-                    .Value.Should().BeNull();
-            }
-            else
-            {
-                person.Properties.Any(s => string.Equals(s.Name, "Education",StringComparison.Ordinal)).Should().BeFalse();
-            }
+
+            person.Properties.Any(s => string.Equals(s.Name, "Education",StringComparison.Ordinal)).Should().BeFalse();
 
             ODataResource address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.Ordinal))
@@ -1024,16 +1017,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
                     .Value.Should().Be(0);
 
-                if (bNullValuesOmitted)
-                {
-                    // selected null-able property should be restored as null.
-                    person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Address", StringComparison.Ordinal))
-                        .Value.Should().BeNull();
-                }
-                else
-                {
-                    person.Properties.Any(s => string.Equals(s.Name, "Address", StringComparison.Ordinal)).Should().BeFalse();
-                }
+                // Complex type as nested resource is not restored as null property.
+                person.Properties.Any(s => string.Equals(s.Name, "Address", StringComparison.Ordinal)).Should().BeFalse();
 
                 // null-able but not selected properties and not-null-able properties should not be restored.
                 person.Properties.Any(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Should().BeFalse();
@@ -1106,6 +1091,143 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             // not selected property should not be restored.
             edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+        }
+
+        [Fact]
+        public void ReadingNormalDynamicCollectionPropertyInOpenStructuralTypeShouldWork()
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = GetDynamicModel(out entityType, out entitySet);
+
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20MyDynamic,%20Address/MyDynamic1)/$entity\"," +
+                    "\"@odata.id\":\"http://mytest\"," +
+                    "\"Id\":0," +
+                    "\"Test@odata.type\":\"#Collection(Edm.String)\"," +
+                    "\"Test\":null," +
+                    "\"MyDynamic@odata.type\":\"#Collection(Edm.String)\"," +
+                    "\"MyDynamic\":[\"mystr\"]," +
+                    "\"Address\":{\"CountryRegion\":\"China\",\"Test1@odata.type\":\"#Collection(Edm.Int32)\",\"Test1\":null, \"MyDynamic1@odata.type\":\"#Collection(Edm.Int32)\",\"MyDynamic1\":[1]}" +
+                "}";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            );
+
+            entries.Count.Should().Be(2);
+            nestedResourceInfos.Count.Should().Be(1);
+
+            ODataResource person = entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
+            person.Should().NotBeNull();
+            person.Properties.FirstOrDefault(p => string.Equals(p.Name, "MyDynamic", StringComparison.Ordinal)).Value.Should().NotBeNull();
+
+            ODataResource address = entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Address", StringComparison.Ordinal));
+            address.Should().NotBeNull();
+            address.Properties.FirstOrDefault(p => string.Equals(p.Name, "MyDynamic1", StringComparison.Ordinal))
+                .Value.Should().NotBeNull();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingNullableDynamicCollectionPropertyInOpenStructuralTypeShouldWork(bool bNullValuesOmitted)
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = GetDynamicModel(out entityType, out entitySet);
+
+            const string payload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20MyDynamic,%20Address/MyDynamic1)/$entity\"," +
+                "\"@odata.id\":\"http://mytest\"," +
+                "\"Id\":0," +
+                "\"Test@odata.type\":\"#Collection(Edm.String)\"," +
+                "\"Test\":null," +
+                "\"Address\":{\"CountryRegion\":\"China\",\"Test1@odata.type\":\"#Collection(Edm.Int32)\",\"Test1\":null}" +
+                "}";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                nullValuesOmitted: bNullValuesOmitted);
+
+            entries.Count.Should().Be(2);
+            nestedResourceInfos.Count.Should().Be(1);
+
+            ODataResource person = entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
+            person.Should().NotBeNull();
+            if (bNullValuesOmitted)
+            {
+                person.Properties.Any(p => string.Equals(p.Name, "MyDynamic", StringComparison.Ordinal)).Should().BeTrue();
+            }
+            else
+            {
+                person.Properties.Any(p => string.Equals(p.Name, "MyDynamic", StringComparison.Ordinal)).Should().BeFalse();
+            }
+
+            ODataResource address =entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Address", StringComparison.Ordinal));
+            address.Should().NotBeNull();
+            if (bNullValuesOmitted)
+            {
+                address.Properties.Any(p => string.Equals(p.Name, "MyDynamic1", StringComparison.Ordinal)).Should().BeTrue();
+            }
+            else
+            {
+                address.Properties.Any(p => string.Equals(p.Name, "MyDynamic1", StringComparison.Ordinal)).Should().BeFalse();
+            }
+        }
+
+        private EdmModel GetDynamicModel(out EdmEntityType entityType, out EdmEntitySet entitySet)
+        {
+            EdmModel model = new EdmModel();
+
+            EdmComplexType complexType = new EdmComplexType("NS", "Address", null, false, true/*isOpen*/);
+            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
+            model.AddElement(complexType);
+
+            entityType = new EdmEntityType("NS", "Person", null, false, true/*isOpen*/);
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Address", new EdmComplexTypeReference(complexType, false));
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
+            entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            return model;
         }
 
         [Theory]

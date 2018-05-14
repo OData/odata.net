@@ -2267,8 +2267,7 @@ namespace Microsoft.OData.JsonLight
         {
             // Restore omitted null value only when processing response and when
             // Preference header omit-values=nulls is specified.
-            if (this.jsonLightInputContext.ReadingResponse
-                && this.jsonLightInputContext.MessageReaderSettings.NullValuesOmitted)
+            if (ShouldRestoreNullValues())
             {
                 IODataJsonLightReaderResourceState resourceState = this.CurrentResourceState;
                 IEdmStructuredType edmStructuredType = resourceState.ResourceType;
@@ -2291,59 +2290,102 @@ namespace Microsoft.OData.JsonLight
                         }
                         else
                         {
-                            // Partial subtree. Combine navigation properties and selected properties at the node with distinct.
-                            selectedProperties =
-                                resourceState.SelectedProperties.GetSelectedNavigationProperties(edmStructuredType)
-                                as IEnumerable<IEdmProperty>;
-                            selectedProperties = selectedProperties.Concat(
-                                resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType))
-                                .Distinct();
+                           // Partial subtree.
+                           selectedProperties = resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType);
+                        }
+
+                        // All dynamic properties: null value restoration.
+                        foreach (string name in resourceState.SelectedProperties.GetSelectedDynamicProperties(edmStructuredType))
+                        {
+                            RestoreNullODataProperty(name, resourceState);
                         }
 
                         foreach (IEdmProperty currentProperty in selectedProperties)
                         {
                             Debug.Assert(currentProperty.Type != null, "currentProperty.Type != null");
-                            if (!currentProperty.Type.IsNullable || currentProperty.PropertyKind == EdmPropertyKind.Navigation)
+
+                            // 1. Skip declared properties that are not null-able types.
+                            // 2. Don't need to restored null value for resources or nested resources omitted on the wire, since
+                            // reader just don't report them anyway.
+                            // 3. Skip properties (including navigation properties) that have been read.
+                            if (!IsNullableProperty(currentProperty)
+                                || resource.Properties.Any(p => p.Name.Equals(currentProperty.Name, StringComparison.Ordinal))
+                                || resourceState.NavigationPropertiesRead.Contains(currentProperty.Name))
                             {
-                                // Skip declared properties that are not null-able types, and declared navigation properties
-                                // which are specified using odata.navigationlink annotations whose absence stand for null values.
                                 continue;
                             }
 
-                            // Response should be generated using case sensitive, matching EDM defined by metadata.
-                            // In order to find potential omitted properties, need to check
-                            // resource properties read and navigation properties read.
-                            if (!resource.Properties.Any(
-                                p => p.Name.Equals(currentProperty.Name, StringComparison.Ordinal))
-                                && !resourceState.NavigationPropertiesRead.Contains(currentProperty.Name))
-                            {
-                                // Add null value to omitted property declared in the type
-                                ODataProperty property = new ODataProperty
-                                {
-                                    Name = currentProperty.Name,
-                                    Value = new ODataNullValue()
-                                };
-
-                                // Mark as processed, will throw if duplicate is detected.
-                                resourceState.PropertyAndAnnotationCollector.MarkPropertyAsProcessed(property.Name);
-
-                                ReadOnlyEnumerable<ODataProperty> readonlyEnumerable =
-                                    resource.Properties as ReadOnlyEnumerable<ODataProperty>;
-                                if (readonlyEnumerable != null)
-                                {
-                                    // For non-entity resource, add the property underneath the read-only enumerable.
-                                    resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
-                                }
-                                else
-                                {
-                                    // For entity resource, concatenate the property to original enumerable.
-                                    resource.Properties =
-                                        resource.Properties.Concat(new List<ODataProperty>() { property });
-                                }
-                            }
+                            RestoreNullODataProperty(currentProperty.Name, resourceState);
                         }
                     }
                 }
+            }
+        }
+
+        private static bool IsNullableProperty(IEdmProperty property)
+        {
+            bool isNullableProperty = true;
+
+            if (!property.Type.IsNullable)
+            {
+                // From customized model whether it is null-able
+                isNullableProperty = false;
+            }
+            else
+            {
+                // From definition type kind.
+                switch (property.Type.Definition.TypeKind)
+                {
+                    case EdmTypeKind.Complex:            // complex types
+                    case EdmTypeKind.Entity:
+                    case EdmTypeKind.EntityReference:
+                    case EdmTypeKind.Path:
+                        isNullableProperty = false;
+                        break;
+
+                    case EdmTypeKind.Collection:
+                        IEdmCollectionType collectionType = property.Type.Definition as EdmCollectionType;
+                        isNullableProperty = collectionType.ElementType.IsNullable;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            return isNullableProperty;
+        }
+
+        /// <summary>
+        /// Restore the null property value in the resource.
+        /// </summary>
+        /// <param name="nullPropertyName">Name of the property to restore the null value.</param>
+        /// <param name="resourceState">The resource state.</param>
+        private static void RestoreNullODataProperty(string nullPropertyName, IODataJsonLightReaderResourceState resourceState)
+        {
+            // Add null value to omitted property declared in the type
+            ODataProperty property = new ODataProperty
+            {
+                Name = nullPropertyName,
+                Value = new ODataNullValue()
+            };
+
+            // Mark as processed, will throw if duplicate is detected.
+            resourceState.PropertyAndAnnotationCollector.MarkPropertyAsProcessed(property.Name);
+            ODataResourceBase resource = resourceState.Resource;
+
+            ReadOnlyEnumerable<ODataProperty> readonlyEnumerable =
+                resource.Properties as ReadOnlyEnumerable<ODataProperty>;
+            if (readonlyEnumerable != null)
+            {
+                // For non-entity resource, add the property underneath the read-only enumerable.
+                resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+            }
+            else
+            {
+                // For entity resource, concatenate the property to original enumerable.
+                resource.Properties =
+                    resource.Properties.Concat(new List<ODataProperty>() { property });
             }
         }
 

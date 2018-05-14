@@ -101,7 +101,9 @@ namespace Microsoft.OData.JsonLight
         /// Whether the properties are being written for complex value. Also used for detecting whether stream properties
         /// are allowed as named stream properties should only be defined on ODataResource instances
         /// </param>
-        /// <param name="omitNullValues">Whether to omit null property values.</param>
+        /// <param name="omitNullValues">Whether to omit null property values.
+        /// Value should be 'false' if writing delta payload, otherwise derived from request preference header.
+        /// </param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         internal void WriteProperties(
             IEdmStructuredType owningType,
@@ -168,7 +170,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataResource instance, false otherwise.
         /// Named stream properties should only be defined on ODataResource instances.</param>
-        /// <param name="omitNullValues">whether to omit null property values for writing.</param>
+        /// <param name="omitNullValues"> Whether to omit null property values for writing.
+        /// Value should be 'false' if writing top level properties or delta payload, otherwise derived from request preference header.
+        /// </param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         private void WriteProperty(
@@ -199,6 +203,14 @@ namespace Microsoft.OData.JsonLight
                 this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(propertyName, owningType);
             }
 
+
+            if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
+            {
+                WriteODataTypeAnnotation(property, isTopLevel);
+            }
+
+            WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
+
             // Optimization for null values:
             // If no validation is required, we don't need property serialization info and could try to skip writing null property right away
             // If this property is top-level, we cannot optimize here due to backward-compatibility requirement for OData-6.x.
@@ -215,13 +227,6 @@ namespace Microsoft.OData.JsonLight
             WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
 
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
-
-            if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
-            {
-                WriteODataTypeAnnotation(property, isTopLevel);
-            }
-
-            WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
 
             // handle ODataUntypedValue
             ODataUntypedValue untypedValue = value as ODataUntypedValue;

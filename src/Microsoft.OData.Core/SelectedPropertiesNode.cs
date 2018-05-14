@@ -445,10 +445,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets all selected properties at the current node.
+        /// Gets all selected structured properties at the current node.
         /// </summary>
         /// <param name="structuredType">The current structured type.</param>
-        /// <returns>The selected properties at this node level.</returns>
+        /// <returns>The selected structured properties at this node level.</returns>
+        /// <remarks>Result does not include the dynamic properties, which can be retrieved by <code>GetSelectedDynamicProperties</code></remarks>
         internal IEnumerable<IEdmProperty> GetSelectedProperties(IEdmStructuredType structuredType)
         {
             if (this.selectionType == SelectionType.Empty)
@@ -471,6 +472,27 @@ namespace Microsoft.OData
 
             // Get declared properties selected, and filter out unrecognized properties.
             return this.selectedProperties.Select(structuredType.FindProperty).OfType<IEdmProperty>();
+        }
+
+        /// <summary>
+        /// Return names of dynamic properties if current structured node is open type.
+        /// </summary>
+        /// <param name="structuredType">The current structured type.</param>
+        /// <returns>The names of dynamic properties, empty if the current structured type is not open type.</returns>
+        internal IEnumerable<string> GetSelectedDynamicProperties(IEdmStructuredType structuredType)
+        {
+            IEnumerable<string> dynamicProperties = Enumerable.Empty<string>();
+
+            if (structuredType.IsOpen && this.selectedProperties != null && this.selectedProperties.Count > 0)
+            {
+                dynamicProperties = this.selectedProperties.Select(
+                    prop => structuredType.FindProperty(prop) == null
+                    ? prop
+                    : null)
+                    .OfType<string>();
+            }
+
+            return dynamicProperties;
         }
 
         /// <summary>

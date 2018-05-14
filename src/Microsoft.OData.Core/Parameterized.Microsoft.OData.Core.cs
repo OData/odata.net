@@ -1629,14 +1629,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The value '{0}' is not a valid value for OData token '{1}' in HTTP Prefer or Preference-Applied headers."
-        /// </summary>
-        internal static string HttpPreferenceHeader_InvalidValueForToken(object p0, object p1)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.HttpPreferenceHeader_InvalidValueForToken, p0, p1);
-        }
-
-        /// <summary>
         /// A string like "The character set '{0}' is not supported."
         /// </summary>
         internal static string MediaType_EncodingNotSupported(object p0) {

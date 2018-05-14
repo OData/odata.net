@@ -17,6 +17,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Write various payload with/without EDM model in Atom/VerboseJosn/JsonLight formats.
@@ -174,6 +176,193 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         responseMessageWithModel, odataWriter, /* hasModel */false);
                     Assert.IsNotNull(rspRecvd);
                 }
+            }
+        }
+
+        // Test provided by Mike Pizzo as omit-values=nulls requirement test cases related to
+        // dynamic properties and annotation-only properties.
+        [TestMethod]
+        public void Mikep_ReadWriteNullNavigationTest()
+        {
+            // set up model
+            var model = new EdmModel();
+            var addressType = model.AddComplexType("test", "Address");
+            addressType.AddStructuralProperty("city", EdmPrimitiveTypeKind.String, true);
+            var employeeType = model.AddEntityType("test", "Employee", null, false, true);
+            var key = employeeType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, false);
+            employeeType.AddKeys(key);
+            employeeType.AddStructuralProperty("Title", EdmPrimitiveTypeKind.String, true);
+            employeeType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
+
+            employeeType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo
+                {
+                    Name = "Manager",
+                    TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                    Target = employeeType
+                }
+            );
+            var container = model.AddEntityContainer("test", "service");
+            var employeeSet = container.AddEntitySet("employees", employeeType);
+
+            // set up writer and reader
+            Uri serviceUri = new Uri("http://test/");
+
+            //            string expectedNulls = "{\"@odata.context\":\"" + serviceUri + "$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity\",\"Name\":\"Fred\",\"Title@test.annotation\":\"annotationValue\",\"Title\":null,\"Dynamic\":null,\"DynamicAnnotated@test.annotation\":\"annotationValue\",\"DynamicAnnotated\":null,\"Address\":null,\"Manager\":null}";
+            string expectedNulls = @"{
+                ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity"",
+                ""Name"":""Fred"",
+                ""Title@test.annotation"":""annotationValue"",""Title"":null,
+                ""Dynamic"":null,
+                ""DynamicAnnotated@test.annotation"":""annotationValue"",""DynamicAnnotated"":null,
+                ""Address"":null,""Manager"":null
+            }";
+            expectedNulls = Regex.Replace(expectedNulls, @"\s*", string.Empty, RegexOptions.Multiline);
+            Assert.IsTrue(expectedNulls.Contains(serviceUri.ToString()));
+
+            //            string expectedNoNulls = "{\"@odata.context\":\"" + serviceUri + "$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity\",\"Name\":\"Fred\",\"Title@test.annotation\":\"annotationValue\",\"DynamicAnnotated@test.annotation\":\"annotationValue\"}";
+            string expectedNoNulls = @"{
+                ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity"",
+                ""Name"":""Fred"",
+                ""Title@test.annotation"":""annotationValue"",
+                ""DynamicAnnotated@test.annotation"":""annotationValue""
+            }";
+            expectedNoNulls = Regex.Replace(expectedNoNulls, @"\s*", string.Empty, RegexOptions.Multiline);
+            Assert.IsTrue(expectedNoNulls.Contains(serviceUri.ToString()));
+
+            var writeSettings = new ODataMessageWriterSettings() { BaseUri = serviceUri };
+            writeSettings.ODataUri = new ODataUriParser(model, serviceUri, new Uri("employees?$select=Name,Title,Dynamic,Address&$expand=Manager", UriKind.Relative)).ParseUri();
+
+            foreach (bool omitNulls in new bool[] { false, true })
+            {
+                // validate writing a null navigation property value
+                var stream = new MemoryStream();
+                var responseMessage = new StreamResponseMessage(stream);
+                if (omitNulls)
+                {
+                    responseMessage.SetHeader("Preference-Applied", "omit-values=nulls,odata.include-annotations=\"*\"");
+                }
+                else
+                {
+                    responseMessage.SetHeader("Preference-Applied", "odata.include-annotations=\"*\"");
+                }
+                var messageWriter = new ODataMessageWriter(responseMessage, writeSettings, model);
+                var writer = messageWriter.CreateODataResourceWriter(employeeSet, employeeType);
+                writer.WriteStart(new ODataResource
+                {
+                    Properties = new ODataProperty[]
+                    {
+                        new ODataProperty {Name = "Name", Value = "Fred" },
+                        new ODataProperty {Name = "Title", Value = new ODataNullValue(),
+                            InstanceAnnotations = new ODataInstanceAnnotation[] {
+                                new ODataInstanceAnnotation("test.annotation", new ODataPrimitiveValue( "annotationValue" ))
+                            }
+                        },
+                        new ODataProperty {Name = "Dynamic", Value = new ODataNullValue() },
+                        new ODataProperty {Name = "DynamicAnnotated", Value = new ODataNullValue(),
+                            InstanceAnnotations = new ODataInstanceAnnotation[] {
+                                new ODataInstanceAnnotation("test.annotation", new ODataPrimitiveValue( "annotationValue" ))
+                            }
+                        }
+                    }
+                });
+
+                // write address
+                writer.WriteStart(new ODataNestedResourceInfo
+                {
+                    Name = "Address",
+                    IsCollection = false
+                });
+                writer.WriteStart((ODataResource)null);
+                writer.WriteEnd(); //address
+                writer.WriteEnd(); //address nestedInfo
+
+                // write manager
+                writer.WriteStart(new ODataNestedResourceInfo
+                {
+                    Name = "Manager",
+                    IsCollection = false
+                });
+                writer.WriteStart((ODataResource)null);
+                writer.WriteEnd(); // manager resource
+                writer.WriteEnd(); // manager nested info
+
+                writer.WriteEnd(); // resource
+                stream.Flush();
+
+                // compare written stream to expected stream
+                stream.Seek(0, SeekOrigin.Begin);
+                var streamReader = new StreamReader(stream);
+                Assert.AreEqual(omitNulls ? expectedNoNulls : expectedNulls, streamReader.ReadToEnd(), String.Format("Did not generate expected string when {0}omitting nulls", omitNulls ? "" : "not "));
+
+                // validate reading back the stream
+                var readSettings = new ODataMessageReaderSettings() { BaseUri = serviceUri, ReadUntypedAsString = false };
+                stream.Seek(0, SeekOrigin.Begin);
+                var messageReader = new ODataMessageReader(responseMessage, readSettings, model);
+                var reader = messageReader.CreateODataResourceReader(employeeSet, employeeType);
+                string reading = "Employee";
+                bool addressReturned = false;
+                bool managerReturned = false;
+                ODataResource employeeResource = null;
+                ODataResource managerResource = null;
+                ODataResource addressResource = null;
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceEnd:
+                            switch (reading)
+                            {
+                                case "Manager":
+                                    managerResource = reader.Item as ODataResource;
+                                    managerReturned = true;
+                                    break;
+                                case "Address":
+                                    addressResource = reader.Item as ODataResource;
+                                    addressReturned = true;
+                                    break;
+                                case "Employee":
+                                    employeeResource = reader.Item as ODataResource;
+                                    break;
+                            }
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            reading = ((ODataNestedResourceInfo)reader.Item).Name;
+                            break;
+                        case ODataReaderState.NestedResourceInfoEnd:
+                            reading = "Employee";
+                            break;
+                    }
+                }
+
+                if (!omitNulls)
+                {
+                    Assert.IsTrue(managerReturned, "Manager not returned when {0}omitting nulls", omitNulls ? "" : "not ");
+                }
+                Assert.IsNull(managerResource, "Manager resource not null when {0}omitting nulls", omitNulls ? "" : "not ");
+
+                if (!omitNulls)
+                {
+                    Assert.IsTrue(addressReturned, "Address not returned when {0}omitting nulls", omitNulls ? "" : "not ");
+                }
+                Assert.IsNull(addressResource, "Address resource not null when {0}omitting nulls", omitNulls ? "" : "not ");
+
+                Assert.IsNotNull(employeeResource, "Employee should not be null");
+                var titleProperty = employeeResource.Properties.FirstOrDefault(p => p.Name == "Title");
+                Assert.IsNotNull(titleProperty, "Title property should not be null");
+                Assert.IsNull(titleProperty.Value, "Title property value should be null");
+                var titleAnnotation = titleProperty.InstanceAnnotations.FirstOrDefault(a => a.Name == "test.annotation");
+                Assert.IsNotNull(titleAnnotation, "Title property missing the test.annotation");
+                Assert.AreEqual(((ODataPrimitiveValue)titleAnnotation.Value).Value.ToString(), "annotationValue");
+                var dynamicProperty = employeeResource.Properties.FirstOrDefault(p => p.Name == "Dynamic");
+                Assert.IsNotNull(dynamicProperty, "Dynamic property should not be null");
+                Assert.IsNull(dynamicProperty.Value, "Dynamic property value should be null");
+                var dynamicAnnotatedProperty = employeeResource.Properties.FirstOrDefault(p => p.Name == "DynamicAnnotated");
+                Assert.IsNotNull(dynamicAnnotatedProperty, "DynamicAnnotated property should not be null");
+                Assert.IsNull(dynamicAnnotatedProperty.Value, "DynamicAnnotated property value should be null");
+                var dynamicAnnotation = dynamicAnnotatedProperty.InstanceAnnotations.FirstOrDefault(a => a.Name == "test.annotation");
+                Assert.IsNotNull(dynamicAnnotation, "DynamicAnnotated property missing the test.annotation");
+                Assert.AreEqual(((ODataPrimitiveValue)dynamicAnnotation.Value).Value.ToString(), "annotationValue");
             }
         }
 

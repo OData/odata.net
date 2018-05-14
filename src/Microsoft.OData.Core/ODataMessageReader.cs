@@ -169,15 +169,14 @@ namespace Microsoft.OData
             this.model = model ?? GetModel(this.container);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
 
-            // Whether null values were omitted in the response.
+            // Whether null values were omitted in the response, false by default.
             this.settings.NullValuesOmitted = false;
-            string omitValuePreferenceApplied = responseMessage.PreferenceAppliedHeader().OmitValues;
-            if (omitValuePreferenceApplied != null)
+            if (string.Equals(responseMessage.PreferenceAppliedHeader().OmitValues, ODataConstants.OmitValuesNulls,
+                StringComparison.OrdinalIgnoreCase))
             {
                 // If the Preference-Applied header's omit-values parameter is present in the response, its value should
                 // be applied to the reader's setting.
-                this.settings.NullValuesOmitted =
-                    omitValuePreferenceApplied.Equals(ODataConstants.OmitValuesNulls, StringComparison.OrdinalIgnoreCase);
+                this.settings.NullValuesOmitted = true;
             }
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter

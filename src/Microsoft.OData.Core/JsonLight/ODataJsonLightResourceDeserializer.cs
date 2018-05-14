@@ -998,6 +998,10 @@ namespace Microsoft.OData.JsonLight
                         ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
                         AddResourceProperty(resourceState, edmProperty.Name, streamPropertyValue);
                     }
+                    else if (this.JsonLightInputContext.ShouldRestoreNullValues())
+                    {
+                        AddResourceProperty(resourceState, propertyName, new ODataNullValue());
+                    }
                     else
                     {
                         throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyTypeReference.FullName()));
@@ -1320,7 +1324,18 @@ namespace Microsoft.OData.JsonLight
             // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(propertyName));
+                if (this.JsonLightInputContext.ShouldRestoreNullValues())
+                {
+                    // For case of property without values that are possibly omitted, restore omitted null value
+                    // and return nested resource as null.
+                    AddResourceProperty(resourceState, propertyName, new ODataNullValue());
+                    return null;
+                }
+                else
+                {
+                    throw new ODataException(
+                        ODataErrorStrings.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(propertyName));
+                }
             }
 
             object propertyValue = null;
