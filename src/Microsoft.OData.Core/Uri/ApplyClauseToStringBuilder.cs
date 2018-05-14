@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.OData.UriParser;
@@ -97,21 +98,39 @@ namespace Microsoft.OData
 
         private void Translate(AggregateTransformationNode transformation)
         {
+            Translate(transformation.AggregateExpressions);
+        }
+
+        private void Translate(IEnumerable<AggregateExpressionBase> expressions)
+        {
             bool appendComma = false;
-            foreach (AggregateExpression aggExpression in transformation.AggregateExpressions.OfType<AggregateExpression>())
+            foreach (AggregateExpressionBase expression in expressions)
             {
                 appendComma = AppendComma(appendComma);
 
-                if (aggExpression.Method != AggregationMethod.VirtualPropertyCount)
+                switch (expression.AggregateKind)
                 {
-                    AppendExpression(aggExpression.Expression);
-                    query.Append(ExpressionConstants.SymbolEscapedSpace);
-                    AppendWord(ExpressionConstants.KeywordWith);
-                }
+                    case AggregateExpressionKind.PropertyAggregate:
+                        AggregateExpression aggExpression = expression as AggregateExpression;
+                        if (aggExpression.Method != AggregationMethod.VirtualPropertyCount)
+                        {
+                            AppendExpression(aggExpression.Expression);
+                            query.Append(ExpressionConstants.SymbolEscapedSpace);
+                            AppendWord(ExpressionConstants.KeywordWith);
+                        }
 
-                AppendWord(GetAggregationMethodName(aggExpression));
-                AppendWord(ExpressionConstants.KeywordAs);
-                query.Append(aggExpression.Alias);
+                        AppendWord(GetAggregationMethodName(aggExpression));
+                        AppendWord(ExpressionConstants.KeywordAs);
+                        query.Append(aggExpression.Alias);
+                        break;
+                    case AggregateExpressionKind.EntitySetAggregate:
+                        EntitySetAggregateExpression esExpression = expression as EntitySetAggregateExpression;
+                        query.Append(esExpression.Alias);
+                        query.Append(ExpressionConstants.SymbolOpenParen);
+                        Translate(esExpression.Children);
+                        query.Append(ExpressionConstants.SymbolClosedParen);
+                        break;
+                }
             }
         }
 
