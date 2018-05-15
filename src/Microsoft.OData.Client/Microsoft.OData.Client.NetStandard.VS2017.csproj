@@ -106,6 +106,7 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\FunctionParameterAliasToken.cs" Link="ALinq\UriParser\SyntacticAst\FunctionParameterAliasToken.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\FunctionParameterToken.cs" Link="ALinq\UriParser\SyntacticAst\FunctionParameterToken.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\InnerPathToken.cs" Link="ALinq\UriParser\SyntacticAst\InnerPathToken.cs" />
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\InToken.cs" Link="ALinq\UriParser\SyntacticAst\InToken.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\IPathSegmentTokenVisitor.cs" Link="ALinq\UriParser\Visitors\IPathSegmentTokenVisitor.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\ISyntacticTreeVisitor.cs" Link="ALinq\UriParser\Visitors\ISyntacticTreeVisitor.cs" />
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\SyntacticTreeVisitor.cs" Link="ALinq\UriParser\Visitors\SyntacticTreeVisitor.cs" />
