@@ -57,7 +57,7 @@ namespace Microsoft.OData.UriParser
 
             if (collapsed && !(generatedProperties?.Contains(tokenIn.Identifier) ?? false))
             {
-                throw ExceptionUtil.CreatePropertyNotFoundException(tokenIn.Identifier, edmType.FullTypeName());
+                throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(tokenIn.Identifier));
             }
 
             if (TryBindAsDeclaredProperty(tokenIn, edmType, resolver, out nextSegment))

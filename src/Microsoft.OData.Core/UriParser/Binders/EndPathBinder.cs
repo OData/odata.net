@@ -151,7 +151,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw ExceptionUtil.CreatePropertyNotFoundException(endPathToken.Identifier, singleValueParent.TypeReference.FullName(), state.IsCollapsed);
+                        throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(endPathToken.Identifier));
                     }
                 }
 

@@ -142,6 +142,11 @@ namespace Microsoft.OData.UriParser
         internal List<string> AggregatedPropertyNames { get; set; }
 
         /// <summary>
+        /// The property set when group by or aggregation is done and properties are collapsed out of scope
+        /// </summary>
+        internal bool IsCollapsed { get; set; }
+
+        /// <summary>
         /// The parsed segments in path and query option.
         /// </summary>
         internal List<ODataPathSegment> ParsedSegments

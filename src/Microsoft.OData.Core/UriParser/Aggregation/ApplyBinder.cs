@@ -51,13 +51,12 @@ namespace Microsoft.OData.UriParser.Aggregation
                         AggregateTransformationNode aggregate = BindAggregateToken((AggregateToken)(token));
                         transformations.Add(aggregate);
                         aggregateExpressionsCache = aggregate.AggregateExpressions;
-                        state.AggregatedPropertyNames =
-                            aggregate.AggregateExpressions.Select(statement => statement.Alias).ToList();
+                        state.AggregatedPropertyNames = aggregate.AggregateExpressions.Select(statement => statement.Alias).ToList();
+                        state.IsCollapsed = true;
                         break;
                     case QueryTokenKind.AggregateGroupBy:
                         GroupByTransformationNode groupBy = BindGroupByToken((GroupByToken)(token));
                         transformations.Add(groupBy);
-                        state.AggregatedPropertyNames = groupBy.GroupingProperties.Select(g => g.Name).ToList();
                         state.IsCollapsed = true;
                         break;
                     case QueryTokenKind.Compute:
@@ -148,11 +147,6 @@ namespace Microsoft.OData.UriParser.Aggregation
                     EntitySetAggregateToken token = aggregateToken as EntitySetAggregateToken;
                     QueryNode boundPath = this.bindMethod(token.EntitySet);
                     
-                    if (boundPath.Kind != QueryNodeKind.CollectionNavigationNode)
-                    {
-                        throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedForEntitySetAggregation((token.EntitySet as EndPathToken)?.Identifier ?? string.Empty, boundPath.Kind));
-                    }
-
                     IEnumerable<AggregateExpressionBase> children = token.Expressions.Select(x => BindAggregateExpressionToken(x)).ToList();
                     return new EntitySetAggregateExpression((CollectionNavigationNode)boundPath, children);
                 }
