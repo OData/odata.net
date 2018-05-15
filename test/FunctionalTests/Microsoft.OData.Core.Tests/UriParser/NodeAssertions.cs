@@ -362,6 +362,14 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<BinaryOperatorNode>(orderByQueryNode);
         }
 
+        public static AndConstraint<InNode> ShouldBeInNode(this QueryNode node, IEdmTypeReference itemType)
+        {
+            node.Should().BeOfType<InNode>();
+            var inNode = node.As<InNode>();
+            inNode.ItemType.ShouldBeEquivalentTo(itemType);
+            return new AndConstraint<InNode>(inNode);
+        }
+
         public static AndConstraint<UnaryOperatorNode> ShouldBeUnaryOperatorNode(this QueryNode node, UnaryOperatorKind expectedOperatorKind)
         {
             node.Should().BeOfType<UnaryOperatorNode>();

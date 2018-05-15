@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\..\..\sln\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\..\..\sln\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="..\..\..\..\sln\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props" Condition="Exists('..\..\..\..\sln\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" />
@@ -360,6 +360,9 @@
     <Compile Include="..\UriParser\SemanticAst\BatchReferenceSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\BatchSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\BinaryOperatorNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\CollectionConstantNodeTests.cs">
+      <Link>CollectionConstantNodeTests.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionFunctionCallNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionNavigationNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionPropertyAccessNodeTests.cs" />
@@ -368,6 +371,9 @@
     <Compile Include="..\UriParser\SemanticAst\CountSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\InNodeTests.cs">
+      <Link>InNodeTests.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\EntitySetNodeTests.cs" />

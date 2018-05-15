@@ -139,6 +139,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// $compute expression token
         /// </summary>
-        ComputeExpression = 28
+        ComputeExpression = 28,
+
+        /// <summary>
+        /// In operator.
+        /// </summary>
+        In = 29
     }
 }

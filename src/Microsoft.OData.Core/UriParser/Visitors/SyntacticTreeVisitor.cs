@@ -50,6 +50,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Visits an InToken
+        /// </summary>
+        /// <param name="tokenIn">The In token to visit.</param>
+        /// <returns>An InNode thats bound to this token</returns>
+        public virtual T Visit(InToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>

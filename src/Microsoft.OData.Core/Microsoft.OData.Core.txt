@@ -708,6 +708,8 @@ MetadataBinder_OrderByExpressionNotSingleValue=The $orderby expression must eval
 MetadataBinder_PropertyAccessWithoutParentParameter=A PropertyAccessQueryToken without a parent was encountered outside of $filter or $orderby expression. The PropertyAccessQueryToken without a parent token is only allowed inside $filter or $orderby expressions.
 MetadataBinder_BinaryOperatorOperandNotSingleValue=The operand for a binary operator '{0}' is not a single value. Binary operators require both operands to be single values.
 MetadataBinder_UnaryOperatorOperandNotSingleValue=The operand for a unary operator '{0}' is not a single value. Unary operators require the operand to be a single value.
+MetadataBinder_LeftOperandNotSingleValue=The left operand for the IN operation is not a single value. IN operations require the left operand to be a single value and the right operand to be a collection value.
+MetadataBinder_RightOperandNotCollectionValue=The right operand for the IN operation is not a collection value. IN operations require the left operand to be a single value and the right operand to be a collection value.
 MetadataBinder_PropertyAccessSourceNotSingleValue=The parent value for a property access of a property '{0}' is not a single value. Property access can only be applied to a single value.
 MetadataBinder_IncompatibleOperandsError=A binary operator with incompatible types was detected. Found operand types '{0}' and '{1}' for operator kind '{2}'.
 MetadataBinder_IncompatibleOperandError=A unary operator with an incompatible type was detected. Found operand type '{0}' for operator kind '{1}'.
@@ -778,6 +780,7 @@ Nodes_NonStaticEntitySetExpressionsAreNotSupportedInThisRelease=Only static Enti
 Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An instance of CollectionFunctionCallNode can only be created with a primitive, complex or enum collection type. For functions returning a collection of entities, use EntityCollectionFunctionCallNode instead.
 Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity=An instance of EntityCollectionFunctionCallNode can only be created with an entity collection type. For functions returning a collection of primitive or complex values, use CollectionFunctionCallNode instead.
 Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An instance of SingleValueFunctionCallNode can only be created with a primitive, complex or enum type. For functions returning a single entity, use SingleEntityFunctionCallNode instead.
+Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType=An instance of InNode can only be created where the item type of the right operand collection '{0}' is equal to that of the left operand single value '{1}'.
 
 ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path while parsing the path within a select or expand query option.
 
@@ -910,6 +913,7 @@ PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is mi
 ; Note: The below list of error messages are common to both the OData and the Spatial project.
 
 JsonReader_UnexpectedComma=Invalid JSON. An unexpected comma was found in scope '{0}'. A comma is only valid between properties of an object or between elements of an array.
+JsonReader_ArrayClosureMismatch=Invalid JSON. A array closure mismatch occurred. A '{0}' was expected to match '{1}', but instead '{2}' was found.
 JsonReader_MultipleTopLevelValues=Invalid JSON. More than one value was found at the root of the JSON content. JSON content can only have one value at the root level, which is an array, an object or a primitive value.
 JsonReader_EndOfInputWithOpenScope=Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed.
 JsonReader_UnexpectedToken=Invalid JSON. Unexpected token '{0}'.

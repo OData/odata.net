@@ -136,6 +136,9 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\InnerPathToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\InnerPathToken.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\InToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\InToken.cs</Link>
+    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\IPathSegmentTokenVisitor.cs">
       <Link>ALinq\UriParser\Visitors\IPathSegmentTokenVisitor.cs</Link>
     </Compile>

@@ -525,7 +525,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionWithDot()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2.id3(", moveToFirstToken: true, useSemicolonDelimeter: false);
+            ExpressionLexer l = new ExpressionLexer("id1.id2.id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.True(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1.id2.id3", l.CurrentToken.Text);
             Assert.Equal(0, l.CurrentToken.Position);
@@ -534,7 +534,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunction()
         {
-            ExpressionLexer l = new ExpressionLexer("id1(", moveToFirstToken: true, useSemicolonDelimeter: false);
+            ExpressionLexer l = new ExpressionLexer("id1(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.True(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Text);
             Assert.Equal(0, l.CurrentToken.Position);
@@ -543,7 +543,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_DoesNotEndWithId()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.(", moveToFirstToken: true, useSemicolonDelimeter: false);
+            ExpressionLexer l = new ExpressionLexer("id1.(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Text);
             Assert.Equal(0, l.CurrentToken.Position);
@@ -552,7 +552,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_DoesNotEndWithParen()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2.id3", moveToFirstToken: true, useSemicolonDelimeter: false);
+            ExpressionLexer l = new ExpressionLexer("id1.id2.id3", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Text);
             Assert.Equal(0, l.CurrentToken.Position);
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_WhitespaceBeforeParen()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2.id3 (", moveToFirstToken: true, useSemicolonDelimeter: false);
+            ExpressionLexer l = new ExpressionLexer("id1.id2.id3 (", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Text);
             Assert.Equal(0, l.CurrentToken.Position);
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_WhitespaceInBetween()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2 .id3(", moveToFirstToken: true, useSemicolonDelimeter: false);
+            ExpressionLexer l = new ExpressionLexer("id1.id2 .id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Text);
             Assert.Equal(0, l.CurrentToken.Position);
@@ -680,21 +680,21 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpressionLexerShouldFailByDefaultForAtSymbol()
         {
-            Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimeter: false);
+            Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false);
             lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldFailAtSymbolIsLastCharacter()
         {
-            Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimeter: false, parsingFunctionParameters: true);
+            Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldExpectIdentifierStartAfterAtSymbol()
         {
-            Action lex = () => new ExpressionLexer("@1", moveToFirstToken: true, useSemicolonDelimeter: false, parsingFunctionParameters: true);
+            Action lex = () => new ExpressionLexer("@1", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             lex.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_InvalidCharacter("1", 1, "@1"));
         }
 
@@ -955,7 +955,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughBalancedParentheticalExpressionWorks()
         {
-            ExpressionLexer lexer = new ExpressionLexer("(expression)next", moveToFirstToken: true, useSemicolonDelimeter: true, parsingFunctionParameters: false);
+            ExpressionLexer lexer = new ExpressionLexer("(expression)next", moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
             string result = lexer.AdvanceThroughBalancedParentheticalExpression();
             result.Should().Be("(expression)");
             // TODO: the state of the lexer is weird right now, see note in AdvanceThroughBalancedParentheticalExpression.
@@ -1029,7 +1029,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             Action test = () =>
             {
-                ExpressionLexer l = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimeter: false);
+                ExpressionLexer l = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: false);
                 while (l.CurrentToken.Kind != ExpressionTokenKind.End)
                 {
                     l.NextToken();
@@ -1046,7 +1046,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         private static void ValidateTokenSequence(string expression, bool parsingFunctionParameters, params ExpressionToken[] expectTokens)
         {
-            ExpressionLexer l = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimeter: false, parsingFunctionParameters: parsingFunctionParameters);
+            ExpressionLexer l = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: parsingFunctionParameters);
             for (int i = 0; i < expectTokens.Length; ++i)
             {
                 Assert.Equal(expectTokens[i].Kind, l.CurrentToken.Kind);
@@ -1059,7 +1059,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         private static ExpressionLexer CreateLexerForAdvanceThroughExpandOptionTest(string text)
         {
-            return new ExpressionLexer(text, moveToFirstToken: false, useSemicolonDelimeter: true, parsingFunctionParameters: false);
+            return new ExpressionLexer(text, moveToFirstToken: false, useSemicolonDelimiter: true, parsingFunctionParameters: false);
         }
 
     }

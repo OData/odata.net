@@ -1663,6 +1663,104 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
         #endregion
 
+        #region In Operator Tests
+        [Fact]
+        public void FilterWithInOperationWithPrimitiveTypeProperties()
+        {
+            FilterClause filter = ParseFilter("ID in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithIntConstant()
+        {
+            FilterClause filter = ParseFilter("9001 in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            filter.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be(9001);
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithStringConstant()
+        {
+            FilterClause filter = ParseFilter("'777-42-9001' in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetString(true));
+            filter.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be("777-42-9001");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedSSNs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithMismatchedOperandTypes()
+        {
+            Action parse = () => ParseFilter("ID in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ArgumentException>().WithMessage(
+                ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("Edm.String", "Edm.Int32"));
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithNestedOperation()
+        {
+            FilterClause filter = ParseFilter("(ID in RelatedIDs) eq false", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<BinaryOperatorNode>().Left.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithNavigationProperties()
+        {
+            FilterClause filter = ParseFilter("MyDog/LionWhoAteMe in MyDog/LionsISaw", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeInNode(HardCodedTestModel.GetLionTypeReference());
+            filter.Expression.As<InNode>().Left.As<SingleNavigationNode>().NavigationProperty.Name.Should().Be("LionWhoAteMe");
+            filter.Expression.As<InNode>().Right.As<CollectionNavigationNode>().NavigationProperty.Name.Should().Be("LionsISaw");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithBoundFunctions()
+        {
+            FilterClause filter = ParseFilter("Fully.Qualified.Namespace.GetPriorAddress in Fully.Qualified.Namespace.GetPriorAddresses", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeInNode(new EdmComplexTypeReference(HardCodedTestModel.GetAddressType(), true));
+            filter.Expression.As<InNode>().Left.As<SingleValueFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddress");
+            filter.Expression.As<InNode>().Right.As<CollectionResourceFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddresses");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithComplexTypeProperties()
+        {
+            FilterClause filter = ParseFilter("GeographyPoint in GeographyCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true));
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("GeographyPoint");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyCollection");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithBracketCollection()
+        {
+            // Once bracket collection literals are instantiated as CollectionConstantNode, this test case should be updated.
+            Action parse = () => ParseFilter("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithParensCollection()
+        {
+            FilterClause filter = ParseFilter("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithMismatchedClosureCollection()
+        {
+            Action parse = () => ParseFilter("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+        }
+        #endregion
+
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
         {
             return new ODataQueryOptionParser(edmModel, edmType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } }) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } }.ParseFilter();

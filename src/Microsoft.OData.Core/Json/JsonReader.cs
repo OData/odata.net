@@ -285,7 +285,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // We might see end of array here
-                    if (this.characterBuffer[this.tokenStartIndex] == ']')
+                    if (this.characterBuffer[this.tokenStartIndex] == ']' || this.characterBuffer[this.tokenStartIndex] == ')')
                     {
                         this.tokenStartIndex++;
 
@@ -408,6 +408,7 @@ namespace Microsoft.OData.Json
                     this.tokenStartIndex++;
                     return JsonNodeType.StartObject;
 
+                case '(':
                 case '[':
                     // Start of array
                     this.PushScope(ScopeType.Array);

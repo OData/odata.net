@@ -940,7 +940,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
         public void ConvertFromUriShouldThrowOnNullParameter()
         {
-            Action convertFrom = () => ODataUriUtils.ConvertFromUriLiteral(null, ODataVersion.V4, null, null);
+            Action convertFrom = () => ODataUriUtils.ConvertFromUriLiteral(null, ODataVersion.V4, null, null, false);
             convertFrom.ShouldThrow<ArgumentNullException>();
         }
 
@@ -952,7 +952,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public void ConvertFromUriShouldParseJsonLightEvenNoModelIsProvided()
         {
             var text = "[1,2,3]";
-            object restulTmp = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, null /*edmModel*/, null /*expectedType*/);
+            object restulTmp = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, null /*edmModel*/, null /*expectedType*/, false /*parseParenthesisExpressionAsLiteral*/);
             restulTmp.As<ODataCollectionValue>().TypeName.Should().Be(null);
             restulTmp.As<ODataCollectionValue>().Items.Cast<Int32>().Count().Should().Be(3);
         }
@@ -969,7 +969,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithNumberProperty").ToTypeReference();
             var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithNumberProperty\",\"numberProperty\":42}";
 
-            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType, false);
             parse.ShouldThrow<ODataException>();
         }
 
@@ -981,7 +981,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false));
             var text = "[]";
 
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType, false);
             result.Should().BeAssignableTo<ODataCollectionValue>();
             result.As<ODataCollectionValue>().TypeName.Should().Be("Collection(Edm.Int32)");
             result.As<ODataCollectionValue>().Items.Should().NotBeNull();
@@ -995,7 +995,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false));
             var text = "[42]";
 
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType, false);
             result.Should().BeAssignableTo<ODataCollectionValue>();
             result.As<ODataCollectionValue>().TypeName.Should().Be("Collection(Edm.Int32)");
             result.As<ODataCollectionValue>().Items.Should().HaveCount(1);
@@ -1009,7 +1009,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false));
             var text = "[\"Bart\",\"Homer\",\"Marge\"]";
 
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType, false);
             result.Should().BeAssignableTo<ODataCollectionValue>();
             result.As<ODataCollectionValue>().TypeName.Should().Be("Collection(Edm.String)");
             result.As<ODataCollectionValue>().Items.Should().HaveCount(3);
@@ -1025,7 +1025,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetBoolean(false));
             var text = "[true,false]";
 
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType, false);
             result.Should().BeAssignableTo<ODataCollectionValue>();
             result.As<ODataCollectionValue>().TypeName.Should().Be("Collection(Edm.Boolean)");
             result.As<ODataCollectionValue>().Items.Should().HaveCount(2);
@@ -1040,7 +1040,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = EdmCoreModel.GetCollection(EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false)));
             var text = "[[1,2],[3,4]]";
 
-            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType, false);
             parse.ShouldThrow<ODataException>();
             // JSON light fails because of the nested collections, verbose JSON will fail for other reasons, so we are not baselining error message
         }
@@ -1073,7 +1073,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     this.Assert,
                     () =>
                     {
-                        ODataUriUtils.ConvertFromUriLiteral(testCase.Parameter, version, model, typeReference);
+                        ODataUriUtils.ConvertFromUriLiteral(testCase.Parameter, version, model, typeReference, false);
                     },
                     testCase.ExpectedException,
                     this.ExceptionVerifier
@@ -1081,7 +1081,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else // Positive Test
             {
-                object actualValue = ODataUriUtils.ConvertFromUriLiteral(testCase.Parameter, version, model, typeReference);
+                object actualValue = ODataUriUtils.ConvertFromUriLiteral(testCase.Parameter, version, model, typeReference, false);
                 object expectedValue = testCase.ExpectedValue;
                 bool fail = false;
 

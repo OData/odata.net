@@ -163,6 +163,16 @@ namespace Microsoft.OData.UriParser
         /// Cast on a single value.
         /// </summary>
         SingleValueCast = InternalQueryNodeKind.SingleValueCast,
+
+        /// <summary>
+        /// In operator node.
+        /// </summary>
+        In = InternalQueryNodeKind.In,
+
+        /// <summary>
+        /// Node that represents a collection of constants.
+        /// </summary>
+        CollectionConstant = InternalQueryNodeKind.CollectionConstant,
     }
 
     /// <summary>
@@ -319,5 +329,15 @@ namespace Microsoft.OData.UriParser
         /// Cast on a single value.
         /// </summary>
         SingleValueCast = 29,
+
+        /// <summary>
+        /// In operator node.
+        /// </summary>
+        In = 30,
+
+        /// <summary>
+        /// Node that represents a collection of constants.
+        /// </summary>
+        CollectionConstant = 31,
     }
 }

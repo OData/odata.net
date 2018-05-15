@@ -574,7 +574,7 @@ namespace Microsoft.OData.UriParser
                         {
                             // ExpressionTokenKind.BracketedExpression means text like [1,2]
                             // so now try convert it to collection type value:
-                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
+                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type, false);
                         }
                         else
                         {

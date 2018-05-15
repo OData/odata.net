@@ -155,6 +155,8 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespacePerson.AddStructuralProperty("PreviousAddresses", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespaceAddressTypeReference)));
             FullyQualifiedNamespacePerson.AddStructuralProperty("FavoriteColors", new EdmCollectionTypeReference(new EdmCollectionType(colorTypeReference)));
             FullyQualifiedNamespacePerson.AddStructuralProperty("FavoriteNumber", FullyQualifiedNamespaceUInt16Reference);
+            FullyQualifiedNamespacePerson.AddStructuralProperty("RelatedIDs", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("RelatedSSNs", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
             FullyQualifiedNamespacePerson.AddStructuralProperty("StockQuantity", FullyQualifiedNamespaceUInt32Reference);
             FullyQualifiedNamespacePerson.AddStructuralProperty("LifeTime", FullyQualifiedNamespaceUInt64Reference);
             FullyQualifiedNamespacePerson.AddKeys(FullyQualifiedNamespacePerson_ID);
@@ -966,6 +968,8 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""PreviousAddresses"" Type=""Collection(Fully.Qualified.Namespace.Address)"" />
         <Property Name=""FavoriteColors"" Type=""Collection(Fully.Qualified.Namespace.ColorPattern)"" />
         <Property Name=""FavoriteNumber"" Type=""Fully.Qualified.Namespace.UInt16"" />
+        <Property Name=""RelatedIDs"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
+        <Property Name=""RelatedSSNs"" Type=""Collection(Edm.String)"" Nullable=""true"" />
         <Property Name=""StockQuantity"" Type=""Fully.Qualified.Namespace.UInt32"" />
         <Property Name=""LifeTime"" Type=""Fully.Qualified.Namespace.UInt64"" />
         <NavigationProperty Name=""MyDog"" Type=""Fully.Qualified.Namespace.Dog"" />

@@ -127,11 +127,27 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="CollectionPropertyAccessNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="ConstantNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
         public override String Visit(ConstantNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+            if (node.Value == null)
+            {
+                return ExpressionConstants.KeywordNull;
+            }
+
+            return node.LiteralText;
+        }
+
+        /// <summary>
+        /// Translates a <see cref="CollectionConstantNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(CollectionConstantNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             if (node.Value == null)

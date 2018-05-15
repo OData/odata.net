@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ConstantNode.cs" company="Microsoft">
+// <copyright file="CollectionConstantNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,14 +9,13 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
 
     #endregion Namespaces
 
     /// <summary>
     /// Node representing a constant value, can either be primitive, complex, entity, or collection value.
     /// </summary>
-    public sealed class ConstantNode : SingleValueNode
+    public sealed class CollectionConstantNode : CollectionNode
     {
         /// <summary>
         /// The constant value.
@@ -26,45 +25,31 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Cache for the TypeReference after it has been calculated for the current state of the node.
         /// </summary>
-        private readonly IEdmTypeReference typeReference;
+        private readonly IEdmTypeReference itemType;
 
         /// <summary>
-        /// Create a ConstantNode
+        /// The type of the collection represented by this node.
         /// </summary>
-        /// <param name="constantValue">This node's primitive value.</param>
-        /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
-        public ConstantNode(object constantValue, string literalText)
-            : this(constantValue)
-        {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
-            this.LiteralText = literalText;
-        }
+        private readonly IEdmCollectionTypeReference collectionTypeReference;
 
         /// <summary>
-        /// Create a ConstantNode
+        /// Create a CollectionConstantNode
         /// </summary>
         /// <param name="constantValue">This node's primitive value.</param>
         /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
         /// <param name="typeReference">The typeReference of this node's value.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
-        public ConstantNode(object constantValue, string literalText, IEdmTypeReference typeReference)
+        public CollectionConstantNode(object constantValue, string literalText, IEdmCollectionTypeReference collectionType)
         {
+            ExceptionUtils.CheckArgumentNotNull(constantValue, "constantValue");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
+            ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
 
             this.constantValue = constantValue;
             this.LiteralText = literalText;
-            this.typeReference = typeReference;
-        }
-
-        /// <summary>
-        /// Create a ConstantNode
-        /// </summary>
-        /// <param name="constantValue">This node's primitive value.</param>
-        public ConstantNode(object constantValue)
-        {
-            this.constantValue = constantValue;
-            this.typeReference = constantValue == null ? null : EdmLibraryExtensions.GetPrimitiveTypeReference(constantValue.GetType());
+            EdmCollectionType edmCollectionType = collectionType.Definition as EdmCollectionType;
+            this.itemType = edmCollectionType.ElementType;
+            this.collectionTypeReference = collectionType;
         }
 
         /// <summary>
@@ -84,24 +69,32 @@ namespace Microsoft.OData.UriParser
         public string LiteralText { get; private set; }
 
         /// <summary>
-        /// Gets the resouce type of the single value this node represents.
+        /// Gets the resource type of a single item from the collection represented by this node.
         /// </summary>
-        public override IEdmTypeReference TypeReference
+        public override IEdmTypeReference ItemType
         {
             get
             {
-                return this.typeReference;
+                return this.itemType;
             }
         }
 
         /// <summary>
-        /// Gets the kind of the query node.
+        /// The type of the collection represented by this node.
+        /// </summary>
+        public override IEdmCollectionTypeReference CollectionType
+        {
+            get { return this.collectionTypeReference; }
+        }
+
+        /// <summary>
+        /// Gets the kind of this node.
         /// </summary>
         internal override InternalQueryNodeKind InternalKind
         {
             get
             {
-                return InternalQueryNodeKind.Constant;
+                return InternalQueryNodeKind.CollectionConstant;
             }
         }
 
