@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using FluentAssertions;
 using Microsoft.OData.Tests.UriParser;
-using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -253,14 +253,16 @@ namespace Microsoft.OData.Tests.Query
         public void TestCollectionConvertFromBracketCollection()
         {
             object collection = ODataUriUtils.ConvertFromUriLiteral("[1,2,3]", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))), false);
-            collection.As<Microsoft.OData.ODataCollectionValue>().Items.Should().Equal(new int[] { 1, 2, 3 });
+            IEnumerable items = collection.As<Microsoft.OData.ODataCollectionValue>().Items;
+            items.Should().Equal(new int[] { 1, 2, 3 });
         }
 
         [Fact]
         public void TestCollectionConvertFromParenthesisCollection()
         {
             object collection = ODataUriUtils.ConvertFromUriLiteral("(1,2,3)", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))), true);
-            collection.As<Microsoft.OData.ODataCollectionValue>().Items.Should().Equal(new int[] { 1, 2, 3 });
+            IEnumerable items = collection.As<Microsoft.OData.ODataCollectionValue>().Items;
+            items.Should().Equal(new int[] { 1, 2, 3 });
         }
         #endregion
     }

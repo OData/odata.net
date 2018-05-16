@@ -26,11 +26,11 @@ namespace Microsoft.OData.UriParser
                 {
                     OData.Edm.IEdmCollectionTypeReference collectionReference =
                         literalToken.ExpectedEdmTypeReference as OData.Edm.IEdmCollectionTypeReference;
-                    if (collectionReference != null && literalToken.OriginalText[0] != '[')
+                    if (collectionReference != null && literalToken.OriginalText[0] == '(')
                     {
-                        // CollectionConstantNode does not currently include bracket collection literals and only parenthesis-based
-                        // literals. See https://github.com/OData/odata.net/issues/1164. When we are ready to move bracket-based
-                        // literals to CollectionConstantNode, simply remove the '[' check in the if-statement.
+                        // CollectionConstantNode currently supports only parenthesis-based literals.
+                        // See https://github.com/OData/odata.net/issues/1164. When we are ready to move bracket-based
+                        // literals to CollectionConstantNode, simply remove the '(' check in the if-statement.
                         return new CollectionConstantNode(literalToken.Value, literalToken.OriginalText, collectionReference);
                     }
 
