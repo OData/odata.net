@@ -81,6 +81,21 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Translates a <see cref="InNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(InNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+
+            string left = this.TranslateNode(node.Left);
+            string right = this.TranslateNode(node.Right);
+
+            return String.Concat(left, ' ', ExpressionConstants.KeywordIn, ' ', right);
+        }
+
+        /// <summary>
         /// Translates a <see cref="CountNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
