@@ -388,7 +388,8 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.ShouldThrow<ODataException>().WithMessage("Bad Request - Error in query syntax.");
+            action.ShouldThrow<ODataException>()
+                .WithMessage(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
