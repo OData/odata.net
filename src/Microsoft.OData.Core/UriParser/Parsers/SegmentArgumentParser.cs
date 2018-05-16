@@ -188,7 +188,6 @@ namespace Microsoft.OData.UriParser
         public bool TryConvertValues(IEdmEntityType targetEntityType, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
         {
             Debug.Assert(!this.IsEmpty, "!this.IsEmpty -- caller should check");
-            Debug.Assert(targetEntityType.Key().Count() == this.ValueCount || resolver.GetType() != typeof(ODataUriResolver), "type.KeyProperties.Count == this.ValueCount -- will change with containment");
 
             if (this.NamedValues != null)
             {
@@ -197,7 +196,6 @@ namespace Microsoft.OData.UriParser
             else
             {
                 Debug.Assert(this.positionalValues != null, "positionalValues != null -- otherwise this is Empty");
-                Debug.Assert(this.PositionalValues.Count == targetEntityType.Key().Count() || resolver.GetType() != typeof(ODataUriResolver), "Count of positional values does not match.");
                 keyPairs = resolver.ResolveKeys(targetEntityType, this.PositionalValues, this.ConvertValueWrapper);
             }
 
