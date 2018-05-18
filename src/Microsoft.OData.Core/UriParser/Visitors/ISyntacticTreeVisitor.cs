@@ -145,14 +145,14 @@ namespace Microsoft.OData.UriParser
         T Visit(FunctionParameterToken tokenIn);
 
         /// <summary>
-        /// Visits a AggregateTransformationToken
+        /// Visits a AggregateToken
         /// </summary>
         /// <param name="tokenIn">The AggregateToken to bind</param>
         /// <returns>A T node bound to this AggregateToken</returns>
         T Visit(AggregateToken tokenIn);
 
         /// <summary>
-        /// Visits a AggregateToken
+        /// Visits a AggregateExpressionToken
         /// </summary>
         /// <param name="tokenIn">The AggregateExpressionToken to bind</param>
         /// <returns>A T node bound to this AggregateExpressionToken</returns>

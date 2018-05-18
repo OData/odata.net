@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visits an AggregateTransformationToken
+        /// Visits an AggregateToken
         /// </summary>
         /// <param name="tokenIn">The AggregateToken to visit</param>
         /// <returns>A T bound to this AggregateToken</returns>
@@ -120,7 +120,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visits an AggregateToken
+        /// Visits an AggregateExpressionToken
         /// </summary>
         /// <param name="tokenIn">The AggregateExpressionToken to visit</param>
         /// <returns>A T bound to this AggregateExpressionToken</returns>
