@@ -158,6 +158,15 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Handle a FilterSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public override void Handle(FilterSegment segment)
+        {
+            CommonHandler(segment);
+        }
+
+        /// <summary>
         /// Handle a LinksSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>

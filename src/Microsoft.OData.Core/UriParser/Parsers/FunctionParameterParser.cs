@@ -37,7 +37,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>Whether the parameters could be split.</returns>
         internal static bool TrySplitOperationParameters(string parenthesisExpression, ODataUriParserConfiguration configuration, out ICollection<FunctionParameterToken> splitParameters)
         {
-            ExpressionLexer lexer = new ExpressionLexer(parenthesisExpression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/, true /*parsingFunctionParameters*/);
+            ExpressionLexer lexer = new ExpressionLexer(parenthesisExpression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
             UriQueryExpressionParser parser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, lexer);
             var ret = parser.TrySplitOperationParameters(ExpressionTokenKind.End, out splitParameters);
 

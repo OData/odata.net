@@ -928,8 +928,8 @@
     <Compile Include="..\Schema\CoreModel\EdmCoreModelPrimitiveType.cs">
       <Link>Schema\CoreModel\EdmCoreModelPrimitiveType.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
-      <Link>Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypedType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelUntypedType.cs</Link>
     </Compile>
     <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
       <Link>Schema\CoreModel\IEdmCoreModelElement.cs</Link>

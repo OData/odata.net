@@ -1662,11 +1662,17 @@
     <Compile Include="..\UriParser\SemanticAst\CountVirtualPropertyNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CountVirtualPropertyNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\FilterSegment.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\FilterSegment.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\NonResourceRangeVariable.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\NonResourceRangeVariable.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ReferenceSegment.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\ReferenceSegment.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariable.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\ResourceRangeVariable.cs</Link>

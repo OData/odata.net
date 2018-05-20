@@ -842,10 +842,15 @@ CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists=The given f
 RequestUriProcessor_InvalidValueForEntitySegment=The ODataPathSegment provided (Id = {0}) is not an EntitySetSegment.
 RequestUriProcessor_InvalidValueForKeySegment=The KeySegment provided (Id = {0}) is either null, having no keys, or does not target a single resource.
 
+RequestUriProcessor_CannotApplyFilterOnSingleEntities=The $filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'.
+RequestUriProcessor_NavigationSourceNotFound=There are no navigation sources found to apply '{0}'.
+RequestUriProcessor_FilterPathSegmentRequiresParameterAlias=The $filter path segment must contain a single parameter alias in the form $filter=@alias.
+
 ; Copied from the server, will be incrementally replaced.
 RequestUriProcessor_EmptySegmentInRequestUrl=Empty segment encountered in request URL. Please make sure that a valid request URL is specified.
 RequestUriProcessor_SyntaxError=Bad Request - Error in query syntax.
 RequestUriProcessor_CountOnRoot=The request URI is not valid, the segment $count cannot be applied to the root of the service.
+RequestUriProcessor_FilterOnRoot=The request URI is not valid, the segment $filter cannot be applied to the root of the service.
 RequestUriProcessor_MustBeLeafSegment=The request URI is not valid. The segment '{0}' must be the last segment in the URI because it is one of the following: $ref, $batch, $count, $value, $metadata, a named media resource, an action, a noncomposable function, an action import, a noncomposable function import, an operation with void return type, or an operation import with void return type.
 RequestUriProcessor_LinkSegmentMustBeFollowedByEntitySegment=The request URI is not valid. The segment '{0}' must refer to a navigation property since the previous segment identifier is '{1}'.
 RequestUriProcessor_MissingSegmentAfterLink=The request URI is not valid. There must a segment specified after the '{0}' segment and the segment must refer to a entity resource.

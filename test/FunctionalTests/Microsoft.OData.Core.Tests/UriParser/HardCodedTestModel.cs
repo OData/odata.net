@@ -453,6 +453,14 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceAllHaveDogFunction2.AddParameter("inOffice", EdmCoreModel.Instance.GetBoolean(true));
             model.AddElement(FullyQualifiedNamespaceAllHaveDogFunction2);
 
+            var FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPeopleWhoHaveDogs", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)), true, null, true);
+            FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
+            model.AddElement(FullyQualifiedNamespaceGetPeopleWhoHaveDogsFunction);
+
+            var FullyQualifiedNamespaceAdoptShibaInuAction = new EdmFunction("Fully.Qualified.Namespace", "AdoptShibaInu", EdmCoreModel.Instance.GetBoolean(true), true, null, true);
+            FullyQualifiedNamespaceAdoptShibaInuAction.AddParameter("people", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
+            model.AddElement(FullyQualifiedNamespaceAdoptShibaInuAction);
+
             var FullyQualifiedNamespaceFireAllAction = new EdmAction("Fully.Qualified.Namespace", "FireAll", EdmCoreModel.Instance.GetBoolean(true), true, null);
             FullyQualifiedNamespaceFireAllAction.AddParameter("employees", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespacePersonTypeReference)));
             model.AddElement(FullyQualifiedNamespaceFireAllAction);
@@ -1239,6 +1247,14 @@ namespace Microsoft.OData.Tests.UriParser
         <Parameter Name=""inOffice"" Type=""Edm.Boolean"" />
         <ReturnType Type=""Edm.Boolean"" />
       </Function>
+      <Function Name=""GetPeopleWhoHaveDogs"" IsBound=""true"" IsComposable=""true"">
+        <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+        <ReturnType Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+      </Function>
+      <Action Name=""AdoptShibaInu"" IsBound=""true"">
+        <Parameter Name=""people"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
+        <ReturnType Type=""Edm.Boolean"" />
+      </Action>
       <Action Name=""FireAll"" IsBound=""true"">
         <Parameter Name=""employees"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <ReturnType Type=""Edm.Boolean"" />
@@ -1987,6 +2003,16 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmFunction GetFunctionForAllHaveDogWithTwoParameters()
         {
             return TestModel.FindOperations("Fully.Qualified.Namespace.AllHaveDog").Single(f => f.Parameters.Count() == 2).As<IEdmFunction>();
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPeopleWhoHaveDogs()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPeopleWhoHaveDogs").Single();
+        }
+
+        public static IEdmOperationImport GetAdoptShibaInuActionImport()
+        {
+            return TestModel.EntityContainer.FindOperationImports("AdoptShibaInu").Single();
         }
 
         public static IEdmOperationImport GetFunctionImportForGetCoolestPerson()

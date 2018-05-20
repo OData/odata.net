@@ -25,6 +25,12 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<CountSegment>(segment.As<CountSegment>());
         }
 
+        public static AndConstraint<FilterSegment> ShouldBeFilterSegment(this ODataPathSegment segment)
+        {
+            segment.Should().BeOfType<FilterSegment>();
+            return new AndConstraint<FilterSegment>(segment.As<FilterSegment>());
+        }
+
         public static AndConstraint<BatchSegment> ShouldBeBatchSegment(this ODataPathSegment segment)
         {
             segment.Should().BeOfType<BatchSegment>();
@@ -90,6 +96,14 @@ namespace Microsoft.OData.Tests.UriParser
             NavigationPropertySegment navPropSegment = segment.As<NavigationPropertySegment>();
             navPropSegment.NavigationProperty.Should().Be(navigationProperty);
             return new AndConstraint<NavigationPropertySegment>(navPropSegment);
+        }
+
+        public static AndConstraint<ReferenceSegment> ShouldBeReferenceSegment(this ODataPathSegment segment, IEdmNavigationSource navigationSource)
+        {
+            segment.Should().BeOfType<ReferenceSegment>();
+            ReferenceSegment referenceSegment = segment.As<ReferenceSegment>();
+            referenceSegment.TargetEdmNavigationSource.Should().Be(navigationSource);
+            return new AndConstraint<ReferenceSegment>(referenceSegment);
         }
 
         public static AndConstraint<DynamicPathSegment> ShouldBeDynamicPathSegment(this ODataPathSegment segment, string identifier)

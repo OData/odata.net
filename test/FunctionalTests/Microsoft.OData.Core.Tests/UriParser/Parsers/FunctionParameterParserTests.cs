@@ -122,7 +122,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NullFunctionParameterShouldParseCorrectly()
         {
             ICollection<OperationSegmentParameter> parsedParameters;
-            TryParsOperationParameters("CanMoveToAddress", "address=null", null, out parsedParameters).Should().BeTrue();
+            TryParseOperationParameters("CanMoveToAddress", "address=null", null, out parsedParameters).Should().BeTrue();
             parsedParameters.Should().HaveCount(1);
             parsedParameters.Single().ShouldBeConstantParameterWithValueType("address", (object)null);
         }
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void TypedNullFunctionParameterParsingShouldThrow()
         {
             ICollection<OperationSegmentParameter> parsedParameters;
-            Action parse = () => TryParsOperationParameters("CanMoveToAddress", "address=null'Fully.Qualified.Namespace.Address'", null, out parsedParameters).Should().BeTrue();
+            Action parse = () => TryParseOperationParameters("CanMoveToAddress", "address=null'Fully.Qualified.Namespace.Address'", null, out parsedParameters).Should().BeTrue();
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_SyntaxError(12, "address=null'Fully.Qualified.Namespace.Address'"));
         }
 
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             return TryParseFunctionParameters(functionName, parenthesisExpression, paramAliasAccessor, HardCodedTestModel.GetFunctionImportIsAddressGood(), out parsedParameters);
         }
 
-        private static bool TryParsOperationParameters(string functionName, string parenthesisExpression, ParameterAliasValueAccessor paramAliasAccessor, out ICollection<OperationSegmentParameter> parsedParameters)
+        private static bool TryParseOperationParameters(string functionName, string parenthesisExpression, ParameterAliasValueAccessor paramAliasAccessor, out ICollection<OperationSegmentParameter> parsedParameters)
         {
             return TryParseOperationParameters(functionName, parenthesisExpression, paramAliasAccessor, HardCodedTestModel.GetFunctionForCanMoveToAddress(), out parsedParameters);
         }
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             ICollection<FunctionParameterToken> splitParameters;
             parsedSegementParameters = null;
-            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { ParameterAliasValueAccessor = paramAliasAccessor, EnableCaseInsensitiveUriFunctionIdentifier = false };
+            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { ParameterAliasValueAccessor = paramAliasAccessor, EnableCaseInsensitive = false };
             if (FunctionParameterParser.TrySplitOperationParameters(parenthesisExpression, configuration, out splitParameters))
             {
                 parsedSegementParameters = FunctionCallBinder.BindSegmentParameters(configuration, operation, splitParameters);

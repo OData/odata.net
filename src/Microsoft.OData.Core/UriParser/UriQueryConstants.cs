@@ -26,6 +26,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>A segment name in a URI that indicates that this is a count operation.</summary>
         internal const string CountSegment = "$count";
 
+        /// <summary>A segment name in a URI that indicates that a filter is being applied to a collection.</summary>
+        internal const string FilterSegment = "$filter";
+
         /// <summary>A filter query option name.</summary>
         internal const string FilterQueryOption = "$filter";
 

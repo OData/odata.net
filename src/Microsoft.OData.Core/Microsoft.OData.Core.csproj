@@ -83,11 +83,13 @@
     <Compile Include="BindingPathHelper.cs" />
     <Compile Include="UriParser\Binders\ComputeBinder.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
+    <Compile Include="UriParser\SemanticAst\AnnotationSegment.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\ComputeClause.cs" />
     <Compile Include="UriParser\SemanticAst\ComputeExpression.cs" />
     <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />
-    <Compile Include="UriParser\SemanticAst\AnnotationSegment.cs" />
+    <Compile Include="UriParser\SemanticAst\FilterSegment.cs" />
+    <Compile Include="UriParser\SemanticAst\ReferenceSegment.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
