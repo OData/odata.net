@@ -60,9 +60,10 @@ namespace Microsoft.OData.UriParser
             // An open paren here would indicate calling a method in regular C# syntax.
             // TODO: Make this more generalized to work with any kind of function.
             bool identifierIsFunction = this.lexer.ExpandIdentifierAsFunction();
-            if (identifierIsFunction)
+            QueryToken functionCallToken;
+            if (identifierIsFunction && this.functionCallParser.TryParseIdentifierAsFunction(parent, out functionCallToken))
             {
-                return this.functionCallParser.ParseIdentifierAsFunction(parent);
+                return functionCallToken;
             }
 
             if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)

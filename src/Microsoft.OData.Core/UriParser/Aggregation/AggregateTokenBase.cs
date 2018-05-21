@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ApplyTransformationToken.cs" company="Microsoft">
+// <copyright file="AggregateTokenBase.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,9 +11,9 @@ namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
     /// <summary>
-    /// Base class for Apply transformation tokens
+    /// Base class for Aggregate transformation tokens
     /// </summary>
-    public abstract class ApplyTransformationToken : QueryToken
+    public abstract class AggregateTokenBase : ApplyTransformationToken
     {
     }
 }

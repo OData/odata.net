@@ -4692,6 +4692,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "$apply/aggregate token kind '{0}' not supported."
+        /// </summary>
+        internal static string ApplyBinder_UnsupportedAggregateKind(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ApplyBinder_UnsupportedAggregateKind, p0);
+        }
+
+        /// <summary>
         /// A string like "$apply/aggregate expression '{0}' must evaluate to a single value."
         /// </summary>
         internal static string ApplyBinder_AggregateExpressionNotSingleValue(object p0) {
@@ -4717,6 +4724,13 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ApplyBinder_UnsupportedGroupByChild(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ApplyBinder_UnsupportedGroupByChild, p0);
+        }
+
+        /// <summary>
+        /// A string like "There are unsupported aggregation expressions in the transformation node."
+        /// </summary>
+        internal static string AggregateTransformationNode_UnsupportedAggregateExpressions() {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AggregateTransformationNode_UnsupportedAggregateExpressions);
         }
 
         /// <summary>

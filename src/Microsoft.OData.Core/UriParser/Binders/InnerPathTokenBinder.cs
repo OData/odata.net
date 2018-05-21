@@ -140,6 +140,18 @@ namespace Microsoft.OData.UriParser
                     return boundFunction;
                 }
 
+                CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
+
+                if (collectionParent != null)
+                {
+                    IEdmEntityTypeReference parentType = collectionParent.EntityItemType;
+                    IEdmProperty collectionProperty = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), segmentToken.Identifier);
+                    if (collectionProperty != null && collectionProperty.PropertyKind == EdmPropertyKind.Structural)
+                    {
+                        return new AggregatedCollectionPropertyNode(collectionParent, collectionProperty);
+                    }
+                }
+
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(segmentToken.Identifier));
             }
 
