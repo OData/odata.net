@@ -145,7 +145,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         public void AggregateOperatorNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateToken(new List<AggregateExpressionToken>()));
+            Action visitUnaryOperatorToken = () => visitor.Visit(new AggregateToken(new List<AggregateTokenBase>()));
             visitUnaryOperatorToken.ShouldThrow<NotImplementedException>();
         }
 

@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -28,16 +29,33 @@ namespace Microsoft.OData.UriParser
         private readonly UriQueryExpressionParser parser;
 
         /// <summary>
+        /// If set to true, catches any ODataException thrown while trying to parse function arguments.
+        /// </summary>
+        private readonly bool restoreStateIfFail;
+
+        /// <summary>
         /// Create a new FunctionCallParser.
         /// </summary>
         /// <param name="lexer">Lexer positioned at a function identifier.</param>
         /// <param name="parser">The UriQueryExpressionParser.</param>
         public FunctionCallParser(ExpressionLexer lexer, UriQueryExpressionParser parser)
+            : this(lexer, parser, false /* restoreStateIfFail */)
+        {
+        }
+
+        /// <summary>
+        /// Create a new FunctionCallParser.
+        /// </summary>
+        /// <param name="lexer">Lexer positioned at a function identifier.</param>
+        /// <param name="parser">The UriQueryExpressionParser.</param>
+        /// <param name="restoreStateIfFail">If set to true, catches any ODataException thrown while trying to parse function arguments.</param>
+        public FunctionCallParser(ExpressionLexer lexer, UriQueryExpressionParser parser, bool restoreStateIfFail)
         {
             ExceptionUtils.CheckArgumentNotNull(lexer, "lexer");
             ExceptionUtils.CheckArgumentNotNull(parser, "parser");
             this.lexer = lexer;
             this.parser = parser;
+            this.restoreStateIfFail = restoreStateIfFail;
         }
 
         /// <summary>
@@ -57,13 +75,19 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses an identifier that represents a function.
+        /// Try to parse an identifier that represents a function. If the parser instance has
+        /// <see cref="restoreStateIfFail"/> set as false, then an <see cref="ODataException"/>
+        /// is thrown if the parser finds an error.
         /// </summary>
         /// <param name="parent">Token for the parent of the function being parsed.</param>
-        /// <returns>QueryToken representing this function.</returns>
-        public QueryToken ParseIdentifierAsFunction(QueryToken parent)
+        /// <param name="result">QueryToken representing this function.</param>
+        /// <returns>True if the parsing was successful.</returns>
+        public bool TryParseIdentifierAsFunction(QueryToken parent, out QueryToken result)
         {
+            result = null;
             string functionName;
+
+            ExpressionLexer.ExpressionLexerPosition position = lexer.SnapshotPosition();
 
             if (this.Lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
@@ -77,19 +101,28 @@ namespace Microsoft.OData.UriParser
                 this.Lexer.NextToken();
             }
 
-            FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList();
+            FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList(() => lexer.RestorePosition(position));
+            if (arguments != null)
+            {
+                result = new FunctionCallToken(functionName, arguments, parent);
+            }
 
-            return new FunctionCallToken(functionName, arguments, parent);
+            return result != null;
         }
 
         /// <summary>
         /// Parses argument lists or entity key value list.
         /// </summary>
         /// <returns>The lexical tokens representing the arguments.</returns>
-        public FunctionParameterToken[] ParseArgumentListOrEntityKeyList()
+        public FunctionParameterToken[] ParseArgumentListOrEntityKeyList(Action restoreAction = null)
         {
             if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
+                if (restoreStateIfFail && restoreAction != null)
+                {
+                    restoreAction();
+                    return null;
+                }
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
@@ -106,6 +139,11 @@ namespace Microsoft.OData.UriParser
 
             if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
+                if (restoreStateIfFail && restoreAction != null)
+                {
+                    restoreAction();
+                    return null;
+                }
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
