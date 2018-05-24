@@ -161,35 +161,13 @@ namespace Microsoft.OData.UriParser
                 IList<KeyValuePair<string, FunctionSignatureWithReturnType>> bufferedKeyValuePairs
                     = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
 
-                // Do case-sensitive search first.
-                if (CustomFunctions.ContainsKey(functionCallToken))
+                foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> func in CustomFunctions)
                 {
-                    FunctionSignatureWithReturnType[] signatureGroup = null;
-                    CustomFunctions.TryGetValue(functionCallToken, out signatureGroup);
-
-                    Debug.Assert(signatureGroup != null, "signatureGroup != null");
-
-                    foreach (FunctionSignatureWithReturnType sig in signatureGroup)
+                    if (func.Key.Equals(functionCallToken, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                     {
-                        // case-sensitive match: canonical name is just the function token name.
-                        bufferedKeyValuePairs.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(functionCallToken, sig));
-                    }
-                }
-
-                // Continue to search for match, if case-insensitive is enabled.
-                if (enableCaseInsensitive)
-                {
-                    foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> func in CustomFunctions)
-                    {
-                        if (func.Key.Equals(functionCallToken, StringComparison.OrdinalIgnoreCase)
-                            /* Skip the exact match above to avoid double-counting. */
-                            && !func.Key.Equals(functionCallToken, StringComparison.Ordinal))
+                        foreach (FunctionSignatureWithReturnType sig in func.Value)
                         {
-                            foreach (FunctionSignatureWithReturnType sig in func.Value)
-                            {
-                                // case-insensitive match: canonical name is the one from the CustomFunctions dictionary.
-                                bufferedKeyValuePairs.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(func.Key, sig));
-                            }
+                            bufferedKeyValuePairs.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(func.Key, sig));
                         }
                     }
                 }
