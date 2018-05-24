@@ -385,7 +385,7 @@ namespace Microsoft.OData.UriParser
             SingleValueNode[] argumentNodes, string functionCallToken)
         {
             IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
-            Debug.Assert(nameFunctions != null, "functions != null");
+            Debug.Assert(nameFunctions != null, "nameFunctions != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
             Debug.Assert(functionCallToken != null, "functionCallToken != null");
             IList<KeyValuePair<string,FunctionSignatureWithReturnType>> applicableNameFunctions
@@ -464,7 +464,7 @@ namespace Microsoft.OData.UriParser
                 {
                     // For multiple best matches based on argument types
                     if (equallyArgumentsMatchingNameFunctions.Count(
-                            _ => _.Key.Equals(functionCallToken, StringComparison.Ordinal)) == 1)
+                            f => f.Key.Equals(functionCallToken, StringComparison.Ordinal)) == 1)
                     {
                         // There is only one case-sensitive function name match among the equally argument-types matching functions.
                         result = equallyArgumentsMatchingNameFunctions.First(_ => _.Key.Equals(functionCallToken, StringComparison.Ordinal));

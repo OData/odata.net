@@ -109,7 +109,7 @@ namespace Microsoft.OData.UriParser
                 // we specifically want to find just the first function that matches the number of arguments, we don't care about
                 // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
                 // those arguments are.
-                var found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Count() == argumentCount);
+                KeyValuePair<string, FunctionSignatureWithReturnType> found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Count() == argumentCount);
                 if (found.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
                     throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionCallToken, argumentTypes.Count()));
@@ -342,7 +342,7 @@ namespace Microsoft.OData.UriParser
             boundFunction = null;
 
             IEdmType bindingType = null;
-            var singleValueParent = parent as SingleValueNode;
+            SingleValueNode singleValueParent = parent as SingleValueNode;
             if (singleValueParent != null)
             {
                 if (singleValueParent.TypeReference != null)
@@ -352,7 +352,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                var collectionValueParent = parent as CollectionNode;
+                CollectionNode collectionValueParent = parent as CollectionNode;
                 if (collectionValueParent != null)
                 {
                     bindingType = collectionValueParent.CollectionType.Definition;
@@ -401,7 +401,7 @@ namespace Microsoft.OData.UriParser
             boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
             IEdmTypeReference returnType = function.ReturnType;
             IEdmEntitySetBase returnSet = null;
-            var singleEntityNode = parent as SingleResourceNode;
+            SingleResourceNode singleEntityNode = parent as SingleResourceNode;
             if (singleEntityNode != null)
             {
                 returnSet = function.GetTargetEntitySet(singleEntityNode.NavigationSource, state.Model);
@@ -452,7 +452,7 @@ namespace Microsoft.OData.UriParser
             List<OperationSegmentParameter> boundParameters = new List<OperationSegmentParameter>();
 
             IDictionary<string, SingleValueNode> input = new Dictionary<string, SingleValueNode>(StringComparer.Ordinal);
-            foreach (var paraToken in parametersParsed)
+            foreach (FunctionParameterToken paraToken in parametersParsed)
             {
                 // TODO: considering another better exception
                 if (paraToken.ValueToken is EndPathToken)
@@ -471,12 +471,12 @@ namespace Microsoft.OData.UriParser
 
             IDictionary<IEdmOperationParameter, SingleValueNode> result = configuration.Resolver.ResolveOperationParameters(functionOrOpertion, input);
 
-            foreach (var item in result)
+            foreach (KeyValuePair<IEdmOperationParameter, SingleValueNode> item in result)
             {
                 SingleValueNode boundNode = item.Value;
 
                 // ensure node type is compatible with parameter type.
-                var sourceTypeReference = boundNode.GetEdmTypeReference();
+                IEdmTypeReference sourceTypeReference = boundNode.GetEdmTypeReference();
                 bool sourceIsNullOrOpenType = (sourceTypeReference == null);
                 if (!sourceIsNullOrOpenType)
                 {
@@ -507,19 +507,19 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            var constantNode = boundNode as ConstantNode;
+            ConstantNode constantNode = boundNode as ConstantNode;
             if (constantNode == null)
             {
                 return false;
             }
 
-            var sourceType = constantNode.TypeReference;
+            IEdmTypeReference sourceType = constantNode.TypeReference;
             if (sourceType == null || !sourceType.IsInt32())
             {
                 return false;
             }
 
-            var sourceValue = (int)constantNode.Value;
+            int sourceValue = (int)constantNode.Value;
             object targetValue = null;
             switch (targetType.PrimitiveKind())
             {
@@ -596,7 +596,7 @@ namespace Microsoft.OData.UriParser
                 string valueStr = null;
                 if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
                 {
-                    var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+                    ExpressionLexer lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
                     if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                     {
                         object result;
@@ -637,20 +637,13 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="functionName">name of the function</param>
         /// <returns>matched unbound function names; null if no matches found.</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for unbound functions.")]
         private string IsUnboundFunction(string functionName)
         {
-            foreach (string key in UnboundFunctionNames)
-            {
-                if (key.Equals(functionName,
-                    this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier
-                        ? StringComparison.OrdinalIgnoreCase
-                        : StringComparison.Ordinal))
-                {
-                    return key;
-                }
-            }
-
-            return null;
+            functionName = this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier
+                ? functionName.ToLowerInvariant()
+                : functionName;
+            return UnboundFunctionNames.FirstOrDefault(name => name.Equals(functionName, StringComparison.Ordinal));
         }
 
         /// <summary>
