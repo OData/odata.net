@@ -388,7 +388,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(nameFunctions != null, "nameFunctions != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
             Debug.Assert(functionCallToken != null, "functionCallToken != null");
-            IList<KeyValuePair<string,FunctionSignatureWithReturnType>> applicableNameFunctions
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> applicableNameFunctions
                 = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(nameFunctions.Count);
 
             // Build a list of applicable functions (and cache their promoted arguments).
