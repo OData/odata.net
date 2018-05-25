@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Class that knows how to bind literal values.
     /// </summary>
@@ -31,7 +33,15 @@ namespace Microsoft.OData.UriParser
                         // CollectionConstantNode currently supports only parenthesis-based literals.
                         // See https://github.com/OData/odata.net/issues/1164. When we are ready to move bracket-based
                         // literals to CollectionConstantNode, simply remove the '(' check in the if-statement.
-                        return new CollectionConstantNode(literalToken.Value, literalToken.OriginalText, collectionReference);
+                        ODataCollectionValue collectionValue = literalToken.Value as ODataCollectionValue;
+                        if (collectionValue != null)
+                        {
+                            return new CollectionConstantNode(collectionValue.Items, literalToken.OriginalText, collectionReference);
+                        }
+                        else
+                        {
+                            return new CollectionConstantNode(literalToken.Value as IEnumerable<object>, literalToken.OriginalText, collectionReference);
+                        }
                     }
 
                     return new ConstantNode(literalToken.Value, literalToken.OriginalText, literalToken.ExpectedEdmTypeReference);

@@ -117,7 +117,7 @@ namespace Microsoft.OData.UriParser
                     object result = valueStr;
                     if (!parameterType.IsStructured() && !parameterType.IsStructuredCollectionType())
                     {
-                        result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType, false);
+                        result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType);
                     }
 
                     // For non-primitive type, we have to pass parameterType to LiteralToken, then to ConstantNode so the service can know what the type it is.

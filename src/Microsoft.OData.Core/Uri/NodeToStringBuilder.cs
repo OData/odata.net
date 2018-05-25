@@ -165,7 +165,7 @@ namespace Microsoft.OData
         public override String Visit(CollectionConstantNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
-            if (node.Value == null)
+            if (String.IsNullOrEmpty(node.LiteralText))
             {
                 return ExpressionConstants.KeywordNull;
             }

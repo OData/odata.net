@@ -33,6 +33,7 @@ namespace Microsoft.OData.UriParser
         /// Binds an In operator token.
         /// </summary>
         /// <param name="inToken">The In operator token to bind.</param>
+        /// <param name="state">State of the metadata binding.</param>
         /// <returns>The bound In operator token.</returns>
         internal QueryNode BindInOperator(InToken inToken, BindingState state)
         {
@@ -48,9 +49,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Retrieve SingleValueNode bound with given query token.
         /// </summary>
-        /// <param name="operatorKind">the query token kind</param>
-        /// <param name="queryToken">the query token</param>
-        /// <returns>the corresponding SingleValueNode</returns>
+        /// <param name="queryToken">The query token</param>
+        /// <returns>The corresponding SingleValueNode</returns>
         private SingleValueNode GetSingleValueOperandFromToken(QueryToken queryToken)
         {
             SingleValueNode operand = this.bindMethod(queryToken) as SingleValueNode;
@@ -63,11 +63,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Retrieve SingleValueNode bound with given query token.
+        /// Retrieve CollectionNode bound with given query token.
         /// </summary>
-        /// <param name="operatorKind">the query token kind</param>
-        /// <param name="queryToken">the query token</param>
-        /// <returns>the corresponding SingleValueNode</returns>
+        /// <param name="queryToken">The query token</param>
+        /// <param name="expectedType">The expected type that this collection holds</param>
+        /// <param name="model">The Edm model</param>
+        /// <returns>The corresponding CollectionNode</returns>
         private CollectionNode GetCollectionOperandFromToken(QueryToken queryToken, IEdmTypeReference expectedType, IEdmModel model)
         {
             CollectionNode operand = null;
@@ -75,7 +76,7 @@ namespace Microsoft.OData.UriParser
             if (literalToken != null)
             {
                 string literalText = literalToken.OriginalText;
-                object collection = ODataUriUtils.ConvertFromUriLiteral(literalText, ODataVersion.V4, model, expectedType, true);
+                object collection = ODataUriConversionUtils.ConvertFromCollectionValue(literalText, model, expectedType);
                 LiteralToken collectionLiteralToken = new LiteralToken(collection, literalText, expectedType);
                 operand = this.bindMethod(collectionLiteralToken) as CollectionConstantNode;
             }

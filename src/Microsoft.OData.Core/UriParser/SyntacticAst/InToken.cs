@@ -26,9 +26,8 @@ namespace Microsoft.OData.UriParser
         private readonly QueryToken right;
 
         /// <summary>
-        /// Create a new BinaryOperatorToken given the operator, left and right query.
+        /// Create a new InToken given the left and right query tokens.
         /// </summary>
-        /// <param name="operatorKind">The operator represented by this node.</param>
         /// <param name="left">The left operand.</param>
         /// <param name="right">The right operand.</param>
         public InToken(QueryToken left, QueryToken right)

@@ -83,9 +83,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</summary>
         private readonly bool parsingFunctionParameters;
 
-        /// <summary>Whether to parse a parenthesis expression as a literal.</summary>
-        private readonly bool parseParenthesisExpressionAsLiteral;
-
         /// <summary>Lexer ignores whitespace</summary>
         private bool ignoreWhitespace;
 
@@ -98,7 +95,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter)
-            : this(expression, moveToFirstToken, useSemicolonDelimiter, false /*parsingFunctionParameters*/, false /*parseParenthesisExpressionAsLiteral*/)
+            : this(expression, moveToFirstToken, useSemicolonDelimiter, false /*parsingFunctionParameters*/)
         {
         }
 
@@ -108,22 +105,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
         internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
-            : this(expression, moveToFirstToken, useSemicolonDelimiter, parsingFunctionParameters, false /*parseParenthesisExpressionAsLiteral*/)
-        {
-        }
-
-        /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
-        /// <param name="expression">Expression to parse.</param>
-        /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
-        /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
-        /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
-        /// <param name="parseParenthesisExpressionAsLiteral">If true, the lexer will parse parenthesis expressions as string literals.</param>
-        internal ExpressionLexer(
-            string expression,
-            bool moveToFirstToken,
-            bool useSemicolonDelimiter,
-            bool parsingFunctionParameters,
-            bool parseParenthesisExpressionAsLiteral)
         {
             Debug.Assert(expression != null, "expression != null");
 
@@ -132,7 +113,6 @@ namespace Microsoft.OData.UriParser
             this.TextLen = this.Text.Length;
             this.useSemicolonDelimiter = useSemicolonDelimiter;
             this.parsingFunctionParameters = parsingFunctionParameters;
-            this.parseParenthesisExpressionAsLiteral = parseParenthesisExpressionAsLiteral;
 
             this.SetTextPos(0);
 
@@ -536,7 +516,7 @@ namespace Microsoft.OData.UriParser
             switch (this.ch)
             {
                 case '(':
-                    if (this.parseParenthesisExpressionAsLiteral || this.CurrentToken.Text == ExpressionConstants.KeywordIn)
+                    if (this.CurrentToken.Text == ExpressionConstants.KeywordIn)
                     {
                         this.NextChar();
                         this.AdvanceThroughBalancedExpression('(', ')');
@@ -547,6 +527,7 @@ namespace Microsoft.OData.UriParser
                         this.NextChar();
                         t = ExpressionTokenKind.OpenParen;
                     }
+
                     break;
                 case ')':
                     this.NextChar();

@@ -157,7 +157,7 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestEnumConvertFromUriLiteral_EnumName()
         {
-            ODataEnumValue enumVal = (ODataEnumValue)ODataUriUtils.ConvertFromUriLiteral("Fully.Qualified.Namespace.ColorPattern'Red'", ODataVersion.V4, HardCodedTestModel.TestModel, null, false);
+            ODataEnumValue enumVal = (ODataEnumValue)ODataUriUtils.ConvertFromUriLiteral("Fully.Qualified.Namespace.ColorPattern'Red'", ODataVersion.V4, HardCodedTestModel.TestModel, null);
             enumVal.Value.Should().Be(1L + "");
             enumVal.TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
         }
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestEnumConvertFromUriLiteral_EnumName_Combined()
         {
-            ODataEnumValue enumVal = (ODataEnumValue)ODataUriUtils.ConvertFromUriLiteral("Fully.Qualified.Namespace.ColorPattern'Red,Solid,BlueYellowStriped'", ODataVersion.V4, HardCodedTestModel.TestModel, null, false);
+            ODataEnumValue enumVal = (ODataEnumValue)ODataUriUtils.ConvertFromUriLiteral("Fully.Qualified.Namespace.ColorPattern'Red,Solid,BlueYellowStriped'", ODataVersion.V4, HardCodedTestModel.TestModel, null);
             enumVal.Value.Should().Be(31L + "");
             enumVal.TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
         }
@@ -173,7 +173,7 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestEnumConvertFromUriLiteral_EnumLong()
         {
-            ODataEnumValue enumVal = (ODataEnumValue)ODataUriUtils.ConvertFromUriLiteral("Fully.Qualified.Namespace.ColorPattern'11'", ODataVersion.V4, HardCodedTestModel.TestModel, null, false);
+            ODataEnumValue enumVal = (ODataEnumValue)ODataUriUtils.ConvertFromUriLiteral("Fully.Qualified.Namespace.ColorPattern'11'", ODataVersion.V4, HardCodedTestModel.TestModel, null);
             enumVal.Value.Should().Be(11L + "");
             enumVal.TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
         }
@@ -191,10 +191,10 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestDateConvertFromUriLiteral()
         {
-            Date dateValue = (Date)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDate(false), false);
+            Date dateValue = (Date)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDate(false));
             dateValue.Should().Be(new Date(1997, 7, 1));
 
-            DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateTimeOffset(false), false);
+            DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateTimeOffset(false));
             dtoValue1.Should().Be(new DateTimeOffset(1997, 7, 1, 0, 0, 0, new TimeSpan(0)));
 
             var dtoValue2 = ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4);
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TesTimeOfDayConvertFromUriLiteral()
         {
-            TimeOfDay timeValue1 = (TimeOfDay)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetTimeOfDay(false), false);
+            TimeOfDay timeValue1 = (TimeOfDay)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetTimeOfDay(false));
             timeValue1.Should().Be(new TimeOfDay(12, 13, 14, 15));
 
             TimeOfDay timeValue2 = (TimeOfDay)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4);
@@ -252,15 +252,7 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestCollectionConvertFromBracketCollection()
         {
-            object collection = ODataUriUtils.ConvertFromUriLiteral("[1,2,3]", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))), false);
-            IEnumerable items = collection.As<Microsoft.OData.ODataCollectionValue>().Items;
-            items.Should().Equal(new int[] { 1, 2, 3 });
-        }
-
-        [Fact]
-        public void TestCollectionConvertFromParenthesisCollection()
-        {
-            object collection = ODataUriUtils.ConvertFromUriLiteral("(1,2,3)", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))), true);
+            object collection = ODataUriUtils.ConvertFromUriLiteral("[1,2,3]", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
             IEnumerable items = collection.As<Microsoft.OData.ODataCollectionValue>().Items;
             items.Should().Equal(new int[] { 1, 2, 3 });
         }

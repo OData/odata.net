@@ -4635,7 +4635,7 @@ public sealed class Microsoft.OData.ODataUriExtensions {
 
 public sealed class Microsoft.OData.ODataUriUtils {
 	public static object ConvertFromUriLiteral (string value, Microsoft.OData.ODataVersion version)
-	public static object ConvertFromUriLiteral (string value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference typeReference, bool parseParenthesisExpressionAsLiteral)
+	public static object ConvertFromUriLiteral (string value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 	public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version)
 	public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model)
 }
@@ -6007,12 +6007,12 @@ public sealed class Microsoft.OData.UriParser.BinaryOperatorToken : Microsoft.OD
 }
 
 public sealed class Microsoft.OData.UriParser.CollectionConstantNode : Microsoft.OData.UriParser.CollectionNode {
-	public CollectionConstantNode (object constantValue, string literalText, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType)
+	public CollectionConstantNode (System.Collections.Generic.IEnumerable`1[[System.Object]] objectCollection, string literalText, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType)
 
+	System.Collections.Generic.IList`1[[Microsoft.OData.UriParser.ConstantNode]] Collection  { public get; }
 	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
 	string LiteralText  { public get; }
-	object Value  { public get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
@@ -6331,7 +6331,6 @@ public sealed class Microsoft.OData.UriParser.InnerPathToken : Microsoft.OData.U
 public sealed class Microsoft.OData.UriParser.InNode : Microsoft.OData.UriParser.SingleValueNode {
 	public InNode (Microsoft.OData.UriParser.SingleValueNode left, Microsoft.OData.UriParser.CollectionNode right)
 
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
 	Microsoft.OData.UriParser.SingleValueNode Left  { public get; }
 	Microsoft.OData.UriParser.CollectionNode Right  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }

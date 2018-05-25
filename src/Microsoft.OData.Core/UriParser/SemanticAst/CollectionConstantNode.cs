@@ -8,6 +8,8 @@ namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -18,9 +20,9 @@ namespace Microsoft.OData.UriParser
     public sealed class CollectionConstantNode : CollectionNode
     {
         /// <summary>
-        /// The constant value.
+        /// Collection of ConstantNodes.
         /// </summary>
-        private readonly object constantValue;
+        private readonly IList<ConstantNode> collection = new List<ConstantNode>();
 
         /// <summary>
         /// Cache for the TypeReference after it has been calculated for the current state of the node.
@@ -35,31 +37,35 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Create a CollectionConstantNode
         /// </summary>
-        /// <param name="constantValue">This node's primitive value.</param>
+        /// <param name="objectCollection">A collection of objects.</param>
         /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
-        /// <param name="typeReference">The typeReference of this node's value.</param>
+        /// <param name="collectionType">The reference to the collection type.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
-        public CollectionConstantNode(object constantValue, string literalText, IEdmCollectionTypeReference collectionType)
+        public CollectionConstantNode(IEnumerable<object> objectCollection, string literalText, IEdmCollectionTypeReference collectionType)
         {
-            ExceptionUtils.CheckArgumentNotNull(constantValue, "constantValue");
+            ExceptionUtils.CheckArgumentNotNull(objectCollection, "objectCollection");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
             ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
 
-            this.constantValue = constantValue;
             this.LiteralText = literalText;
             EdmCollectionType edmCollectionType = collectionType.Definition as EdmCollectionType;
             this.itemType = edmCollectionType.ElementType;
             this.collectionTypeReference = collectionType;
+
+            foreach (object item in objectCollection)
+            {
+                this.collection.Add(new ConstantNode(item, item.ToString(), this.itemType));
+            }
         }
 
         /// <summary>
-        /// Gets the primitive constant value.
+        /// Gets the collection of ConstantNodes.
         /// </summary>
-        public object Value
+        public IList<ConstantNode> Collection
         {
             get
             {
-                return this.constantValue;
+                return new ReadOnlyCollection<ConstantNode>(this.collection);
             }
         }
 

@@ -366,7 +366,6 @@ namespace Microsoft.OData.Tests.UriParser
         {
             node.Should().BeOfType<InNode>();
             var inNode = node.As<InNode>();
-            inNode.ItemType.ShouldBeEquivalentTo(itemType);
             return new AndConstraint<InNode>(inNode);
         }
 

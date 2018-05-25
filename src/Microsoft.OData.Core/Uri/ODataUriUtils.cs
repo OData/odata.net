@@ -28,7 +28,7 @@ namespace Microsoft.OData
         /// <returns>A CLR object that the <paramref name="value"/> represents (won't be EnumNode).</returns>
         public static object ConvertFromUriLiteral(string value, ODataVersion version)
         {
-            return ODataUriUtils.ConvertFromUriLiteral(value, version, null, null, false);
+            return ODataUriUtils.ConvertFromUriLiteral(value, version, null, null);
         }
 
         /// <summary>
@@ -40,15 +40,8 @@ namespace Microsoft.OData
         /// <param name="model">Optional model to perform verification against.</param>
         /// <param name="typeReference">Optional IEdmTypeReference to perform verification against.
         ///  Callers must provide a <paramref name="model"/> containing this type if it is specified.</param>
-        /// <param name="parseParenthesisExpressionAsLiteral">If the string is contains a parenthesis expression,
-        /// determines whether it should be parsed as an entire string literal.</param>
         /// <returns>A CLR object that the <paramref name="value"/> represents or an EnumNode.</returns>
-        public static object ConvertFromUriLiteral(
-            string value,
-            ODataVersion version,
-            IEdmModel model,
-            IEdmTypeReference typeReference,
-            bool parseParenthesisExpressionAsLiteral)
+        public static object ConvertFromUriLiteral(string value, ODataVersion version, IEdmModel model, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(value, "value");
             if (typeReference != null && model == null)
@@ -62,18 +55,13 @@ namespace Microsoft.OData
             }
 
             // Let ExpressionLexer try to get a primitive
-            ExpressionLexer lexer = new ExpressionLexer(
-                value,
-                false /*moveToFirstToken*/,
-                false /*useSemicolonDelimiter*/,
-                false /*parsingFunctionParameters*/,
-                parseParenthesisExpressionAsLiteral);
+            ExpressionLexer lexer = new ExpressionLexer(value, false /*moveToFirstToken*/, false /*useSemicolonDelimeter*/);
             Exception error;
             ExpressionToken token;
 
             lexer.TryPeekNextToken(out token, out error);
 
-            if (token.Kind == ExpressionTokenKind.BracketedExpression || token.Kind == ExpressionTokenKind.ParenthesesExpression)
+            if (token.Kind == ExpressionTokenKind.BracketedExpression)
             {
                 return ODataUriConversionUtils.ConvertFromCollectionValue(value, model, typeReference);
             }

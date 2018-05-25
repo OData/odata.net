@@ -37,11 +37,6 @@ namespace Microsoft.OData.UriParser
         private readonly CollectionNode right;
 
         /// <summary>
-        /// The resource type of a single item from the collection represented by this node.
-        /// </summary>
-        private readonly IEdmTypeReference itemType;
-
-        /// <summary>
         /// Create a InNode
         /// </summary>
         /// <param name="left">The left operand.</param>
@@ -60,8 +55,6 @@ namespace Microsoft.OData.UriParser
                 throw new ArgumentException(ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType(
                     this.right.ItemType.FullName(), this.left.GetEdmTypeReference().FullName()));
             }
-
-            itemType = left.GetEdmTypeReference();
         }
 
         /// <summary>
@@ -83,17 +76,6 @@ namespace Microsoft.OData.UriParser
             get
             {
                 return this.right;
-            }
-        }
-
-        /// <summary>
-        /// Gets the resource type of a single item from the collection represented by this node.
-        /// </summary>
-        public IEdmTypeReference ItemType
-        {
-            get
-            {
-                return this.itemType;
             }
         }
 

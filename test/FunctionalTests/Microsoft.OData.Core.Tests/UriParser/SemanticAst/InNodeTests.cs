@@ -37,15 +37,6 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
-        public void ItemTypeShouldBeSetCorrectlyFromOperands()
-        {
-            ConstantNode left = new ConstantNode("Doge");
-            CollectionPropertyAccessNode right = new CollectionPropertyAccessNode(this.fakeDogSource, HardCodedTestModel.GetDogNicknamesProperty());
-            InNode inNode = new InNode(left, right);
-            inNode.ItemType.FullName().Should().Be("Edm.String");
-        }
-
-        [Fact]
         public void TypeReferenceIsSetCorrectlyFromOperands()
         {
             ConstantNode left = new ConstantNode("Cat");

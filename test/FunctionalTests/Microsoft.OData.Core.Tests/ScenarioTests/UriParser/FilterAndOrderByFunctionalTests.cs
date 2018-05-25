@@ -1710,6 +1710,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithInOperationWithMultipleNestedOperations()
+        {
+            FilterClause filter = ParseFilter("((ID in RelatedIDs) eq ('777-42-9001' in RelatedSSNs))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<BinaryOperatorNode>().Left.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
         public void FilterWithInOperationWithNavigationProperties()
         {
             FilterClause filter = ParseFilter("MyDog/LionWhoAteMe in MyDog/LionsISaw", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -1737,11 +1747,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void FilterWithInOperationWithBracketCollection()
+        public void FilterWithInOperationWithEnums()
         {
-            // Once bracket collection literals are instantiated as CollectionConstantNode, this test case should be updated.
-            Action parse = () => ParseFilter("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+            FilterClause filter = ParseFilter("Fully.Qualified.Namespace.ColorPattern'SolidYellow' in FavoriteColors", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
+            filter.Expression.ShouldBeInNode(enumtypeRef);
+            filter.Expression.As<InNode>().Left.As<ConstantNode>().LiteralText.Should().Be("Fully.Qualified.Namespace.ColorPattern'SolidYellow'");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("FavoriteColors");
         }
 
         [Fact]
@@ -1772,19 +1784,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void OrderByWithInOperationWithIntConstant()
         {
-            OrderByClause OrderBy = ParseOrderBy("9001 in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            OrderBy.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
-            OrderBy.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be(9001);
-            OrderBy.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+            OrderByClause orderby = ParseOrderBy("9001 in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            orderby.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be(9001);
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
         }
 
         [Fact]
         public void OrderByWithInOperationWithStringConstant()
         {
-            OrderByClause OrderBy = ParseOrderBy("'777-42-9001' in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            OrderBy.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetString(true));
-            OrderBy.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be("777-42-9001");
-            OrderBy.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedSSNs");
+            OrderByClause orderby = ParseOrderBy("'777-42-9001' in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetString(true));
+            orderby.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be("777-42-9001");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedSSNs");
         }
 
         [Fact]
@@ -1798,55 +1810,67 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void OrderByWithInOperationWithNestedOperation()
         {
-            OrderByClause OrderBy = ParseOrderBy("(ID in RelatedIDs) eq false", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            OrderBy.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            OrderBy.Expression.As<BinaryOperatorNode>().Left.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
-            OrderBy.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
-            OrderBy.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+            OrderByClause orderby = ParseOrderBy("(ID in RelatedIDs) eq false", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            orderby.Expression.As<BinaryOperatorNode>().Left.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithMultipleNestedOperations()
+        {
+            OrderByClause orderby = ParseOrderBy("((ID in RelatedIDs) eq ('777-42-9001' in RelatedSSNs))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            orderby.Expression.As<BinaryOperatorNode>().Left.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
         }
 
         [Fact]
         public void OrderByWithInOperationWithNavigationProperties()
         {
-            OrderByClause OrderBy = ParseOrderBy("MyDog/LionWhoAteMe in MyDog/LionsISaw", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            OrderBy.Expression.ShouldBeInNode(HardCodedTestModel.GetLionTypeReference());
-            OrderBy.Expression.As<InNode>().Left.As<SingleNavigationNode>().NavigationProperty.Name.Should().Be("LionWhoAteMe");
-            OrderBy.Expression.As<InNode>().Right.As<CollectionNavigationNode>().NavigationProperty.Name.Should().Be("LionsISaw");
+            OrderByClause orderby = ParseOrderBy("MyDog/LionWhoAteMe in MyDog/LionsISaw", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeInNode(HardCodedTestModel.GetLionTypeReference());
+            orderby.Expression.As<InNode>().Left.As<SingleNavigationNode>().NavigationProperty.Name.Should().Be("LionWhoAteMe");
+            orderby.Expression.As<InNode>().Right.As<CollectionNavigationNode>().NavigationProperty.Name.Should().Be("LionsISaw");
         }
 
         [Fact]
         public void OrderByWithInOperationWithBoundFunctions()
         {
-            OrderByClause OrderBy = ParseOrderBy("Fully.Qualified.Namespace.GetPriorAddress in Fully.Qualified.Namespace.GetPriorAddresses", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            OrderBy.Expression.ShouldBeInNode(new EdmComplexTypeReference(HardCodedTestModel.GetAddressType(), true));
-            OrderBy.Expression.As<InNode>().Left.As<SingleValueFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddress");
-            OrderBy.Expression.As<InNode>().Right.As<CollectionResourceFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddresses");
+            OrderByClause orderby = ParseOrderBy("Fully.Qualified.Namespace.GetPriorAddress in Fully.Qualified.Namespace.GetPriorAddresses", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeInNode(new EdmComplexTypeReference(HardCodedTestModel.GetAddressType(), true));
+            orderby.Expression.As<InNode>().Left.As<SingleValueFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddress");
+            orderby.Expression.As<InNode>().Right.As<CollectionResourceFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddresses");
         }
 
         [Fact]
         public void OrderByWithInOperationWithComplexTypeProperties()
         {
-            OrderByClause OrderBy = ParseOrderBy("GeographyPoint in GeographyCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            OrderBy.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true));
-            OrderBy.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("GeographyPoint");
-            OrderBy.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyCollection");
+            OrderByClause orderby = ParseOrderBy("GeographyPoint in GeographyCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true));
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("GeographyPoint");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyCollection");
         }
 
         [Fact]
-        public void OrderByWithInOperationWithBracketCollection()
+        public void OrderByWithInOperationWithEnums()
         {
-            // Once bracket collection literals are instantiated as CollectionConstantNode, this test case should be updated.
-            Action parse = () => ParseOrderBy("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+            OrderByClause orderby = ParseOrderBy("Fully.Qualified.Namespace.ColorPattern'SolidYellow' in FavoriteColors", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
+            orderby.Expression.ShouldBeInNode(enumtypeRef);
+            orderby.Expression.As<InNode>().Left.As<ConstantNode>().LiteralText.Should().Be("Fully.Qualified.Namespace.ColorPattern'SolidYellow'");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("FavoriteColors");
         }
 
         [Fact]
         public void OrderByWithInOperationWithParensCollection()
         {
-            OrderByClause OrderBy = ParseOrderBy("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            OrderBy.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
-            OrderBy.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
-            OrderBy.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
+            OrderByClause orderby = ParseOrderBy("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeInNode(EdmCoreModel.Instance.GetInt32(false));
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
         }
 
         [Fact]
