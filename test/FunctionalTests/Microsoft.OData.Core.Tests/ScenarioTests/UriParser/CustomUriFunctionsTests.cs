@@ -538,7 +538,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void ParseWithExactMatchCustomUriFunction_EnableCaseInsensitive_ShouldWorkForMultipleEquiventArgumentsMatches()
+        public void ParseWithExactMatchCustomUriFunction_EnableCaseInsensitive_ShouldWorkForMultipleEquivalentArgumentsMatches()
         {
             string lowerCaseName = "myfunction";
             string upperCaseName = lowerCaseName.ToUpper();
