@@ -4,20 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
-    using System;
+
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -34,10 +27,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Constructs a MetadataBinder with the given <paramref name="initialState"/>.
-        /// This constructor gets used if you are not calling the top level entry point ParseQuery.
+        /// This constructor gets used if you are not calling the top level resource point ParseQuery.
         /// This is an at-your-own-risk constructor, since you must provide valid initial state.
         /// </summary>
         /// <param name="initialState">The initialState to use for binding.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if initial state is null.</exception>
+        /// <exception cref="System.ArgumentNullException">Throws if initialState.Model is null.</exception>
         internal MetadataBinder(BindingState initialState)
         {
             ExceptionUtils.CheckArgumentNotNull(initialState, "initialState");
@@ -75,6 +70,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="skip">The skip amount or null if none was specified.</param>
         /// <returns> the skip clause </returns>
+        /// <exception cref="ODataException">Throws if skip is less than 0.</exception>
         public static long? ProcessSkip(long? skip)
         {
             if (skip.HasValue)
@@ -95,6 +91,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="top">The top amount or null if none was specified.</param>
         /// <returns> the top clause </returns>
+        /// <exception cref="ODataException">Throws if top is less than 0.</exception>
         public static long? ProcessTop(long? top)
         {
             if (top.HasValue)
@@ -117,9 +114,22 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="bindingState">the current state of the binding algorithm.</param>
         /// <param name="bindMethod">pointer to a binder method.</param>
         /// <returns>The list of <see cref="QueryNode"/> instances after binding.</returns>
+        /// <exception cref="ODataException">Throws if bindingState is null.</exception>
+        /// <exception cref="ODataException">Throws if bindMethod is null.</exception>
         public static List<QueryNode> ProcessQueryOptions(BindingState bindingState, MetadataBinder.QueryTokenVisitor bindMethod)
         {
+            if (bindingState == null || bindingState.QueryOptions == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
+            }
+
+            if (bindMethod == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
+            }
+
             List<QueryNode> customQueryOptionNodes = new List<QueryNode>();
+
             foreach (CustomQueryOptionToken queryToken in bindingState.QueryOptions)
             {
                 QueryNode customQueryOptionNode = bindMethod(queryToken);
@@ -228,7 +238,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Binds an InnerPathToken.
         /// </summary>
         /// <param name="token">Token to bind.</param>
-        /// <returns>Either a SingleNavigationNode, CollectionNavigationNode, SinglePropertyAccessNode (complex), 
+        /// <returns>Either a SingleNavigationNode, CollectionNavigationNode, SinglePropertyAccessNode (complex),
         /// or CollectionPropertyAccessNode (primitive or complex) that is the metadata-bound version of the given token.</returns>
         protected virtual QueryNode BindInnerPathSegment(InnerPathToken token)
         {

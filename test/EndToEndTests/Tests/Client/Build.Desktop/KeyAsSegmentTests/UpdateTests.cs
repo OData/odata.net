@@ -134,15 +134,5 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.AddRelatedObject(customer, "Orders", order);
             contextWrapper.SaveChanges();
         }
-
-        [TestMethod]
-        public void UpdateEntryWithEtag()
-        {
-            var contextWrapper = this.CreateWrappedContext();
-            var discontinuedProduct = contextWrapper.Context.Product.OfType<DiscontinuedProduct>().Take(1).Single();
-            discontinuedProduct.Description = "This is a new description";
-            contextWrapper.UpdateObject(discontinuedProduct);
-            contextWrapper.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
-        }
     }
 }

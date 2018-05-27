@@ -6,6 +6,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.Taupo.OData</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.OData</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ErrorReport>prompt</ErrorReport>
@@ -84,7 +85,6 @@
     <Compile Include="Common\Annotations\MinimumRequiredVersionAnnotation.cs" />
     <Compile Include="Common\Annotations\SerializationTypeNameTestAnnotation.cs" />
     <Compile Include="Common\AsyncTestStream.cs" />
-    <Compile Include="Atom\AtomMetadataODataObjectModelVisitor.cs" />
     <Compile Include="Common\Batch\BatchGeneratorExtensions.cs" />
     <Compile Include="Common\Batch\BatchPayloadGenerator.cs" />
     <Compile Include="Common\Batch\BatchResponseToDummyRequestGenerator.cs" />
@@ -97,7 +97,9 @@
     <Compile Include="Common\Batch\ODataBatch.cs" />
     <Compile Include="Common\CombinatorialEngineExtensionMethods.cs" />
     <Compile Include="Common\AstoriaAttributeToODataLibAnnotationConverter.cs" />
+    <Compile Include="Common\ODataAnnotatableExtensions.cs" />
     <Compile Include="Common\ODataAssemblyResourceLookup.cs" />
+    <Compile Include="Common\PayloadElementODataWriter.cs" />
     <Compile Include="Common\SpatialUtils.cs" />
     <Compile Include="Common\EdmModelUtils.cs" />
     <Compile Include="Common\EdmModelBuilder.cs" />
@@ -146,7 +148,6 @@
     <Compile Include="Common\ODataUnitTestModule.cs" />
     <Compile Include="Common\ODataVersionUtils.cs" />
     <Compile Include="Common\PayloadBuilder.cs" />
-    <Compile Include="Common\PayloadElementODataWriter.cs" />
     <Compile Include="Common\PayloadGeneratorExtensions.cs" />
     <Compile Include="Common\PayloadTestDescriptor.cs" />
     <Compile Include="Common\PayloadTestDescriptorAnnotation.cs" />
@@ -200,7 +201,6 @@
     <Compile Include="DependencyImplementationAssemblies.cs" />
     <Compile Include="Common\EmptyErrorResultComparer.cs" />
     <Compile Include="Contracts\IDataServiceProviderFactory.cs" />
-    <Compile Include="Common\InheritODataAnnotationsUtils.cs" />
     <Compile Include="Contracts\IODataLibPayloadElementComparer.cs" />
     <Compile Include="Contracts\IODataPayloadElementPropertyWriter.cs" />
     <Compile Include="Contracts\IODataQueryProvider.cs" />

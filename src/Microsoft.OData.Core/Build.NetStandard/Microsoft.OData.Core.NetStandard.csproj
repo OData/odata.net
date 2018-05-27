@@ -1,0 +1,1829 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.Core</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <TransparentAssembly>true</TransparentAssembly>
+    <SecurityMigration>false</SecurityMigration>
+    <RootNamespace>Microsoft.OData.Core</RootNamespace>
+    <ProjectGuid>{1A263F63-1859-4310-957B-4F8875019896}</ProjectGuid>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <UseDefaultVisualStudioVersion>false</UseDefaultVisualStudioVersion>
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <DefineConstants>$(DefineConstants);ODATA_CORE;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
+    <EnableLocalization>true</EnableLocalization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>..\..\..\bin\AnyCPU\Debug\Product\.NETPortable\v5.0\Microsoft.OData.Core\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>..\..\..\bin\AnyCPU\Release\Product\.NETPortable\v5.0\Microsoft.OData.Core\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cover|AnyCPU'">
+    <OutputPath>..\..\..\bin\AnyCPU\Cover\Product\.NETPortable\v5.0\Microsoft.OData.Core\</OutputPath>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <!-- References -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\Microsoft.OData.Edm\Build.NetStandard\Microsoft.OData.Edm.NetStandard.csproj">
+      <Project>{DB301FA8-1CFA-487D-BA1E-803016E2A85C}</Project>
+      <Name>Microsoft.OData.Edm.NetStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Microsoft.Spatial\Build.NetStandard\Microsoft.Spatial.NetStandard.csproj">
+      <Project>{48142D27-C862-4F4F-A781-1A9B72F6CDFA}</Project>
+      <Name>Microsoft.Spatial.NetStandard</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <!-- Generated files -->
+  <ItemGroup>
+    <TextStringResource Include="..\Microsoft.OData.Core.txt">
+      <ResFile>Microsoft.OData.Core</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Core.TextRes</FullClassName>
+    </TextStringResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs">
+      <Link>EdmValueParser.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs">
+      <Link>EdmValueWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\PlatformHelper.cs">
+      <Link>PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\AnnotationFilter.cs">
+      <Link>AnnotationFilter.cs</Link>
+    </Compile>
+    <Compile Include="..\AnnotationFilterPattern.cs">
+      <Link>AnnotationFilterPattern.cs</Link>
+    </Compile>
+    <Compile Include="..\AsyncBufferedStream.cs">
+      <Link>AsyncBufferedStream.cs</Link>
+    </Compile>
+    <Compile Include="..\BindingPathHelper.cs">
+      <Link>BindingPathHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\BufferedReadStream.cs">
+      <Link>BufferedReadStream.cs</Link>
+    </Compile>
+    <Compile Include="..\BufferingReadStream.cs">
+      <Link>BufferingReadStream.cs</Link>
+    </Compile>
+    <Compile Include="..\CollectionWithoutExpectedTypeValidator.cs">
+      <Link>CollectionWithoutExpectedTypeValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\ContainerBuilderExtensions.cs">
+      <Link>ContainerBuilderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\DuplicatePropertyNameChecker.cs">
+      <Link>DuplicatePropertyNameChecker.cs</Link>
+    </Compile>
+    <Compile Include="..\EdmExtensionMethods.cs">
+      <Link>EdmExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\ErrorUtils.cs">
+      <Link>ErrorUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\EdmValueUtils.cs">
+      <Link>Evaluation\EdmValueUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\IODataResourceMetadataContext.cs">
+      <Link>Evaluation\IODataResourceMetadataContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\KeySerializer.cs">
+      <Link>Evaluation\KeySerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\LiteralFormatter.cs">
+      <Link>Evaluation\LiteralFormatter.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\NoOpResourceMetadataBuilder.cs">
+      <Link>Evaluation\NoOpResourceMetadataBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataConventionalEntityMetadataBuilder.cs">
+      <Link>Evaluation\ODataConventionalEntityMetadataBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataConventionalResourceMetadataBuilder.cs">
+      <Link>Evaluation\ODataConventionalResourceMetadataBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataConventionalUriBuilder.cs">
+      <Link>Evaluation\ODataConventionalUriBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataMetadataContext.cs">
+      <Link>Evaluation\ODataMetadataContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataMissingOperationGenerator.cs">
+      <Link>Evaluation\ODataMissingOperationGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataResourceMetadataBuilder.cs">
+      <Link>Evaluation\ODataResourceMetadataBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataResourceMetadataContext.cs">
+      <Link>Evaluation\ODataResourceMetadataContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Evaluation\ODataUriBuilder.cs">
+      <Link>Evaluation\ODataUriBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\ExceptionUtils.cs">
+      <Link>ExceptionUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\GeographyTypeConverter.cs">
+      <Link>GeographyTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\GeometryTypeConverter.cs">
+      <Link>GeometryTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\HttpHeaderValue.cs">
+      <Link>HttpHeaderValue.cs</Link>
+    </Compile>
+    <Compile Include="..\HttpHeaderValueElement.cs">
+      <Link>HttpHeaderValueElement.cs</Link>
+    </Compile>
+    <Compile Include="..\HttpHeaderValueLexer.cs">
+      <Link>HttpHeaderValueLexer.cs</Link>
+    </Compile>
+    <Compile Include="..\HttpUtils.cs">
+      <Link>HttpUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\IContainerBuilder.cs">
+      <Link>IContainerBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\IContainerProvider.cs">
+      <Link>IContainerProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\IDuplicatePropertyNameChecker.cs">
+      <Link>IDuplicatePropertyNameChecker.cs</Link>
+    </Compile>
+    <Compile Include="..\InstanceAnnotationWriteTracker.cs">
+      <Link>InstanceAnnotationWriteTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\InternalErrorCodes.cs">
+      <Link>InternalErrorCodes.cs</Link>
+    </Compile>
+    <Compile Include="..\InternalErrorCodesCommon.cs">
+      <Link>InternalErrorCodesCommon.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataBatchOperationListener.cs">
+      <Link>IODataBatchOperationListener.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataOutputInStreamErrorListener.cs">
+      <Link>IODataOutputInStreamErrorListener.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataPayloadUriConverter.cs">
+      <Link>IODataPayloadUriConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataReaderWriterListener.cs">
+      <Link>IODataReaderWriterListener.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataRequestMessage.cs">
+      <Link>IODataRequestMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataRequestMessageAsync.cs">
+      <Link>IODataRequestMessageAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataResourceTypeContext.cs">
+      <Link>IODataResourceTypeContext.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataResponseMessage.cs">
+      <Link>IODataResponseMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\IODataResponseMessageAsync.cs">
+      <Link>IODataResponseMessageAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\IPrimitiveTypeConverter.cs">
+      <Link>IPrimitiveTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\IReaderValidator.cs">
+      <Link>IReaderValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\IWriterValidator.cs">
+      <Link>IWriterValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\IODataJsonLightReaderResourceState.cs">
+      <Link>JsonLight\IODataJsonLightReaderResourceState.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\IODataJsonLightWriterResourceState.cs">
+      <Link>JsonLight\IODataJsonLightWriterResourceState.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonFullMetadataLevel.cs">
+      <Link>JsonLight\JsonFullMetadataLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonFullMetadataTypeNameOracle.cs">
+      <Link>JsonLight\JsonFullMetadataTypeNameOracle.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonLightConstants.cs">
+      <Link>JsonLight\JsonLightConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonLightMetadataLevel.cs">
+      <Link>JsonLight\JsonLightMetadataLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonLightODataAnnotationWriter.cs">
+      <Link>JsonLight\JsonLightODataAnnotationWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonLightTypeNameOracle.cs">
+      <Link>JsonLight\JsonLightTypeNameOracle.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonMinimalMetadataLevel.cs">
+      <Link>JsonLight\JsonMinimalMetadataLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonMinimalMetadataTypeNameOracle.cs">
+      <Link>JsonLight\JsonMinimalMetadataTypeNameOracle.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonNoMetadataLevel.cs">
+      <Link>JsonLight\JsonNoMetadataLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\JsonNoMetadataTypeNameOracle.cs">
+      <Link>JsonLight\JsonNoMetadataTypeNameOracle.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataAnnotationNames.cs">
+      <Link>JsonLight\ODataAnnotationNames.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightCollectionDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightCollectionDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightCollectionReader.cs">
+      <Link>JsonLight\ODataJsonLightCollectionReader.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightCollectionSerializer.cs">
+      <Link>JsonLight\ODataJsonLightCollectionSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightCollectionWriter.cs">
+      <Link>JsonLight\ODataJsonLightCollectionWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightContextUriParser.cs">
+      <Link>JsonLight\ODataJsonLightContextUriParser.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightContextUriParseResult.cs">
+      <Link>JsonLight\ODataJsonLightContextUriParseResult.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightDeltaReader.cs">
+      <Link>JsonLight\ODataJsonLightDeltaReader.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightDeltaWriter.cs">
+      <Link>JsonLight\ODataJsonLightDeltaWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightEntityReferenceLinkDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightEntityReferenceLinkDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightEntityReferenceLinkSerializer.cs">
+      <Link>JsonLight\ODataJsonLightEntityReferenceLinkSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightErrorDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightErrorDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightInputContext.cs">
+      <Link>JsonLight\ODataJsonLightInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightOutputContext.cs">
+      <Link>JsonLight\ODataJsonLightOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs">
+      <Link>JsonLight\ODataJsonLightBatchAtomicGroupCache.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs">
+      <Link>JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchReader.cs">
+      <Link>JsonLight\ODataJsonLightBatchReader.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchWriter.cs">
+      <Link>JsonLight\ODataJsonLightBatchWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchReaderStream.cs">
+      <Link>JsonLight\ODataJsonLightBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs">
+      <Link>JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightParameterDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightParameterDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightParameterReader.cs">
+      <Link>JsonLight\ODataJsonLightParameterReader.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightParameterWriter.cs">
+      <Link>JsonLight\ODataJsonLightParameterWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightPayloadKindDetectionDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightPayloadKindDetectionDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightPropertyAndValueDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightPropertyAndValueDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightPropertySerializer.cs">
+      <Link>JsonLight\ODataJsonLightPropertySerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightReader.cs">
+      <Link>JsonLight\ODataJsonLightReader.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightReaderNestedResourceInfo.cs">
+      <Link>JsonLight\ODataJsonLightReaderNestedResourceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightReaderUtils.cs">
+      <Link>JsonLight\ODataJsonLightReaderUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightResourceDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightResourceDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightResourceSerializer.cs">
+      <Link>JsonLight\ODataJsonLightResourceSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightSerializer.cs">
+      <Link>JsonLight\ODataJsonLightSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightServiceDocumentDeserializer.cs">
+      <Link>JsonLight\ODataJsonLightServiceDocumentDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightServiceDocumentSerializer.cs">
+      <Link>JsonLight\ODataJsonLightServiceDocumentSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightUtils.cs">
+      <Link>JsonLight\ODataJsonLightUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightValidationUtils.cs">
+      <Link>JsonLight\ODataJsonLightValidationUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightValueSerializer.cs">
+      <Link>JsonLight\ODataJsonLightValueSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightWriter.cs">
+      <Link>JsonLight\ODataJsonLightWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ODataJsonLightWriterUtils.cs">
+      <Link>JsonLight\ODataJsonLightWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\JsonLight\ReorderingJsonReader.cs">
+      <Link>JsonLight\ReorderingJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\BufferingJsonReader.cs">
+      <Link>Json\BufferingJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\DefaultJsonReaderFactory.cs">
+      <Link>Json\DefaultJsonReaderFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\DefaultJsonWriterFactory.cs">
+      <Link>Json\DefaultJsonWriterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\GeoJsonWriterAdapter.cs">
+      <Link>Json\GeoJsonWriterAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IJsonReader.cs">
+      <Link>Json\IJsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IJsonReaderFactory.cs">
+      <Link>Json\IJsonReaderFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IJsonWriter.cs">
+      <Link>Json\IJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IJsonWriterFactory.cs">
+      <Link>Json\IJsonWriterFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\IODataJsonOperationsDeserializerContext.cs">
+      <Link>Json\IODataJsonOperationsDeserializerContext.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonConstants.cs">
+      <Link>Json\JsonConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonLightInstanceAnnotationWriter.cs">
+      <Link>Json\JsonLightInstanceAnnotationWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonNodeType.cs">
+      <Link>Json\JsonNodeType.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonReader.cs">
+      <Link>Json\JsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonReaderExtensions.cs">
+      <Link>Json\JsonReaderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonSharedUtils.cs">
+      <Link>Json\JsonSharedUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonValueUtils.cs">
+      <Link>Json\JsonValueUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonWriter.cs">
+      <Link>Json\JsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\JsonWriterExtensions.cs">
+      <Link>Json\JsonWriterExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\NonIndentedTextWriter.cs">
+      <Link>Json\NonIndentedTextWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\ODataJsonFormat.cs">
+      <Link>Json\ODataJsonFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\ODataJsonReaderCoreUtils.cs">
+      <Link>Json\ODataJsonReaderCoreUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\ODataJsonWriterUtils.cs">
+      <Link>Json\ODataJsonWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Json\TextWriterWrapper.cs">
+      <Link>Json\TextWriterWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\MediaTypeUtils.cs">
+      <Link>MediaTypeUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\MessageStreamWrapper.cs">
+      <Link>MessageStreamWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\BufferingXmlReader.cs">
+      <Link>Metadata\BufferingXmlReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\CachedPrimitiveKeepInContentAnnotation.cs">
+      <Link>Metadata\CachedPrimitiveKeepInContentAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\EdmConstants.cs">
+      <Link>Metadata\EdmConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\EdmLibraryExtensions.cs">
+      <Link>Metadata\EdmLibraryExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\EdmTypeReaderResolver.cs">
+      <Link>Metadata\EdmTypeReaderResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\EdmTypeResolver.cs">
+      <Link>Metadata\EdmTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\EdmTypeWriterResolver.cs">
+      <Link>Metadata\EdmTypeWriterResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\MetadataUtils.cs">
+      <Link>Metadata\MetadataUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\MetadataUtilsCommon.cs">
+      <Link>Metadata\MetadataUtilsCommon.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\ODataAtomErrorDeserializer.cs">
+      <Link>Metadata\ODataAtomErrorDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\ODataMetadataConstants.cs">
+      <Link>Metadata\ODataMetadataConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\ODataMetadataReaderUtils.cs">
+      <Link>Metadata\ODataMetadataReaderUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\ODataMetadataWriterUtils.cs">
+      <Link>Metadata\ODataMetadataWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Metadata\XmlReaderExtensions.cs">
+      <Link>Metadata\XmlReaderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\MimeConstants.cs">
+      <Link>MimeConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchFormat.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchInputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchOutputContext.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReader.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReader.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchReaderStream.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriter.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs">
+      <Link>MultipartMixed\ODataMultipartMixedBatchWriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\MultipartMixed\DependsOnIdsTracker.cs">
+      <Link>MultipartMixed\DependsOnIdsTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\NonDisposingStream.cs">
+      <Link>NonDisposingStream.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataAction.cs">
+      <Link>ODataAction.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataAnnotatable.cs">
+      <Link>ODataAnnotatable.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataAsynchronousReader.cs">
+      <Link>ODataAsynchronousReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataAsynchronousResponseMessage.cs">
+      <Link>ODataAsynchronousResponseMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataAsynchronousWriter.cs">
+      <Link>ODataAsynchronousWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchOperationHeaders.cs">
+      <Link>ODataBatchOperationHeaders.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchOperationMessage.cs">
+      <Link>ODataBatchOperationMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchOperationReadStream.cs">
+      <Link>ODataBatchOperationReadStream.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchOperationRequestMessage.cs">
+      <Link>ODataBatchOperationRequestMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchOperationResponseMessage.cs">
+      <Link>ODataBatchOperationResponseMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchOperationStream.cs">
+      <Link>ODataBatchOperationStream.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchOperationWriteStream.cs">
+      <Link>ODataBatchOperationWriteStream.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchPayloadUriConverter.cs">
+      <Link>ODataBatchPayloadUriConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchPayloadUriOptions.cs">
+      <Link>ODataBatchPayloadUriOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchReader.cs">
+      <Link>ODataBatchReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchReaderState.cs">
+      <Link>ODataBatchReaderState.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchReaderStream.cs">
+      <Link>ODataBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchReaderStreamBuffer.cs">
+      <Link>ODataBatchReaderStreamBuffer.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchReaderStreamScanResult.cs">
+      <Link>ODataBatchReaderStreamScanResult.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchUtils.cs">
+      <Link>ODataBatchUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataBatchWriter.cs">
+      <Link>ODataBatchWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionReader.cs">
+      <Link>ODataCollectionReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionReaderCore.cs">
+      <Link>ODataCollectionReaderCore.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionReaderCoreAsync.cs">
+      <Link>ODataCollectionReaderCoreAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionReaderState.cs">
+      <Link>ODataCollectionReaderState.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionStart.cs">
+      <Link>ODataCollectionStart.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionStartSerializationInfo.cs">
+      <Link>ODataCollectionStartSerializationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionValue.cs">
+      <Link>ODataCollectionValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionWriter.cs">
+      <Link>ODataCollectionWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataCollectionWriterCore.cs">
+      <Link>ODataCollectionWriterCore.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataConstants.cs">
+      <Link>ODataConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataContentTypeException.cs">
+      <Link>ODataContentTypeException.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataContextUriBuilder.cs">
+      <Link>ODataContextUriBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataContextUrlInfo.cs">
+      <Link>ODataContextUrlInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataContextUrlLevel.cs">
+      <Link>ODataContextUrlLevel.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaDeletedEntry.cs">
+      <Link>ODataDeltaDeletedEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaDeletedLink.cs">
+      <Link>ODataDeltaDeletedLink.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaKind.cs">
+      <Link>ODataDeltaKind.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaLink.cs">
+      <Link>ODataDeltaLink.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaLinkBase.cs">
+      <Link>ODataDeltaLinkBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaReader.cs">
+      <Link>ODataDeltaReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaReaderState.cs">
+      <Link>ODataDeltaReaderState.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaResourceSet.cs">
+      <Link>ODataDeltaResourceSet.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaResourceSetSerializationInfo.cs">
+      <Link>ODataDeltaResourceSetSerializationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaSerializationInfo.cs">
+      <Link>ODataDeltaSerializationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeltaWriter.cs">
+      <Link>ODataDeltaWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataDeserializer.cs">
+      <Link>ODataDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataEdmPropertyAnnotation.cs">
+      <Link>ODataEdmPropertyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataEntityReferenceLink.cs">
+      <Link>ODataEntityReferenceLink.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataEntityReferenceLinks.cs">
+      <Link>ODataEntityReferenceLinks.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataEntitySetInfo.cs">
+      <Link>ODataEntitySetInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataEnumValue.cs">
+      <Link>ODataEnumValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataError.cs">
+      <Link>ODataError.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataErrorDetail.cs">
+      <Link>ODataErrorDetail.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataErrorException.cs">
+      <Link>ODataErrorException.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataException.cs">
+      <Link>ODataException.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataFormat.cs">
+      <Link>ODataFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataFunction.cs">
+      <Link>ODataFunction.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataFunctionImportInfo.cs">
+      <Link>ODataFunctionImportInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataInnerError.cs">
+      <Link>ODataInnerError.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataInputContext.cs">
+      <Link>ODataInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataInstanceAnnotation.cs">
+      <Link>ODataInstanceAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataItem.cs">
+      <Link>ODataItem.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataJsonDateTimeFormat.cs">
+      <Link>ODataJsonDateTimeFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataLibraryCompatibility.cs">
+      <Link>ODataLibraryCompatibility.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMediaType.cs">
+      <Link>ODataMediaType.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMediaTypeFormat.cs">
+      <Link>ODataMediaTypeFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMediaTypeResolver.cs">
+      <Link>ODataMediaTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessage.cs">
+      <Link>ODataMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessageExtensions.cs">
+      <Link>ODataMessageExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessageInfo.cs">
+      <Link>ODataMessageInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessageQuotas.cs">
+      <Link>ODataMessageQuotas.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessageReader.cs">
+      <Link>ODataMessageReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessageReaderSettings.cs">
+      <Link>ODataMessageReaderSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessageWriter.cs">
+      <Link>ODataMessageWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMessageWriterSettings.cs">
+      <Link>ODataMessageWriterSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMetadataFormat.cs">
+      <Link>ODataMetadataFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMetadataInputContext.cs">
+      <Link>ODataMetadataInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataMetadataOutputContext.cs">
+      <Link>ODataMetadataOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNestedResourceInfo.cs">
+      <Link>ODataNestedResourceInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNestedResourceInfoSerializationInfo.cs">
+      <Link>ODataNestedResourceInfoSerializationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNullValue.cs">
+      <Link>ODataNullValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataNullValueBehaviorKind.cs">
+      <Link>ODataNullValueBehaviorKind.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataObjectModelExtensions.cs">
+      <Link>ODataObjectModelExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataOperation.cs">
+      <Link>ODataOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataOutputContext.cs">
+      <Link>ODataOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataParameterReader.cs">
+      <Link>ODataParameterReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataParameterReaderCore.cs">
+      <Link>ODataParameterReaderCore.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataParameterReaderCoreAsync.cs">
+      <Link>ODataParameterReaderCoreAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataParameterReaderState.cs">
+      <Link>ODataParameterReaderState.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataParameterWriter.cs">
+      <Link>ODataParameterWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataParameterWriterCore.cs">
+      <Link>ODataParameterWriterCore.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPayloadKind.cs">
+      <Link>ODataPayloadKind.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPayloadKindDetectionInfo.cs">
+      <Link>ODataPayloadKindDetectionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPayloadKindDetectionResult.cs">
+      <Link>ODataPayloadKindDetectionResult.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPayloadValueConverter.cs">
+      <Link>ODataPayloadValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPreferenceHeader.cs">
+      <Link>ODataPreferenceHeader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPrimitiveValue.cs">
+      <Link>ODataPrimitiveValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataProperty.cs">
+      <Link>ODataProperty.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPropertyKind.cs">
+      <Link>ODataPropertyKind.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataPropertySerializationInfo.cs">
+      <Link>ODataPropertySerializationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataRawInputContext.cs">
+      <Link>ODataRawInputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataRawOutputContext.cs">
+      <Link>ODataRawOutputContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataRawValueConverter.cs">
+      <Link>ODataRawValueConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataRawValueFormat.cs">
+      <Link>ODataRawValueFormat.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataRawValueUtils.cs">
+      <Link>ODataRawValueUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataReader.cs">
+      <Link>ODataReader.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataReaderCore.cs">
+      <Link>ODataReaderCore.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataReaderCoreAsync.cs">
+      <Link>ODataReaderCoreAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataReaderState.cs">
+      <Link>ODataReaderState.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataRequestMessage.cs">
+      <Link>ODataRequestMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataResource.cs">
+      <Link>ODataResource.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataResourceSerializationInfo.cs">
+      <Link>ODataResourceSerializationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataResourceSet.cs">
+      <Link>ODataResourceSet.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataResourceSetBase.cs">
+      <Link>ODataResourceSetBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataResourceTypeContext.cs">
+      <Link>ODataResourceTypeContext.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataResponseMessage.cs">
+      <Link>ODataResponseMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataSerializer.cs">
+      <Link>ODataSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataServiceDocument.cs">
+      <Link>ODataServiceDocument.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataServiceDocumentElement.cs">
+      <Link>ODataServiceDocumentElement.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataSimplifiedOptions.cs">
+      <Link>ODataSimplifiedOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataSingletonInfo.cs">
+      <Link>ODataSingletonInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataStreamReferenceValue.cs">
+      <Link>ODataStreamReferenceValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataTypeAnnotation.cs">
+      <Link>ODataTypeAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataUntypedValue.cs">
+      <Link>ODataUntypedValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataUtils.cs">
+      <Link>ODataUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataUtilsInternal.cs">
+      <Link>ODataUtilsInternal.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataValue.cs">
+      <Link>ODataValue.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataValueUtils.cs">
+      <Link>ODataValueUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataVersion.cs">
+      <Link>ODataVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataVersionCache.cs">
+      <Link>ODataVersionCache.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataWriter.cs">
+      <Link>ODataWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ODataWriterCore.cs">
+      <Link>ODataWriterCore.cs</Link>
+    </Compile>
+    <Compile Include="..\PrimitiveConverter.cs">
+      <Link>PrimitiveConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyAndAnnotationCollector.cs">
+      <Link>PropertyAndAnnotationCollector.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyCache.cs">
+      <Link>PropertyCache.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyCacheHandler.cs">
+      <Link>PropertyCacheHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyMetadataTypeInfo.cs">
+      <Link>PropertyMetadataTypeInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertySerializationInfo.cs">
+      <Link>PropertySerializationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyValueTypeInfo.cs">
+      <Link>PropertyValueTypeInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\RawValueWriter.cs">
+      <Link>RawValueWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReaderUtils.cs">
+      <Link>ReaderUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\ReaderValidationUtils.cs">
+      <Link>ReaderValidationUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\ReaderValidator.cs">
+      <Link>ReaderValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\ReadOnlyEnumerable.cs">
+      <Link>ReadOnlyEnumerable.cs</Link>
+    </Compile>
+    <Compile Include="..\ReadOnlyEnumerableExtensions.cs">
+      <Link>ReadOnlyEnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ReadOnlyEnumerableOfT.cs">
+      <Link>ReadOnlyEnumerableOfT.cs</Link>
+    </Compile>
+    <Compile Include="..\ReferenceEqualityComparer.cs">
+      <Link>ReferenceEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\ResourceSetWithoutExpectedTypeValidator.cs">
+      <Link>ResourceSetWithoutExpectedTypeValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\SelectedPropertiesNode.cs">
+      <Link>SelectedPropertiesNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ServiceLifetime.cs">
+      <Link>ServiceLifetime.cs</Link>
+    </Compile>
+    <Compile Include="..\ServicePrototype.cs">
+      <Link>ServicePrototype.cs</Link>
+    </Compile>
+    <Compile Include="..\ServiceProviderExtensions.cs">
+      <Link>ServiceProviderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\SimpleLazy.cs">
+      <Link>SimpleLazy.cs</Link>
+    </Compile>
+    <Compile Include="..\TaskUtils.cs">
+      <Link>TaskUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\TypeNameOracle.cs">
+      <Link>TypeNameOracle.cs</Link>
+    </Compile>
+    <Compile Include="..\TypeUtils.cs">
+      <Link>TypeUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UnknownEntitySet.cs">
+      <Link>UnknownEntitySet.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\AggregateExpression.cs">
+      <Link>UriParser\Aggregation\AggregateExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\AggregateToken.cs">
+      <Link>UriParser\Aggregation\AggregateToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\AggregationMethod.cs">
+      <Link>UriParser\Aggregation\AggregationMethod.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\ApplyBinder.cs">
+      <Link>UriParser\Aggregation\ApplyBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\ApplyClause.cs">
+      <Link>UriParser\Aggregation\ApplyClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\ApplyTransformationToken.cs">
+      <Link>UriParser\Aggregation\ApplyTransformationToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\ComputeTransformationNode.cs">
+      <Link>UriParser\Aggregation\ComputeTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\FilterTransformationNode.cs">
+      <Link>UriParser\Aggregation\FilterTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\GroupByPropertyNode.cs">
+      <Link>UriParser\Aggregation\GroupByPropertyNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\GroupByToken.cs">
+      <Link>UriParser\Aggregation\GroupByToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\GroupByTransformationNode.cs">
+      <Link>UriParser\Aggregation\GroupByTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\TransformationNode.cs">
+      <Link>UriParser\Aggregation\TransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\TransformationNodeKind.cs">
+      <Link>UriParser\Aggregation\TransformationNodeKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateExpression.cs"> 
+      <Link>UriParser\Aggregation\EntitySetAggregateExpression.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateToken.cs"> 
+      <Link>UriParser\Aggregation\EntitySetAggregateToken.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateExpressionBase.cs"> 
+      <Link>UriParser\Aggregation\AggregateExpressionBase.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateTokenBase.cs"> 
+      <Link>UriParser\Aggregation\AggregateTokenBase.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateExpressionToken.cs"> 
+      <Link>UriParser\Aggregation\AggregateExpressionToken.cs</Link> 
+    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\AggregateTransformationNode.cs">
+      <Link>UriParser\Aggregation\AggregateTransformationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs"> 
+      <Link>UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs</Link> 
+    </Compile>
+    <Compile Include="..\UriParser\Binders\BinaryOperatorBinder.cs">
+      <Link>UriParser\Binders\BinaryOperatorBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\BinderBase.cs">
+      <Link>UriParser\Binders\BinderBase.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\BindingState.cs">
+      <Link>UriParser\Binders\BindingState.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\ComputeBinder.cs">
+      <Link>UriParser\Binders\ComputeBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\DottedIdentifierBinder.cs">
+      <Link>UriParser\Binders\DottedIdentifierBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\EndPathBinder.cs">
+      <Link>UriParser\Binders\EndPathBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\EnumBinder.cs">
+      <Link>UriParser\Binders\EnumBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\ExpandTreeNormalizer.cs">
+      <Link>UriParser\Binders\ExpandTreeNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\FilterBinder.cs">
+      <Link>UriParser\Binders\FilterBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\FunctionCallBinder.cs">
+      <Link>UriParser\Binders\FunctionCallBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\InnerPathTokenBinder.cs">
+      <Link>UriParser\Binders\InnerPathTokenBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\KeyBinder.cs">
+      <Link>UriParser\Binders\KeyBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\LambdaBinder.cs">
+      <Link>UriParser\Binders\LambdaBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\LiteralBinder.cs">
+      <Link>UriParser\Binders\LiteralBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\MetadataBinder.cs">
+      <Link>UriParser\Binders\MetadataBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\MetadataBindingUtils.cs">
+      <Link>UriParser\Binders\MetadataBindingUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\OrderByBinder.cs">
+      <Link>UriParser\Binders\OrderByBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\ParameterAliasBinder.cs">
+      <Link>UriParser\Binders\ParameterAliasBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\RangeVariableBinder.cs">
+      <Link>UriParser\Binders\RangeVariableBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SearchBinder.cs">
+      <Link>UriParser\Binders\SearchBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectBinder.cs">
+      <Link>UriParser\Binders\SelectBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectExpandBinder.cs">
+      <Link>UriParser\Binders\SelectExpandBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectExpandClauseFinisher.cs">
+      <Link>UriParser\Binders\SelectExpandClauseFinisher.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectExpandPathBinder.cs">
+      <Link>UriParser\Binders\SelectExpandPathBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectExpandSemanticBinder.cs">
+      <Link>UriParser\Binders\SelectExpandSemanticBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectExpandSyntacticUnifier.cs">
+      <Link>UriParser\Binders\SelectExpandSyntacticUnifier.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectPathSegmentTokenBinder.cs">
+      <Link>UriParser\Binders\SelectPathSegmentTokenBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\SelectTreeNormalizer.cs">
+      <Link>UriParser\Binders\SelectTreeNormalizer.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Binders\UnaryOperatorBinder.cs">
+      <Link>UriParser\Binders\UnaryOperatorBinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
+      <Link>UriParser\BuiltInUriFunctions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\CustomUriFunctions.cs">
+      <Link>UriParser\CustomUriFunctions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\CustomUriLiteralPrefixes.cs">
+      <Link>UriParser\CustomUriLiteralPrefixes.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ExceptionUtil.cs">
+      <Link>UriParser\ExceptionUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ExpressionLexer.cs">
+      <Link>UriParser\ExpressionLexer.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ExpressionLexerLiteralExtensions.cs">
+      <Link>UriParser\ExpressionLexerLiteralExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ExpressionLexerUtils.cs">
+      <Link>UriParser\ExpressionLexerUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ExpressionToken.cs">
+      <Link>UriParser\ExpressionToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\FunctionSignature.cs">
+      <Link>UriParser\FunctionSignature.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\FunctionSignatureWithReturnType.cs">
+      <Link>UriParser\FunctionSignatureWithReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\InternalErrorCodes.cs">
+      <Link>UriParser\InternalErrorCodes.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\KeyPropertyValue.cs">
+      <Link>UriParser\KeyPropertyValue.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\LiteralUtils.cs">
+      <Link>UriParser\LiteralUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\NamedValue.cs">
+      <Link>UriParser\NamedValue.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ODataPathInfo.cs">
+      <Link>UriParser\ODataPathInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ODataQueryOptionParser.cs">
+      <Link>UriParser\ODataQueryOptionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ODataUnrecognizedPathException.cs">
+      <Link>UriParser\ODataUnrecognizedPathException.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ODataUriParser.cs">
+      <Link>UriParser\ODataUriParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ODataUriParserConfiguration.cs">
+      <Link>UriParser\ODataUriParserConfiguration.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ODataUriParserSettings.cs">
+      <Link>UriParser\ODataUriParserSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\OrderByDirection.cs">
+      <Link>UriParser\OrderByDirection.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ParseDynamicPathSegment.cs">
+      <Link>UriParser\ParseDynamicPathSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\CustomUriLiteralParsers.cs">
+      <Link>UriParser\Parsers\CustomUriLiteralParsers.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\DefaultUriLiteralParser.cs">
+      <Link>UriParser\Parsers\DefaultUriLiteralParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\ExpandDepthAndCountValidator.cs">
+      <Link>UriParser\Parsers\ExpandDepthAndCountValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\ExpandOptionParser.cs">
+      <Link>UriParser\Parsers\ExpandOptionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\FunctionCallParser.cs">
+      <Link>UriParser\Parsers\FunctionCallParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\FunctionOverloadResolver.cs">
+      <Link>UriParser\Parsers\FunctionOverloadResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\FunctionParameterParser.cs">
+      <Link>UriParser\Parsers\FunctionParameterParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\IdentifierTokenizer.cs">
+      <Link>UriParser\Parsers\IdentifierTokenizer.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\IFunctionCallParser.cs">
+      <Link>UriParser\Parsers\IFunctionCallParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\IUriLiteralParser.cs">
+      <Link>UriParser\Parsers\IUriLiteralParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\KeyFinder.cs">
+      <Link>UriParser\Parsers\KeyFinder.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\LiteralParser.cs">
+      <Link>UriParser\Parsers\LiteralParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\NodeFactory.cs">
+      <Link>UriParser\Parsers\NodeFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\ODataPathFactory.cs">
+      <Link>UriParser\Parsers\ODataPathFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\ODataPathParser.cs">
+      <Link>UriParser\Parsers\ODataPathParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\PathParserModelUtils.cs">
+      <Link>UriParser\Parsers\PathParserModelUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\PathReverser.cs">
+      <Link>UriParser\Parsers\PathReverser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\SearchParser.cs">
+      <Link>UriParser\Parsers\SearchParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\SegmentArgumentParser.cs">
+      <Link>UriParser\Parsers\SegmentArgumentParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\SegmentKeyHandler.cs">
+      <Link>UriParser\Parsers\SegmentKeyHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\SelectExpandParser.cs">
+      <Link>UriParser\Parsers\SelectExpandParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\SelectExpandSyntacticParser.cs">
+      <Link>UriParser\Parsers\SelectExpandSyntacticParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\SelectExpandTermParser.cs">
+      <Link>UriParser\Parsers\SelectExpandTermParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriLiteralParsingException.cs">
+      <Link>UriParser\Parsers\UriLiteralParsingException.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriParserHelper.cs">
+      <Link>UriParser\Parsers\UriParserHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriPathParser.cs">
+      <Link>UriParser\Parsers\UriPathParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriPrimitiveTypeParser.cs">
+      <Link>UriParser\Parsers\UriPrimitiveTypeParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriQueryExpressionParser.cs">
+      <Link>UriParser\Parsers\UriQueryExpressionParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Parsers\UriTemplateParser.cs">
+      <Link>UriParser\Parsers\UriTemplateParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\QueryNodeUtils.cs">
+      <Link>UriParser\QueryNodeUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\QueryOptionUtils.cs">
+      <Link>UriParser\QueryOptionUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ReadOnlyEnumerableForUriParser.cs">
+      <Link>UriParser\ReadOnlyEnumerableForUriParser.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\AlternateKeysODataUriResolver.cs">
+      <Link>UriParser\Resolver\AlternateKeysODataUriResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\ODataUriResolver.cs">
+      <Link>UriParser\Resolver\ODataUriResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\StringAsEnumResolver.cs">
+      <Link>UriParser\Resolver\StringAsEnumResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Resolver\UnqualifiedODataUriResolver.cs">
+      <Link>UriParser\Resolver\UnqualifiedODataUriResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SearchLexer.cs">
+      <Link>UriParser\SearchLexer.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\AllNode.cs">
+      <Link>UriParser\SemanticAst\AllNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\AnyNode.cs">
+      <Link>UriParser\SemanticAst\AnyNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\BatchReferenceSegment.cs">
+      <Link>UriParser\SemanticAst\BatchReferenceSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\BatchSegment.cs">
+      <Link>UriParser\SemanticAst\BatchSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\BinaryOperatorNode.cs">
+      <Link>UriParser\SemanticAst\BinaryOperatorNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionComplexNode.cs">
+      <Link>UriParser\SemanticAst\CollectionComplexNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionFunctionCallNode.cs">
+      <Link>UriParser\SemanticAst\CollectionFunctionCallNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionNavigationNode.cs">
+      <Link>UriParser\SemanticAst\CollectionNavigationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionNode.cs">
+      <Link>UriParser\SemanticAst\CollectionNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionOpenPropertyAccessNode.cs">
+      <Link>UriParser\SemanticAst\CollectionOpenPropertyAccessNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionPropertyAccessNode.cs">
+      <Link>UriParser\SemanticAst\CollectionPropertyAccessNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNode.cs">
+      <Link>UriParser\SemanticAst\CollectionResourceCastNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionResourceFunctionCallNode.cs">
+      <Link>UriParser\SemanticAst\CollectionResourceFunctionCallNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionResourceNode.cs">
+      <Link>UriParser\SemanticAst\CollectionResourceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeClause.cs">
+      <Link>UriParser\SemanticAst\ComputeClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeExpression.cs">
+      <Link>UriParser\SemanticAst\ComputeExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ConstantNode.cs">
+      <Link>UriParser\SemanticAst\ConstantNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ConvertNode.cs">
+      <Link>UriParser\SemanticAst\ConvertNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CountNode.cs">
+      <Link>UriParser\SemanticAst\CountNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CountSegment.cs">
+      <Link>UriParser\SemanticAst\CountSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CountVirtualPropertyNode.cs">
+      <Link>UriParser\SemanticAst\CountVirtualPropertyNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\DetermineNavigationSourceTranslator.cs">
+      <Link>UriParser\SemanticAst\DetermineNavigationSourceTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\DynamicPathSegment.cs">
+      <Link>UriParser\SemanticAst\DynamicPathSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\EntityIdSegment.cs">
+      <Link>UriParser\SemanticAst\EntityIdSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\EntitySetSegment.cs">
+      <Link>UriParser\SemanticAst\EntitySetSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ExpandedNavigationSelectItem.cs">
+      <Link>UriParser\SemanticAst\ExpandedNavigationSelectItem.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ExpandedReferenceSelectItem.cs">
+      <Link>UriParser\SemanticAst\ExpandedReferenceSelectItem.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\FilterClause.cs">
+      <Link>UriParser\SemanticAst\FilterClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\KeyLookupNode.cs">
+      <Link>UriParser\SemanticAst\KeyLookupNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\KeySegment.cs">
+      <Link>UriParser\SemanticAst\KeySegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\LambdaNode.cs">
+      <Link>UriParser\SemanticAst\LambdaNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\LevelsClause.cs">
+      <Link>UriParser\SemanticAst\LevelsClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\AnnotationSegment.cs">
+      <Link>UriParser\SemanticAst\AnnotationSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\MetadataSegment.cs">
+      <Link>UriParser\SemanticAst\MetadataSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\NamedFunctionParameterNode.cs">
+      <Link>UriParser\SemanticAst\NamedFunctionParameterNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\NamespaceQualifiedWildcardSelectItem.cs">
+      <Link>UriParser\SemanticAst\NamespaceQualifiedWildcardSelectItem.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\NavigationPropertyLinkSegment.cs">
+      <Link>UriParser\SemanticAst\NavigationPropertyLinkSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\NavigationPropertySegment.cs">
+      <Link>UriParser\SemanticAst\NavigationPropertySegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\NonResourceRangeVariable.cs">
+      <Link>UriParser\SemanticAst\NonResourceRangeVariable.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs">
+      <Link>UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ODataExpandPath.cs">
+      <Link>UriParser\SemanticAst\ODataExpandPath.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ODataPath.cs">
+      <Link>UriParser\SemanticAst\ODataPath.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ODataPathExtensions.cs">
+      <Link>UriParser\SemanticAst\ODataPathExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ODataPathSegment.cs">
+      <Link>UriParser\SemanticAst\ODataPathSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ODataSelectPath.cs">
+      <Link>UriParser\SemanticAst\ODataSelectPath.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ODataUnresolvedFunctionParameterAlias.cs">
+      <Link>UriParser\SemanticAst\ODataUnresolvedFunctionParameterAlias.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\OperationImportSegment.cs">
+      <Link>UriParser\SemanticAst\OperationImportSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\OperationSegment.cs">
+      <Link>UriParser\SemanticAst\OperationSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\OperationSegmentParameter.cs">
+      <Link>UriParser\SemanticAst\OperationSegmentParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\OrderByClause.cs">
+      <Link>UriParser\SemanticAst\OrderByClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ParameterAliasNode.cs">
+      <Link>UriParser\SemanticAst\ParameterAliasNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ParameterAliasValueAccessor.cs">
+      <Link>UriParser\SemanticAst\ParameterAliasValueAccessor.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\PathSelectItem.cs">
+      <Link>UriParser\SemanticAst\PathSelectItem.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\PathTemplateSegment.cs">
+      <Link>UriParser\SemanticAst\PathTemplateSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\PropertySegment.cs">
+      <Link>UriParser\SemanticAst\PropertySegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\QueryNode.cs">
+      <Link>UriParser\SemanticAst\QueryNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\RangeVariable.cs">
+      <Link>UriParser\SemanticAst\RangeVariable.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\RangeVariableKind.cs">
+      <Link>UriParser\SemanticAst\RangeVariableKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariable.cs">
+      <Link>UriParser\SemanticAst\ResourceRangeVariable.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNode.cs">
+      <Link>UriParser\SemanticAst\ResourceRangeVariableReferenceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SearchClause.cs">
+      <Link>UriParser\SemanticAst\SearchClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SearchTermNode.cs">
+      <Link>UriParser\SemanticAst\SearchTermNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SelectExpandClause.cs">
+      <Link>UriParser\SemanticAst\SelectExpandClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SelectExpandClauseExtensions.cs">
+      <Link>UriParser\SemanticAst\SelectExpandClauseExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SelectItem.cs">
+      <Link>UriParser\SemanticAst\SelectItem.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleComplexNode.cs">
+      <Link>UriParser\SemanticAst\SingleComplexNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleEntityNode.cs">
+      <Link>UriParser\SemanticAst\SingleEntityNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleNavigationNode.cs">
+      <Link>UriParser\SemanticAst\SingleNavigationNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueCastNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueCastNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleResourceCastNode.cs">
+      <Link>UriParser\SemanticAst\SingleResourceCastNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleResourceFunctionCallNode.cs">
+      <Link>UriParser\SemanticAst\SingleResourceFunctionCallNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleResourceNode.cs">
+      <Link>UriParser\SemanticAst\SingleResourceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingletonSegment.cs">
+      <Link>UriParser\SemanticAst\SingletonSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueFunctionCallNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueFunctionCallNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueOpenPropertyAccessNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueOpenPropertyAccessNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValuePropertyAccessNode.cs">
+      <Link>UriParser\SemanticAst\SingleValuePropertyAccessNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\TypeSegment.cs">
+      <Link>UriParser\SemanticAst\TypeSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\UnaryOperatorNode.cs">
+      <Link>UriParser\SemanticAst\UnaryOperatorNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\UriTemplateExpression.cs">
+      <Link>UriParser\SemanticAst\UriTemplateExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ValueSegment.cs">
+      <Link>UriParser\SemanticAst\ValueSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\WildcardSelectItem.cs">
+      <Link>UriParser\SemanticAst\WildcardSelectItem.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\AllToken.cs">
+      <Link>UriParser\SyntacticAst\AllToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\AnyToken.cs">
+      <Link>UriParser\SyntacticAst\AnyToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\BinaryOperatorToken.cs">
+      <Link>UriParser\SyntacticAst\BinaryOperatorToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ComputeExpressionToken.cs">
+      <Link>UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
+      <Link>UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\DottedIdentifierToken.cs">
+      <Link>UriParser\SyntacticAst\DottedIdentifierToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\EndPathToken.cs">
+      <Link>UriParser\SyntacticAst\EndPathToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ExpandTermToken.cs">
+      <Link>UriParser\SyntacticAst\ExpandTermToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\ExpandToken.cs">
+      <Link>UriParser\SyntacticAst\ExpandToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\FunctionCallToken.cs">
+      <Link>UriParser\SyntacticAst\FunctionCallToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\FunctionParameterAliasToken.cs">
+      <Link>UriParser\SyntacticAst\FunctionParameterAliasToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\FunctionParameterToken.cs">
+      <Link>UriParser\SyntacticAst\FunctionParameterToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\InnerPathToken.cs">
+      <Link>UriParser\SyntacticAst\InnerPathToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\LambdaToken.cs">
+      <Link>UriParser\SyntacticAst\LambdaToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\LiteralToken.cs">
+      <Link>UriParser\SyntacticAst\LiteralToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\NonSystemToken.cs">
+      <Link>UriParser\SyntacticAst\NonSystemToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\OrderByToken.cs">
+      <Link>UriParser\SyntacticAst\OrderByToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\PathSegmentToken.cs">
+      <Link>UriParser\SyntacticAst\PathSegmentToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\PathToken.cs">
+      <Link>UriParser\SyntacticAst\PathToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\QueryToken.cs">
+      <Link>UriParser\SyntacticAst\QueryToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\QueryTokenKind.cs">
+      <Link>UriParser\SyntacticAst\QueryTokenKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\RangeVariableToken.cs">
+      <Link>UriParser\SyntacticAst\RangeVariableToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\SelectToken.cs">
+      <Link>UriParser\SyntacticAst\SelectToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\StarToken.cs">
+      <Link>UriParser\SyntacticAst\StarToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\StringLiteralToken.cs">
+      <Link>UriParser\SyntacticAst\StringLiteralToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\SystemToken.cs">
+      <Link>UriParser\SyntacticAst\SystemToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\UnaryOperatorToken.cs">
+      <Link>UriParser\SyntacticAst\UnaryOperatorToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\TreeNodeKinds\BinaryOperatorKind.cs">
+      <Link>UriParser\TreeNodeKinds\BinaryOperatorKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\TreeNodeKinds\ExpressionTokenKind.cs">
+      <Link>UriParser\TreeNodeKinds\ExpressionTokenKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\TreeNodeKinds\QueryNodeKind.cs">
+      <Link>UriParser\TreeNodeKinds\QueryNodeKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\TreeNodeKinds\RequestTargetKind.cs">
+      <Link>UriParser\TreeNodeKinds\RequestTargetKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\TreeNodeKinds\UnaryOperatorKind.cs">
+      <Link>UriParser\TreeNodeKinds\UnaryOperatorKind.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\TypeFacetsPromotionRules.cs">
+      <Link>UriParser\TypeFacetsPromotionRules.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\TypePromotionUtils.cs">
+      <Link>UriParser\TypePromotionUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\UriEdmHelpers.cs">
+      <Link>UriParser\UriEdmHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\UriFunctionsHelper.cs">
+      <Link>UriParser\UriFunctionsHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\UriQueryConstants.cs">
+      <Link>UriParser\UriQueryConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\IPathSegmentTokenVisitor.cs">
+      <Link>UriParser\Visitors\IPathSegmentTokenVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\IsCollectionTranslator.cs">
+      <Link>UriParser\Visitors\IsCollectionTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\ISyntacticTreeVisitor.cs">
+      <Link>UriParser\Visitors\ISyntacticTreeVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentHandler.cs">
+      <Link>UriParser\Visitors\PathSegmentHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentToContextUrlPathTranslator.cs">
+      <Link>UriParser\Visitors\PathSegmentToContextUrlPathTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentTokenEqualityComparer.cs">
+      <Link>UriParser\Visitors\PathSegmentTokenEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentTokenVisitor.cs">
+      <Link>UriParser\Visitors\PathSegmentTokenVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentToResourcePathTranslator.cs">
+      <Link>UriParser\Visitors\PathSegmentToResourcePathTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentToStringTranslator.cs">
+      <Link>UriParser\Visitors\PathSegmentToStringTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\PathSegmentTranslator.cs">
+      <Link>UriParser\Visitors\PathSegmentTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\QueryNodeVisitor.cs">
+      <Link>UriParser\Visitors\QueryNodeVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\SelectItemHandler.cs">
+      <Link>UriParser\Visitors\SelectItemHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\SelectItemTranslator.cs">
+      <Link>UriParser\Visitors\SelectItemTranslator.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\SelectPropertyVisitor.cs">
+      <Link>UriParser\Visitors\SelectPropertyVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs">
+      <Link>UriParser\Visitors\SplitEndingSegmentOfTypeHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Visitors\SyntacticTreeVisitor.cs">
+      <Link>UriParser\Visitors\SyntacticTreeVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\UriUtils.cs">
+      <Link>UriUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ApplyClauseToStringBuilder.cs">
+      <Link>Uri\ApplyClauseToStringBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ExpressionConstants.cs">
+      <Link>Uri\ExpressionConstants.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\NodeToStringBuilder.cs">
+      <Link>Uri\NodeToStringBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUri.cs">
+      <Link>Uri\ODataUri.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUriConversionUtils.cs">
+      <Link>Uri\ODataUriConversionUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUriExtensions.cs">
+      <Link>Uri\ODataUriExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUriUtils.cs">
+      <Link>Uri\ODataUriUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\ODataUrlKeyDelimiter.cs">
+      <Link>Uri\ODataUrlKeyDelimiter.cs</Link>
+    </Compile>
+    <Compile Include="..\Uri\SelectExpandClauseToStringBuilder.cs">
+      <Link>Uri\SelectExpandClauseToStringBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\Utils.cs">
+      <Link>Utils.cs</Link>
+    </Compile>
+    <Compile Include="..\ValidationKinds.cs">
+      <Link>ValidationKinds.cs</Link>
+    </Compile>
+    <Compile Include="..\ValidationUtils.cs">
+      <Link>ValidationUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterUtils.cs">
+      <Link>WriterUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidationUtils.cs">
+      <Link>WriterValidationUtils.cs</Link>
+    </Compile>
+    <Compile Include="..\WriterValidator.cs" />
+    <None Include="..\obj2c\i386\AssemblyAttributes.cs">
+      <Visible>false</Visible>
+    </None>
+    <None Include="..\obj2c\i386\AssemblyRefs.cs">
+      <Visible>false</Visible>
+    </None>
+    <Compile Include="..\GlobalSuppressions.cs" />
+    <None Include="project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ShippingAssemblyAttributes.cs">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Microsoft.OData.Core.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Core.cs</LastGenOutput>
+    </None>
+    <Compile Include="..\Microsoft.OData.Core.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.OData.Core.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <None Include="..\Parameterized.Microsoft.OData.Core.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Core.cs</LastGenOutput>
+    </None>
+    <Compile Include="..\Parameterized.Microsoft.OData.Core.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.OData.Core.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Some of the test projects have a dependency on this ddl and just adding reference to this project from 
+          those test projects is not sufficient. We have to place the dll in the suitebin folder for those test
+          projects to be able to find the dll. (Note that we are not adding this dll to the GAC.)
+     -->
+    <SuiteBin Include="$(IntermediateOutputPath)$(AssemblyName).dll">
+      <Visible>false</Visible>
+    </SuiteBin>
+    <SuiteBin Include="$(IntermediateOutputPath)$(AssemblyName).pdb">
+      <Visible>false</Visible>
+    </SuiteBin>
+    <CopyFile Include="@(SuiteBin)">
+      <DestFolder>$(SuiteBinPath)</DestFolder>
+    </CopyFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(BuildExtensionsPath)\Portable.targets" />
+</Project>

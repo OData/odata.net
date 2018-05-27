@@ -9,12 +9,10 @@ namespace Microsoft.Test.Taupo.OData.Json.TextAnnotations
     #region Namespaces
     using System;
     using System.Globalization;
-    using Microsoft.Spatial;
     using System.Text;
     using System.Xml;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Common;
-    using Microsoft.Data.Spatial;
     #endregion Namespaces
 
     /// <summary>

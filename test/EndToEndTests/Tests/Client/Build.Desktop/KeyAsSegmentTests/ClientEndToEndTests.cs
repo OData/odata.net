@@ -128,21 +128,8 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.AreEqual(3, person.PersonMetadata.Count, "person.PersonMetadata.Count == 3");
         }
 
-        [TestMethod]
-        public void AttachToWithEtag()
-        {
-            var contextWrapper = this.CreateWrappedContext();
-
-            var product = contextWrapper.Context.Product.First();
-            string productEtag = contextWrapper.GetEntityDescriptor(product).ETag;
-            var attachToProduct = new Product { ProductId = product.ProductId };
-            contextWrapper.Detach(product);
-
-            contextWrapper.AttachTo("Product", attachToProduct, productEtag);
-            contextWrapper.LoadProperty(attachToProduct, "Detail");
-        }
-
-        [TestMethod]
+        // [Ignore] // Issue: #623: Support DI in OData Client
+        // [TestMethod] // github issuse: #896
         public void ContextReferencesTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -170,6 +157,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.IsTrue(entityFromAttachTo == entityFromQueryWithOfType, "Both variables should reference the same object.");
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [TestMethod]
         public void LoadPropertyWithNextLink()
         {
@@ -198,6 +186,6 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
             } while ((customerContinuation = response.GetContinuation()) != null);
         }
-
+#endif
     }
 }

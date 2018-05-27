@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using EdmLibTests.StubEdm;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.VocabularyStubs
 {
-    using EdmLibTests.StubEdm;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Values;
-
     public class StubStringConstantExpression : StubEdmElement, IEdmStringConstantExpression
     {
         public StubStringConstantExpression(string value)
@@ -52,7 +52,7 @@ namespace EdmLibTests.VocabularyStubs
 
         public Microsoft.OData.Edm.IEdmTypeReference Type
         {
-            get { return Microsoft.OData.Edm.Library.EdmCoreModel.Instance.GetString(false); }
+            get { return Microsoft.OData.Edm.EdmCoreModel.Instance.GetString(false); }
         }
     }
 }

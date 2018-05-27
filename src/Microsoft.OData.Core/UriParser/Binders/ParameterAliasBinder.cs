@@ -4,17 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// This class binds parameter alias by :
-    /// (1) parse and bind the alias value's expression into SingleValueNode, then get its type. 
+    /// (1) parse and bind the alias value's expression into SingleValueNode, then get its type.
     /// (2) asign SingleValueNode's type to alias' ParameterAliasNode.
     /// </summary>
     internal sealed class ParameterAliasBinder
@@ -85,10 +82,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // TODO: change Settings.FilterLimit to ParameterAliasValueLimit
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(bindingState.Configuration.Settings.FilterLimit);
             QueryToken aliasValueToken = expressionParser.ParseExpressionText(aliasValueExpression);
-            
+
             // Special logic to handle parameter alias token.
             aliasValueToken = ParseComplexOrCollectionAlias(aliasValueToken, parameterType, bindingState.Model);
-            
+
             // Get the semantic node, and check for SingleValueNode
             QueryNode aliasValueNode = this.bindMethod(aliasValueToken);
             SingleValueNode result = aliasValueNode as SingleValueNode;
@@ -115,10 +112,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
             {
                 var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
-                if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
+                if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                 {
                     object result = valueStr;
-                    if (!parameterType.IsEntity() && !parameterType.IsEntityCollectionType())
+                    if (!parameterType.IsStructured() && !parameterType.IsStructuredCollectionType())
                     {
                         result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType);
                     }

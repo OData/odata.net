@@ -4,21 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
-#elif ODATALIB_QUERY
-namespace Microsoft.OData.Query
 #else
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 #endif
 {
     #region Namespaces
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
 
     #endregion Namespaces
 
@@ -39,12 +34,12 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Determines whether the specified exception can be caught and 
+        /// Determines whether the specified exception can be caught and
         /// handled, or whether it should be allowed to continue unwinding.
         /// </summary>
         /// <param name="e"><see cref="Exception"/> to test.</param>
         /// <returns>
-        /// true if the specified exception can be caught and handled; 
+        /// true if the specified exception can be caught and handled;
         /// false otherwise.
         /// </returns>
         internal static bool IsCatchableExceptionType(Exception e)
@@ -54,7 +49,7 @@ namespace Microsoft.OData.Core
             Type type = e.GetType();
 
             // a 'catchable' exception is defined by what it is not.
-            return 
+            return
 #if !PORTABLELIB
                     type != ThreadAbortType &&
                     type != StackOverflowType &&
@@ -68,19 +63,21 @@ namespace Microsoft.OData.Core
         /// <typeparam name="T">Type of the argument, used to force usage only for reference types.</typeparam>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
-        internal static void CheckArgumentNotNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
+        /// <returns>The value</returns>
+        internal static T CheckArgumentNotNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
             if (value == null)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw Error.ArgumentNull(parameterName);
-#endif 
+#endif
             }
+
+            return value;
         }
 
-#if !ODATALIB_QUERY
         /// <summary>
         /// Checks the argument string value empty string and throws <see cref="ArgumentNullException"/> if it is empty. The value can be null though.
         /// </summary>
@@ -92,12 +89,11 @@ namespace Microsoft.OData.Core
 
             if (value != null && value.Length == 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentException(Strings.ExceptionUtils_ArgumentStringEmpty, parameterName);
 #endif
             }
         }
-#endif
 
         /// <summary>
         /// Checks the argument string value for null or empty string and throws <see cref="ArgumentNullException"/> if it is null or empty.
@@ -110,7 +106,7 @@ namespace Microsoft.OData.Core
 
             if (string.IsNullOrEmpty(value))
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentNullException(parameterName, Strings.ExceptionUtils_ArgumentStringNullOrEmpty);
 #endif
             }
@@ -127,7 +123,7 @@ namespace Microsoft.OData.Core
 
             if (value < 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckIntegerNotNegative(value));
 #endif
             }
@@ -144,7 +140,7 @@ namespace Microsoft.OData.Core
 
             if (value <= 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckIntegerPositive(value));
 #endif
             }
@@ -161,13 +157,12 @@ namespace Microsoft.OData.Core
 
             if (value <= 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckLongPositive(value));
 #endif
             }
         }
 
-#if !ODATALIB_QUERY
         /// <summary>
         /// Checks the <paramref name="value"/> for not being empty.
         /// </summary>
@@ -180,19 +175,18 @@ namespace Microsoft.OData.Core
 
             if (value == null)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 throw Error.ArgumentNull(parameterName);
 #endif
             }
             else if (value.Count == 0)
             {
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 // TODO: STRINGS The string is fine; just rename it to just ArgumentEmpty
                 throw new ArgumentException(Strings.ExceptionUtils_ArgumentStringEmpty, parameterName);
 #endif
             }
         }
-#endif
 
         /// <summary>
         /// A workaround to a problem with FxCop which does not recognize the CheckArgumentNotNull method

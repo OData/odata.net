@@ -32,18 +32,4 @@ namespace System.Data.Test.Astoria
         public static ResourceIdentifier ALinq_MethodNotSupported = Create("ALinq_MethodNotSupported", typeof(NotSupportedException));
         public static ResourceIdentifier DataServiceException_GeneralError = Create("DataServiceException_GeneralError");
     }
-#if ASTORIA_OPEN_OBJECT
-    public class MicrosoftDataWebClientResourceIdentifiers
-    {
-        public static ResourceIdentifier Create(string id,Type expectedException)
-        {
-            return new ResourceIdentifier(typeof(Microsoft.OData.Client.OpenObject).Assembly,id, ComparisonFlag.Full,expectedException);
-        }
-        public static ResourceIdentifier Create(string id)
-        {
-            return Create(id,null);
-        }
-        public static ResourceIdentifier Foo = Create("Foo");
-    }
-#endif
 }

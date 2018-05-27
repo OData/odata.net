@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     #region Namespaces
     using System;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     #endregion Namespaces
 
@@ -40,92 +40,79 @@ namespace Microsoft.Test.Taupo.OData.Common
             new MediaTypeWithFormat[][]
             {
                 // feed
-                new MediaTypeWithFormat[] 
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeAtomXmlSubType },
+                new MediaTypeWithFormat[]
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // entry
-                new MediaTypeWithFormat[] 
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeAtomXmlSubType },
+                new MediaTypeWithFormat[]
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // property
                 new MediaTypeWithFormat[]
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" + MimeConstants.MimeXmlSubType },
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // entity reference link
                 new MediaTypeWithFormat[]
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" + MimeConstants.MimeXmlSubType },
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // entity reference links
                 new MediaTypeWithFormat[]
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" +  MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" +  MimeConstants.MimeXmlSubType },
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" +  MimeConstants.MimeJsonSubType }
                 },
 
                 // value
                 new MediaTypeWithFormat[]
-                { 
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.RawValue, MediaType = MimeConstants.MimeTextType + "/" + MimeConstants.MimePlainSubType },
                 },
 
                 // binary
                 new MediaTypeWithFormat[]
-                { 
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.RawValue, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeOctetStreamSubType },
                 },
 
                 // collection
                 new MediaTypeWithFormat[]
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeTextType + "/" + MimeConstants.MimeXmlSubType },
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // service document
                 new MediaTypeWithFormat[]
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeAtomSvcXmlSubType },
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // metadata document
                 new MediaTypeWithFormat[]
-                { 
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Metadata, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
                 },
 
                 // error
                 new MediaTypeWithFormat[]
-                { 
-                    new MediaTypeWithFormat { Format = ODataFormat.Atom, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeXmlSubType },
+                {
                     new MediaTypeWithFormat { Format = ODataFormat.Json, MediaType = MimeConstants.MimeApplicationType + "/" + MimeConstants.MimeJsonSubType }
                 },
 
                 // batch
                 new MediaTypeWithFormat[]
-                { 
+                {
                     // Note that as per spec the multipart/mixed must have a boundary parameter which is not specified here. We will add that parameter
                     // when using this mime type because we need to generate a new boundary every time.
                     new MediaTypeWithFormat { Format = ODataFormat.Batch, MediaType = MimeConstants.MimeMultipartType + "/" + MimeConstants.MimeMixedSubType },
                 },
-                
+
                 // parameter
                 new MediaTypeWithFormat[]
                 {
@@ -190,21 +177,21 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <returns>The default encoding for <paramref name="kind"/>.</returns>
         public static Encoding GetDefaultEncoding(ODataPayloadKind kind, ODataFormat format)
         {
-            if (format == ODataFormat.Atom)
+            if (format == ODataFormat.Json)
             {
                 return null;
             }
-            
+
             if (format == ODataFormat.Metadata)
             {
                 return null;
             }
-            
+
             if (format == ODataFormat.Batch)
             {
                 return null;
             }
-            
+
             if (format == ODataFormat.RawValue)
             {
                 return Latin1Encoding;
@@ -235,7 +222,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                     case ODataPayloadKind.BinaryValue:
                         return ODataFormat.RawValue;
                     default:
-                        return ODataFormat.Atom;
+                        return ODataFormat.Json;
                 }
             }
 
@@ -252,14 +239,12 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             switch (kind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                 case ODataPayloadKind.EntityReferenceLinks:
-                    if (format == ODataFormat.Atom || format == null) return "application/atom+xml;type=feed";
-                    else if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
+                    if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
-                case ODataPayloadKind.Entry:
-                    if (format == ODataFormat.Atom || format == null) return "application/atom+xml;type=entry";
-                    else if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
+                case ODataPayloadKind.Resource:
+                    if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
                 case ODataPayloadKind.Value:
                     if (format == ODataFormat.RawValue || format == null) return "text/plain;charset=iso-8859-1";
@@ -272,8 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 case ODataPayloadKind.EntityReferenceLink:  // fall through
                 case ODataPayloadKind.Error:                // fall through
                 case ODataPayloadKind.ServiceDocument:
-                    if (format == ODataFormat.Atom || format == null) return "application/xml";
-                    else if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
+                    if (format == ODataFormat.Json) return "application/json;odata.metadata=minimal;odata.streaming=true;charset=utf-8";
                     else throw new NotSupportedException("Unsupported format for " + kind.ToString() + ".");
                 case ODataPayloadKind.Batch:
                     if (format == ODataFormat.Batch || format == null) return "multipart/mixed";
@@ -295,16 +279,18 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </summary>
         /// <param name="kind">The <see cref="ODataPayloadKind"/> to get the supported media types for.</param>
         /// <param name="includeApplicationJson">true if application/json should be included as supported media type (for reading versions &lt; V3).</param>
+        /// <param name="includeApplicationJsonLight">true if JsonLight media types should be included.</param>
         /// <returns>The string concatenating all supported media types for <paramref name="kind"/>.</returns>
         public static string GetSupportedMediaTypes(ODataPayloadKind kind, bool includeApplicationJson = true, bool includeApplicationJsonLight = true)
         {
             StringBuilder builder = new StringBuilder();
+            bool hasTailingComma = false;
 
             // Add the JSON media types to the supported payload kinds
             switch (kind)
             {
-                case ODataPayloadKind.Feed:
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.ResourceSet:
+                case ODataPayloadKind.Resource:
                 case ODataPayloadKind.Property:
                 case ODataPayloadKind.Collection:
                 case ODataPayloadKind.EntityReferenceLink:
@@ -312,51 +298,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 case ODataPayloadKind.Error:
                 case ODataPayloadKind.ServiceDocument:
                 case ODataPayloadKind.Parameter:
-                    if (includeApplicationJsonLight)
-                    {
-                        builder.Append("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=minimal;odata.streaming=true");
-                        builder.Append(", application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=minimal;odata.streaming=false");
-                        builder.Append(", application/json;odata.metadata=minimal;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=minimal;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=minimal");
-                        builder.Append(", application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=full;odata.streaming=true");
-                        builder.Append(", application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=full;odata.streaming=false");
-                        builder.Append(", application/json;odata.metadata=full;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=full;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=full");
-                        builder.Append(", application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=none;odata.streaming=true");
-                        builder.Append(", application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=none;odata.streaming=false");
-                        builder.Append(", application/json;odata.metadata=none;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.metadata=none;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.metadata=none");
-                        builder.Append(", application/json;odata.streaming=true;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.streaming=true;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.streaming=true");
-                        builder.Append(", application/json;odata.streaming=false;IEEE754Compatible=false");
-                        builder.Append(", application/json;odata.streaming=false;IEEE754Compatible=true");
-                        builder.Append(", application/json;odata.streaming=false");
-                        builder.Append(", application/json;IEEE754Compatible=false");
-                        builder.Append(", application/json;IEEE754Compatible=true");
-                         builder.Append(", ");
-                    }
-
-                    if (includeApplicationJson)
-                    {
-                        builder.Append("application/json");
-                        builder.Append(", ");
-                    }
+                    AddJsonMediaTypes(includeApplicationJson, includeApplicationJsonLight, builder);
                     break;
                 default:
                     break;
@@ -364,10 +306,10 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             switch (kind)
             {
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                 case ODataPayloadKind.EntityReferenceLinks:
                     break;
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                     break;
                 case ODataPayloadKind.Property:
                     break;
@@ -386,7 +328,9 @@ namespace Microsoft.Test.Taupo.OData.Common
                 case ODataPayloadKind.ServiceDocument:
                     break;
                 case ODataPayloadKind.Batch:
-                    builder.Append("multipart/mixed");
+                    builder.Append("multipart/mixed, ");
+                    AddJsonMediaTypes(includeApplicationJson, includeApplicationJsonLight, builder);
+                    hasTailingComma = true;
                     break;
                 case ODataPayloadKind.MetadataDocument:
                     break;
@@ -398,7 +342,66 @@ namespace Microsoft.Test.Taupo.OData.Common
                     throw new NotSupportedException("Unsupported payload kind found: " + kind.ToString());
             }
 
-            return builder.ToString();
+            return hasTailingComma
+                    ? builder.ToString(0, builder.Length - 1)
+                    : builder.ToString();
+        }
+
+        /// <summary>
+        /// Populate the names of all possible application/json media types to the string builder passed in.
+        /// </summary>
+        /// <param name="includeApplicationJson">true if application/json should be included as supported media type (for reading versions &lt; V3).</param>
+        /// <param name="includeApplicationJsonLight">true if JsonLight media types should be included (for OData V4 and beyond).</param>
+        /// <param name="builder">string builder object to accept the eligible media type names.</param>
+        /// <returns>The string concatenating all supported media types for <paramref name="kind"/>.</returns>
+        private static void AddJsonMediaTypes(bool includeApplicationJson, bool includeApplicationJsonLight,
+            StringBuilder builder)
+        {
+            if (includeApplicationJsonLight)
+            {
+                builder.Append("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=minimal;odata.streaming=true");
+                builder.Append(", application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=minimal;odata.streaming=false");
+                builder.Append(", application/json;odata.metadata=minimal;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=minimal;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=minimal");
+                builder.Append(", application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=full;odata.streaming=true;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=full;odata.streaming=true");
+                builder.Append(", application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=full;odata.streaming=false;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=full;odata.streaming=false");
+                builder.Append(", application/json;odata.metadata=full;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=full;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=full");
+                builder.Append(", application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=none;odata.streaming=true;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=none;odata.streaming=true");
+                builder.Append(", application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=none;odata.streaming=false;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=none;odata.streaming=false");
+                builder.Append(", application/json;odata.metadata=none;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.metadata=none;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.metadata=none");
+                builder.Append(", application/json;odata.streaming=true;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.streaming=true;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.streaming=true");
+                builder.Append(", application/json;odata.streaming=false;IEEE754Compatible=false");
+                builder.Append(", application/json;odata.streaming=false;IEEE754Compatible=true");
+                builder.Append(", application/json;odata.streaming=false");
+                builder.Append(", application/json;IEEE754Compatible=false");
+                builder.Append(", application/json;IEEE754Compatible=true");
+                builder.Append(", ");
+            }
+
+            if (includeApplicationJson)
+            {
+                builder.Append("application/json");
+                builder.Append(", ");
+            }
         }
 
         /// <summary>
@@ -412,7 +415,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             ExceptionUtilities.CheckArgumentNotNull(contentType, "contentType");
             ExceptionUtilities.CheckArgumentNotNull(payloadKind, "payloadKind");
             var indexOfSeparator = contentType.IndexOf(';');
-            if ( indexOfSeparator > -1)
+            if (indexOfSeparator > -1)
             {
                 contentType = contentType.Substring(0, indexOfSeparator);
             }

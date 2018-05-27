@@ -128,13 +128,13 @@ namespace Microsoft.OData.Edm.Validation
         // unused 49,
         // unused 50,
 
-        /// <summary> 
-        /// Precision out of range 
+        /// <summary>
+        /// Precision out of range
         /// </summary>
         PrecisionOutOfRange = 51,
 
-        /// <summary> 
-        /// Scale out of range 
+        /// <summary>
+        /// Scale out of range
         /// </summary>
         ScaleOutOfRange = 52,
 
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Edm.Validation
 
         /// <summary>
         /// An object with an interface kind property does not implement the interface corresponding to the value of that property.
-        /// For example this error will be reported for an object that implements <see cref="IEdmType"/> interface with kind property reporting <see cref="EdmTypeKind"/>.Entity, 
+        /// For example this error will be reported for an object that implements <see cref="IEdmType"/> interface with kind property reporting <see cref="EdmTypeKind"/>.Entity,
         /// but does not implement <see cref="IEdmEntityType"/> interface.
         /// </summary>
         InterfaceCriticalKindValueMismatch = 77,
@@ -299,17 +299,17 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         InvalidPropertyInRelationshipConstraint = 111,
 
-        /// <summary> 
+        /// <summary>
         /// Type mismatch between ToProperty and FromProperty in the relationship constraint
         /// </summary>
         TypeMismatchRelationshipConstraint = 112,
 
-        /// <summary> 
+        /// <summary>
         /// Invalid multiplicty of the principal end of a navigation.
         /// </summary>
         InvalidMultiplicityOfPrincipalEnd = 113,
 
-        /// <summary> 
+        /// <summary>
         /// The number of properties in the FromProperty and ToProperty in the relationship constraint must be identical
         /// </summary>
         MismatchNumberOfPropertiesInRelationshipConstraint = 114,
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Edm.Validation
         //// <summary> No Properties defined in either FromProperty or ToProperty in the relationship constraint</summary>
         // MissingPropertyInRelationshipConstraint = 115,
 
-        /// <summary> 
+        /// <summary>
         /// Invalid multiplicty of the dependent end of a navigation.
         /// </summary>
         InvalidMultiplicityOfDependentEnd = 116,
@@ -327,8 +327,8 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         OpenTypeNotSupported = 117,
 
-        /// <summary> 
-        /// Same role referred in the ToRole and FromRole of a referential constraint 
+        /// <summary>
+        /// Same role referred in the ToRole and FromRole of a referential constraint
         /// </summary>
         SameRoleReferredInReferentialConstraint = 119,
 
@@ -348,13 +348,13 @@ namespace Microsoft.OData.Edm.Validation
         //// <summary> Precision must not be greater than 28 </summary>
         // PrecisionMoreThanAllowedMax = 127,
 
-        /// <summary> 
+        /// <summary>
         /// Properties that are part of entity key must be of scalar type
         /// </summary>
         EntityKeyMustBeScalar = 128,
 
-        /// <summary> 
-        /// Binary type properties which are part of entity key are currently supported before V2.0 
+        /// <summary>
+        /// Binary type properties which are part of entity key are currently supported before V2.0
         /// </summary>
         EntityKeyMustNotBeBinary = 129,
 
@@ -394,11 +394,6 @@ namespace Microsoft.OData.Edm.Validation
         // EmptyDefiningQuery = 142,
         //// <summary>Schema, Table and DefiningQuery are all specified, and are mutualy exlusive</summary>
         // TableAndSchemaAreMutuallyExclusiveWithDefiningQuery = 143,
-
-        /// <summary>
-        /// ConcurrencyMode value was malformed
-        /// </summary>
-        InvalidConcurrencyMode = 144,
 
         /// <summary>
         /// Conurency can't change for any sub types of an EntitySet type.
@@ -449,7 +444,7 @@ namespace Microsoft.OData.Edm.Validation
         //// <summary> Function declares a ReturnType attribute and element</summary>
         // AmbiguousFunctionReturnType = 156,
 
-        /// <summary> 
+        /// <summary>
         /// Nullable complex Type not supported in version 1.0 and 2.0.
         /// </summary>
         NullableComplexTypeProperty = 157,
@@ -458,7 +453,7 @@ namespace Microsoft.OData.Edm.Validation
         // NonComplexCollections = 158,
 
         /// <summary>
-        /// No Key defined on Entity Type 
+        /// No Key defined on Entity Type
         /// </summary>
         KeyMissingOnEntityType = 159,
 
@@ -466,15 +461,15 @@ namespace Microsoft.OData.Edm.Validation
         // InvalidNamespaceInUsing = 160,
 
         /// <summary>
-        /// Need not specify system namespace in using 
+        /// Need not specify system namespace in using
         /// </summary>
         SystemNamespaceEncountered = 161,
 
         //// <summary> Cannot use a reserved/system namespace as alias </summary>
         // CannotUseSystemNamespaceAsAlias = 162,
 
-        /// <summary> 
-        /// Invalid qualification specified for type 
+        /// <summary>
+        /// Invalid qualification specified for type
         /// </summary>
         InvalidNamespaceName = 163,
 
@@ -549,9 +544,9 @@ namespace Microsoft.OData.Edm.Validation
         // EdmAssociationEnd_EntityTypeMustNotBeNull = 205,
 
         /// <summary>
-        /// The value for an enumeration type member is ouf of range.
+        /// The enumeration member must have a value.
         /// </summary>
-        EnumMemberValueOutOfRange = 206,
+        EnumMemberMustHaveValue = 206,
 
         // EdmFunctionImport_ReturnTypeMustBeCollectionType = 210,
         // EdmModel_NameIsNotAllowed = 211,
@@ -699,7 +694,10 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         InvalidNavigationPropertyType = 258,
 
-        // unused 259
+        /// <summary>
+        /// Edm.PrimitiveType cannot be used as the type of a key property of an entity type.
+        /// </summary>
+        KeyPropertyTypeCannotBeEdmPrimitiveType = 259,
 
         // unused 260
 
@@ -787,6 +785,11 @@ namespace Microsoft.OData.Edm.Validation
         /// Operation with an EntitySetPath has an invalid return type. The return type must be an entity type or collection of entity type.
         /// </summary>
         OperationWithEntitySetPathReturnTypeInvalid = 256,
+
+        /// <summary>
+        /// Collection(Edm.PrimitiveType) and Collection(Edm.ComplexType) cannot be used as the return type of a function.
+        /// </summary>
+        OperationWithCollectionOfAbstractReturnTypeInvalid = 257,
 
         /// <summary>
         /// Max length is out of range.
@@ -879,9 +882,9 @@ namespace Microsoft.OData.Edm.Validation
         InvalidIfExpressionIncorrectNumberOfOperands = 290,
 
         /// <summary>
-        /// The type of an enum member value must match the underlying of the parent enum.
+        /// The enum member value is out of range of its underlying type.
         /// </summary>
-        EnumMemberTypeMustMatchEnumUnderlyingType = 292,
+        EnumMemberValueOutOfRange = 292,
 
         /// <summary>
         /// The IsType expression is invalid because it does not have 1 element.
@@ -949,7 +952,7 @@ namespace Microsoft.OData.Edm.Validation
         NavigationPropertyWithRecursiveContainmentTargetMustBeOptional = 305,
 
         /// <summary>
-        /// If a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as 
+        /// If a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as
         /// the declaring type of the property, then the multiplicity of the source of navigation is Zero-Or-One.
         /// </summary>
         NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne = 306,
@@ -1101,9 +1104,9 @@ namespace Microsoft.OData.Edm.Validation
         PropertyMustNotHaveKindOfNone = 336,
 
         /// <summary>
-        /// A term without other errors must not have kind of none.
+        /// A property type cannot be collection of Edm.Primitive or Edm.ComplexType.
         /// </summary>
-        TermMustNotHaveKindOfNone = 337,
+        PropertyTypeCannotBeCollectionOfAbstractType = 337,
 
         /// <summary>
         /// A schema element without other errors must not have kind of none.
@@ -1186,7 +1189,7 @@ namespace Microsoft.OData.Edm.Validation
         BadPrincipalPropertiesInReferentialConstraint = 353,
 
         /// <summary>
-        /// A direct value annotation with the same name and namespace already exists.
+        /// A direct annotation with the same name and namespace already exists.
         /// </summary>
         DuplicateDirectValueAnnotationFullName = 354,
 
@@ -1299,5 +1302,60 @@ namespace Microsoft.OData.Edm.Validation
         /// TimeOfDay value is invalid.
         /// </summary>
         InvalidTimeOfDay = 376,
+
+        /// <summary>
+        /// Navigation property partner path cannot be resolved.
+        /// </summary>
+        UnresolvedNavigationPropertyPartnerPath = 377,
+
+        /// <summary>
+        /// Navigation property binding path cannot be resolved.
+        /// </summary>
+        UnresolvedNavigationPropertyBindingPath = 378,
+
+        /// <summary>
+        /// A required parameter followed an optional parameter.
+        /// </summary>
+        RequiredParametersMustPrecedeOptional = 379,
+
+        /// <summary>
+        /// The enum type is not valid for the requested type.
+        /// </summary>
+        ExpressionEnumKindNotValidForAssertedType = 380,
+
+        /// <summary>
+        /// The underlying type of a type definition type cannot be Edm.PrimitiveType.
+        /// </summary>
+        TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType = 381,
+
+        /// <summary>
+        /// The base type of an entity type cannot be Edm.EntityType.
+        /// </summary>
+        EntityTypeBaseTypeCannotBeEdmEntityType = 382,
+
+        /// <summary>
+        /// The base type of a complex type cannot be Edm.ComplexType.
+        /// </summary>
+        ComplexTypeBaseTypeCannotBeEdmComplexType = 383,
+
+        /// <summary>
+        /// Edm.EntityType cannot be used as the type of a singleton in an entity container.
+        /// </summary>
+        EntityTypeOfSingletonCannotBeEdmEntityType = 384,
+
+        /// <summary>
+        /// Edm.EntityType cannot be used as the type of an entity set in an entity container.
+        /// </summary>
+        EntityTypeOfEntitySetCannotBeEdmEntityType = 385,
+
+        /// <summary>
+        /// The dclaring type of navigation source cannot have path type property.
+        /// </summary>
+        DeclaringTypeOfNavigationSourceCannotHavePathProperty = 386,
+
+        /// <summary>
+        /// The type of navigation property cannot have path type property.
+        /// </summary>
+        TypeOfNavigationPropertyCannotHavePathProperty = 387
     }
 }

@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
 
     /// <summary>
     /// This class marks a type that represents an Astoria client entity
-    /// such that the Astoria client will treat it as a media entry 
+    /// such that the Astoria client will treat it as a media entry
     /// according to ATOM's "media link entry" concept.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]

@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using System.Linq;
     using System.Net;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;

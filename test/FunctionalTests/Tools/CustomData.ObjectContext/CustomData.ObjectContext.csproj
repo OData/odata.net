@@ -7,7 +7,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>System.Data.Test.Astoria.CustomData</RootNamespace>
     <AssemblyName>CustomData.ObjectContext</AssemblyName>
-    <TargetFrameworkVersion>$(WinFxRefsVersion)</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AssemblyKeyType>ECMA</AssemblyKeyType>
     <CreateMetaAssembly>false</CreateMetaAssembly>

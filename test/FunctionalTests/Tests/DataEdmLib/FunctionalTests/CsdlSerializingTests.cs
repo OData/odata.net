@@ -15,9 +15,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -137,7 +134,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""myByte"" Type=""Edm.Byte"" />
     <Property Name=""myStream"" Type=""Edm.Stream"" />
     <Property Name=""myString"" Type=""Edm.String"" DefaultValue=""BorkBorkBork"" MaxLength=""128"" Unicode=""false"" />
-    <Property Name=""myStringMax"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" MaxLength=""max"" Unicode=""false"" />
+    <Property Name=""myStringMax"" Type=""Edm.String"" MaxLength=""max"" Unicode=""false"" />
     <Property Name=""myTimeOfDay"" Type=""Edm.TimeOfDay"" Precision=""4"" />
   </ComplexType>
 </Schema>";
@@ -536,7 +533,7 @@ namespace EdmLibTests.FunctionalTests
             }
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(readers, out model, out errors);
+            bool parsed = SchemaReader.TryParse(readers, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
             StringWriter sw = new StringWriter();
@@ -551,7 +548,7 @@ namespace EdmLibTests.FunctionalTests
                     {0, 0, EdmErrorCode.SingleFileExpected},
                 };
                 IEnumerable<EdmError> actualSerializationErrors;
-                model.TryWriteCsdl(xw, out actualSerializationErrors);
+                model.TryWriteSchema(xw, out actualSerializationErrors);
                 CompareErrors(actualSerializationErrors, expectedSerializationErrors);
             }
         }
@@ -683,7 +680,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeValueTerm()
+        public void SerializeTerm()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -714,7 +711,7 @@ namespace EdmLibTests.FunctionalTests
       <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Annotation Term=""Core.OptimisticConcurrencyControl"">
+    <Annotation Term=""Org.OData.Core.V1.OptimisticConcurrency"">
       <Collection>
         <PropertyPath>Concurrency</PropertyPath>
       </Collection>
@@ -741,7 +738,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeValueAnnotation()
+        public void SerializeVocabularyAnnotation()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -764,7 +761,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeOutOfLineValueAnnotation()
+        public void SerializeOutOfLineVocabularyAnnotation()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -798,7 +795,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeOutOfLineValueAnnotationOnExtendedTargets()
+        public void SerializeOutOfLineVocabularyAnnotationOnExtendedTargets()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -835,7 +832,7 @@ namespace EdmLibTests.FunctionalTests
   <Term Name=""Subject"" Type=""foo.Person"" />
   <EntityContainer Name=""C1"">
     <EntitySet Name=""People"" EntityType=""foo.Person"" />
-    <ActionImport Name=""GetCustomers"" Action=""foo.GetCustomers"" EntitySet=""Customers"" />
+    <ActionImport Name=""GetCustomers"" Action=""foo.GetCustomers"" EntitySet=""People"" />
   </EntityContainer>
   <Annotations Target=""foo.Person"">
     <Annotation Term=""foo.Age"" Qualifier=""First"" Int=""123"" />
@@ -1138,40 +1135,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeReferenceExpressions()
-        {
-            const string inputText =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <Annotations Target=""foo.Person"">
-    <Annotation Term=""Funk.Punning"">
-      <IsType Type=""Edm.Int32"">
-        <Path>Living</Path>
-      </IsType>
-    </Annotation>
-    <Annotation Term=""Funk.Clear"">
-      <PropertyReference Name=""Foo"">
-        <Null />
-      </PropertyReference>
-    </Annotation>
-    <Annotation Term=""Funk.Near"">
-      <ParameterReference Name=""Bork"" />
-    </Annotation>
-    <Annotation Term=""Funk.Dear"">
-      <FunctionReference Name=""Biz.Baz"" />
-    </Annotation>
-    <Annotation Term=""Funk.Beer"">
-      <EntitySetReference Name=""Quip.Quack/Qwop"" />
-    </Annotation>
-    <Annotation Term=""Funk.Fear"">
-      <Null />
-    </Annotation>
-  </Annotations>
-</Schema>";
-            VerifyRoundTrip(inputText);
-        }
-
-        [TestMethod]
         public void CheckArgumentValidation()
         {
             const string inputText =
@@ -1184,13 +1147,13 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             try
             {
-                model.TryWriteCsdl((XmlWriter)null, out errors);
+                model.TryWriteSchema((XmlWriter)null, out errors);
             }
             catch (Exception e)
             {
@@ -1198,7 +1161,7 @@ namespace EdmLibTests.FunctionalTests
             }
             try
             {
-                model.TryWriteCsdl((Func<string, XmlWriter>)null, out errors);
+                model.TryWriteSchema((Func<string, XmlWriter>)null, out errors);
             }
             catch (Exception e)
             {
@@ -1206,7 +1169,7 @@ namespace EdmLibTests.FunctionalTests
             }
             try
             {
-                model.TryWriteCsdl(s => null, out errors);
+                model.TryWriteSchema(s => null, out errors);
             }
             catch (Exception e)
             {
@@ -1470,6 +1433,37 @@ namespace EdmLibTests.FunctionalTests
             VerifyRoundTrip(csdl);
         }
 
+        [ TestMethod]
+        public void RoundtripModelWithTypeDefinitionFacets()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""MyNS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <TypeDefinition Name=""Length"" UnderlyingType=""Edm.Int32"" />
+  <TypeDefinition Name=""Width"" UnderlyingType=""Edm.Int32"">
+    <Annotation Term=""Org.OData.Measurements.V1.Unit"" String=""Centimeters"" />
+  </TypeDefinition>
+  <TypeDefinition Name=""Weight"" UnderlyingType=""Edm.Decimal"">
+    <Annotation Term=""Org.OData.Measurements.V1.Unit"" String=""Kilograms"" />
+  </TypeDefinition>
+  <TypeDefinition Name=""Address"" UnderlyingType=""Edm.String"" />
+  <TypeDefinition Name=""Point"" UnderlyingType=""Edm.GeographyPoint"" />
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Weight"" Type=""MyNS.Weight"" Precision=""3"" Scale=""2"" />
+    <Property Name=""Address"" Type=""MyNS.Address"" MaxLength=""10"" Unicode=""false"" />
+    <Property Name=""Point"" Type=""MyNS.Point"" SRID=""123"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""People"" EntityType=""MyNS.Person"" />
+  </EntityContainer>
+</Schema>";
+
+            VerifyRoundTrip(csdl);
+        }
+
         [TestMethod]
         public void RoundtripModelWithTypeDefinitionInOperation()
         {
@@ -1526,7 +1520,7 @@ namespace EdmLibTests.FunctionalTests
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1539,7 +1533,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();
@@ -1570,12 +1564,12 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(readers, out model, out errors);
+            bool parsed = SchemaReader.TryParse(readers, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEnumerator<XmlWriter> writerEnumerator = writers.GetEnumerator();
-            model.TryWriteCsdl(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
+            model.TryWriteSchema(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
 
             foreach (XmlWriter xw in writers)
             {

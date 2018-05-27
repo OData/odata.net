@@ -7,16 +7,10 @@
 namespace Microsoft.OData.Service.Providers
 {
     #region Namespaces
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
 
+    using System.Diagnostics;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Vocabularies;
 
     #endregion Namespaces
 
@@ -83,7 +77,7 @@ namespace Microsoft.OData.Service.Providers
                 
                 if (resourceSet != null)
                 {
-                    return new EdmEntitySetReferenceExpression(this.model.EnsureEntitySet(resourceSet));
+                    return new EdmPathExpression(this.model.EnsureEntitySet(resourceSet).Name);
                 }
 
                 if (this.entitySetPath != null)

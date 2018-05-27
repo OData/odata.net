@@ -9,7 +9,7 @@ namespace Microsoft.OData.Service
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// A <see cref="IODataResponseMessage"/> implementation that is only used for writing error payloads inside already existing error payloads.

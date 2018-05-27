@@ -7,12 +7,10 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SyntacticAst
+namespace Microsoft.OData.Tests.UriParser.SyntacticAst
 {
     public class ExpandTermTokenTests
     {
@@ -60,10 +58,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.SyntacticAst
             ExpandTermToken expandTerm1 = new ExpandTermToken(new NonSystemToken("stuff", null, null),
                                                              null /*selectOption*/,
                                                              null /*expandOption*/);
-            expandTerm1.PathToNavProp.ShouldBeNonSystemToken("stuff");
+            expandTerm1.PathToNavigationProp.ShouldBeNonSystemToken("stuff");
 
             ExpandTermToken expandTerm2 = new ExpandTermToken(new NonSystemToken("stuff", null, null));
-            expandTerm2.PathToNavProp.ShouldBeNonSystemToken("stuff");
+            expandTerm2.PathToNavigationProp.ShouldBeNonSystemToken("stuff");
         }
 
         [Fact]

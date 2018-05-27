@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -116,12 +115,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                             {
-                                ExpectedException = tc.Format == ODataFormat.Atom 
-                                    ? tc.IsRequest
-                                        ? null
-                                        : ODataExpectedExceptions.ODataException("ValidationUtils_MismatchPropertyKindForStreamProperty", "NonStreamProperty") 
-                                    : tc.Format == ODataFormat.Json
-                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType", "NonStreamProperty", "Edm.Boolean")
+                                ExpectedException = tc.Format == ODataFormat.Json
+                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "NonStreamProperty", "Edm.Boolean")
                                         : ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject")
                             },
                     },
@@ -156,10 +151,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -210,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.PrimitiveValue(testCase.Value).WithTypeAnnotation(testCase.DataType),
                     PayloadEdmModel = new EdmModel().Fixup(),
                     ExpectedException = testCase.Value == null
-                        ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullValueForNonNullableType", testCase.TypeName)
+                        ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "value", testCase.TypeName)
                         : null,
                 });
 
@@ -229,14 +220,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException(
                             "ReaderValidationUtils_NullNamedValueForNonNullableType",
                             "propertyName",
-                            testDescriptor.ExpectedException.ExpectedMessage.Arguments.ElementAt(0));
+                            testDescriptor.ExpectedException.ExpectedMessage.Arguments.ElementAt(1));
                     }
 
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
 
                     testDescriptor.RunTest(testConfiguration);
                 });

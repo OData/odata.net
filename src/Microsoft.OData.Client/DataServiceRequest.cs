@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>non-generic placeholder for generic implementation</summary>
     public abstract class DataServiceRequest
@@ -62,7 +62,6 @@ namespace Microsoft.OData.Client
         /// <param name="message">the message</param>
         /// <param name="expectedPayloadKind">expected payload kind.</param>
         /// <returns>atom materializer</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Returning MaterializeAtom, caller will dispose")]
         internal static MaterializeAtom Materialize(
             ResponseInfo responseInfo,
             QueryComponents queryComponents,
@@ -338,8 +337,8 @@ namespace Microsoft.OData.Client
 
 #if PORTABLELIB
             // Empty Memorystream will be set when posting null operation parameters
-            return string.CompareOrdinal(XmlConstants.HttpMethodPost, qc.HttpMethod) == 0 
-                ? new QueryResult(source, method, this, requestMessage, requestInfo, callback, state, new ContentStream(new MemoryStream(), false /*isKnownMemoryStream*/)) 
+            return string.CompareOrdinal(XmlConstants.HttpMethodPost, qc.HttpMethod) == 0
+                ? new QueryResult(source, method, this, requestMessage, requestInfo, callback, state, new ContentStream(new MemoryStream(), false /*isKnownMemoryStream*/))
                 : new QueryResult(source, method, this, requestMessage, requestInfo, callback, state);
 #else
             return new QueryResult(source, method, this, requestMessage, requestInfo, callback, state);

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>Enumeration with all the states the batch reader can be in.</summary>
     public enum ODataBatchReaderState
@@ -13,12 +13,12 @@ namespace Microsoft.OData.Core
         Initial,
 
         /// <summary>The batch reader detected an operation.</summary>
-        /// <remarks>In this state the start boundary, the request/response line 
+        /// <remarks>In this state the start boundary, the request/response line
         /// and the operation headers have already been read.</remarks>
         Operation,
 
         /// <summary>The batch reader detected the start of a change set.</summary>
-        /// <remarks>In this state the start boundary and the change set 
+        /// <remarks>In this state the start boundary and the change set
         /// headers have already been read.</remarks>
         ChangesetStart,
 

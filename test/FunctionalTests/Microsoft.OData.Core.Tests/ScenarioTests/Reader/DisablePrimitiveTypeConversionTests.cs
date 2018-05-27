@@ -10,11 +10,10 @@ using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
+namespace Microsoft.OData.Tests.ScenarioTests.Reader
 {
     public class DisablePrimitiveTypeConversionTests
     {
@@ -34,39 +33,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             this.model.AddElement(container);
             container.AddEntitySet("Entities", this.entityType);
 
-            this.defaultSettings = new ODataMessageReaderSettings { BaseUri = new Uri("http://serviceRoot/"), EnableAtom = true };
-            this.settingsWithConversionDisabled = new ODataMessageReaderSettings(this.defaultSettings) { DisablePrimitiveTypeConversion = true, EnableAtom = true };
-        }
-
-        [Fact]
-        public void AtomShouldConvertOpenPropertyValueToPayloadSpecifiedTypeEvenIfConversionIsDisabled()
-        {
-            this.ReadPropertyValueInAtom("OpenProperty", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled).Should().BeAssignableTo<byte[]>();
-        }
-
-        [Fact]
-        public void AtomShouldConvertDeclaredPropertyValueToPayloadSpecifiedTypeEvenIfConversionIsDisabled()
-        {
-            this.ReadPropertyValueInAtom("String", "AQ==", "Edm.Binary", this.settingsWithConversionDisabled).Should().BeAssignableTo<byte[]>();
-        }
-
-        [Fact]
-        public void AtomShouldNotConvertDeclaredPropertyValueToMetadataTypeIfConversionIsDisabled()
-        {
-            this.ReadPropertyValueInAtom("Binary", "AQ==", null, this.settingsWithConversionDisabled).Should().BeAssignableTo<string>();
-        }
-
-        [Fact]
-        public void AtomShouldConvertDeclaredPropertyValueToMetadataTypeByDefault()
-        {
-            this.ReadPropertyValueInAtom("Binary", "AQ==", null, this.defaultSettings).Should().BeAssignableTo<byte[]>();
-        }
-
-        [Fact]
-        public void AtomShouldFailIfPayloadTypeDoesNotMatchMetadataTypeByDefault()
-        {
-            Action readWithWrongType = () => this.ReadPropertyValueInAtom("String", "AQ==", "Edm.Binary", this.defaultSettings);
-            readWithWrongType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_IncompatibleType("Edm.Binary", "Edm.String"));
+            this.defaultSettings = new ODataMessageReaderSettings { BaseUri = new Uri("http://serviceRoot/") };
+            this.settingsWithConversionDisabled = this.defaultSettings.Clone();
+            this.settingsWithConversionDisabled.EnablePrimitiveTypeConversion = false;
         }
 
         [Fact]
@@ -107,26 +76,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             return property.Value;
         }
 
-        private object ReadPropertyValueInAtom(string propertyName, string propertyValue, string typeName, ODataMessageReaderSettings settings)
-        {
-            var payload = CreateAtomPayload(propertyName, propertyValue, typeName);
-            var property = this.ReadPropertyOfEntry(payload, propertyName, settings, "application/atom+xml");
-            return property.Value;
-        }
-
-        private static string CreateAtomPayload(string propertyName, string value, string type)
-        {
-            const string format = @"
-                <entry xmlns=""http://www.w3.org/2005/Atom"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-                    <content type=""application/xml"">
-                    <m:properties>
-                        <d:{0}{2}>{1}</d:{0}>
-                    </m:properties>
-                    </content>
-                </entry>";
-            return string.Format(format, propertyName, value, type == null ? null : string.Format(" m:type=\"{0}\"", type));
-        }
-
         private static string CreateJsonLightPayload(string propertyName, string value, string type)
         {
             const string format = @"
@@ -144,15 +93,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
             var message = new InMemoryMessage { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", contentType);
             var reader = new ODataMessageReader((IODataResponseMessage)message, settings, this.model);
-            var entryReader = reader.CreateODataEntryReader(this.entityType);
+            var entryReader = reader.CreateODataResourceReader(this.entityType);
             entryReader.Read().Should().BeTrue();
-            entryReader.State.Should().Be(ODataReaderState.EntryStart);
+            entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read().Should().BeTrue();
-            entryReader.State.Should().Be(ODataReaderState.EntryEnd);
-            entryReader.Item.Should().BeAssignableTo<ODataEntry>();
+            entryReader.State.Should().Be(ODataReaderState.ResourceEnd);
+            entryReader.Item.Should().BeAssignableTo<ODataResource>();
 
-            entryReader.Item.As<ODataEntry>().Properties.Should().Contain(p => p.Name == propertyName);
-            var property = entryReader.Item.As<ODataEntry>().Properties.Single(p => p.Name == propertyName);
+            entryReader.Item.As<ODataResource>().Properties.Should().Contain(p => p.Name == propertyName);
+            var property = entryReader.Item.As<ODataResource>().Properties.Single(p => p.Name == propertyName);
             return property;
         }
     }

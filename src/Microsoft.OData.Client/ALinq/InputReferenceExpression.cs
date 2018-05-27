@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     /// <remarks>
     /// Because the type of the input reference is the element type of the set,
     /// it can be used to indicate what a range variable ranges over.
-    /// 
+    ///
     /// For example, in input.Select(b => b.id), 'input' is an IQueryable of T,
     /// and 'b' is a parameter of type T. 'b' can be rebound as an input reference
     /// to 'input' by the InputBinder, which helps in query analysis and

@@ -632,7 +632,7 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""Product"" Nullable=""false"" Partner=""OrderLines"" Type=""DefaultNamespace.Product"">
       <ReferentialConstraint Property=""ProductId"" ReferencedProperty=""ProductId"" />
     </NavigationProperty>
-    <Property ConcurrencyMode=""Fixed"" Name=""ConcurrencyToken"" Nullable=""false"" Type=""Edm.String"" />
+    <Property Name=""ConcurrencyToken"" Nullable=""false"" Type=""Edm.String"" />
     <Property Name=""OrderId"" Nullable=""false"" Type=""Edm.Int32"" />
     <Property Name=""OrderLineStream"" Nullable=""false"" Type=""Edm.Stream"" />
     <Property Name=""ProductId"" Nullable=""false"" Type=""Edm.Int32"" />
@@ -714,7 +714,7 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""RelatedProducts"" Partner=""ProductToRelatedProducts"" Type=""Collection(DefaultNamespace.Product)"" />
     <NavigationProperty Name=""Reviews"" Partner=""Product"" Type=""Collection(DefaultNamespace.ProductReview)"" />
     <NavigationProperty Name=""Suppliers"" Partner=""Products"" Type=""Collection(DefaultNamespace.Supplier)"" />
-    <Property ConcurrencyMode=""Fixed"" Name=""BaseConcurrency"" Nullable=""false"" Type=""Edm.String"" />
+    <Property Name=""BaseConcurrency"" Nullable=""false"" Type=""Edm.String"" />
     <Property Name=""ComplexConcurrency"" Nullable=""false"" Type=""DefaultNamespace.ConcurrencyInfo"" />
     <Property MaxLength=""1000"" Name=""Description"" Nullable=""true"" Type=""Edm.String"" />
     <Property Name=""Dimensions"" Nullable=""false"" Type=""DefaultNamespace.Dimensions"" />

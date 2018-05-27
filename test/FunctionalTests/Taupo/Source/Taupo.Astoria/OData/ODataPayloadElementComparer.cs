@@ -151,11 +151,21 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             public void Visit(ComplexInstance expected)
             {
                 ExceptionUtilities.CheckArgumentNotNull(expected, "expected");
-                var observed = this.GetNextObservedElement<ComplexInstance>();
+                var observed = this.GetNextObservedElement();
 
-                using (this.Assert.WithMessage("Complex instance did not match expectation"))
+                if (observed.ElementType == ODataPayloadElementType.EntityInstance
+                    || observed.ElementType == ODataPayloadElementType.ComplexInstance)
                 {
-                    this.CompareComplexInstance(expected, observed);
+
+                    using (this.Assert.WithMessage("Complex instance did not match expectation"))
+                    {
+                        this.CompareComplexInstance(expected, (ComplexInstance)observed);
+                    }
+                }
+                else
+                {
+                    var expandedLink = (ExpandedLink)observed;
+                    this.WrapAccept(expected, expandedLink.ExpandedElement);
                 }
             }
 
@@ -181,14 +191,32 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             public void Visit(ComplexMultiValue expected)
             {
                 ExceptionUtilities.CheckArgumentNotNull(expected, "expected");
-                var observed = this.GetNextObservedElement<ComplexMultiValue>();
-
-                using (this.Assert.WithMessage("Complex multi-value did not match expectation"))
+                var observed = this.GetNextObservedElement();
+                if (observed.ElementType == ODataPayloadElementType.ExpandedLink)
                 {
-                    this.Assert.AreEqual(expected.IsNull, observed.IsNull, "Null flag did not match expectation");
-                    this.Assert.AreEqual(expected.FullTypeName, observed.FullTypeName, "Full type name did not match expectation");
+                    using (this.Assert.WithMessage("Complex multi-value did not match expectation"))
+                    {
+                        var expandedLink = (ExpandedLink)observed;
+                        this.CompareList<ComplexInstance, EntityInstance>(expected, expandedLink.ExpandedElement as EntitySetInstance);
+                    }
+                }
+                else if (observed.ElementType == ODataPayloadElementType.EntitySetInstance)
+                {
+                    using (this.Assert.WithMessage("Complex multi-value did not match expectation"))
+                    {
+                        this.CompareList<ComplexInstance, EntityInstance>(expected, (EntitySetInstance)observed);
+                    }
+                }
+                else
+                {
+                    using (this.Assert.WithMessage("Complex multi-value did not match expectation"))
+                    {
+                        ComplexMultiValue complexMultiValue = (ComplexMultiValue)observed;
+                        this.Assert.AreEqual(expected.IsNull, complexMultiValue.IsNull, "Null flag did not match expectation");
+                        this.Assert.AreEqual(expected.FullTypeName, complexMultiValue.FullTypeName, "Full type name did not match expectation");
 
-                    this.CompareCollection(expected, observed);
+                        this.CompareCollection(expected, complexMultiValue);
+                    }
                 }
             }
 
@@ -199,14 +227,36 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             public void Visit(ComplexMultiValueProperty expected)
             {
                 ExceptionUtilities.CheckArgumentNotNull(expected, "expected");
-                var observed = this.GetNextObservedElement<ComplexMultiValueProperty>();
+                var observed = this.GetNextObservedElement();
 
-                using (this.Assert.WithMessage("Complex multi-value property '{0}' did not match expectation", expected.Name))
+                if (observed.ElementType == ODataPayloadElementType.NavigationPropertyInstance)
                 {
-                    this.Assert.AreEqual(expected.Name, observed.Name, "Property name did not match expectation");
+                    using (this.Assert.WithMessage("Complex multi-value property '{0}' did not match expectation", expected.Name))
+                    {
+                        var navigationPropertyInstance = (NavigationPropertyInstance)observed;
 
-                    this.CompareAnnotations(expected.Annotations, observed.Annotations);
-                    this.WrapAccept(expected.Value, observed.Value);
+                        this.Assert.AreEqual(expected.Name, navigationPropertyInstance.Name, "Property name did not match expectation");
+                        this.WrapAccept(expected.Value, navigationPropertyInstance.Value);
+                    }
+
+                }
+                else if (observed.ElementType == ODataPayloadElementType.EntitySetInstance)
+                {
+                    using (this.Assert.WithMessage("Complex multi-value property '{0}' did not match expectation", expected.Name))
+                    {
+                        this.WrapAccept(expected.Value, (EntitySetInstance)observed);
+                    }
+                }
+                else
+                {
+                    using (this.Assert.WithMessage("Complex multi-value property '{0}' did not match expectation", expected.Name))
+                    {
+                        var complexMultiValue = (ComplexMultiValueProperty)observed;
+                        this.Assert.AreEqual(expected.Name, complexMultiValue.Name, "Property name did not match expectation");
+
+                        this.CompareAnnotations(expected.Annotations, complexMultiValue.Annotations);
+                        this.WrapAccept(expected.Value, complexMultiValue.Value);
+                    }
                 }
             }
 
@@ -217,14 +267,30 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             public void Visit(ComplexProperty expected)
             {
                 ExceptionUtilities.CheckArgumentNotNull(expected, "expected");
-                var observed = this.GetNextObservedElement<ComplexProperty>();
-
-                using (this.Assert.WithMessage("Complex property '{0}' did not match expectation", expected.Name))
+                //var observed = this.GetNextObservedElement<ComplexProperty>();
+                var observed = this.GetNextObservedElement();
+                if (observed.ElementType == ODataPayloadElementType.EntityInstance
+                    || observed.ElementType == ODataPayloadElementType.ComplexInstance)
                 {
-                    this.Assert.AreEqual(expected.Name, observed.Name, "Property name did not match expectation");
-                    this.CompareAnnotations(expected.Annotations, observed.Annotations);
-                    this.WrapAccept(expected.Value, observed.Value);
+                    using (this.Assert.WithMessage("Complex property '{0}' did not match expectation", expected.Name))
+                    {
+                        this.WrapAccept(expected.Value, observed);
+                    }
                 }
+                else if (observed.ElementType == ODataPayloadElementType.ComplexProperty)
+                {
+                    var complexProperty = (ComplexProperty)observed;
+                    this.Assert.AreEqual(expected.Name, complexProperty.Name, "Property name did not match expectation");
+                    this.WrapAccept(expected.Value, complexProperty.Value);
+
+                }
+                else
+                {
+                    var navigationProperty = (NavigationPropertyInstance)observed;
+                    this.Assert.AreEqual(expected.Name, navigationProperty.Name, "Property name did not match expectation");
+                    this.WrapAccept(expected.Value, navigationProperty.Value);
+                }
+
             }
 
             /// <summary>
@@ -316,7 +382,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
 
                     this.Assert.AreEqual(expected.ETag, observed.ETag, "ETag did not match expectation");
 
-                    if (this.comparingJsonLightResponse && expected.Id == null)
+                    if (this.comparingJsonLightResponse && expected.Id == null && !expected.IsComplex)
                     {
                         this.Assert.IsNotNull(observed.Id, "Conventional template evaluation should compute the Id.");
                     }
@@ -325,7 +391,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                         this.Assert.AreEqual(expected.Id, observed.Id, "ID did not match expectation");
                     }
 
-                    if (this.comparingJsonLightResponse && expected.EditLink == null)
+                    if (this.comparingJsonLightResponse && expected.EditLink == null && !expected.IsComplex)
                     {
                         this.Assert.IsNotNull(observed.EditLink, "Conventional template evaluation should compute the EditLink.");
                     }
@@ -334,21 +400,23 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                         this.Assert.AreEqual(expected.EditLink, observed.EditLink, "Edit link did not match expectation");
                     }
 
-                    this.Assert.AreEqual(expected.StreamETag, observed.StreamETag, "Stream ETag did not match expectation");
-                    this.Assert.AreEqual(expected.StreamContentType, observed.StreamContentType, "Stream content type did not match expectation");
-
-                    var isMle = expected.Annotations.OfType<IsMediaLinkEntryAnnotation>().FirstOrDefault();
-                    if (this.comparingJsonLightResponse && isMle != null)
+                    if (!expected.IsComplex)
                     {
-                        this.Assert.IsNotNull(observed.StreamSourceLink, "Conventional template evaluation should compute the StreamSourceLink.");
-                        this.Assert.IsNotNull(observed.StreamEditLink, "Conventional template evaluation should compute the StreamEditLink.");
-                    }
-                    else
-                    {
-                        this.Assert.AreEqual(expected.StreamSourceLink, observed.StreamSourceLink, "Stream source link did not match expectation");
-                        this.Assert.AreEqual(expected.StreamEditLink, observed.StreamEditLink, "Stream edit link did not match expectation");
-                    }
+                        this.Assert.AreEqual(expected.StreamETag, observed.StreamETag, "Stream ETag did not match expectation");
+                        this.Assert.AreEqual(expected.StreamContentType, observed.StreamContentType, "Stream content type did not match expectation");
 
+                        var isMle = expected.Annotations.OfType<IsMediaLinkEntryAnnotation>().FirstOrDefault();
+                        if (this.comparingJsonLightResponse && isMle != null)
+                        {
+                            this.Assert.IsNotNull(observed.StreamSourceLink, "Conventional template evaluation should compute the StreamSourceLink.");
+                            this.Assert.IsNotNull(observed.StreamEditLink, "Conventional template evaluation should compute the StreamEditLink.");
+                        }
+                        else
+                        {
+                            this.Assert.AreEqual(expected.StreamSourceLink, observed.StreamSourceLink, "Stream source link did not match expectation");
+                            this.Assert.AreEqual(expected.StreamEditLink, observed.StreamEditLink, "Stream edit link did not match expectation");
+                        }
+                    }
                     this.CompareList(expected.ServiceOperationDescriptors, observed.ServiceOperationDescriptors);
 
                     this.CompareComplexInstance(expected, observed);
@@ -645,6 +713,19 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             public void Visit(PrimitiveProperty expected)
             {
                 ExceptionUtilities.CheckArgumentNotNull(expected, "expected");
+
+                // This is a bug of this test framework that it treat null complex as primitiveValue.
+                if (expected.Value.ElementType == ODataPayloadElementType.PrimitiveValue &&  expected.Value != null && expected.Value.ClrValue == null)
+                {
+                    var nullValue = this.GetNextObservedElement();
+                    if (nullValue.ElementType == ODataPayloadElementType.NavigationPropertyInstance)
+                    {
+                        this.Assert.IsTrue(string.IsNullOrEmpty(((NavigationPropertyInstance)nullValue).Value.StringRepresentation.Trim(' ', '{', '}')), "read null value");
+                        return;
+                    }
+                    
+                }
+
                 var observed = this.GetNextObservedElement<PrimitiveProperty>();
 
                 using (this.Assert.WithMessage("Primitive property '{0}' did not match expectation", expected.Name))
@@ -715,7 +796,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                 using (this.Assert.WithMessage("Service document did not match expectation"))
                 {
                     this.CompareAnnotations(expected.Annotations, observed.Annotations);
-                    this.CompareList<WorkspaceInstance>(expected.Workspaces, observed.Workspaces);
+                    this.CompareList(expected.Workspaces, observed.Workspaces);
                 }
             }
 
@@ -746,7 +827,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                 {
                     this.CompareAnnotations(expected.Annotations, observed.Annotations);
                     this.Assert.AreEqual(expected.Title, observed.Title, "Title did not match expectation");
-                    this.CompareList<ResourceCollectionInstance>(expected.ResourceCollections, observed.ResourceCollections);
+                    this.CompareList(expected.ResourceCollections, observed.ResourceCollections);
                 }
             }
 
@@ -763,7 +844,8 @@ namespace Microsoft.Test.Taupo.Astoria.OData
 
                 this.Assert.AreEqual(expected.FullTypeName, actual.FullTypeName, "Full type name did not match expectation");
 
-                this.CompareAnnotations(expected.Annotations, actual.Annotations);
+                //[TODO]:layliu Compare Annotations
+                //this.CompareAnnotations(expected.Annotations, actual.Annotations);
 
                 var expectedProperties = expected.Properties.ToList();
                 var actualProperties = actual.Properties.ToList();
@@ -839,10 +921,30 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             private void CompareCollection<TElement>(ODataPayloadElementCollection<TElement> expected, ODataPayloadElementCollection<TElement> actual) where TElement : ODataPayloadElement
             {
                 this.CompareAnnotations(expected.Annotations, actual.Annotations);
-                this.CompareList<TElement>(expected, actual);
+                this.CompareList<TElement, TElement>(expected, actual);
             }
 
-            private void CompareList<TElement>(IList<TElement> expected, IList<TElement> actual) where TElement : ODataPayloadElement
+            //private void CompareList<TElement>(IList<TElement> expected, IList<TElement> actual) where TElement : ODataPayloadElement
+            //{
+            //    if (expected == null && actual == null)
+            //    {
+            //        return;
+            //    }
+
+            //    this.Assert.IsFalse(expected == null || actual == null, "One of the lists is null.");
+            //    this.Assert.AreEqual(expected.Count, actual.Count, "Count did not match expectation");
+            //    for (int i = 0; i < expected.Count; i++)
+            //    {
+            //        using (this.Assert.WithMessage("Value at position {0} did not match expectation", i + 1))
+            //        {
+            //            this.WrapAccept(expected[i], actual[i]);
+            //        }
+            //    }
+            //}
+
+            private void CompareList<T1, T2>(IList<T1> expected, IList<T2> actual)
+                where T1 : ODataPayloadElement
+                where T2 : ODataPayloadElement
             {
                 if (expected == null && actual == null)
                 {
@@ -892,10 +994,25 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     string.Join("\r\n", observedFiltered.Select(o => o.StringRepresentation).ToArray()));
             }
 
+            private ODataPayloadElement GetNextObservedElement()
+            {
+                return this.observedElementStack.Peek();
+            }
             private TElement GetNextObservedElement<TElement>() where TElement : ODataPayloadElement
             {
                 var observed = this.observedElementStack.Peek();
-                this.Assert.AreEqual(ODataPayloadElement.GetElementType<TElement>(), observed.ElementType, "Unexpected element type");
+                //if (ODataPayloadElement.GetElementType<TElement>() == ODataPayloadElementType.ComplexProperty)
+                //{
+                //    this.Assert.AreEqual(ODataPayloadElementType.EntityInstance, observed.ElementType, "Unexpected element type");
+                //}
+                //else
+                //{
+                //    
+
+                var elementType = ODataPayloadElement.GetElementType<TElement>();
+                this.Assert.IsTrue(elementType == observed.ElementType
+                    || (elementType == ODataPayloadElementType.ComplexInstance && observed.ElementType == ODataPayloadElementType.EntityInstance), "Unexpected element type");
+                //}
                 return (TElement)observed;
             }
 

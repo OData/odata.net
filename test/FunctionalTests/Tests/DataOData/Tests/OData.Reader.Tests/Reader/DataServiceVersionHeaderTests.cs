@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     #region Namespaces
     using System;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Execution;
@@ -115,7 +115,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 TestMessage testMessage = base.CreateInputMessage(testConfiguration);
 
                 // now overwrite the DSV header
-                testMessage.SetHeader(Microsoft.OData.Core.ODataConstants.ODataVersionHeader, this.DataServiceVersion);
+                testMessage.SetHeader(Microsoft.OData.ODataConstants.ODataVersionHeader, this.DataServiceVersion);
 
                 return testMessage;
             }

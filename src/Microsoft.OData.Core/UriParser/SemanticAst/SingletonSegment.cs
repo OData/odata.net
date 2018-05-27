@@ -4,13 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -51,7 +48,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the <see cref="IEdmType"/> of this <see cref="SingletonSegment"/>. 
+        /// Gets the <see cref="IEdmType"/> of this <see cref="SingletonSegment"/>.
         /// This will always be an  <see cref="IEdmEntityType"/> of this singleton.
         /// </summary>
         public override IEdmType EdmType

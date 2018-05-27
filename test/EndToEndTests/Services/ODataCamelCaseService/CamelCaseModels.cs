@@ -11,7 +11,7 @@ namespace microsoft.odata.sampleService.models.camelcase
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Web;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.ODataWCFService;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 

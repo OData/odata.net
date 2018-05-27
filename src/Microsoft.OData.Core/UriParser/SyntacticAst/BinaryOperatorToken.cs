@@ -4,23 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+using Microsoft.OData.UriParser;
+
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
-    #region Namespaces
-    #endregion Namespaces
-
     /// <summary>
     /// Lexical token representing a binary operator.
     /// </summary>
-    internal sealed class BinaryOperatorToken : QueryToken
+    public sealed class BinaryOperatorToken : QueryToken
     {
         /// <summary>
         /// The operator represented by this node.

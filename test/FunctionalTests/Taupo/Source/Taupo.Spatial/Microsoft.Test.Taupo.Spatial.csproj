@@ -5,13 +5,12 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Test.Taupo.Spatial</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.Spatial</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TransparentAssembly>true</TransparentAssembly>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <EnableStyleCop>true</EnableStyleCop>
     <DefineConstants>TAUPO_SPATIAL</DefineConstants>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>

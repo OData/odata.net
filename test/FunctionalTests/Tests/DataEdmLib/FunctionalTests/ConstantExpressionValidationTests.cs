@@ -20,205 +20,205 @@ namespace EdmLibTests.FunctionalTests
     public class ConstantExpressionValidationTests : EdmLibTestCaseBase
     {
         [TestMethod]
-        public void ValidateValueAnnotationInvalidIntegerConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidIntegerConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidInteger }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidIntegerConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidIntegerConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidIntegerConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidIntegerConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidInteger }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidIntegerConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidIntegerConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidBooleanConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidBooleanConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidBoolean }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidBooleanConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidBooleanConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidBooleanConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidBooleanConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidBoolean }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidBooleanConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidBooleanConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidFloatConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidFloatConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidFloatingPoint }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidFloatConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidFloatConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidFloatConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidFloatConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidFloatingPoint }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidFloatConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidFloatConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidDecimalConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidDecimalConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDecimal }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidDecimalConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDecimalConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidDecimalConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidDecimalConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDecimal }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidDecimalConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDecimalConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidDurationConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidDurationConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDuration }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidDurationConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDurationConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidDurationConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidDurationConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDuration }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidGuidConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidGuidConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidGuid }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidGuidConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidGuidConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidGuidConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidGuidConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidGuid }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidGuidConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidGuidConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidDateTimeOffsetConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidDateTimeOffsetConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDateTimeOffset }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidDateTimeOffsetConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDateTimeOffsetConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidDateTimeOffsetConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidDateTimeOffsetConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDateTimeOffset }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidDateTimeOffsetConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDateTimeOffsetConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidBinaryConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidBinaryConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidBinary }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidBinaryConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidBinaryConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidBinaryConstantExpressionCsdl()
+        public void ValidateVocabularyAnnotationInvalidBinaryConstantExpressionCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidBinary }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidBinaryConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidBinaryConstantExpressionCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidValueDurationConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidValueDurationConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDuration }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidValueDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidValueDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidFormatDurationConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidFormatDurationConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDuration }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidFormatDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidFormatDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidTypeReferenceDurationConstantModel()
+        public void ValidateVocabularyAnnotationInvalidTypeReferenceDurationConstantModel()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -226,18 +226,18 @@ namespace EdmLibTests.FunctionalTests
                 { null, null, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidTypeReferenceDurationConstantModel(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidTypeReferenceDurationConstantModel(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationInvalidMaxTimeConstantAttributeCsdl()
+        public void ValidateVocabularyAnnotationInvalidMaxTimeConstantAttributeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.InvalidDuration }
             };
 
-            this.VerifySemanticValidation(ConstantExpressionModelBuilder.ValueAnnotationInvalidMaxDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidMaxDurationConstantAttributeCsdl(), EdmVersion.V40, expectedErrors);
         }
     }
 }

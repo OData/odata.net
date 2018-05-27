@@ -4,12 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Metadata
+namespace Microsoft.OData.Tests.Metadata
 {
     public class MetadataUtilsCommonTests
     {

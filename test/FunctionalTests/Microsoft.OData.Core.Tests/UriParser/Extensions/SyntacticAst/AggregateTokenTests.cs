@@ -7,15 +7,15 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
+namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
 {
     public class AggregateTokenTests
     {
-        private IEnumerable<AggregateExpressionToken> statements = new List<AggregateExpressionToken>();
+        private IEnumerable<AggregateTokenBase> statements = new List<AggregateTokenBase>();
 
         [Fact]
         public void StatementsCannotBeNull()
@@ -27,14 +27,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
         [Fact]
         public void StatementsSetCorrectly()
         {
-            var token = new AggregateToken(statements);
-            ((object)token.Expressions).Should().Be(statements);
+            AggregateToken token = new AggregateToken(statements);
+            ((object)token.AggregateExpressions).Should().Be(statements);
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
-            var token = new AggregateToken(statements);
+            AggregateToken token = new AggregateToken(statements);
             token.Kind.Should().Be(QueryTokenKind.Aggregate);
         }
     }

@@ -21,31 +21,31 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Tests the buffer implementation used by the ODataBatchReaderStream.
+    /// Tests the buffer implementation used by the ODataMultipartMixedBatchReaderStream.
     /// </summary>
     [TestClass, TestCase]
     public class BatchReaderStreamBufferTests : ODataReaderTestCase
     {
         /// <summary>Boundary strings used in the tests.</summary>
-        private static readonly IEnumerable<string> BoundaryStrings = new string[] 
-        { 
-            "-", 
-            "a-b-c", 
-            "0123456789012345678901234567890123456789012345678901234567890123456789" 
+        private static readonly IEnumerable<string> BoundaryStrings = new string[]
+        {
+            "-",
+            "a-b-c",
+            "0123456789012345678901234567890123456789012345678901234567890123456789"
         };
 
         /// <summary>Line feed characters used in the tests.</summary>
-        private static readonly IEnumerable<char[]> LineFeeds = new char[][] 
-        { 
-            BatchReaderStreamTestUtils.DefaultLineFeedChars, 
-            new char[] { '\r' }, 
-            new char[] { '\n' } 
+        private static readonly IEnumerable<char[]> LineFeeds = new char[][]
+        {
+            BatchReaderStreamTestUtils.DefaultLineFeedChars,
+            new char[] { '\r' },
+            new char[] { '\n' }
         };
 
-        /// <summary>The counts of whitespaces used in the tests.</summary>
+        /// <summary>The counts of white spaces used in the tests.</summary>
         private static readonly IEnumerable<int> WhitespaceCounts = new int[] { 0, 1, 10 };
 
-        /// <summary>Array of boolean values indicating whether to preceed a boundary delimiter with a line feed or not.</summary>
+        /// <summary>Array of boolean values indicating whether to precede a boundary delimiter with a line feed or not.</summary>
         private static readonly bool[] LeadingLineFeedForBoundary = new bool[] { true, false };
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         public IDependencyInjector Injector { get; set; }
 
 #if !SILVERLIGHT && !WINDOWS_PHONE
-        // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
+        // Batch stream buffer tests use private reflection and thus cannot run on SilverLight or the phone.
         [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStreamBuffer.RefillFrom method.")]
         public void BatchReaderStreamBufferRefillFromTest()
         {
@@ -948,11 +948,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             /// <summary>The expected result of scanning the buffer.</summary>
             public BatchReaderStreamBufferWrapper.ODataBatchReaderStreamScanResult ExpectedScanResult { get; set; }
 
-            /// <summary>The expected start position of the string we searched for; 
+            /// <summary>The expected start position of the string we searched for;
             /// or null to ignore during verification.</summary>
             public int? ExpectedStartPosition { get; set; }
 
-            /// <summary>The expected end position of the string we searched for; 
+            /// <summary>The expected end position of the string we searched for;
             /// or null to ignore during verification.</summary>
             public int? ExpectedEndPosition { get; set; }
 
@@ -1015,8 +1015,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             }
 
             /// <summary>The boundary string to scan for.</summary>
-            public string Boundary 
-            { 
+            public string Boundary
+            {
                 get
                 {
                     this.Assert.IsTrue(this.Boundaries.Count() == 1, "Must have exactly 1 boundary for this property to work.");
@@ -1037,11 +1037,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             /// <summary>The maximum number of bytes to scan.</summary>
             public int MaxScanLength { get; set; }
 
-            /// <summary>true if we expected to detect an end boundary; 
+            /// <summary>true if we expected to detect an end boundary;
             /// otherwise false or null to ignore during verification.</summary>
             public bool? ExpectedIsEndBoundary { get; set; }
 
-            /// <summary>true if we expected to detect a parent boundary; 
+            /// <summary>true if we expected to detect a parent boundary;
             /// otherwise false or null to ignore during verification.</summary>
             public bool? ExpectedIsParentBoundary { get; set; }
 
@@ -1056,10 +1056,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             /// <param name="isEndBoundary">true if we detected an end boundary; otherwise false.</param>
             /// <param name="isParentBoundary">true if we detected a parent boundary; otherwise false.</param>
             public void VerifyResult(
-                BatchReaderStreamBufferWrapper streamBuffer, 
-                BatchReaderStreamBufferWrapper.ODataBatchReaderStreamScanResult scanResult, 
-                int startPos, 
-                int endPos, 
+                BatchReaderStreamBufferWrapper streamBuffer,
+                BatchReaderStreamBufferWrapper.ODataBatchReaderStreamScanResult scanResult,
+                int startPos,
+                int endPos,
                 bool isEndBoundary,
                 bool isParentBoundary)
             {
@@ -1091,10 +1091,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 int boundaryStart, boundaryEnd;
                 bool isEndBoundary, isParentBoundary;
                 var scanResult = streamBuffer.ScanForBoundary(
-                    this.Boundaries, 
-                    int.MaxValue, 
-                    out boundaryStart, 
-                    out boundaryEnd, 
+                    this.Boundaries,
+                    int.MaxValue,
+                    out boundaryStart,
+                    out boundaryEnd,
                     out isEndBoundary,
                     out isParentBoundary);
                 this.VerifyResult(streamBuffer, scanResult, boundaryStart, boundaryEnd, isEndBoundary, isParentBoundary);

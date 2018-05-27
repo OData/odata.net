@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -57,12 +56,15 @@ namespace Microsoft.OData.Core.JsonLight
             this.instanceAnnotationWriter = new SimpleLazy<JsonLightInstanceAnnotationWriter>(() =>
                 new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(jsonLightOutputContext), jsonLightOutputContext.TypeNameOracle));
             this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(() =>
-                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified));
+                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter,
+                    this.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix, this.MessageWriterSettings.Version));
 
             if (initContextUriBuilder)
             {
                 // DEVNOTE: grab this early so that any validation errors are thrown at creation time rather than when Write___ is called.
-                this.ContextUriBuilder = jsonLightOutputContext.CreateContextUriBuilder();
+                this.ContextUriBuilder = ODataContextUriBuilder.Create(
+                    this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri,
+                    this.jsonLightOutputContext.WritingResponse && !(this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel));
             }
         }
 
@@ -138,7 +140,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
         internal ODataContextUrlInfo WriteContextUriProperty(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
         {
-            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.None)
+            if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
                 return null;
             }
@@ -151,9 +153,7 @@ namespace Microsoft.OData.Core.JsonLight
                 contextUrlInfo = contextUrlInfoGen();
             }
 
-            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.OnDemand
-                && contextUrlInfo != null
-                && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
+            if (contextUrlInfo != null && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
             {
                 return null;
             }
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Core.JsonLight
                     this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataContext);
                 }
 
-                this.JsonWriter.WritePrimitiveValue(contextUri.AbsoluteUri);
+                this.JsonWriter.WritePrimitiveValue(contextUri.IsAbsoluteUri ? contextUri.AbsoluteUri : contextUri.OriginalString);
                 this.allowRelativeUri = true;
                 return contextUrlInfo;
             }
@@ -215,15 +215,15 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(uri != null, "uri != null");
 
-            // Get the metadataDocumentUri directly from MessageWriterSettings and not using ContextUriBuilder because in the case of getting the service document with nometadata 
+            // Get the metadataDocumentUri directly from MessageWriterSettings and not using ContextUriBuilder because in the case of getting the service document with nometadata
             // ContextUriBuilder returns null, but the metadataDocumentUri is needed to calculate Absolute Uris in the service document. In any other case jsonLightOutputContext.CreateContextUriBuilder() should be used.
             Uri metadataDocumentUri = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri;
 
             Uri resultUri;
-            if (this.jsonLightOutputContext.UrlResolver != null)
+            if (this.jsonLightOutputContext.PayloadUriConverter != null)
             {
                 // The resolver returns 'null' if no custom resolution is desired.
-                resultUri = this.jsonLightOutputContext.UrlResolver.ResolveUrl(metadataDocumentUri, uri);
+                resultUri = this.jsonLightOutputContext.PayloadUriConverter.ConvertPayloadUri(metadataDocumentUri, uri);
                 if (resultUri != null)
                 {
                     return UriUtils.UriToString(resultUri);

@@ -1198,7 +1198,7 @@
       <PropertyRef Name="CurrencyCode" />
     </Key>
     <Property Name="CurrencyCode" Type="String" Nullable="false" MaxLength="3" Unicode="true"   />
-    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true"   ConcurrencyMode="Fixed" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" />
     <Property Name="ModifiedDate" Type="DateTimeOffset" Nullable="false" />
     <NavigationProperty Name="CountryRegionCurrency" Partner="Currency" Type="PerformanceServices.Edm.AdventureWorks.CountryRegionCurrency" />
     <NavigationProperty Name="CurrencyRate" Partner="Currency" Type="PerformanceServices.Edm.AdventureWorks.CurrencyRate" />

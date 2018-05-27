@@ -15,8 +15,8 @@ namespace Microsoft.OData.Service.Serializers
     using System.Globalization;
     using System.Text;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Parsing;
     using Microsoft.OData.Service.Providers;
@@ -34,8 +34,8 @@ namespace Microsoft.OData.Service.Serializers
         /// These query parameters can be copied for each next page link.
         /// Don't need to copy $skiptoken, $skip and $top because they are calculated every time.
         /// </summary>
-        private static readonly String[] NextPageQueryParametersToCopy = 
-        { 
+        private static readonly String[] NextPageQueryParametersToCopy =
+        {
             XmlConstants.HttpQueryStringFilter,
             XmlConstants.HttpQueryStringExpand,
             XmlConstants.HttpQueryStringOrderBy,
@@ -234,12 +234,6 @@ namespace Microsoft.OData.Service.Serializers
                 return ((Binary)propertyValue).ToArray();
             }
 
-#if !INTERNAL_DROP && !EFRTM
-            if (ObjectContextSpatialUtil.IsDbGeography(type))
-            {
-                return ObjectContextSpatialUtil.ConvertDbGeography(propertyValue);
-            }
-#endif
             // Since WCF DS support DateTime Clr type, it needs to convert into DateTimeOffset before passing to ODataLib
             // for serialization.
             if (type == typeof(DateTime))
@@ -260,7 +254,7 @@ namespace Microsoft.OData.Service.Serializers
         /// </summary>
         /// <param name="queryResults">Query results to enumerate.</param>
         /// <remarks>
-        /// <paramref name="queryResults"/> should correspond to the RequestQuery of the 
+        /// <paramref name="queryResults"/> should correspond to the RequestQuery of the
         /// RequestDescription object passed while constructing this serializer
         /// We allow the results to be passed in
         /// to let the query be executed earlier than at result-writing time, which
@@ -314,7 +308,7 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             // In ExpandedWrapper's decription property, we only append the type name if there is any ambiguity.
-            // If the navigation property already refers to the more derived type, which in turn has a 
+            // If the navigation property already refers to the more derived type, which in turn has a
             // navigation property, we do not need to append the type name while accessing the latter.
             string propertyName = property.Name;
             if (expandedNode != null && this.GetCurrentExpandedProjectionNode().ResourceType != expandedNode.TargetResourceType)
@@ -497,7 +491,7 @@ namespace Microsoft.OData.Service.Serializers
                         count++;
                     }
 
-                    // Throw error if the current count is greater than the maximum page size. The only 
+                    // Throw error if the current count is greater than the maximum page size. The only
                     // exception to this is service actions, because service actions discard paging and return the entire resultset.
                     if (count > max && !this.RequestDescription.IsServiceActionRequest)
                     {
@@ -535,7 +529,7 @@ namespace Microsoft.OData.Service.Serializers
 
             // expandedProjectionNode can be null in couple of scenarios. If you are using V1 IExpandProvider interface,
             // then providers can modify the ExpandSegments, which means that expandedProjectionNodes might not be present,
-            // but since ExpandPaths are present, we will expand that property. Look in ShouldExpandForSegment method to 
+            // but since ExpandPaths are present, we will expand that property. Look in ShouldExpandForSegment method to
             // find out more about how we figure out whether we should expand or not when using IExpandProvider.
             return this.PushSegment(current, expandedProjectionNode);
         }
@@ -664,7 +658,7 @@ namespace Microsoft.OData.Service.Serializers
         protected string GetETagValue(object resource, ResourceType resourceType)
         {
             // this.httpETagHeaderValue is the etag value which got computed for writing the etag in the response
-            // headers. The etag response header only gets written out in certain scenarios, whereas we always 
+            // headers. The etag response header only gets written out in certain scenarios, whereas we always
             // write etag in the response payload, if the type has etag properties. So just checking here is the
             // etag has already been computed, and if yes, returning that, otherwise computing the etag.
             if (!String.IsNullOrEmpty(this.httpETagHeaderValue))
@@ -700,13 +694,13 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Returns the property value in terms of OData object model (ODataPrimitiveValue, ODataNullValue, ODataComplexValue or ODataCollectionValue instance) for the given property value.
+        /// Returns the property value in terms of OData object model (ODataPrimitiveValue, ODataNullValue or ODataCollectionValue instance) for the given property value.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="propertyResourceType">Type of the property.</param>
         /// <param name="propertyValue">Value of the property.</param>
         /// <param name="openProperty">True if the property is an open property, otherwise false.</param>
-        /// <returns>Returns the property value in terms of OData object model (CLR type, ODataComplexValue or ODataCollectionValue instance) for the given property value.</returns>
+        /// <returns>Returns the property value in terms of OData object model (CLR type, ODataCollectionValue instance) for the given property value.</returns>
         protected ODataValue GetPropertyValue(string propertyName, ResourceType propertyResourceType, object propertyValue, bool openProperty)
         {
             Debug.Assert(propertyName != null, "propertyName != null");
@@ -717,54 +711,71 @@ namespace Microsoft.OData.Service.Serializers
                 return this.GetPrimitiveValueAsODataValue(propertyResourceType, propertyValue);
             }
 
-            if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
-            {
-                // no need to handle null here as the property setter on ODataProperty will handle it.
-                return this.GetComplexValue(propertyName, propertyValue);
-            }
-
             if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.Collection)
             {
                 return this.GetCollection(propertyName, (CollectionResourceType)propertyResourceType, propertyValue);
             }
-           
+
+            // Open navigation properties are not supported on OpenTypes
+            throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.OpenNavigationPropertiesNotSupportedOnOpenTypes(propertyName));
+        }
+
+        protected ODataItemWrapper GetPropertyResourceOrResourceSet(string propertyName, ResourceType propertyResourceType, object propertyValue, bool openProperty)
+        {
+            Debug.Assert(propertyName != null, "propertyName != null");
+            Debug.Assert(propertyResourceType != null, "propertyResourceType != null");
+
+            if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
+            {
+                // no need to handle null here as the property setter on ODataProperty will handle it.
+                return this.GetComplexResource(propertyName, propertyValue);
+            }
+
+            if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.Collection)
+            {
+                return this.GetComplexResourceSet(propertyName, (CollectionResourceType)propertyResourceType, propertyValue);
+            }
+
             // Open navigation properties are not supported on OpenTypes
             throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.OpenNavigationPropertiesNotSupportedOnOpenTypes(propertyName));
         }
 
         /// <summary>
-        /// Returns the ODataComplexValue instance for the given property value.
+        /// Returns the ODataResourceWrapper instance for the given property value.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="propertyValue">Value of the property.</param>
-        /// <returns>Returns the ODataComplexValue instance for the given property value.</returns>
-        protected ODataComplexValue GetComplexValue(string propertyName, object propertyValue)
+        /// <returns>Returns the ODataResourceWrapper instance for the given property value.</returns>
+        protected ODataResourceWrapper GetComplexResource(string propertyName, object propertyValue)
         {
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!String.IsNullOrEmpty(propertyName)");
 
             if (WebUtil.IsNullValue(propertyValue))
             {
-                return null;
+                return new ODataResourceWrapper()
+                {
+                    Resource = null
+                };
             }
 
-            ODataComplexValue complexValue = new ODataComplexValue();
-            
+            ODataResource complexResource = new ODataResource();
+
             // Resolve the complex type instance - no need to check the resource type for the right type
             // since ODataLib will do this validation.
-            ResourceType valueResourceType = WebUtil.GetNonPrimitiveResourceType(this.Provider, propertyValue);
-            complexValue.TypeName = valueResourceType.FullName;
+            ResourceType valueResourceType = WebUtil.GetNonPrimitiveResourceType(this.service.Provider, propertyValue);
+            complexResource.TypeName = valueResourceType.FullName;
 
-            // If this is not a complex type, return early. This validation error will be caught by ODataLib later.
-            if (valueResourceType.ResourceTypeKind != ResourceTypeKind.ComplexType)
+            complexResource.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = valueResourceType.FullName });
+
+            this.PayloadMetadataPropertyManager.SetTypeName(complexResource, null, valueResourceType.FullName);
+
+            complexResource.Properties = this.GetPropertiesOfComplexType(propertyValue, valueResourceType, propertyName);
+
+            return new ODataResourceWrapper()
             {
-                return complexValue;
-            }
-
-            this.PayloadMetadataPropertyManager.SetTypeName(complexValue, valueResourceType);
-
-            complexValue.Properties = this.GetPropertiesOfComplexType(propertyValue, valueResourceType, propertyName);
-            
-            return complexValue;
+                Resource = complexResource,
+                NestedResourceInfoWrappers = GetAllNestedComplexProperties(propertyValue, valueResourceType)
+            };
         }
 
         /// <summary>
@@ -787,22 +798,48 @@ namespace Microsoft.OData.Service.Serializers
 
             ODataCollectionValue collection = new ODataCollectionValue { TypeName = propertyResourceType.FullName };
             this.PayloadMetadataPropertyManager.SetTypeName(collection, propertyResourceType);
-            if (propertyResourceType.ItemType.ResourceTypeKind == ResourceTypeKind.Primitive)
-            {
-                collection.Items = GetEnumerable(
-                    enumerable,
-                    GetPrimitiveValue);
-            }
-            else
-            {
-                collection.Items = GetEnumerable(
-                    enumerable,
-                    value => this.GetComplexValue(propertyName, value));
-            }
+            collection.Items = GetEnumerable(
+                enumerable,
+                GetPrimitiveValue);
 
             this.RecurseLeave();
 
             return collection;
+        }
+
+        /// <summary>
+        /// Returns the ODataResourceSetWrapper instance for the given property value.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyResourceType">Type of the property.</param>
+        /// <param name="propertyValue">Value of the property.</param>
+        /// <returns>Returns the ODataResourceSetWrapper instance for the given property value.</returns>
+        protected ODataResourceSetWrapper GetComplexResourceSet(string propertyName, CollectionResourceType propertyResourceType, object propertyValue)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(propertyName), "!String.IsNullOrEmpty(propertyName)");
+            Debug.Assert(
+                propertyResourceType.ItemType.ResourceTypeKind == ResourceTypeKind.ComplexType || propertyResourceType.ItemType.ResourceTypeKind == ResourceTypeKind.Primitive,
+                "Collection items must be either primitive or complex type.");
+
+            this.RecurseEnter();
+
+            IEnumerable enumerable = GetCollectionEnumerable(propertyValue, propertyName);
+
+            ODataResourceSet collection = new ODataResourceSet { TypeName = propertyResourceType.FullName };
+            this.PayloadMetadataPropertyManager.SetTypeName(collection, null, propertyResourceType.FullName);
+
+            ODataResourceSetWrapper resourceSetWrapper = new ODataResourceSetWrapper()
+            {
+                ResourceSet = collection,
+            };
+
+            resourceSetWrapper.Resources = GetEnumerable(
+                    enumerable,
+                    value => this.GetComplexResource(propertyName, value));
+
+            this.RecurseLeave();
+
+            return resourceSetWrapper;
         }
 
         /// <summary>Finds the <see cref="ExpandedProjectionNode"/> node which describes the current segment.</summary>
@@ -814,7 +851,7 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/> 
+        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T">Type parameter.</typeparam>
         /// <param name="enumerable">IEnumerable which contains the list of the objects that needs to be converted.</param>
@@ -874,18 +911,81 @@ namespace Microsoft.OData.Service.Serializers
 
             foreach (ResourceProperty resourceProperty in resourceType.Properties)
             {
+                if (resourceProperty.TypeKind == ResourceTypeKind.ComplexType
+                    || resourceProperty.TypeKind == ResourceTypeKind.Collection && resourceProperty.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    continue;
+                }
                 object propertyValue = WebUtil.GetPropertyValue(this.Service.Provider, resource, resourceType, resourceProperty, null);
                 ODataValue odataValue = this.GetPropertyValue(resourceProperty.Name, resourceProperty.ResourceType, propertyValue, false /*openProperty*/);
                 ODataProperty odataProperty = new ODataProperty { Name = resourceProperty.Name, Value = odataValue };
                 propertiesList.Add(odataProperty);
             }
 
-            // Once all the properties of the complex type has been enumerated, then remove this resource 
+            // Once all the properties of the complex type has been enumerated, then remove this resource
             // from the hashset
             this.RemoveFromComplexTypeCollection(resource);
             this.RecurseLeave();
 
             return propertiesList;
+        }
+
+        private IEnumerable<ODataNestedResourceInfoWrapper> GetAllNestedComplexProperties(object resource, ResourceType resourceType)
+        {
+            Debug.Assert(resource != null, "resource != null");
+
+            List<ODataNestedResourceInfoWrapper> properties = new List<ODataNestedResourceInfoWrapper>(resourceType.Properties.Count);
+            foreach (ResourceProperty property in resourceType.Properties)
+            {
+                if (property.TypeKind == ResourceTypeKind.ComplexType
+                    || property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    properties.Add(this.GetODataNestedResourceForComplexProperty(resource, resourceType, property));
+                }
+            }
+
+            //if (entityToSerialize.ResourceType.IsOpenType)
+            //{
+            //    foreach (KeyValuePair<string, object> property in this.Provider.GetOpenPropertyValues(entityToSerialize.Entity))
+            //    {
+            //        string propertyName = property.Key;
+            //        if (string.IsNullOrEmpty(propertyName))
+            //        {
+            //            throw new DataServiceException(500, Microsoft.OData.Service.Strings.Syndication_InvalidOpenPropertyName(entityToSerialize.ResourceType.FullName));
+            //        }
+
+            //        properties.Add(this.GetODataPropertyForOpenProperty(propertyName, property.Value));
+            //    }
+            //}
+
+            return properties;
+        }
+
+        /// <summary>Gets ODataProperty for the given <paramref name="property"/>.</summary>
+        /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
+        /// <param name="property">ResourceProperty instance in question.</param>
+        /// <returns>A instance of ODataProperty for the given <paramref name="property"/>.</returns>
+        private ODataNestedResourceInfoWrapper GetODataNestedResourceForComplexProperty(object resource, ResourceType resourceType, ResourceProperty property)
+        {
+            Debug.Assert(resource != null, "resource != null");
+            Debug.Assert(property != null && resourceType.Properties.Contains(property), "property != null && currentResourceType.Properties.Contains(property)");
+
+            ODataItemWrapper odataPropertyResourceWrapper;
+            object propertyValue = WebUtil.GetPropertyValue(this.Service.Provider, resource, resourceType, property, null);
+            odataPropertyResourceWrapper = this.GetPropertyResourceOrResourceSet(property.Name, property.ResourceType, propertyValue, false /*openProperty*/);
+
+            ODataNestedResourceInfo odataNestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = property.Name,
+                IsCollection = property.TypeKind == ResourceTypeKind.Collection
+            };
+            odataNestedInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
+
+            return new ODataNestedResourceInfoWrapper()
+            {
+                NestedResourceInfo = odataNestedInfo,
+                NestedResourceOrResourceSet = odataPropertyResourceWrapper
+            };
         }
 
         /// <summary>
@@ -972,7 +1072,7 @@ namespace Microsoft.OData.Service.Serializers
             {
                 // Build a string containing all the $expand and $select for the current node and children
                 StringBuilder projectionPaths, expansionPaths;
-                expandedProjectionNode.SelectExpandClause.GetSelectExpandPaths(out projectionPaths, out expansionPaths);
+                expandedProjectionNode.SelectExpandClause.GetSelectExpandPaths(ODataVersion.V4, out projectionPaths, out expansionPaths);
 
                 Debug.Assert(projectionPaths != null, "projectionPaths != null");
                 Debug.Assert(expansionPaths != null, "expansionPaths != null");

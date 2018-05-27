@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// The reading entry args
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// Initializes a new instance of the <see cref="ReadingEntryArgs" /> class.
         /// </summary>
         /// <param name="entry">The entry.</param>
-        public ReadingEntryArgs(ODataEntry entry)
+        public ReadingEntryArgs(ODataResource entry)
         {
             this.Entry = entry;
         }
@@ -28,6 +28,6 @@ namespace Microsoft.OData.Client
         /// <value>
         /// The entry.
         /// </value>
-        public ODataEntry Entry { get; private set; }
+        public ODataResource Entry { get; private set; }
     }
 }

@@ -7,7 +7,7 @@
 namespace AstoriaUnitTests.Tests
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service;
     using System.Data.Test.Astoria;
     using System.Dynamic;

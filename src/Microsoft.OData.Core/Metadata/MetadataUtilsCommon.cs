@@ -4,15 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Metadata
+namespace Microsoft.OData.Metadata
 {
     #region Namespaces
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
     #endregion Namespaces
 
     /// <summary>
@@ -159,7 +156,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="typeReference">The <see cref="IEdmTypeReference"/> to check.</param>
         /// <returns>true if the <paramref name="typeReference"/> is considered a value type; otherwise false.</returns>
         /// <remarks>
-        /// The notion of value type in the OData space is driven by the IDSMP requirements where 
+        /// The notion of value type in the OData space is driven by the IDSMP requirements where
         /// Clr types denote the primitive types.
         /// </remarks>
         internal static bool IsODataValueType(this IEdmTypeReference typeReference)
@@ -217,6 +214,19 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
+        /// Checks whether a type reference refers to a OData collection value type of structured elements.
+        /// </summary>
+        /// <param name="typeReference">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="typeReference"/> is an OData collection value type of structured type; otherwise false.</returns>
+        internal static bool IsStructuredCollectionType(this IEdmTypeReference typeReference)
+        {
+            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
+            ExceptionUtils.CheckArgumentNotNull(typeReference.Definition, "typeReference.Definition");
+
+            return typeReference.Definition.IsStructuredCollectionType();
+        }
+
+        /// <summary>
         /// Checks whether a type refers to a OData collection value type of non-entity elements.
         /// </summary>
         /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
@@ -248,7 +258,7 @@ namespace Microsoft.OData.Core.Metadata
 
             IEdmCollectionType collectionType = type as IEdmCollectionType;
 
-            // Return false if this is not a collection type, or if it's a collection of entity types (i.e., a navigation property)
+            // Return false if this is not a collection type, or if it's not a collection of entity types (i.e., a navigation property)
             if (collectionType == null || (collectionType.ElementType != null && collectionType.ElementType.TypeKind() != EdmTypeKind.Entity))
             {
                 return false;
@@ -256,6 +266,100 @@ namespace Microsoft.OData.Core.Metadata
 
             Debug.Assert(collectionType.TypeKind == EdmTypeKind.Collection, "Expected collection type kind.");
             return true;
+        }
+
+        /// <summary>
+        /// Checks whether a type refers to a OData collection value type of structured elements.
+        /// </summary>
+        /// <param name="type">The (non-null) <see cref="IEdmType"/> to check.</param>
+        /// <returns>true if the <paramref name="type"/> is an OData collection value type of structured type; otherwise false.</returns>
+        internal static bool IsStructuredCollectionType(this IEdmType type)
+        {
+            Debug.Assert(type != null, "type != null");
+
+            IEdmCollectionType collectionType = type as IEdmCollectionType;
+
+            if (collectionType == null
+                || (collectionType.ElementType != null
+                    && (collectionType.ElementType.TypeKind() != EdmTypeKind.Entity && collectionType.ElementType.TypeKind() != EdmTypeKind.Complex)))
+            {
+                return false;
+            }
+
+            Debug.Assert(collectionType.TypeKind == EdmTypeKind.Collection, "Expected collection type kind.");
+            return true;
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is an entity or entity collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
+        internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType)
+        {
+            IEdmEntityType entityType;
+            return edmType.IsEntityOrEntityCollectionType(out entityType);
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is an entity or entity collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <param name="entityType">The entity type. If the given type was a collection, this will be the element type.</param>
+        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
+        internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType, out IEdmEntityType entityType)
+        {
+            Debug.Assert(edmType != null, "edmType != null");
+            if (edmType.TypeKind == EdmTypeKind.Entity)
+            {
+                entityType = (IEdmEntityType)edmType;
+                return true;
+            }
+
+            if (edmType.TypeKind != EdmTypeKind.Collection)
+            {
+                entityType = null;
+                return false;
+            }
+
+            entityType = ((IEdmCollectionType)edmType).ElementType.Definition as IEdmEntityType;
+            return entityType != null;
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is a structured or structured collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <returns>Whether or not the type is a structured or structured collection type.</returns>
+        internal static bool IsStructuredOrStructuredCollectionType(this IEdmType edmType)
+        {
+            IEdmStructuredType structuredType;
+            return edmType.IsStructuredOrStructuredCollectionType(out structuredType);
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is a structured or structured collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <param name="structuredType">The structured type. If the given type was a collection, this will be the element type.</param>
+        /// <returns>Whether or not the type is a structured or structured collection type.</returns>
+        internal static bool IsStructuredOrStructuredCollectionType(this IEdmType edmType, out IEdmStructuredType structuredType)
+        {
+            Debug.Assert(edmType != null, "edmType != null");
+            if (edmType.TypeKind.IsStructured())
+            {
+                structuredType = (IEdmStructuredType)edmType;
+                return true;
+            }
+
+            if (edmType.TypeKind != EdmTypeKind.Collection)
+            {
+                structuredType = null;
+                return false;
+            }
+
+            structuredType = ((IEdmCollectionType)edmType).ElementType.Definition as IEdmStructuredType;
+            return structuredType != null;
         }
 
         /// <summary>
@@ -415,56 +519,18 @@ namespace Microsoft.OData.Core.Metadata
                     }
 
                     break;
-                case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.Date:
                     switch (targetPrimitiveKind)
                     {
+                        case EdmPrimitiveTypeKind.Date:
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                             return true;
-                        case EdmPrimitiveTypeKind.Date:
-                            object tmp;
-                            return TryGetConstantNodePrimitiveDate(sourceNodeOrNull, out tmp);
                     }
 
                     break;
 
                 default:
                     return sourcePrimitiveKind == targetPrimitiveKind || targetPrimitiveType.IsAssignableFrom(sourcePrimitiveType);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Try getting the constant DateTimeOffset node value
-        /// </summary>
-        /// <param name="sourceNodeOrNull">The Node</param>
-        /// <param name="primitiveValue">The out parameter if succeeds</param>
-        /// <returns>true if the constant node is for date type</returns>
-        internal static bool TryGetConstantNodePrimitiveDate(SingleValueNode sourceNodeOrNull, out object primitiveValue)
-        {
-            primitiveValue = null;
-
-            ConstantNode constantNode = sourceNodeOrNull as ConstantNode;
-            if (constantNode != null)
-            {
-                IEdmPrimitiveType primitiveType = constantNode.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
-                if (primitiveType != null)
-                {
-                    switch (primitiveType.PrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.DateTimeOffset:
-                            Date result;
-                            if (UriParser.UriUtils.TryUriStringToDate(constantNode.LiteralText, out result))
-                            {
-                                primitiveValue = constantNode.LiteralText;
-                                return true;
-                            }
-
-                            break;
-                        default:
-                            return false;
-                    }
-                }
             }
 
             return false;

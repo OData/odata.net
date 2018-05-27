@@ -6,9 +6,10 @@
 
 namespace Microsoft.Test.OData.Tests.Client.Common
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public static class ODataValueAssertEqualHelper
@@ -25,26 +26,17 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
             else
             {
-                ODataComplexValue expectedComplexValue = expected as ODataComplexValue;
-                ODataComplexValue actualComplexValue = actual as ODataComplexValue;
-                if (expectedComplexValue != null && actualComplexValue != null)
+                ODataEnumValue expectedEnumValue = expected as ODataEnumValue;
+                ODataEnumValue actualEnumValue = actual as ODataEnumValue;
+                if (expectedEnumValue != null && actualEnumValue != null)
                 {
-                    AssertODataComplexValueAreEqual(expectedComplexValue, actualComplexValue);
+                    AssertODataEnumValueAreEqual(expectedEnumValue, actualEnumValue);
                 }
                 else
                 {
-                    ODataEnumValue expectedEnumValue = expected as ODataEnumValue;
-                    ODataEnumValue actualEnumValue = actual as ODataEnumValue;
-                    if (expectedEnumValue != null && actualEnumValue != null)
-                    {
-                        AssertODataEnumValueAreEqual(expectedEnumValue, actualEnumValue);
-                    }
-                    else
-                    {
-                        ODataCollectionValue expectedCollectionValue = (ODataCollectionValue)expected;
-                        ODataCollectionValue actualCollectionValue = (ODataCollectionValue)actual;
-                        AssertODataCollectionValueAreEqual(expectedCollectionValue, actualCollectionValue);
-                    }
+                    ODataCollectionValue expectedCollectionValue = (ODataCollectionValue)expected;
+                    ODataCollectionValue actualCollectionValue = (ODataCollectionValue)actual;
+                    AssertODataCollectionValueAreEqual(expectedCollectionValue, actualCollectionValue);
                 }
             }
         }
@@ -73,14 +65,6 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
         }
 
-        private static void AssertODataComplexValueAreEqual(ODataComplexValue expectedComplexValue, ODataComplexValue actualComplexValue)
-        {
-            Assert.IsNotNull(expectedComplexValue);
-            Assert.IsNotNull(actualComplexValue);
-            Assert.AreEqual(expectedComplexValue.TypeName, actualComplexValue.TypeName);
-            AssertODataPropertiesAreEqual(expectedComplexValue.Properties, actualComplexValue.Properties);
-        }
-
         public static void AssertODataPropertiesAreEqual(IEnumerable<ODataProperty> expectedProperties, IEnumerable<ODataProperty> actualProperties)
         {
             if (expectedProperties == null && actualProperties == null)
@@ -105,6 +89,19 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             Assert.IsNotNull(actualOdataProperty);
             Assert.AreEqual(expectedOdataProperty.Name, actualOdataProperty.Name);
             AssertODataValueAreEqual(ToODataValue(expectedOdataProperty.Value), ToODataValue(actualOdataProperty.Value));
+        }
+
+        public static void AssertODataPropertyAndResourceAreEqual(ODataResource expectedOdataProperty, ODataResource actualOdataProperty)
+        {
+            Assert.IsNotNull(expectedOdataProperty);
+            Assert.IsNotNull(actualOdataProperty);
+            AssertODataValueAndResourceAreEqual(expectedOdataProperty, actualOdataProperty);
+        }
+
+        public static void AssertODataValueAndResourceAreEqual(ODataResource expected, ODataResource actual)
+        {
+            Assert.AreEqual(expected.TypeName, actual.TypeName);
+            AssertODataPropertiesAreEqual(expected.Properties, actual.Properties);
         }
 
         private static ODataValue ToODataValue(object value)
@@ -137,6 +134,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             Assert.AreEqual(expectedEnumValue.Value, actualEnumValue.Value);
             Assert.AreEqual(expectedEnumValue.TypeName, actualEnumValue.TypeName);
         }
+
         #endregion Util methods to AssertAreEqual ODataValues
 
     }

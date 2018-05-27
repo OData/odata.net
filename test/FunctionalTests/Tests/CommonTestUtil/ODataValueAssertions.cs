@@ -9,7 +9,7 @@ namespace AstoriaUnitTests.TDD.Common
     using System;
     using FluentAssertions;
     using FluentAssertions.Primitives;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     [CLSCompliant(false)]
     public static class ODataValueAssertionsExtensions
@@ -34,12 +34,6 @@ namespace AstoriaUnitTests.TDD.Common
             return new AndConstraint<ODataValueAssertions>(this);
         }
 
-        public AndConstraint<ODataValueAssertions> BeComplex()
-        {
-            this.Subject.Should().BeAssignableTo<ODataComplexValue>();
-            return new AndConstraint<ODataValueAssertions>(this);
-        }
-
         public AndConstraint<ODataValueAssertions> BeCollection()
         {
             this.Subject.Should().BeAssignableTo<ODataCollectionValue>();
@@ -61,7 +55,7 @@ namespace AstoriaUnitTests.TDD.Common
 
         public AndConstraint<ODataValueAssertions> HaveSerializationTypeName(string value)
         {
-            var annotation = this.Subject.As<ODataValue>().GetAnnotation<SerializationTypeNameAnnotation>();
+            var annotation = this.Subject.As<ODataValue>().TypeAnnotation;
             annotation.Should().NotBeNull();
             annotation.TypeName.Should().Be(value);
             return new AndConstraint<ODataValueAssertions>(this);
@@ -69,9 +63,47 @@ namespace AstoriaUnitTests.TDD.Common
 
         public AndConstraint<ODataValueAssertions> NotHaveSerializationTypeName()
         {
-            var annotation = this.Subject.As<ODataValue>().GetAnnotation<SerializationTypeNameAnnotation>();
+            var annotation = this.Subject.As<ODataValue>().TypeAnnotation;
             annotation.Should().BeNull();
             return new AndConstraint<ODataValueAssertions>(this);
+        }
+    }
+
+    [CLSCompliant(false)]
+    public static class ODataItemAssertionsExtensions
+    {
+        public static ODataItemAssertions Should(this ODataItem subject)
+        {
+            return new ODataItemAssertions(subject);
+        }
+    }
+
+    [CLSCompliant(false)]
+    public class ODataItemAssertions : ObjectAssertions
+    {
+        protected internal ODataItemAssertions(ODataItem value)
+            : base(value)
+        {
+        }
+
+        public AndConstraint<ODataItemAssertions> BeResource()
+        {
+            this.Subject.Should().BeAssignableTo<ODataResource>();
+            return new AndConstraint<ODataItemAssertions>(this);
+        }
+
+        public AndConstraint<ODataItemAssertions> BeResourceSet()
+        {
+            this.Subject.Should().BeAssignableTo<ODataResourceSet>();
+            return new AndConstraint<ODataItemAssertions>(this);
+        }
+
+        public AndConstraint<ODataItemAssertions> HaveSerializationTypeName(string value)
+        {
+            var annotation = this.Subject.As<ODataItem>().TypeAnnotation;
+            annotation.Should().NotBeNull();
+            annotation.TypeName.Should().Be(value);
+            return new AndConstraint<ODataItemAssertions>(this);
         }
     }
 }

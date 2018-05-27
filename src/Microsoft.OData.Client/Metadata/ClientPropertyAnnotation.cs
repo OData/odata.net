@@ -77,6 +77,15 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>cached value for IsPrimitiveOrEnumOrComplexCollection property</summary>
         private bool? isPrimitiveOrEnumOrComplexCollection;
 
+        /// <summary>cached value for IsComplex property</summary>
+        private bool? isComplex;
+
+        /// <summary>cached value for IsComplex property</summary>
+        private bool? isComplexCollection;
+
+        /// <summary>cached value for IsCollection property</summary>
+        private bool? isResourceSet;
+
         /// <summary>cached value of IsGeographyOrGeometry property</summary>
         private bool? isSpatialType;
 
@@ -228,6 +237,36 @@ namespace Microsoft.OData.Client.Metadata
             get { return this.collectionGenericType != null && !this.IsPrimitiveOrEnumOrComplexCollection; }
         }
 
+        /// <summary>The item type of the nested resource set</summary>
+        internal Type ResourceSetItemType
+        {
+            get { return this.IsResourceSet ? this.collectionGenericType : null; }
+        }
+
+        /// <summary>Is this property a resource set?</summary>
+        internal bool IsResourceSet
+        {
+            get
+            {
+                if (!this.isResourceSet.HasValue)
+                {
+                    if (this.collectionGenericType == null)
+                    {
+                        this.isResourceSet = false;
+                    }
+                    else
+                    {
+                        this.isResourceSet =
+                            (this.EdmProperty.PropertyKind == EdmPropertyKind.Structural
+                            || this.EdmProperty.PropertyKind == EdmPropertyKind.Navigation)
+                            && this.EdmProperty.Type.AsCollection().ElementType().IsStructured();
+                    }
+                }
+
+                return this.isResourceSet.Value;
+            }
+        }
+
         /// <summary>Type of items in the primitive or complex collection.</summary>
         internal Type PrimitiveOrComplexCollectionItemType
         {
@@ -246,6 +285,44 @@ namespace Microsoft.OData.Client.Metadata
         internal bool IsEnumType
         {
             get { return this.PropertyType.IsEnum(); }
+        }
+
+        /// <summary>Returns if this property is complex type.</summary>
+        internal bool IsComplex
+        {
+            get
+            {
+                if (!this.isComplex.HasValue)
+                {
+                    this.isComplex = this.EdmProperty.Type.TypeKind() == EdmTypeKind.Complex;
+                }
+
+                return this.isComplex.Value;
+            }
+        }
+
+        /// <summary>Returns if this property is complex type.</summary>
+        internal bool IsComplexCollection
+        {
+            get
+            {
+                if (!this.isComplexCollection.HasValue)
+                {
+                    if (this.collectionGenericType == null)
+                    {
+                        this.isComplexCollection = false;
+                    }
+                    else
+                    {
+                        var type = this.EdmProperty.Type;
+                        this.isComplexCollection = this.EdmProperty.PropertyKind == EdmPropertyKind.Structural
+                                                   && type.IsCollection()
+                                                   && (type as IEdmCollectionTypeReference).ElementType().IsComplex();
+                    }
+                }
+
+                return this.isComplexCollection.Value;
+            }
         }
 
         /// <summary>Is this property a collection of primitive or enum or complex types?</summary>
@@ -327,7 +404,7 @@ namespace Microsoft.OData.Client.Metadata
             Debug.Assert(null != this.collectionRemove, "missing removeMethod");
 
             Debug.Assert(this.PropertyType.IsAssignableFrom(instance.GetType()), "unexpected collection instance");
-            Debug.Assert((null == value) || this.EntityCollectionItemType.IsAssignableFrom(value.GetType()) || this.PrimitiveOrComplexCollectionItemType.IsAssignableFrom(value.GetType()), "unexpected collection value to remove");
+            Debug.Assert((null == value) || this.ResourceSetItemType.IsAssignableFrom(value.GetType()) || this.PrimitiveOrComplexCollectionItemType.IsAssignableFrom(value.GetType()), "unexpected collection value to remove");
             this.collectionRemove.Invoke(instance, value);
         }
 

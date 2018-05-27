@@ -4,11 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -65,12 +63,24 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Translate an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>UserDefinedValue</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override bool Translate(AnnotationSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return false;
+        }
+
+        /// <summary>
         /// Translate an OpenPropertySegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>UserDefinedValue</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
-        public override bool Translate(OpenPropertySegment segment)
+        public override bool Translate(DynamicPathSegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return false;

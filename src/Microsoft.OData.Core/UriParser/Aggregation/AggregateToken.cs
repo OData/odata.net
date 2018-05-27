@@ -4,33 +4,55 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
+    using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using System.Linq;
 
-    internal sealed class AggregateToken : ApplyTransformationToken
+    /// <summary>
+    /// Query token representing an Aggregate token.
+    /// </summary>
+    public sealed class AggregateToken : ApplyTransformationToken
     {
-        private readonly IEnumerable<AggregateExpressionToken> expressions;
+        private readonly IEnumerable<AggregateTokenBase> expressions;
 
-        public AggregateToken(IEnumerable<AggregateExpressionToken> expressions)
+        /// <summary>
+        /// Create an AggregateTransformationToken.
+        /// </summary>
+        /// <param name="expressions">The aggregate expressions.</param>
+        public AggregateToken(IEnumerable<AggregateTokenBase> expressions)
         {
             ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
             this.expressions = expressions;
         }
 
+        /// <summary>
+        /// Gets the kind of this token.
+        /// </summary>
         public override QueryTokenKind Kind
         {
             get { return QueryTokenKind.Aggregate; }
         }
 
+        /// <summary>
+        /// Create an AggregateToken.
+        /// </summary>
+        /// <param name="expressions">The list of AggregateExpressionToken.</param>
+        [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
         public IEnumerable<AggregateExpressionToken> Expressions
+        {
+            get
+            {
+                return expressions.OfType<AggregateExpressionToken>();
+            }
+        }
+
+        public IEnumerable<AggregateTokenBase> AggregateExpressions
         {
             get
             {

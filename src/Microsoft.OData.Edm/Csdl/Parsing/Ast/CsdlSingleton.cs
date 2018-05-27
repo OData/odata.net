@@ -11,12 +11,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Represents a CSDL Singleton.
     /// </summary>
-    internal class CsdlSingleton : CsdlAbstractNavigationSource  
+    internal class CsdlSingleton : CsdlAbstractNavigationSource
     {
         private readonly string type;
-        
-        public CsdlSingleton(string name, string type, IEnumerable<CsdlNavigationPropertyBinding> navigationPropertyBindings, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, navigationPropertyBindings, documentation, location)
+
+        public CsdlSingleton(string name, string type, IEnumerable<CsdlNavigationPropertyBinding> navigationPropertyBindings, CsdlLocation location)
+            : base(name, navigationPropertyBindings, location)
         {
             this.type = type;
         }

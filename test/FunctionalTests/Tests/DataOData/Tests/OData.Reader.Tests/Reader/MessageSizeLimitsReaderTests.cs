@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -38,214 +37,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
         [InjectDependency(IsRequired = true)]
         public IODataRequestManager RequestManager { get; set; }
-
-        [Ignore]
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading property payloads.")]
-        public void PropertyMessageSizeLimitReadTest()
-        {
-            EdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            ODataPayloadElement propertyPayload = PayloadBuilder.PrimitiveProperty("LongName", "This is a name with a lot of characters so that we can test some security limits.");
-
-            var testCases = new MessageSizeLimitTestCase[]
-            {
-                // Single byte size should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 1,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 328, ResponseSize = 328 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 162, ResponseSize = 162 },
-                },
-                // Small number should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 40,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 328, ResponseSize = 328 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 162, ResponseSize = 162 },
-                },
-                // ATOM & JSON-L fails, Verbose JSON works
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 120,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 328, ResponseSize = 328 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 162, ResponseSize = 162 },
-                },
-                // Large number should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 10000,
-                },
-                // Default should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = -1,
-                },
-            };
-
-            this.RunAtomJsonMessageSizeLimitTests(model, propertyPayload, testCases);
-
-            // Another tests with a payload that is too large for the default max message size
-            ODataPayloadElement propertyPayload2 = PayloadBuilder.PrimitiveProperty("LongName2", new string('a', 1024 * 1024 + 1));
-            testCases = new MessageSizeLimitTestCase[]
-            {
-                // Default should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = -1,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 1048839, ResponseSize = 1048839 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 1048658, ResponseSize = 1048658 },
-                },
-            };
-
-            this.RunAtomJsonMessageSizeLimitTests(model, propertyPayload2, testCases);
-        }
-
-        [Ignore]
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading feed payloads.")]
-        public void FeedMessageSizeLimitReadTest()
-        {
-            EdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var entityType = model.FindDeclaredType("TestModel.Person") as EdmEntityType;
-
-            ODataPayloadElement payload = PayloadBuilder.EntitySet(new EntityInstance[]
-                {
-                    PayloadBuilder.Entity("TestModel.Person").PrimitiveProperty("Id", 1),
-                    PayloadBuilder.Entity("TestModel.Person").PrimitiveProperty("Id", 2),
-                }).WithTypeAnnotation(entityType);
-
-            var testCases = new MessageSizeLimitTestCase[]
-            {
-                // Single byte size should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 1,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 735, ResponseSize = 735 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 200, ResponseSize = 202 },
-                },
-                // Small number should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 40,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 735, ResponseSize = 735 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 200, ResponseSize = 202 },
-                },
-                // ATOM & JSON-L fails, Verbose JSON works
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 150,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 735, ResponseSize = 735 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 200, ResponseSize = 202 },
-                },
-                // Large number should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 10000,
-                },
-                // Default should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = -1,
-                },
-            };
-
-            this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases);
-        }
-
-        [Ignore]
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading entry payloads.")]
-        public void EntryMessageSizeLimitReadTest()
-        {
-            EdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            ODataPayloadElement payload = PayloadBuilder.Entity("TestModel.Person").PrimitiveProperty("Id", 1);
-
-            var testCases = new MessageSizeLimitTestCase[]
-            {
-                // Single byte size should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 1,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 443, ResponseSize = 443 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 142, ResponseSize = 144 },
-                },
-                // Small number should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 40,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 443, ResponseSize = 443 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 142, ResponseSize = 144 },
-                },
-                // Only JSON request works
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 65,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 443, ResponseSize = 443 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 142, ResponseSize = 144 },
-                },
-                // Only ATOM & JSON-L response should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 142,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 443, ResponseSize = 443 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 144 },
-                },
-                // Large number should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 10000,
-                },
-                // Default should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = -1,
-                },
-            };
-
-            this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases);
-        }
-
-        [Ignore]
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading entity reference link payloads.")]
-        public void EntityReferenceLinkMessageSizeLimitReadTest()
-        {
-            EdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            EdmEntityType cityType = model.FindDeclaredType("TestModel.CityType") as EdmEntityType;
-            EdmEntitySet citySet = model.EntityContainersAcrossModels().Single().FindEntitySet("Cities") as EdmEntitySet;
-
-            ODataPayloadElement payload = PayloadBuilder.DeferredLink("http://odata.org/erl").ExpectedNavigationProperty(citySet, cityType, "PoliceStation");
-
-            var testCases = new MessageSizeLimitTestCase[]
-            {
-                // Single byte size should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 1,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 237, ResponseSize = 237 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 99, ResponseSize = 99 },
-                },
-                // Small number should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 20,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 237, ResponseSize = 237 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 99, ResponseSize = 99 },
-                },
-                // Large number should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 10000,
-                },
-                // Default should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = -1,
-                },
-            };
-
-            this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases);
-        }
 
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading entity reference links payloads.")]
         public void EntityReferenceLinksMessageSizeLimitReadTest()
@@ -290,53 +81,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             };
 
             this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases, tc => tc.IsRequest);
-        }
-
-        [Ignore]
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading collection payloads.")]
-        public void CollectionMessageSizeLimitReadTest()
-        {
-            EdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var itemTypeAnnotationType = MetadataUtils.GetPrimitiveTypeReference(typeof(string)).Definition;
-            var collectionTypeAnnotationType = MetadataUtils.GetPrimitiveTypeReference(typeof(string)).ToCollectionTypeReference().Definition;
-
-            ODataPayloadElement payload = new PrimitiveCollection(
-                PayloadBuilder.PrimitiveValue("Vienna").WithTypeAnnotation(itemTypeAnnotationType),
-                PayloadBuilder.PrimitiveValue("Prague").WithTypeAnnotation(itemTypeAnnotationType),
-                PayloadBuilder.PrimitiveValue("Redmond").WithTypeAnnotation(itemTypeAnnotationType))
-                .WithTypeAnnotation(collectionTypeAnnotationType)
-                .ExpectedCollectionItemType(itemTypeAnnotationType).CollectionName("PrimitiveCollection");
-
-            var testCases = new MessageSizeLimitTestCase[]
-            {
-                // Single byte size should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 1,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 411, ResponseSize = 411 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 123, ResponseSize = 123 },
-                },
-                // Small number should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 20,
-                    AtomSizes = new RequestResponseSizes { RequestSize = 411, ResponseSize = 411 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 123, ResponseSize = 123 },
-                },
-                // Large number should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 10000,
-                },
-                // Default should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = -1,
-                },
-            };
-
-            this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases);
         }
 
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading service document payloads.")]
@@ -569,7 +313,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 },
             };
 
-            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => !tc.IsRequest || (tc.Format != ODataFormat.Atom && tc.Format != ODataFormat.Json));
+            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => !tc.IsRequest || tc.Format != ODataFormat.Json);
         }
 
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading batch response payloads.")]
@@ -613,45 +357,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 },
             };
 
-            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => tc.IsRequest || (tc.Format != ODataFormat.Json || tc.Format != ODataFormat.Atom));
+            this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => true);
         }
 #endif
-
-        [Ignore]
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading parameter payloads.")]
-        public void ParameterMessageSizeLimitReadTest()
-        {
-            EdmModel model = new EdmModel();
-            ODataPayloadElement payload = TestParameters.CreateParameterValues(model, false /*fullSet*/).First();
-
-            var testCases = new MessageSizeLimitTestCase[]
-            {
-                // Single byte size should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 1,
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 18, ResponseSize = -1 },
-                },
-                // Small number should fail
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 10,
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = 18, ResponseSize = -1 },
-                },
-                // Large number should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = 10000,
-                },
-                // Default should work
-                new MessageSizeLimitTestCase
-                {
-                    MaxMessageSize = -1,
-                },
-            };
-
-            this.RunAtomJsonMessageSizeLimitTests(model, payload, testCases, tc => !tc.IsRequest || tc.Format == ODataFormat.Atom);
-        }
 
         private void RunAtomJsonMessageSizeLimitTests(
             EdmModel model,
@@ -689,11 +397,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     (testCase, testConfiguration) =>
                     {
                         int size = -1;
-                        if (testConfiguration.Format == ODataFormat.Atom && testCase.AtomSizes != null)
-                        {
-                            size = testConfiguration.IsRequest ? testCase.AtomSizes.RequestSize : testCase.AtomSizes.ResponseSize;
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
+                        if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
                         {
                             size = testConfiguration.IsRequest ? testCase.JsonLightSizes.RequestSize : testCase.JsonLightSizes.ResponseSize;
                         }
@@ -738,11 +442,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testCase, testConfiguration) =>
                 {
                     int size = -1;
-                    if (testConfiguration.Format == ODataFormat.Atom && testCase.AtomSizes != null)
-                    {
-                        size = testConfiguration.IsRequest ? testCase.AtomSizes.RequestSize : testCase.AtomSizes.ResponseSize;
-                    }
-                    else if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
+                    if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
                     {
                         size = testConfiguration.IsRequest ? testCase.JsonLightSizes.RequestSize : testCase.JsonLightSizes.ResponseSize;
                     }

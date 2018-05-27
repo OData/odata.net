@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 #if !WINDOWS_PHONE
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
@@ -152,48 +152,48 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
 
-        public override ODataWriter CreateEntryWriter(string parameterName)
+        public override ODataWriter CreateResourceWriter(string parameterName)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.parameterWriter.CreateEntryWriter(parameterName), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.parameterWriter.CreateResourceWriter(parameterName), this.testConfiguration);
             }
             else
             {
 #if  SILVERLIGHT || WINDOWS_PHONE
                 throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
 #else
-                return this.parameterWriter.CreateEntryWriterAsync(parameterName)
+                return this.parameterWriter.CreateResourceWriterAsync(parameterName)
                     .ContinueWith(task => new ODataWriterTestWrapper(task.Result, this.testConfiguration), TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
 #endif
             }
         }
 
-        public override Task<ODataWriter> CreateEntryWriterAsync(string parameterName)
+        public override Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
 
-        public override ODataWriter CreateFeedWriter(string parameterName)
+        public override ODataWriter CreateResourceSetWriter(string parameterName)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataWriterTestWrapper(this.parameterWriter.CreateFeedWriter(parameterName), this.testConfiguration);
+                return new ODataWriterTestWrapper(this.parameterWriter.CreateResourceSetWriter(parameterName), this.testConfiguration);
             }
             else
             {
 #if  SILVERLIGHT || WINDOWS_PHONE
                 throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
 #else
-                return this.parameterWriter.CreateFeedWriterAsync(parameterName)
+                return this.parameterWriter.CreateResourceSetWriterAsync(parameterName)
                     .ContinueWith(task => new ODataWriterTestWrapper(task.Result, this.testConfiguration), TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
 #endif
             }
         }
 
-        public override Task<ODataWriter> CreateFeedWriterAsync(string parameterName)
+        public override Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }

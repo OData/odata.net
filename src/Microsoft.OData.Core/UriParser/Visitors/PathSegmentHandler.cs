@@ -4,16 +4,24 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// Handler interface for walking the path semantic tree.
     /// </summary>
     public abstract class PathSegmentHandler
     {
+        /// <summary>
+        /// Handle a ODataPathSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(ODataPathSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Handle a TypeSegment
         /// </summary>
@@ -69,6 +77,15 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Handle an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(AnnotationSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Handle an OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
@@ -90,7 +107,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Handle an OpenPropertySegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
-        public virtual void Handle(OpenPropertySegment segment)
+        public virtual void Handle(DynamicPathSegment segment)
         {
             throw new NotImplementedException();
         }

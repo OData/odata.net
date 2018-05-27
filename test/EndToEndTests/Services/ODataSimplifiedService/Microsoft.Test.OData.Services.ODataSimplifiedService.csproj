@@ -6,7 +6,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.OData.SampleService.Models.ODataSimplified</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.ODataSimplifiedService</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -49,7 +49,6 @@
     <Compile Include="ODataSimplifiedModels.cs" />
     <Compile Include="ODataSimplifiedService.cs" />
     <Compile Include="ODataSimplifiedServiceDescriptor.cs" />
-    <Compile Include="ODataSimplifiedRequestHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

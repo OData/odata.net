@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.Evaluation;
+    using Microsoft.OData.JsonLight;
     #endregion
 
     /// <summary>
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core
     public abstract class ODataOperation : ODataAnnotatable
     {
         /// <summary>the metadata builder for this operation.</summary>
-        private ODataEntityMetadataBuilder metadataBuilder;
+        private ODataResourceMetadataBuilder metadataBuilder;
 
         /// <summary>A human-readable description of the <see cref="ODataAction"/> or the <see cref="ODataFunction"/>.</summary>
         private string title;
@@ -45,12 +45,12 @@ namespace Microsoft.OData.Core
         /// <summary>The parameter names for this operation.</summary>
         private string parameterNames;
 
-        /// <summary>Gets or sets the URI to get metadata for the <see cref="T:Microsoft.OData.Core.ODataAction" />.</summary>
-        /// <returns>The URI to get metadata for the <see cref="T:Microsoft.OData.Core.ODataAction" />.</returns>
+        /// <summary>Gets or sets the URI to get metadata for the <see cref="T:Microsoft.OData.ODataAction" />.</summary>
+        /// <returns>The URI to get metadata for the <see cref="T:Microsoft.OData.ODataAction" />.</returns>
         public Uri Metadata { get; set; }
 
-        /// <summary>Gets or sets a human-readable description of the <see cref="T:Microsoft.OData.Core.ODataAction" />.</summary>
-        /// <returns>A human-readable description of the <see cref="T:Microsoft.OData.Core.ODataAction" />.</returns>
+        /// <summary>Gets or sets a human-readable description of the <see cref="T:Microsoft.OData.ODataAction" />.</summary>
+        /// <returns>A human-readable description of the <see cref="T:Microsoft.OData.ODataAction" />.</returns>
         public string Title
         {
             get
@@ -67,8 +67,8 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>Gets or sets the URI to invoke the <see cref="T:Microsoft.OData.Core.ODataAction" />.</summary>
-        /// <returns> The URI to invoke the <see cref="T:Microsoft.OData.Core.ODataAction" />.</returns>
+        /// <summary>Gets or sets the URI to invoke the <see cref="T:Microsoft.OData.ODataAction" />.</summary>
+        /// <returns> The URI to invoke the <see cref="T:Microsoft.OData.ODataAction" />.</returns>
         public Uri Target
         {
             get
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="builder">The metadata builder used to compute values from model annotations.</param>
         /// <param name="metadataDocumentUri">The metadata document Uri.</param>
-        internal void SetMetadataBuilder(ODataEntityMetadataBuilder builder, Uri metadataDocumentUri)
+        internal void SetMetadataBuilder(ODataResourceMetadataBuilder builder, Uri metadataDocumentUri)
         {
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(metadataDocumentUri.IsAbsoluteUri, "metadataDocumentUri.IsAbsoluteUri");
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Core
         /// Gets the metadata builder for this operation.
         /// </summary>
         /// <returns>The metadata builder used to compute values.</returns>
-        internal ODataEntityMetadataBuilder GetMetadataBuilder()
+        internal ODataResourceMetadataBuilder GetMetadataBuilder()
         {
             return this.metadataBuilder;
         }

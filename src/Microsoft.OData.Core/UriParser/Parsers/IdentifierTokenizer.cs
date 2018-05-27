@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -61,19 +58,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             this.lexer.ValidateToken(ExpressionTokenKind.Identifier);
 
             // An open paren here would indicate calling a method in regular C# syntax.
-            // TODO: Make this more generalized to work with any kind of function. 
+            // TODO: Make this more generalized to work with any kind of function.
             bool identifierIsFunction = this.lexer.ExpandIdentifierAsFunction();
-            if (identifierIsFunction)
+            QueryToken functionCallToken;
+            if (identifierIsFunction && this.functionCallParser.TryParseIdentifierAsFunction(parent, out functionCallToken))
             {
-                return this.functionCallParser.ParseIdentifierAsFunction(parent);
+                return functionCallToken;
             }
 
             if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
                 string fullIdentifier = this.lexer.ReadDottedIdentifier(false);
-                return new DottedIdentifierToken(fullIdentifier, parent); 
+                return new DottedIdentifierToken(fullIdentifier, parent);
             }
-            
+
             return this.ParseMemberAccess(parent);
         }
 

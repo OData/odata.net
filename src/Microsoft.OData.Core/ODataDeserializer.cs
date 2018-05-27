@@ -4,19 +4,22 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
+
     using System.Diagnostics;
     using Microsoft.OData.Edm;
     #endregion Namespaces
-    
+
     /// <summary>
     /// Base class for all OData deserializers.
     /// </summary>
     internal abstract class ODataDeserializer
     {
+        /// <summary>The reader validator to use for reading.</summary>
+        protected IReaderValidator ReaderValidator;
+
         /// <summary>The input context to use for reading.</summary>
         private readonly ODataInputContext inputContext;
 
@@ -29,28 +32,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(inputContext != null, "inputContext != null");
 
             this.inputContext = inputContext;
-        }
-
-        /// <summary>
-        /// true if the WCF DS server compatibility format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseServerFormatBehavior
-        {
-            get
-            {
-                return this.inputContext.UseServerFormatBehavior;
-            }
-        }
-
-        /// <summary>
-        /// true if the default format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseDefaultFormatBehavior
-        {
-            get
-            {
-                return this.inputContext.UseDefaultFormatBehavior;
-            }
+            this.ReaderValidator = this.inputContext.MessageReaderSettings.Validator;
         }
 
         /// <summary>
@@ -90,9 +72,9 @@ namespace Microsoft.OData.Core
         /// Creates a new instance of a duplicate property names checker.
         /// </summary>
         /// <returns>The newly created instance of duplicate property names checker.</returns>
-        internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
+        internal PropertyAndAnnotationCollector CreatePropertyAndAnnotationCollector()
         {
-            return this.inputContext.CreateDuplicatePropertyNamesChecker();
+            return this.inputContext.CreatePropertyAndAnnotationCollector();
         }
     }
 }

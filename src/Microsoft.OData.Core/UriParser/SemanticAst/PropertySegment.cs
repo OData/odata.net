@@ -4,14 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    using System.Collections.ObjectModel;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     #endregion Namespaces
 
@@ -30,7 +27,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="property">The structural property that this segment represents.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input property is null.</exception>
-        public PropertySegment(IEdmStructuralProperty property) 
+        public PropertySegment(IEdmStructuralProperty property)
         {
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 

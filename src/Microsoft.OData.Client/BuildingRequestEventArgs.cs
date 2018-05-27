@@ -40,15 +40,15 @@ namespace Microsoft.OData.Client
         /// Gets the Request HTTP Method that the outgoing request will use.
         /// </summary>
         public string Method { get; set; }
-        
+
         /// <summary>
         /// The Uri of the outgoing request. The Uri may be altered. No error checking will be performed against any changes made.
         /// </summary>
         public Uri RequestUri
         {
-            get 
-            { 
-                return this.requestUri; 
+            get
+            {
+                return this.requestUri;
             }
 
             set
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// The headers for this request. Adding new custom headers is supported. Behavior is undefined for changing existing headers or adding 
+        /// The headers for this request. Adding new custom headers is supported. Behavior is undefined for changing existing headers or adding
         /// system headers.  No error checking will be performed against any changes made.
         /// </summary>
         public IDictionary<string, string> Headers

@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client
 {
     /// <summary>
-    /// Used to specify a value synchronization strategy. 
+    /// Used to specify a value synchronization strategy.
     /// </summary>
     /// <remarks>
     /// Equivalent to System.Data.dll!System.Data.LoadOption

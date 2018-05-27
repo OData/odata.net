@@ -8,9 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Expressions;
-using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.Test.OData.Services.ODataOperationService
@@ -39,14 +36,23 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
             companyAddressType.AddProperty(new EdmStructuralProperty(companyAddressType, "CompanyName", EdmCoreModel.Instance.GetString(false)));
             model.AddElement(companyAddressType);
 
+            var orderDetailType = new EdmComplexType(ns, "OrderDetail");
+            orderDetailType.AddProperty(new EdmStructuralProperty(orderDetailType, "Quantity", EdmCoreModel.Instance.GetInt32(false)));
+            orderDetailType.AddProperty(new EdmStructuralProperty(orderDetailType, "UnitPrice", EdmCoreModel.Instance.GetSingle(false)));
+            model.AddElement(orderDetailType);
+
+            var infoFromCustomerType = new EdmComplexType(ns, "InfoFromCustomer");
+            infoFromCustomerType.AddProperty(new EdmStructuralProperty(infoFromCustomerType, "CustomerMessage", EdmCoreModel.Instance.GetString(false)));
+            model.AddElement(infoFromCustomerType);
+
             #endregion
 
             #region EnumType
 
             var customerLevelType = new EdmEnumType(ns, "CustomerLevel");
-            customerLevelType.AddMember("Common", new EdmIntegerConstant(0));
-            customerLevelType.AddMember("Silver", new EdmIntegerConstant(1));
-            customerLevelType.AddMember("Gold", new EdmIntegerConstant(2));
+            customerLevelType.AddMember("Common", new EdmEnumMemberValue(0));
+            customerLevelType.AddMember("Silver", new EdmEnumMemberValue(1));
+            customerLevelType.AddMember("Gold", new EdmEnumMemberValue(2));
             model.AddElement(customerLevelType);
 
             #endregion
@@ -70,6 +76,8 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
             orderType.AddKeys(orderIdProperty);
             orderType.AddStructuralProperty("OrderDate", EdmCoreModel.Instance.GetDateTimeOffset(false));
             orderType.AddStructuralProperty("Notes", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+            orderType.AddStructuralProperty("OrderDetails", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(orderDetailType, true))));
+            orderType.AddStructuralProperty("InfoFromCustomer", new EdmComplexTypeReference(infoFromCustomerType, true));
             model.AddElement(orderType);
 
             var ordersNavigation = customerType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
@@ -190,13 +198,13 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
             var getCustomersByOrdersUnboundFunction = new EdmFunction(ns, "GetCustomersByOrders", customerCollectionTypeReference, false, null, true);
             getCustomersByOrdersUnboundFunction.AddParameter("orders", orderCollectionTypeReference);
             model.AddElement(getCustomersByOrdersUnboundFunction);
-            defaultContainer.AddFunctionImport(getCustomersByOrdersUnboundFunction.Name, getCustomersByOrdersUnboundFunction, new EdmEntitySetReferenceExpression(customerSet));
+            defaultContainer.AddFunctionImport(getCustomersByOrdersUnboundFunction.Name, getCustomersByOrdersUnboundFunction, new EdmPathExpression("Customers"));
 
             // Function Import: Parameter is Collection of Entity, Return Entity
             var getCustomerByOrderUnboundFunction = new EdmFunction(ns, "GetCustomerByOrder", customerTypeReference, false, null, true);
             getCustomerByOrderUnboundFunction.AddParameter("order", orderTypeReference);
             model.AddElement(getCustomerByOrderUnboundFunction);
-            defaultContainer.AddFunctionImport(getCustomerByOrderUnboundFunction.Name, getCustomerByOrderUnboundFunction, new EdmEntitySetReferenceExpression(customerSet));
+            defaultContainer.AddFunctionImport(getCustomerByOrderUnboundFunction.Name, getCustomerByOrderUnboundFunction, new EdmPathExpression("Customers"));
 
             // Function Import: Bound to Entity, Return Complex Value
             var getCustomerAddressUnboundFunction = new EdmFunction(ns, "GetCustomerAddress", addressTypeReference, false, null, true);

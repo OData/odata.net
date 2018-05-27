@@ -4,45 +4,41 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
-{
-    #region Namespaces
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    #endregion Namespaces
+using Microsoft.OData.Edm;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
-    /// Node representing a type segment that casts a single value node.
+    /// Node representing a type segment that casts a single primitive value node.
     /// </summary>
     public sealed class SingleValueCastNode : SingleValueNode
     {
         /// <summary>
-        /// The single value node that we're casting to a different type.
+        /// The resource that we're casting to a different type.
         /// </summary>
         private readonly SingleValueNode source;
 
         /// <summary>
         /// The target type that the source is cast to.
         /// </summary>
-        private readonly IEdmComplexTypeReference typeReference;
+        private readonly IEdmPrimitiveTypeReference primitiveTypeReference;
 
         /// <summary>
         /// Created a SingleValueCastNode with the given source node and the given type to cast to.
         /// </summary>
         /// <param name="source"> Source <see cref="SingleValueNode"/> that is being cast.</param>
-        /// <param name="complexType">Type to cast to.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input complexType is null.</exception>
-        public SingleValueCastNode(SingleValueNode source, IEdmComplexType complexType)
+        /// <param name="primitiveType">Type to cast to.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input primitiveType is null.</exception>
+        public SingleValueCastNode(SingleValueNode source, IEdmPrimitiveType primitiveType)
         {
-            ExceptionUtils.CheckArgumentNotNull(complexType, "complexType");
+            ExceptionUtils.CheckArgumentNotNull(source, "source");
+            ExceptionUtils.CheckArgumentNotNull(primitiveType, "primitiveType");
             this.source = source;
-            this.typeReference = new EdmComplexTypeReference(complexType, false);
+            this.primitiveTypeReference = new EdmPrimitiveTypeReference(primitiveType, true);
         }
 
         /// <summary>
-        /// Gets the single value node that we're casting to a different type.
+        /// Gets the property that we're casting to a different type.
         /// </summary>
         public SingleValueNode Source
         {
@@ -54,7 +50,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
-            get { return this.typeReference; }
+            get { return this.primitiveTypeReference; }
         }
 
         /// <summary>
@@ -62,10 +58,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         internal override InternalQueryNodeKind InternalKind
         {
-            get
-            {
-                return InternalQueryNodeKind.SingleValueCast;
-            }
+            get { return InternalQueryNodeKind.SingleValueCast; }
         }
 
         /// <summary>

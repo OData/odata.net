@@ -54,7 +54,7 @@ namespace AstoriaUnitTests
         <Property Name=""Name"" Type=""Edm.String"" Nullable=""true"" m:FC_TargetPath=""SyndicationTitle"" m:FC_ContentKind=""text"" m:FC_KeepInContent=""true"" />
         <Property Name=""PrimaryAddress"" Type=""ODataDemo.Address"" Nullable=""false"" m:FC_TargetPath=""City"" m:FC_NsUri=""http://mynamespace"" m:FC_NsPrefix=""e"" m:FC_SourcePath=""City"" m:FC_KeepInContent=""true"" />
         <Property Name=""Addresses"" Type=""Collection(ODataDemo.Address)"" Nullable=""false"" />
-        <Property Name=""Concurrency"" Type=""Edm.Int32"" Nullable=""false"" ConcurrencyMode=""Fixed"" />
+        <Property Name=""Concurrency"" Type=""Edm.Int32"" Nullable=""false"" />
         <NavigationProperty Name=""Products"" Type=""Collection(ODataDemo.Product)"" Partner=""Supplier"" />
       </EntityType>
       <ComplexType Name=""Address"">
@@ -94,7 +94,7 @@ namespace AstoriaUnitTests
 
         public static IEdmModel BuildSimplifiedNorthwindModel()
         {
-            return EdmxReader.Parse(XmlTextReader.Create(new StringReader(SimpleNorthwindModel)));
+            return CsdlReader.Parse(XmlTextReader.Create(new StringReader(SimpleNorthwindModel)));
         }
 
         public class Product

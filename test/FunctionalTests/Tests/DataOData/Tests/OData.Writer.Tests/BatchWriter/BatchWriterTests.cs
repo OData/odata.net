@@ -15,8 +15,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 #if !SILVERLIGHT
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
@@ -32,6 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for writing batch requests/responses with the ODataBatchWriter.
     /// </summary>
@@ -53,7 +54,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         [InjectDependency(IsRequired = true)]
         public BatchResponseToDummyRequestGenerator RequestGenerator { get; set; }
 
-        [TestMethod, Variation(Description = "Tests writing requests with the batch writer (with dummy payloads).")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests writing requests with the batch writer (with dummy payloads).")]
         public void ODataBatchWriterRequestTests()
         {
             Uri baseUri = new Uri("http://services.odata.org/OData/OData.svc");
@@ -71,7 +73,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     {
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.QueryOperation(null, new Uri("http://odata.org")),
-                    }, 
+                    },
                     ODataExpectedExceptions.ArgumentNullOrEmptyException()),
                 // null method for request in changeset
                 new BatchWriterTestDescriptor(
@@ -81,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.StartChangeSet(),
                         BatchWriterUtils.QueryOperation(null, new Uri("http://odata.org")),
-                    }, 
+                    },
                     ODataExpectedExceptions.ArgumentNullOrEmptyException()),
                 // empty method for request on top-level
                 new BatchWriterTestDescriptor(
@@ -90,7 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     {
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.QueryOperation(string.Empty, new Uri("http://odata.org")),
-                    }, 
+                    },
                     ODataExpectedExceptions.ArgumentNullOrEmptyException()),
                 // empty method for request in changeset
                 new BatchWriterTestDescriptor(
@@ -100,7 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.StartChangeSet(),
                         BatchWriterUtils.QueryOperation(string.Empty, new Uri("http://odata.org")),
-                    }, 
+                    },
                     ODataExpectedExceptions.ArgumentNullOrEmptyException()),
                 // Modify method for request on top-level should work
                 new BatchWriterTestDescriptor(
@@ -119,7 +121,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.StartChangeSet(),
                         BatchWriterUtils.QueryOperation("GET", new Uri("http://odata.org")),
-                    }, 
+                    },
                     ODataExpectedExceptions.ODataException("ODataBatch_InvalidHttpMethodForChangeSetRequest", "GET")),
                 // null uri for request on top-level
                 new BatchWriterTestDescriptor(
@@ -128,7 +130,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     {
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.QueryOperation("GET", null),
-                    }, 
+                    },
                     ODataExpectedExceptions.ArgumentNullException()),
                 // null uri for request in changeset
                 new BatchWriterTestDescriptor(
@@ -138,7 +140,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.StartChangeSet(),
                         BatchWriterUtils.QueryOperation("POST", null),
-                    }, 
+                    },
                     ODataExpectedExceptions.ArgumentNullException()),
             });
 
@@ -154,7 +156,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests writing responses with the batch writer (with dummy payloads).")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests writing responses with the batch writer (with dummy payloads).")]
         public void ODataBatchWriterResponseTests()
         {
             Uri baseUri = new Uri("http://services.odata.org/OData/OData.svc");
@@ -172,13 +175,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests correct handling of absolute and relative URIs in batches.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests correct handling of absolute and relative URIs in batches.")]
         public void ODataBatchWriterBaseUriTests()
         {
             Func<Uri, Uri, ExpectedException, BatchWriterTestDescriptor> createInvokation = (uri, baseUri, expectedException) =>
                 {
-                    var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
-                    { 
+                    var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
+                    {
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.QueryOperation("GET", uri),
                         BatchWriterUtils.EndBatch(),
@@ -236,13 +240,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests different combinations of Http methods for query operations and changeset requests.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests different combinations of Http methods for query operations and changeset requests.")]
         public void ODataBatchWriterHttpMethodTests()
         {
             Func<string, string, BatchWriterTestDescriptor> createQueryOperation = (method, expectedError) =>
             {
-                var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
-                    { 
+                var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
+                    {
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.QueryOperation(method, new Uri("http://www.odata.org/")),
                         BatchWriterUtils.EndBatch(),
@@ -255,7 +260,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             Func<string, string, BatchWriterTestDescriptor> createChangeSetRequest = (method, expectedError) =>
             {
-                var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -271,7 +276,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             Func<string, string, BatchWriterTestDescriptor> createChangeSetRequestWithNullContentId = (method, expectedError) =>
             {
-                var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -287,10 +292,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             IEnumerable<string> httpMethodValues = new string[]
             {
-                Microsoft.OData.Core.ODataConstants.MethodGet,
-                Microsoft.OData.Core.ODataConstants.MethodPatch,
-                Microsoft.OData.Core.ODataConstants.MethodPost,
-                Microsoft.OData.Core.ODataConstants.MethodPut,
+                Microsoft.OData.ODataConstants.MethodGet,
+                Microsoft.OData.ODataConstants.MethodPatch,
+                Microsoft.OData.ODataConstants.MethodPost,
+                Microsoft.OData.ODataConstants.MethodPut,
             };
 
             // Now we allow non-query outside of changeset.
@@ -322,7 +327,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation headers.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation headers.")]
         public void ODataBatchWriterCrossReferencingLinksInHeaderTest()
         {
             Uri baseUri = new Uri("http://odata.org/base");
@@ -482,7 +488,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent.Where(tc => tc.IsRequest),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.IsRequest && tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testDescriptor, testConfig, payloadTestConfig) =>
                 {
                     testConfig = ModifyBatchTestConfig(testConfig, testDescriptor);
@@ -491,8 +497,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [Ignore]
-        [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation payloads.")]
+        // [TestMethod, Variation(Description = "Tests various cross referencing links in changeset operation payloads.")]
         public void ODataBatchWriterCrossReferencingLinksInPayloadTest()
         {
             Uri baseUri = new Uri("http://odata.org/base");
@@ -524,31 +529,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             Func<Uri, string, WriterTestConfiguration, BatchWriterUtils.ODataPayload> createODataPayload = (uri, expectedUri, testConfig) =>
                 {
                     Debug.Assert(!uri.IsAbsoluteUri, "Expected a relative Uri.");
-                    ODataEntry sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+                    ODataResource sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
                     sampleEntry.ReadLink = uri;
                     ODataItem[] entryPayload = new ODataItem[] { sampleEntry };
 
-                    Uri testCaseBaseUri = testConfig.MessageWriterSettings.PayloadBaseUri;
+                    Uri testCaseBaseUri = testConfig.MessageWriterSettings.BaseUri;
 
                     string expectedResult = null;
-                    if (testConfig.Format == ODataFormat.Atom)
-                    {
-                        string xmlBaseAttribute = string.Empty;
-                        if (testCaseBaseUri != null)
-                        {
-                            xmlBaseAttribute = "xml:base=\"" + testCaseBaseUri.AbsoluteUri + "\" ";
-                        }
-
-                        // construct the expected Uri from the payload URI
-                        if (expectedUri == null)
-                        {
-                            // in ATOM we expect the original string in the payload
-                            expectedUri = uri.OriginalString;
-                        }
-
-                        expectedResult = string.Format(CultureInfo.InvariantCulture, entryPayloadExpectedAtomResultTemplate, xmlBaseAttribute, expectedUri);
-                    }
-                    else if (testConfig.Format == ODataFormat.Json)
+                    if (testConfig.Format == ODataFormat.Json)
                     {
                         // construct the expected Uri from the payload URI
                         if (expectedUri == null)
@@ -589,10 +577,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         {
                             BatchWriterUtils.ChangeSetRequest("POST", new Uri("http://odata.org/1"), "1", /*headers*/ null, payloadString),
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/2"), 
-                                "2", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/2"),
+                                "2",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$1", UriKind.Relative), "$1", testConfig)),
                         },
                     },
@@ -604,10 +592,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         {
                             BatchWriterUtils.ChangeSetRequest("POST", new Uri("http://odata.org/1"), "1", /*headers*/ null, payloadString),
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/2"), 
-                                "2", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/2"),
+                                "2",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$1/foo", UriKind.Relative), "$1/foo", testConfig)),
                         },
                     },
@@ -619,10 +607,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         {
                             BatchWriterUtils.ChangeSetRequest("POST", new Uri("http://odata.org/1"), "", /*headers*/ null, payloadString),
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/2"), 
-                                "2", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/2"),
+                                "2",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$/foo", UriKind.Relative), "$/foo", testConfig)),
                         },
                     },
@@ -634,10 +622,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         {
                             BatchWriterUtils.ChangeSetRequest("POST", new Uri("http://odata.org/1"), "$$$", /*headers*/ null, payloadString),
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/2"), 
-                                "2", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/2"),
+                                "2",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$$$$", UriKind.Relative), "$$$$", testConfig)),
                         },
                     },
@@ -649,10 +637,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         {
                             BatchWriterUtils.ChangeSetRequest("POST", new Uri("http://odata.org/1"), "1", /*headers*/ null, payloadString),
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/2"), 
-                                "2", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/2"),
+                                "2",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$NonExisting", UriKind.Relative), null, testConfig)),
                         },
                         ExpectedExceptionNoBaseUri = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "$NonExisting"),
@@ -664,10 +652,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         Operations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                         {
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/1"), 
-                                "1", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/1"),
+                                "1",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$2", UriKind.Relative), null, testConfig)),
                             BatchWriterUtils.ChangeSetRequest("POST", new Uri("http://odata.org/2"), "2", /*headers*/ null, payloadString),
                         },
@@ -684,10 +672,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         Operations2 = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                         {
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/2"), 
-                                "2", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/2"),
+                                "2",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$1", UriKind.Relative), null, testConfig)),
                         },
                         ExpectedExceptionNoBaseUri = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "$1"),
@@ -703,10 +691,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         Operations2 = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                         {
                             BatchWriterUtils.ChangeSetRequest(
-                                "POST", 
-                                new Uri("http://odata.org/2"), 
-                                "2", 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry), 
+                                "POST",
+                                new Uri("http://odata.org/2"),
+                                "2",
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource),
                                 createODataPayload(new Uri("$2", UriKind.Relative), null, testConfig)),
                         },
                         ExpectedExceptionNoBaseUri = ODataExpectedExceptions.ODataException("ODataWriter_RelativeUriUsedWithoutBaseUriSpecified", "$2"),
@@ -760,7 +748,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 new Uri[] { baseUri, null },
                 payloadStrings,
                 this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent.Where(tc => tc.IsRequest),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.IsRequest && tc.Format == ODataFormat.Atom && tc.MessageWriterSettings.DisableMessageStreamDisposal == false),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCaseFunc, testBaseUri, payloadString, testConfig, payloadTestConfig) =>
                 {
                     payloadTestConfig = ModifyPayloadTestConfig(payloadTestConfig, testBaseUri);
@@ -770,51 +758,52 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
         public void ODataBatchWriterUserExceptionInRequestTests()
         {
             var testCases = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[][]
             {
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.UserException(),
                 },
 
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.UserException(),
                 },
 
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.QueryOperation("GET", new Uri("http://www.odata.org/")),
                     BatchWriterUtils.UserException(),
                 },
 
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.QueryOperation("GET", new Uri("http://www.odata.org/")),
                     BatchWriterUtils.EndBatch(),
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -822,7 +811,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -831,7 +820,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -858,51 +847,52 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests the proper behavior of the batch writer if user code throws an exception while the batch writer is being used/active.")]
         public void ODataBatchWriterUserExceptionInResponseTests()
         {
             var testCases = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[][]
             {
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.UserException(),
                 },
 
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.UserException(),
                 },
 
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.QueryOperationResponse(200, string.Empty),
                     BatchWriterUtils.UserException(),
                 },
 
                 new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                { 
+                {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.QueryOperationResponse(200, string.Empty),
                     BatchWriterUtils.EndBatch(),
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -910,7 +900,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -919,7 +909,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     BatchWriterUtils.UserException(),
                 },
 
-                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[] 
+                new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
                     BatchWriterUtils.StartBatch(),
                     BatchWriterUtils.StartChangeSet(),
@@ -946,37 +936,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [Ignore]
-        [TestMethod, Variation(Description = "Tests writing of sample OData payloads.")]
+        // [TestMethod, Variation(Description = "Tests writing of sample OData payloads.")]
         public void ODataBatchWriterODataPayloadSmokeTests()
         {
             // Create OData payloads
-            ODataEntry sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
-            ODataFeed sampleFeed = ObjectModelUtils.CreateDefaultFeedWithAtomMetadata();
+            ODataResource sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResourceSet sampleFeed = ObjectModelUtils.CreateDefaultFeedWithAtomMetadata();
             ODataAnnotatedError sampleError = ObjectModelUtils.CreateDefaultError(true);
 
             ODataItem[] entryPayload = new ODataItem[] { sampleEntry };
             ODataItem[] feedPayload = new ODataItem[] { sampleFeed, sampleEntry };
             ODataAnnotatedError[] errorPayload = new ODataAnnotatedError[] { sampleError };
 
-            // the expected entry result (ATOM and JSON)
-            Func<ODataVersion, string> entryPayloadExpectedAtomResult =
-                version => string.Join(
-                "$(NL)",
-                @"<entry xmlns=""" + TestAtomConstants.AtomNamespace +
-                    @""" xmlns:d=""" + TestAtomConstants.ODataNamespace +
-                    @""" xmlns:m=""" + TestAtomConstants.ODataMetadataNamespace +
-                    @""" xmlns:georss=""" + TestAtomConstants.GeoRssNamespace +
-                    @""" xmlns:gml=""" + TestAtomConstants.GmlNamespace + @""">" +
-                @"  <id>" + ObjectModelUtils.DefaultEntryId + "</id>",
-                @"  <link rel=""self"" href=""" + ObjectModelUtils.DefaultEntryReadLink + @""" />",
-                @"  <title />",
-                @"  <updated>" + ObjectModelUtils.DefaultEntryUpdated + "</updated>",
-                @"  <author>",
-                @"    <name />",
-                @"  </author>",
-                @"  <content type=""application/xml"" />",
-                @"</entry>");
+            // the expected entry result (JSON)
             string[] entryPayloadExpectedJsonResult = new string[]
             {
                 "{",
@@ -986,29 +958,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 "}"
             };
 
-            // create the expected feed result (ATOM and JSON)
-            Func<ODataVersion, string> feedPayloadExpectedAtomResult =
-                version => string.Join(
-                "$(NL)",
-                @"<feed xmlns=""" + TestAtomConstants.AtomNamespace + @""" xmlns:d=""" + TestAtomConstants.ODataNamespace +
-                    @""" xmlns:m=""" + TestAtomConstants.ODataMetadataNamespace +
-                    @""" xmlns:georss=""" + TestAtomConstants.GeoRssNamespace +
-                    @""" xmlns:gml=""" + TestAtomConstants.GmlNamespace + @""">" +
-                @"  <id>http://www.odata.org/feedid</id>",
-                @"  <title />",
-                @"  <updated>2010-10-10T10:10:10Z</updated>",
-                @"  <entry>",
-                @"    <id>" + ObjectModelUtils.DefaultEntryId + "</id>",
-                @"    <link rel=""self"" href=""" + ObjectModelUtils.DefaultEntryReadLink + @""" />",
-                @"    <title />",
-                @"    <updated>" + ObjectModelUtils.DefaultEntryUpdated + "</updated>",
-                @"    <author>",
-                @"      <name />",
-                @"    </author>",
-                @"    <content type=""application/xml"" />",
-                @"  </entry>",
-                @"</feed>");
-
+            // create the expected feed result (JSON)
             string[] feedPayloadExpectedJsonResult = new string[]
             {
                 "[",
@@ -1020,20 +970,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 "]"
             };
 
-            // create the expected error result (ATOM and JSON)
-            string errorPayloadExpectedAtomResult =
-                string.Join(
-                "$(NL)",
-                @"<m:error xmlns:m=""" + TestAtomConstants.ODataMetadataNamespace + @""">",
-                @"  <m:code>Default error code</m:code>",
-                @"  <m:message xml:lang=""Default error message language."">Default error message.</m:message>",
-                @"  <m:innererror>",
-                @"    <m:message>Default inner error.</m:message>",
-                @"    <m:type></m:type>",
-                @"    <m:stacktrace></m:stacktrace>",
-                @"  </m:innererror>",
-                @"</m:error>");
-
+            // create the expected error result (JSON)
             string[] errorPayloadExpectedJsonResult = new string[]
             {
                 "{",
@@ -1050,66 +987,58 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             // create the various query and changeset batches
             var testCases = new Func<WriterTestConfiguration, BatchTestWithDirection>[]
             {
-                testConfig => 
+                testConfig =>
                     {
                         // entry payload of query operation response with 200  response code
-                        string expectedResult = testConfig.Format == ODataFormat.Atom
-                            ? entryPayloadExpectedAtomResult(testConfig.Version)
-                            : JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResult);
+                        string expectedResult = JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResult);
 
                         testConfig = SetAcceptableHeaders(testConfig);
 
                         return new BatchTestWithDirection
                         {
                             Batch = BatchWriterUtils.CreateQueryResponseBatch(
-                                200, 
-                                new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult }, 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry)),
+                                200,
+                                new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource)),
                             ForRequests = false
                         };
                     },
-                testConfig => 
+                testConfig =>
                     {
                         // feed payload of query operation response with 200  response code
-                        string expectedResult = testConfig.Format == ODataFormat.Atom
-                            ? feedPayloadExpectedAtomResult(testConfig.Version)
-                            : JsonUtils.WrapTopLevelResults(testConfig, feedPayloadExpectedJsonResult);
+                        string expectedResult = JsonUtils.WrapTopLevelResults(testConfig, feedPayloadExpectedJsonResult);
 
                         testConfig = SetAcceptableHeaders(testConfig);
 
                         return new BatchTestWithDirection
                         {
                             Batch = BatchWriterUtils.CreateQueryResponseBatch(
-                                200, 
-                                new BatchWriterUtils.ODataPayload() { Items = feedPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult }, 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Feed)),
+                                200,
+                                new BatchWriterUtils.ODataPayload() { Items = feedPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.ResourceSet)),
                             ForRequests = false
                         };
                     },
-                testConfig => 
+                testConfig =>
                     {
                         // error payload of query operation response with 200  response code
-                        string expectedResult = testConfig.Format == ODataFormat.Atom
-                            ? errorPayloadExpectedAtomResult
-                            : string.Join("$(NL)", errorPayloadExpectedJsonResult);
+                        string expectedResult = string.Join("$(NL)", errorPayloadExpectedJsonResult);
 
                         testConfig = SetAcceptableHeaders(testConfig);
 
                         return new BatchTestWithDirection
                         {
                             Batch = BatchWriterUtils.CreateQueryResponseBatch(
-                                200, 
-                                new BatchWriterUtils.ODataPayload() { Items = errorPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult }, 
+                                200,
+                                new BatchWriterUtils.ODataPayload() { Items = errorPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
                                 GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Error)),
                             ForRequests = false
                         };
                     },
-                testConfig => 
+                testConfig =>
                     {
                         // changeset request with entry payload
-                        string expectedResult = testConfig.Format == ODataFormat.Atom
-                            ? entryPayloadExpectedAtomResult(testConfig.Version)
-                            : JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResult);
+                        string expectedResult = JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResult);
 
                         testConfig = SetAcceptableHeaders(testConfig);
 
@@ -1118,18 +1047,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                             Batch = BatchWriterUtils.CreateChangeSetRequestBatch(
                                 "POST",
                                 new Uri("http://services.odata.org/OData/OData.svc/Products"),
-                                new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult }, 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry)
+                                new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource)
                                 ),
                             ForRequests = true
                         };
                     },
-                testConfig => 
+                testConfig =>
                     {
                         // changeset response with entry payload
-                        string expectedResult = testConfig.Format == ODataFormat.Atom
-                            ? entryPayloadExpectedAtomResult(testConfig.Version)
-                            : JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResult);
+                        string expectedResult = JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResult);
 
                         testConfig = SetAcceptableHeaders(testConfig);
 
@@ -1137,18 +1064,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         {
                             Batch = BatchWriterUtils.CreateChangeSetResponseBatch(
                                 200,
-                                new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult }, 
-                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Entry)
+                                new BatchWriterUtils.ODataPayload() { Items = entryPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
+                                GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Resource)
                                 ),
                             ForRequests = false
                         };
                     },
-                testConfig => 
+                testConfig =>
                     {
                         // changeset response with error payload
-                        string expectedResult = testConfig.Format == ODataFormat.Atom
-                            ? errorPayloadExpectedAtomResult
-                            : string.Join("$(NL)", errorPayloadExpectedJsonResult);
+                        string expectedResult = string.Join("$(NL)", errorPayloadExpectedJsonResult);
 
                         testConfig = SetAcceptableHeaders(testConfig);
 
@@ -1156,7 +1081,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         {
                             Batch = BatchWriterUtils.CreateChangeSetResponseBatch(
                                 200,
-                                new BatchWriterUtils.ODataPayload() { Items = errorPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult }, 
+                                new BatchWriterUtils.ODataPayload() { Items = errorPayload, TestConfiguration = testConfig, ExpectedResult = expectedResult },
                                 GetExpectedHeadersForFormat(testConfig.Format, ODataPayloadKind.Error)),
                             ForRequests = false
                         };
@@ -1168,7 +1093,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => !tc.MessageWriterSettings.DisableMessageStreamDisposal && tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCase, batchTestConfig, payloadTestConfig) =>
                 {
                     if (batchTestConfig.IsRequest != payloadTestConfig.IsRequest)
@@ -1202,12 +1127,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 return testConfig;
             }
 
-            if (testConfig.Format == ODataFormat.Atom || testConfig.Format == ODataFormat.Json)
+            if (testConfig.Format == ODataFormat.Json)
             {
                 ODataMessageWriterSettings newSettings = testConfig.MessageWriterSettings.Clone();
-                string acceptableContentTypes = testConfig.Format == ODataFormat.Atom
-                    ? MimeTypes.ApplicationAtomXml
-                    : MimeTypes.ApplicationJson;
+                string acceptableContentTypes = MimeTypes.ApplicationJson;
                 newSettings.SetContentType(acceptableContentTypes, null);
                 return new WriterTestConfiguration(testConfig.Format, newSettings, testConfig.IsRequest, testConfig.Synchronous);
             }
@@ -1220,7 +1143,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             throw new NotSupportedException("Unsupported format " + testConfig.Format.ToString() + " found.");
         }
 
-        [TestMethod, Variation(Description = "Tests different max sizes for change sets and the expected error behavior.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests different max sizes for change sets and the expected error behavior.")]
         public void ODataBatchWriterChangeSetSizeTests()
         {
             Func<int, int[], int?, ExpectedException, BatchWriterTestDescriptor> createChangeSetBatch =
@@ -1314,7 +1238,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [TestMethod, Variation(Description = "Tests different max sizes for batches and the expected error behavior.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Tests different max sizes for batches and the expected error behavior.")]
         public void ODataBatchWriterBatchSizeTests()
         {
             Func<int, int?, ExpectedException, BatchWriterTestDescriptor> createQueryBatch =
@@ -1417,8 +1342,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 });
         }
 
-        [Ignore]
-        [TestMethod, Variation(Description = "Tests a variety of batch payload shapes.")]
+        // [TestMethod, Variation(Description = "Tests a variety of batch payload shapes.")]
         // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
         public void ODataBatchWithPayloadTests()
         {
@@ -1465,7 +1389,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent.Where(tc => tc.MessageWriterSettings.DisableMessageStreamDisposal == false),
+               this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent.Where(tc => tc.MessageWriterSettings.EnableMessageStreamDisposal == true),
                (testDescriptor, testConfiguration) =>
                {
                    testDescriptor.RunTest(testConfiguration, this.Logger);
@@ -1530,7 +1454,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 batchWriter.WriteStartBatch();
                 var newMessage = batchWriter.CreateOperationRequestMessage("GET", new Uri("http://www.odata.org"));
                 // This line should fail
-                messageWriterWrapper.CreateODataEntryWriter();
+                messageWriterWrapper.CreateODataResourceWriter();
             }
         }
 
@@ -1614,7 +1538,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         /// <summary>
-        /// This method tries to write operations with DisableMessageStreamDisposal set to true
+        /// This method tries to write operations with EnableMessageStreamDisposal set to true
         /// </summary>
         /// <param name="newTestConfig">The config to use</param>
         /// <param name="testMessage">The message to use</param>
@@ -1622,7 +1546,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         {
             ExceptionUtilities.CheckArgumentNotNull(config, "config");
             ExceptionUtilities.CheckArgumentNotNull(testMessage, "testMessage");
-            config.MessageWriterSettings.DisableMessageStreamDisposal = true;
+            config.MessageWriterSettings.EnableMessageStreamDisposal = false;
 
             using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(testMessage, null, config, this.Assert, null))
             {
@@ -1630,20 +1554,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 batchWriter.WriteStartBatch();
                 batchWriter.WriteStartChangeset();
                 var opmessage1 = batchWriter.CreateOperationRequestMessage("PUT", new Uri("http://www.odata.org/Customers"));
-                var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
-                messageWriterSettings.SetContentType(ODataFormat.Atom);
-                var messageConfig = new WriterTestConfiguration(ODataFormat.Atom, messageWriterSettings, config.IsRequest, config.Synchronous);
+                var messageWriterSettings = config.MessageWriterSettings.Clone();
+                messageWriterSettings.SetContentType(ODataFormat.Json);
+                var messageConfig = new WriterTestConfiguration(ODataFormat.Json, messageWriterSettings, config.IsRequest, config.Synchronous);
 
                 using (ODataMessageWriterTestWrapper opWriterWrapper = TestWriterUtils.CreateMessageWriter(opmessage1.GetStream(), messageConfig, this.Assert, messageWriterSettings, null))
                 {
-                    var entryWriter = opWriterWrapper.CreateODataEntryWriter();
-                    entryWriter.WriteStart(new ODataEntry()
+                    var entryWriter = opWriterWrapper.CreateODataResourceWriter();
+                    entryWriter.WriteStart(new ODataResource()
                     {
                         Id = new Uri("http://id"),
                         TypeName = "Entry1",
                         EditLink = new Uri("http://www.odata.org/Customers(1)"),
                         ReadLink = new Uri("http://www.odata.org/Customers(1)"),
-                        Properties = new ODataProperty[] 
+                        Properties = new ODataProperty[]
                         {
                             new ODataProperty() { Name = "Property", Value= 5 }
                         }
@@ -1666,7 +1590,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         {
             ExceptionUtilities.CheckArgumentNotNull(config, "config");
             ExceptionUtilities.CheckArgumentNotNull(testMessage, "testMessage");
-            config.MessageWriterSettings.DisableMessageStreamDisposal = true;
+            config.MessageWriterSettings.EnableMessageStreamDisposal = false;
 
             using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(testMessage, null, config, this.Assert, null))
             {
@@ -1684,7 +1608,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             {
                 // clone the message writer settings with a new base Uri
                 newSettings = testConfig.MessageWriterSettings.Clone();
-                newSettings.PayloadBaseUri = testDescriptor.BaseUri;
+                newSettings.BaseUri = testDescriptor.BaseUri;
             }
 
             if (testDescriptor.MaxPartsPerBatch.HasValue || testDescriptor.MaxOperationsPerChangeset.HasValue)
@@ -1718,31 +1642,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             {
                 // clone the message writer settings with a new base Uri
                 newSettings = testConfig.MessageWriterSettings.Clone();
-                newSettings.PayloadBaseUri = baseUri;
+                newSettings.BaseUri = baseUri;
             }
 
             return newSettings == null
                 ? testConfig
                 : new WriterTestConfiguration(testConfig.Format, newSettings, testConfig.IsRequest, testConfig.Synchronous);
         }
-
-        private static readonly Dictionary<string, string> atomFeedPayloadHeaders = new Dictionary<string, string>()
-                {
-                    { "Content-Type", "application/atom+xml;type=feed" },
-                    { "OData-Version", null }
-                };
-
-        private static readonly Dictionary<string, string> atomEntryPayloadHeaders = new Dictionary<string, string>()
-                {
-                    { "Content-Type", "application/atom+xml;type=entry" },
-                    { "OData-Version", null }
-                };
-
-        private static readonly Dictionary<string, string> atomErrorPayloadHeaders = new Dictionary<string, string>()
-                {
-                    { "Content-Type", "application/xml" },
-                    { "OData-Version", null }
-                };
 
         private static readonly Dictionary<string, string> jsonPayloadHeaders = new Dictionary<string, string>()
                 {
@@ -1755,14 +1661,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             Dictionary<string, string> expectedHeaders = null;
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed:
-                    expectedHeaders = format == ODataFormat.Atom ? atomFeedPayloadHeaders : jsonPayloadHeaders;
+                case ODataPayloadKind.ResourceSet:
+                    expectedHeaders = jsonPayloadHeaders;
                     break;
-                case ODataPayloadKind.Entry:
-                    expectedHeaders = format == ODataFormat.Atom ? atomEntryPayloadHeaders : jsonPayloadHeaders;
+                case ODataPayloadKind.Resource:
+                    expectedHeaders = jsonPayloadHeaders;
                     break;
                 case ODataPayloadKind.Error:
-                    expectedHeaders = format == ODataFormat.Atom ? atomErrorPayloadHeaders : jsonPayloadHeaders;
+                    expectedHeaders = jsonPayloadHeaders;
                     break;
                 case ODataPayloadKind.Property:
                 case ODataPayloadKind.EntityReferenceLink:
@@ -1789,7 +1695,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             public ODataBatchOperationRequestMessage(Stream outputStream)
             {
-                Type classType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.ODataBatchOperationRequestMessage");
+                Type classType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.ODataBatchOperationRequestMessage");
                 this.instance = Activator.CreateInstance(classType, outputStream, null);
             }
 

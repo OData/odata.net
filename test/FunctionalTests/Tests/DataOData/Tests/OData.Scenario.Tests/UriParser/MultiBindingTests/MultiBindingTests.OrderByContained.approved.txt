@@ -1,0 +1,34 @@
+$orderby = ContainedNav1/NavOnContained/ID
+
+
+OrderByClause
+	Item Type = [NS.EntityType Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	ResourceRangeVariable
+		Name = $it
+		NavigationSource = EntitySet
+		TypeReference = [NS.EntityType Nullable=False]
+	Expression = 
+	SingleValuePropertyAccessNode
+		Property = ID
+		TypeReference = [Edm.String Nullable=False Unicode=True]
+		Source = 
+		SingleNavigationNode
+			NavigationSource = NavEntitySet1
+			Type Reference = [NS.NavEntityType Nullable=False]
+			Property = NavOnContained
+			Multiplicity = One
+			Source = 
+			SingleNavigationNode
+				NavigationSource = ContainedNav1
+				Type Reference = [NS.ContainedEntityType Nullable=False]
+				Property = ContainedNav1
+				Multiplicity = One
+				Source = 
+				ResourceRangeVariableReferenceNode
+					Name = $it
+					NavigationSource = EntitySet
+					TypeReference = [NS.EntityType Nullable=False]
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
+	Then By = 

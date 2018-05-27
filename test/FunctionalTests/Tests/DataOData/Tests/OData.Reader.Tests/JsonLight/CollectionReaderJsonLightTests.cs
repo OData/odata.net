@@ -10,8 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System.Linq;
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Execution;
@@ -38,18 +37,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             IEdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel();
             IEdmEntityContainer container = model.FindEntityContainer("DefaultContainer");
             EdmOperationImport primitiveCollectionResultOperation = container.FindOperationImports("PrimitiveCollectionResultOperation").Single() as EdmOperationImport;
-            EdmOperationImport complexCollectionResultOperation = container.FindOperationImports("ComplexCollectionResultOperation").Single() as EdmOperationImport;
 
             var primitiveCollection = PayloadBuilder.PrimitiveCollection("PrimitiveCollectionResultOperation");
             primitiveCollection.Add(PayloadBuilder.PrimitiveValue(1));
             primitiveCollection.Add(PayloadBuilder.PrimitiveValue(2));
             primitiveCollection.Add(PayloadBuilder.PrimitiveValue(3));
-
-            var complexCollection = PayloadBuilder.ComplexCollection("ComplexCollectionResultOperation");
-            var complexValue1 = PayloadBuilder.ComplexValue("TestModel.Address")
-                    .PrimitiveProperty("Street", "Am Euro Platz")
-                    .AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null });
-            complexCollection.Add(complexValue1);
 
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new[]
             {
@@ -60,14 +52,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadElement = primitiveCollection.DeepCopy()
                         .JsonRepresentation("{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\", \"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1, 2, 3 ] }")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
-                },
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    DebugDescription = "Complex collection - should work.",
-                    PayloadEdmModel = model,
-                    PayloadElement = complexCollection.DeepCopy()
-                        .JsonRepresentation("{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(TestModel.Address)\", \"" + JsonLightConstants.ODataValuePropertyName + "\":[ { \"Street\":\"Am Euro Platz\" } ] }")
-                        .ExpectedFunctionImport(complexCollectionResultOperation),
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -236,7 +220,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataEditLinkAnnotationName + "\":null }")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation),
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd", JsonLightConstants.ODataEditLinkAnnotationName)
-                },                
+                },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Invalid OData instance annotation after collection property - should fail.",
@@ -314,18 +298,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
-                    DebugDescription = "Expected complex item type and odata.type consistent - should work.",
-                    PayloadEdmModel = model,
-                    PayloadElement = complexCollection.DeepCopy()
-                        .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(TestModel.Address)\", " +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName(JsonLightConstants.ODataValuePropertyName, JsonLightConstants.ODataTypeAnnotationName) + "\":\"Collection(TestModel.Address)\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ { \"Street\": \"Am Euro Platz\"} ]" +
-                            "}")
-                        .ExpectedFunctionImport(complexCollectionResultOperation),
-                },
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
                     DebugDescription = "Context URI (primitive collection) and odata.type consistent - should work.",
                     PayloadEdmModel = model,
                     PayloadElement = primitiveCollection.DeepCopy()
@@ -335,18 +307,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1, 2, 3 ]" +
                             "}")
                         .ExpectedFunctionImport(primitiveCollectionResultOperation)
-                },
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    DebugDescription = "Context URI (complex collection) and odata.type consistent - should work.",
-                    PayloadEdmModel = model,
-                    PayloadElement = complexCollection.DeepCopy()
-                        .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(TestModel.Address)\", " +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName(JsonLightConstants.ODataValuePropertyName, JsonLightConstants.ODataTypeAnnotationName) + "\":\"Collection(TestModel.Address)\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ { \"Street\": \"Am Euro Platz\"} ]" +
-                            "}")
-                        .ExpectedFunctionImport(complexCollectionResultOperation),
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {

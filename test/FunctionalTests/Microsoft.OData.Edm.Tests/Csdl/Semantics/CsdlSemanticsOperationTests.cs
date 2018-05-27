@@ -9,8 +9,8 @@ using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         private readonly CsdlLocation testLocation;
         public CsdlSemanticsOperationTests()
         {
-            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null, null);
+            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null);
 
             var csdlSchema = CsdlBuilder.Schema("FQ.NS", csdlStructuredTypes: new[] { this.csdlEntityType });
             
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         [Fact]
         public void NonBoundCsdlSemanticsOperationPropertiesShouldBeCorrect()
         {
-            var function = new CsdlFunction("Checkout", Enumerable.Empty<CsdlOperationParameter>(), new CsdlNamedTypeReference("Edm.String", false, testLocation), false /*isBound*/, null /*entitySetPath*/, true /*isComposable*/, null /*documentation*/, testLocation);
+            var function = new CsdlFunction("Checkout", Enumerable.Empty<CsdlOperationParameter>(), new CsdlNamedTypeReference("Edm.String", false, testLocation), false /*isBound*/, null /*entitySetPath*/, true /*isComposable*/, testLocation);
             var semanticFunction = new CsdlSemanticsFunction(this.semanticSchema, function);
             semanticFunction.IsBound.Should().BeFalse();
             semanticFunction.Location().Should().Be(testLocation);
@@ -56,11 +56,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         {
             var action = new CsdlAction(
                 "Checkout",
-                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), null, testLocation) }, 
+                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), testLocation) }, 
                 new CsdlNamedTypeReference("Edm.String", false, testLocation), 
-                true /*isBound*/, 
-                "entity/FakePath", 
-                null /*documentation*/, 
+                true /*isBound*/,
+                "entity/FakePath",
                 testLocation);
 
             var semanticAction = new CsdlSemanticsAction(this.semanticSchema, action);
@@ -69,8 +68,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             semanticAction.Name.Should().Be("Checkout");
             semanticAction.Namespace.Should().Be("FQ.NS");
             semanticAction.ReturnType.Definition.Should().Be(EdmCoreModel.Instance.GetString(true).Definition);
-            semanticAction.EntitySetPath.Path.ToList()[0].Should().Be("entity");
-            semanticAction.EntitySetPath.Path.ToList()[1].Should().Be("FakePath");
+            semanticAction.EntitySetPath.PathSegments.ToList()[0].Should().Be("entity");
+            semanticAction.EntitySetPath.PathSegments.ToList()[1].Should().Be("FakePath");
             semanticAction.SchemaElementKind.Should().Be(EdmSchemaElementKind.Action);
         }
     }

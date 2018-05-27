@@ -8,12 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Unit tests for the ExpandOptionParser class.
@@ -28,7 +26,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             ExpandOptionParser optionParser = new ExpandOptionParser(5);
             var termToken = optionParser.BuildExpandTermToken(pathToken, "");
 
-            termToken.ElementAt(0).PathToNavProp.Should().Be(pathToken);
+            termToken.ElementAt(0).PathToNavigationProp.Should().Be(pathToken);
         }
 
         [Fact]
@@ -118,7 +116,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             var result = this.ParseExpandOptions("($expand=two)");
             ExpandTermToken two = result.ExpandOption.ExpandTerms.Single();
-            two.PathToNavProp.ShouldBeNonSystemToken("two");
+            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
         }
 
         [Fact]
@@ -126,9 +124,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             var result = this.ParseExpandOptions("($expand=two($expand=three))");
             ExpandTermToken two = result.ExpandOption.ExpandTerms.Single();
-            two.PathToNavProp.ShouldBeNonSystemToken("two");
+            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
             ExpandTermToken three = two.ExpandOption.ExpandTerms.Single();
-            three.PathToNavProp.ShouldBeNonSystemToken("three");
+            three.PathToNavigationProp.ShouldBeNonSystemToken("three");
         }
 
         [Fact]
@@ -136,16 +134,17 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             var result = this.ParseExpandOptions("($expand=two($expand=three;);)");
             ExpandTermToken two = result.ExpandOption.ExpandTerms.Single();
-            two.PathToNavProp.ShouldBeNonSystemToken("two");
+            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
             ExpandTermToken three = two.ExpandOption.ExpandTerms.Single();
-            three.PathToNavProp.ShouldBeNonSystemToken("three");
+            three.PathToNavigationProp.ShouldBeNonSystemToken("three");
         }
 
-        [Fact(Skip = "This test currently fails.")]
-        public void CannotHaveAnOptionMoreThanOnce()
+        [Fact]
+        public void CanHaveAnOptionMoreThanOnce()
         {
-            Action parse = () => this.ParseExpandOptions("($filter=true; $filter=false)");
-            parse.ShouldThrow<ODataException>().WithMessage("TODO");
+            // This test was once written to support only one instance of filter
+            // but on 6.x and 7.x, it is supported.
+            this.ParseExpandOptions("($filter=true; $filter=false)");
         }
 
         [Fact]

@@ -244,7 +244,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                if (this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType())).GetProperty(sourceProperty, false).IsEntityCollection ||
+                if (this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType())).GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection ||
                     (null == (existing = this.DetachReferenceLink(source, sourceProperty, target, linkMerge))))
                 {
                     this.AddLink(relation);

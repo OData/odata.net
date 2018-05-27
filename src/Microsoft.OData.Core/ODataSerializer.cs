@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics;
@@ -37,28 +37,6 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// true if the WCF DS server compatibility format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseServerFormatBehavior
-        {
-            get
-            {
-                return this.outputContext.UseServerFormatBehavior;
-            }
-        }
-
-        /// <summary>
-        /// true if the default format behavior should be used; otherwise false.
-        /// </summary>
-        internal bool UseDefaultFormatBehavior
-        {
-            get
-            {
-                return this.outputContext.UseDefaultFormatBehavior;
-            }
-        }
-
-        /// <summary>
         /// The message writer settings.
         /// </summary>
         internal ODataMessageWriterSettings MessageWriterSettings
@@ -70,13 +48,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The URL resolver.
+        /// The URL converter.
         /// </summary>
-        internal IODataUrlResolver UrlResolver
+        internal IODataPayloadUriConverter PayloadUriConverter
         {
             get
             {
-                return this.outputContext.UrlResolver;
+                return this.outputContext.PayloadUriConverter;
             }
         }
 
@@ -106,9 +84,9 @@ namespace Microsoft.OData.Core
         /// Creates a new instance of a duplicate property names checker.
         /// </summary>
         /// <returns>The newly created instance of duplicate property names checker.</returns>
-        internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
+        internal IDuplicatePropertyNameChecker CreateDuplicatePropertyNameChecker()
         {
-            return new DuplicatePropertyNamesChecker(this.MessageWriterSettings.WriterBehavior.AllowDuplicatePropertyNames, this.WritingResponse, !this.MessageWriterSettings.EnableFullValidation);
+            return MessageWriterSettings.Validator.CreateDuplicatePropertyNameChecker();
         }
     }
 }

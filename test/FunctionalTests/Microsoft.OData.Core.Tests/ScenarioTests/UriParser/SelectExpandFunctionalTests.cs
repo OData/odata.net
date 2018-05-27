@@ -8,15 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// URI Parser functional tests for V4 $select and $expand.
@@ -134,17 +133,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SelectComplexCollectionPropertySubProp()
-        {
-            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Street");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
-        }
-
-        [Fact]
         public void SelectComplexCollectionPropertyWrongSubProp()
         {
             Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/WrongProp");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Address", "WrongProp"));
         }
 
         [Fact]
@@ -158,17 +150,50 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SelectComplexCollectionPropertyWithCastProp()
-        {
-            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.HomeAddress/Street");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
-        }
-
-        [Fact]
         public void SelectComplexCollectionPropertyWithWrongCast()
         {
             Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.OpenAddress");
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+        }
+
+        [Fact]
+        public void SelectWithCastProperty()
+        {
+            SelectExpandClause select = RunParseSelectExpand("Artist/Edm.String", null, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
+            List<SelectItem> items = select.SelectedItems.ToList();
+            items.Count.Should().Be(1);
+
+            ODataPathSegment[] segments = new ODataPathSegment[2];
+            segments[0] = new PropertySegment(HardCodedTestModel.GetPaintingArtistProp());
+            segments[1] = new TypeSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), null);
+            items[0].ShouldBePathSelectionItem(new ODataPath(segments));
+        }
+
+        [Fact]
+        public void SelectWithCastOpenProperty()
+        {
+            SelectExpandClause select = RunParseSelectExpand("Assistant/Edm.String", null, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
+            List<SelectItem> items = select.SelectedItems.ToList();
+            items.Count.Should().Be(1);
+
+            ODataPathSegment[] segments = new ODataPathSegment[2];
+            segments[0] = new DynamicPathSegment("Assistant");
+            segments[1] = new TypeSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), null);
+            items[0].ShouldBePathSelectionItem(new ODataPath(segments));
+        }
+
+        [Fact]
+        public void SelectWithCastOpenComplexProperty()
+        {
+            SelectExpandClause select = RunParseSelectExpand("Exhibit/Location/Edm.String", null, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
+            List<SelectItem> items = select.SelectedItems.ToList();
+            items.Count.Should().Be(1);
+
+            ODataPathSegment[] segments = new ODataPathSegment[3];
+            segments[0] = new DynamicPathSegment("Exhibit");
+            segments[1] = new DynamicPathSegment("Location");
+            segments[2] = new TypeSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), null);
+            items[0].ShouldBePathSelectionItem(new ODataPath(segments));
         }
 
         [Fact]
@@ -217,7 +242,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         public void CallingAFunctionIsNotRecognizedInSelect()
         {
             Action parse = () => ParseSingleSelectForPerson("HasDog(inOffice=true)");
-            parse.ShouldThrow<ODataException>().WithMessage("HasDog(inOffice=true)", ComparisonMode.EquivalentSubstring);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("HasDog(inOffice=true)"));
         }
 
         [Fact]
@@ -283,7 +308,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             results.AllSelected.Should().BeFalse();
             results.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new TypeSegment(HardCodedTestModel.GetFramedPaintingType(), HardCodedTestModel.GetPaintingsSet()),
-                    new OpenPropertySegment("OpenProp")));
+                    new DynamicPathSegment("OpenProp")));
         }
 
         [Fact]
@@ -293,7 +318,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             item.ShouldBePathSelectionItem(new ODataSelectPath(
                     new TypeSegment(HardCodedTestModel.GetOpenEmployeeType(), HardCodedTestModel.GetPeopleSet()),
-                    new OpenPropertySegment("OpenProp")));
+                    new DynamicPathSegment("OpenProp")));
         }
 
         [Fact]
@@ -332,7 +357,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         [Fact]
         public void UnqualifiedActionNameOnOpenTypeShouldBeInterpretedAsAnOperation()
         {
-            ParseSingleSelectForPainting("Restore").ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("Restore")));
+            ParseSingleSelectForPainting("Restore").ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("Restore")));
         }
 
         [Fact]
@@ -341,8 +366,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             ParseSingleSelectForPainting("Fully.Qualified.Namespace.Restore").ShouldBeSelectedItemOfType<PathSelectItem>().And.SelectedPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetRestoreAction());
         }
 
-        // Todo: Select sub-properties of complex types
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void CanSelectSubPropertyOfComplexType()
         {
             const string select = "MyAddress/City";
@@ -356,6 +380,24 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new PropertySegment(HardCodedTestModel.GetPersonAddressProp()),
+                    new PropertySegment(HardCodedTestModel.GetAddressCityProperty())));
+            result.AllSelected.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CanSelectSubPropertyOfComplexCollection()
+        {
+            const string select = "PreviousAddresses/City";
+            var result = RunParseSelectExpandAndAssertPaths(
+                select,
+                null,
+                select,
+                null,
+                HardCodedTestModel.GetPersonType(),
+                HardCodedTestModel.GetPeopleSet());
+
+            result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
+                    new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp()),
                     new PropertySegment(HardCodedTestModel.GetAddressCityProperty())));
             result.AllSelected.Should().BeFalse();
         }
@@ -394,7 +436,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.GetPaintingType(),
                 HardCodedTestModel.GetPaintingsSet());
 
-            result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("SomeOpenProperty")));
+            result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("SomeOpenProperty")));
             result.AllSelected.Should().BeFalse();
         }
 
@@ -420,7 +462,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var items = result.SelectedItems.ToArray();
             items[0].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPaintingArtistProp())));
-            items[1].ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("SomeOpenProperty")));
+            items[1].ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("SomeOpenProperty")));
             result.AllSelected.Should().BeFalse();
         }
 
@@ -1031,74 +1073,65 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 .And.SelectedPath.Single().ShouldBePropertySegment(HardCodedTestModel.GetPet2PetColorPatternProperty());
         }
 
-        //ToDo: Don't support NavProps in complex types yet... when we do we need to un-ignore this
-        //ToDo: and make it pass.
-        //ToDo: When the work is done to allow Nav props in complex types make sure we can select and expand them
-        [Fact(Skip = "This test currently fails.")]
-        public void ExpandOnComplexTypeWorks()
-        {
-            var results = RunParseSelectExpand(null, "MyFavoriteNeighbor", HardCodedTestModel.GetAddressType(), null);
-            results.SelectedItems.Should().HaveCount(2);
-            results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>()
-                .And.PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(HardCodedTestModel.GetAddressMyFavoriteNeighborNavProp());
-        }
+        //[Fact(Skip = "#622: support NavProps in complex types, make sure we can select and expand them.")]
+        //public void ExpandOnComplexTypeWorks()
+        //{
+        //    var results = RunParseSelectExpand(null, "MyFavoriteNeighbor", HardCodedTestModel.GetAddressType(), null);
+        //    results.SelectedItems.Should().HaveCount(2);
+        //    results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>()
+        //        .And.PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(HardCodedTestModel.GetAddressMyFavoriteNeighborNavProp());
+        //}
 
-        //ToDo: Same here
-        //ToDo: When the work is done to allow Nav props in complex types make sure we can select and expand them
-        [Fact(Skip = "This test currently fails.")]
-        public void SelectAndExpandWorkOnComplexTypes()
-        {
-            var results = RunParseSelectExpand("City", "MyFavoriteNeighbor($select=Name)", HardCodedTestModel.GetAddressType(), null);
-            results.SelectedItems.Should().HaveCount(2);
-            results.SelectedItems.First().ShouldBeSelectedItemOfType<PathSelectItem>()
-                .And.SelectedPath.First().ShouldBePropertySegment(HardCodedTestModel.GetAddressCityProperty());
-            var myNeighborsExpansion = results.SelectedItems.Last().ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>().And;
-            myNeighborsExpansion.PathToNavigationProperty.Single().ShouldBePropertySegment(HardCodedTestModel.GetAddressMyNeighborsProperty());
-            myNeighborsExpansion.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>()
-                .And.SelectedPath.Single().ShouldBePropertySegment(HardCodedTestModel.GetPersonNameProp());
-        }
+        //[Fact(Skip = "#622: support NavProps in complex types, make sure we can select and expand them.")]
+        //public void SelectAndExpandWorkOnComplexTypes()
+        //{
+        //    var results = RunParseSelectExpand("City", "MyFavoriteNeighbor($select=Name)", HardCodedTestModel.GetAddressType(), null);
+        //    results.SelectedItems.Should().HaveCount(2);
+        //    results.SelectedItems.First().ShouldBeSelectedItemOfType<PathSelectItem>()
+        //        .And.SelectedPath.First().ShouldBePropertySegment(HardCodedTestModel.GetAddressCityProperty());
+        //    var myNeighborsExpansion = results.SelectedItems.Last().ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>().And;
+        //    myNeighborsExpansion.PathToNavigationProperty.Single().ShouldBePropertySegment(HardCodedTestModel.GetAddressMyNeighborsProperty());
+        //    myNeighborsExpansion.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>()
+        //        .And.SelectedPath.Single().ShouldBePropertySegment(HardCodedTestModel.GetPersonNameProp());
+        //}
 
-        // TODO: When we get filter working un-ignore this.
-        // ToDo: Get nested $filter working
-        [Fact(Skip = "This test currently fails.")]
-        public void BasicNestedFilterClauseWorks()
-        {
-            const string expectedSelect = "MyPaintings";
-            const string expand = "MyPaintings($filter=true)";
-            var results = RunParseSelectExpandAndAssertPaths(
-                null,
-                expand,
-                expectedSelect,
-                expand,
-                HardCodedTestModel.GetPersonType(),
-                HardCodedTestModel.GetPeopleSet());
-            var filterClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.FilterOption;
-            filterClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
-            filterClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
-            filterClause.RangeVariable.Name.Should().Be("$it");
-            filterClause.Expression.ShouldBeConstantQueryNode(true);
-        }
+        //[Fact(Skip = "#622: Get nested $filter working")]
+        //public void BasicNestedFilterClauseWorks()
+        //{
+        //    const string expectedSelect = "MyPaintings";
+        //    const string expand = "MyPaintings($filter=true)";
+        //    var results = RunParseSelectExpandAndAssertPaths(
+        //        null,
+        //        expand,
+        //        expectedSelect,
+        //        expand,
+        //        HardCodedTestModel.GetPersonType(),
+        //        HardCodedTestModel.GetPeopleSet());
+        //    var filterClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.FilterOption;
+        //    filterClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
+        //    filterClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
+        //    filterClause.RangeVariable.Name.Should().Be("$it");
+        //    filterClause.Expression.ShouldBeConstantQueryNode(true);
+        //}
 
-        // ToDo: When we get orderby working un-ignore this.
-        // ToDo: Get nested $orderby working
-        [Fact(Skip = "This test currently fails.")]
-        public void BasicNestedOrderbyClauseWorks()
-        {
-            const string expectedSelect = "MyPaintings";
-            const string expand = "MyPaintings($orderby=Value)";
-            var results = RunParseSelectExpandAndAssertPaths(
-                null,
-                expand,
-                expectedSelect,
-                expand,
-                HardCodedTestModel.GetPersonType(),
-                HardCodedTestModel.GetPeopleSet());
-            var orderbyClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.OrderByOption;
-            orderbyClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
-            orderbyClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
-            orderbyClause.RangeVariable.Name.Should().Be("$it");
-            orderbyClause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingValueProperty());
-        }
+        //[Fact(Skip = "#622: Get nested $orderby working.")]
+        //public void BasicNestedOrderbyClauseWorks()
+        //{
+        //    const string expectedSelect = "MyPaintings";
+        //    const string expand = "MyPaintings($orderby=Value)";
+        //    var results = RunParseSelectExpandAndAssertPaths(
+        //        null,
+        //        expand,
+        //        expectedSelect,
+        //        expand,
+        //        HardCodedTestModel.GetPersonType(),
+        //        HardCodedTestModel.GetPeopleSet());
+        //    var orderbyClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.OrderByOption;
+        //    orderbyClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
+        //    orderbyClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
+        //    orderbyClause.RangeVariable.Name.Should().Be("$it");
+        //    orderbyClause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingValueProperty());
+        //}
 
         [Fact]
         public void NestedOptionsWithoutClosingParenthesisShouldThrow()
@@ -1332,7 +1365,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         private static string ConvertSelectToString(SelectExpandClause selectExpandClause)
         {
             string selectClause, expandClause;
-            selectExpandClause.GetSelectExpandPaths(out selectClause, out expandClause);
+            // todo: run this for each version
+            selectExpandClause.GetSelectExpandPaths(ODataVersion.V4, out selectClause, out expandClause);
             return selectClause;
         }
 
@@ -1340,7 +1374,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         private static string ConvertExpandToString(SelectExpandClause selectExpandClause)
         {
             string selectClause, expandClause;
-            selectExpandClause.GetSelectExpandPaths(out selectClause, out expandClause);
+            // todo: run this for each OData version
+            selectExpandClause.GetSelectExpandPaths(ODataVersion.V4, out selectClause, out expandClause);
             return expandClause;
         }
 

@@ -6,8 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Expressions;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
@@ -47,8 +46,8 @@ namespace Microsoft.OData.Edm
                 case EdmSchemaElementKind.TypeDefinition:
                     this.VisitSchemaType((IEdmType)element);
                     break;
-                case EdmSchemaElementKind.ValueTerm:
-                    this.ProcessValueTerm((IEdmValueTerm)element);
+                case EdmSchemaElementKind.Term:
+                    this.ProcessTerm((IEdmTerm)element);
                     break;
                 case EdmSchemaElementKind.EntityContainer:
                     this.ProcessEntityContainer((IEdmEntityContainer)element);
@@ -84,18 +83,7 @@ namespace Microsoft.OData.Edm
         {
             if (annotation.Term != null)
             {
-                switch (annotation.Term.TermKind)
-                {
-                    case EdmTermKind.Type:
-                    case EdmTermKind.Value:
-                        this.ProcessAnnotation((IEdmValueAnnotation)annotation);
-                        break;
-                    case EdmTermKind.None:
-                        this.ProcessVocabularyAnnotation(annotation);
-                        break;
-                    default:
-                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TermKind(annotation.Term.TermKind));
-                }
+                this.ProcessAnnotation(annotation);
             }
             else
             {
@@ -142,23 +130,14 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.DecimalConstant:
                     this.ProcessDecimalConstantExpression((IEdmDecimalConstantExpression)expression);
                     break;
-                case EdmExpressionKind.EntitySetReference:
-                    this.ProcessEntitySetReferenceExpression((IEdmEntitySetReferenceExpression)expression);
-                    break;
-                case EdmExpressionKind.EnumMemberReference:
-                    this.ProcessEnumMemberReferenceExpression((IEdmEnumMemberReferenceExpression)expression);
-                    break;
                 case EdmExpressionKind.EnumMember:
                     this.ProcessEnumMemberExpression((IEdmEnumMemberExpression)expression);
                     break;
                 case EdmExpressionKind.FloatingConstant:
                     this.ProcessFloatingConstantExpression((IEdmFloatingConstantExpression)expression);
                     break;
-                case EdmExpressionKind.OperationApplication:
-                    this.ProcessOperationApplicationExpression((IEdmApplyExpression)expression);
-                    break;
-                case EdmExpressionKind.OperationReference:
-                    this.ProcessOperationReferenceExpression((IEdmOperationReferenceExpression)expression);
+                case EdmExpressionKind.FunctionApplication:
+                    this.ProcessFunctionApplicationExpression((IEdmApplyExpression)expression);
                     break;
                 case EdmExpressionKind.GuidConstant:
                     this.ProcessGuidConstantExpression((IEdmGuidConstantExpression)expression);
@@ -171,9 +150,6 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmExpressionKind.IsType:
                     this.ProcessIsTypeExpression((IEdmIsTypeExpression)expression);
-                    break;
-                case EdmExpressionKind.ParameterReference:
-                    this.ProcessParameterReferenceExpression((IEdmParameterReferenceExpression)expression);
                     break;
                 case EdmExpressionKind.LabeledExpressionReference:
                     this.ProcessLabeledExpressionReferenceExpression((IEdmLabeledExpressionReferenceExpression)expression);
@@ -193,9 +169,6 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.NavigationPropertyPath:
                     this.ProcessNavigationPropertyPathExpression((IEdmPathExpression)expression);
                     break;
-                case EdmExpressionKind.PropertyReference:
-                    this.ProcessPropertyReferenceExpression((IEdmPropertyReferenceExpression)expression);
-                    break;
                 case EdmExpressionKind.Record:
                     this.ProcessRecordExpression((IEdmRecordExpression)expression);
                     break;
@@ -207,9 +180,6 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmExpressionKind.DurationConstant:
                     this.ProcessDurationConstantExpression((IEdmDurationConstantExpression)expression);
-                    break;
-                case EdmExpressionKind.ValueTermReference:
-                    this.ProcessPropertyReferenceExpression((IEdmPropertyReferenceExpression)expression);
                     break;
                 case EdmExpressionKind.None:
                     this.ProcessExpression(expression);
@@ -287,6 +257,9 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.None:
                     this.ProcessTypeReference(reference);
                     break;
+                case EdmTypeKind.Path:
+                    this.ProcessPathTypeReference(reference.AsPath());
+                    break;
                 default:
                     throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(reference.TypeKind().ToString()));
             }
@@ -339,6 +312,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
                 case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                 case EdmPrimitiveTypeKind.None:
                     this.ProcessPrimitiveTypeReference(reference);
                     break;
@@ -538,19 +512,18 @@ namespace Microsoft.OData.Edm
             this.ProcessElement(element);
         }
 
+        protected virtual void ProcessPathTypeReference(IEdmPathTypeReference reference)
+        {
+            this.ProcessTypeReference(reference);
+        }
+
         #endregion
 
         #region Terms
 
         protected virtual void ProcessTerm(IEdmTerm term)
         {
-            // Do not visit NamedElement as that gets visited by other means.
-        }
-
-        protected virtual void ProcessValueTerm(IEdmValueTerm term)
-        {
             this.ProcessSchemaElement(term);
-            this.ProcessTerm(term);
             this.VisitTypeReference(term.Type);
         }
 
@@ -568,7 +541,6 @@ namespace Microsoft.OData.Edm
         protected virtual void ProcessEntityType(IEdmEntityType definition)
         {
             this.ProcessSchemaElement(definition);
-            this.ProcessTerm(definition);
             this.ProcessStructuredType(definition);
             this.ProcessSchemaType(definition);
         }
@@ -656,7 +628,7 @@ namespace Microsoft.OData.Edm
             this.ProcessNamedElement(annotation);
         }
 
-        protected virtual void ProcessAnnotation(IEdmValueAnnotation annotation)
+        protected virtual void ProcessAnnotation(IEdmVocabularyAnnotation annotation)
         {
             this.ProcessVocabularyAnnotation(annotation);
             this.VisitExpression(annotation.Value);
@@ -696,15 +668,6 @@ namespace Microsoft.OData.Edm
             this.VisitPropertyConstructors(expression.Properties);
         }
 
-        protected virtual void ProcessPropertyReferenceExpression(IEdmPropertyReferenceExpression expression)
-        {
-            this.ProcessExpression(expression);
-            if (expression.Base != null)
-            {
-                this.VisitExpression(expression.Base);
-            }
-        }
-
         protected virtual void ProcessPathExpression(IEdmPathExpression expression)
         {
             this.ProcessExpression(expression);
@@ -716,11 +679,6 @@ namespace Microsoft.OData.Edm
         }
 
         protected virtual void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
-        {
-            this.ProcessExpression(expression);
-        }
-
-        protected virtual void ProcessParameterReferenceExpression(IEdmParameterReferenceExpression expression)
         {
             this.ProcessExpression(expression);
         }
@@ -756,15 +714,9 @@ namespace Microsoft.OData.Edm
             this.VisitExpression(expression.FalseExpression);
         }
 
-        protected virtual void ProcessOperationReferenceExpression(IEdmOperationReferenceExpression expression)
+        protected virtual void ProcessFunctionApplicationExpression(IEdmApplyExpression expression)
         {
             this.ProcessExpression(expression);
-        }
-
-        protected virtual void ProcessOperationApplicationExpression(IEdmApplyExpression expression)
-        {
-            this.ProcessExpression(expression);
-            this.VisitExpression(expression.AppliedOperation);
             this.VisitExpressions(expression.Arguments);
         }
 
@@ -778,17 +730,7 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
-        protected virtual void ProcessEnumMemberReferenceExpression(IEdmEnumMemberReferenceExpression expression)
-        {
-            this.ProcessExpression(expression);
-        }
-
         protected virtual void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression)
-        {
-            this.ProcessExpression(expression);
-        }
-
-        protected virtual void ProcessEntitySetReferenceExpression(IEdmEntitySetReferenceExpression expression)
         {
             this.ProcessExpression(expression);
         }

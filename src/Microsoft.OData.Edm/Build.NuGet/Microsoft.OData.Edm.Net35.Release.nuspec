@@ -7,18 +7,19 @@
     <version>$VersionNuGetSemantic$</version>
     <authors>Microsoft Corporation</authors>
     <owners>Microsoft Corporation</owners>
-    <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only.</summary>
     <description>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only. Targets .NET Lib with support for .NET 3.5.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
+    <copyright>© Microsoft Corporation.  All rights reserved.</copyright>
   </metadata>
   <files>
-    <file src="Net35\Microsoft.OData.Edm.NetFX35.dll" target="lib\net35" />
-    <file src="Net35\Microsoft.OData.Edm.NetFX35.pdb" target="lib\net35" />
-    <file src="Net35\Microsoft.OData.Edm.NetFX35.xml" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Edm.NetFX35.V7.dll" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Edm.NetFX35.V7.pdb" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.OData.Edm.NetFX35.V7.xml" target="lib\net35" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />

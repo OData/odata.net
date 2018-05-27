@@ -28,7 +28,7 @@ namespace Microsoft.OData.Client
         private static readonly MethodInfo expandMethodInfo = typeof(DataServiceQuery<TElement>).GetMethod("Expand", new Type[] { typeof(string) });
 
         /// <summary>Method info for the generic version of the Expand method</summary>
-#if DNXCORE50
+#if PORTABLELIB
         private static readonly MethodInfo expandGenericMethodInfo = typeof(DataServiceQuery<TElement>).GetMethodWithGenericArgs("Expand", true /*isPublic*/, false /*isStatic*/, 1 /*genericArgCount*/);
 #else
         private static readonly MethodInfo expandGenericMethodInfo = (MethodInfo)typeof(DataServiceQuery<TElement>).GetMember("Expand*").Single(m => ((MethodInfo)m).GetGenericArguments().Count() == 1);
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client
         public string GetKeyPath(string keyString)
         {
             string resourcePath = UriUtil.UriToString(this.RequestUri).Substring(UriUtil.UriToString(this.Context.BaseUri).Length);
-            if (this.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
+            if (this.Context.UrlKeyDelimiter == DataServiceUrlKeyDelimiter.Slash)
             {
                 return resourcePath + UriHelper.FORWARDSLASH + keyString;
             }
@@ -250,7 +250,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.</summary>
         /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which TElement represents the type of the query results.</returns>
         /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         /// <exception cref="T:System.NotSupportedException">When during materialization an object is encountered in the input stream that cannot be deserialized to an instance of TElement.</exception>
@@ -354,7 +354,6 @@ namespace Microsoft.OData.Client
 
         /// <summary>Represents the URI of the query to the data service.</summary>
         /// <returns>A URI as string that represents the query to the data service for this <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0010", Justification = "ToString for display purpose is OK")]
         public override string ToString()
         {
             try
@@ -391,7 +390,7 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB
         /// Synchronous methods not available
         /// <summary>
-        /// Returns an IEnumerable from an Internet resource. 
+        /// Returns an IEnumerable from an Internet resource.
         /// </summary>
         /// <returns>An IEnumerable that contains the response from the Internet resource.</returns>
         internal override IEnumerable ExecuteInternal()
@@ -463,7 +462,7 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB
         /// Synchronous methods not available
         /// <summary>
-        /// Returns an IEnumerable from an Internet resource. 
+        /// Returns an IEnumerable from an Internet resource.
         /// </summary>
         /// <param name="response">The response of the previous page</param>
         /// <returns>An IEnumerable that contains the response from the Internet resource.</returns>

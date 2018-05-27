@@ -10,12 +10,12 @@ namespace Microsoft.OData.Performance
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// An OData Request Message backed by a Stream.
     /// </summary>
-    public class StreamBasedRequestMessage : IODataRequestMessageAsync
+    public class StreamBasedRequestMessage : IODataRequestMessageAsync, IContainerProvider
     {
         private readonly Stream _stream;
         private readonly IDictionary<string, string> _headers;
@@ -87,5 +87,7 @@ namespace Microsoft.OData.Performance
                 throw new NotImplementedException();
             }
         }
+
+        public IServiceProvider Container { get; set; }
     }
 }

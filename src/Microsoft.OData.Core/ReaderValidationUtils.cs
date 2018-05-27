@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
+    using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     #endregion Namespaces
 
     /// <summary>
@@ -34,11 +34,6 @@ namespace Microsoft.OData.Core
             if (messageReaderSettings.BaseUri != null && !messageReaderSettings.BaseUri.IsAbsoluteUri)
             {
                 throw new ODataException(Strings.ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageReaderSettings.BaseUri)));
-            }
-
-            if (!readingResponse && messageReaderSettings.UndeclaredPropertyBehaviorKinds != ODataUndeclaredPropertyBehaviorKinds.None)
-            {
-                throw new ODataException(Strings.ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest);
             }
         }
 
@@ -62,8 +57,10 @@ namespace Microsoft.OData.Core
         /// <param name="streamProperty">The stream property to check.</param>
         /// <param name="structuredType">The owning type of the stream property or null if no metadata is available.</param>
         /// <param name="streamEdmProperty">The stream property defined by the model.</param>
-        /// <param name="messageReaderSettings">The message reader settings being used.</param>
-        internal static void ValidateStreamReferenceProperty(ODataProperty streamProperty, IEdmStructuredType structuredType, IEdmProperty streamEdmProperty, ODataMessageReaderSettings messageReaderSettings)
+        /// <param name="throwOnUndeclaredLinkProperty">Whether ThrowOnUndeclaredLinkProperty validation setting is enabled.</param>
+        internal static void ValidateStreamReferenceProperty(
+            ODataProperty streamProperty, IEdmStructuredType structuredType,
+            IEdmProperty streamEdmProperty, bool throwOnUndeclaredLinkProperty)
         {
             Debug.Assert(streamProperty != null, "streamProperty != null");
 
@@ -71,9 +68,9 @@ namespace Microsoft.OData.Core
 
             if (structuredType != null && structuredType.IsOpen)
             {
-                // If no property match was found in the metadata and an error wasn't raised, 
+                // If no property match was found in the metadata and an error wasn't raised,
                 // it is an open property (which is not supported for streams).
-                if (streamEdmProperty == null && !messageReaderSettings.ReportUndeclaredLinkProperties)
+                if (streamEdmProperty == null && throwOnUndeclaredLinkProperty)
                 {
                     // Fails with the correct error message.
                     ValidationUtils.ValidateOpenPropertyValue(streamProperty.Name, streamProperty.Value);
@@ -84,19 +81,17 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validate a null value.
         /// </summary>
-        /// <param name="model">The <see cref="IEdmModel"/> used to read the payload.</param>
         /// <param name="expectedTypeReference">The expected type of the null value.</param>
-        /// <param name="messageReaderSettings">The message reader settings.</param>
-        /// <param name="validateNullValue">true to validate the the null value; false to only check whether the type is supported.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
+        /// <param name="validateNullValue">true to validate the null value; false to only check whether the type is supported.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         internal static void ValidateNullValue(
-            IEdmModel model,
             IEdmTypeReference expectedTypeReference,
-            ODataMessageReaderSettings messageReaderSettings,
+            bool enablePrimitiveTypeConversion,
             bool validateNullValue,
             string propertyName,
-            bool? isDynamicProperty = null)
+            bool? isDynamicProperty)
         {
             // For a null value if we have an expected type
             //   - we validate that the expected type is nullable if type conversion is enabled
@@ -105,44 +100,26 @@ namespace Microsoft.OData.Core
             //   - we simply return null (treat it is as primitive null value)
             if (expectedTypeReference != null)
             {
-                ValidateTypeSupported(expectedTypeReference);
-
-                if (!messageReaderSettings.DisablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
+                if (enablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
                 {
-                    ValidateNullValueAllowed(expectedTypeReference, validateNullValue, model, propertyName, isDynamicProperty);
+                    ValidateNullValueAllowed(expectedTypeReference, validateNullValue, propertyName, isDynamicProperty);
                 }
             }
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataEntry"/> to ensure all required information is specified and valid.
-        /// </summary>
-        /// <param name="entry">The entry to validate.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entry", Justification = "Used only in debug asserts.")]
-        internal static void ValidateEntry(ODataEntry entry)
-        {
-            Debug.Assert(entry != null, "entry != null");
-
-            // [Astoria-ODataLib-Integration] Validation of atom:id value differs between client and server
-            // For now don't validate ID at all - relaxed readers rule.
-
-            // Type name is verified in the format readers since it's shared with other non-entity types
-            // and verifying it here would mean doing it twice.
-
-            // Readers will report any combination of the other properties (for example MR and such)
-            // So nothing else to check.
-        }
-
-        /// <summary>
-        /// Finds a defined property from the model if one is available.
+        /// Validates that a property with the specified name exists on a given structured type.
         /// The structured type can be null if no metadata is available.
         /// </summary>
-        /// <param name="propertyName">The name of the property to find.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
+        /// <param name="propertyName">The name of the property to validate.</param>
+        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
+        /// <param name="throwOnUndeclaredPropertyForNonOpenType">Whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.</param>
+        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
-        internal static IEdmProperty FindDefinedProperty(string propertyName, IEdmStructuredType owningStructuredType)
+        internal static IEdmProperty ValidatePropertyDefined(string propertyName,
+                                                                  IEdmStructuredType owningStructuredType,
+                                                                  bool throwOnUndeclaredPropertyForNonOpenType)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -152,132 +129,19 @@ namespace Microsoft.OData.Core
             }
 
             IEdmProperty property = owningStructuredType.FindProperty(propertyName);
-            return property;
-        }
-
-        /// <summary>
-        /// Validates that a property with the specified name exists on a given structured type.
-        /// The structured type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
-        /// or null if no metadata is available.</param>
-        /// <param name="messageReaderSettings">The message reader settings being used.</param>
-        /// <param name="ignoreProperty">true if the property should be completely ignored and not parsed/reported, in this case the return value is null.
-        /// false if the property should be parsed and reported as usual.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
-        /// or null if no metadata is available.</returns>
-        internal static IEdmProperty ValidateValuePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, ODataMessageReaderSettings messageReaderSettings, out bool ignoreProperty)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
-
-            ignoreProperty = false;
-
-            if (owningStructuredType == null)
-            {
-                return null;
-            }
-
-            IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (messageReaderSettings.IgnoreUndeclaredValueProperties)
+                if (throwOnUndeclaredPropertyForNonOpenType)
                 {
-                    ignoreProperty = true;
+                    throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
                 }
                 else
                 {
-                    throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                    Debug.Assert(!throwOnUndeclaredPropertyForNonOpenType, "!throwOnUndeclaredPropertyForNonOpenType");
                 }
             }
 
             return property;
-        }
-
-        /// <summary>
-        /// Validates that the expected property name matches the property name read from the payload.
-        /// </summary>
-        /// <param name="expectedPropertyName">The expected property name.</param>
-        /// <param name="payloadPropertyName">The property name read from the payload.</param>
-        internal static void ValidateExpectedPropertyName(string expectedPropertyName, string payloadPropertyName)
-        {
-            if (expectedPropertyName != null && string.CompareOrdinal(expectedPropertyName, payloadPropertyName) != 0)
-            {
-                throw new ODataException(Strings.ReaderValidationUtils_NonMatchingPropertyNames(payloadPropertyName, expectedPropertyName));
-            }
-        }
-
-        /// <summary>
-        /// Validates that a property with the specified name exists on a given structured type.
-        /// The structured type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/> 
-        /// or null if no metadata is available.</param>
-        /// <param name="messageReaderSettings">The message reader settings being used.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/> 
-        /// or null if no metadata is available.</returns>
-        internal static IEdmProperty ValidateLinkPropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, ODataMessageReaderSettings messageReaderSettings)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
-
-            if (owningStructuredType == null)
-            {
-                return null;
-            }
-
-            IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
-            if (property == null && !owningStructuredType.IsOpen)
-            {
-                if (!messageReaderSettings.ReportUndeclaredLinkProperties)
-                {
-                    throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
-                }
-            }
-
-            return property;
-        }
-
-        /// <summary>
-        /// Validates that a navigation property with the specified name exists on a given entity type.
-        /// The entity type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
-        /// <param name="messageReaderSettings">The message reader settings being used.</param>
-        /// <returns>The <see cref="IEdmNavigationProperty"/> instance representing the navigation property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</returns>
-        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(
-            string propertyName,
-            IEdmEntityType owningEntityType,
-            ODataMessageReaderSettings messageReaderSettings)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
-
-            if (owningEntityType == null)
-            {
-                return null;
-            }
-
-            IEdmProperty property = ValidateLinkPropertyDefined(propertyName, owningEntityType, messageReaderSettings);
-            if (property == null)
-            {
-                if (owningEntityType.IsOpen && !messageReaderSettings.ReportUndeclaredLinkProperties)
-                {
-                    // We don't support open navigation properties
-                    throw new ODataException(Strings.ValidationUtils_OpenNavigationProperty(propertyName, owningEntityType.FullTypeName()));
-                }
-            }
-            else if (property.PropertyKind != EdmPropertyKind.Navigation)
-            {
-                // The property must be a navigation property
-                throw new ODataException(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningEntityType.FullTypeName(), property.PropertyKind.ToString()));
-            }
-
-            return (IEdmNavigationProperty)property;
         }
 
         /// <summary>
@@ -302,7 +166,7 @@ namespace Microsoft.OData.Core
         /// <param name="payloadTypeName">The payload type name to resolve.</param>
         /// <param name="expectedTypeKind">The default payload type kind, this is used when the resolution is not possible,
         /// but the type name is not empty. (Should be either Complex or Entity).</param>
-        /// <param name="readerBehavior">Reader behavior to use for compatibility.</param>
+        /// <param name="clientCustomTypeResolver">The function of client custom type resolver.</param>
         /// <param name="payloadTypeKind">This is set to the detected payload type kind, or None if the type was not specified.</param>
         /// <returns>The resolved type. This may be null if either no user-specified model is specified, or the type name is not recognized by the model.</returns>
         /// <remarks>The method detects the payload kind even if the model does not recognize the type. It figures out primitive and collection types always,
@@ -312,7 +176,7 @@ namespace Microsoft.OData.Core
             IEdmTypeReference expectedTypeReference,
             string payloadTypeName,
             EdmTypeKind expectedTypeKind,
-            ODataReaderBehavior readerBehavior,
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             out EdmTypeKind payloadTypeKind)
         {
             if (payloadTypeName == null)
@@ -332,7 +196,7 @@ namespace Microsoft.OData.Core
                 model,
                 expectedTypeReference == null ? null : expectedTypeReference.Definition,
                 payloadTypeName,
-                readerBehavior,
+                clientCustomTypeResolver,
                 out payloadTypeKind);
             if (payloadTypeKind == EdmTypeKind.None)
             {
@@ -346,15 +210,19 @@ namespace Microsoft.OData.Core
         /// Resolves and validates the payload type against the expected type and returns the target type.
         /// </summary>
         /// <param name="expectedTypeKind">The expected type kind for the value.</param>
+        /// <param name="expectStructuredType">This value indicates if a structured type is expected to be return.
+        /// True for structured type, false for non-structured type, null for indetermination.</param>
         /// <param name="defaultPrimitivePayloadType">The default payload type if none is specified in the payload;
         /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="expectedTypeReference">The expected type reference, or null if no expected type is available.</param>
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
-        /// <param name="messageReaderSettings">The message reader settings to use.</param>
+        /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
-        /// <param name="serializationTypeNameAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
+        /// <param name="typeAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
         /// <returns>
         /// The target type reference to use for parsing the value.
         /// If there is no user specified model, this will return null.
@@ -365,18 +233,26 @@ namespace Microsoft.OData.Core
         /// </remarks>
         internal static IEdmTypeReference ResolvePayloadTypeNameAndComputeTargetType(
             EdmTypeKind expectedTypeKind,
+            bool? expectStructuredType,
             IEdmType defaultPrimitivePayloadType,
             IEdmTypeReference expectedTypeReference,
             string payloadTypeName,
             IEdmModel model,
-            ODataMessageReaderSettings messageReaderSettings,
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
+            bool throwIfTypeConflictsWithMetadata,
+            bool enablePrimitiveTypeConversion,
             Func<EdmTypeKind> typeKindFromPayloadFunc,
             out EdmTypeKind targetTypeKind,
-            out SerializationTypeNameAnnotation serializationTypeNameAnnotation)
+            out ODataTypeAnnotation typeAnnotation)
         {
             Debug.Assert(typeKindFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
+            Debug.Assert(
+                expectedTypeKind == EdmTypeKind.None
+                || expectedTypeKind.IsStructured() && expectStructuredType != false
+                || !expectedTypeKind.IsStructured() && expectStructuredType != true,
+                "expectedTypeKind == EdmTypeKind.None || expectedTypeKind.IsStructured() && expectStructuredType != false || !expectedTypeKind.IsStructured() && expectStructuredType != true");
 
-            serializationTypeNameAnnotation = null;
+            typeAnnotation = null;
 
             // What is the right behavior if both expected and actual types are specified for complex value?
             //             We decided that they have to match exactly.
@@ -391,17 +267,22 @@ namespace Microsoft.OData.Core
                 expectedTypeReference,
                 payloadTypeName,
                 EdmTypeKind.Complex,
-                messageReaderSettings.ReaderBehavior,
+                clientCustomTypeResolver,
                 out payloadTypeKind);
 
             // Compute the target type kind based on the expected type, the payload type kind
             // and a function to detect the target type kind from the shape of the payload.
+            bool forResource = expectStructuredType == true
+                               || !expectStructuredType.HasValue && payloadTypeKind.IsStructured();
+
             targetTypeKind = ComputeTargetTypeKind(
                 expectedTypeReference,
-                /*forEntityValue*/ expectedTypeKind == EdmTypeKind.Entity,
+                forResource,
                 payloadTypeName,
                 payloadTypeKind,
-                messageReaderSettings,
+                clientCustomTypeResolver,
+                throwIfTypeConflictsWithMetadata,
+                enablePrimitiveTypeConversion,
                 typeKindFromPayloadFunc);
 
             // Resolve potential conflicts between payload and expected types and apply all the various behavior changing flags from settings
@@ -415,7 +296,9 @@ namespace Microsoft.OData.Core
                     payloadTypeName,
                     defaultPrimitivePayloadType,
                     model,
-                    messageReaderSettings);
+                    clientCustomTypeResolver,
+                    enablePrimitiveTypeConversion,
+                    throwIfTypeConflictsWithMetadata);
             }
             else
             {
@@ -426,17 +309,18 @@ namespace Microsoft.OData.Core
                     payloadType,
                     payloadTypeName,
                     model,
-                    messageReaderSettings);
+                    clientCustomTypeResolver,
+                    throwIfTypeConflictsWithMetadata);
 
                 if (targetTypeReference != null)
                 {
-                    serializationTypeNameAnnotation = CreateSerializationTypeNameAnnotation(payloadTypeName, targetTypeReference);
+                    typeAnnotation = CreateODataTypeAnnotation(payloadTypeName, payloadType, targetTypeReference);
                 }
             }
 
-            if (expectedTypeKind != EdmTypeKind.None && targetTypeReference != null)
+            if ((expectedTypeKind != EdmTypeKind.None || (targetTypeKind != EdmTypeKind.Untyped && expectStructuredType == true)) && targetTypeReference != null)
             {
-                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeKind, payloadTypeName);
+                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeKind, forResource, payloadTypeName);
             }
 
             return targetTypeReference;
@@ -452,7 +336,9 @@ namespace Microsoft.OData.Core
         /// <param name="defaultPayloadType">The default payload type if none is specified in the payload;
         /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="model">The model to use.</param>
-        /// <param name="messageReaderSettings">The message reader settings to use.</param>
+        /// <param name="clientCustomTypeResolver">Custom type resolver used by client, or null if none.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <returns>The target type reference to use for parsing the value. This method never returns null.</returns>
         internal static IEdmTypeReference ResolveAndValidatePrimitiveTargetType(
             IEdmTypeReference expectedTypeReference,
@@ -461,9 +347,10 @@ namespace Microsoft.OData.Core
             string payloadTypeName,
             IEdmType defaultPayloadType,
             IEdmModel model,
-            ODataMessageReaderSettings messageReaderSettings)
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
+            bool enablePrimitiveTypeConversion,
+            bool throwIfTypeConflictsWithMetadata)
         {
-            Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
             Debug.Assert(
                 payloadTypeKind == EdmTypeKind.Primitive || payloadTypeKind == EdmTypeKind.Complex ||
                 payloadTypeKind == EdmTypeKind.Entity || payloadTypeKind == EdmTypeKind.Collection ||
@@ -477,12 +364,7 @@ namespace Microsoft.OData.Core
                 "The payload type kind must match the payload type if that is available.");
             Debug.Assert(payloadType == null || payloadTypeName != null, "If we have a payload type, we must have its name as well.");
 
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadType != null;
-
-            if (expectedTypeReference != null && !useExpectedTypeOnlyForTypeResolution)
-            {
-                ValidateTypeSupported(expectedTypeReference);
-            }
+            bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadType != null;
 
             // Validate type kinds except for open properties or when in lax mode, but only if primitive type conversion is enabled.
             // If primitive type conversion is disabled, the type kind must match, no matter what validation mode is used.
@@ -491,11 +373,11 @@ namespace Microsoft.OData.Core
             // - In the lax mode the payload type is ignored, so its type kind is not verified in any way
             // - If the DisablePrimitiveTypeConversion == true, the lax/strict mode doesn't matter and we will read the payload value on its own.
             //     In this case we require the payload value to always be a primitive type (so type kinds must match), but it may not be convertible
-            //     to the expected type, it will still be reported to the caller. 
-            if (payloadTypeKind != EdmTypeKind.None && (messageReaderSettings.DisablePrimitiveTypeConversion || !messageReaderSettings.DisableStrictMetadataValidation))
+            //     to the expected type, it will still be reported to the caller.
+            if (payloadTypeKind != EdmTypeKind.None && (!enablePrimitiveTypeConversion || throwIfTypeConflictsWithMetadata))
             {
                 // Make sure that the type kinds match.
-                ValidationUtils.ValidateTypeKind(payloadTypeKind, EdmTypeKind.Primitive, payloadTypeName);
+                ValidationUtils.ValidateTypeKind(payloadTypeKind, EdmTypeKind.Primitive, null, payloadTypeName);
             }
 
             if (!model.IsUserModel())
@@ -508,7 +390,7 @@ namespace Microsoft.OData.Core
 
             // If the primitive type conversion is off, use the payload type always.
             // If there's no expected type or the expected type is ignored, use the payload type as well.
-            if (expectedTypeReference == null || useExpectedTypeOnlyForTypeResolution || messageReaderSettings.DisablePrimitiveTypeConversion)
+            if (expectedTypeReference == null || useExpectedTypeOnlyForTypeResolution || !enablePrimitiveTypeConversion)
             {
                 // If there's no payload type, use the default payload type.
                 // Note that in collections the items without type should inherit the type name from the collection, in that case the expectedTypeReference
@@ -517,17 +399,14 @@ namespace Microsoft.OData.Core
             }
 
             // The server ignores the payload type when expected type is specified
-            // The server is going to use lax mode everywhere so this is not an issue.
-            if (messageReaderSettings.DisableStrictMetadataValidation)
+            if (!throwIfTypeConflictsWithMetadata)
             {
-                // Lax validation logic
                 // Always use the expected type, the payload type is ignored.
                 return expectedTypeReference;
             }
 
-            // Strict validation logic
             // We assume the expected type in the case where no payload type is specified
-            // for a primitive value (in strict mode); if no expected type is available we assume Edm.String.
+            // for a primitive value; if no expected type is available we assume Edm.String.
             if (payloadType != null)
             {
                 // The payload type must be convertible to the expected type.
@@ -541,8 +420,8 @@ namespace Microsoft.OData.Core
                 }
             }
 
-            // Read using the expected type. 
-            // If there was a payload type we verified that it's convertible and thus we can safely read 
+            // Read using the expected type.
+            // If there was a payload type we verified that it's convertible and thus we can safely read
             // the content of the value as the expected type.
             return expectedTypeReference;
         }
@@ -556,7 +435,8 @@ namespace Microsoft.OData.Core
         /// <param name="payloadType">The payload type, or null if the payload type was not specified, or it didn't resolve against the model.</param>
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
-        /// <param name="messageReaderSettings">The message reader settings to use.</param>
+        /// <param name="clientCustomTypeResolver">Custom type resolver used by client, or null if none.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <returns>
         /// The target type reference to use for parsing the value.
         /// If there is no user specified model, this will return null.
@@ -572,19 +452,19 @@ namespace Microsoft.OData.Core
             IEdmType payloadType,
             string payloadTypeName,
             IEdmModel model,
-            ODataMessageReaderSettings messageReaderSettings)
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
+            bool throwIfTypeConflictsWithMetadata)
         {
-            Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
             Debug.Assert(
                 expectedTypeKind == EdmTypeKind.Enum || expectedTypeKind == EdmTypeKind.Complex || expectedTypeKind == EdmTypeKind.Entity ||
-                expectedTypeKind == EdmTypeKind.Collection || expectedTypeKind == EdmTypeKind.TypeDefinition,
+                expectedTypeKind == EdmTypeKind.Collection || expectedTypeKind == EdmTypeKind.TypeDefinition || expectedTypeKind == EdmTypeKind.Untyped,
                 "The expected type kind must be one of Enum, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
                 payloadTypeKind == EdmTypeKind.Complex || payloadTypeKind == EdmTypeKind.Entity ||
                 payloadTypeKind == EdmTypeKind.Collection || payloadTypeKind == EdmTypeKind.None ||
                 payloadTypeKind == EdmTypeKind.Primitive || payloadTypeKind == EdmTypeKind.Enum ||
-                payloadTypeKind == EdmTypeKind.TypeDefinition,
-                "The payload type kind must be one of None, Primitive, Enum, Complex, Entity, Collection or TypeDefinition.");
+                payloadTypeKind == EdmTypeKind.TypeDefinition || payloadTypeKind == EdmTypeKind.Untyped,
+                "The payload type kind must be one of None, Primitive, Enum, Untyped, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
                 expectedTypeReference == null || expectedTypeReference.TypeKind() == expectedTypeKind,
                 "The expected type kind must match the expected type reference if that is available.");
@@ -593,14 +473,12 @@ namespace Microsoft.OData.Core
                 "The payload type kind must match the payload type if that is available.");
             Debug.Assert(payloadType == null || payloadTypeName != null, "If we have a payload type, we must have its name as well.");
 
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadType != null;
+            bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadType != null;
             if (!useExpectedTypeOnlyForTypeResolution)
             {
-                ValidateTypeSupported(expectedTypeReference);
-
                 // We should validate that the payload type resolved before anything else to produce reasonable error messages
                 // Otherwise we might report errors which are somewhat confusing (like "Type '' is Complex but Collection was expected.").
-                if (model.IsUserModel() && (expectedTypeReference == null || !messageReaderSettings.DisableStrictMetadataValidation))
+                if (model.IsUserModel() && (expectedTypeReference == null || throwIfTypeConflictsWithMetadata))
                 {
                     // When using a type resolver (i.e., useExpectedTypeOnlyForTypeResolution == true) then we don't have to
                     // call this method because the contract with the type resolver is to always resolve the type name and thus
@@ -608,18 +486,11 @@ namespace Microsoft.OData.Core
                     VerifyPayloadTypeDefined(payloadTypeName, payloadType);
                 }
             }
-            else
-            {
-                // Payload types are always nullable.
-                ValidateTypeSupported(payloadType == null ? null : payloadType.ToTypeReference(/*nullable*/ true));
-            }
 
-            // In lax mode don't cross check kinds of types (we would just use the expected type) unless we expect
-            // an open property of a specific kind (e.g. top level complex property for PUT requests)
-            if (payloadTypeKind != EdmTypeKind.None && (!messageReaderSettings.DisableStrictMetadataValidation || expectedTypeReference == null))
+            if (payloadTypeKind != EdmTypeKind.None && (throwIfTypeConflictsWithMetadata || expectedTypeReference == null))
             {
                 // Make sure that the type kinds match.
-                ValidationUtils.ValidateTypeKind(payloadTypeKind, expectedTypeKind, payloadTypeName);
+                ValidationUtils.ValidateTypeKind(payloadTypeKind, expectedTypeKind, null, payloadTypeName);
             }
 
             if (!model.IsUserModel())
@@ -638,7 +509,7 @@ namespace Microsoft.OData.Core
                     payloadType);
             }
 
-            if (messageReaderSettings.DisableStrictMetadataValidation)
+            if (!throwIfTypeConflictsWithMetadata)
             {
                 return ResolveAndValidateTargetTypeStrictValidationDisabled(
                     expectedTypeKind,
@@ -693,37 +564,25 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validates whether the specified type reference is supported in the current version.
-        /// </summary>
-        /// <param name="typeReference">The type reference to check.</param>
-        internal static void ValidateTypeSupported(IEdmTypeReference typeReference)
-        {
-            if (typeReference != null)
-            {
-                // Do the version specific validation for given types
-            }
-        }
-
-        /// <summary>
         /// Validates that the parsed context URI from the payload is consistent with the expected
-        /// entity set and entity type when reading a feed or entry payload.
+        /// entity set and entity type when reading a resource set or resource payload.
         /// </summary>
         /// <param name="contextUriParseResult">The parse result of the context URI from the payload.</param>
         /// <param name="scope">The top-level scope representing the reader state.</param>
         /// <param name="updateScope">Whether to update scope when validating.</param>
-        internal static void ValidateFeedOrEntryContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
+        internal static void ValidateResourceSetOrResourceContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
         {
             if (contextUriParseResult.EdmType is IEdmCollectionType)
             {
-                ValidateFeedContextUri(contextUriParseResult, scope, updateScope);
+                ValidateResourceSetContextUri(contextUriParseResult, scope, updateScope);
                 return;
             }
 
             Debug.Assert(contextUriParseResult != null, "contextUriParseResult != null");
             Debug.Assert(
-                contextUriParseResult.NavigationSource != null || contextUriParseResult.EdmType != null,
-                "contextUriParseResult.EntitySet != null || contextUriParseResult.EdmType != null");
-            Debug.Assert(contextUriParseResult.EdmType is IEdmEntityType, "contextUriParseResult.StructuredType is IEdmEntityType");
+                contextUriParseResult.Path != null && contextUriParseResult.Path.IsUndeclared() ||
+                contextUriParseResult.NavigationSource != null || (contextUriParseResult.EdmType != null && contextUriParseResult.EdmType is IEdmStructuredType),
+                "contextUriParseResult.Path != null && contextUriParseResult.Path.IsUndeclared() || contextUriParseResult.NavigationSource != null || (contextUriParseResult.EdmType != null && contextUriParseResult.EdmType is IEdmStructuredType)");
 
             // Set the navigation source name or make sure the navigation source names match.
             if (scope.NavigationSource == null)
@@ -741,28 +600,35 @@ namespace Microsoft.OData.Core
                     scope.NavigationSource.FullNavigationSourceName()));
             }
 
-            // Set the entity type or make sure the entity types are assignable.
-            IEdmEntityType payloadEntityType = (IEdmEntityType)contextUriParseResult.EdmType;
-            if (scope.EntityType == null)
+            // Set the resource type or make sure the resource types are assignable.
+            IEdmStructuredType payloadEntityType = (IEdmStructuredType)contextUriParseResult.EdmType;
+
+            if (payloadEntityType == null)
+            {
+                // for dynmaic path, the contextUriParseResult.EdmType might be null;
+                return;
+            }
+
+            if (scope.ResourceType == null)
             {
                 if (updateScope)
                 {
-                    scope.EntityType = payloadEntityType;
+                    scope.ResourceType = payloadEntityType;
                 }
             }
-            else if (scope.EntityType.IsAssignableFrom(payloadEntityType))
+            else if (scope.ResourceType.IsAssignableFrom(payloadEntityType))
             {
                 if (updateScope)
                 {
-                    scope.EntityType = payloadEntityType;
+                    scope.ResourceType = payloadEntityType;
                 }
             }
-            else if (!payloadEntityType.IsAssignableFrom(scope.EntityType))
+            else if (!payloadEntityType.IsAssignableFrom(scope.ResourceType))
             {
                 throw new ODataException(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntityType(
                     UriUtils.UriToString(contextUriParseResult.ContextUri),
                     contextUriParseResult.EdmType.FullTypeName(),
-                    scope.EntityType.FullName()));
+                    scope.ResourceType.FullTypeName()));
             }
         }
 
@@ -782,21 +648,36 @@ namespace Microsoft.OData.Core
                 return expectedItemTypeReference;
             }
 
-            Debug.Assert(contextUriParseResult.EdmType is IEdmCollectionType, "contextUriParseResult.EdmType is IEdmCollectionType");
-            IEdmCollectionType actualCollectionType = (IEdmCollectionType)contextUriParseResult.EdmType;
-            if (expectedItemTypeReference != null)
+            if (contextUriParseResult.EdmType is IEdmCollectionType)
             {
-                // We allow co-variance in collection types (e.g., expecting the item type of Geography from a payload of Collection(GeographyPoint).
-                if (!expectedItemTypeReference.IsAssignableFrom(actualCollectionType.ElementType))
+                Debug.Assert(contextUriParseResult.EdmType is IEdmCollectionType, "contextUriParseResult.EdmType is IEdmCollectionType");
+                IEdmCollectionType actualCollectionType = (IEdmCollectionType)contextUriParseResult.EdmType;
+                if (expectedItemTypeReference != null)
                 {
-                    throw new ODataException(OData.Core.Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
-                        UriUtils.UriToString(contextUriParseResult.ContextUri),
-                        actualCollectionType.ElementType.FullName(),
-                        expectedItemTypeReference.FullName()));
+                    // We allow co-variance in collection types (e.g., expecting the item type of Geography from a payload of Collection(GeographyPoint).
+                    if (!expectedItemTypeReference.IsAssignableFrom(actualCollectionType.ElementType))
+                    {
+                        throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
+                            UriUtils.UriToString(contextUriParseResult.ContextUri),
+                            actualCollectionType.ElementType.FullName(),
+                            expectedItemTypeReference.FullName()));
+                    }
                 }
+
+                return actualCollectionType.ElementType;
             }
 
-            return actualCollectionType.ElementType;
+            Debug.Assert(contextUriParseResult.EdmType is IEdmComplexType && contextUriParseResult.DetectedPayloadKinds.Any(k => k == ODataPayloadKind.Collection),
+                "contextUriParseResult.EdmType is IEdmComplexType");
+            if (expectedItemTypeReference != null && !expectedItemTypeReference.Definition.IsAssignableFrom(contextUriParseResult.EdmType))
+            {
+                throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
+                    UriUtils.UriToString(contextUriParseResult.ContextUri),
+                    contextUriParseResult.EdmType.FullTypeName(),
+                    expectedItemTypeReference.Definition.FullTypeName()));
+            }
+
+            return contextUriParseResult.EdmType.ToTypeReference(true);
         }
 
         /// <summary>
@@ -813,7 +694,7 @@ namespace Microsoft.OData.Core
 
             if (propertyValue == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull(
+                throw new ODataException(Strings.ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull(
                     propertyName,
                     metadata,
                     operationsHeader));
@@ -836,7 +717,7 @@ namespace Microsoft.OData.Core
             {
                 if (expectedTypeKind == EdmTypeKind.Entity)
                 {
-                    throw new ODataException(Strings.ReaderValidationUtils_EntryWithoutType);
+                    throw new ODataException(Strings.ReaderValidationUtils_ResourceWithoutType);
                 }
 
                 return null; // supports undeclared property
@@ -865,12 +746,10 @@ namespace Microsoft.OData.Core
             switch (expectedTypeKind)
             {
                 case EdmTypeKind.Complex:
-                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related 
-                    // in any way. In that case we will just use the expected type because we are in lax mode. 
+                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
+                    // in any way. In that case we will just use the expected type.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
-                        // Verify if it's a derived complex type, in all other cases simply use the expected type.
-                        VerifyComplexType(expectedTypeReference, payloadType, /* failIfNotRelated */ false);
                         if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsComplex().ComplexDefinition(), (IEdmComplexType)payloadType))
                         {
                             return payloadType.ToTypeReference(/*nullable*/ true);
@@ -879,8 +758,8 @@ namespace Microsoft.OData.Core
 
                     break;
                 case EdmTypeKind.Entity:
-                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related 
-                    // in any way. In that case we will just use the expected type because we are in lax mode. 
+                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
+                    // in any way. In that case we will just use the expected type.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
                         // If the type is assignable (equal or derived) we will use the payload type, since we want to allow derived entities
@@ -893,12 +772,15 @@ namespace Microsoft.OData.Core
 
                     break;
                 case EdmTypeKind.Collection:
-                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related 
-                    // in any way. In that case we will just use the expected type because we are in lax mode. 
+                    // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
+                    // in any way. In that case we will just use the expected type.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
                         VerifyCollectionComplexItemType(expectedTypeReference, payloadType);
                     }
+
+                    break;
+                case EdmTypeKind.Untyped: // untyped: no validation (can be anything)
 
                     break;
                 case EdmTypeKind.Enum: // enum: no validation
@@ -977,6 +859,8 @@ namespace Microsoft.OData.Core
                         throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.FullTypeName(), expectedTypeReference.FullName()));
                     }
 
+                    break;
+                case EdmTypeKind.Untyped:
                     break;
                 default:
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ReaderValidationUtils_ResolveAndValidateTypeName_Strict_TypeKind));
@@ -1062,22 +946,23 @@ namespace Microsoft.OData.Core
         /// Conditionally creates the annotation to put on the read value in order to retain the type name from the payload.
         /// </summary>
         /// <param name="payloadTypeName">The payload type name.</param>
+        /// <param name="payloadType">The payload type.</param>
         /// <param name="targetTypeReference">The type reference into which we're going to parse.</param>
         /// <returns>The annotation to report to the reader for adding on the read value.</returns>
-        private static SerializationTypeNameAnnotation CreateSerializationTypeNameAnnotation(string payloadTypeName, IEdmTypeReference targetTypeReference)
+        private static ODataTypeAnnotation CreateODataTypeAnnotation(string payloadTypeName, IEdmType payloadType, IEdmTypeReference targetTypeReference)
         {
             Debug.Assert(targetTypeReference != null, "targetTypeReference != null");
 
-            if (payloadTypeName != null && string.CompareOrdinal(payloadTypeName, targetTypeReference.FullName()) != 0)
+            if (payloadType != null && !payloadType.IsEquivalentTo(targetTypeReference.Definition))
             {
-                return new SerializationTypeNameAnnotation { TypeName = payloadTypeName };
+                return new ODataTypeAnnotation(payloadTypeName, payloadType);
             }
 
             // Add the annotation with a null type name so that we know when the payload type is inferred from the expected type.
-            // This is useful when validating a payload that inserts a derived entity (that does not specify a payload type) into the entity set. 
-            if (payloadTypeName == null)
+            // This is useful when validating a payload that inserts a derived entity (that does not specify a payload type) into the entity set.
+            if (payloadType == null)
             {
-                return new SerializationTypeNameAnnotation { TypeName = null };
+                return new ODataTypeAnnotation();
             }
 
             return null;
@@ -1088,35 +973,38 @@ namespace Microsoft.OData.Core
         /// possibly the payload shape.
         /// </summary>
         /// <param name="expectedTypeReference">The expected type reference used to read the payload value.</param>
-        /// <param name="forEntityValue">true when resolving a type name for an entity value; false for a non-entity value.</param>
+        /// <param name="forResource">true when resolving a type name for a resource; false for a non-resource.</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
-        /// <param name="messageReaderSettings">The message reader settings.</param>
+        /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to determine the type kind of the value by analyzing the payload data.</param>
         /// <returns>The type kind to be used to read the payload.</returns>
         private static EdmTypeKind ComputeTargetTypeKind(
             IEdmTypeReference expectedTypeReference,
-            bool forEntityValue,
+            bool forResource,
             string payloadTypeName,
             EdmTypeKind payloadTypeKind,
-            ODataMessageReaderSettings messageReaderSettings,
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
+            bool throwIfTypeConflictsWithMetadata,
+            bool enablePrimitiveTypeConversion,
             Func<EdmTypeKind> typeKindFromPayloadFunc)
         {
-            Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
             Debug.Assert(typeKindFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
 
             // If we have a type resolver, we always use the type returned by the resolver
             // and use the expected type only for the resolution.
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadTypeKind != EdmTypeKind.None;
+            bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadTypeKind != EdmTypeKind.None;
 
             // Determine the target type kind
-            // If the DisablePrimitiveTypeConversion is on, we must not infer the type kind from the expected type
+            // If the EnablePrimitiveTypeConversion is off, we must not infer the type kind from the expected type
             // but instead we need to read it from the payload.
             // This is necessary to correctly fail on complex/collection as well as to correctly read spatial values.
             EdmTypeKind expectedTypeKind = EdmTypeKind.None;
             if (!useExpectedTypeOnlyForTypeResolution)
             {
-                expectedTypeKind = GetExpectedTypeKind(expectedTypeReference, messageReaderSettings);
+                expectedTypeKind = ReaderUtils.GetExpectedTypeKind(expectedTypeReference, enablePrimitiveTypeConversion);
             }
 
             EdmTypeKind targetTypeKind;
@@ -1129,13 +1017,8 @@ namespace Microsoft.OData.Core
             {
                 if (payloadTypeKind != EdmTypeKind.None)
                 {
-                    Debug.Assert(
-                        messageReaderSettings.ReaderBehavior.TypeResolver == null
-                        || messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.WcfDataServicesClient,
-                        "A custom type resolver is only supported in the client format behavior.");
-
                     // If we have a type kind based on the type name, use it.
-                    if (!forEntityValue)
+                    if (!forResource)
                     {
                         ValidationUtils.ValidateValueTypeKind(payloadTypeKind, payloadTypeName);
                     }
@@ -1152,64 +1035,48 @@ namespace Microsoft.OData.Core
 
             Debug.Assert(targetTypeKind != EdmTypeKind.None, "We should have determined the target type kind by now.");
 
-            if (ShouldValidatePayloadTypeKind(messageReaderSettings, expectedTypeReference, payloadTypeKind))
+            if (ShouldValidatePayloadTypeKind(
+                clientCustomTypeResolver,
+                throwIfTypeConflictsWithMetadata,
+                enablePrimitiveTypeConversion,
+                expectedTypeReference, payloadTypeKind))
             {
-                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeReference.TypeKind(), payloadTypeName);
+                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeReference.TypeKind(), null, payloadTypeName);
             }
 
             return targetTypeKind;
         }
 
         /// <summary>
-        /// Gets the expected type kind based on the given <see cref="IEdmTypeReference"/>, or EdmTypeKind.None if no specific type should be expected.
-        /// </summary>
-        /// <param name="expectedTypeReference">The expected type reference.</param>
-        /// <param name="messageReaderSettings">The message reader settings.</param>
-        /// <returns>The expected type kind based on the settings and type reference, or EdmTypeKind.None if no specific type should be expected.</returns>
-        private static EdmTypeKind GetExpectedTypeKind(IEdmTypeReference expectedTypeReference, ODataMessageReaderSettings messageReaderSettings)
-        {
-            IEdmType expectedTypeDefinition;
-            if (expectedTypeReference == null || (expectedTypeDefinition = expectedTypeReference.Definition) == null)
-            {
-                return EdmTypeKind.None;
-            }
-
-            // If the DisablePrimitiveTypeConversion is on, we must not infer the type kind from the expected type
-            // but instead we need to read it from the payload.
-            // This is necessary to correctly fail on complex/collection as well as to correctly read spatial values.
-            EdmTypeKind expectedTypeKind = expectedTypeDefinition.TypeKind;
-            if (messageReaderSettings.DisablePrimitiveTypeConversion && (expectedTypeKind == EdmTypeKind.Primitive && !expectedTypeDefinition.IsStream()))
-            {
-                return EdmTypeKind.None;
-            }
-
-            // Otherwise, if we have an expected type, use that.
-            return expectedTypeKind;
-        }
-
-        /// <summary>
         /// Determines if the expect value type and the current settings mandate us to validate type kinds of payload values.
         /// </summary>
-        /// <param name="messageReaderSettings">The message reader settings.</param>
-        /// <param name="expectedValueTypeReference">The expected type reference for the value infered from the model.</param>
+        /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
+        /// <param name="expectedValueTypeReference">The expected type reference for the value inferred from the model.</param>
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
         /// <returns>true if the payload value kind must be verified, false otherwise.</returns>
         /// <remarks>This method deals with the strict versus lax behavior, as well as with the behavior when primitive type conversion is disabled.</remarks>
-        private static bool ShouldValidatePayloadTypeKind(ODataMessageReaderSettings messageReaderSettings, IEdmTypeReference expectedValueTypeReference, EdmTypeKind payloadTypeKind)
+        private static bool ShouldValidatePayloadTypeKind(
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
+            bool throwIfTypeConflictsWithMetadata,
+            bool enablePrimitiveTypeConversion,
+            IEdmTypeReference expectedValueTypeReference,
+            EdmTypeKind payloadTypeKind)
         {
             // If we have a type resolver, we always use the type returned by the resolver
             // and use the expected type only for the resolution.
-            bool useExpectedTypeOnlyForTypeResolution = messageReaderSettings.ReaderBehavior.TypeResolver != null && payloadTypeKind != EdmTypeKind.None;
+            bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadTypeKind != EdmTypeKind.None;
 
             // Type kind validation must happen when
-            // - In strict mode
+            // - ThrowIfTypeConflictsWithMetadata is set
             // - Target type is primitive and primitive type conversion is disabled
-            // In lax mode we don't want to validate type kinds, but the DisablePrimitiveTypeConversion overrides the lax mode behavior.
+            // And the EnablePrimitiveTypeConversion overrides the ThrowIfTypeConflictsWithMetadata behavior.
             // If there's no expected type, then there's nothing to validate against (open property).
             return expectedValueTypeReference != null &&
-                (!messageReaderSettings.DisableStrictMetadataValidation ||
+                (throwIfTypeConflictsWithMetadata ||
                 useExpectedTypeOnlyForTypeResolution ||
-                (expectedValueTypeReference.IsODataPrimitiveTypeKind() && messageReaderSettings.DisablePrimitiveTypeConversion));
+                (expectedValueTypeReference.IsODataPrimitiveTypeKind() && !enablePrimitiveTypeConversion));
         }
 
         /// <summary>
@@ -1217,13 +1084,10 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="expectedValueTypeReference">The expected type for the value, or null if no such type is available.</param>
         /// <param name="validateNullValue">true to validate the null value; otherwise false.</param>
-        /// <param name="model">The model to use to get the OData-Version.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
-        private static void ValidateNullValueAllowed(IEdmTypeReference expectedValueTypeReference, bool validateNullValue, IEdmModel model, string propertyName, bool? isDynamicProperty)
+        private static void ValidateNullValueAllowed(IEdmTypeReference expectedValueTypeReference, bool validateNullValue, string propertyName, bool? isDynamicProperty)
         {
-            Debug.Assert(model != null, "For null validation, model is required.");
-
             if (validateNullValue && expectedValueTypeReference != null)
             {
                 Debug.Assert(
@@ -1260,13 +1124,10 @@ namespace Microsoft.OData.Core
                 }
                 else if (expectedValueTypeReference.IsODataComplexTypeKind())
                 {
-                    if (ValidationUtils.ShouldValidateComplexPropertyNullValue(model))
+                    IEdmComplexTypeReference complexTypeReference = expectedValueTypeReference.AsComplex();
+                    if (!complexTypeReference.IsNullable)
                     {
-                        IEdmComplexTypeReference complexTypeReference = expectedValueTypeReference.AsComplex();
-                        if (!complexTypeReference.IsNullable)
-                        {
-                            ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
-                        }
+                        ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
                     }
                 }
             }
@@ -1289,7 +1150,7 @@ namespace Microsoft.OData.Core
 
 
         /// <summary>
-        /// The validate feed context uri.
+        /// The validate resource set context uri.
         /// </summary>
         /// <param name="contextUriParseResult">
         /// The context uri parse result.
@@ -1300,9 +1161,9 @@ namespace Microsoft.OData.Core
         /// <param name="updateScope">
         /// The update scope.
         /// </param>
-        private static void ValidateFeedContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
+        private static void ValidateResourceSetContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
         {
-            // TODO: add validation logic for a feed context uri
+            // TODO: add validation logic for a resource set context uri
         }
     }
 }

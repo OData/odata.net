@@ -35,15 +35,11 @@ namespace Microsoft.Test.Taupo.OData.Json
         /// <param name="value">The value to return as a text.</param>
         /// <param name="writingJsonLight">true if we are writing JSON Light, false if we're writing Verbose JSON.</param>
         /// <returns>The text representation of the JSON value, the serialized JSON.</returns>
-        public static string ToText(this JsonValue value, bool writingJsonLight, bool indent = true)
+        public static string ToText(this JsonValue value, bool writingJsonLight)
         {
             using (StringWriter writer = new StringWriter())
             {
-                if (!indent)
-                {
-                    writer.NewLine = string.Empty;
-                }
-
+                writer.NewLine = string.Empty;
                 value.SaveAsText(writer, writingJsonLight);
                 return writer.ToString();
             }

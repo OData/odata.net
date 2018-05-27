@@ -22,90 +22,90 @@ namespace EdmLibTests.FunctionalTests
     {
         #region Duration
         [TestMethod]
-        public void RoundTripTestValueAnnotationInvalidDurationConstantExpressionCsdl()
+        public void RoundTripTestVocabularyAnnotationInvalidDurationConstantExpressionCsdl()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantAttributeCsdl();
-            var csdl = ConstantExpressionModelBuilder.ValueAnnotationInvalidDurationConstantExpressionCsdl();
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl();
+            var csdl = ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDurationConstantExpressionCsdl();
             VerifyRoundTrip(expectedCsdl, csdl);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationInvalidDurationConstantAttributeCsdl()
+        public void RoundTripTestVocabularyAnnotationInvalidDurationConstantAttributeCsdl()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantAttributeCsdl();
-            var csdl = ConstantExpressionModelBuilder.ValueAnnotationInvalidDurationConstantAttributeCsdl();
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl();
+            var csdl = ConstantExpressionModelBuilder.VocabularyAnnotationInvalidDurationConstantAttributeCsdl();
             VerifyRoundTrip(expectedCsdl, csdl);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationValidDefaultDurationConstantAttributeCsdl()
+        public void RoundTripTestVocabularyAnnotationValidDefaultDurationConstantAttributeCsdl()
         {
-            var csdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantAttributeCsdl();
+            var csdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl();
             VerifyRoundTrip(csdl);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationValidDurationConstantAttributeCsdl()
+        public void RoundTripTestVocabularyAnnotationValidDurationConstantAttributeCsdl()
         {
-            var csdl = ConstantExpressionModelBuilder.ValueAnnotationValidDurationConstantAttributeCsdl();
+            var csdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDurationConstantAttributeCsdl();
             VerifyRoundTrip(csdl);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationInvalidValueDurationConstantAttributeCsdl()
+        public void RoundTripTestVocabularyAnnotationInvalidValueDurationConstantAttributeCsdl()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantAttributeCsdl();
-            var csdl = ConstantExpressionModelBuilder.ValueAnnotationInvalidValueDurationConstantAttributeCsdl();
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl();
+            var csdl = ConstantExpressionModelBuilder.VocabularyAnnotationInvalidValueDurationConstantAttributeCsdl();
             VerifyRoundTrip(expectedCsdl, csdl);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationInvalidFormatDurationConstantAttributeCsdl()
+        public void RoundTripTestVocabularyAnnotationInvalidFormatDurationConstantAttributeCsdl()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantAttributeCsdl();
-            var csdl = ConstantExpressionModelBuilder.ValueAnnotationInvalidFormatDurationConstantAttributeCsdl();
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl();
+            var csdl = ConstantExpressionModelBuilder.VocabularyAnnotationInvalidFormatDurationConstantAttributeCsdl();
             VerifyRoundTrip(expectedCsdl, csdl);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationValidDurationConstantAttributeModel()
+        public void RoundTripTestVocabularyAnnotationValidDurationConstantAttributeModel()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidDurationConstantAttributeCsdl();
-            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.ValueAnnotationValidDurationConstantModel()).Select(n => XElement.Parse(n));
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDurationConstantAttributeCsdl();
+            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.VocabularyAnnotationValidDurationConstantModel()).Select(n => XElement.Parse(n));
             VerifyRoundTrip(expectedCsdl, csdl, true);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationValidLargeDurationConstantModel()
+        public void RoundTripTestVocabularyAnnotationValidLargeDurationConstantModel()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidLargeDurationConstantModelCsdl();
-            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.ValueAnnotationValidLargeDurationConstantModel()).Select(n => XElement.Parse(n));
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidLargeDurationConstantModelCsdl();
+            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.VocabularyAnnotationValidLargeDurationConstantModel()).Select(n => XElement.Parse(n));
             VerifyRoundTrip(expectedCsdl, csdl, true);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationValidDefaultDurationConstantModel()
+        public void RoundTripTestVocabularyAnnotationValidDefaultDurationConstantModel()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantAttributeCsdl();
-            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantModel()).Select(n => XElement.Parse(n));
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl();
+            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantModel()).Select(n => XElement.Parse(n));
             VerifyRoundTrip(expectedCsdl, csdl, true);
         }
 
         [TestMethod]
-        public void RoundTripTestValueAnnotationInvalidTypeReferenceDurationConstantModel()
+        public void RoundTripTestVocabularyAnnotationInvalidTypeReferenceDurationConstantModel()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidLargeDurationConstantModelCsdl();
-            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.ValueAnnotationInvalidTypeReferenceDurationConstantModel()).Select(n => XElement.Parse(n));
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidLargeDurationConstantModelCsdl();
+            var csdl = this.GetSerializerResult(ConstantExpressionModelBuilder.VocabularyAnnotationInvalidTypeReferenceDurationConstantModel()).Select(n => XElement.Parse(n));
             VerifyRoundTrip(expectedCsdl, csdl, true);
         }
         #endregion
 
         #region Guid
         [TestMethod]
-        public void RoundTripTestValueAnnotationInvalidGuidConstantExpressionCsdl()
+        public void RoundTripTestVocabularyAnnotationInvalidGuidConstantExpressionCsdl()
         {
-            var expectedCsdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantAttributeCsdl();
-            var csdl = ConstantExpressionModelBuilder.ValueAnnotationValidDefaultDurationConstantExpressionCsdl();
+            var expectedCsdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl();
+            var csdl = ConstantExpressionModelBuilder.VocabularyAnnotationValidDefaultDurationConstantExpressionCsdl();
             VerifyRoundTrip(expectedCsdl, csdl);
         }
         #endregion
@@ -117,7 +117,7 @@ namespace EdmLibTests.FunctionalTests
             if (validate)
             {
                 IEnumerable<EdmError> errors;
-                model.Validate(Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4, out errors);
+                model.Validate(Microsoft.OData.Edm.EdmConstants.EdmVersion4, out errors);
                 Assert.AreEqual(0, errors.Count(), "Unexpected errors.");
             }
 

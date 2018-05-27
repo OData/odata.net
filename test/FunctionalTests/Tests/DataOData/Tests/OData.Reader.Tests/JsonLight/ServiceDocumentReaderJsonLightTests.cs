@@ -18,7 +18,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     #endregion Namespaces
 
     /// <summary>
@@ -306,7 +305,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 ],
                                 ""value@cn.foo"":""out of order""
                             }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "cn.foo", "value")
+                    ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "cn.foo", "value")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
@@ -322,7 +321,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                     },
                                 ]
                              }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "cn.foo", "name")
+                    ExpectedException = null
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
@@ -338,7 +337,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                     },
                                 ]
                              }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "cn.foo")
+                    ExpectedException = null
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
@@ -354,7 +353,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                     },
                                 ]
                              }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "cn.foo", "value")
+                    ExpectedException = null
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {
@@ -370,7 +369,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                     },
                                 ]
                              }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "cn.foo")
+                    ExpectedException = null
                 },
                 #endregion error test cases
             };

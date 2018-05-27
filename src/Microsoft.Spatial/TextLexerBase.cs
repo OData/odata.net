@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Diagnostics;
     using System.IO;
@@ -95,8 +95,8 @@ namespace Microsoft.Data.Spatial
         public bool Next()
         {
             // DEVNOTE(pqian):
-            // This function is called a very large number of times during text parsing. 
-            // For example, experiments show that during simple WKT parsing, this function accounts for over 70% 
+            // This function is called a very large number of times during text parsing.
+            // For example, experiments show that during simple WKT parsing, this function accounts for over 70%
             // of the workload. Thus, efforts should be taken to keep this function as light weight as possible.
             // Token Accumulation Logic:
             // we'll accumulate whenever we are:
@@ -106,7 +106,7 @@ namespace Microsoft.Data.Spatial
             // 2a. MatchTokenType tell us to (terminate = true)
             // 2b. We are inside a token and we've encountered a new token (currentType and peek type is different)
             // It follows that most of the time we will either accumulate the token or break out of the loop
-            // to return the token, except in one case, where we are starting fresh AND the first character is a terminal 
+            // to return the token, except in one case, where we are starting fresh AND the first character is a terminal
             // character (delimeter). In this case we will both accumulate that char and break out of the loop.
             if (this.peekToken != null)
             {
@@ -161,7 +161,7 @@ namespace Microsoft.Data.Spatial
 
             return originalToken != this.currentToken;
         }
-        
+
         /// <summary>
         /// Examine the current character and determine its token type
         /// </summary>

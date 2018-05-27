@@ -4,7 +4,7 @@ $filter = not contains('milk',Name) and indexof(Name, 'a') lt 3 or concat(Name, 
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = SpecialProduct
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -23,11 +23,11 @@ FilterQueryOption
 								Property = Name
 								TypeReference = [Edm.String Nullable=True Unicode=True]
 								Source = 
-								EntityRangeVariableReferenceNode
+								ResourceRangeVariableReferenceNode
 									Name = $it
 									NavigationSource = SpecialProduct
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				)
 			And
 					SingleValueFunctionCallNode
@@ -39,11 +39,11 @@ FilterQueryOption
 								Property = Name
 								TypeReference = [Edm.String Nullable=True Unicode=True]
 								Source = 
-								EntityRangeVariableReferenceNode
+								ResourceRangeVariableReferenceNode
 									Name = $it
 									NavigationSource = SpecialProduct
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 							a(Type: [Edm.String Nullable=True Unicode=True])
 				LessThan
 					3(Type: [Edm.Int32 Nullable=False])
@@ -57,19 +57,19 @@ FilterQueryOption
 						Property = Name
 						TypeReference = [Edm.String Nullable=True Unicode=True]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = SpecialProduct
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					SingleValuePropertyAccessNode
 						Property = QuantityPerUnit
 						TypeReference = [Edm.String Nullable=True Unicode=True]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = SpecialProduct
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Equal
 			bubbles(Type: [Edm.String Nullable=True Unicode=True])

@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+using System.Diagnostics;
+
+namespace Microsoft.OData.UriParser
 {
+    using System.Text;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.UriBuilder;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// Extension methods for <see cref="ODataPath"/>. These method provide convenince functions.
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Computes the <see cref="IEdmTypeReference"/> of the resource identified by this <see cref="ODataPath"/>.
         /// </summary>
         /// <param name="path">Path to compute the type for.</param>
-        /// <returns>The <see cref="IEdmTypeReference"/> of the resource, or null if the path does not identify a 
+        /// <returns>The <see cref="IEdmTypeReference"/> of the resource, or null if the path does not identify a
         /// resource with a type.</returns>
         public static IEdmTypeReference EdmType(this ODataPath path)
         {
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Computes the <see cref="IEdmNavigationSource"/> of the resource identified by this <see cref="ODataPath"/>.
         /// </summary>
         /// <param name="path">Path to compute the set for.</param>
-        /// <returns>The <see cref="IEdmNavigationSource"/> of the resource, or null if the path does not identify a 
+        /// <returns>The <see cref="IEdmNavigationSource"/> of the resource, or null if the path does not identify a
         /// resource that is part of a set.</returns>
         public static IEdmNavigationSource NavigationSource(this ODataPath path)
         {
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Computes whether or not the resource identified by this <see cref="ODataPath"/> is a collection.
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
-        /// <returns>True if the resource if a feed or collection of primitive or complex types. False otherwise.</returns>
+        /// <returns>True if the resource if a resource set or collection of primitive or complex types. False otherwise.</returns>
         public static bool IsCollection(this ODataPath path)
         {
             return path.LastSegment.TranslateWith(new IsCollectionTranslator());
@@ -60,13 +60,27 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
         /// <param name="navigationProperty">The navigation property this segment represents.</param>
-        /// <param name="navigationSource">The navigation source of the entities targetted by this navigation property. This can be null.</param>
-        /// <returns>The ODataPath with navigation property appended in the end in the end</returns>
+        /// <param name="navigationSource">The navigation source of the entities targeted by this navigation property. This can be null.</param>
+        /// <returns>The ODataPath with navigation property segment appended in the end.</returns>
         public static ODataPath AppendNavigationPropertySegment(this ODataPath path, IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
         {
             var newPath = new ODataPath(path);
             NavigationPropertySegment np = new NavigationPropertySegment(navigationProperty, navigationSource);
             newPath.Add(np);
+            return newPath;
+        }
+
+        /// <summary>
+        /// Build a segment representing a property.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <param name="property">The property this segment represents.</param>
+        /// <returns>>The ODataPath with property segment appended in the end.</returns>
+        public static ODataPath AppendPropertySegment(this ODataPath path, IEdmStructuralProperty property)
+        {
+            var newPath = new ODataPath(path);
+            PropertySegment propertySegment = new PropertySegment(property);
+            newPath.Add(propertySegment);
             return newPath;
         }
 
@@ -117,7 +131,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             return newPath;
         }
 
-
         /// <summary>
         /// Remove the type-cast segment in the end of ODataPath, the method does not modify current ODataPath instance,
         /// it returns a new ODataPath without ending type segment.
@@ -138,8 +151,19 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>True if the the ODataPath targets at an individual property. False otherwise.</returns>
         public static bool IsIndividualProperty(this ODataPath path)
         {
-            ODataPathSegment lastSegmentWithTypeCast = path.TrimEndingTypeSegment().LastSegment;
-            return lastSegmentWithTypeCast is PropertySegment || lastSegmentWithTypeCast is OpenPropertySegment;
+            ODataPathSegment lastNonTypeCastSegment = path.TrimEndingTypeSegment().LastSegment;
+            return lastNonTypeCastSegment is PropertySegment || lastNonTypeCastSegment is DynamicPathSegment;
+        }
+
+        /// <summary>
+        /// Computes whether or not the ODataPath targets at an unknown segment.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <returns>True if the the ODataPath targets at an unknown segment. False otherwise.</returns>
+        public static bool IsUndeclared(this ODataPath path)
+        {
+            ODataPathSegment lastNonTypeCastSegment = path.TrimEndingTypeSegment().LastSegment;
+            return lastNonTypeCastSegment is DynamicPathSegment;
         }
 
         /// <summary>
@@ -150,7 +174,83 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <returns>The string representation of the Context Url path.</returns>
         public static string ToContextUrlPathString(this ODataPath path)
         {
-            return string.Concat(path.WalkWith(PathSegmentToContextUrlPathTranslator.DefaultInstance).ToArray()).TrimStart('/');
+            StringBuilder pathString = new StringBuilder();
+            PathSegmentToContextUrlPathTranslator pathTranslator = PathSegmentToContextUrlPathTranslator.DefaultInstance;
+            ODataPathSegment priorSegment = null;
+            bool foundOperationWithoutPath = false;
+            foreach (ODataPathSegment segment in path)
+            {
+                OperationSegment operationSegment = segment as OperationSegment;
+                OperationImportSegment operationImportSegment = segment as OperationImportSegment;
+                if (operationImportSegment != null)
+                {
+                    IEdmOperationImport operationImport = operationImportSegment.OperationImports.FirstOrDefault();
+                    Debug.Assert(operationImport != null);
+
+                    EdmPathExpression pathExpression = operationImport.EntitySet as EdmPathExpression;
+                    if (pathExpression != null)
+                    {
+                        Debug.Assert(priorSegment == null); // operation import is always the first segment?
+                        pathString.Append(pathExpression.Path);
+                    }
+                    else
+                    {
+                        pathString = operationImport.Operation.ReturnType != null ?
+                                new StringBuilder(operationImport.Operation.ReturnType.FullName()) :
+                                new StringBuilder("Edm.Untyped");
+
+                        foundOperationWithoutPath = true;
+                    }
+                }
+                else if (operationSegment != null)
+                {
+                    IEdmOperation operation = operationSegment.Operations.FirstOrDefault();
+                    Debug.Assert(operation != null);
+
+                    if (operation.IsBound &&
+                        priorSegment != null &&
+                        operation.Parameters.First().Type.Definition == priorSegment.EdmType)
+                    {
+                        if (operation.EntitySetPath != null)
+                        {
+                            foreach (string pathSegment in operation.EntitySetPath.PathSegments.Skip(1))
+                            {
+                                pathString.Append('/');
+                                pathString.Append(pathSegment);
+                            }
+                        }
+                        else if (operationSegment.EntitySet != null)
+                        {
+                            // Is it correct to check EntitySet?
+                            pathString = new StringBuilder(operationSegment.EntitySet.Name);
+                        }
+                        else
+                        {
+                            pathString = operation.ReturnType != null ?
+                                new StringBuilder(operation.ReturnType.FullName()) :
+                                new StringBuilder("Edm.Untyped");
+
+                            foundOperationWithoutPath = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (foundOperationWithoutPath)
+                    {
+                        pathString = new StringBuilder(segment.EdmType.FullTypeName());
+                        foundOperationWithoutPath = false;
+                    }
+                    else
+                    {
+                        pathString.Append(segment.TranslateWith(pathTranslator));
+                    }
+                }
+
+                priorSegment = segment;
+            }
+
+            return pathString.ToString().TrimStart('/');
         }
 
         /// <summary>
@@ -158,11 +258,11 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// mainly translate Query Url path.
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
-        /// <param name="urlConventions">Mark whether key is segment</param>
+        /// <param name="urlKeyDelimiter">Mark whether key is segment</param>
         /// <returns>The string representation of the Query Url path.</returns>
-        public static string ToResourcePathString(this ODataPath path, ODataUrlConventions urlConventions)
-        {       
-             return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlConventions.UrlConvention)).ToArray()).TrimStart('/');
+        public static string ToResourcePathString(this ODataPath path, ODataUrlKeyDelimiter urlKeyDelimiter)
+        {
+            return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlKeyDelimiter)).ToArray()).TrimStart('/');
         }
 
         /// <summary>
@@ -187,6 +287,21 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         public static ODataExpandPath ToExpandPath(this ODataSelectPath path)
         {
             return new ODataExpandPath(path);
+        }
+
+        /// <summary>
+        /// Gets the target navigation source to the ODataPath.
+        /// </summary>
+        /// <param name="path">Path to compute the set for.</param>
+        /// <returns>The target navigation source to the ODataPath.</returns>
+        internal static IEdmNavigationSource TargetNavigationSource(this ODataPath path)
+        {
+            if (path == null)
+            {
+                return null;
+            }
+
+            return new ODataPathInfo(path).TargetNavigationSource;
         }
     }
 }

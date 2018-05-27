@@ -127,6 +127,7 @@ namespace AstoriaUnitTests.Tests
     using EFFK = AstoriaUnitTests.EFFK;
     using EFFKClient = AstoriaUnitTests.EFFK.Client;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/880
     [TestClass]
     public class EFFKTests
     {
@@ -164,8 +165,8 @@ namespace AstoriaUnitTests.Tests
         public void PerTestSetup()
         {
             this.ctx = new DataServiceContext(web.ServiceRoot);
-            this.ctx.EnableAtom = true;
-            this.ctx.Format.UseAtom();
+            //this.ctx.EnableAtom = true;
+            //this.ctx.Format.UseAtom();
             this.ctx.ResolveName = (t) =>
             {
                 string clientName = t.FullName;
@@ -191,7 +192,8 @@ namespace AstoriaUnitTests.Tests
             this.ctx = null;
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_Get_SimpleGet()
         {
             var q = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)");
@@ -205,7 +207,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_Get_ProjectNavOnly()
         {
             var q = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithNavOrder()
@@ -228,7 +231,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_Get_ProjectFKOnly()
         {
             var q = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithFKOrder()
@@ -251,7 +255,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_Update_SimpleUpdate()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)").FirstOrDefault();
@@ -276,7 +281,8 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, cust.ID);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_Update_ProjectedUpdate()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.Customer()
@@ -309,7 +315,8 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, cust.ID);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_Update_NarrowingUpdate1()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithFKOrder()
@@ -344,7 +351,8 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, cust.ID);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_Update_NarrowingUpdate2()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Select(c => new EFFKClient.NarrowCustomerWithNavOrder()
@@ -379,7 +387,8 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, 1);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_InsertTest()
         {
             var newCust = new EFFKClient.Customer() { ID = 10, Name = "New Cust", EditTimeStamp = new byte[] { 0, 1, 2, 3 } };
@@ -427,7 +436,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_InsertAddRelated()
         {
             var newCust = new EFFKClient.Customer() { ID = 11, EditTimeStamp = new byte[] { 0 } };
@@ -447,7 +457,8 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(100022, 11);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_DeleteLinks()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)").FirstOrDefault();
@@ -480,7 +491,8 @@ namespace AstoriaUnitTests.Tests
             VerifyServerOrderId(order.ID, null);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_SettingTheSameRelationshipAgain()
         {
             var cust = ctx.CreateQuery<EFFKClient.Customer>("CustomObjectContext.Customers").Expand("Orders($expand=Customers)").FirstOrDefault();
@@ -490,7 +502,8 @@ namespace AstoriaUnitTests.Tests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_1To1_BasicInsert_Bind_Delete()
         {
             // Create new office type
@@ -518,7 +531,8 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Office>("CustomObjectContext.Offices").Count(), 0, "There should be no offices left");
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_1To1_CascadeDelete_PrincipalToDependent()
         {
             // Create new office type
@@ -542,7 +556,8 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Worker>("CustomObjectContext.Workers").Count(), 0, "There should be no workers left");
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_1To1_CascadeDelete_DependentToPrincipal()
         {
             // Create new office type
@@ -566,7 +581,8 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Worker>("CustomObjectContext.Workers").Count(), 0, "There should be no workers left");
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_1To1_DeleteDependent()
         {
             // Create new office type
@@ -593,7 +609,8 @@ namespace AstoriaUnitTests.Tests
             Assert.AreEqual(ctx.CreateQuery<EFFKClient.Worker>("CustomObjectContext.Workers").Count(), 0, "There should be no workers left");
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_1To1_BasicInsertAndBind_Batch()
         {
             // Create new office type
@@ -615,13 +632,14 @@ namespace AstoriaUnitTests.Tests
             ctx.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_1To1_BasicInsertAndBind_Batch_ChangedUriCompositionRulesOnServer()
         {
             // Fix URI composition in Astoria for V3 payloads
             ctx = new DataServiceContext(web.ServiceRoot, Microsoft.OData.Client.ODataProtocolVersion.V4);
-            ctx.EnableAtom = true;
-            ctx.Format.UseAtom();
+            //ctx.EnableAtom = true;
+            //ctx.Format.UseAtom();
             // Create new office type
             EFFKClient.Office o = new EFFKClient.Office() { ID = 1, BuildingName = "Building 35", FloorNumber = 2, OfficeNumber = 2173 };
             ctx.AddObject("CustomObjectContext.Offices", o);
@@ -641,7 +659,8 @@ namespace AstoriaUnitTests.Tests
             ctx.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void EFFK_1To1_UpdateRelationship()
         {
             // Create new office type
@@ -695,8 +714,8 @@ namespace AstoriaUnitTests.Tests
         private void VerifyServerOrderId(int orderId, int? expectedCustomerId, String message = null)
         {
             var _ctx = new DataServiceContext(web.ServiceRoot);
-            _ctx.EnableAtom = true;
-            _ctx.Format.UseAtom();
+            //_ctx.EnableAtom = true;
+            //_ctx.Format.UseAtom();
 
             var order = _ctx.CreateQuery<EFFKClient.Order>("CustomObjectContext.Orders").Expand("Customers").Where(o => o.ID == orderId).FirstOrDefault();
 

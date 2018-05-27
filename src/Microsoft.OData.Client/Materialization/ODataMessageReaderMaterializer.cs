@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
     /// <summary>
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Feed being materialized; possibly null.
         /// </summary>
-        internal sealed override ODataFeed CurrentFeed
+        internal sealed override ODataResourceSet CurrentFeed
         {
             get { return null; }
         }
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Entry being materialized; possibly null.
         /// </summary>
-        internal sealed override ODataEntry CurrentEntry
+        internal sealed override ODataResource CurrentEntry
         {
             get { return null; }
         }

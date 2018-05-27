@@ -19,7 +19,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     [TestClass]
     public class ClientSpatialTests
     {
-        [TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void TestCollectionOfSpatialTypes()
         {
             DSPUnitTestServiceDefinition roadTripServiceDefinition = GetRoadTripServiceDefinition(typeof(GeographyPoint), TestPoint.DefaultValues, false, false,
@@ -43,8 +45,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var tripLegs = context.CreateQuery<TripLegWithCollection<GeographyPoint>>("TripLegs").Where(t => t.ID == SpatialTestUtil.DefaultId).ToList();
                 var tripLeg = tripLegs.Single();
                 Assert.AreEqual(2, tripLeg.PointsOfInterest.Count(), "didn't materialize all the elements");

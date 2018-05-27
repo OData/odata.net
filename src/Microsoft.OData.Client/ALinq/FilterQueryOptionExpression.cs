@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq.Expressions;
-    
+
     /// <summary>
     /// An resource specific expression representing a filter query option.
     /// </summary>

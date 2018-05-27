@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class AvroFormat : ODataFormat
     {
@@ -26,12 +26,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         public override ODataInputContext CreateInputContext(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings)
         {
-            return new ODataAvroInputContext(this, messageInfo.GetMessageStream(), messageInfo.MediaType, messageInfo.Encoding, messageReaderSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
+            return new ODataAvroInputContext(this, messageInfo, messageReaderSettings);
         }
 
         public override ODataOutputContext CreateOutputContext(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings)
         {
-            return new ODataAvroOutputContext(this, messageInfo.GetMessageStream(), messageInfo.Encoding, messageWriterSettings, messageInfo.IsResponse, true, messageInfo.Model, messageInfo.UrlResolver);
+            return new ODataAvroOutputContext(this, messageInfo, messageWriterSettings);
         }
 
         public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings)

@@ -5,8 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -16,7 +15,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         private readonly List<IEdmSchemaElement> schemaElements;
         private readonly List<IEdmEntityContainer> entityContainers;
         private readonly Dictionary<string, List<IEdmVocabularyAnnotation>> annotations;
-        private readonly List<string> usedNamespaces; 
+        private readonly List<string> usedNamespaces;
 
         public EdmSchema(string namespaceString)
         {

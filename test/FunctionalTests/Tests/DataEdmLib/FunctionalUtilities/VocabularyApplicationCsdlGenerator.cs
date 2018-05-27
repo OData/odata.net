@@ -11,8 +11,7 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 
     /// <summary>
@@ -20,9 +19,9 @@ namespace EdmLibTests.FunctionalUtilities
     /// </summary>
     public class VocabularyApplicationCsdlGenerator
     {
-        public XElement GenerateApplicationCsdl(EdmVersion edmVerion, IEdmModel applicationModel)
+        public XElement GenerateApplicationCsdl(EdmVersion edmVersion, IEdmModel applicationModel)
         {
-            XNamespace ns = this.DetermineXmlNamespace(edmVerion);
+            XNamespace ns = this.DetermineXmlNamespace(edmVersion);
             var schema = new XElement(ns + "Schema", new XAttribute("Namespace", "Application.NS1"));
 
             IEnumerable<IEdmVocabularyAnnotatable> possiblyAnnotated = applicationModel.SchemaElements.OfType<IEdmEntityType>().Cast<IEdmVocabularyAnnotatable>()
@@ -31,11 +30,11 @@ namespace EdmLibTests.FunctionalUtilities
 
             foreach (var annotated in possiblyAnnotated.Where(e => e.VocabularyAnnotations(applicationModel).Any()))
             {
-                var valueAnnotations = annotated.VocabularyAnnotations(applicationModel).OfType<IEdmValueAnnotation>();
+                var valueAnnotations = annotated.VocabularyAnnotations(applicationModel);
                 schema.Add(new XElement(
                                 ns + "Annotations",
                                 new XAttribute("Target", this.GetTargetPathFor(annotated, applicationModel)),
-                                this.GenerateValueAnnotations(ns, valueAnnotations)));
+                                this.GenerateVocabularyAnnotations(ns, valueAnnotations)));
             }
 
             return schema;
@@ -58,7 +57,7 @@ namespace EdmLibTests.FunctionalUtilities
             throw new System.InvalidOperationException(string.Format("unexpected element (not SchemaElement, Container, or ContainerElement): {0}", annotated));
         }
 
-        private IEnumerable<XElement> GenerateValueAnnotations(XNamespace ns, IEnumerable<IEdmValueAnnotation> valueAnnotations)
+        private IEnumerable<XElement> GenerateVocabularyAnnotations(XNamespace ns, IEnumerable<IEdmVocabularyAnnotation> valueAnnotations)
         {
             foreach (var va in valueAnnotations)
             {
@@ -138,7 +137,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             if (csdlVersion == EdmVersion.V40)
             {
-                return EdmConstants.EdmOasisNamespace;
+                return Microsoft.Test.OData.Utils.Metadata.EdmConstants.EdmOasisNamespace;
             }
             else
             {

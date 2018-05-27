@@ -11,7 +11,7 @@ namespace EdmLibTests.FunctionalUtilities
 
     public static class ClrTypeMappingTestModelBuilder
     {
-        public static IEnumerable<XElement> ValueAnnotationClassTypeBasicTest()
+        public static IEnumerable<XElement> VocabularyAnnotationClassTypeBasicTest()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -193,7 +193,7 @@ namespace EdmLibTests.FunctionalUtilities
             return new XElement[] { XElement.Parse(csdl) };
         }
 
-        public static IEnumerable<XElement> ValueAnnotationClassTypeRecursiveTest()
+        public static IEnumerable<XElement> VocabularyAnnotationClassTypeRecursiveTest()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -224,7 +224,7 @@ namespace EdmLibTests.FunctionalUtilities
             return new XElement[] { XElement.Parse(csdl) };
         }
 
-        public static IEnumerable<XElement> ValueAnnotationClassTypeWithNewProperties()
+        public static IEnumerable<XElement> VocabularyAnnotationClassTypeWithNewProperties()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -250,7 +250,7 @@ namespace EdmLibTests.FunctionalUtilities
             return new XElement[] { XElement.Parse(csdl) };
         }
 
-        public static IEnumerable<XElement> ValueAnnotationCollectionPropertyTest()
+        public static IEnumerable<XElement> VocabularyAnnotationCollectionPropertyTest()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -303,7 +303,7 @@ namespace EdmLibTests.FunctionalUtilities
             return new XElement[] { XElement.Parse(csdl) };
         }
 
-        public static IEnumerable<XElement> ValueAnnotationCollectionOfCollectionPropertyTest()
+        public static IEnumerable<XElement> VocabularyAnnotationCollectionOfCollectionPropertyTest()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -330,7 +330,7 @@ namespace EdmLibTests.FunctionalUtilities
             return new XElement[] { XElement.Parse(csdl) };
         }
 
-        public static IEnumerable<XElement> ValueAnnotationEnumTest()
+        public static IEnumerable<XElement> VocabularyAnnotationEnumTest()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -364,7 +364,7 @@ namespace EdmLibTests.FunctionalUtilities
             return new XElement[] { XElement.Parse(csdl) };
         }
 
-        public static IEnumerable<XElement> ValueAnnotationDuplicatePropertyNameTest()
+        public static IEnumerable<XElement> VocabularyAnnotationDuplicatePropertyNameTest()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -387,7 +387,7 @@ namespace EdmLibTests.FunctionalUtilities
             return new XElement[] { XElement.Parse(csdl) };
         }
 
-        public static IEnumerable<XElement> ValueAnnotationEmptyValueAnnotations()
+        public static IEnumerable<XElement> VocabularyAnnotationEmptyVocabularyAnnotations()
         {
             var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>

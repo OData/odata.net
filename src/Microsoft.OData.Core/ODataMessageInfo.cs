@@ -4,14 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -21,35 +18,38 @@ namespace Microsoft.OData.Core
     public sealed class ODataMessageInfo
     {
         /// <summary>The parsed content type as <see cref="ODataMediaType"/>.</summary>
-        public ODataMediaType MediaType { get; internal set; }
+        public ODataMediaType MediaType { get; set; }
 
         /// <summary>The encoding specified in the charset parameter of contentType or the default encoding from MediaType.</summary>
-        public Encoding Encoding { get; internal set; }
+        public Encoding Encoding { get; set; }
 
         /// <summary>The <see cref="IEdmModel"/> for the payload.</summary>
-        public IEdmModel Model { get; internal set; }
+        public IEdmModel Model { get; set; }
 
         /// <summary>
         /// Whether is dealing with response.
         /// </summary>
-        public bool IsResponse { get; internal set; }
+        public bool IsResponse { get; set; }
 
         /// <summary>
-        /// Function to get the message stream
+        /// The optional URL converter to perform custom URL conversion for URLs read from the payload.
         /// </summary>
-        public Func<Stream> GetMessageStream { get; internal set; }
+        public IODataPayloadUriConverter PayloadUriConverter { get; set; }
 
         /// <summary>
-        /// The optional URL resolver to perform custom URL resolution for URLs read from the payload.
+        /// The optional dependency injection container to get related services for message writing.
         /// </summary>
-        public IODataUrlResolver UrlResolver { get; internal set; }
+        public IServiceProvider Container { get; set; }
 
-#if ODATALIB_ASYNC
         /// <summary>
-        /// Function to get the message stream task
+        /// Whether the message should be read or written asynchronously.
         /// </summary>
-        public Func<Task<Stream>> GetMessageStreamAsync { get; internal set; }
-#endif
+        public bool IsAsync { get; set; }
+
+        /// <summary>
+        /// The message stream created by GetMessageStream or GetMessageAsync.
+        /// </summary>
+        public Stream MessageStream { get; set; }
 
         /// <summary>
         /// The payload kind for the message, currently used by <see cref="ODataRawInputContext"/> only.

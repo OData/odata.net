@@ -10,7 +10,7 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using global::Xunit;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Xunit.Performance;
 
     public class ODataReaderFeedTests
@@ -20,48 +20,56 @@ namespace Microsoft.OData.Performance
         private static readonly IEdmEntityType TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeed()
         { 
             ReadFeedTestAndMeasure("Entry.json", 1000, true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatial()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, true); 
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedWithExpansions()
         {
             ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatialWithExpansions()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, true);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeed_NoValidation()
         {
             ReadFeedTestAndMeasure("Entry.json", 1000, false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatial_NoValidation()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedWithExpansions_NoValidation()
         {
             ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, false);
         }
 
         [Benchmark]
+        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatialWithExpansions_NoValidation()
         {
             ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, false);
@@ -77,7 +85,7 @@ namespace Microsoft.OData.Performance
                     {
                         using (var messageReader = ODataMessageHelper.CreateMessageReader(stream, Model, ODataMessageKind.Response, isFullValidation))
                         {
-                            ODataReader feedReader = messageReader.CreateODataFeedReader(TestEntitySet, TestEntityType);
+                            ODataReader feedReader = messageReader.CreateODataResourceSetReader(TestEntitySet, TestEntityType);
                             while (feedReader.Read()) { }
                         }
                     }

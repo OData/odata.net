@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #region Namespaces
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
@@ -71,29 +71,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             new WcfDsServerPayloadElementNormalizer(format, payloadEdmModel).Recurse(payloadElement);
             return payloadElement;
-        }
-
-        /// <summary>
-        /// Visits the entity instance.
-        /// </summary>
-        /// <param name="payloadElement">The payload element being visited.</param>
-        public override void Visit(EntityInstance payloadElement)
-        {
-            base.Visit(payloadElement);
-
-            if (format == ODataFormat.Atom)
-            {
-                if (!IsMLE(payloadElement))
-                {
-                    payloadElement.RemoveAnnotations(typeof(IsMediaLinkEntryAnnotation));
-                }
-
-                payloadElement.RemoveAnnotations(typeof(SelfLinkAnnotation));
-                payloadElement.EditLink = null;
-                payloadElement.StreamEditLink = null;
-                payloadElement.StreamSourceLink = null;
-                payloadElement.StreamETag = null;
-            }
         }
 
         private bool IsMLE(EntityInstance entity)

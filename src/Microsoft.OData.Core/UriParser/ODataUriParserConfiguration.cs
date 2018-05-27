@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using System.Collections.Generic;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -16,16 +15,39 @@ namespace Microsoft.OData.Core.UriParser
     /// </summary>
     internal sealed class ODataUriParserConfiguration
     {
-        /// <summary>
-        /// Model to use for metadata binding.
-        /// </summary>
-        private readonly IEdmModel model;
-
         /// <summary>The conventions to use when parsing URLs.</summary>
-        private ODataUrlConventions urlConventions = ODataUrlConventions.Default;
+        private ODataUrlKeyDelimiter urlKeyDelimiter;
 
         /// <summary>The resolver to use when parsing URLs.</summary>
-        private ODataUriResolver uriResolver = new ODataUriResolver();
+        private ODataUriResolver uriResolver;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
+        public ODataUriParserConfiguration(IEdmModel model, IServiceProvider container)
+        {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+
+            this.Model = model;
+            this.Container = container;
+            this.Resolver = ODataUriResolver.GetUriResolver(container);
+            this.urlKeyDelimiter = ODataUrlKeyDelimiter.GetODataUrlKeyDelimiter(container);
+
+            if (this.Container == null)
+            {
+                this.Settings = new ODataUriParserSettings();
+            }
+            else
+            {
+                this.Settings = this.Container.GetRequiredService<ODataUriParserSettings>();
+            }
+
+            this.EnableUriTemplateParsing = false;
+        }
 
         /// <summary>
         /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
@@ -33,14 +55,9 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="model">Model to use for metadata binding.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input model is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input serviceRoot is not an AbsoluteUri</exception>
-        public ODataUriParserConfiguration(IEdmModel model)
+        internal ODataUriParserConfiguration(IEdmModel model)
+            : this(model, null)
         {
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-
-            this.model = model;
-            this.Settings = new ODataUriParserSettings();
-            this.EnableUriTemplateParsing = false;
-            this.EnableCaseInsensitiveUriFunctionIdentifier = false;
         }
 
         /// <summary>
@@ -51,27 +68,29 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// Gets the model for this ODataUriParser
         /// </summary>
-        public IEdmModel Model
-        {
-            get { return this.model; }
-        }
+        public IEdmModel Model { get; private set; }
 
         /// <summary>
-        /// Gets or Sets the <see cref="ODataUrlConventions"/> to use while parsing, specifically
+        /// The optional dependency injection container to get related services for URI parsing.
+        /// </summary>
+        public IServiceProvider Container { get; private set; }
+
+        /// <summary>
+        /// Gets or Sets the <see cref="ODataUrlKeyDelimiter"/> to use while parsing, specifically
         /// whether to recognize keys as segments or not.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Throws if the input value is null.</exception>
-        public ODataUrlConventions UrlConventions
+        public ODataUrlKeyDelimiter UrlKeyDelimiter
         {
             get
             {
-                return this.urlConventions;
+                return this.urlKeyDelimiter;
             }
 
             set
             {
-                ExceptionUtils.CheckArgumentNotNull(value, "UrlConventions");
-                this.urlConventions = value;
+                ExceptionUtils.CheckArgumentNotNull(value, "UrlKeyDelimiter");
+                this.urlKeyDelimiter = value;
             }
         }
 
@@ -79,6 +98,11 @@ namespace Microsoft.OData.Core.UriParser
         /// Gets or Sets a callback that returns a BatchReferenceSegment (to be used for $0 in batch)
         /// </summary>
         public Func<string, BatchReferenceSegment> BatchReferenceCallback { get; set; }
+
+        /// <summary>
+        /// Gets or sets the function which can be used to parse an unknown path segment or an open property segment.
+        /// </summary>
+        public ParseDynamicPathSegment ParseDynamicPathSegmentFunc { get; set; }
 
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
@@ -94,6 +118,17 @@ namespace Microsoft.OData.Core.UriParser
             {
                 Resolver.EnableCaseInsensitive = value;
             }
+        }
+
+        /// <summary>
+        /// Gets or Sets an option whether no dollar query options is enabled.
+        /// If it is enabled, the '$' prefix of system query options becomes optional.
+        /// For example, "select" and "$select" are equivalent in this case.
+        /// </summary>
+        internal bool EnableNoDollarQueryOptions
+        {
+            get { return this.Resolver.EnableNoDollarQueryOptions; }
+            set { this.Resolver.EnableNoDollarQueryOptions = value; }
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
 
     /// <summary>Utility functions for processing Expression trees</summary>
@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client
         private static readonly Dictionary<PropertyInfo, MethodInfo> propertiesAsMethodsMap;
 
         /// <summary>
-        /// Cache used to store element type (TElement) for key Type if key Type implements IEnumerable{TElement} or 
+        /// Cache used to store element type (TElement) for key Type if key Type implements IEnumerable{TElement} or
         /// null if the key Type does not implement IEnumerable{T} e.g.:
         /// List{Entity} - Entity
         /// Entity       - null
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client
         static TypeSystem()
         {
 #if !PORTABLELIB
-            const int ExpectedCount = 35;
+            const int ExpectedCount = 43;
 #endif
             // string functions
             expressionMethodMap = new Dictionary<MethodInfo, string>(EqualityComparer<MethodInfo>.Default);
@@ -80,13 +80,23 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Minutes", typeof(int)).GetGetMethod(), @"minute");
             expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Seconds", typeof(int)).GetGetMethod(), @"second");
 
-            // datetimeoffset methods (date? time?)
+            // datetimeoffset methods
+            expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Date", typeof(DateTime)).GetGetMethod(), @"date");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Day", typeof(int)).GetGetMethod(), @"day");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Hour", typeof(int)).GetGetMethod(), @"hour");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Month", typeof(int)).GetGetMethod(), @"month");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Minute", typeof(int)).GetGetMethod(), @"minute");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Second", typeof(int)).GetGetMethod(), @"second");
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Year", typeof(int)).GetGetMethod(), @"year");
+
+            // datetime methods
+            expressionMethodMap.Add(typeof(DateTime).GetProperty("Date", typeof(DateTime)).GetGetMethod(), @"date");
+            expressionMethodMap.Add(typeof(DateTime).GetProperty("Day", typeof(int)).GetGetMethod(), @"day");
+            expressionMethodMap.Add(typeof(DateTime).GetProperty("Hour", typeof(int)).GetGetMethod(), @"hour");
+            expressionMethodMap.Add(typeof(DateTime).GetProperty("Month", typeof(int)).GetGetMethod(), @"month");
+            expressionMethodMap.Add(typeof(DateTime).GetProperty("Minute", typeof(int)).GetGetMethod(), @"minute");
+            expressionMethodMap.Add(typeof(DateTime).GetProperty("Second", typeof(int)).GetGetMethod(), @"second");
+            expressionMethodMap.Add(typeof(DateTime).GetProperty("Year", typeof(int)).GetGetMethod(), @"year");
 
             // timespan methods
             expressionMethodMap.Add(typeof(TimeSpan).GetProperty("Hours", typeof(int)).GetGetMethod(), @"hour");
@@ -115,7 +125,7 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(GeographyOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeographyPoint), typeof(GeographyPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
             expressionMethodMap.Add(typeof(GeometryOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeometryPoint), typeof(GeometryPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
 
-            // Portable Lib can be 35 or 33 depending on if its running on Silverlight or not, disabling in this case           
+            // Portable Lib can be 35 or 33 depending on if its running on Silverlight or not, disabling in this case
 #if !PORTABLELIB
             Debug.Assert(expressionMethodMap.Count == ExpectedCount, "expressionMethodMap.Count == ExpectedCount");
 #endif
@@ -145,6 +155,9 @@ namespace Microsoft.OData.Client
                 typeof(DateTimeOffset).GetProperty("Day", typeof(int)),
                 typeof(DateTimeOffset).GetProperty("Day", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
+                typeof(DateTimeOffset).GetProperty("Date", typeof(DateTime)),
+                typeof(DateTimeOffset).GetProperty("Date", typeof(DateTime)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
                 typeof(DateTimeOffset).GetProperty("Hour", typeof(int)),
                 typeof(DateTimeOffset).GetProperty("Hour", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
@@ -159,6 +172,29 @@ namespace Microsoft.OData.Client
             propertiesAsMethodsMap.Add(
                 typeof(DateTimeOffset).GetProperty("Year", typeof(int)),
                 typeof(DateTimeOffset).GetProperty("Year", typeof(int)).GetGetMethod());
+
+            propertiesAsMethodsMap.Add(
+                typeof(DateTime).GetProperty("Day", typeof(int)),
+                typeof(DateTime).GetProperty("Day", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(DateTime).GetProperty("Date", typeof(DateTime)),
+                typeof(DateTime).GetProperty("Date", typeof(DateTime)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(DateTime).GetProperty("Hour", typeof(int)),
+                typeof(DateTime).GetProperty("Hour", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(DateTime).GetProperty("Minute", typeof(int)),
+                typeof(DateTime).GetProperty("Minute", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(DateTime).GetProperty("Second", typeof(int)),
+                typeof(DateTime).GetProperty("Second", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(DateTime).GetProperty("Month", typeof(int)),
+                typeof(DateTime).GetProperty("Month", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(DateTime).GetProperty("Year", typeof(int)),
+                typeof(DateTime).GetProperty("Year", typeof(int)).GetGetMethod());
+
             propertiesAsMethodsMap.Add(
                 typeof(TimeSpan).GetProperty("Hours", typeof(int)),
                 typeof(TimeSpan).GetProperty("Hours", typeof(int)).GetGetMethod());
@@ -189,7 +225,7 @@ namespace Microsoft.OData.Client
                 typeof(Date).GetProperty("Day", typeof(int)),
                 typeof(Date).GetProperty("Day", typeof(int)).GetGetMethod());
 
-            Debug.Assert(propertiesAsMethodsMap.Count == 16, "propertiesAsMethodsMap.Count == 16");
+            Debug.Assert(propertiesAsMethodsMap.Count == 24, "propertiesAsMethodsMap.Count == 24");
         }
 
         /// <summary>

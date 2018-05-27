@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Visitors;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
     /// Fake implementation of SingleEntityNode. This is intended to be used as a parent node in unit tests.
@@ -47,6 +46,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.set; }
+        }
+
+        public override IEdmStructuredTypeReference StructuredTypeReference
+        {
+            get { return this.typeReference; }
         }
 
         public override IEdmEntityTypeReference EntityTypeReference

@@ -7,13 +7,10 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Net;
-    using System.Reflection;
     using System.Threading;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using Microsoft.Test.OData.DependencyInjection;
 
     [Serializable]
     public abstract class ODataReflectionDataSource : IODataDataSource
@@ -34,10 +31,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
         private IODataOperationProvider operationProvider;
         [NonSerialized]
         private IEdmModel model;
+        [NonSerialized]
+        private IServiceProvider container;
 
         public virtual IEdmModel Model
         {
-            get { return this.model ?? (this.model = this.CreateModel()); }
+            get { return this.model ?? (this.model = (IEdmModel)this.container.GetService(typeof(IEdmModel))); }
         }
 
         public IODataQueryProvider QueryProvider
@@ -80,10 +79,28 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
             }
         }
 
+        public IServiceProvider Container
+        {
+            get
+            {
+                if (this.container == null)
+                {
+                    this.container = ContainerBuilderHelper.BuildContainer(this.ConfigureContainer);
+                }
+
+                return this.container;
+            }
+        }
+
         public abstract void Reset();
 
         public abstract void Initialize();
 
         protected abstract IEdmModel CreateModel();
+
+        protected virtual void ConfigureContainer(IContainerBuilder builder)
+        {
+            builder.AddService(ServiceLifetime.Singleton, sp => this.CreateModel());
+        }
     }
 }

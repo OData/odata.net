@@ -50,7 +50,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -97,7 +97,7 @@ namespace EdmLibTests.FunctionalTests
 </Schema>";
             IEdmModel model;
             IEnumerable<EdmError> error;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
             Assert.IsTrue(parsed, "parsed");
 
             IEdmComplexType complexType = (IEdmComplexType)model.FindType("Grumble.Smod");
@@ -126,7 +126,7 @@ namespace EdmLibTests.FunctionalTests
 </Schema>";
             IEdmModel model;
             IEnumerable<EdmError> error;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
             Assert.IsFalse(parsed, "parsed");
 
             var location = (CsdlLocation)error.First().ErrorLocation;
@@ -240,7 +240,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx), new XmlReaderSettings(), edmxUri), getReferencedSchemaFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx), new XmlReaderSettings(), edmxUri), getReferencedSchemaFunc, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
 
             var errorList = errors.ToArray();

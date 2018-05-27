@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Service
 {
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Public class which wraps the ODataWriter instance.
@@ -19,6 +19,7 @@ namespace Microsoft.OData.Service
         /// </summary>
         private readonly ODataWriter innerWriter;
 
+        internal ODataWriter InnerWriter { get { return innerWriter; } }
         /// <summary>
         /// Creates a new instance of DataServiceODataWriter.
         /// </summary>
@@ -33,7 +34,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Start writing a feed.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataFeed and the collection instance to serialize.</param>
+        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataResourceSet and the collection instance to serialize.</param>
         public virtual void WriteStart(DataServiceODataWriterFeedArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
@@ -43,7 +44,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Start writing an entry.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataEntry and the entry instance to serialize.</param>
+        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataResource and the entry instance to serialize.</param>
         public virtual void WriteStart(DataServiceODataWriterEntryArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
@@ -53,8 +54,8 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Start writing a navigation link.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNavigationLink to serialize.</param>
-        public virtual void WriteStart(DataServiceODataWriterNavigationLinkArgs args)
+        /// <param name="args">DataServiceODataWriterNestedResourceInfoArgs which contains the ODataNestedResourceInfo to serialize.</param>
+        public virtual void WriteStart(DataServiceODataWriterNestedResourceInfoArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
             this.innerWriter.WriteStart(args.NavigationLink);
@@ -71,7 +72,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Finish writing a feed.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataFeed and the collection instance that is being serialized.</param>
+        /// <param name="args">DataServiceODataWriterFeedArgs which contains the ODataResourceSet and the collection instance that is being serialized.</param>
         /// <remarks>
         /// This method calls WriteEnd() and it's used to track when WriteEnd is called for feed.
         /// </remarks>
@@ -84,7 +85,7 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Finish writing an entry.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataEntry and the entry instance that is being serialized.</param>
+        /// <param name="args">DataServiceODataWriterEntryArgs which contains the ODataResource and the entry instance that is being serialized.</param>
         /// <remarks>
         /// This method calls WriteEnd() and it's used to track when WriteEnd is called for Entry.
         /// </remarks>
@@ -97,11 +98,11 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Finish writing a navigation link.
         /// </summary>
-        /// <param name="args">DataServiceODataWriterNavigationLinkArgs which contains the ODataNavigationLink that is being serialized.</param>
+        /// <param name="args">DataServiceODataWriterNestedResourceInfoArgs which contains the ODataNestedResourceInfo that is being serialized.</param>
         /// <remarks>
         /// This method calls WriteEnd() and it's used to track when WriteEnd is called for Link.
         /// </remarks>
-        public virtual void WriteEnd(DataServiceODataWriterNavigationLinkArgs args)
+        public virtual void WriteEnd(DataServiceODataWriterNestedResourceInfoArgs args)
         {
             WebUtil.CheckArgumentNull(args, "args");
             this.WriteEnd();

@@ -6,7 +6,6 @@
 
 
 using FluentAssertions;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests

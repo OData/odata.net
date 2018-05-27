@@ -6,7 +6,7 @@
 
 using FluentAssertions.Collections;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Contains generic fluent assertion extensions.

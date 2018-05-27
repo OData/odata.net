@@ -10,10 +10,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.PrimitiveValueConverters;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -34,8 +32,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsSchema, IEnumerable<IEdmEntityContainer>> entityContainersCache = new Cache<CsdlSemanticsSchema, IEnumerable<IEdmEntityContainer>>();
         private static readonly Func<CsdlSemanticsSchema, IEnumerable<IEdmEntityContainer>> ComputeEntityContainersFunc = (me) => me.ComputeEntityContainers();
 
-        private readonly Cache<CsdlSemanticsSchema, IEnumerable<IEdmValueTerm>> valueTermsCache = new Cache<CsdlSemanticsSchema, IEnumerable<IEdmValueTerm>>();
-        private static readonly Func<CsdlSemanticsSchema, IEnumerable<IEdmValueTerm>> ComputeValueTermsFunc = (me) => me.ComputeValueTerms();
+        private readonly Cache<CsdlSemanticsSchema, IEnumerable<IEdmTerm>> termsCache = new Cache<CsdlSemanticsSchema, IEnumerable<IEdmTerm>>();
+        private static readonly Func<CsdlSemanticsSchema, IEnumerable<IEdmTerm>> ComputeTermsFunc = (me) => me.ComputeTerms();
 
         private readonly Cache<CsdlSemanticsSchema, Dictionary<string, object>> labeledExpressionsCache = new Cache<CsdlSemanticsSchema, Dictionary<string, object>>();
         private static readonly Func<CsdlSemanticsSchema, Dictionary<string, object>> ComputeLabeledExpressionsFunc = (me) => me.ComputeLabeledExpressions();
@@ -70,9 +68,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.operationsCache.GetValue(this, ComputeFunctionsFunc, null); }
         }
 
-        public IEnumerable<IEdmValueTerm> ValueTerms
+        public IEnumerable<IEdmTerm> Terms
         {
-            get { return this.valueTermsCache.GetValue(this, ComputeValueTermsFunc, null); }
+            get { return this.termsCache.GetValue(this, ComputeTermsFunc, null); }
         }
 
         public IEnumerable<IEdmEntityContainer> EntityContainers
@@ -112,9 +110,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return FindSchemaElement<IEdmSchemaType>(name, ExtensionMethods.FindTypeInModelTree);
         }
 
-        public IEdmValueTerm FindValueTerm(string name)
+        public IEdmTerm FindTerm(string name)
         {
-            return FindSchemaElement<IEdmValueTerm>(name, FindValueTerm);
+            return FindSchemaElement<IEdmTerm>(name, FindTerm);
         }
 
         public IEdmEntityContainer FindEntityContainer(string name)
@@ -179,9 +177,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return this.model.ReplaceAlias(name);
         }
 
-        private static IEdmValueTerm FindValueTerm(IEdmModel model, string name)
+        private static IEdmTerm FindTerm(IEdmModel model, string name)
         {
-            return model.FindValueTerm(name);
+            return model.FindTerm(name);
         }
 
         private static IEdmEntityContainer FindEntityContainer(IEdmModel model, string name)
@@ -198,7 +196,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             switch (expression.ExpressionKind)
             {
-                case Expressions.EdmExpressionKind.Labeled:
+                case EdmExpressionKind.Labeled:
                     {
                         CsdlLabeledExpression labeledElement = (CsdlLabeledExpression)expression;
                         string label = labeledElement.Label;
@@ -225,28 +223,28 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         break;
                     }
 
-                case Expressions.EdmExpressionKind.Collection:
+                case EdmExpressionKind.Collection:
                     foreach (CsdlExpressionBase element in ((CsdlCollectionExpression)expression).ElementValues)
                     {
                         AddLabeledExpressions(element, result);
                     }
 
                     break;
-                case Expressions.EdmExpressionKind.OperationApplication:
+                case EdmExpressionKind.FunctionApplication:
                     foreach (CsdlExpressionBase argument in ((CsdlApplyExpression)expression).Arguments)
                     {
                         AddLabeledExpressions(argument, result);
                     }
 
                     break;
-                case Expressions.EdmExpressionKind.Record:
+                case EdmExpressionKind.Record:
                     foreach (CsdlPropertyValue property in ((CsdlRecordExpression)expression).PropertyValues)
                     {
                         AddLabeledExpressions(property.Expression, result);
                     }
 
                     break;
-                case Expressions.EdmExpressionKind.If:
+                case EdmExpressionKind.If:
                     {
                         CsdlIfExpression ifExpression = (CsdlIfExpression)expression;
                         AddLabeledExpressions(ifExpression.Test, result);
@@ -256,10 +254,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         break;
                     }
 
-                case Expressions.EdmExpressionKind.IsType:
+                case EdmExpressionKind.IsType:
                     AddLabeledExpressions(((CsdlIsTypeExpression)expression).Operand, result);
                     break;
-                case Expressions.EdmExpressionKind.Cast:
+                case EdmExpressionKind.Cast:
                     AddLabeledExpressions(((CsdlCastExpression)expression).Operand, result);
                     break;
                 default:
@@ -300,12 +298,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return result;
         }
 
-        private IEnumerable<IEdmValueTerm> ComputeValueTerms()
+        private IEnumerable<IEdmTerm> ComputeTerms()
         {
-            List<IEdmValueTerm> terms = new List<IEdmValueTerm>();
+            List<IEdmTerm> terms = new List<IEdmTerm>();
             foreach (CsdlTerm valueTerm in this.schema.Terms)
             {
-                terms.Add(new CsdlSemanticsValueTerm(this, valueTerm));
+                terms.Add(new CsdlSemanticsTerm(this, valueTerm));
             }
 
             return terms;
@@ -349,8 +347,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             foreach (var typeDefinition in schema.TypeDefinitions)
             {
-                this.AttachDefaultPrimitiveValueConverter(typeDefinition);
-                types.Add(new CsdlSemanticsTypeDefinitionDefinition(this, typeDefinition));
+                CsdlSemanticsTypeDefinitionDefinition edmTypeDefinition =
+                    new CsdlSemanticsTypeDefinitionDefinition(this, typeDefinition);
+                this.AttachDefaultPrimitiveValueConverter(typeDefinition, edmTypeDefinition);
+                types.Add(edmTypeDefinition);
             }
 
             foreach (var structuredType in this.schema.StructuredTypes)
@@ -383,7 +383,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// matches the default unsigned int type definitions defined in <see cref="PrimitiveValueConverterConstants"/>.
         /// </summary>
         /// <param name="typeDefinition">The type definition to be added to the schema.</param>
-        private void AttachDefaultPrimitiveValueConverter(CsdlTypeDefinition typeDefinition)
+        /// <param name="edmTypeDefinition">The EDM type definition to be added to the model.</param>
+        private void AttachDefaultPrimitiveValueConverter(CsdlTypeDefinition typeDefinition, IEdmTypeDefinition edmTypeDefinition)
         {
             Debug.Assert(typeDefinition != null, "typeDefinition != null");
 
@@ -410,15 +411,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 return;
             }
 
-            this.Model.SetPrimitiveValueConverter(
-                String.Format(CultureInfo.InvariantCulture, "{0}.{1}", this.Namespace, typeDefinition.Name),
-                DefaultPrimitiveValueConverter.Instance);
+            this.Model.SetPrimitiveValueConverter(edmTypeDefinition, DefaultPrimitiveValueConverter.Instance);
         }
 
         /// <summary>
         /// All of the labeled expressions in a schema are collected into a dictionary so that references to them can be bound.
         /// The elements of the dictionary are Csdl objects and not CsdlSemantics objects because the semantics objects are not created
-        /// until and unless necessary. 
+        /// until and unless necessary.
         /// </summary>
         /// <returns>A dictionary containing entries for all labeled expressions in the schema.</returns>
         private Dictionary<string, object> ComputeLabeledExpressions()
@@ -433,7 +432,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             foreach (CsdlStructuredType schemaType in this.schema.StructuredTypes)
             {
                 AddLabeledExpressions(schemaType.VocabularyAnnotations, result);
-                foreach (CsdlProperty property in schemaType.Properties)
+                foreach (CsdlProperty property in schemaType.StructuralProperties)
                 {
                     AddLabeledExpressions(property.VocabularyAnnotations, result);
                 }

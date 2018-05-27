@@ -13,7 +13,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Net;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -880,6 +879,14 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             payloadElement.Add(PayloadBuilder.PrimitiveProperty(propertyName, value));
             return payloadElement;
+        }
+
+        public static EntityInstance IsComplex(this EntityInstance entity, bool isComplex)
+        {
+            ExceptionUtilities.CheckArgumentNotNull(entity, "entity");
+
+            entity.IsComplex = isComplex;
+            return entity;
         }
 
         /// <summary>

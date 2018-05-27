@@ -8,7 +8,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataCollectionStartSerializationInfoTests
     {
@@ -29,14 +29,14 @@ namespace Microsoft.OData.Core.Tests
         public void SettingNullCollectionTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.CollectionTypeName = null;
-            action.ShouldThrow<ArgumentNullException>().WithMessage("CollectionTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("CollectionTypeName"));
         }
 
         [Fact]
         public void SettingEmptyCollectionTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.CollectionTypeName = "";
-            action.ShouldThrow<ArgumentNullException>().WithMessage("CollectionTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("CollectionTypeName"));
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Core.Tests
         public void ValidatingSerializationInfoShouldThrowIfCollectionTypeNameNotSet()
         {
             Action action = () => ODataCollectionStartSerializationInfo.Validate(new ODataCollectionStartSerializationInfo());
-            action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.CollectionTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.CollectionTypeName"));
         }
     }
 }

@@ -7,12 +7,11 @@
 namespace AstoriaUnitTests.Stubs.DataServiceProvider
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using Microsoft.OData.Service.Providers;
     using System.Linq;
     using System.Reflection;
-    using Microsoft.OData.Core;
+    using Microsoft.OData.Service.Providers;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     /// <summary>Implementation of the <see cref="IDataServiceQueryProvider"/>.</summary>
     public class DSPResourceQueryProvider : IDataServiceQueryProvider

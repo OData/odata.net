@@ -4,13 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Class that knows how to bind a LambdaToken.
     /// </summary>
@@ -55,7 +53,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // Bind the expression
             SingleValueNode expression = this.BindExpressionToken(lambdaToken.Expression);
-            
+
             // Create the node
             LambdaNode lambdaNode = NodeFactory.CreateLambdaNode(state, parent, expression, rangeVariable, lambdaToken.Kind);
 
@@ -67,7 +65,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             return lambdaNode;
         }
-        
+
         /// <summary>
         /// Bind the parent of the LambdaToken
         /// </summary>
@@ -87,7 +85,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     throw new ODataException(ODataErrorStrings.MetadataBinder_LambdaParentMustBeCollection);
                 }
 
-                // support open collection properties 
+                // support open collection properties
                 return new CollectionOpenPropertyAccessNode(parentOpenPropertyNode.Source, parentOpenPropertyNode.Name);
             }
 

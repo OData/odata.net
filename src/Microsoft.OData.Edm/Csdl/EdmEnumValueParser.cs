@@ -53,7 +53,7 @@ namespace Microsoft.OData.Edm.Csdl
                 enumType = new UnresolvedEnumType(enumTypeName, location);
                 isUnresolved = true;
             }
-            else if (enumValues.Count() > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntergeType(enumType)))
+            else if (enumValues.Count() > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType)))
             {
                 return false;
             }
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="enumType">The enum type.</param>
         /// <returns>True if the underlying type of enum type is integer type.</returns>
-        internal static bool IsEnumIntergeType(IEdmEnumType enumType)
+        internal static bool IsEnumIntegerType(IEdmEnumType enumType)
         {
             return enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.Byte ||
                    enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.SByte ||

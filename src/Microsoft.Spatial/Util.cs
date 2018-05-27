@@ -32,7 +32,7 @@ namespace Microsoft.Spatial
 
         /// <summary>SecurityException exception type</summary>
         private static readonly Type SecurityType = typeof(System.Security.SecurityException);
-        
+
         /// <summary>
         /// Check if input is null, throw an ArgumentNullException if it is.
         /// </summary>

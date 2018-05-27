@@ -28,11 +28,6 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         public string DefaultValueString { get; set; }
 
         /// <summary>
-        /// Gets or sets the concurrency mode
-        /// </summary>
-        public EdmConcurrencyMode ConcurrencyMode { get; set; }
-
-        /// <summary>
         /// Gets or sets the type
         /// </summary>
         public IEdmTypeReference Type { get; set; }

@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using System;
     using System.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         public void SingletonClientTest()
         {
             Random rand = new Random();
-            ODataFormat[] formats = { ODataFormat.Atom, ODataFormat.Json };
+            ODataFormat[] formats = { ODataFormat.Json };
             foreach (var format in formats)
             {
                 //Query Singleton
@@ -229,7 +229,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 Name = tmpAssertId + "Name",
                 Number = tmpAssertId
             };
-            
+
             TestClientContext.AddRelatedObject(publicCompany, "Assets", tmpAssert);
             TestClientContext.SaveChanges();
 

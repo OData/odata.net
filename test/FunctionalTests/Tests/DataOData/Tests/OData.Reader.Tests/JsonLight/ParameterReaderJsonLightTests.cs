@@ -8,9 +8,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 {
     #region Namespaces
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -95,7 +94,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Custom property annotation for a valid parameter property (after property) - should fail.",
                     Json = "{\"p1\":42, \"" + JsonLightUtils.GetPropertyAnnotationName("p1", "my.custom") + "\":42, \"p2\":\"Vienna\"}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "my.custom", "p1"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "my.custom", "p1"),
                 },
                 new
                 {

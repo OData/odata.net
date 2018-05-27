@@ -4,18 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
-
     /// <summary>
-    /// Base class for Applt transformation tokens
+    /// Base class for Apply transformation tokens
     /// </summary>
-    internal abstract class ApplyTransformationToken : QueryToken
+    public abstract class ApplyTransformationToken : QueryToken
     {
     }
 }

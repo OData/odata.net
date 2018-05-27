@@ -8,7 +8,6 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
 {
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT

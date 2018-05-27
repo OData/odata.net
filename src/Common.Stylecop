@@ -90,6 +90,11 @@
     </Analyzer>
     <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.MaintainabilityRules">
       <Rules>
+        <Rule Name="DebugAssertMustProvideMessageText">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
         <Rule Name="FileMayOnlyContainASingleClass">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
@@ -130,6 +135,11 @@
     </Analyzer>
     <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.ReadabilityRules">
       <Rules>
+        <Rule Name="ParameterMustNotSpanMultipleLines">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>         
         <Rule Name="UseBuiltInTypeAlias">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
@@ -175,11 +185,21 @@
             <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>
         </Rule>
+        <Rule Name="UsingDirectivesMustBePlacedWithinNamespace">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
       </Rules>
       <AnalyzerSettings />
     </Analyzer>
     <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.SpacingRules">
       <Rules>
+        <Rule Name="CodeMustNotContainMultipleWhitespaceInARow">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>           
         <Rule Name="MemberAccessSymbolsMustBeSpacedCorrectly">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
@@ -268,6 +288,34 @@
           </RuleSettings>
         </Rule>
       </Rules>
+    </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.OData.StyleCop.LineLengthRule">
+      <Rules>
+        <Rule Name="LineMustNotBeTooLong">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+    </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.OData.StyleCop.UsingOutsideNamespaceRule">
+      <Rules>
+        <Rule Name="UsingDirectivesMustBePlacedOutsideNamespace">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+    </Analyzer>
+    <Analyzer AnalyzerId="Microsoft.OData.StyleCop.UseVarRule">
+      <Rules>
+        <Rule Name="UseVarWhenPossible">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>
+      </Rules>
+      <AnalyzerSettings />
     </Analyzer>
   </Analyzers>
 </StyleCopSettings>

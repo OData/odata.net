@@ -4,18 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>
@@ -59,16 +56,7 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataRawInputContext(
-                this,
-                messageInfo.GetMessageStream(),
-                messageInfo.Encoding,
-                messageReaderSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver,
-                messageInfo.PayloadKind);
+            return new ODataRawInputContext(this, messageInfo, messageReaderSettings);
         }
 
         /// <summary>
@@ -84,24 +72,16 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return new ODataRawOutputContext(
-                this,
-                messageInfo.GetMessageStream(),
-                messageInfo.Encoding,
-                messageWriterSettings,
-                messageInfo.IsResponse,
-                /*synchronous*/ true,
-                messageInfo.Model,
-                messageInfo.UrlResolver);
+            return new ODataRawOutputContext(this, messageInfo, messageWriterSettings);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="settings">Configuration settings of the OData reader.</param>
-        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
+        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s
         /// that are supported with the specified payload.</returns>
         public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
             ODataMessageInfo messageInfo,
@@ -124,18 +104,8 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return messageInfo.GetMessageStreamAsync()
-                .FollowOnSuccessWith(
-                    (streamTask) => (ODataInputContext)new ODataRawInputContext(
-                        this,
-                        streamTask.Result,
-                        messageInfo.Encoding,
-                        messageReaderSettings,
-                        messageInfo.IsResponse,
-                        /*synchronous*/ false,
-                        messageInfo.Model,
-                        messageInfo.UrlResolver,
-                        messageInfo.PayloadKind));
+            return Task.FromResult<ODataInputContext>(
+                new ODataRawInputContext(this, messageInfo, messageReaderSettings));
         }
 
         /// <summary>
@@ -151,17 +121,8 @@ namespace Microsoft.OData.Core
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "message");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return messageInfo.GetMessageStreamAsync()
-                .FollowOnSuccessWith(
-                    (streamTask) => (ODataOutputContext)new ODataRawOutputContext(
-                        this,
-                        streamTask.Result,
-                        messageInfo.Encoding,
-                        messageWriterSettings,
-                        messageInfo.IsResponse,
-                        /*synchronous*/ false,
-                        messageInfo.Model,
-                        messageInfo.UrlResolver));
+            return Task.FromResult<ODataOutputContext>(
+                new ODataRawOutputContext(this, messageInfo, messageWriterSettings));
         }
 #endif
 

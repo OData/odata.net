@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
     #endregion Namespaces
 
     /// <summary>
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
-        /// Will write the function's name and start the JSONP scope if we are writing a response and the 
+        /// Will write the function's name and start the JSONP scope if we are writing a response and the
         /// JSONP function name is not null or empty.
         /// </summary>
         /// <param name="jsonWriter">JsonWriter to write to.</param>
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Core.Json
         }
 
         /// <summary>
-        /// If we are writing a response and the given Json Padding function name is not null or empty 
+        /// If we are writing a response and the given Json Padding function name is not null or empty
         /// this function will close the JSONP scope.
         /// </summary>
         /// <param name="jsonWriter">JsonWriter to write to.</param>
@@ -188,12 +188,12 @@ namespace Microsoft.OData.Core.Json
 
                 if (detail.Target != null)
                 {
-                    // "target": "$search" 
+                    // "target": "$search"
                     jsonWriter.WriteName(JsonConstants.ODataErrorTargetName);
                     jsonWriter.WriteValue(detail.Target);
                 }
 
-                // "message": "$search query option not supported",                
+                // "message": "$search query option not supported",
                 jsonWriter.WriteName(JsonConstants.ODataErrorMessageName);
                 jsonWriter.WriteValue(detail.Message ?? string.Empty);
 

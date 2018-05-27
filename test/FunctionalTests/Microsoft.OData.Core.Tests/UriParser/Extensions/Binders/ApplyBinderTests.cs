@@ -5,17 +5,15 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
+namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
 {
     public class ApplyBinderTests
     {
@@ -27,7 +25,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
 
         public ApplyBinderTests()
         {
-            var implicitRangeVariable = new EntityRangeVariable(ExpressionConstants.It,
+            ResourceRangeVariable implicitRangeVariable = new ResourceRangeVariable(ExpressionConstants.It,
                 HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
             this._bindingState = new BindingState(_configuration) { ImplicitRangeVariable = implicitRangeVariable };
             this._bindingState.RangeVariables.Push(
@@ -37,7 +35,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWithNullShouldThrow()
         {
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             Action bind = () => binder.BindApply(null);
             bind.ShouldThrow<ArgumentNullException>();
         }
@@ -45,53 +43,80 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWithAggregateShouldReturnApplyClause()
         {
-            var tokens = _parser.ParseApply("aggregate(UnitPrice with sum as TotalPrice)");
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate(UnitPrice with sum as TotalPrice)");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
-            var actual = binder.BindApply(tokens);
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
             actual.Transformations.Should().HaveCount(1);
 
-            var transformations = actual.Transformations.ToList();
-            var aggregate = transformations[0] as AggregateTransformationNode;
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            AggregateTransformationNode aggregate = transformations[0] as AggregateTransformationNode;
 
             aggregate.Should().NotBeNull();
             aggregate.Kind.Should().Be(TransformationNodeKind.Aggregate);
-            aggregate.Expressions.Should().NotBeNull();
-            aggregate.Expressions.Should().HaveCount(1);
+            aggregate.AggregateExpressions.Should().NotBeNull();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
 
-            var statements = aggregate.Expressions.ToList();
-            var statement = statements[0];
+            List<AggregateExpressionBase> statements = aggregate.AggregateExpressions.ToList();
+            AggregateExpression statement = statements[0] as AggregateExpression;
+            statement.Should().NotBeNull();
             VerifyIsFakeSingleValueNode(statement.Expression);
             statement.Method.Should().Be(AggregationMethod.Sum);
             statement.Alias.Should().Be("TotalPrice");
         }
 
         [Fact]
+        public void BindApplyWithCountInAggregateShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate($count as TotalCount)");
+
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            AggregateTransformationNode aggregate = transformations[0] as AggregateTransformationNode;
+
+            aggregate.Should().NotBeNull();
+            aggregate.Kind.Should().Be(TransformationNodeKind.Aggregate);
+            aggregate.Expressions.Should().NotBeNull();
+            aggregate.Expressions.Should().HaveCount(1);
+
+            List<AggregateExpression> statements = aggregate.Expressions.ToList();
+            AggregateExpression statement = statements[0];
+
+            statement.Method.Should().Be(AggregationMethod.VirtualPropertyCount);
+            statement.Alias.Should().Be("TotalCount");
+        }
+
+        [Fact]
         public void BindApplyWithAggregateAndFilterShouldReturnApplyClause()
         {
-            var tokens = _parser.ParseApply("aggregate(StockQuantity with sum as TotalPrice)/filter(TotalPrice eq 100)");
-            var metadataBiner = new MetadataBinder(_bindingState);
-            var binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
-            var actual = binder.BindApply(tokens);
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate(StockQuantity with sum as TotalPrice)/filter(TotalPrice eq 100)");
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
             actual.Transformations.Should().HaveCount(2);
 
-            var transformations = actual.Transformations.ToList();
-            var filter = transformations[1] as FilterTransformationNode;
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            FilterTransformationNode filter = transformations[1] as FilterTransformationNode;
 
             filter.Should().NotBeNull();
             filter.Kind.Should().Be(TransformationNodeKind.Filter);
 
-            var filtareClause = filter.FilterClause;
-            filtareClause.Expression.Should().NotBeNull();
-            var binaryOperation = filtareClause.Expression as BinaryOperatorNode;
+            FilterClause filterClause = filter.FilterClause;
+            filterClause.Expression.Should().NotBeNull();
+            BinaryOperatorNode binaryOperation = filterClause.Expression as BinaryOperatorNode;
             binaryOperation.Should().NotBeNull();
-            var propertyConvertNode = binaryOperation.Left as ConvertNode;
+            ConvertNode propertyConvertNode = binaryOperation.Left as ConvertNode;
             propertyConvertNode.Should().NotBeNull();
-            var propertyAccess = propertyConvertNode.Source as SingleValueOpenPropertyAccessNode;
+            SingleValueOpenPropertyAccessNode propertyAccess = propertyConvertNode.Source as SingleValueOpenPropertyAccessNode;
             propertyAccess.Should().NotBeNull();
             propertyAccess.Name.Should().Be("TotalPrice");
         }
@@ -99,23 +124,23 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWitGroupByShouldReturnApplyClause()
         {
-            var tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice))");
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
-            var actual = binder.BindApply(tokens);
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
             actual.Transformations.Should().HaveCount(1);
 
-            var transformations = actual.Transformations.ToList();
-            var groupBy = transformations[0] as GroupByTransformationNode;
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
 
             groupBy.Should().NotBeNull();
             groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
             groupBy.GroupingProperties.Should().NotBeNull();
             groupBy.GroupingProperties.Should().HaveCount(2);
 
-            var groupingProperties = groupBy.GroupingProperties.ToList();
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
             VerifyIsFakeSingleValueNode(groupingProperties[0].Expression);
             VerifyIsFakeSingleValueNode(groupingProperties[1].Expression);
 
@@ -125,29 +150,29 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWitGroupByWithNavigationShouldReturnApplyClause()
         {
-            var tokens = _parser.ParseApply("groupby((MyDog/City))");
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/City))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindMethodReturnsPersonDogNameNavigation, _bindingState);
-            var actual = binder.BindApply(tokens);
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturnsPersonDogNameNavigation, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
             actual.Transformations.Should().HaveCount(1);
 
-            var transformations = actual.Transformations.ToList();
-            var groupBy = transformations[0] as GroupByTransformationNode;
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
 
             groupBy.Should().NotBeNull();
             groupBy.Kind.Should().Be(TransformationNodeKind.GroupBy);
             groupBy.GroupingProperties.Should().NotBeNull();
             groupBy.GroupingProperties.Should().HaveCount(1);
 
-            var groupingProperties = groupBy.GroupingProperties.ToList();
-            var dogNode = groupingProperties[0];
+            List<GroupByPropertyNode> groupingProperties = groupBy.GroupingProperties.ToList();
+            GroupByPropertyNode dogNode = groupingProperties[0];
             dogNode.Expression.Should().BeNull();
             dogNode.Name.Should().Be("MyDog");
             dogNode.ChildTransformations.Should().HaveCount(1);
 
-            var nameNode = dogNode.ChildTransformations[0];
+            GroupByPropertyNode nameNode = dogNode.ChildTransformations[0];
 
             dogNode.Name.Should().Be("MyDog");
 
@@ -159,34 +184,35 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWitGroupByWithAggregateShouldReturnApplyClause()
         {
-            var tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice), aggregate(UnitPrice with sum as TotalPrice))");
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice), aggregate(UnitPrice with sum as TotalPrice))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
-            var actual = binder.BindApply(tokens);
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
             actual.Transformations.Should().HaveCount(1);
 
-            var transformations = actual.Transformations.ToList();
-            var groupBy = transformations[0] as GroupByTransformationNode;
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode groupBy = transformations[0] as GroupByTransformationNode;
 
-            var aggregate = groupBy.ChildTransformations;
+            TransformationNode aggregate = groupBy.ChildTransformations;
             aggregate.Should().NotBeNull();
         }
 
         [Fact]
         public void BindApplyWitFilterShouldReturnApplyClause()
         {
-            var tokens = _parser.ParseApply("filter(UnitPrice eq 5)");
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("filter(UnitPrice eq 5)");
 
-            var binder = new ApplyBinder(BindMethodReturnsBooleanPrimitive, _bindingState);
-            var actual = binder.BindApply(tokens);
+            ApplyBinder binder = new ApplyBinder(BindMethodReturnsBooleanPrimitive, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+            actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
             actual.Transformations.Should().HaveCount(1);
 
-            var transformations = actual.Transformations.ToList();
-            var filter = transformations[0] as FilterTransformationNode;
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            FilterTransformationNode filter = transformations[0] as FilterTransformationNode;
 
             filter.Should().NotBeNull();
             filter.Kind.Should().Be(TransformationNodeKind.Filter);
@@ -197,31 +223,59 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWitMultipleTokensShouldReturnApplyClause()
         {
-            var tokens =
+            IEnumerable<QueryToken> tokens =
                 _parser.ParseApply(
                     "groupby((ID, SSN, LifeTime))/aggregate(LifeTime with sum as TotalLife)/groupby((TotalLife))/aggregate(TotalLife with sum as TotalTotalLife)");
 
-            var state = new BindingState(_configuration);
-            var metadataBiner = new MetadataBinder(_bindingState);
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
 
-            var binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
-            var actual = binder.BindApply(tokens);
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
             actual.Transformations.Should().HaveCount(4);
 
-            var transformations = actual.Transformations.ToList();
-            var firstGroupBy = transformations[0] as GroupByTransformationNode;
+            List<TransformationNode> transformations = actual.Transformations.ToList();
+            GroupByTransformationNode firstGroupBy = transformations[0] as GroupByTransformationNode;
             firstGroupBy.Should().NotBeNull();
-            var firstAggregate = transformations[1] as AggregateTransformationNode;
+            TransformationNode firstAggregate = transformations[1] as AggregateTransformationNode;
             firstAggregate.Should().NotBeNull();
-            var scecondGroupBy = transformations[2] as GroupByTransformationNode;
+            TransformationNode scecondGroupBy = transformations[2] as GroupByTransformationNode;
             scecondGroupBy.Should().NotBeNull();
-            var scecondAggregate = transformations[3] as AggregateTransformationNode;
+            AggregateTransformationNode scecondAggregate = transformations[3] as AggregateTransformationNode;
             scecondAggregate.Should().NotBeNull();
         }
 
-        private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
+        [Fact]
+        public void BindApplyWithEntitySetAggregationReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens =
+                _parser.ParseApply(
+                    "groupby((LifeTime),aggregate(MyPaintings($count as Count)))");
+
+            BindingState state = new BindingState(_configuration);
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            GroupByTransformationNode groupBy = actual.Transformations.First() as GroupByTransformationNode;
+            groupBy.Should().NotBeNull();
+            groupBy.GroupingProperties.Should().HaveCount(1);
+
+            AggregateTransformationNode aggregate = groupBy.ChildTransformations as AggregateTransformationNode;
+            aggregate.Should().NotBeNull();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
+
+            EntitySetAggregateExpression entitySetAggregate = aggregate.AggregateExpressions.First() as EntitySetAggregateExpression;
+            entitySetAggregate.Should().NotBeNull();
+        }
+
+    private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
 
         private static SingleValueNode BindMethodReturnsBooleanPrimitive(QueryToken token)
         {
@@ -231,7 +285,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
         public static void VerifyIsFakeSingleValueNode(QueryNode node)
         {
             node.Should().NotBeNull();
-            node.Should().BeSameAs(FakeBindMethods.FakeSingleValueProperty);
+            node.Should().BeSameAs(FakeBindMethods.FakeSingleComplexProperty);
         }
     }
 }

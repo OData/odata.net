@@ -8,7 +8,7 @@ namespace EdmLibTests.StubEdm
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmEntitySet
@@ -63,7 +63,7 @@ namespace EdmLibTests.StubEdm
         /// <summary>
         /// Gets the path that represents current path of the navigation source. 
         /// </summary>
-        public Microsoft.OData.Edm.Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return null; }
         }
@@ -72,6 +72,14 @@ namespace EdmLibTests.StubEdm
         /// Gets the type of this navigation source.
         /// </summary>
         public IEdmType Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to include in service doucment
+        /// </summary>
+        public bool IncludeInServiceDocument
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Sets the navigation target for a particular navigation property.
@@ -104,6 +112,16 @@ namespace EdmLibTests.StubEdm
             {
                 return null;
             }
+        }
+
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            return FindNavigationTarget(navigationProperty);
+        }
+
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            return null;
         }
     }
 }

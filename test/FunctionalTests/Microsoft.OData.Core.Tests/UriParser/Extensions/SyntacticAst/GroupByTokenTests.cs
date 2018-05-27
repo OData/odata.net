@@ -7,18 +7,17 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Aggregation;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Extensions.SyntacticAst
+namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
 {
     public class GroupByTokenTests
     {
         private IEnumerable<EndPathToken> properties = new List<EndPathToken>();
 
-        private AggregateToken aggregate = new AggregateToken(new List<AggregateExpressionToken>());
+        private AggregateToken aggregate = new AggregateToken(new List<AggregateTokenBase>());
 
         [Fact]
         public void PropertiesCannotBeNull()

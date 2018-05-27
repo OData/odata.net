@@ -4,17 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Validation;
-
     public static class CamelCaseInMemoryModel
     {
         public static IEdmModel CreateModel(string ns)
@@ -29,17 +25,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             model.AddElement(orderDetail);
 
             var billingType = new EdmEnumType(ns, "billingType", EdmPrimitiveTypeKind.Int64, false);
-            billingType.AddMember("fund", new EdmIntegerConstant(0));
-            billingType.AddMember("refund", new EdmIntegerConstant(1));
-            billingType.AddMember("chargeback", new EdmIntegerConstant(2));
+            billingType.AddMember("fund", new EdmEnumMemberValue(0));
+            billingType.AddMember("refund", new EdmEnumMemberValue(1));
+            billingType.AddMember("chargeback", new EdmEnumMemberValue(2));
             model.AddElement(billingType);
 
             var category = new EdmEnumType(ns, "category", true);
-            category.AddMember("toy", new EdmIntegerConstant(1));
-            category.AddMember("food", new EdmIntegerConstant(2));
-            category.AddMember("cloth", new EdmIntegerConstant(4));
-            category.AddMember("drink", new EdmIntegerConstant(8));
-            category.AddMember("computer", new EdmIntegerConstant(16));
+            category.AddMember("toy", new EdmEnumMemberValue(1));
+            category.AddMember("food", new EdmEnumMemberValue(2));
+            category.AddMember("cloth", new EdmEnumMemberValue(4));
+            category.AddMember("drink", new EdmEnumMemberValue(8));
+            category.AddMember("computer", new EdmEnumMemberValue(16));
             model.AddElement(category);
 
             var namedObject = new EdmEntityType(ns, "namedObject");

@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
@@ -40,7 +40,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             public Func<WriterTestConfiguration, bool> SkipForConfiguration { get; set; }
         }
 
-        [TestMethod, Variation(Description = "Validates correct checking of states in ODataCollectionWriter implementations.")]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Validates correct checking of states in ODataCollectionWriter implementations.")]
         public void CollectionWriterStatesTest()
         {
             var testCases = new CollectionWriterStatesTestDescriptor[]
@@ -142,7 +144,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 EnumExtensionMethods.GetValues<CollectionWriterAction>().Cast<CollectionWriterAction>(),
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => !tc.IsRequest && tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testCase, writerAction, testConfiguration) =>
                 {
                     using (TestStream stream = new TestStream())

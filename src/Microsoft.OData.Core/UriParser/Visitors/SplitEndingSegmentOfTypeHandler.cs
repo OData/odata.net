@@ -4,13 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// Split Last Segment Of Certain Kind, the result of this handler is two part of ODataPath,
@@ -116,6 +113,15 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Handle an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public override void Handle(AnnotationSegment segment)
+        {
+            CommonHandler(segment);
+        }
+
+        /// <summary>
         /// Handle an OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
@@ -137,7 +143,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Handle an OpenPropertySegment
         /// </summary>
         /// <param name="segment">the segment to Handle</param>
-        public override void Handle(OpenPropertySegment segment)
+        public override void Handle(DynamicPathSegment segment)
         {
             CommonHandler(segment);
         }
@@ -218,5 +224,3 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
     }
 }
-
-#endif

@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+
     #endregion Namespaces
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core
         private readonly IEdmTypeReference expectedItemType;
 
         /// <summary>Checker to detect duplicate property names on complex collection items.</summary>
-        private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
+        private IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
 
         /// <summary>The collection validator instance if no expected item type has been specified; otherwise null.</summary>
         private CollectionWithoutExpectedTypeValidator collectionValidator;
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Core
             Start,
 
             /// <summary>
-            /// The writer has started writing and is writing the wrapper elements for the 
+            /// The writer has started writing and is writing the wrapper elements for the
             /// collection items (if any). No or all items have been written.
             /// </summary>
             Collection,
@@ -102,19 +102,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>Checker to detect duplicate property names on complex collection items.</summary>
-        protected DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        protected IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
         {
             get
             {
-                if (this.duplicatePropertyNamesChecker == null)
-                {
-                    this.duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(
-                        this.outputContext.MessageWriterSettings.WriterBehavior.AllowDuplicatePropertyNames,
-                        this.outputContext.WritingResponse,
-                        !this.outputContext.MessageWriterSettings.EnableFullValidation);
-                }
-
-                return this.duplicatePropertyNamesChecker;
+                return duplicatePropertyNameChecker
+                       ?? (duplicatePropertyNameChecker
+                           = outputContext.MessageWriterSettings.Validator.CreateDuplicatePropertyNameChecker());
             }
         }
 
@@ -159,7 +153,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -183,7 +177,7 @@ namespace Microsoft.OData.Core
             this.WriteStartImplementation(collectionStart);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a collection.
         /// </summary>
@@ -206,7 +200,7 @@ namespace Microsoft.OData.Core
             this.WriteItemImplementation(item);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously start writing a collection item.
         /// </summary>
@@ -234,7 +228,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously finish writing a collection.
         /// </summary>
@@ -302,7 +296,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         protected abstract void FlushSynchronously();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -359,7 +353,7 @@ namespace Microsoft.OData.Core
         {
             this.StartPayloadInStartState();
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
-            this.InterceptException(() => 
+            this.InterceptException(() =>
                 {
                     if (this.expectedItemType == null)
                     {
@@ -393,7 +387,7 @@ namespace Microsoft.OData.Core
 
             this.InterceptException(() =>
             {
-                this.outputContext.WriterValidator.ValidateCollectionItem(item, true /* isNullable */);
+                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
                 this.WriteCollectionItem(item, this.expectedItemType);
             });
         }
@@ -464,7 +458,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataCollectionWriterCore_AsyncCallOnSyncWriter);
@@ -542,7 +536,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Leave the current writer scope and return to the previous scope. 
+        /// Leave the current writer scope and return to the previous scope.
         /// When reaching the top-level replace the 'Started' scope with a 'Completed' scope.
         /// </summary>
         /// <remarks>Note that this method is never called once an error has been written or a fatal exception has been thrown.</remarks>

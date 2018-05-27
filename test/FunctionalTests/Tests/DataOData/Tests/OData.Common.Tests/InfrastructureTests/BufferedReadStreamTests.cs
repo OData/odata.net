@@ -174,7 +174,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 
             public static Task<BufferedReadStreamTestWrapper> BufferStream(Stream inputStream)
             {
-                Type asyncBufferedStreamType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.BufferedReadStream");
+                Type asyncBufferedStreamType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.BufferedReadStream");
 
                 object task = ReflectionUtils.InvokeMethod(asyncBufferedStreamType, "BufferStreamAsync", inputStream);
                 return (Task<BufferedReadStreamTestWrapper>)ReflectionUtils.InvokeGenericMethod(

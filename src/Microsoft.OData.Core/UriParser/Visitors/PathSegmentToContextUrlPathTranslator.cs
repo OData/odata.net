@@ -4,9 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System;
@@ -15,9 +13,8 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Evaluation;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -47,7 +44,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="keyAsSegment">Whether use key as segment</param>
         private PathSegmentToContextUrlPathTranslator(bool keyAsSegment)
         {
-            KeySerializer = KeySerializer.Create(UrlConvention.CreateWithExplicitValue(keyAsSegment));
+            this.KeySerializer = KeySerializer.Create(keyAsSegment);
         }
 
         /// <summary>
@@ -130,6 +127,17 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Translate an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(AnnotationSegment segment)
+        {
+            Debug.Assert(segment != null, "segment != null");
+            return "/" + segment.Term.FullName();
+        }
+
+        /// <summary>
         /// Translate a OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
@@ -156,10 +164,10 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
-        public override string Translate(OpenPropertySegment segment)
+        public override string Translate(DynamicPathSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
-            return "/" + segment.PropertyName;
+            return "/" + segment.Identifier;
         }
 
         /// <summary>
@@ -223,5 +231,3 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
     }
 }
-
-#endif

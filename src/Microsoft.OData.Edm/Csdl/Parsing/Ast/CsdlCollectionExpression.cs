@@ -23,9 +23,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.elementValues = new List<CsdlExpressionBase>(elementValues);
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.Collection; }
+            get { return EdmExpressionKind.Collection; }
         }
 
         public CsdlTypeReference Type

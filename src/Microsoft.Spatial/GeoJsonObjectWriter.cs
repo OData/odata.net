@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace Microsoft.Data.Spatial
         /// Stores the last object fully serialized
         /// </summary>
         private object lastCompletedObject;
-        
+
         /// <summary>
         /// Get the top level json object
         /// </summary>
@@ -65,7 +65,7 @@ namespace Microsoft.Data.Spatial
             // switch into the new container
             this.containers.Push(jsonObject);
         }
-        
+
         /// <summary>
         /// Start a new json array scope
         /// </summary>
@@ -154,7 +154,7 @@ namespace Microsoft.Data.Spatial
         /// <remarks>
         /// When inserting to a dictionary, the name-value pair comes across multiple pipeline calls
         /// Therefore we need to buffer the name part and wait for the value part.
-        /// You can get into an incorrect state (caught by asserts) if you add a property name without 
+        /// You can get into an incorrect state (caught by asserts) if you add a property name without
         /// using it immediately next.
         /// </remarks>
         private String GetAndClearCurrentPropertyName()

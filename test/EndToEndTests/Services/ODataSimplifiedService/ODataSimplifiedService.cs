@@ -15,9 +15,5 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     [ServiceBehavior(IncludeExceptionDetailInFaults = true, InstanceContextMode = InstanceContextMode.Single)]
     public class ODataSimplifiedService : ODataService<ODataSimplifiedDataSource>
     {
-        public override RootRequestHandler CreateRootRequestHandler(HttpMethod method, ODataSimplifiedDataSource dataSource)
-        {
-            return new ODataSimplifiedRequestHandler(method, dataSource);
-        }
     }
 }

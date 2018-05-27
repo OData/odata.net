@@ -4,13 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using Microsoft.Spatial;
-
     /// <summary>
     /// Helper methods for Geometry types
     /// </summary>

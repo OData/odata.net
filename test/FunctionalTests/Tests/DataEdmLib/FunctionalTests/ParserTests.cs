@@ -60,30 +60,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(NullableStringUnbounded.IsUnicode == false, "The parser failed to process the value of the unicode facet");
         }
 
-        [Ignore] // Ignored during FI
-        [TestMethod]
-        public void ParserTestComplexTypeWithBaseType()
-        {
-            IEnumerable<XElement> csdlElements = ModelBuilder.ComplexTypeWithBaseType(this.EdmVersion);
-            IEdmModel resultEdmModel = this.GetParserResult(csdlElements);
-            // This test case manually validates the result since the Taupo does not support the using statements cross-referrenced in multiple schemas. 
-
-            // FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.third.VALIDeCOMPLEXtYPE1's base type == FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.ValidComplexType2
-            var schemaElements = resultEdmModel.SchemaElements.Where(n => n.Name == "VALIDeCOMPLEXtYPE1" && n.Namespace == "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.third");
-            Assert.AreEqual(schemaElements.Count(), 1, "EdmModel.SchemaElements returns more than expected");
-            var baseComplexType = (schemaElements.Single() as IEdmComplexType).BaseType as IEdmComplexType;
-            Assert.AreEqual(baseComplexType.Namespace, "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second", "The result namespace value is not correct.");
-            Assert.AreEqual(baseComplexType.Name, "ValidComplexType2", "The result type name is not correct.");
-
-            // FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.ValidComplexType2's base type == FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validComplexType1
-            resultEdmModel = this.GetParserResult(csdlElements);
-            schemaElements = resultEdmModel.SchemaElements.Where(n => n.Name == "ValidComplexType2" && n.Namespace == "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second");
-            Assert.AreEqual(schemaElements.Count(), 1, "EdmModel.SchemaElements returns more than expected");
-            baseComplexType = (schemaElements.Single() as IEdmComplexType).BaseType as IEdmComplexType;
-            Assert.AreEqual(baseComplexType.Namespace, "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first", "The result namespace value is not correct.");
-            Assert.AreEqual(baseComplexType.Name, "validComplexType1", "The result type name is not correct.");
-        }
-
         [TestMethod]
         public void ParserTestSimpleAllPrimitiveTypesDefaultValueCheck()
         {
@@ -189,12 +165,12 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
             var csdlElements = new XElement[] { XElement.Parse(csdl) };
-            bool parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdl)) }, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errors.Count(), "2 errors");
             Assert.AreEqual(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "10: Unexpected Xml Element");
 
-            parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { csdlElements.First().CreateReader() }, out model, out errors);
+            parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { csdlElements.First().CreateReader() }, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errors.Count(), "2 errors");
             Assert.AreEqual(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "10: Unexpected Xml Element");
@@ -209,16 +185,16 @@ namespace EdmLibTests.FunctionalTests
 
             foreach (var csdl in csdls)
             {
-                bool parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { csdl.CreateReader() }, out model, out errors);
+                bool parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { csdl.CreateReader() }, out model, out errors);
                 Assert.IsTrue(parsed, "parsed");
 
                 // http://docs.oasis-open.org/odata/ns/edm is a namespace that OData uses. 
                 var csdlStringNewNamespace = csdl.ToString();
-                parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
+                parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
                 Assert.IsTrue(parsed, "parsed");
 
                 csdlStringNewNamespace = csdl.ToString().Replace(csdl.GetDefaultNamespace().NamespaceName, "http://schemas.microsoft.com/ado/2007/09/edm");
-                parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
+                parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
                 Assert.IsFalse(parsed, "The parser should not support other invalid namespaces than http://docs.oasis-open.org/odata/ns/edm.");
             }
         }
@@ -250,8 +226,6 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 { 4, 10, EdmErrorCode.NavigationSourceTypeHasNoKeys },
-                { 7, 6, EdmErrorCode.KeyMissingOnEntityType },
-                { 5, 10, EdmErrorCode.NavigationSourceTypeHasNoKeys },
             };
 
             IEnumerable<EdmError> actualErrors = null;

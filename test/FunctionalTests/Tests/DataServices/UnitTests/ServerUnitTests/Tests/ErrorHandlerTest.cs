@@ -65,7 +65,9 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
-        [TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void ErrorResponseContentTypeHasCharset()
         {
             // regression tests for these bugs :
@@ -112,7 +114,9 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
-        [TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void ProcessExceptionTest()
         {
             Type[] exceptionTypes = new Type[]

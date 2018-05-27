@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System.Collections.ObjectModel;
     using Microsoft.OData.Service;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class CustomInstanceAnnotationsWriter : DataServiceODataWriter
     {
@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             {
                 current = new CustomInstanceAnnotationsDescriptor
                 {
-                    TypeOfAnnotatedItem = typeof(ODataFeed),
+                    TypeOfAnnotatedItem = typeof(ODataResourceSet),
                     Parent = null,
                     AnnotationsOnStart = new Collection<ODataInstanceAnnotation>(CustomInstanceAnnotationsGenerator.GetAnnotations("AnnotationOnFeed.AddedBeforeWriteStart.").Concat(CustomInstanceAnnotationsGenerator.GetAnnotationsWithTermInMetadata()).ToList()),
                     AnnotationsOnEnd = new Collection<ODataInstanceAnnotation>(CustomInstanceAnnotationsGenerator.GetAnnotations("AnnotationOnFeed.AddedAfterWriteStart.").ToList()),
@@ -42,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             {
                 current = new CustomInstanceAnnotationsDescriptor 
                 { 
-                    TypeOfAnnotatedItem = typeof(ODataFeed),
+                    TypeOfAnnotatedItem = typeof(ODataResourceSet),
                     Parent = writtenItemsStack.Peek(),
                     AnnotationsOnEnd = new Collection<ODataInstanceAnnotation>(), 
                     AnnotationsOnStart = new Collection<ODataInstanceAnnotation>()
@@ -69,7 +69,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
         {
             CustomInstanceAnnotationsDescriptor current = new CustomInstanceAnnotationsDescriptor
             {
-                TypeOfAnnotatedItem = typeof(ODataEntry),
+                TypeOfAnnotatedItem = typeof(ODataResource),
                 Parent = writtenItemsStack.Count == 0 ? null : writtenItemsStack.Peek(),
                 AnnotationsOnStart = new Collection<ODataInstanceAnnotation>(CustomInstanceAnnotationsGenerator.GetAnnotations("AnnotationOnEntry.AddedBeforeWriteStart.").ToList()),
                 AnnotationsOnEnd = new Collection<ODataInstanceAnnotation>(CustomInstanceAnnotationsGenerator.GetAnnotations("AnnotationOnEntry.AddedAfterWriteStart.").Concat(CustomInstanceAnnotationsGenerator.GetAnnotationsWithTermInMetadata()).ToList()),
@@ -90,9 +90,9 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             }
         }
 
-        public override void WriteStart(DataServiceODataWriterNavigationLinkArgs args)
+        public override void WriteStart(DataServiceODataWriterNestedResourceInfoArgs args)
         {
-            var current = new CustomInstanceAnnotationsDescriptor { TypeOfAnnotatedItem = typeof(ODataNavigationLink) };
+            var current = new CustomInstanceAnnotationsDescriptor { TypeOfAnnotatedItem = typeof(ODataNestedResourceInfo) };
             writtenItemsStack.Push(current);
             base.WriteStart(args);
         }

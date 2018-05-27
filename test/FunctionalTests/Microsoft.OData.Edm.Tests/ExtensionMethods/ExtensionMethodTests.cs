@@ -8,12 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Library.Expressions;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Tests;
 using Microsoft.OData.Edm.Tests.Validation;
 using Microsoft.OData.Edm.Validation;
@@ -309,7 +308,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             IEnumerable<EdmError> errorsFound = null;
             IEdmOperationParameter operationParameter = null;
-            IEnumerable<IEdmNavigationProperty> navigationProperties = null;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
 
             functionImport.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out errorsFound).Should().BeFalse();
             errorsFound.ToList().Should().HaveCount(0);
@@ -328,7 +327,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             IEnumerable<EdmError> errorsFound = null;
             IEdmOperationParameter operationParameter = null;
-            IEnumerable<IEdmNavigationProperty> navigationProperties = null;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
 
             functionImport.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out errorsFound).Should().BeTrue();
             errorsFound.ToList().Should().HaveCount(0);
@@ -351,7 +350,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             IEnumerable<EdmError> errorsFound = null;
             IEdmOperationParameter operationParameter = null;
-            IEnumerable<IEdmNavigationProperty> navigationProperties = null;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
             IEdmEntityType entityType = null;
 
             function.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound).Should().BeFalse();
@@ -370,7 +369,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             IEnumerable<EdmError> errorsFound = null;
             IEdmOperationParameter operationParameter = null;
-            IEnumerable<IEdmNavigationProperty> navigationProperties = null;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
             IEdmEntityType entityType = null;
 
             function.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound).Should().BeTrue();
@@ -383,7 +382,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         [Fact]
         public void TryGetEntitySetWithBoundCsdlSemanticOperationParameterShouldReturnTrueAndHaveNoErrors()
         {
-            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null, null);
+            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null);
             var csdlSchema = CsdlBuilder.Schema("FQ.NS", csdlStructuredTypes: new[] { csdlEntityType });
 
             var csdlModel = new CsdlModel();
@@ -394,16 +393,15 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             var action = new CsdlAction(
                 "Checkout",
-                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), null, testLocation) },
+                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), testLocation) },
                 new CsdlNamedTypeReference("Edm.String", false, testLocation),
                 true /*isBound*/,
                 "entity",
-                null /*documentation*/,
                 testLocation);
 
             var semanticAction = new CsdlSemanticsAction(semanticSchema, action);
             IEdmOperationParameter edmParameter;
-            IEnumerable<IEdmNavigationProperty> navigationProperties;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties;
             IEdmEntityType entityType;
             IEnumerable<EdmError> errors;
             semanticAction.TryGetRelativeEntitySetPath(semanticSchema.Model, out edmParameter, out navigationProperties, out entityType, out errors).Should().BeTrue();
@@ -701,7 +699,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             IEnumerable<EdmError> errorsFound = null;
             IEdmOperationParameter operationParameter = null;
-            IEnumerable<IEdmNavigationProperty> navigationProperties = null;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
             IEdmEntityType entityType = null;
 
             operation.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);
@@ -712,7 +710,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             IEnumerable<EdmError> errorsFound = null;
             IEdmOperationParameter operationParameter = null;
-            IEnumerable<IEdmNavigationProperty> navigationProperties = null;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
             IEdmEntityType entityType = null;
 
             operation.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);
@@ -726,7 +724,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             IEnumerable<EdmError> errorsFound = null;
             IEdmOperationParameter operationParameter = null;
-            IEnumerable<IEdmNavigationProperty> navigationProperties = null;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = null;
             IEdmEntityType entityType = null;
 
             operation.TryGetRelativeEntitySetPath(model, out operationParameter, out navigationProperties, out entityType, out errorsFound);

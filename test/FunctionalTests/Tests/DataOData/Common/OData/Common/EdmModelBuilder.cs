@@ -37,7 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 IEdmModel model;
                 IEnumerable<EdmError> errors;
-                if (!CsdlReader.TryParse(new XmlReader[] { reader }, references, out model, out errors))
+                if (!SchemaReader.TryParse(new XmlReader[] { reader }, references, out model, out errors))
                 {
                     throw new AssertionFailedException("Model loading failed: " + string.Join("\r\n", errors.Select(e => e.ErrorLocation.ToString() + ": " + e.ErrorMessage)));
                 }
@@ -73,7 +73,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 IEdmModel model;
                 IEnumerable<EdmError> errors;
-                if (!CsdlReader.TryParse(new XmlReader[] { reader }, references, out model, out errors))
+                if (!SchemaReader.TryParse(new XmlReader[] { reader }, references, out model, out errors))
                 {
                     throw new AssertionFailedException("Model loading failed: " + string.Join("\r\n", errors.Select(e => e.ErrorLocation.ToString() + ": " + e.ErrorMessage)));
                 }

@@ -4,23 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Metadata
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
+namespace Microsoft.OData.Metadata
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Atom;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Class with utility methods for dealing with OData metadata.
     /// </summary>
@@ -36,30 +29,14 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(model != null, "model != null");
             Debug.Assert(annotatable != null, "annotatable != null");
-            
+
             IEnumerable<IEdmDirectValueAnnotation> annotations = model.DirectValueAnnotations(annotatable);
             if (annotations == null)
             {
                 return null;
             }
 
-            return annotations.Where(a => a.NamespaceUri == AtomConstants.ODataMetadataNamespace);
-        }
-
-        /// <summary>
-        /// Gets the EDM type of an OData instance from the <see cref="ODataTypeAnnotation"/> of the instance (if available).
-        /// </summary>
-        /// <param name="annotatable">The OData instance to get the EDM type for.</param>
-        /// <returns>The EDM type of the <paramref name="annotatable"/> if available in the <see cref="ODataTypeAnnotation"/> annotation.</returns>
-        internal static IEdmTypeReference GetEdmType(this ODataAnnotatable annotatable)
-        {
-            if (annotatable == null)
-            {
-                return null;
-            }
-
-            ODataTypeAnnotation typeAnnotation = annotatable.GetAnnotation<ODataTypeAnnotation>();
-            return typeAnnotation == null ? null : typeAnnotation.Type;
+            return annotations.Where(a => a.NamespaceUri == ODataMetadataConstants.ODataMetadataNamespace);
         }
 
         /// <summary>
@@ -87,7 +64,7 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="model">The model to use.</param>
         /// <param name="expectedType">The expected type for the type name being resolved, or null if none is available.</param>
         /// <param name="typeName">The name of the type to resolve.</param>
-        /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
+        /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
         /// <param name="typeKind">The type kind of the type, if it could be determined. This will be None if we couldn't tell. It might be filled
         /// even if the method returns null, for example for Collection types with item types which are not recognized.</param>
         /// <returns>The <see cref="IEdmType"/> representing the type specified by the <paramref name="typeName"/>;
@@ -96,15 +73,10 @@ namespace Microsoft.OData.Core.Metadata
             IEdmModel model,
             IEdmType expectedType,
             string typeName,
-            ODataReaderBehavior readerBehavior,
+            Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             out EdmTypeKind typeKind)
         {
-            Func<IEdmType, string, IEdmType> customTypeResolver = readerBehavior == null ? null : readerBehavior.TypeResolver;
-            Debug.Assert(
-                customTypeResolver == null || readerBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient,
-                "Custom type resolver can only be specified in WCF DS Client behavior.");
-
-            return ResolveTypeName(model, expectedType, typeName, customTypeResolver, out typeKind);
+            return ResolveTypeName(model, expectedType, typeName, clientCustomTypeResolver, out typeKind);
         }
 
         /// <summary>
@@ -118,7 +90,6 @@ namespace Microsoft.OData.Core.Metadata
         /// even if the method returns null, for example for Collection types with item types which are not recognized.</param>
         /// <returns>The <see cref="IEdmType"/> representing the type specified by the <paramref name="typeName"/>;
         /// or null if no such type could be found.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "IEdmModel.FindType is allowed here and all other places should call this method to get to the type.")]
         internal static IEdmType ResolveTypeName(
             IEdmModel model,
             IEdmType expectedType,
@@ -181,7 +152,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="model">The model to search for operations.</param>
         /// <param name="edmTypeResolver">The edm type resolver to get the parameter type.</param>
         /// <returns>An enumeration of operations that are always bindable to the given type.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")] 
         internal static IEdmOperation[] CalculateBindableOperationsForType(IEdmType bindingType, IEdmModel model, EdmTypeResolver edmTypeResolver)
         {
             Debug.Assert(model != null, "model != null");
@@ -222,12 +192,12 @@ namespace Microsoft.OData.Core.Metadata
         /// <param name="qualifiedTermName">The name of the term to lookup, including the namespace.</param>
         /// <param name="model">The model to look in.</param>
         /// <returns>The type of the term in the model, or null if no matching term was found.</returns>
-        internal static IEdmTypeReference LookupTypeOfValueTerm(string qualifiedTermName, IEdmModel model)
+        internal static IEdmTypeReference LookupTypeOfTerm(string qualifiedTermName, IEdmModel model)
         {
             Debug.Assert(model != null, "model != null");
 
             IEdmTypeReference typeFromModel = null;
-            IEdmValueTerm termFromModel = model.FindValueTerm(qualifiedTermName);
+            IEdmTerm termFromModel = model.FindTerm(qualifiedTermName);
             if (termFromModel != null)
             {
                 typeFromModel = termFromModel.Type;

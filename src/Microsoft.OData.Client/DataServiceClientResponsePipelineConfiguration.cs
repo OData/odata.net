@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
 
     /// <summary>
@@ -18,10 +18,10 @@ namespace Microsoft.OData.Client
     public class DataServiceClientResponsePipelineConfiguration
     {
         /// <summary> Actions to be run when reading start entry called </summary>
-        private readonly List<Action<ReadingEntryArgs>> readingStartEntryActions;
+        private readonly List<Action<ReadingEntryArgs>> readingStartResourceActions;
 
         /// <summary> Actions to be run when reading end entry called </summary>
-        private readonly List<Action<ReadingEntryArgs>> readingEndEntryActions;
+        private readonly List<Action<ReadingEntryArgs>> readingEndResourceActions;
 
         /// <summary> Actions to be run when reading start feed called </summary>
         private readonly List<Action<ReadingFeedArgs>> readingStartFeedActions;
@@ -30,10 +30,10 @@ namespace Microsoft.OData.Client
         private readonly List<Action<ReadingFeedArgs>> readingEndFeedActions;
 
         /// <summary> Actions to be run when reading start link called </summary>
-        private readonly List<Action<ReadingNavigationLinkArgs>> readingStartNavigationLinkActions;
+        private readonly List<Action<ReadingNestedResourceInfoArgs>> readingStartNestedResourceInfoActions;
 
         /// <summary> Actions to be run when reading end link called </summary>
-        private readonly List<Action<ReadingNavigationLinkArgs>> readingEndNavigationLinkActions;
+        private readonly List<Action<ReadingNestedResourceInfoArgs>> readingEndNestedResourceInfoActions;
 
         /// <summary> Actions to be run after an entry has been materialized </summary>
         private readonly List<Action<MaterializedEntityArgs>> materializedEntityActions;
@@ -53,13 +53,13 @@ namespace Microsoft.OData.Client
             Debug.Assert(sender != null, "sender!= null");
 
             this.sender = sender;
-            this.readingEndEntryActions = new List<Action<ReadingEntryArgs>>();
+            this.readingEndResourceActions = new List<Action<ReadingEntryArgs>>();
             this.readingEndFeedActions = new List<Action<ReadingFeedArgs>>();
-            this.readingEndNavigationLinkActions = new List<Action<ReadingNavigationLinkArgs>>();
+            this.readingEndNestedResourceInfoActions = new List<Action<ReadingNestedResourceInfoArgs>>();
 
-            this.readingStartEntryActions = new List<Action<ReadingEntryArgs>>();
+            this.readingStartResourceActions = new List<Action<ReadingEntryArgs>>();
             this.readingStartFeedActions = new List<Action<ReadingFeedArgs>>();
-            this.readingStartNavigationLinkActions = new List<Action<ReadingNavigationLinkArgs>>();
+            this.readingStartNestedResourceInfoActions = new List<Action<ReadingNestedResourceInfoArgs>>();
 
             this.materializedEntityActions = new List<Action<MaterializedEntityArgs>>();
 
@@ -76,12 +76,12 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                return this.readingStartEntryActions.Count > 0 ||
-                    this.readingEndEntryActions.Count > 0 ||
+                return this.readingStartResourceActions.Count > 0 ||
+                    this.readingEndResourceActions.Count > 0 ||
                     this.readingStartFeedActions.Count > 0 ||
                     this.readingEndFeedActions.Count > 0 ||
-                    this.readingStartNavigationLinkActions.Count > 0 ||
-                    this.readingEndNavigationLinkActions.Count > 0;
+                    this.readingStartNestedResourceInfoActions.Count > 0 ||
+                    this.readingEndNestedResourceInfoActions.Count > 0;
             }
         }
 
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Client
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.readingStartEntryActions.Add(action);
+            this.readingStartResourceActions.Add(action);
             return this;
         }
 
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Client
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.readingEndEntryActions.Add(action);
+            this.readingEndResourceActions.Add(action);
             return this;
         }
 
@@ -171,11 +171,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>The response pipeline configuration.</returns>
-        public DataServiceClientResponsePipelineConfiguration OnNavigationLinkStarted(Action<ReadingNavigationLinkArgs> action)
+        public DataServiceClientResponsePipelineConfiguration OnNestedResourceInfoStarted(Action<ReadingNestedResourceInfoArgs> action)
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.readingStartNavigationLinkActions.Add(action);
+            this.readingStartNestedResourceInfoActions.Add(action);
             return this;
         }
 
@@ -184,11 +184,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>The response pipeline configuration.</returns>
-        public DataServiceClientResponsePipelineConfiguration OnNavigationLinkEnded(Action<ReadingNavigationLinkArgs> action)
+        public DataServiceClientResponsePipelineConfiguration OnNestedResourceInfoEnded(Action<ReadingNestedResourceInfoArgs> action)
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.readingEndNavigationLinkActions.Add(action);
+            this.readingEndNestedResourceInfoActions.Add(action);
             return this;
         }
 
@@ -209,13 +209,13 @@ namespace Microsoft.OData.Client
         /// Executes actions that configure reader settings.
         /// </summary>
         /// <param name="readerSettings">The reader settings.</param>
-        internal void ExecuteReaderSettingsConfiguration(ODataMessageReaderSettingsBase readerSettings)
+        internal void ExecuteReaderSettingsConfiguration(ODataMessageReaderSettings readerSettings)
         {
             Debug.Assert(readerSettings != null, "readerSettings != null");
 
             if (this.messageReaderSettingsConfigurationActions.Count > 0)
             {
-                MessageReaderSettingsArgs args = new MessageReaderSettingsArgs(new DataServiceClientMessageReaderSettingsShim(readerSettings));
+                MessageReaderSettingsArgs args = new MessageReaderSettingsArgs(readerSettings);
                 foreach (Action<MessageReaderSettingsArgs> readerSettingsConfigurationAction in this.messageReaderSettingsConfigurationActions)
                 {
                     readerSettingsConfigurationAction(args);
@@ -227,13 +227,13 @@ namespace Microsoft.OData.Client
         /// Executes the on entry end actions.
         /// </summary>
         /// <param name="entry">The entry.</param>
-        internal void ExecuteOnEntryEndActions(ODataEntry entry)
+        internal void ExecuteOnEntryEndActions(ODataResource entry)
         {
             // Be noticed that the entry could be null in some case, like expand.
-            if (this.readingEndEntryActions.Count > 0)
+            if (this.readingEndResourceActions.Count > 0)
             {
                 ReadingEntryArgs args = new ReadingEntryArgs(entry);
-                foreach (Action<ReadingEntryArgs> entryAction in this.readingEndEntryActions)
+                foreach (Action<ReadingEntryArgs> entryAction in this.readingEndResourceActions)
                 {
                     entryAction(args);
                 }
@@ -244,13 +244,13 @@ namespace Microsoft.OData.Client
         /// Executes the on entry start actions.
         /// </summary>
         /// <param name="entry">The entry.</param>
-        internal void ExecuteOnEntryStartActions(ODataEntry entry)
+        internal void ExecuteOnEntryStartActions(ODataResource entry)
         {
             // Be noticed that the entry could be null in some case, like expand.
-            if (this.readingStartEntryActions.Count > 0)
+            if (this.readingStartResourceActions.Count > 0)
             {
                 ReadingEntryArgs args = new ReadingEntryArgs(entry);
-                foreach (Action<ReadingEntryArgs> entryAction in this.readingStartEntryActions)
+                foreach (Action<ReadingEntryArgs> entryAction in this.readingStartResourceActions)
                 {
                     entryAction(args);
                 }
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Client
         /// Executes the on feed end actions.
         /// </summary>
         /// <param name="feed">The feed.</param>
-        internal void ExecuteOnFeedEndActions(ODataFeed feed)
+        internal void ExecuteOnFeedEndActions(ODataResourceSet feed)
         {
             Debug.Assert(feed != null, "entry != null");
 
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Client
         /// Executes the on feed start actions.
         /// </summary>
         /// <param name="feed">The feed.</param>
-        internal void ExecuteOnFeedStartActions(ODataFeed feed)
+        internal void ExecuteOnFeedStartActions(ODataResourceSet feed)
         {
             Debug.Assert(feed != null, "feed != null");
             if (this.readingStartFeedActions.Count > 0)
@@ -296,13 +296,13 @@ namespace Microsoft.OData.Client
         /// Executes the on navigation end actions.
         /// </summary>
         /// <param name="link">The link.</param>
-        internal void ExecuteOnNavigationEndActions(ODataNavigationLink link)
+        internal void ExecuteOnNavigationEndActions(ODataNestedResourceInfo link)
         {
             Debug.Assert(link != null, "link != null");
-            if (this.readingEndNavigationLinkActions.Count > 0)
+            if (this.readingEndNestedResourceInfoActions.Count > 0)
             {
-                ReadingNavigationLinkArgs args = new ReadingNavigationLinkArgs(link);
-                foreach (Action<ReadingNavigationLinkArgs> navAction in this.readingEndNavigationLinkActions)
+                ReadingNestedResourceInfoArgs args = new ReadingNestedResourceInfoArgs(link);
+                foreach (Action<ReadingNestedResourceInfoArgs> navAction in this.readingEndNestedResourceInfoActions)
                 {
                     navAction(args);
                 }
@@ -313,14 +313,14 @@ namespace Microsoft.OData.Client
         /// Executes the on navigation start actions.
         /// </summary>
         /// <param name="link">The link.</param>
-        internal void ExecuteOnNavigationStartActions(ODataNavigationLink link)
+        internal void ExecuteOnNavigationStartActions(ODataNestedResourceInfo link)
         {
             Debug.Assert(link != null, "link != null");
 
-            if (this.readingStartNavigationLinkActions.Count > 0)
+            if (this.readingStartNestedResourceInfoActions.Count > 0)
             {
-                ReadingNavigationLinkArgs args = new ReadingNavigationLinkArgs(link);
-                foreach (Action<ReadingNavigationLinkArgs> navAction in this.readingStartNavigationLinkActions)
+                ReadingNestedResourceInfoArgs args = new ReadingNestedResourceInfoArgs(link);
+                foreach (Action<ReadingNestedResourceInfoArgs> navAction in this.readingStartNestedResourceInfoActions)
                 {
                     navAction(args);
                 }
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void ExecuteEntityMaterializedActions(ODataEntry entry, object entity)
+        internal void ExecuteEntityMaterializedActions(ODataResource entry, object entity)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entity != null, "entity != entity");

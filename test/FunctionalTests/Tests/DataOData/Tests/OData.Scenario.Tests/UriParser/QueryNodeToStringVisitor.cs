@@ -4,18 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-
     /// <summary>
     /// Serializes the QueryNode to string.
     /// </summary>
@@ -37,8 +33,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                     return ToString((AnyNode)node);
                 case QueryNodeKind.All:
                     return ToString((AllNode)node);
-                case QueryNodeKind.NonentityRangeVariableReference:
-                    return ToString((NonentityRangeVariableReferenceNode)node);
+                case QueryNodeKind.NonResourceRangeVariableReference:
+                    return ToString((NonResourceRangeVariableReferenceNode)node);
                 case QueryNodeKind.Convert:
                     return ToString((ConvertNode)node);
                 case QueryNodeKind.BinaryOperator:
@@ -53,30 +49,32 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                     return ToString((CollectionPropertyAccessNode)node);
                 case QueryNodeKind.CollectionOpenPropertyAccess:
                     return ToString((CollectionOpenPropertyAccessNode)node);
-                case QueryNodeKind.SingleEntityCast:
-                    return ToString((SingleEntityCastNode)node);
-                case QueryNodeKind.EntityCollectionCast:
-                    return ToString((EntityCollectionCastNode)node);
-                case QueryNodeKind.EntityRangeVariableReference:
-                    return ToString((EntityRangeVariableReferenceNode)node);
+                case QueryNodeKind.SingleResourceCast:
+                    return ToString((SingleResourceCastNode)node);
+                case QueryNodeKind.CollectionResourceCast:
+                    return ToString((CollectionResourceCastNode)node);
+                case QueryNodeKind.ResourceRangeVariableReference:
+                    return ToString((ResourceRangeVariableReferenceNode)node);
                 case QueryNodeKind.Constant:
                     return ToString((ConstantNode)node);
                 case QueryNodeKind.CollectionNavigationNode:
                     return ToString((CollectionNavigationNode)node);
                 case QueryNodeKind.SingleNavigationNode:
                     return ToString((SingleNavigationNode)node);
-                case QueryNodeKind.SingleEntityFunctionCall:
-                    return ToString((SingleEntityFunctionCallNode)node);
+                case QueryNodeKind.SingleResourceFunctionCall:
+                    return ToString((SingleResourceFunctionCallNode)node);
                 case QueryNodeKind.NamedFunctionParameter:
                     return ToString((NamedFunctionParameterNode)node);
                 case QueryNodeKind.ParameterAlias:
                     return ToString((ParameterAliasNode)node);
                 case QueryNodeKind.SearchTerm:
                     return ToString((SearchTermNode)node);
-                case QueryNodeKind.CollectionPropertyCast:
-                    return ToString((CollectionPropertyCastNode)node);
-                case QueryNodeKind.SingleValueCast:
-                    return ToString((SingleValueCastNode)node);
+                case QueryNodeKind.SingleComplexNode:
+                    return ToString((SingleComplexNode)node);
+                case QueryNodeKind.CollectionComplexNode:
+                    return ToString((CollectionComplexNode)node);
+                case QueryNodeKind.Count:
+                    return ToString((CountNode)node);
                 default:
                     throw new NotSupportedException(String.Format("Node kind not yet supported: {0}", node.Kind.ToString()));
             }
@@ -97,13 +95,13 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         }
 
         /// <summary>
-        /// Writes EntityRangeVariableReferenceNode to string.
+        /// Writes ResourceRangeVariableReferenceNode to string.
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(EntityRangeVariableReferenceNode node)
+        private static string ToString(ResourceRangeVariableReferenceNode node)
         {
-            return tabHelper.Prefix + "EntityRangeVariableReferenceNode" +
+            return tabHelper.Prefix + "ResourceRangeVariableReferenceNode" +
                 tabHelper.Indent(() =>
                     tabHelper.Prefix + "Name = " + node.Name +
                     tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
@@ -117,9 +115,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(EntityRangeVariable node)
+        private static string ToString(ResourceRangeVariable node)
         {
-            return tabHelper.Prefix + "EntityRangeVariable" +
+            return tabHelper.Prefix + "ResourceRangeVariable" +
                 tabHelper.Indent(() =>
                     tabHelper.Prefix + "Name = " + node.Name +
                     tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
@@ -132,7 +130,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(NonentityRangeVariableReferenceNode node)
+        private static string ToString(NonResourceRangeVariableReferenceNode node)
         {
             return tabHelper.Prefix + "NonentityRangeVariableReferenceNode" +
                 tabHelper.Indent(() =>
@@ -147,9 +145,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(NonentityRangeVariable node)
+        private static string ToString(NonResourceRangeVariable node)
         {
-            return tabHelper.Prefix + "NonentityRangeVariable" +
+            return tabHelper.Prefix + "NonResourceRangeVariable" +
                 tabHelper.Indent(() =>
                     tabHelper.Prefix + "Name = " + node.Name +
                     tabHelper.Prefix + "TypeReference = " + node.TypeReference
@@ -300,15 +298,15 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(SingleEntityCastNode node)
+        private static string ToString(SingleResourceCastNode node)
         {
             if (node != null)
             {
-                return tabHelper.Prefix + "SingleEntityCastNode" +
+                return tabHelper.Prefix + "SingleResourceCastNode" +
                     tabHelper.Indent(() =>
                         tabHelper.Prefix + "Type Reference = " + node.TypeReference +
                         tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
-                        tabHelper.Prefix + "Entity Type Reference = " + node.EntityTypeReference +
+                        tabHelper.Prefix + "Entity Type Reference = " + node.StructuredTypeReference +
                         tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
             }
@@ -350,15 +348,33 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(EntityCollectionCastNode node)
+        private static string ToString(CollectionResourceCastNode node)
         {
             if (node != null)
             {
-                return tabHelper.Prefix + "EntityCollectionCastNode" +
+                return tabHelper.Prefix + "CollectionResourceCastNode" +
                  tabHelper.Indent(() =>
-                    tabHelper.Prefix + "Entity Item Type = " + node.EntityItemType +
+                    tabHelper.Prefix + "Entity Item Type = " + node.ItemStructuredType +
                     tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
                     tabHelper.Prefix + "Item Type = " + node.ItemType +
+                    tabHelper.Prefix + "Source = " + ToString(node.Source)
+                );
+            }
+
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Writes CountNode.
+        /// </summary>
+        /// <param name="node">Node to write to string</param>
+        /// <returns>String representation of node.</returns>
+        private static string ToString(CountNode node)
+        {
+            if (node != null)
+            {
+                return tabHelper.Prefix + "CountNode" +
+                 tabHelper.Indent(() =>
                     tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
             }
@@ -477,11 +493,11 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(SingleEntityFunctionCallNode node)
+        private static string ToString(SingleResourceFunctionCallNode node)
         {
             if (node != null)
             {
-                return tabHelper.Prefix + "SingleEntityFunctionCallNode" +
+                return tabHelper.Prefix + "SingleResourceFunctionCallNode" +
                             tabHelper.Indent(() =>
                                 tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
                                 tabHelper.Prefix + "Type Reference = " + node.TypeReference +
@@ -541,10 +557,10 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// <returns>String representation of node.</returns>
         private static string ToStringParameter(RangeVariable node)
         {
-            if (node is EntityRangeVariable)
-                return ToString((EntityRangeVariable)node);
-            if (node is NonentityRangeVariable)
-                return ToString((NonentityRangeVariable)node);
+            if (node is ResourceRangeVariable)
+                return ToString((ResourceRangeVariable)node);
+            if (node is NonResourceRangeVariable)
+                return ToString((NonResourceRangeVariable)node);
             return String.Empty;
         }
         #endregion
@@ -783,30 +799,31 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         }
 
         /// <summary>
-        /// Writes single value property cast node to string.
+        /// Writes single complex property node to string.
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(SingleValueCastNode node)
+        private static string ToString(SingleComplexNode node)
         {
-            return tabHelper.Prefix + "SingleValueCastNode" +
+            return tabHelper.Prefix + "SingleComplexNode" +
                 tabHelper.Indent(() =>
+                    tabHelper.Prefix + "Property = " + node.Property.Name +
                     tabHelper.Prefix + "TypeReference = " + node.TypeReference +
                     tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
         }
 
         /// <summary>
-        /// Writes collection property cast node to string.
+        /// Writes collection complex property node to string.
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(CollectionPropertyCastNode node)
+        private static string ToString(CollectionComplexNode node)
         {
-            return tabHelper.Prefix + "CollectionPropertyCastNode" +
+            return tabHelper.Prefix + "CollectionComplexNode" +
                 tabHelper.Indent(() =>
-                    tabHelper.Prefix + "Property = " + node.Source.Property.Name +
-                    tabHelper.Prefix + "TypeReference = " + node.ItemType +
+                    tabHelper.Prefix + "Property = " + node.Property.Name +
+                    tabHelper.Prefix + "ItemType = " + node.ItemType +
                     tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
         }

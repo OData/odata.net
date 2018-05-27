@@ -12,8 +12,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
     using System.Linq;
     using System.Net;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
-    using Microsoft.Test.OData.Framework;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -132,6 +131,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         /// <summary>
         /// Verify actions in entry payload format json minimalmetadata, and json nometadata.
         /// </summary>
@@ -183,11 +183,12 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                 this.VerifyActionInJsonLightPayload("OrderLine(OrderId=-10,ProductId=-10)", expectedRetrieveProductAction, mimeType);
             }
         }
+#endif
 
         private void VerifyOperationsInMetadata(Dictionary<string, string> expectedOperations, IEnumerable<IEdmOperationImport> actualActionImports)
         {
             Assert.AreEqual(expectedOperations.Count, actualActionImports.Count(), "Wrong number of ActionImport");
-            
+
             // Verify the binding type of the ActionImport in metadata.
             foreach (KeyValuePair<string, string> operation in expectedOperations)
             {
@@ -219,16 +220,16 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
 
             var responseMessage = requestMessage.GetResponse();
 
-            ODataEntry entry = null;
+            ODataResource entry = null;
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, this.model))
             {
-                var reader = messageReader.CreateODataEntryReader();
+                var reader = messageReader.CreateODataResourceReader();
 
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entry = (ODataEntry)reader.Item;
+                        entry = (ODataResource)reader.Item;
                     }
                 }
             }
@@ -250,8 +251,10 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
-        private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType, bool verifyActionNotInPayload = false)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType)
         {
+            var verifyActionNotInPayload = (acceptMimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.ServiceUri.AbsoluteUri + queryUri);
             request.Accept = acceptMimeType;
             string responseString = string.Empty;
@@ -276,5 +279,6 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                 }
             }
         }
+#endif
     }
 }

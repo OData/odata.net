@@ -6,22 +6,17 @@
 
 namespace EdmLibTests.FunctionalTests
 {
+    #if SILVERLIGHT
+    using Microsoft.Silverlight.Testing;
+#endif
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -209,7 +204,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_OnBaseEntityTypes()
+        public void Term_Constant_OnBaseEntityTypes()
         {
             this.SetupModelsAndValues();
 
@@ -222,7 +217,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm termInt32Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int32Value");
+            IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
 
             IEdmValue annotationOnPerson = applicationModel.GetTermValue(this.personValue, termInt32Value, expressionEvaluator);
             Assert.AreEqual(100, ((IEdmIntegerValue)annotationOnPerson).Value, "Term annotation value is wrong.");
@@ -238,7 +233,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_OnBaseEntityTypesWithMultipleValueAnnotation()
+        public void Term_Constant_OnBaseEntityTypesWithMultipleVocabularyAnnotation()
         {
             this.SetupModelsAndValues();
 
@@ -252,7 +247,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm termInt32Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int32Value");
+            IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
 
             IEdmValue annotationOnPerson = applicationModel.GetTermValue(this.personValue, termInt32Value, "q1.q1", expressionEvaluator);
             Assert.AreEqual(100, ((IEdmIntegerValue)annotationOnPerson).Value, "Term annotation value is wrong.");
@@ -268,7 +263,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_OnDerivedEntityType()
+        public void Term_Constant_OnDerivedEntityType()
         {
             this.SetupModelsAndValues();
 
@@ -284,7 +279,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm termInt32Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int32Value");
+            IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
 
             IEdmValue annotationOnPerson = applicationModel.GetTermValue(this.personValue, termInt32Value, expressionEvaluator);
             Assert.AreEqual(100, ((IEdmIntegerValue)annotationOnPerson).Value, "Term annotation value");
@@ -294,7 +289,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_BinaryWithOddDigits()
+        public void Term_Constant_BinaryWithOddDigits()
         {
             this.SetupModelsAndValues();
 
@@ -307,10 +302,10 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm term;
+            IEdmTerm term;
             IEdmValue annotationValue;
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.BinaryValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.BinaryValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             byte[] v = ((IEdmBinaryConstantExpression)annotationValue).Value;
             Assert.AreEqual(0, v.Length, "Binary value length");
@@ -327,7 +322,7 @@ namespace EdmLibTests.FunctionalTests
 
         // [EdmLib] missing constants for spatial
         [TestMethod]
-        public void ValueTerm_Constant_AllTypes_OnEntityType()
+        public void Term_Constant_AllTypes_OnEntityType()
         {
             this.SetupModelsAndValues();
 
@@ -358,79 +353,79 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm term;
+            IEdmTerm term;
             IEdmValue annotationValue;
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.BinaryValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.BinaryValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             byte[] v = ((IEdmBinaryValue)annotationValue).Value;
             Assert.AreEqual(2, v.Length, "Binary value length");
             Assert.AreEqual(0x12, v[0], "Binary value");
             Assert.AreEqual(0x34, v[1], "Binary value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.BooleanValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.BooleanValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(true, ((IEdmBooleanValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.ByteValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.ByteValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(255, ((IEdmIntegerValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.DateValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.DateValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(new Date(2014, 8, 8), ((IEdmDateValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.DateTimeOffsetValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.DateTimeOffsetValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(DateTimeOffset.Parse("2001-10-26T19:32:52+00:00"), ((IEdmDateTimeOffsetValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.DecimalValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.DecimalValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(12.345M, ((IEdmDecimalValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.DoubleValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.DoubleValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(3.1416, ((IEdmFloatingValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.GuidValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.GuidValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f2"), ((IEdmGuidValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.Int16Value");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.Int16Value");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(0, ((IEdmIntegerValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.Int32Value");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(100, ((IEdmIntegerValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.Int64Value");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.Int64Value");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(9999, ((IEdmIntegerValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.DurationValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.DurationValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(new TimeSpan(0, 1, 59), ((IEdmDurationValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.SByteValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.SByteValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(-128, ((IEdmIntegerValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.SingleValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.SingleValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(3.1416E10, ((IEdmFloatingValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.StringValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.StringValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual("I am a string.", ((IEdmStringValue)annotationValue).Value, "Term annotation value");
 
-            term = this.vocabularyDefinitionModel.FindValueTerm("bar.TimeOfDayValue");
+            term = this.vocabularyDefinitionModel.FindTerm("bar.TimeOfDayValue");
             annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
             Assert.AreEqual(new TimeOfDay(1, 30, 59, 123), ((IEdmTimeOfDayValue)annotationValue).Value, "Term annotation value");
         }
 
         [TestMethod]
-        public void ValueTerm_Path_OnEntityType()
+        public void Term_Path_OnEntityType()
         {
             this.SetupModelsAndValues();
 
@@ -445,21 +440,21 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm termInt32Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int32Value");
+            IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
             IEdmValue annotationCoolnessIndex = applicationModel.GetTermValue(this.personValue, termInt32Value, expressionEvaluator);
             Assert.AreEqual(Int32.MaxValue, ((IEdmIntegerValue)annotationCoolnessIndex).Value, "Term annotation value");
 
-            IEdmValueTerm termStringValue = this.vocabularyDefinitionModel.FindValueTerm("bar.StringValue");
+            IEdmTerm termStringValue = this.vocabularyDefinitionModel.FindTerm("bar.StringValue");
             IEdmValue annotationZipMain = applicationModel.GetTermValue(this.personValue, termStringValue, expressionEvaluator);
             Assert.AreEqual("98052", ((IEdmStringValue)annotationZipMain).Value, "Term annotation value");
 
-            IEdmValueTerm termInt64Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int64Value");
+            IEdmTerm termInt64Value = this.vocabularyDefinitionModel.FindTerm("bar.Int64Value");
             IEdmValue annotationWorkPhoneLocal = applicationModel.GetTermValue(this.personValue, termInt64Value, expressionEvaluator);
             Assert.AreEqual(9991234, ((IEdmIntegerValue)annotationWorkPhoneLocal).Value, "Term annotation value");
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_OnProperty()
+        public void Term_Constant_OnProperty()
         {
             this.SetupModelsAndValues();
 
@@ -478,10 +473,10 @@ namespace EdmLibTests.FunctionalTests
             IEdmProperty property = person.FindProperty("CoolnessIndex");
             IEdmPropertyValue contextPropertyValue = ((IEdmStructuredValue)this.personValue).FindPropertyValue("CoolnessIndex");
 
-            IEdmValueTerm termInt32Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int32Value");
-            IEdmValueTerm termStringValue = this.vocabularyDefinitionModel.FindValueTerm("bar.StringValue");
+            IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
+            IEdmTerm termStringValue = this.vocabularyDefinitionModel.FindTerm("bar.StringValue");
 
-            IEdmValueAnnotation annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt32Value) as IEdmValueAnnotation;
+            IEdmVocabularyAnnotation annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt32Value);
             IEdmExpression expression = annotation.Value;
             IEdmValue annotationHotIndex = expressionEvaluator.Evaluate(expression);
             Assert.AreEqual(-1, ((IEdmIntegerValue)annotationHotIndex).Value, "Term annotation value");
@@ -512,7 +507,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Path_OnProperty()
+        public void Term_Path_OnProperty()
         {
             this.SetupModelsAndValues();
 
@@ -529,17 +524,17 @@ namespace EdmLibTests.FunctionalTests
             IEdmProperty property = person.FindProperty("ContactInfo");
             IEdmPropertyValue contextPropertyValue = ((IEdmStructuredValue)this.personValue).FindPropertyValue("ContactInfo");
 
-            IEdmValueTerm termInt16Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int16Value");
+            IEdmTerm termInt16Value = this.vocabularyDefinitionModel.FindTerm("bar.Int16Value");
             // ?? Assumes Entity always??
             // IEdmValue annotationHotIndex = applicationModel.GetTermValue(contextPropertyValue.Value, termInt16Value, evaluator);
-            IEdmValueAnnotation annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt16Value) as IEdmValueAnnotation;
+            IEdmVocabularyAnnotation annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt16Value);
             IEdmExpression expression = annotation.Value;
             IEdmValue annotationWorkphoneLocal = expressionEvaluator.Evaluate(expression, (IEdmStructuredValue)contextPropertyValue.Value);
             Assert.AreEqual(9991234, ((IEdmIntegerValue)annotationWorkphoneLocal).Value, "Term annotation value");
         }
 
         [TestMethod]
-        public void ValueTerm_OperationApplication_OnNavigationProperty()
+        public void Term_FunctionApplication_OnNavigationProperty()
         {
             this.SetupModelsAndValues();
 
@@ -564,14 +559,14 @@ namespace EdmLibTests.FunctionalTests
             IEdmProperty property = person.FindProperty("Address");
             IEdmPropertyValue contextPropertyValue = ((IEdmStructuredValue)this.personValue).FindPropertyValue("Address");
 
-            IEdmValueTerm termStringValue = this.vocabularyDefinitionModel.FindValueTerm("bar.StringValue");
-            IEdmValueAnnotation annotationString = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termStringValue) as IEdmValueAnnotation;
+            IEdmTerm termStringValue = this.vocabularyDefinitionModel.FindTerm("bar.StringValue");
+            IEdmVocabularyAnnotation annotationString = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termStringValue);
             IEdmValue annotationStringValue = expressionEvaluator.Evaluate(annotationString.Value, (IEdmStructuredValue)contextPropertyValue.Value);
             Assert.AreEqual("98052-0000", ((IEdmStringValue)annotationStringValue).Value, "Term annotation value");
         }
 
         [TestMethod]
-        public void ValueTerm_TypeTerm_If_OnEntityContainer()
+        public void Term_TypeTerm_If_OnEntityContainer()
         {
             this.SetupModelsAndValues();
 
@@ -592,16 +587,16 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmEntityContainer container = this.baseModel.FindEntityContainer("fooContainer");
 
-            IEdmValueTerm termInt32Value = this.vocabularyDefinitionModel.FindValueTerm("bar.Int32Value");
-            IEdmValueAnnotation valueAnnotation = applicationModel.FindVocabularyAnnotations<IEdmValueAnnotation>(container, termInt32Value).SingleOrDefault();
+            IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
+            IEdmVocabularyAnnotation valueAnnotation = applicationModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(container, termInt32Value).SingleOrDefault();
 
             // ?? why do I need a context here?
             IEdmValue valueOfValueAnnotation = expressionEvaluator.Evaluate(valueAnnotation.Value, this.personValue);
-            Assert.AreEqual(999, ((IEdmIntegerValue)valueOfValueAnnotation).Value, "Value annotation evaluated value.");
+            Assert.AreEqual(999, ((IEdmIntegerValue)valueOfValueAnnotation).Value, "Annotation evaluated value.");
         }
 
         [TestMethod]
-        public void ValueTerm_OperationApplication_WithOverloads_OnEntitySet()
+        public void Term_FunctionApplication_WithOverloads_OnEntitySet()
         {
             this.SetupModelsAndValues();
 
@@ -626,15 +621,15 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmEntitySet personSet = this.baseModel.FindEntityContainer("fooContainer").FindEntitySet("PersonSet");
 
-            IEdmValueTerm term = this.vocabularyDefinitionModel.FindValueTerm("bar.StringValue");
-            IEdmValueAnnotation valueAnnotation = applicationModel.FindVocabularyAnnotations<IEdmValueAnnotation>(personSet, term).SingleOrDefault();
+            IEdmTerm term = this.vocabularyDefinitionModel.FindTerm("bar.StringValue");
+            IEdmVocabularyAnnotation valueAnnotation = applicationModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(personSet, term).SingleOrDefault();
 
             IEdmValue valueOfAnnotation = expressionEvaluator.Evaluate(valueAnnotation.Value, this.personValue);
             Assert.AreEqual("123", ((IEdmStringValue)valueOfAnnotation).Value, "Annotation evaluated value.");
         }
 
         [TestMethod]
-        public void ValueTerm_ComplexValue_OnEntityType()
+        public void Term_ComplexValue_OnEntityType()
         {
             this.SetupModelsAndValues();
 
@@ -651,7 +646,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel, this.operationsModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm termComplexValue = this.vocabularyDefinitionModel.FindValueTerm("bar.ComplexValue");
+            IEdmTerm termComplexValue = this.vocabularyDefinitionModel.FindTerm("bar.ComplexValue");
             IEdmValue annotationComplexValue = applicationModel.GetTermValue(this.personValue, termComplexValue, expressionEvaluator);
 
             var structuredValue = (IEdmStructuredValue)annotationComplexValue;
@@ -666,7 +661,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_EntityValue_OnEntityType()
+        public void Term_EntityValue_OnEntityType()
         {
             this.SetupModelsAndValues();
 
@@ -684,7 +679,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel, this.operationsModel);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
-            IEdmValueTerm termEntityValue = this.vocabularyDefinitionModel.FindValueTerm("bar.EntityValue");
+            IEdmTerm termEntityValue = this.vocabularyDefinitionModel.FindTerm("bar.EntityValue");
             IEdmValue annotationEntityValue = applicationModel.GetTermValue(this.personValue, termEntityValue, expressionEvaluator);
 
             var structuredValue = (IEdmStructuredValue)annotationEntityValue;
@@ -727,7 +722,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel applicationModel = this.Parse(applicationCsdl);
             EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(null);
 
-            var term = applicationModel.FindValueTerm("bar.MoreTransformedPersonTerm");
+            var term = applicationModel.FindTerm("bar.MoreTransformedPersonTerm");
             var property = applicationModel.FindEntityType("bar.MoreTransformedPerson").FindProperty("Description");
             var fakeContextValue = new EdmStructuredValue(new EdmEntityTypeReference(applicationModel.FindEntityType("bar.Person"), true), Enumerable.Empty<IEdmPropertyValue>());
             IEdmValue valueOfAnnotation = applicationModel.GetPropertyValue(fakeContextValue, term, property, expressionEvaluator);
@@ -785,7 +780,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmValue goodnessValue = applicationModel.GetTermValue(personDecoration, "bar.DecorationTerm", "Goodness", evaluator);
             Assert.AreEqual("Excellent", ((IEdmStringValue)goodnessValue).Value, "Annotation evaluated value.");
 
-            IEdmValueAnnotation randomTermAnnotation = applicationModel.FindVocabularyAnnotations<IEdmValueAnnotation>(person, "bar.RandomTerm").Single();
+            IEdmVocabularyAnnotation randomTermAnnotation = applicationModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(person, "bar.RandomTerm").Single();
             random = evaluator.EvaluateToClrValue<string>(randomTermAnnotation.Value, context);
             Assert.AreEqual("Extra value!", random, "Annotation evaluated value.");
         }
@@ -804,7 +799,7 @@ namespace EdmLibTests.FunctionalTests
             });
             var edmModel = this.GetParserResult(new XElement[] { XElement.Parse(annotatingModelCsdl) });
             var evaluator = new EdmExpressionEvaluator(null);
-            edmModel.GetTermValue(aValue, edmModel.FindValueTerm("foo.DistantAge"), evaluator);
+            edmModel.GetTermValue(aValue, edmModel.FindTerm("foo.DistantAge"), evaluator);
         }
 
         private IEdmModel Parse(string csdl, params IEdmModel[] referencedModels)

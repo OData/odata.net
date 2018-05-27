@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 

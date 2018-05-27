@@ -88,7 +88,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 </edmx:Edmx>";
             public DefaultTestModel()
             {
-                this.RepresentativeModel = EdmxReader.Parse(XElement.Parse(RepresentativeEdmxDocument).CreateReader());
+                this.RepresentativeModel = CsdlReader.Parse(XElement.Parse(RepresentativeEdmxDocument).CreateReader());
                 this.EntityContainer = this.RepresentativeModel.EntityContainer;
                 this.EntityContainer.Should().NotBeNull();
                 this.EntityContainer.Name.Should().Be("Container");
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
   </edmx:DataServices>
 </edmx:Edmx>";
 
-            var edmModel = EdmxReader.Parse(XElement.Parse(testCsdl).CreateReader());
+            var edmModel = CsdlReader.Parse(XElement.Parse(testCsdl).CreateReader());
             var operations = edmModel.SchemaElements.OfType<IEdmOperation>().ToList();
             operations.Should().HaveCount(6);
             var container = edmModel.EntityContainer;
@@ -271,7 +271,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
   </edmx:DataServices>
 </edmx:Edmx>";
 
-            var edmModel = EdmxReader.Parse(XElement.Parse(testCsdl).CreateReader());
+            var edmModel = CsdlReader.Parse(XElement.Parse(testCsdl).CreateReader());
             var operations = edmModel.SchemaElements.OfType<IEdmOperation>().ToList();
             operations.Should().HaveCount(8);
 
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void EntitySetPathReturnsCorrectly()
         {
-            var paths = this.TestModel.RemoveBadCarAction.EntitySetPath.Path.ToList();
+            var paths = this.TestModel.RemoveBadCarAction.EntitySetPath.PathSegments.ToList();
             paths[0].Should().Be("People");
             paths[1].Should().Be("Cars");
         }
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 </edmx:Edmx>";
             IEdmModel model = null;
             IEnumerable<EdmError> errors = null;
-            var errorParsing = EdmxReader.TryParse(XElement.Parse(errorDocument).CreateReader(), out model, out errors);
+            var errorParsing = CsdlReader.TryParse(XElement.Parse(errorDocument).CreateReader(), out model, out errors);
             errorParsing.Should().BeFalse();
             var errorsList = errors.ToList();
             errorsList.Should().HaveCount(1);
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
   </edmx:DataServices>
 </edmx:Edmx>";
             
-            var model = EdmxReader.Parse(XElement.Parse(errorDocument).CreateReader());
+            var model = CsdlReader.Parse(XElement.Parse(errorDocument).CreateReader());
             IEnumerable<EdmError> errors = null;
             model.Validate(out errors);
 
@@ -395,8 +395,9 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            Action test = () => EdmxReader.Parse(XElement.Parse(errorDocument).CreateReader());
-            test.ShouldThrow<EdmParseException>().WithMessage(Strings.XmlParser_MissingAttribute("Action", "ActionImport"), ComparisonMode.Substring);
+            Action test = () => CsdlReader.Parse(XElement.Parse(errorDocument).CreateReader());
+            test.ShouldThrow<EdmParseException>().Where(e => e.Message.Contains(
+                Strings.XmlParser_MissingAttribute("Action", "ActionImport")));
         }
 
         [Fact]
@@ -406,7 +407,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             using (var writer = XmlWriter.Create(builder))
             {
                 IEnumerable<EdmError> errors;
-                EdmxWriter.TryWriteEdmx(this.TestModel.RepresentativeModel, writer, EdmxTarget.OData, out errors).Should().BeTrue();
+                CsdlWriter.TryWriteCsdl(this.TestModel.RepresentativeModel, writer, CsdlTarget.OData, out errors).Should().BeTrue();
                 errors.Should().BeEmpty();
                 writer.Flush();
             }

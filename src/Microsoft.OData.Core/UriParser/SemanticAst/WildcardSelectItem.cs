@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Visitors;
-
     /// <summary>
     /// Class to represent a '*' selection item, indicating that all structural properties should be selected.
     /// </summary>

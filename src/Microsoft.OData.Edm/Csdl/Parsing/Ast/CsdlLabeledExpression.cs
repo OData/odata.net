@@ -18,9 +18,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.element = element;
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.Labeled; }
+            get { return EdmExpressionKind.Labeled; }
         }
 
         public string Label

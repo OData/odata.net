@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.ClientExtensions
     using System.IO;
     using System.Net;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public static class ContextUtils
     {

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Delta kinds
@@ -14,13 +14,13 @@ namespace Microsoft.OData.Core
         /// <summary>None delta</summary>
         None,
 
-        /// <summary>Delta feed</summary>
-        Feed,
+        /// <summary>Delta resource set</summary>
+        ResourceSet,
 
-        /// <summary>Delta entry</summary>
-        Entry,
+        /// <summary>Delta resource</summary>
+        Resource,
 
-        /// <summary>Delta deleted entry</summary>
+        /// <summary>Delta deleted resource</summary>
         DeletedEntry,
 
         /// <summary>Delta link</summary>

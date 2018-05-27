@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -18,7 +17,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly CsdlSemanticsSchema schema;
 
         /// <summary>
-        /// This doesn't need the full caching mechanism because the computation is cheap, and the likelyhood of computing a primitive type reference without needing its definition is remote.
+        /// This doesn't need the full caching mechanism because the computation is cheap, and the likelihood of computing a primitive type reference without needing its definition is remote.
         /// </summary>
         private readonly IEdmPrimitiveType definition;
 
@@ -27,7 +26,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             this.schema = schema;
             this.Reference = reference;
-            this.definition = EdmCoreModel.Instance.GetPrimitiveType(this.Reference.Kind); 
+            this.definition = EdmCoreModel.Instance.GetPrimitiveType(this.Reference.Kind);
         }
 
         public bool IsNullable

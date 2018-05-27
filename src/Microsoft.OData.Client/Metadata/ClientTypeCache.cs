@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client.Metadata
                 foundInCache = ClientTypeCache.namedTypes.TryGetValue(typename, out foundType);
             }
 
-            // at this point, if we have seen this type before, we either have the resolved type "foundType", 
+            // at this point, if we have seen this type before, we either have the resolved type "foundType",
             // or we have tried to resolve it before but did not success, in which case foundType will be null.
             // Either way we should return what's in the cache since the result is unlikely to change.
             // We only need to keep on searching if there isn't an entry in the cache.

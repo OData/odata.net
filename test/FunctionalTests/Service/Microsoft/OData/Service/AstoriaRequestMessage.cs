@@ -13,12 +13,12 @@ namespace Microsoft.OData.Service
     using System.IO;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// IODataRequestMessage interface implementation.
     /// </summary>
-    internal class AstoriaRequestMessage : IODataRequestMessage, IODataUrlResolver
+    internal class AstoriaRequestMessage : IODataRequestMessage, IODataPayloadUriConverter
     {
         #region Private Fields
 
@@ -380,6 +380,8 @@ namespace Microsoft.OData.Service
                     return this.requestAcceptCharSet;
                 case XmlConstants.HttpPrefer:
                     return this.GetCustomHeaderIfAvailable(headerName);
+                case XmlConstants.HttpAccept:
+                    return this.requestAccept;
                 default:
                     Debug.Assert(false, "Invalid header name encountered: " + headerName);
                     throw new DataServiceException(500, Strings.DataServiceException_GeneralError);
@@ -415,7 +417,7 @@ namespace Microsoft.OData.Service
 
         #endregion IODataRequestMessage Methods
 
-        #region IODataUrlResolver Members
+        #region IODataPayloadUriConverter Members
 
         /// <summary>
         /// Method to implement a custom URL resolution scheme.
@@ -428,7 +430,7 @@ namespace Microsoft.OData.Service
         /// A <see cref="Uri"/> instance that reflects the custom resolution of the method arguments
         /// into a URL or null if no custom resolution is desired; in that case the default resolution is used.
         /// </returns>
-        public Uri ResolveUrl(Uri baseUri, Uri payloadUri)
+        public Uri ConvertPayloadUri(Uri baseUri, Uri payloadUri)
         {
             Debug.Assert(payloadUri != null, "The payload URI should never be null.");
 

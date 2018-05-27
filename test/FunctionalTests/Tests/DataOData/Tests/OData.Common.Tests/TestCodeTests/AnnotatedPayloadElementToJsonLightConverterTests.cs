@@ -245,7 +245,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                     ExpectedJson = @"
                         {
                           """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + @""":true
+                          ""value"":null
                         }"
                 },
                 // Primitive property

@@ -23,8 +23,9 @@ Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel
 
 Partial Public Class ClientModule
-
-    <TestClass()> _
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
+    'Remove Atom
+    ' <TestClass()>
     Public Class CustomRequestsTest
         Inherits AstoriaTestCase
 
@@ -45,22 +46,22 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            ''Me.'ctx.EnableAtom = True
+            ''Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
             Me.ctx = Nothing
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub CustomizeHeaders()
             AddHandler ctx.SendingRequest2, AddressOf SendingRequestHandler_Customize
 
             Dim q = ctx.CreateQuery(Of HeaderAsEntity)("/HttpHeaders")
 
-            Dim e = (From h In q.AsEnumerable() _
-                     Where h.ID = "CustomTestHeader" And h.Value = "CustomTestHeaderData" _
+            Dim e = (From h In q.AsEnumerable()
+                     Where h.ID = "CustomTestHeader" And h.Value = "CustomTestHeaderData"
                      Select h).Count()
 
             Assert.IsTrue(1 = e)
@@ -76,7 +77,7 @@ Partial Public Class ClientModule
             Assert.AreEqual("CustomTestHeaderData", header.Value)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> _
+        <TestCategory("Partition3")> <TestMethod()>
         Public Sub VersionForServiceOps()
             Dim q = ctx.CreateQuery(Of SimpleEntity)("/EchoHeaders")
             Dim e As SimpleEntity = q.AsEnumerable().First()
@@ -95,8 +96,8 @@ Partial Public Class ClientModule
 
                     For Each saveoption As SaveChangesOptions In New SaveChangesOptions() {SaveChangesOptions.None, SaveChangesOptions.ContinueOnError, SaveChangesOptions.BatchWithSingleChangeset}
                         ctx = New DataServiceContext(web.ServiceRoot)
-                        ctx.EnableAtom = True
-                        ctx.Format.UseAtom()
+                        ''ctx.EnableAtom = True
+                        ''ctx.Format.UseAtom()
                         ctx.ResolveName = AddressOf ResolveName
                         Dim customer = ctx.CreateQuery(Of Customer)("Customers").Execute().Last()
                         ctx.UpdateObject(customer)

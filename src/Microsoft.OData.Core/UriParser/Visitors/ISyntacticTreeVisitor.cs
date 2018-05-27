@@ -4,21 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.UriParser.Aggregation;
 
     /// <summary>
     /// Visitor interface for walking the Syntactic Tree.
     /// </summary>
     /// <typeparam name="T">Return type for the visitor methods on this visitor.</typeparam>
-    internal interface ISyntacticTreeVisitor<T>
+    public interface ISyntacticTreeVisitor<T>
     {
         /// <summary>
         /// Visit an AllToken
@@ -45,7 +43,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>
-        /// <returns>Either a SingleEntityCastNode, or EntityCollectionCastNode bound to this DottedIdentifierToken</returns>
+        /// <returns>Either a SingleResourceCastNode, or CollectionResourceCastNode bound to this DottedIdentifierToken</returns>
         T Visit(DottedIdentifierToken tokenIn);
 
         /// <summary>
@@ -115,7 +113,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Visits a RangeVariableToken
         /// </summary>
         /// <param name="tokenIn">The RangeVariableToken to bind</param>
-        /// <returns>An Entity or NonEntity RangeVariableReferenceNode bound to this RangeVariableToken</returns>
+        /// <returns>A Resource or NonResource RangeVariableReferenceNode bound to this RangeVariableToken</returns>
         T Visit(RangeVariableToken tokenIn);
 
         /// <summary>
@@ -124,7 +122,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="tokenIn">The SelectToken to bind</param>
         /// <returns>A QueryNode bound to this SelectToken</returns>
         T Visit(SelectToken tokenIn);
-        
+
         /// <summary>
         /// Visits a StarToken
         /// </summary>
@@ -159,6 +157,13 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// <param name="tokenIn">The AggregateExpressionToken to bind</param>
         /// <returns>A T node bound to this AggregateExpressionToken</returns>
         T Visit(AggregateExpressionToken tokenIn);
+
+        /// <summary>
+        /// Visits a EntitySetAggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The EntitySetAggregateToken to bind</param>
+        /// <returns>A T node bound to this EntitySetAggregateToken</returns>
+        T Visit(EntitySetAggregateToken tokenIn);
 
         /// <summary>
         /// Visits a GroupByToken

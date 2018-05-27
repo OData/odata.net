@@ -42,14 +42,16 @@ namespace AstoriaUnitTests.Tests
                 currentCode.Insert(currentCode.ToString().IndexOf("public byte[] Body { get; set; }"), "[Required()]\n");
                 currentCode.Insert(currentCode.ToString().IndexOf("public int? Age { get; set; }"), "[Required()]\n");
 
-                return currentCode;             
+                return currentCode;
             };
 
-            service = new DSPUnitTestServiceDefinition(metadata, providerKind, defaultData);           
-            service.Writable = true;                                    
+            service = new DSPUnitTestServiceDefinition(metadata, providerKind, defaultData);
+            service.Writable = true;
         }
 
-        [TestCategory("Partition2"), TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void NonNullableComplexPropertyTest()
         {
             test.TestUtil.RunCombinations(
@@ -105,13 +107,14 @@ namespace AstoriaUnitTests.Tests
                 });
         }
 
+        //TODO: Add test cases for complex property ("/People(1)/Office")
         [TestCategory("Partition2"), TestMethod]
         public void NonNullableTopLevelPropertiesTest()
         {
             // Create a Test case
             var testCase = new NonNullablePropertiesTestCase()
             {
-                RequestUris = new string[] { "/People(1)/Office", "/People(1)/Name", "/People(1)/Body", "/People(1)/Age" },
+                RequestUris = new string[] { "/People(1)/Name", "/People(1)/Body", "/People(1)/Age" },
                 HttpMethods = new string[] { "PUT"},
             };            
 
@@ -120,7 +123,7 @@ namespace AstoriaUnitTests.Tests
                 new DSPUnitTestServiceDefinition[]{ service },
                 testCase.HttpMethods,
                 testCase.RequestUris,
-                new string[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.MimeApplicationXml },
+                new string[] { UnitTestsUtil.JsonLightMimeType },
                 ServiceVersion.ValidVersions, // requestDSV
                 ServiceVersion.ValidVersions, // requestMDSV
                 ServiceVersion.ValidVersions, // maxProtocolVersion
@@ -146,14 +149,7 @@ namespace AstoriaUnitTests.Tests
                         if (requestMDSV != null) request.RequestMaxVersion = requestMDSV.ToString();                           
                            
                         request.RequestContentType = format;
-                        if (format == UnitTestsUtil.JsonLightMimeType)
-                        {
-                            request.SetRequestStreamAsText(@"{ @odata.null : true }");       
-                        }
-                        else if(format == UnitTestsUtil.MimeApplicationXml)
-                        {
-                            request.SetRequestStreamAsText(@"<" + requestUri.Substring(requestUri.LastIndexOf("/") + 1) + " xmlns:m=\"http://docs.oasis-open.org/odata/ns/metadata\" m:null=\"true\" />");       
-                        }                           
+                        request.SetRequestStreamAsText(@"{ ""value"" : null }");
 
                         IDisposable dispose = null;
                         if (httpMethod != "GET")

@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
+
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Core
         /// the default encoding for well-known media types.
         /// </returns>
         /// <remarks>
-        /// As per http://tools.ietf.org/html/rfc2616#section-3.7, the type, 
+        /// As per http://tools.ietf.org/html/rfc2616#section-3.7, the type,
         /// subtype and parameter name attributes are case-insensitive.
         /// </remarks>
         internal Encoding SelectEncoding()
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Core
             if (this.parameters != null)
             {
                 foreach (string encodingName in
-                    this.parameters.Where(parameter => 
+                    this.parameters.Where(parameter =>
                         HttpUtils.CompareMediaTypeParameterNames(ODataConstants.Charset, parameter.Key))
                         .Select(parameter => parameter.Value.Trim())
                         .Where(encodingName => encodingName.Length > 0))
@@ -206,11 +206,11 @@ namespace Microsoft.OData.Core
 
             return builder.ToString();
         }
-        
+
         /// <summary>Gets the named encoding if specified.</summary>
         /// <param name="name">Name (possibly null or empty).</param>
         /// <returns>
-        /// The named encoding if specified; the encoding for HTTP missing 
+        /// The named encoding if specified; the encoding for HTTP missing
         /// charset specification otherwise.
         /// </returns>
         /// <remarks>

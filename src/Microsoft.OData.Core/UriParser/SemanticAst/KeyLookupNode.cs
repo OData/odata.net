@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -20,15 +19,15 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// The collection that this key is referring to.
         /// </summary>
-        private readonly EntityCollectionNode source;
+        private readonly CollectionResourceNode source;
 
         /// <summary>
-        /// The navigation source containing the collection this key referrs to.
+        /// The navigation source containing the collection this key refers to.
         /// </summary>
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// The resouce type of the single value the key referrs to.
+        /// The resource type of the single value the key refers to.
         /// </summary>
         private readonly IEdmEntityTypeReference entityTypeReference;
 
@@ -43,19 +42,19 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="source">The collection that this key is referring to.</param>
         /// <param name="keyPropertyValues">List of the properties and their values that we use to look up our return value.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source is null.</exception>
-        public KeyLookupNode(EntityCollectionNode source, IEnumerable<KeyPropertyValue> keyPropertyValues)
+        public KeyLookupNode(CollectionResourceNode source, IEnumerable<KeyPropertyValue> keyPropertyValues)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             this.source = source;
             this.navigationSource = source.NavigationSource;
-            this.entityTypeReference = source.EntityItemType;
+            this.entityTypeReference = source.ItemStructuredType as IEdmEntityTypeReference;
             this.keyPropertyValues = keyPropertyValues;
         }
 
         /// <summary>
         /// Gets the collection that this key is referring to.
         /// </summary>
-        public EntityCollectionNode Source
+        public CollectionResourceNode Source
         {
             get { return this.source; }
         }
@@ -69,7 +68,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the resouce type of the single value that the key referrs to.
+        /// Gets the resource type of the single value that the key refers to.
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
@@ -80,7 +79,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the resouce type of the single value that the key referrs to.
+        /// Gets the resource type of the single value that the key refers to.
         /// </summary>
         public override IEdmEntityTypeReference EntityTypeReference
         {
@@ -88,11 +87,19 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the navigation source that contains the collection this key referrs to.
+        /// Gets the navigation source that contains the collection this key refers to.
         /// </summary>
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// Gets the resource structured type of the single value that the key refers to.
+        /// </summary>
+        public override IEdmStructuredTypeReference StructuredTypeReference
+        {
+            get { return this.entityTypeReference; }
         }
 
         /// <summary>

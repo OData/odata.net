@@ -7,7 +7,6 @@
 namespace AstoriaUnitTests
 {
     using System;
-    using System.Collections;
     using Microsoft.OData.Service.Providers;
     using System.Linq;
     using System.Linq.Expressions;

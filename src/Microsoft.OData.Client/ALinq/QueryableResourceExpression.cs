@@ -92,7 +92,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Member for ResourceSet 
+        /// Member for ResourceSet
         /// </summary>
         internal Expression MemberExpression
         {
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Is this ResourceSet enclosed in an anonymously-typed transparent scope produced by a SelectMany operation? 
+        /// Is this ResourceSet enclosed in an anonymously-typed transparent scope produced by a SelectMany operation?
         /// Applies to navigation ResourceSets.
         /// </summary>
         internal bool HasTransparentScope
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Adds a filter to this ResourceSetExpression.
-        /// If filter is already presents, adds the predicateConjunts to the 
+        /// If filter is already presents, adds the predicateConjunts to the
         /// PredicateConjucts of the filter
         /// </summary>
         /// <param name="predicateConjuncts">The predicate conjuncts.</param>
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Removes the filter expression from current resource set.
-        /// This happens when a separate Where clause is specified in a LINQ 
+        /// This happens when a separate Where clause is specified in a LINQ
         /// expression for every key property.
         /// </summary>
         internal void RemoveFilterExpression()
@@ -440,26 +440,26 @@ namespace Microsoft.OData.Client
         protected abstract QueryableResourceExpression CreateCloneWithNewTypes(Type newType, Type newResourceType);
 
         /// <summary>
-        /// Represents the property accesses required to access both 
+        /// Represents the property accesses required to access both
         /// this resource set and its source resource/set (for navigations).
-        /// 
+        ///
         /// These accesses are required to reference resource sets enclosed
-        /// in transparent scopes introduced by use of SelectMany. 
+        /// in transparent scopes introduced by use of SelectMany.
         /// </summary>
         /// <remarks>
         /// For example, this query:
-        ///  from c in Custs where c.id == 1 
+        ///  from c in Custs where c.id == 1
         ///  from o in c.Orders from od in o.OrderDetails select od
-        ///  
+        ///
         /// Translates to:
         ///  c.Where(c => c.id == 1)
         ///   .SelectMany(c => o, (c, o) => new $(c=c, o=o))
         ///   .SelectMany($ => $.o, ($, od) => od)
-        /// 
+        ///
         /// PatternRules.MatchPropertyProjectionSet identifies Orders as the target of the collector.
         /// PatternRules.MatchTransparentScopeSelector identifies the introduction of a transparent identifer.
-        /// 
-        /// A transparent accessor is associated with Orders, with 'c' being the source accesor, 
+        ///
+        /// A transparent accessor is associated with Orders, with 'c' being the source accesor,
         /// and 'o' being the (introduced) accessor.
         /// </remarks>
         [DebuggerDisplay("{ToString()}")]

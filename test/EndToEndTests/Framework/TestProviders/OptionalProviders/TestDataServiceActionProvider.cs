@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Framework.TestProviders.OptionalProviders
     using System.Collections.Generic;
     using System.Linq;
 #if TESTPROVIDERS
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 #else
     using Microsoft.Data.OData;
 #endif

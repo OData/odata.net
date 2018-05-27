@@ -4,12 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
 
     #endregion Namespaces
 
@@ -28,7 +27,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets or sets the items in the bag value.</summary>
         /// <returns>The items in the bag value.</returns>
-        public IEnumerable Items
+        public IEnumerable<object> Items
         {
             get;
             set;

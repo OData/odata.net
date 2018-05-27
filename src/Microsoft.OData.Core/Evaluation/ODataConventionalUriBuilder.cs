@@ -4,20 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Evaluation
-{
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
-    using Microsoft.OData.Core.Metadata;
-    #endregion
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using Microsoft.OData.JsonLight;
 
+namespace Microsoft.OData.Evaluation
+{
     /// <summary>
     /// Implementation of OData URI builder based on OData protocol conventions.
     /// </summary>
@@ -26,9 +21,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <summary>The base URI of the service. This will be used as the base URI for all entity containers.</summary>
         private readonly Uri serviceBaseUri;
 
-        /// <summary>The specific url-convention to use.</summary>
-        private readonly UrlConvention urlConvention;
-
         /// <summary>The specific key-serializer to use based on the convention.</summary>
         private readonly KeySerializer keySerializer;
 
@@ -36,15 +28,14 @@ namespace Microsoft.OData.Core.Evaluation
         /// Constructor.
         /// </summary>
         /// <param name="serviceBaseUri">The base URI of the service. This will be used as the base URI for all entity containers.</param>
-        /// <param name="urlConvention">The specific url convention to use.</param>
-        internal ODataConventionalUriBuilder(Uri serviceBaseUri, UrlConvention urlConvention)
+        /// <param name="urlKeyDelimiter">Key delimiter used in url.</param>
+        internal ODataConventionalUriBuilder(Uri serviceBaseUri, ODataUrlKeyDelimiter urlKeyDelimiter)
         {
             Debug.Assert(serviceBaseUri != null && serviceBaseUri.IsAbsoluteUri, "serviceBaseUri != null && serviceBaseUri.IsAbsoluteUri");
-            Debug.Assert(urlConvention != null, "urlConvention != null");
+            Debug.Assert(urlKeyDelimiter != null, "urlKeyDelimiter != null");
 
             this.serviceBaseUri = serviceBaseUri;
-            this.urlConvention = urlConvention;
-            this.keySerializer = KeySerializer.Create(this.urlConvention);
+            this.keySerializer = KeySerializer.Create(urlKeyDelimiter.EnableKeyAsSegment);
         }
 
         /// <summary>
@@ -101,7 +92,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="streamPropertyName">
-        /// The name of the stream property the link is computed for; 
+        /// The name of the stream property the link is computed for;
         /// or null for the default media resource.
         /// </param>
         /// <returns>The edit link for the stream.</returns>
@@ -125,7 +116,7 @@ namespace Microsoft.OData.Core.Evaluation
         /// </summary>
         /// <param name="baseUri">The URI to append to.</param>
         /// <param name="streamPropertyName">
-        /// The name of the stream property the link is computed for; 
+        /// The name of the stream property the link is computed for;
         /// or null for the default media resource.
         /// </param>
         /// <returns>The read link for the stream.</returns>
@@ -226,7 +217,7 @@ namespace Microsoft.OData.Core.Evaluation
         [Conditional("DEBUG")]
         private static void ValidateBaseUri(Uri baseUri)
         {
-            Debug.Assert(baseUri != null && baseUri.IsAbsoluteUri, "baseUri != null && baseUri.IsAbsoluteUri");
+            Debug.Assert(baseUri != null, "baseUri != null");
         }
 
         /// <summary>
@@ -236,7 +227,6 @@ namespace Microsoft.OData.Core.Evaluation
         /// <param name="segment">The segment to append.</param>
         /// <param name="escapeSegment">True if the new segment should be escaped, otherwise False.</param>
         /// <returns>New URI with the appended segment and no trailing slash added.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are model elements like property names or keywords.")]
         private static Uri AppendSegment(Uri baseUri, string segment, bool escapeSegment)
         {
             string baseUriString = UriUtils.UriToString(baseUri);
@@ -248,7 +238,7 @@ namespace Microsoft.OData.Core.Evaluation
 
             if (baseUriString[baseUriString.Length - 1] != ODataConstants.UriSegmentSeparatorChar)
             {
-                return new Uri(baseUriString + ODataConstants.UriSegmentSeparator + segment, UriKind.Absolute);
+                return new Uri(baseUriString + ODataConstants.UriSegmentSeparator + segment, UriKind.RelativeOrAbsolute);
             }
             else
             {
@@ -267,7 +257,7 @@ namespace Microsoft.OData.Core.Evaluation
         {
             if (keyPropertyValue == null)
             {
-                throw new ODataException(OData.Core.Strings.ODataConventionalUriBuilder_NullKeyValue(keyPropertyName, entityTypeName));
+                throw new ODataException(Strings.ODataConventionalUriBuilder_NullKeyValue(keyPropertyName, entityTypeName));
             }
 
             return keyPropertyValue;
@@ -286,7 +276,7 @@ namespace Microsoft.OData.Core.Evaluation
 
             if (!keyProperties.Any())
             {
-                throw new ODataException(OData.Core.Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties(entityTypeName));
+                throw new ODataException(Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties(entityTypeName));
             }
 
             this.keySerializer.AppendKeyExpression(builder, keyProperties, p => p.Key, p => ValidateKeyValue(p.Key, p.Value, entityTypeName));

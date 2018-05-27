@@ -5,15 +5,6 @@
 //---------------------------------------------------------------------
 
 #pragma warning disable 436
-#if INTERNAL_DROP
-#region Namespaces
-using System.Runtime.CompilerServices;
-#endregion Namespaces
-
-[assembly: InternalsVisibleTo("System.Runtime.Serialization.OData" + AssemblyRef.ProductPublicKey)]
-[assembly: InternalsVisibleTo("Microsoft.OData.Query" + AssemblyRef.ProductPublicKey)]
-
-#else
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests.TDDUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Client.TDDUnitTests" + AssemblyRef.TestPublicKey)]
@@ -26,8 +17,8 @@ using System.Runtime.CompilerServices;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.Taupo.OData.Reader.Tests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.Taupo.OData.Writer.Tests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.Taupo.OData" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Query" + AssemblyRef.ProductPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Core.Tests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Client.Tests" + AssemblyRef.TestPublicKey)]
-#endif
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.OData.DependencyInjection.NetCore" + AssemblyRef.TestPublicKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Core.Tests.NetCore" + AssemblyRef.TestPublicKey)]
 #pragma warning restore 436

@@ -466,7 +466,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader, getReferencedModelFromMap);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, getReferencedModelFromMap);
                 }
                 finally
                 {
@@ -1757,7 +1757,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceRefere
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader, getReferencedModelFromMap);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, getReferencedModelFromMap);
                 }
                 finally
                 {

@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Service.Providers
 {
     #region Namespaces
@@ -18,17 +20,14 @@ namespace Microsoft.OData.Service.Providers
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using CommonUtil = Microsoft.OData.Service.CommonUtil;
 
     #endregion Namespaces
@@ -232,11 +231,11 @@ namespace Microsoft.OData.Service.Providers
         }
 
         /// <summary>
-        /// Get the value of the default value annotation (if present).
+        /// Get the value of the default annotation (if present).
         /// </summary>
-        /// <param name="annotations">The annotations that optionally hold the default value annotation.</param>
+        /// <param name="annotations">The annotations that optionally hold the default annotation.</param>
         /// <returns>The string representation of the default value if present; otherwise null.</returns>
-        /// <remarks>This method will remove the default value annotation from the annotations if found.</remarks>
+        /// <remarks>This method will remove the default annotation from the annotations if found.</remarks>
         internal static string GetAndRemoveDefaultValue(List<KeyValuePair<string, object>> annotations)
         {
             if (annotations == null || annotations.Count == 0)

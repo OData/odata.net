@@ -4,41 +4,54 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
-    /// A aggregate expression representing a aggregation transformation.
+    /// Represents an aggregate expression that aggregates a single value entity.
     /// </summary>
-    public sealed class AggregateExpression
+    public sealed class AggregateExpression : AggregateExpressionBase
     {
         private readonly AggregationMethod method;
 
-        private readonly SingleValueNode expression;
+        private readonly AggregationMethodDefinition methodDefinition;
 
-        private readonly string alias;
+        private readonly SingleValueNode expression;
 
         private readonly IEdmTypeReference typeReference;
 
         /// <summary>
-        /// Create a AggregateExpression.
+        /// Create a PropertyAggregateExpression.
         /// </summary>
         /// <param name="expression">The aggregation expression.</param>
         /// <param name="method">The <see cref="AggregationMethod"/>.</param>
         /// <param name="alias">The aggregation alias.</param>
         /// <param name="typeReference">The <see cref="IEdmTypeReference"/> of this aggregate expression.</param>
         public AggregateExpression(SingleValueNode expression, AggregationMethod method, string alias, IEdmTypeReference typeReference)
+            : base(AggregateExpressionKind.PropertyAggregate, alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
-            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
 
             this.expression = expression;
             this.method = method;
-            this.alias = alias;
+
+            //// TypeRefrence is null for dynamic properties
             this.typeReference = typeReference;
+        }
+
+        /// <summary>
+        /// Create a AggregateExpression.
+        /// </summary>
+        /// <param name="expression">The aggregation expression.</param>
+        /// <param name="methodDefinition">The <see cref="AggregationMethodDefinition"/>.</param>
+        /// <param name="alias">The aggregation alias.</param>
+        /// <param name="typeReference">The <see cref="IEdmTypeReference"/> of this aggregate expression.</param>
+        public AggregateExpression(SingleValueNode expression, AggregationMethodDefinition methodDefinition, string alias, IEdmTypeReference typeReference)
+            : this(expression, methodDefinition.MethodKind, alias, typeReference)
+        {
+            this.methodDefinition = methodDefinition;
         }
 
         /// <summary>
@@ -46,7 +59,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         /// </summary>
         public SingleValueNode Expression
         {
-            get 
+            get
             {
                 return expression;
             }
@@ -64,13 +77,13 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Gets the aggregation alias.
+        /// Gets the <see cref="AggregationMethodDefinition"/>.
         /// </summary>
-        public string Alias
+        public AggregationMethodDefinition MethodDefinition
         {
             get
             {
-                return alias;
+                return methodDefinition;
             }
         }
 

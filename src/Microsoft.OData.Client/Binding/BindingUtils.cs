@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
                 throw new InvalidOperationException(Strings.DataBinding_Util_UnknownEntitySetName(entity.GetType().FullName));
             }
         }
-        
+
         /// <summary>
         /// Given a collection type, gets it's entity type
         /// </summary>

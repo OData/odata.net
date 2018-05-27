@@ -7,9 +7,6 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Microsoft.OData.Edm;
 
     public interface IODataDataSource
@@ -19,6 +16,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
         IODataOperationProvider OperationProvider { get; }
         IODataStreamProvider StreamProvider { get; }
         IEdmModel Model { get; }
+        IServiceProvider Container { get; }
 
         void Reset();
         void Initialize();

@@ -4,9 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
@@ -25,8 +23,6 @@ namespace Microsoft.OData.Core.Json
         /// <returns>true if the value should be written as a string, false if should be written as a JSON number.</returns>
         internal static bool IsDoubleValueSerializedAsString(double value)
         {
-#if ODATALIB
-#endif
             return Double.IsInfinity(value) || Double.IsNaN(value);
         }
 
@@ -39,10 +35,12 @@ namespace Microsoft.OData.Core.Json
         /// <returns>true if the given primitive value is of a basic JSON type, false otherwise.</returns>
         internal static bool ValueTypeMatchesJsonType(ODataPrimitiveValue primitiveValue, IEdmPrimitiveTypeReference valueTypeReference)
         {
-#if ODATALIB
-#endif
+            return ValueTypeMatchesJsonType(primitiveValue, valueTypeReference.PrimitiveKind());
+        }
 
-            switch (valueTypeReference.PrimitiveKind())
+        internal static bool ValueTypeMatchesJsonType(ODataPrimitiveValue primitiveValue, EdmPrimitiveTypeKind primitiveTypeKind)
+        {
+            switch (primitiveTypeKind)
             {
                 // If the value being serialized is of a basic type where we can rely on just the JSON representation to convey type information, then never write the type name.
                 case EdmPrimitiveTypeKind.Int32:
@@ -54,15 +52,13 @@ namespace Microsoft.OData.Core.Json
                     double doubleValue = (double)primitiveValue.Value;
 
                     // If a double value is positive infinity, negative infinity, or NaN, we serialize the double as a string.
-                    // Thus the reader can't infer the type from the JSON representation, and we must write the type name explicitly 
+                    // Thus the reader can't infer the type from the JSON representation, and we must write the type name explicitly
                     // (i.e., if the property is open or the property type is assumed to be unknown, as is the case when writing in full metadata mode).
                     return !IsDoubleValueSerializedAsString(doubleValue);
-                
+
                 default:
                     return false;
             }
         }
     }
 }
-
-#endif

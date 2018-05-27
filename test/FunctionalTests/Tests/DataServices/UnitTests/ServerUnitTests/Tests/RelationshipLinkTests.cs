@@ -35,7 +35,9 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
-        [TestClass]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+        [Ignore] // Remove Atom
+        // [TestClass]
         public class RelationshipLinkTests : AstoriaTestCase
         {
             [TestMethod]

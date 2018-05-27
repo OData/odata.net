@@ -8,14 +8,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.ODataLibTest;
@@ -23,7 +20,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
@@ -31,13 +27,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
     using Microsoft.Test.Taupo.OData.JsonLight;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.Atom;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ODataPropertyKind = Microsoft.OData.Core.ODataPropertyKind;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for writing properties with the OData writer.
     /// </summary>
@@ -45,7 +40,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     public class WriterPropertyTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
-        private static readonly ODataFeedAndEntrySerializationInfo MySerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
             NavigationSourceEntityTypeName = "TestModel.EntityType",
             NavigationSourceName = "MySet",
@@ -78,16 +73,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         // This test only runs on async which is not supported on Phone and Silverlight
 #if !SILVERLIGHT && !WINDOWS_PHONE
-
-        [TestMethod, Variation(Description = "Test single property ATOM payloads from payload Generator.")]
-        [MethodImplAttribute(MethodImplOptions.NoOptimization)]
-        public void TaupoSinglePropertyTests_Atom()
-        {
-            IEnumerable<EntityInstance> generator = PayloadGenerator.GenerateAtomPayloads();
-            this.TestSinglePropertyGeneration(ODataFormat.Atom, generator);
-        }
-
-        [TestMethod, Variation(Description = "Test single property JSON payloads from payload Generator.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test single property JSON payloads from payload Generator.")]
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void TaupoSinglePropertyTests_Json()
         {
@@ -96,7 +83,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             this.TestSinglePropertyGeneration(ODataFormat.Json, generator);
         }
 
-        [TestMethod, Variation(Description = "Test complex property payloads with metadata")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test complex property payloads with metadata")]
         public void TaupoComplexPropertyMetadataErrorTests()
         {
             var metadata = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildDefaultAstoriaTestModel();
@@ -129,109 +117,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> CreatePrimitiveTopLevelPropertyDescriptors()
         {
             var model = new EdmModel();
-            ODataProperty[] properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(model);
+            ODataProperty[] properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(model).Where(p => p.Value != null).ToArray();
             model.Fixup();
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithPrimitiveProperties");
 
-            string[] propertiesAtomResults = new string[]
-            {
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true""/>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Double"" >1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Binary"">AAEAAQ==</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Single"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Boolean"">true</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Byte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10Z</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10+01:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10-08:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Decimal"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Guid"">11111111-2222-3333-4444-555555555555</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""SByte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int16"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int32"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int64"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Duration"">PT12M20.4S</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyPolygonValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyCollection"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyCollectionValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyMultiPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyMultiPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyMultiLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyMultiLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyMultiPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyMultiPolygonValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryPolygonValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryCollection"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryCollectionValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryMultiPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryMultiPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryMultiLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryMultiLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryMultiPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryMultiPolygonValue) + "</{5}>",
-
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Double"" >1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Single"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Boolean"">true</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Byte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10Z</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10+01:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10-08:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Decimal"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Guid"">11111111-2222-3333-4444-555555555555</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""SByte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int16"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int32"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int64"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Duration"">PT12M20.4S</{5}>",
-
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-            };
-            propertiesAtomResults = propertiesAtomResults
-                .Select(r =>
-                    string.Format(r,
-                        TestAtomConstants.ODataMetadataNamespacePrefix,
-                        TestAtomConstants.ODataMetadataNamespace,
-                        TestAtomConstants.ODataNamespacePrefix,
-                        TestAtomConstants.ODataNamespace,
-                        TestAtomConstants.AtomTypeAttributeName,
-                        TestAtomConstants.ODataValueElementName))
-                .ToArray();
-
             string[] propertiesJsonLightResults = new string[]
             {
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":1.0",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"AAEAAQ==\"",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
@@ -280,39 +171,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"PT12M20.4S\"",
-
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
             };
 
             string[][] propertiesJsonLightRequestResultLines = new string[propertiesJsonLightResults.Length][];
@@ -323,11 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 var property = owningType.FindProperty(properties[i].Name);
                 var typeName = property.Type.TestFullName();
-                if (properties[i].Value == null)
-                {
-                    typeName = "Edm.Null";
-                }
-                else if(properties[i].Value is ISpatial)
+                if (properties[i].Value is ISpatial)
                 {
                     typeName = "Edm." + properties[i].Value.GetType().BaseType.Name;
                 }
@@ -342,7 +196,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             for (int i = 0; i < properties.Length; ++i)
             {
                 ODataProperty property = properties[i];
-                string atomResult = propertiesAtomResults[i];
                 string[] jsonLightRequestResult = propertiesJsonLightRequestResultLines[i];
                 string[] jsonLightResponseResult = propertiesJsonLightResponseResultLines[i];
 
@@ -351,14 +204,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     property,
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = atomResult,
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
@@ -372,64 +218,36 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             throw new NotSupportedException("Format " + formatName + " + is not supported.");
                         }
                     })
-                    {
-                        Model = model,
-                        PayloadEdmElementContainer = owningType
-                    };
+                {
+                    Model = model,
+                    PayloadEdmElementContainer = owningType
+                };
             }
         }
         #endregion Primitive properties
 
         #region Complex properties
-        private IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> CreateComplexPropertyDescriptors()
+        private IEnumerable<PayloadWriterTestDescriptor<ODataItem[]>> CreateComplexPropertyDescriptors()
         {
             EdmModel model = new EdmModel();
-            ODataProperty[] properties = ObjectModelUtils.CreateDefaultComplexProperties(model);
+            ODataItem[][] properties = ObjectModelUtils.CreateDefaultComplexProperties(model);
             model.Fixup();
 
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithComplexProperties");
-
-            string[] propertiesAtomResults = new string[]
-            {
-                string.Join("$(NL)",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""My.AddressType"" xmlns:{2}=""{3}"">",
-                @"$(Indent)<{2}:Street>One Redmond Way</{2}:Street>",
-                @"$(Indent)<{2}:City xml:space=""preserve""> Redmond</{2}:City>",
-                @"</{5}>"),
-                string.Join("$(NL)",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""My.NestedAddressType"">",
-                @"$(Indent)<Street {0}:{4}=""My.StreetType"" xmlns=""{3}"">",
-                @"$(Indent)$(Indent)<StreetName>One Redmond Way</StreetName>",
-                @"$(Indent)$(Indent)<Number {0}:{4}=""Int32"">1234</Number>",
-                @"$(Indent)</Street>",
-                @"$(Indent)<{2}:City xml:space=""preserve"" xmlns:{2}=""{3}"">Redmond </{2}:City>",
-                @"</{5}>")
-            };
-            propertiesAtomResults = propertiesAtomResults
-                .Select(r =>
-                    string.Format(r,
-                        TestAtomConstants.ODataMetadataNamespacePrefix,
-                        TestAtomConstants.ODataMetadataNamespace,
-                        TestAtomConstants.ODataNamespacePrefix,
-                        TestAtomConstants.ODataNamespace,
-                        TestAtomConstants.AtomTypeAttributeName,
-                        TestAtomConstants.ODataValueElementName))
-                .ToArray();
-
 
             Func<bool, string[][]> propertiesJsonLightResultsFunc = isRequest => new string[][]
             {
                 StringUtils.Flatten(
                     "{",
-                    "$(Indent)" + 
+                    "$(Indent)" +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#My.AddressType\"," +
                         "\"Street\":\"One Redmond Way\",\"City\":\" Redmond\"",
                     "}"
                 ),
                 StringUtils.Flatten(
                     "{",
-                    "$(Indent)" + 
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#My.NestedAddressType\"," + 
+                    "$(Indent)" +
+                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#My.NestedAddressType\"," +
                         "\"Street\":{",
                     "$(Indent)$(Indent)\"StreetName\":\"One Redmond Way\",\"Number\":1234",
                     "$(Indent)},\"City\":\"Redmond \"",
@@ -441,34 +259,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             for (int i = 0; i < properties.Length; ++i)
             {
-                ODataProperty property = properties[i];
-                string atomResult = propertiesAtomResults[i];
+                ODataItem[] property = properties[i];
                 string[] jsonLightRequestResult = propertiesJsonLightRequestResults[i];
                 string[] jsonLightResponseResult = propertiesJsonLightResponseResults[i];
 
-                yield return new PayloadWriterTestDescriptor<ODataProperty>(
+                yield return new PayloadWriterTestDescriptor<ODataItem[]>(
                     this.Settings,
                     property,
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = atomResult
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
-                        {
-                            if (((ODataComplexValue)property.Value).TypeName == null)
-                            {
-                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    // TODO: Need to localize error messages that missed string freeze deadline.
-                                    ExpectedException = new ODataException("A type name was not provided for an instance of ODataComplexValue.")
-                                };
-                            }
-
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
                                 Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResult : jsonLightResponseResult),
@@ -481,10 +282,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             throw new NotSupportedException("Format " + formatName + " + is not supported.");
                         }
                     })
-                    {
-                        Model = model,
-                        PayloadEdmElementContainer = owningType
-                    };
+                {
+                    Model = model,
+                    PayloadEdmElementContainer = owningType
+                };
             }
         }
         #endregion Complex properties
@@ -498,81 +299,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithCollectionProperties");
 
-            string[] propertiesAtomResults = new string[]
-            {
-                @"<{6} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{5}=""" + EntityModelUtils.GetCollectionTypeName("Edm.String") + @""" />",
-                string.Join(
-                    "$(NL)",
-                    @"<{6} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{5}=""" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + @""">",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">0</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">1</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">2</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">3</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">4</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">5</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">6</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">7</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">8</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">9</{0}:{4}>",
-                    @"</{6}>"),
-                string.Join(
-                    "$(NL)",
-                    @"<{6} xmlns=""{1}"" xmlns:{0}=""{1}"">",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.Int32"">0</{0}:{4} >",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.Int32"">1</{0}:{4} >",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.Int32"">2</{0}:{4} >",
-                    @"</{6}>"),
-                string.Join(
-                    "$(NL)",
-                    @"<{6} xmlns=""{1}"" xmlns:{0}=""{1}"">",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">One</{0}:{4} >",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">Two</{0}:{4} >",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">Three</{0}:{4} >",
-                    @"</{6}>"),
-                string.Join(
-                    "$(NL)",
-                    @"$(Indent)<{6} xmlns=""{1}"" xmlns:{0}=""{1}"">",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyCollection"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyCollectionValue) + "</{0}:{4}>",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyLineString"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyLineStringValue) + "</{0}:{4}>",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyMultiLineString"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiLineStringValue) + "</{0}:{4}>",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyMultiPoint"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiPointValue) + "</{0}:{4}>",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyMultiPolygon"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiPolygonValue) + "</{0}:{4}>",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyPoint"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPointValue) + "</{0}:{4}>",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyPolygon"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPolygonValue) + "</{0}:{4}>",
-                    @"$(Indent)$(Indent)<{0}:{4} xmlns:{2}=""{3}"" {0}:{5}=""Edm.GeographyPoint"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyValue) + "</{0}:{4}>",
-                    @"$(Indent)</{6}>"),
-                string.Join(
-                    "$(NL)",
-                    @"<{6} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{5}=""" + EntityModelUtils.GetCollectionTypeName("My.AddressType") + @""">",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">",
-                    @"$(Indent)$(Indent)<{2}:Street xmlns:{2}=""{3}"">One Redmond Way</{2}:Street>",
-                    @"$(Indent)$(Indent)<{2}:City xml:space=""preserve"" > Redmond</{2}:City>",
-                    @"$(Indent)</{0}:{4}>",
-                    @"$(Indent)<{0}:{4} xmlns:{2}=""{3}"">",
-                    @"$(Indent)$(Indent)<{2}:Street>Am Euro Platz 3</{2}:Street>",
-                    @"$(Indent)$(Indent)<{2}:City xml:space=""preserve"">Vienna </{2}:City>",
-                    @"$(Indent)</{0}:{4}>",
-                    @"</{6}>"),
-                    string.Empty,
-                    string.Empty
-            };
-            propertiesAtomResults = propertiesAtomResults
-                .Select(r =>
-                    string.Format(r,
-                        TestAtomConstants.ODataMetadataNamespacePrefix,
-                        TestAtomConstants.ODataMetadataNamespace,
-                        TestAtomConstants.ODataNamespacePrefix,
-                        TestAtomConstants.ODataNamespace,
-                        TestAtomConstants.ODataCollectionItemElementName,
-                        TestAtomConstants.AtomTypeAttributeName,
-                        TestAtomConstants.ODataValueElementName))
-                .ToArray();
-
             Func<bool, string[][]> propertiesJsonLightResultsFunc = isRequest => new string[][]
             {
                 StringUtils.Flatten(
                     "{",
-                    "$(Indent)" + 
+                    "$(Indent)" +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.String)\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)",
@@ -581,7 +312,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ),
                 StringUtils.Flatten(
                     "{",
-                    "$(Indent)" + 
+                    "$(Indent)" +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Int32)\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)0,1,2,3,4,5,6,7,8,9",
@@ -590,7 +321,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ),
                 StringUtils.Flatten(
                     "{",
-                    "$(Indent)" + 
+                    "$(Indent)" +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Int32)\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)0,1,2",
@@ -599,7 +330,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ),
                 StringUtils.Flatten(
                     "{",
-                    "$(Indent)" + 
+                    "$(Indent)" +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.String)\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)\"One\",\"Two\",\"Three\"",
@@ -608,7 +339,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ),
                 StringUtils.Flatten(
                     "{",
-                    "$(Indent)" + 
+                    "$(Indent)" +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Geography)\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
                     JsonUtils.GetJsonLines(
@@ -624,20 +355,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     "$(Indent)]",
                     "}"
                 ),
-                StringUtils.Flatten(
-                    "{",
-                    "$(Indent)" + 
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(My.AddressType)\"," +
-                        "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
-                    "$(Indent)$(Indent){",
-                    "$(Indent)$(Indent)$(Indent)\"Street\":\"One Redmond Way\",\"City\":\" Redmond\"",
-                    "$(Indent)$(Indent)},{",
-                    "$(Indent)$(Indent)$(Indent)\"Street\":\"Am Euro Platz 3\",\"City\":\"Vienna \"",
-                    "$(Indent)$(Indent)}",
-                    "$(Indent)]",
-                    "}"
-                ),
-                new string[0], 
+                new string[0],
                 new string[0],
             };
 
@@ -647,7 +365,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             for (int i = 0; i < properties.Length; ++i)
             {
                 ODataProperty property = properties[i];
-                string atomResult = propertiesAtomResults[i];
                 string[] jsonLightRequestResultLines = propertiesJsonLightRequestResults[i];
                 string[] jsonLightResponseResultLines = propertiesJsonLightResponseResults[i];
 
@@ -656,17 +373,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     property,
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = atomResult,
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             ODataCollectionValue collectionValue = ((ODataCollectionValue)property.Value);
-                            if (string.IsNullOrEmpty(collectionValue.TypeName) && (collectionValue.GetAnnotation<SerializationTypeNameAnnotation>() == null || string.IsNullOrEmpty(collectionValue.GetAnnotation<SerializationTypeNameAnnotation>().TypeName)))
+                            if (string.IsNullOrEmpty(collectionValue.TypeName) && (collectionValue.TypeAnnotation == null || string.IsNullOrEmpty(collectionValue.TypeAnnotation.TypeName)))
                             {
                                 return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                 {
@@ -688,11 +398,100 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             throw new NotSupportedException("Format " + formatName + " + is not supported.");
                         }
                     })
-                    {
-                        Model = model,
-                        PayloadEdmElementContainer = owningType
-                    };
+                {
+                    Model = model,
+                    PayloadEdmElementContainer = owningType
+                };
             }
+        }
+
+        private PayloadWriterTestDescriptor<ODataItem[]> CreateComplexCollectionPropertyDescriptors()
+        {
+            EdmModel model = new EdmModel();
+            var property = CreateDefaultComplexCollectionProperties(model);
+            model.Fixup();
+
+            var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithCollectionProperties");
+
+            Func<bool, string[]> propertiesJsonLightResultsFunc = isRequest => new string[]
+            {
+                "{",
+                "$(Indent)" +
+                    "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(My.AddressType)\"," +
+                    "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                "$(Indent)$(Indent){",
+                "$(Indent)$(Indent)$(Indent)\"Street\":\"One Redmond Way\",\"City\":\" Redmond\"",
+                "$(Indent)$(Indent)},{",
+                "$(Indent)$(Indent)$(Indent)\"Street\":\"Am Euro Platz 3\",\"City\":\"Vienna \"",
+                "$(Indent)$(Indent)}",
+                "$(Indent)]",
+                "}"
+            };
+
+            string[] jsonLightRequestResultLines = propertiesJsonLightResultsFunc(true);
+            string[] jsonLightResponseResultLines = propertiesJsonLightResultsFunc(false);
+
+            return new PayloadWriterTestDescriptor<ODataItem[]>(
+                this.Settings,
+                property,
+                (testConfiguration) =>
+                {
+                    if (testConfiguration.Format == ODataFormat.Json)
+                    {
+                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                        {
+                            Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResultLines : jsonLightResponseResultLines),
+                            FragmentExtractor = testConfiguration.IsRequest
+                                ? (Func<JsonValue, JsonValue>)null
+                                : (result) => result
+                        };
+                    }
+                    else
+                    {
+                        string formatName = testConfiguration.Format == null ? "null" : testConfiguration.Format.GetType().Name;
+                        throw new NotSupportedException("Format " + formatName + " + is not supported.");
+                    }
+                })
+            {
+                Model = model,
+                PayloadEdmElementContainer = owningType
+            };
+        }
+
+        public static ODataItem[] CreateDefaultComplexCollectionProperties(EdmModel model = null)
+        {
+            if (model != null)
+            {
+                var addressType = model.ComplexType("AddressType", "My")
+                    .Property("Street", EdmPrimitiveTypeKind.String)
+                    .Property("City", EdmPrimitiveTypeKind.String);
+
+                model.EntityType("EntryWithCollectionProperties", "TestModel")
+                .Property("ComplexCollection", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, true))));
+            }
+
+            return new ODataItem[]
+            {
+                new ODataResourceSet(){TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType")},
+                new ODataResource()
+                {
+                    TypeName = "My.AddressType",
+                    Properties = new []
+                    {
+                        new ODataProperty() { Name = "Street", Value = "One Redmond Way" },
+                        new ODataProperty() { Name = "City", Value = " Redmond" },
+                    }
+                },
+                new ODataResource()
+                {
+                    TypeName = null,
+                    Properties = new []
+                    {
+                        new ODataProperty() { Name = "Street", Value = "Am Euro Platz 3" },
+                        new ODataProperty() { Name = "City", Value = "Vienna " },
+                    }
+                }
+            };
         }
         #endregion Collection properties
 
@@ -700,7 +499,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public void PropertyTests()
         {
             var testDescriptors = this.CreatePrimitiveTopLevelPropertyDescriptors()
-                .Concat(this.CreateComplexPropertyDescriptors())
                 .Concat(this.CreateCollectionPropertyDescriptors());
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -714,7 +512,95 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Test in-stream error cases when writing a property.")]
+        [TestMethod, Variation(Description = "Test property writing.")]
+        public void ComplexPropertyTests()
+        {
+            var testDescriptors = this.CreateComplexPropertyDescriptors();
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent,
+                (testDescriptor, testConfiguration) =>
+                {
+                    testConfiguration = testConfiguration.Clone();
+                    testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger,
+                        writeAction:
+
+                        (messageWriter) =>
+                        {
+                            var resourceWriter = messageWriter.CreateODataResourceWriter();
+                            foreach (var item in testDescriptor.PayloadItems.Single())
+                            {
+                                var resource = item as ODataResource;
+                                if (resource != null)
+                                {
+                                    resourceWriter.WriteStart(resource);
+                                }
+                                else
+                                {
+                                    var nestedInfo = item as ODataNestedResourceInfo;
+                                    if (nestedInfo != null)
+                                    {
+                                        resourceWriter.WriteStart(nestedInfo);
+                                    }
+                                }
+                            }
+
+                            foreach (var item in testDescriptor.PayloadItems.Single())
+                            {
+                                resourceWriter.WriteEnd();
+                            }
+                        });
+                });
+        }
+
+        [TestMethod, Variation(Description = "Test property writing.")]
+        public void ComplexCollectionPropertyTests()
+        {
+            var testDescriptors = new[] { this.CreateComplexCollectionPropertyDescriptors() };
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent,
+                (testDescriptor, testConfiguration) =>
+                {
+                    testConfiguration = testConfiguration.Clone();
+                    testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger,
+                        writeAction:
+
+                        (messageWriter) =>
+                        {
+                            var resourceWriter = messageWriter.CreateODataResourceSetWriter();
+                            foreach (var item in testDescriptor.PayloadItems.Single())
+                            {
+                                var resource = item as ODataResource;
+                                if (resource != null)
+                                {
+                                    resourceWriter.WriteStart(resource);
+                                    resourceWriter.WriteEnd();
+                                }
+                                else
+                                {
+                                    var set = item as ODataResourceSet;
+                                    if (set != null)
+                                    {
+                                        resourceWriter.WriteStart(set);
+                                    }
+                                }
+                            }
+
+                            foreach (var item in testDescriptor.PayloadItems.Single().OfType<ODataResourceSet>())
+                            {
+                                resourceWriter.WriteEnd();
+                            }
+                        });
+                });
+        }
+
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test in-stream error cases when writing a property.")]
         public void PropertyInStreamErrorTests()
         {
             EdmModel model = new EdmModel();
@@ -750,7 +636,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Test error case when writing a property with an invalid Xml character in its value.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Test error case when writing a property with an invalid Xml character in its value.")]
         public void InvalidXmlCharactersTests()
         {
             ODataProperty property = ObjectModelUtils.CreateDefaultPrimitiveProperties().First(p => p.Name == "String");
@@ -771,7 +658,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             PayloadWriterTestDescriptor.WriterTestExpectedResultCallback expectedResultCallback =
                 (testConfig) =>
                 {
-                    if (testConfig.MessageWriterSettings.CheckCharacters)
+                    if (testConfig.MessageWriterSettings.EnableCharactersCheck)
                     {
                         return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
@@ -804,18 +691,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger);
 
                     WriterTestConfiguration otherTestConfiguration = testConfiguration.Clone();
-                    otherTestConfiguration.MessageWriterSettings.CheckCharacters = !testConfiguration.MessageWriterSettings.CheckCharacters;
+                    otherTestConfiguration.MessageWriterSettings.EnableCharactersCheck = !testConfiguration.MessageWriterSettings.EnableCharactersCheck;
                     testDescriptor.RunTopLevelPropertyPayload(otherTestConfiguration, baselineLogger: this.Logger);
                 });
         }
 
-        [TestMethod, Variation(Description = "Makes sure xml:space=\"preserve\" is written for string values with leading and/or trailing spaces.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Makes sure xml:space=\"preserve\" is written for string values with leading and/or trailing spaces.")]
         public void PreserveSpaceTests()
         {
             ODataProperty property = ObjectModelUtils.CreateDefaultPrimitiveProperties().First(p => p.Name == "String");
             this.Assert.AreEqual("String", property.Name, "Expected string property to be the primitive property at position 16.");
 
-            string[] whiteSpaces = new string[] 
+            string[] whiteSpaces = new string[]
             {
                 " ",
                 "\t",
@@ -867,10 +755,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger);
-                });                        
+                });
         }
 
-        [TestMethod, Variation(Description = "Verifies correct failures if invalid property names are specified.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies correct failures if invalid property names are specified.")]
         public void InvalidPropertyNameTest()
         {
             EdmModel model = new EdmModel();
@@ -908,7 +797,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verifies correct failures if invalid property values are specified.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies correct failures if invalid property values are specified.")]
         public void InvalidPropertyValueTest()
         {
             EdmModel model = new EdmModel();
@@ -930,8 +820,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     this.Settings,
                     new ODataProperty { Name = "CollectionProperty", Value = new ODataCollectionValue { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String"), Items = new object[] { new ODataMessageWriterSettings() } } },
                     (tc) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                    { 
-                        ExpectedException2 =  ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.Core.ODataMessageWriterSettings"),
+                    {
+                        ExpectedException2 =  ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.ODataMessageWriterSettings"),
                     }
                 ) { Model = model, PayloadEdmElementContainer = container }
             };
@@ -989,7 +879,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new NonNullableEdmPrimitiveTypeWithValue(EdmPrimitiveTypeKind.Duration, TimeSpan.FromMinutes(12.34), "PT12M20.4S", "\"PT12M20.4S\""),
             };
 
-
         // NOTE that we're only testing null property on a complex top-level property or on an entry, but the same behavior should apply to
         // all of these cases:
         //   primitive on a complex value
@@ -1001,8 +890,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         //   both ATOM and JSON
         //   primitive on complex or entry value in EPM
         // We're not testing these here, since all of it goes through the same code-path, the only difference is passing around the settings.
-
-        [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
         public void NullPropertyOnEntryTest()
         {
             var complexType = new EdmComplexType("TestModel", "NullValueComplexType");
@@ -1047,7 +936,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that null values for nullable/non-nullable types are correctly validated against metadata and correctly serialized.")]
         public void NullPropertyOnComplexValueTest()
         {
             var complexType = new EdmComplexType("TestModel", "NullValueComplexType");
@@ -1069,7 +959,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new Func<TestODataBehaviorKind, ODataVersion, PayloadWriterTestDescriptor<ODataProperty>>(
                     (behaviorKind, version) =>
                     {
-                        IEdmTypeReference dataType = new EdmComplexTypeReference(complexType, nullable); 
+                        IEdmTypeReference dataType = new EdmComplexTypeReference(complexType, nullable);
                         return this.CreateNullPropertyOnComplexValueTestDescriptor(
                             dataType,
                             version,
@@ -1089,7 +979,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on complex values are correctly validated against metadata and correctly serialized.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on complex values are correctly validated against metadata and correctly serialized.")]
         public void NonNullablePropertyOnComplexValueTest()
         {
             // Primitive properties
@@ -1125,7 +1016,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on entries are correctly validated against metadata and correctly serialized.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that non-null values for non-nullable properties on entries are correctly validated against metadata and correctly serialized.")]
         public void NonNullablePropertyOnEntryTest()
         {
             // Primitive properties
@@ -1166,7 +1058,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on complex values.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on complex values.")]
         public void PropertyWithInvalidNameOnComplexValueTest()
         {
             var nonNullablePrimitiveTypeWithValue = NonNullableEdmPrimitiveTypesWithValues.First();
@@ -1194,7 +1087,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on entries.")]
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verifies that we fail on properties with invalid names on entries.")]
         public void PropertyWithInvalidNameOnEntryTest()
         {
             var nonNullablePrimitiveTypeWithValue = NonNullableEdmPrimitiveTypesWithValues.First();
@@ -1228,8 +1122,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verify that TypeName property and SerializationTypeNameAnnotation behave as expected on a complex value.")]
-        public void ComplexValueSerializationTypeNameAnnotationTest()
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a complex value.")]
+        public void ComplexValueODataTypeAnnotationTest()
         {
             // TODO: Move this string to resources and localize it
             const string ODataJsonLightValueSerializer_MissingTypeNameOnComplex = "A type name was not provided for an instance of ODataComplexValue.";
@@ -1239,7 +1134,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonLightTypeName = (string)null,
                     ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnComplex"),
@@ -1250,7 +1145,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = "TestNS.MyType",
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>TestNS.MyType</typeName>",
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJsonLight = (object) null,
@@ -1261,7 +1156,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = "TestNS.MyType",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = null },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJsonLight = (object) null,
@@ -1272,7 +1167,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "DifferentType" },
+                    ODataTypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonLightTypeName = (string) null,
                     ExpectedExceptionInJsonLight = (object) new ODataException(ODataJsonLightValueSerializer_MissingTypeNameOnComplex),
@@ -1283,7 +1178,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = string.Empty },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     XmlTypeName = "<typeName></typeName>",
                     JsonLightTypeName = (string) null,
                     ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnComplex"),
@@ -1294,7 +1189,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = "TestNS.MyType",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "DifferentType" },
+                    ODataTypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                     ExpectedExceptionInJsonLight = (object) null,
@@ -1321,10 +1216,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 ODataComplexValue complexValue = new ODataComplexValue();
                 complexValue.TypeName = tc.TypeName;
-                complexValue.Properties = new[] { new ODataProperty() { Name = "TestProperty", Value = "TestValue"} };
-                if (tc.SerializationTypeNameAnnotation != null)
+                complexValue.Properties = new[] { new ODataProperty() { Name = "TestProperty", Value = "TestValue" } };
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    complexValue.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    complexValue.TypeAnnotation = tc.ODataTypeAnnotation;
                 }
 
                 return new PayloadWriterTestDescriptor<ODataProperty>(
@@ -1332,36 +1227,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     new ODataProperty { Name = "PropertyName", Value = complexValue },
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            if (tc.ExpectedExceptionInAtom is Exception)
-                            {
-                                return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException = (Exception)tc.ExpectedExceptionInAtom
-                                };
-                            }
-
-                            var exception = testConfiguration.IsRequest ? tc.ExpectedExceptionInAtom : tc.ExpectedExceptionInAtomForResponse;
-                            if (exception is ExpectedException)
-                            {
-                                return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = (ExpectedException)exception
-                                };
-                            }
-
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                FragmentExtractor = (result) =>
-                                {
-                                    string typeName = (string)result.Attribute(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomTypeAttributeName);
-                                    return typeName == null ? MissingTypeNameSentinelXElement : new XElement("typeName", typeName);
-                                },
-                                Xml = tc.XmlTypeName
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             if (tc.ExpectedExceptionInJsonLight is Exception)
                             {
@@ -1418,8 +1284,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verify that TypeName property and SerializationTypeNameAnnotation behave as expected on a collection.")]
-        public void CollectionValueSerializationTypeNameAnnotationTest()
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a collection.")]
+        public void CollectionValueODataTypeAnnotationTest()
         {
             #region test cases
 
@@ -1428,7 +1295,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
@@ -1440,7 +1307,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "\"",
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
@@ -1452,7 +1319,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = null },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
@@ -1464,7 +1331,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String") },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(EntityModelUtils.GetCollectionTypeName("Edm.String")),
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     JsonLightTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
@@ -1476,7 +1343,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = string.Empty },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     XmlTypeName = "<typeName></typeName>",
                     JsonTypeName = "\"type\":\"\"",
                     JsonLightTypeName = "\"@odata.type\":\"\"",
@@ -1488,7 +1355,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "NonCollectionTypeName" },
+                    ODataTypeAnnotation = new ODataTypeAnnotation("NonCollectionTypeName"),
                     XmlTypeName = "<typeName>NonCollectionTypeName</typeName>",
                     JsonTypeName = "\"type\":\"NonCollectionTypeName\"",
                     JsonLightTypeName = "\"@odata.type\":\"#NonCollectionTypeName\"",
@@ -1500,7 +1367,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String") },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(EntityModelUtils.GetCollectionTypeName("Edm.String")),
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     JsonLightTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
@@ -1526,16 +1393,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ODataComplexValue complexValue = new ODataComplexValue();
                 complexValue.TypeName = tc.TypeName;
                 complexValue.Properties = new[] { new ODataProperty() { Name = "TestProperty", Value = "TestValue" } };
-                if (tc.SerializationTypeNameAnnotation != null)
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    complexValue.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    complexValue.TypeAnnotation = tc.ODataTypeAnnotation;
                 }
 
                 ODataCollectionValue collection = new ODataCollectionValue();
                 collection.TypeName = tc.TypeName;
-                if (tc.SerializationTypeNameAnnotation != null)
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    collection.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    collection.TypeAnnotation = tc.ODataTypeAnnotation;
                 }
 
                 return new PayloadWriterTestDescriptor<ODataProperty>(
@@ -1543,36 +1410,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     new ODataProperty { Name = "PropertyName", Value = collection },
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            if (tc.ExpectedExceptionInAtom is Exception)
-                            {
-                                return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException = (Exception)tc.ExpectedExceptionInAtom
-                                };
-                            }
-
-                            var exception = testConfiguration.IsRequest ? tc.ExpectedExceptionInAtom : tc.ExpectedExceptionInAtomForResponse;
-                            if (exception is ExpectedException)
-                            {
-                                return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    ExpectedException2 = (ExpectedException)exception
-                                };
-                            }
-
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                FragmentExtractor = (result) =>
-                                {
-                                    string typeName = (string)result.Attribute(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomTypeAttributeName);
-                                    return typeName == null ? MissingTypeNameSentinelXElement : new XElement("typeName", typeName);
-                                },
-                                Xml = tc.XmlTypeName
-                            };
-                        }
-
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
                             if (testConfiguration.Format == ODataFormat.Json)
@@ -1615,10 +1452,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                         throw new NotSupportedException("Format " + testConfiguration.Format.GetType().Name + " is not supported.");
                     })
-                    {
-                        Model = model,
-                        PayloadEdmElementContainer = owningEntityType
-                    };
+                {
+                    Model = model,
+                    PayloadEdmElementContainer = owningEntityType
+                };
             });
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -1632,37 +1469,38 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [TestMethod, Variation(Description = "Verify that SerializationTypeNameAnnotation behave as expected on a collection.")]
-        public void PrimitiveValueSerializationTypeNameAnnotationTest()
+        [Ignore] // Remove Atom
+        // [TestMethod, Variation(Description = "Verify that ODataTypeAnnotation behave as expected on a collection.")]
+        public void PrimitiveValueODataTypeAnnotationTest()
         {
             #region test case
             var testCases = new[]
             {
                 new
                 {
-                    DebugDescription = "A null SerializationTypeNameAnnotation should invoke default primitive type name writing behavior.",
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    DebugDescription = "A null ODataTypeAnnotation should invoke default primitive type name writing behavior.",
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>Edm.Int64</typeName>",
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,   // Since this is a declared property, its type name isn't written by default in JSON light.
                 },
                 new
                 {
-                    DebugDescription = "A SerializationTypeNameAnnotation with a null TypeName should force primitive type names to not be written, regardless of format.",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = null },
+                    DebugDescription = "A ODataTypeAnnotation with a null TypeName should force primitive type names to not be written, regardless of format.",
+                    ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
                 },
                 new
                 {
-                    DebugDescription = "A SerializationTypeNameAnnotation with a TypeName of \"DifferentType\" should cause that type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "DifferentType" },
+                    DebugDescription = "A ODataTypeAnnotation with a TypeName of \"DifferentType\" should cause that type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
+                    ODataTypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                 },
                 new
                 {
-                    DebugDescription = "A SerializationTypeNameAnnotation with an empty string TypeName should cause an empty type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = string.Empty },
+                    DebugDescription = "A ODataTypeAnnotation with an empty string TypeName should cause an empty type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
+                    ODataTypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     XmlTypeName = "<typeName></typeName>",
                     JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"\"",
                 }
@@ -1680,10 +1518,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 var container = new EdmEntityContainer("TestNS", "TestContainer");
                 model.AddElement(container);
 
-                ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue((Int64) 42);
-                if (tc.SerializationTypeNameAnnotation != null)
+                ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue((Int64)42);
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    primitiveValue.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    primitiveValue.TypeAnnotation = tc.ODataTypeAnnotation;
                 }
 
                 return new PayloadWriterTestDescriptor<ODataProperty>(
@@ -1691,19 +1529,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     new ODataProperty { Name = "PropertyName", Value = primitiveValue },
                     (testConfiguration) =>
                     {
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                FragmentExtractor = (result) =>
-                                {
-                                    string typeName = (string)result.Attribute(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomTypeAttributeName);
-                                    return typeName == null ? MissingTypeNameSentinelXElement : new XElement("typeName", typeName);
-                                },
-                                Xml = tc.XmlTypeName
-                            };
-                        }
-
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
@@ -1760,8 +1585,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Value = new ODataComplexValue
                     {
                         TypeName = "TestModel.ComplexType",
-                        Properties = new[] { new ODataProperty { 
-                                    Name = "nullProperty", 
+                        Properties = new[] { new ODataProperty {
+                                    Name = "nullProperty",
                                     Value = null } }
                     }
                 },
@@ -1769,16 +1594,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     if (allowNulls)
                     {
-                        if (tc.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = "<d:nullProperty " +
-                                    "m:null='true' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns:d='http://docs.oasis-open.org/odata/ns/data' />",
-                                FragmentExtractor = (result) => result.Element(TestAtomConstants.ODataXNamespace + "nullProperty")
-                            };
-                        }
-                        else if (tc.Format == ODataFormat.Json)
+                        if (tc.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
@@ -1843,29 +1659,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Value = new ODataComplexValue
                     {
                         TypeName = "TestModel.ComplexType",
-                        Properties = new[] { new ODataProperty { 
-                                    Name = propertyName, 
+                        Properties = new[] { new ODataProperty {
+                                    Name = propertyName,
                                     Value = nonNullablePrimitiveTypeWithValue.Value } }
                     }
                 },
                 (tc) =>
                 {
-                    if (tc.Format == ODataFormat.Atom)
-                    {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = "<d:" + propertyName + " " +
-                                (typeAttributeExpected ? ("m:type='" + typeName + "' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' ") : string.Empty) +
-                                "xmlns:d='http://docs.oasis-open.org/odata/ns/data'>" +
-                                nonNullablePrimitiveTypeWithValue.AtomRepresentation +
-                                "</d:" + propertyName + ">",
-                            FragmentExtractor = (result) => result.Element(TestAtomConstants.ODataXNamespace + propertyName),
-                            ExpectedException2 = isInvalidPropertyName
-                                    ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertiesMustNotContainReservedChars", propertyName, "':', '.', '@'")
-                                    : null,
-                        };
-                    }
-                    else if (tc.Format == ODataFormat.Json)
+                    if (tc.Format == ODataFormat.Json)
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
@@ -1916,11 +1717,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var td = new PayloadWriterTestDescriptor<ODataItem>(
                 this.Settings,
-                new ODataEntry
+                new ODataResource
                 {
                     TypeName = "TestModel.EntityType",
-                    Properties = new[] { new ODataProperty { 
-                                Name = "nullProperty", 
+                    Properties = new[] { new ODataProperty {
+                                Name = "nullProperty",
                                 Value = null } },
                     SerializationInfo = MySerializationInfo
                 },
@@ -1928,23 +1729,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     if (allowNulls)
                     {
-                        if (tc.Format == ODataFormat.Atom)
+                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Xml = "<d:nullProperty " +
-                                    "m:null='true' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns:d='http://docs.oasis-open.org/odata/ns/data' />",
-                                FragmentExtractor = (result) => TestAtomUtils.ExtractPropertiesFromEntry(result).Element(TestAtomConstants.ODataXNamespace + "nullProperty")
-                            };
-                        }
-                        else
-                        {
-                            return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                            {
-                                Json = "\"nullProperty\":null",
-                                FragmentExtractor = (result) => JsonUtils.UnwrapTopLevelValue(tc, result).Object().Property("nullProperty")
-                            };
-                        }
+                            Json = "\"nullProperty\":null",
+                            FragmentExtractor = (result) => JsonUtils.UnwrapTopLevelValue(tc, result).Object().Property("nullProperty")
+                        };
                     }
                     else
                     {
@@ -1985,32 +1774,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var td = new PayloadWriterTestDescriptor<ODataItem>(
                 this.Settings,
-                new ODataEntry
+                new ODataResource
                 {
                     TypeName = "TestModel.EntityType",
-                    Properties = new[] { new ODataProperty { 
-                                Name = propertyName, 
+                    Properties = new[] { new ODataProperty {
+                                Name = propertyName,
                                 Value = nonNullablePrimitiveTypeWithValue.Value } },
                     SerializationInfo = MySerializationInfo
                 },
                 (tc) =>
                 {
-                    if (tc.Format == ODataFormat.Atom)
-                    {
-                        return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        {
-                            Xml = "<d:" + propertyName + " " +
-                                (typeAttributeExpected ? ("m:type='" + typeName + "' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' ") : string.Empty) +
-                                "xmlns:d='http://docs.oasis-open.org/odata/ns/data'>" +
-                                nonNullablePrimitiveTypeWithValue.AtomRepresentation +
-                                "</d:" + propertyName + ">",
-                            FragmentExtractor = (result) => TestAtomUtils.ExtractPropertiesFromEntry(result).Element(TestAtomConstants.ODataXNamespace + propertyName),
-                            ExpectedException2 = isInvalidPropertyName
-                                    ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertiesMustNotContainReservedChars", propertyName, "':', '.', '@'")
-                                    : null,
-                        };
-                    }
-                    else if (tc.Format == ODataFormat.Json)
+                    if (tc.Format == ODataFormat.Json)
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
@@ -2054,10 +1828,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 foreach (PropertyInstance property in entity.Properties)
                 {
                     // For top level property, it should be named with property name.
-                    if (testFormat == ODataFormat.Atom)
-                    {
-                        property.Name = "value";
-                    }
                     payload.Add(property);
                 }
             }

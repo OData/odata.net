@@ -19,8 +19,8 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Const to represent the beginning of a sub expand clause.
         /// </summary>
-        //// ($expand= 
-        private readonly string subExpandStartingText = 
+        //// ($expand=
+        private readonly string subExpandStartingText =
             new StringBuilder().Append(UriHelper.LEFTPAREN)
             .Append(UriHelper.DOLLARSIGN)
             .Append(UriHelper.OPTIONEXPAND)

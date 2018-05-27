@@ -4,19 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.OData.Utils.Metadata;
+
 namespace EdmLibTests.FunctionalUtilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.Test.OData.Utils.Metadata;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Validation;
-
     /// <summary>
     /// Generates the vocabulary definition Csdl (EntityType and ValueTerm)
     /// </summary>
@@ -26,7 +27,7 @@ namespace EdmLibTests.FunctionalUtilities
 
         protected Dictionary<EdmVersion, Version> toProductVersionlookup = new Dictionary<EdmVersion, Version>()
         {
-            { EdmVersion.V40, Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4 }
+            { EdmVersion.V40, Microsoft.OData.Edm.EdmConstants.EdmVersion4 }
         };
 
         public IEnumerable<XElement> GenerateDefinitionCsdl(EdmVersion edmVersion, IEdmModel definitionModel)
@@ -36,7 +37,7 @@ namespace EdmLibTests.FunctionalUtilities
             this.GenerateContentsWithoutDefinition(edmVersion, definitionModel);
 
             XNamespace ns = this.namespaceToContents.First().Value.Name.Namespace;
-            foreach (var valueTerm in definitionModel.SchemaElements.OfType<IEdmValueTerm>())
+            foreach (var valueTerm in definitionModel.SchemaElements.OfType<IEdmTerm>())
             {
                 XElement schema = this.FindOrCreateCorrespondingSchema(valueTerm.Namespace, ns);
 
@@ -167,7 +168,7 @@ namespace EdmLibTests.FunctionalUtilities
             List<StringBuilder> stringBuilders = new List<StringBuilder>();
             List<XmlWriter> xmlWriters = new List<XmlWriter>();
             edmModel.SetEdmVersion(this.toProductVersionlookup[edmVersion]);
-            edmModel.TryWriteCsdl(
+            edmModel.TryWriteSchema(
                 s =>
                 {
                     stringBuilders.Add(new StringBuilder());

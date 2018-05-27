@@ -7,7 +7,7 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     using System.Collections.Generic;
-    using System.Threading;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.SampleService.Models.ModelRefDemo;
     using Microsoft.OData.SampleService.Models.ModelRefDemo.GPS;
@@ -442,6 +442,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         protected override IEdmModel CreateModel()
         {
             return ModelRefInMemoryModel.CreateModelRefServiceModel();
+        }
+
+        protected override void ConfigureContainer(IContainerBuilder builder)
+        {
+            base.ConfigureContainer(builder);
+            builder.AddService(ServiceLifetime.Scoped, sp => this.edmModel);
         }
     }
 }

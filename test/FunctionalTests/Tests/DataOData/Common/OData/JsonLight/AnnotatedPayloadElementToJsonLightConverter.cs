@@ -253,14 +253,6 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                 if (isTopLevel)
                 {
-                    if (payloadElement.Value.IsNull)
-                    {
-                        JsonObject nullProperty = new JsonObject();
-                        AddContextUriProperty(payloadElement, nullProperty);
-                        nullProperty.Add(new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName, new JsonPrimitiveValue(true)));
-                        return nullProperty;
-                    }
-
                     JsonValue complexValue = this.Recurse(payloadElement.Value);
 
                     // NOTE: top-level complex properties don't use a wrapper object.
@@ -645,18 +637,10 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             public JsonValue Visit(PrimitiveProperty payloadElement)
             {
                 bool needsWrapping = this.CurrentElementIsRoot();
-                string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
 
-                JsonProperty jsonProperty = null;
-                if (payloadElement.Value.IsNull && this.CurrentElementIsRoot())
-                {
-                    jsonProperty = new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName, new JsonPrimitiveValue(true)); 
-                }
-                else
-                {
-                    jsonProperty = new JsonProperty(propertyName, null);
-                    jsonProperty.Value = this.Recurse(payloadElement.Value, jsonProperty);
-                }
+                string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
+                JsonProperty jsonProperty = new JsonProperty(propertyName, null);
+                jsonProperty.Value = this.Recurse(payloadElement.Value, jsonProperty);
 
                 var jsonValue = this.WrapTopLevelProperty(payloadElement, jsonProperty, needsWrapping);
                 this.AddPropertyAnnotations(payloadElement, jsonValue);

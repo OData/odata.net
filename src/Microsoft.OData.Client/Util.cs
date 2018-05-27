@@ -50,11 +50,17 @@ namespace Microsoft.OData.Client
         internal static readonly Version ODataVersion4 = new Version(4, 0);
 
         /// <summary>
+        /// OData Version 4.01
+        /// </summary>
+        internal static readonly Version ODataVersion401 = new Version(4, 1);
+
+        /// <summary>
         /// Data service versions supported on the client
         /// </summary>
-        internal static readonly Version[] SupportedResponseVersions = 
-        { 
-            ODataVersion4
+        internal static readonly Version[] SupportedResponseVersions =
+        {
+            ODataVersion4,
+            ODataVersion401
         };
 
         /// <summary>
@@ -371,7 +377,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Similar to Activator.CreateInstance, but uses LCG to avoid 
+        /// Similar to Activator.CreateInstance, but uses LCG to avoid
         /// more stringent Reflection security constraints.in Silverlight
         /// </summary>
         /// <param name="type">Type to create.</param>
@@ -393,7 +399,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Similar to ConstructorInfo.Invoke, but uses LCG to avoid 
+        /// Similar to ConstructorInfo.Invoke, but uses LCG to avoid
         /// more stringent Reflection security constraints in Silverlight
         /// </summary>
         /// <param name="constructor">Constructor to invoke.</param>
@@ -452,7 +458,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// checks whether the batch flag with independent Operation per change set is set 
+        /// checks whether the batch flag with independent Operation per change set is set
         /// </summary>
         /// <param name="options">options as specified by the user.</param>
         /// <returns>true if the given flag is set, otherwise false.</returns>
@@ -544,7 +550,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         /// <summary>
-        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/> 
+        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T">Type parameter.</typeparam>
         /// <param name="enumerable">IEnumerable which contains the list of the objects that needs to be converted.</param>
@@ -570,9 +576,13 @@ namespace Microsoft.OData.Client
         {
             switch (protocolVersion)
             {
-                default:
-                    Debug.Assert(protocolVersion == ODataProtocolVersion.V4, "Did you add a new version?");
+                case ODataProtocolVersion.V4:
                     return ODataVersion4;
+                case ODataProtocolVersion.V401:
+                    return ODataVersion401;
+                default:
+                    Debug.Assert(false, "Did you add a new version?");
+                    return null;
             }
         }
 

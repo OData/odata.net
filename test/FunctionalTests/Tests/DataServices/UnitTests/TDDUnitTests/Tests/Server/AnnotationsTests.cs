@@ -20,13 +20,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     
     [TestClass]
@@ -118,17 +114,17 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
                 IEdmModel vocabularyModel;
                 xmlReaders = new XmlReader[] { XmlReader.Create(new StringReader(vocabulary)) };
-                parsed = CsdlReader.TryParse(xmlReaders, out vocabularyModel, out errors);
+                parsed = SchemaReader.TryParse(xmlReaders, out vocabularyModel, out errors);
                 Assert.IsTrue(parsed);
 
                 IEdmModel annotationsModel1;
                 xmlReaders = new XmlReader[] { XmlReader.Create(new StringReader(annotations1)) };
-                parsed = CsdlReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel1, out errors);
+                parsed = SchemaReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel1, out errors);
                 Assert.IsTrue(parsed);
 
                 IEdmModel annotationsModel2;
                 xmlReaders = new XmlReader[] { XmlReader.Create(new StringReader(annotations2)) };
-                parsed = CsdlReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel2, out errors);
+                parsed = SchemaReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel2, out errors);
                 Assert.IsTrue(parsed);
 
                 // Annotations are intentionally duplicated to test duplicate filtering
@@ -158,32 +154,32 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                 annotatedModel.FindDeclaredVocabularyAnnotations(customerType).ToArray();
             Assert.AreEqual(2, customerAnnotations.Count());
             
-            var ratingPrimary = (IEdmValueAnnotation)customerAnnotations[0];
+            var ratingPrimary = customerAnnotations[0];
             Assert.AreEqual(customerType, ratingPrimary.Target);
             Assert.AreEqual("Primary", ratingPrimary.Qualifier);
             Assert.AreEqual("Rating", ratingPrimary.Term.Name);        
             Assert.AreEqual(1, ((IEdmIntegerConstantExpression)ratingPrimary.Value).Value);
 
-            var ratingSecondary = (IEdmValueAnnotation)customerAnnotations[1];
+            var ratingSecondary = customerAnnotations[1];
             Assert.AreEqual(customerType, ratingSecondary.Target);
             Assert.AreEqual("Secondary", ratingSecondary.Qualifier);
             Assert.AreEqual("Rating", ratingSecondary.Term.Name);
             Assert.AreEqual(2, ((IEdmIntegerConstantExpression)ratingSecondary.Value).Value);
 
-            IEdmValueAnnotation canEdit;
+            IEdmVocabularyAnnotation canEdit;
 
-            canEdit = (IEdmValueAnnotation)annotatedModel.FindDeclaredVocabularyAnnotations(customersContainer).Single();
+            canEdit = annotatedModel.FindDeclaredVocabularyAnnotations(customersContainer).Single();
             Assert.AreEqual(customersContainer, canEdit.Target);
             Assert.AreEqual("CanEdit", canEdit.Term.Name);
             Assert.AreEqual(true, ((IEdmBooleanConstantExpression)canEdit.Value).Value);
 
-            canEdit = (IEdmValueAnnotation)annotatedModel.FindDeclaredVocabularyAnnotations(customersSet).Single();
+            canEdit = annotatedModel.FindDeclaredVocabularyAnnotations(customersSet).Single();
             Assert.AreEqual(customersSet, canEdit.Target);
             Assert.AreEqual("CanEdit", canEdit.Term.Name);
             Assert.AreEqual(true, ((IEdmBooleanConstantExpression)canEdit.Value).Value);
 
             IEdmProperty firstNameProperty = customerType.FindProperty("FirstName");
-            canEdit = (IEdmValueAnnotation)annotatedModel.FindDeclaredVocabularyAnnotations(firstNameProperty).Single();
+            canEdit = annotatedModel.FindDeclaredVocabularyAnnotations(firstNameProperty).Single();
             Assert.AreEqual(firstNameProperty, canEdit.Target);
             Assert.AreEqual("CanEdit", canEdit.Term.Name);
             Assert.AreEqual(true, ((IEdmBooleanConstantExpression)canEdit.Value).Value);
@@ -242,7 +238,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
             var testSubject = new VocabularyAnnotationCache(primaryModel);
 
-            var annotation = new EdmAnnotation(entityContainer, new EdmTerm("fake", "foo", EdmPrimitiveTypeKind.String), new EdmStringConstant("bar"));
+            var annotation = new EdmVocabularyAnnotation(entityContainer, new EdmTerm("fake", "foo", EdmPrimitiveTypeKind.String), new EdmStringConstant("bar"));
             testSubject.Add(annotation);
             testSubject.FindDeclaredVocabularyAnnotations(entityContainer).Should().Contain(annotation).And.HaveCount(1);
         }

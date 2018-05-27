@@ -6,13 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Core.UriParser.Visitors;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Visitors
+namespace Microsoft.OData.Tests.UriParser.Visitors
 {
     public class QueryNodeVisitorTests
     {
@@ -48,7 +46,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
         public void CollectionNavigationNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitCollectionNavigationNode = () => visitor.Visit(new CollectionNavigationNode(ModelBuildingHelpers.BuildCollectionNavigationProperty(), HardCodedTestModel.GetPeopleSet()));
+            Action visitCollectionNavigationNode = () => visitor.Visit(new CollectionNavigationNode(HardCodedTestModel.GetPeopleSet(), ModelBuildingHelpers.BuildCollectionNavigationProperty(), new EdmPathExpression("Reference")));
             visitCollectionNavigationNode.ShouldThrow<NotImplementedException>();
         }
 
@@ -77,54 +75,54 @@ namespace Microsoft.OData.Core.Tests.UriParser.Visitors
         }
 
         [Fact]
-        public void EntityCollectionCastNodeNotImplemented()
+        public void CollectionResourceCastNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitEntityCollectionCastNode = () => visitor.Visit(new EntityCollectionCastNode(new EntitySetNode(HardCodedTestModel.GetPeopleSet()), HardCodedTestModel.GetPersonType()));
-            visitEntityCollectionCastNode.ShouldThrow<NotImplementedException>();
+            Action visitCollectionResourceCastNode = () => visitor.Visit(new CollectionResourceCastNode(new EntitySetNode(HardCodedTestModel.GetPeopleSet()), HardCodedTestModel.GetPersonType()));
+            visitCollectionResourceCastNode.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]
-        public void EntityRangeVariableReferenceNodeNotImplemented()
+        public void ResourceRangeVariableReferenceNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitEntityRangeVariableReferenceNode = () => visitor.Visit(new EntityRangeVariableReferenceNode("stuff", new EntityRangeVariable("stuff", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet())));
-            visitEntityRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();
+            Action visitResourceRangeVariableReferenceNode = () => visitor.Visit(new ResourceRangeVariableReferenceNode("stuff", new ResourceRangeVariable("stuff", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet())));
+            visitResourceRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]
-        public void NonentityRangeVariableReferenceNodeNotImplemented()
+        public void NonResourceRangeVariableReferenceNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
             ConstantNode constNode = new ConstantNode("stuff");
-            NonentityRangeVariable nonentityRangeVariable = new NonentityRangeVariable("dummy", constNode.TypeReference, null);
-            NonentityRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonentityRangeVariableReferenceNode(nonentityRangeVariable.Name, nonentityRangeVariable);
-            Action visitNonEntityRangeVariableReferenceNode = () => visitor.Visit(nonentityRangeVariableReferenceNode);
-            visitNonEntityRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();
+            NonResourceRangeVariable nonentityRangeVariable = new NonResourceRangeVariable("dummy", constNode.TypeReference, null);
+            NonResourceRangeVariableReferenceNode nonResourceRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode(nonentityRangeVariable.Name, nonentityRangeVariable);
+            Action visitNonResourceRangeVariableReferenceNode = () => visitor.Visit(nonResourceRangeVariableReferenceNode);
+            visitNonResourceRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]
-        public void SingleEntityCastNodeNotImplemented()
+        public void SingleResourceCastNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitSingleEntityCastNode = () => visitor.Visit(new SingleEntityCastNode(null, ModelBuildingHelpers.BuildValidEntityType()));
-            visitSingleEntityCastNode.ShouldThrow<NotImplementedException>();
+            Action visitSingleResourceCastNode = () => visitor.Visit(new SingleResourceCastNode(null, ModelBuildingHelpers.BuildValidEntityType()));
+            visitSingleResourceCastNode.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]
         public void SingleNavigationNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitSingleNavigationNode = () => visitor.Visit(new SingleNavigationNode(ModelBuildingHelpers.BuildValidNavigationProperty(), HardCodedTestModel.GetPeopleSet()));
+            Action visitSingleNavigationNode = () => visitor.Visit(new SingleNavigationNode(HardCodedTestModel.GetPeopleSet(), ModelBuildingHelpers.BuildValidNavigationProperty(), new EdmPathExpression("Reference")));
             visitSingleNavigationNode.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]
-        public void SingleEntityFunctionCallNodeNotImplemented()
+        public void SingleResourceFunctionCallNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitSingleEntityFunctionCallNode = () => visitor.Visit(new SingleEntityFunctionCallNode("stuff", null, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
-            visitSingleEntityFunctionCallNode.ShouldThrow<NotImplementedException>();
+            Action visitSingleResourceFunctionCallNode = () => visitor.Visit(new SingleResourceFunctionCallNode("stuff", null, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet()));
+            visitSingleResourceFunctionCallNode.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]

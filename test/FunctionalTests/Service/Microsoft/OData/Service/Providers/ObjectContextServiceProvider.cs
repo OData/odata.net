@@ -492,14 +492,6 @@ namespace Microsoft.OData.Service.Providers
                 throw new InvalidOperationException(Strings.ObjectContext_PropertyNotDefinedOnType(resourceType.FullName, propertyName));
             }
 
-#if !INTERNAL_DROP && !EFRTM
-            // If the new value is a Geography, we need to convert it to the DbGeography type that EF understands
-            if (typeof(Geography).IsInstanceOfType(propertyValue))
-            {
-                propertyValue = ObjectContextSpatialUtil.ConvertGeography((Geography)propertyValue);
-            }
-#endif
-
             // is target Resource going to be replaced?
             // See comment in ResetResources
             object replacedTarget;
@@ -740,11 +732,9 @@ namespace Microsoft.OData.Service.Providers
             // we need to make sure we call this API on a workspace which has information about the CS Mapping.
             // Hence getting workspace from the underlying Entity connection.
             MetadataWorkspace workspace = ((EntityConnection)this.ObjectContext.Connection).GetMetadataWorkspace();
-#if EF6Provider
-            foreach (EdmMember member in workspace.GetRelevantMembersForUpdate(entitySet, entityType, true /*partialUpdateSupported*/))
-#else
+#pragma warning disable 618
             foreach (EdmMember member in workspace.GetRequiredOriginalValueMembers(entitySet, entityType))
-#endif
+#pragma warning restore 618
             {
                 ResourceProperty property = resourceType.TryResolvePropertyName(member.Name, exceptKind: ResourcePropertyKind.Stream);
                 Debug.Assert(property != null, "property != null");
@@ -892,11 +882,8 @@ namespace Microsoft.OData.Service.Providers
                 switch (member.EdmTypeKind)
                 {
                     case BuiltInTypeKind.PrimitiveType:
-#if !INTERNAL_DROP && !EFRTM
-                        Type propertyClrType = ObjectContextSpatialUtil.IsDbGeography(propertyInfo.PropertyType) ? typeof(Geography) : propertyInfo.PropertyType;
-#else
+
                         Type propertyClrType = propertyInfo.PropertyType;
-#endif
                         propertyType = primitiveResourceTypeMap.GetPrimitive(propertyClrType);
 
                         if (propertyType == null)
@@ -1627,7 +1614,7 @@ namespace Microsoft.OData.Service.Providers
             ResourceAssociationTypeEnd dependentEnd = resourceAssociationType.GetEnd(referentialConstraint.ToRole.Name);
 
             List<ResourceProperty> dependentProperties = new List<ResourceProperty>();
-            foreach (EdmProperty edmProperty in referentialConstraint.ToProperties)
+            foreach (System.Data.Metadata.Edm.EdmProperty edmProperty in referentialConstraint.ToProperties)
             {
                 dependentProperties.Add(dependentEnd.ResourceType.TryResolvePropertyName(edmProperty.Name));
             }

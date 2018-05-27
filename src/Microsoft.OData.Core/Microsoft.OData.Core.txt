@@ -27,39 +27,42 @@ ODataOutputContext_MetadataDocumentUriMissing=The ServiceRoot property in ODataM
 ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata=A relative URI value '{0}' was specified in the data to write, but the metadata document URI or the metadata for the item to be written was not specified for the writer. The metadata document URI and the metadata for the item to be written must be provided to the writer when using relative URI values.
 
 ODataWriter_RelativeUriUsedWithoutBaseUriSpecified=A relative URI value '{0}' was specified in the data to write, but a base URI was not specified for the writer. A base URI must be set when using relative URI values.
-ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry=The property '{0}' is a stream property, but it is not a property of an ODataEntry instance. In OData, stream properties must be properties of ODataEntry instances.
+ODataWriter_StreamPropertiesMustBePropertiesOfODataResource=The property '{0}' is a stream property, but it is not a property of an ODataResource instance. In OData, stream properties must be properties of ODataResource instances.
 
 ODataWriterCore_InvalidStateTransition=An invalid state transition has been detected in an OData writer. Cannot transition from state '{0}' to state '{1}'.
-ODataWriterCore_InvalidTransitionFromStart=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write an entry or a feed.
-ODataWriterCore_InvalidTransitionFromEntry=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a navigation link.
-ODataWriterCore_InvalidTransitionFromNullEntry=Cannot transition from state '{0}' to state '{1}'. You must first call ODataWriter.WriteEnd to finish writing a null ODataEntry.
-ODataWriterCore_InvalidTransitionFromFeed=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write an entry.
-ODataWriterCore_InvalidTransitionFromExpandedLink=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write an entry or a feed.
+ODataWriterCore_InvalidTransitionFromStart=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set.
+ODataWriterCore_InvalidTransitionFromResource=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a nested resource.
+ODataWriterCore_InvalidTransitionFrom40DeletedResource=Cannot transition from state '{0}' to state '{1}' when writing an OData 4.0 payload. To write content to a deleted resource, please specify ODataVersion 4.01 or greater in MessageWriterSettings.
+ODataWriterCore_InvalidTransitionFromNullResource=Cannot transition from state '{0}' to state '{1}'. You must first call ODataWriter.WriteEnd to finish writing a null ODataResource.
+ODataWriterCore_InvalidTransitionFromResourceSet=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a resource.
+ODataWriterCore_InvalidTransitionFromExpandedLink=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set.
 ODataWriterCore_InvalidTransitionFromCompleted=Cannot transition from state '{0}' to state '{1}'. Nothing further can be written once the writer has completed.
 ODataWriterCore_InvalidTransitionFromError=Cannot transition from state '{0}' to state '{1}'. Nothing can be written once the writer entered the error state.
-ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty=Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property.
-ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty=Cannot transition from state '{0}' to state '{1}'. Expanded navigation property can only be written within a delta entry.
-ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState=WriteStart(expandedFeed) was called in an invalid state ('{0}'); WriteStart(expandedFeed) is only supported in state 'ExpandedNavigationProperty'.
-ODataWriterCore_WriteEndCalledInInvalidState=ODataWriter.WriteEnd was called in an invalid state ('{0}'); WriteEnd is only supported in states 'Entry', 'Feed', 'NavigationLink', and 'NavigationLinkWithContent'.
-ODataWriterCore_OnlyTopLevelFeedsSupportCount=Only a top-level feed can have the 'ODataFeed.Count' property value specified. Expanded links do not support counts.
-ODataWriterCore_QueryCountInRequest=The ODataFeed.Count must be null for request payloads. Query counts are only supported in responses.
-ODataWriterCore_CannotWriteTopLevelFeedWithEntryWriter=Cannot write a top-level feed with a writer that was created to write a top-level entry.
-ODataWriterCore_CannotWriteTopLevelEntryWithFeedWriter=Cannot write a top-level entry with a writer that was created to write a top-level feed.
+ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource=Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property, complex property or complex collection property.
+ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource=Cannot transition from state '{0}' to state '{1}'. Nested resource can only be written within a delta resource.
+ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState=WriteStart(expandedResourceSet) was called in an invalid state ('{0}'); WriteStart(expandedResourceSet) is only supported in state 'ExpandedNavigationProperty'.
+ODataWriterCore_WriteEndCalledInInvalidState=ODataWriter.WriteEnd was called in an invalid state ('{0}'); WriteEnd is only supported in states 'Resource', 'ResourceSet', 'NavigationLink', and 'NavigationLinkWithContent'.
+
+ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties=No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified.
+ODataWriterCore_QueryCountInRequest=The ODataResourceSet.Count must be null for request payloads. Query counts are only supported in responses.
+ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a delta deleted resource, link, or deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter.
+ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry=Nested content is not allowed in an OData 4.0 deleted entry. For content in deleted entries, please specify OData 4.01 or greater.
+ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter=Cannot write a top-level resource set with a writer that was created to write a top-level resource.
+ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter=Cannot write a top-level resource with a writer that was created to write a top-level resource set.
 ODataWriterCore_SyncCallOnAsyncWriter=A synchronous operation was called on an asynchronous writer. Calls on a writer instance must be either all synchronous or all asynchronous.
 ODataWriterCore_AsyncCallOnSyncWriter=An asynchronous operation was called on a synchronous writer. Calls on a writer instance must be either all synchronous or all asynchronous.
 ODataWriterCore_EntityReferenceLinkWithoutNavigationLink=An entity reference link was written without a surrounding navigation link. The WriteEntityReferenceLink or WriteEntityReferenceLinkAsync methods can only be used when writing the content of a navigation link.
 ODataWriterCore_EntityReferenceLinkInResponse=An entity reference link was written into a response. The WriteEntityReferenceLink or WriteEntityReferenceLinkAsync methods can only be used when writing a request.
-ODataWriterCore_DeferredLinkInRequest=A deferred link was written into a request. In requests, each navigation link must have a feed, entry, or entity reference link written into it.
-ODataWriterCore_MultipleItemsInNavigationLinkContent=More than one item was written into the content of a navigation link. In OData, a navigation link can only contain more than one item in its content when it is a navigation link, ODataNavigationLink.IsCollection set to true, and the writer is writing a request.
-ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed=The ODataFeed.DeltaLink property must be null for expanded feeds. Delta link is not supported on expanded feeds.
+ODataWriterCore_DeferredLinkInRequest=A deferred link was written into a request. In requests, each nested resource info must have a resource set, resource, or entity reference link written into it.
+ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent=More than one item was written into the content of a nested resource. In OData, a nested resource can only contain more than one item in its content when ODataNestedResourceInfo.IsCollection set to true, and the writer is writing a request.
+ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet=The ODataResourceSet.DeltaLink property must be null for expanded resource sets. Delta link is not supported on expanded resource sets.
 ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement=The Path property in ODataMessageWriterSettings.ODataUri must be set when writing contained elements.
 
-DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed=Multiple properties with the name '{0}' were detected in an entry or a complex value. In OData, duplicate property names are not allowed.
-DuplicatePropertyNamesChecker_MultipleLinksForSingleton=Multiple navigation links with the same name '{0}' for a singleton navigation property were detected on an entry. In OData, a singleton navigation property can have only one navigation link.
-DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected. In OData, duplicate annotations are not allowed.
-DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed=Multiple annotations with the name '{0}' were detected for the property with name '{1}'. In OData, duplicate annotations are not allowed.
-DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected for the instance annotation with name '{1}'. In OData, duplicate annotations are not allowed.
-DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty=An annotation with name '{0}' for property '{1}' was detected after the property, or after an annotation for another property. In OData, annotations for a property must be in a single group and must appear before the property they annotate.
+DuplicatePropertyNamesNotAllowed=Multiple properties with the name '{0}' were detected in a resource or a complex value. In OData, duplicate property names are not allowed.
+DuplicateAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected. In OData, duplicate annotations are not allowed.
+DuplicateAnnotationForPropertyNotAllowed=Multiple annotations with the name '{0}' were detected for the property with name '{1}'. In OData, duplicate annotations are not allowed.
+DuplicateAnnotationForInstanceAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected for the instance annotation with name '{1}'. In OData, duplicate annotations are not allowed.
+PropertyAnnotationAfterTheProperty=An annotation with name '{0}' for property '{1}' was detected after the property, or after an annotation for another property. In OData, annotations for a property must be in a single group and must appear before the property they annotate.
 
 AtomValueUtils_CannotConvertValueToAtomPrimitive=Cannot convert a value of type '{0}' to the string representation of an Atom primitive value.
 
@@ -69,22 +72,6 @@ ODataException_GeneralError=An error occurred while processing the OData message
 ODataErrorException_GeneralError=An error was read from the payload. See the 'Error' property for more details.
 ODataUriParserException_GeneralError=An error occurred while parsing part of the URI.
 
-ODataAtomCollectionWriter_CollectionNameMustNotBeNull=An ODataCollectionStart with a 'null' name was passed to the ATOM collection writer. In ATOM, an ODataCollectionStart cannot have a 'null' name.
-
-ODataAtomWriterMetadataUtils_AuthorMetadataMustNotContainNull=A null value was detected in the 'AtomEntryMetadata.Authors' enumerable; the author metadata does not support null values.
-ODataAtomWriterMetadataUtils_CategoryMetadataMustNotContainNull=A null value was detected in the 'AtomEntryMetadata.Categories' enumerable; the category metadata does not support null values.
-ODataAtomWriterMetadataUtils_ContributorMetadataMustNotContainNull=A null value was detected in the 'AtomEntryMetadata.Contributors' enumerable; the contributor metadata does not support null values.
-ODataAtomWriterMetadataUtils_LinkMetadataMustNotContainNull=A null value was detected in the 'AtomEntryMetadata.Links' enumerable; the link metadata does not support null values.
-ODataAtomWriterMetadataUtils_LinkMustSpecifyHref=The 'AtomLinkMetadata.Href' property is required and cannot be null.
-ODataAtomWriterMetadataUtils_CategoryMustSpecifyTerm=The 'AtomCategoryMetadata.Term' property is required and cannot be null.
-ODataAtomWriterMetadataUtils_LinkHrefsMustMatch=The '{0}' value for the href of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. When an href is specified in metadata, the href values must match.
-ODataAtomWriterMetadataUtils_LinkTitlesMustMatch=The '{0}' value for the title of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. When a title is specified in metadata, the titles must match.
-ODataAtomWriterMetadataUtils_LinkRelationsMustMatch=The '{0}' value for the relation of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. When a relation is specified in metadata, the relations must match.
-ODataAtomWriterMetadataUtils_LinkMediaTypesMustMatch=The '{0}' value for the media type of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. If a media type is specified in metadata, the media types must match.
-ODataAtomWriterMetadataUtils_CategoriesHrefWithOtherValues=The 'AtomCategoriesMetadata.Href' property can only be set when no other property is set. When the 'Href' property is not null, the categories cannot have any 'Fixed' or 'Scheme' values, and the 'Categories' collection must be null or empty.
-ODataAtomWriterMetadataUtils_CategoryTermsMustMatch=The '{0}' value for the term of a category, which was either specified or computed, does not match the value '{1}' specified in the ATOM metadata of the category. When a term is specified in Atom metadata, the terms must match.
-ODataAtomWriterMetadataUtils_CategorySchemesMustMatch=The '{0}' value for the scheme of a category, which was either specified or computed, does not match the value '{1}' specified in the ATOM metadata of the category. When a scheme is specified in Atom metadata, the schemes must match.
-
 ODataMessageWriter_WriterAlreadyUsed=The ODataMessageWriter has already been used to write a message payload. An ODataMessageWriter can only be used once to write a payload for a given message.
 ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed=Top-level entity reference link collection payloads are not allowed in requests.
 ODataMessageWriter_ErrorPayloadInRequest=An error cannot be written to a request payload. Errors are only supported in responses.
@@ -92,6 +79,7 @@ ODataMessageWriter_ServiceDocumentInRequest=A service document cannot be written
 ODataMessageWriter_MetadataDocumentInRequest=A metadata document cannot be written to request payloads. Metadata documents are only supported in responses.
 ODataMessageWriter_DeltaInRequest=Cannot write delta in request payload.
 ODataMessageWriter_AsyncInRequest=Cannot write async in request payload.
+ODataMessageWriter_CannotWriteTopLevelNull=Cannot write the value 'null' in top level property; return 204 instead.
 ODataMessageWriter_CannotWriteNullInRawFormat=Cannot write the value 'null' in raw format.
 ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind=Cannot set message headers for the invalid payload kind '{0}'.
 ODataMessageWriter_IncompatiblePayloadKinds=The payload kind '{0}' used in the last call to ODataUtils.SetHeadersForPayload is incompatible with the payload being written, which is of kind '{1}'.
@@ -103,7 +91,7 @@ ODataMessageWriter_CannotSpecifyOperationWithoutModel=No model was specified in 
 ODataMessageWriter_JsonPaddingOnInvalidContentType=A JsonPaddingFunctionName was specified, but the content-type '{0}' is not supported with Json Padding.
 ODataMessageWriter_NonCollectionType=The type '{0}' specified as the collection's item type is not primitive, enum or complex. An ODataCollectionWriter can only write collections of primitive, enum or complex values.
 
-ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth=Both startEntryXmlCustomizationCallback and endEntryXmlCustomizationCallback must be either null or non-null.
+ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth=Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null.
 
 
 ODataCollectionWriterCore_InvalidTransitionFromStart=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write the collection or to write nothing at all.
@@ -129,8 +117,10 @@ ODataParameterWriterCore_CannotWriteEnd=WriteEnd can only be called after WriteS
 ODataParameterWriterCore_CannotWriteInErrorOrCompletedState=The writer is in either the 'Error' or 'Completed' state. No further writes can be performed on this writer.
 ODataParameterWriterCore_DuplicatedParameterNameNotAllowed=The parameter '{0}' has already been written. Duplicate parameter names are not allowed in the parameter payload.
 ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind=The parameter '{0}' is of Edm type kind '{1}'. You cannot call WriteValue on a parameter that is not of Edm type kinds 'Primitive', 'Enum' or 'Complex'.
-ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType=The value for parameter '{0}' is of type '{1}'. WriteValue can only write null, ODataComplexValue, ODataEnumValue and primitive types that are not Stream type.
+ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType=The value for parameter '{0}' is of type '{1}'. WriteValue can only write null, ODataEnumValue and primitive types that are not Stream type.
 ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind=The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateCollectionWriter on a parameter that is not of Edm type kind 'Collection'.
+ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind=The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateResourceWriter on a parameter that is not of Edm type kind 'Entity' or 'Complex'.
+ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind=The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateResourceSetWriter on a parameter that is not of Edm type kind 'Collection(Entity)' or 'Collection(Complex)'.
 ODataParameterWriterCore_ParameterNameNotFoundInOperation=The name '{0}' is not a recognized parameter name for operation '{1}'.
 ODataParameterWriterCore_MissingParameterInParameterPayload=The parameters {0} of the operation '{1}' could not be found when writing the parameter payload. All parameters present in the operation must be written to the parameter payload.
 
@@ -152,7 +142,7 @@ ODataBatchWriter_MaxBatchSizeExceeded=The current batch message contains too man
 ODataBatchWriter_MaxChangeSetSizeExceeded=The current change set contains too many operations. Only change sets with a maximum number of '{0}' operations are allowed.
 ODataBatchWriter_SyncCallOnAsyncWriter=A synchronous operation was called on an asynchronous batch writer. Calls on a batch writer instance must be either all synchronous or all asynchronous.
 ODataBatchWriter_AsyncCallOnSyncWriter=An asynchronous operation was called on a synchronous batch writer. Calls on a batch writer instance must be either all synchronous or all asynchronous.
-ODataBatchWriter_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set.
+ODataBatchWriter_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01.
 ODataBatchWriter_CannotWriteInStreamErrorForBatch=The WriteError and WriteErrorAsync methods on ODataMessageWriter cannot be called when a batch is being written by using ODataBatchWriter. In OData, writing an in-stream error for a batch payload is not supported.
 
 ODataBatchUtils_RelativeUriUsedWithoutBaseUriSpecified=The relative URI '{0}' was specified in a batch operation, but a base URI was not specified for the batch writer or batch reader.
@@ -175,7 +165,20 @@ ODataBatchReader_ReadOrReadAsyncCalledInInvalidState=ODataBatchReader.ReadAsync 
 ODataBatchReader_MaxBatchSizeExceeded=The current batch message contains too many parts. A maximum number of '{0}' query operations and change sets are allowed in a batch message.
 ODataBatchReader_MaxChangeSetSizeExceeded=The current change set contains too many operations. A maximum number of '{0}' operations are allowed in a change set.
 ODataBatchReader_NoMessageWasCreatedForOperation=An operation was detected, but no message was created for it. You must create a message for every operation found in a batch or change set.
-ODataBatchReader_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set.
+ODataBatchReader_ReaderModeNotInitilized=Reader mode is not setup correctly.
+ODataBatchReader_JsonBatchTopLevelPropertyMissing=JsonLight batch format requires top level property name 'requests' or 'response' but it is missing.
+ODataBatchReader_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01.
+ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed=The atomicityGroup ID [{0}] was found duplicated in the batch request. AtomicityGroup IDs have to be adjacent, otherwise would be detected as duplicated.
+ODataBatchReader_RequestPropertyMissing=Request property [{0}] is required but is missing.
+ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed=The dependsOn request Id [{0}] is same as atomicityGroup property value [{1}], and is not allowed.
+ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed=The dependsOn request Id [{0}] is same as id property value [{1}], and it is not allowed.
+ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed=The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore dependsOn property should refer to atomic group Id [{1}] instead.
+ODataBatchReader_DependsOnIdNotFound=The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed.
+ODataBatchReader_AbsoluteURINotMatchingBaseUri=Absolute URI {0} is not start with the base URI [{1}] specified by the operation message.
+ODataBatchReader_ReferenceIdNotIncludedInDependsOn=Request Id reference [{0}] in Uri [{1}] is not found in effective depends-on-Ids [{2}] of the request.
+ODataBatch_GroupIdOrChangeSetIdCannotBeNull=Group id or changeset GUID cannot be null.
+ODataBatchReader_MessageIdPositionedIncorrectly=Message with id [{0}] is positioned incorrectly: all messages of same groupId [{1}] must be adjacent.
+ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull=Changeset boundary must have been set by now.
 
 ODataBatchReaderStream_InvalidHeaderSpecified=The message header '{0}' is invalid. The header value must be of the format '<header name>: <header value>'.
 ODataBatchReaderStream_InvalidRequestLine=The request line '{0}' is invalid. The request line at the start of each operation must be of the format 'HttpMethod RequestUrl HttpVersion'.
@@ -191,7 +194,7 @@ ODataBatchReaderStream_NestedChangesetsAreNotSupported=Nested change sets in a b
 ODataBatchReaderStream_MultiByteEncodingsNotSupported=Invalid multi-byte encoding '{0}' detected. Multi-byte encodings other than UTF-8 are only supported for operation payloads. They are not supported in batch or change set parts.
 ODataBatchReaderStream_UnexpectedEndOfInput=Encountered an unexpected end of input while reading the batch payload.
 
-ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached=Too many white spaces after a boundary delimiter and before the terminating line feed. For security reasons, the total number of characters for a boundary including white spaces must not exceed {0}.
+ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached=Too many white spaces after a boundary delimiter and before the terminating line resource set. For security reasons, the total number of characters for a boundary including white spaces must not exceed {0}.
 
 ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse=When not writing an async response, you cannot create an async response message.
 ODataAsyncWriter_CannotCreateResponseMoreThanOnce=You cannot create an async response message more than once.
@@ -254,21 +257,21 @@ ODataUriUtils_ConvertFromUriLiteralTypeRefWithoutModel=An IEdmTypeReference must
 ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure=Type verification failed. Expected type '{0}' but received the value '{1}'.
 ODataUriUtils_ConvertFromUriLiteralNullTypeVerificationFailure=Type verification failed. Expected type '{0}' but received non-matching null value with associated type '{1}'.
 ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType=Type verification failed. Expected non-nullable type '{0}' but received a null value.
-ODataUriUtils_InvalidUriFormatForEntryIdOrFeedId=The URI '{0}' is an invalid URI for entry id or feed id.
 
 ODataUtils_CannotConvertValueToRawString=The value of type '{0}' could not be converted to a raw string.
 ODataUtils_DidNotFindDefaultMediaType=A default MIME type could not be found for the requested payload in format '{0}'.
-ODataUtils_UnsupportedVersionHeader=The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' is supported as values for the OData-Version header.
+ODataUtils_UnsupportedVersionHeader=The value '{0}' of the OData-Version HTTP header is invalid. Only '4.0' and '4.01' are supported as values for the OData-Version header.
+ODataUtils_MaxProtocolVersionExceeded=An OData version of {0} was specified and the maximum supported OData version is {1}.
 ODataUtils_UnsupportedVersionNumber=An invalid enum value was specified for the version number.
 ODataUtils_ModelDoesNotHaveContainer=The provided model does not contain an entity container.
 
-ReaderUtils_EnumerableModified=The value returned by the '{0}' property cannot be modified until the end of the owning entry is reported by the reader.
+ReaderUtils_EnumerableModified=The value returned by the '{0}' property cannot be modified until the end of the owning resource is reported by the reader.
 
 ReaderValidationUtils_NullValueForNonNullableType=A null value was found with the expected type '{0}[Nullable=False]'. The expected type '{0}[Nullable=False]' does not allow null values.
 ReaderValidationUtils_NullNamedValueForNonNullableType=A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values.
 ReaderValidationUtils_EntityReferenceLinkMissingUri=No URI value was found for an entity reference link. A single URI value was expected.
 ReaderValidationUtils_ValueWithoutType=A value without a type name was found and no expected type is available. When the model is specified, each value in the payload must have a type which can be either specified in the payload, explicitly by the caller or implicitly inferred from the parent value.
-ReaderValidationUtils_EntryWithoutType=An entry without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified.
+ReaderValidationUtils_ResourceWithoutType=A resource without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified.
 ReaderValidationUtils_CannotConvertPrimitiveValue=Cannot convert the literal '{0}' to the expected type '{1}'.
 ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute=The base URI '{0}' specified in ODataMessageReaderSettings.BaseUri is invalid; it must be either null or an absolute URI.
 ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest=The ODataMessageReaderSettings.UndeclaredPropertyBehaviorKinds is not set to ODataUndeclaredPropertyBehaviorKinds.None. When reading request payloads, the ODataMessageReaderSettings.UndeclaredPropertyBehaviorKinds property must be set to ODataUndeclaredPropertyBehaviorKinds.None; other values are not supported.
@@ -312,7 +315,7 @@ ODataReaderCore_AsyncCallOnSyncReader=An asynchronous operation was called on a 
 ODataReaderCore_ReadOrReadAsyncCalledInInvalidState=ODataReader.ReadAsync or ODataReader.Read was called in an invalid state. No further calls can be made to the reader in state '{0}'.
 ODataReaderCore_NoReadCallsAllowed=Calling Read or ReadAsync on an ODataReader instance is not allowed in state '{0}'.
 
-ODataJsonReader_CannotReadEntriesOfFeed=A node of type '{0}' was read from the JSON reader when trying to read the entries of a feed. A 'StartObject' or 'EndArray' node was expected.
+ODataJsonReader_CannotReadResourcesOfResourceSet=A node of type '{0}' was read from the JSON reader when trying to read the resources of a resource set. A 'StartObject' or 'EndArray' node was expected.
 
 ODataJsonReaderUtils_CannotConvertInt32=Cannot convert a value of type 'Edm.Int32' to the expected target type '{0}'.
 ODataJsonReaderUtils_CannotConvertDouble=Cannot convert a value of type 'Edm.Double' to the expected target type '{0}'.
@@ -327,8 +330,8 @@ ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName=Multiple '{0}' properti
 
 
 
-ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget=Multiple operations have the same 'Metadata' property value of '{0}'. The 'Target' property value of these operations must be set to a non-null value.
-ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget=Multiple operations have the same 'Metadata' property value of '{0}' and the same 'Target' property value of '{1}'. When multiple operations have the same 'Metadata' property value, their 'Target' property values must be unique.
+ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget=Multiple operations have the same 'Metadata' property value of '{0}'. The 'Target' property value of these operations must be set to a non-null value.
+ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget=Multiple operations have the same 'Metadata' property value of '{0}' and the same 'Target' property value of '{1}'. When multiple operations have the same 'Metadata' property value, their 'Target' property values must be unique.
 
 ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty=A property with name '{0}' was found in the error object when reading a top-level error. In OData, a top-level error object must have exactly one property with name 'error'.
 ODataJsonErrorDeserializer_TopLevelErrorMessageValueWithInvalidProperty=A property with name '{0}' was found in the message value of a top-level error. In OData, the message value of a top-level error value can only have properties with name 'lang' or 'value'.
@@ -346,7 +349,7 @@ ODataParameterReaderCore_AsyncCallOnSyncReader=An asynchronous operation was cal
 ODataParameterReaderCore_SubReaderMustBeCreatedAndReadToCompletionBeforeTheNextReadOrReadAsyncCall=ODataParameterReader.ReadAsync or ODataParameterReader.Read was called in the '{0}' state. '{1}' must be called in this state, and the created reader must be in the 'Completed' state before the next ODataParameterReader.ReadAsync or ODataParameterReader.Read can be called.
 ODataParameterReaderCore_SubReaderMustBeInCompletedStateBeforeTheNextReadOrReadAsyncCall=ODataParameterReader.ReadAsync or ODataParameterReader.Read was called in the '{0}' state and '{1}' was called but the created reader is not in the 'Completed' state. The created reader must be in 'Completed' state before the next ODataParameterReader.ReadAsync or ODataParameterReader.Read can be called.
 ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState=You cannot call the method '{0}' in state '{1}'.
-ODataParameterReaderCore_CreateReaderAlreadyCalled=The '{0}' method has already been called for the parameter '{1}'. Only one create reader method call is allowed for each entry, feed, or collection parameter.
+ODataParameterReaderCore_CreateReaderAlreadyCalled=The '{0}' method has already been called for the parameter '{1}'. Only one create reader method call is allowed for each resource, resource set, or collection parameter.
 ODataParameterReaderCore_ParameterNameNotInMetadata=The parameter '{0}' in the request payload is not a valid parameter for the operation '{1}'.
 ODataParameterReaderCore_DuplicateParametersInPayload=Multiple parameters with the name '{0}' were found in the request payload.
 ODataParameterReaderCore_ParametersMissingInPayload=One or more parameters of the operation '{0}' are missing from the request payload. The missing parameters are: {1}.
@@ -360,7 +363,7 @@ ValidationUtils_EnumerableContainsANullItem=The '{0}' enumerable contains a null
 ValidationUtils_AssociationLinkMustSpecifyName=The 'Name' property on an ODataAssociationLink must be set to a non-empty string.
 ValidationUtils_AssociationLinkMustSpecifyUrl=The 'Url' property on an ODataAssociationLink must be set to a non-null value that represents the association or associations the link references.
 ValidationUtils_TypeNameMustNotBeEmpty=An empty type name was found; the name of a type cannot be an empty string.
-ValidationUtils_PropertyDoesNotExistOnType=The property '{0}' does not exist on type '{1}'. Make sure to only use property names that are defined by the type.
+ValidationUtils_PropertyDoesNotExistOnType=The property '{0}' does not exist on type '{1}'. Make sure to only use property names that are defined by the type or mark the type as open type.
 ValidationUtils_ResourceMustSpecifyUrl=The 'Url' property on a resource collection must be set to a non-null value.
 ValidationUtils_ResourceMustSpecifyName=The 'Name' property on a resource collection with the 'Url' '{0}' must be set to a non-null value.
 ValidationUtils_ServiceDocumentElementUrlMustNotBeNull=A service document element without a Url was detected; a service document element must have a non-null Url value.
@@ -373,7 +376,7 @@ ValidationUtils_UnrecognizedTypeName=A type named '{0}' could not be resolved by
 ValidationUtils_IncorrectTypeKind=Incompatible type kinds were found. The type '{0}' was found to be of kind '{2}' instead of the expected kind '{1}'.
 ValidationUtils_IncorrectTypeKindNoTypeName=Incompatible type kinds were found. Found type kind '{0}' instead of the expected kind '{1}'.
 ValidationUtils_IncorrectValueTypeKind=A value with type '{0}' was found, which is of kind '{1}'. Value can only be of kind 'Primitive', 'Complex' or 'Collection'.
-ValidationUtils_LinkMustSpecifyName=The 'Name' property on an ODataNavigationLink must be set to a non-empty string.
+ValidationUtils_LinkMustSpecifyName=The 'Name' property on an ODataNestedResourceInfo must be set to a non-empty string.
 ValidationUtils_MismatchPropertyKindForStreamProperty=The property '{0}' cannot be a stream property because it is not of kind EdmPrimitiveTypeKind.Stream.
 ValidationUtils_NestedCollectionsAreNotSupported=Nested collection instances are not allowed.
 ValidationUtils_StreamReferenceValuesNotSupportedInCollections=An ODataStreamReferenceValue item was found in a collection property value, which is not allowed. Collection properties can only have primitive and complex values as items.
@@ -381,10 +384,9 @@ ValidationUtils_IncompatibleType=A value was encountered that has a type name th
 ValidationUtils_OpenCollectionProperty=An open collection property '{0}' was found. In OData, open collection properties are not supported.
 ValidationUtils_OpenStreamProperty=An open stream property '{0}' was found. In OData, open stream properties are not supported.
 ValidationUtils_InvalidCollectionTypeReference=An invalid collection type kind '{0}' was found. In OData, collection types must be of kind 'Collection'.
-ValidationUtils_EntryWithMediaResourceAndNonMLEType=An entry with type '{0}' was found with a media resource, but this entity type is not a media link entry (MLE). When the type is not an MLE entity, the entry cannot have a media resource.
-ValidationUtils_EntryWithoutMediaResourceAndMLEType=An entry with type '{0}' was found without a media resource, but this entity type is a media link entry (MLE). When the type is an MLE entity, the entry must have a media resource.
-ValidationUtils_EntryTypeNotAssignableToExpectedType=An entry with type '{0}' was found, but it is not assignable to the expected type '{1}'. The type specified in the entry must be equal to either the expected type or a derived type.
-ValidationUtils_OpenNavigationProperty=A navigation property with name '{0}' was found on type '{1}', however this property was not declared. Open navigation properties are not supported; all navigation properties must be declared in metadata.
+ValidationUtils_ResourceWithMediaResourceAndNonMLEType=A resource with type '{0}' was found with a media resource, but this entity type is not a media link resource (MLE). When the type is not an MLE entity, the resource cannot have a media resource.
+ValidationUtils_ResourceWithoutMediaResourceAndMLEType=A resource with type '{0}' was found without a media resource, but this entity type is a media link resource (MLE). When the type is an MLE entity, the resource must have a media resource.
+ValidationUtils_ResourceTypeNotAssignableToExpectedType=A resource with type '{0}' was found, but it is not assignable to the expected type '{1}'. The type specified in the resource must be equal to either the expected type or a derived type.
 ValidationUtils_NavigationPropertyExpected=A property with name '{0}' on type '{1}' has kind '{2}', but it is expected to be of kind 'Navigation'.
 ValidationUtils_InvalidBatchBoundaryDelimiterLength=The boundary delimiter '{0}' is invalid. A boundary delimiter must be non-null, be non-empty, and have a maximum of {1} characters.
 ValidationUtils_RecursionDepthLimitReached=The maximum recursion depth limit was reached. The depth of nested values in a single property cannot exceed {0}.
@@ -394,28 +396,26 @@ ValidationUtils_PropertiesMustNotContainReservedChars=The property name '{0}' is
 ValidationUtils_WorkspaceResourceMustNotContainNullItem=A null value was detected when enumerating the collections in a workspace. Workspace collections cannot be null.
 ValidationUtils_InvalidMetadataReferenceProperty=Encountered a property '{0}' that was expected to be a reference to a location in the $metadata document but does not contain a '#' character or is otherwise not a valid metadata reference property. A metadata reference property must contain a '#' and be a valid absolute URI or begin with a '#' and be a valid URI fragment.
 
-ODataAtomWriter_FeedsMustHaveNonEmptyId=An ODataFeed without an ID was detected; in OData, a Feed must have a non-null, non-empty ID value.
-
-WriterValidationUtils_PropertyMustNotBeNull=The 'ODataEntry.Properties' enumerable contains a null item. This enumerable cannot contain null items.
+WriterValidationUtils_PropertyMustNotBeNull=The 'ODataResource.Properties' enumerable contains a null item. This enumerable cannot contain null items.
 WriterValidationUtils_PropertiesMustHaveNonEmptyName=An ODataProperty instance without a name was detected; an ODataProperty must have a non-null, non-empty name.
-WriterValidationUtils_MissingTypeNameWithMetadata=No TypeName was found for an ODataComplexValue of an open property, ODataEntry or custom instance annotation, even though metadata was specified. If a model is passed to the writer, each complex value on an open property, entry or custom instance annotation must have a type name.
-WriterValidationUtils_NextPageLinkInRequest=The ODataFeed.NextPageLink must be null for request payloads. A next link is only supported in responses.
+WriterValidationUtils_MissingTypeNameWithMetadata=No TypeName was found for an ODataResource of an open property, ODataResource or custom instance annotation, even though metadata was specified. If a model is passed to the writer, each complex value on an open property, resource or custom instance annotation must have a type name.
+WriterValidationUtils_NextPageLinkInRequest=The ODataResourceSet.NextPageLink must be null for request payloads. A next link is only supported in responses.
 WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink=A default stream ODataStreamReferenceValue was detected with a 'ContentType' property but without a ReadLink value. In OData, a default stream must either have both a content type and a read link, or neither of them.
 WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType=A default stream ODataStreamReferenceValue was detected with a 'ReadLink' property but without a ContentType value. In OData, a default stream must either have both a content type and a read link, or neither of them.
 WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink=An ODataStreamReferenceValue was detected with null values for both EditLink and ReadLink. In OData, a stream resource must have at least an edit link or a read link.
 WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag=An ODataStreamReferenceValue was detected with an ETag but without an edit link. In OData, a stream resource must have an edit link to have an ETag.
 WriterValidationUtils_StreamReferenceValueEmptyContentType=An ODataStreamReferenceValue was detected with an empty string 'ContentType' property. In OData, a stream resource must either have a non-empty content type or it must be null.
-WriterValidationUtils_EntriesMustHaveNonEmptyId=An entry with an empty ID value was detected. In OData, an entry must either a non-empty ID value or no ID value.
-WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute=The base URI '{0}' specified in ODataMessageWriterSettings.PayloadBaseUri is invalid; it must either be null or an absolute URI.
+WriterValidationUtils_EntriesMustHaveNonEmptyId=A resource with an empty ID value was detected. In OData, a resource must either a non-empty ID value or no ID value.
+WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute=The base URI '{0}' specified in ODataMessageWriterSettings.BaseUri is invalid; it must either be null or an absolute URI.
 WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull=An ODataEntityReferenceLink with a null Url was detected; an ODataEntityReferenceLink must have a non-null Url.
 WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull=The 'ODataEntityReferenceLinks.Links' enumerable contains a null item. This enumerable cannot contain null items.
-WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType=The type '{0}' of an entry in an expanded link is not compatible with the element type '{1}' of the expanded link. Entries in an expanded link must have entity types that are assignable to the element type of the expanded link.
-WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent=The ODataNavigationLink with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a feed, but the actual payload is an entry.
-WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent=The ODataNavigationLink with the URL value '{0}' specifies in its 'IsCollection' property that its payload is an entry, but the actual payload is a feed.
-WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata=The ODataNavigationLink with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a feed, but the metadata declares it as an entry.
-WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata=The ODataNavigationLink with the URL value '{0}' specifies in its 'IsCollection' property that its payload is an entry, but the metadata declares it as feed.
-WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata=The content of the ODataNavigationLink with the URL value '{0}' is a feed, but the metadata declares it as an entry.
-WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata=The content of the ODataNavigationLink with the URL value '{0}' is an entry, but the metadata declares it as feed.
+WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType=The type '{0}' of a resource in an expanded link is not compatible with the element type '{1}' of the expanded link. Entries in an expanded link must have entity types that are assignable to the element type of the expanded link.
+WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent=The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource set, but the actual payload is a resource.
+WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent=The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource, but the actual payload is a resource set.
+WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata=The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource set, but the metadata declares it as a resource.
+WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata=The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource, but the metadata declares it as resource set.
+WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata=The content of the ODataNestedResourceInfo with the URL value '{0}' is a resource set, but the metadata declares it as a resource.
+WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata=The content of the ODataNestedResourceInfo with the URL value '{0}' is a resource, but the metadata declares it as resource set.
 WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue=The collection property '{0}' has a null value, which is not allowed. In OData, collection properties cannot have null values.
 WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue=The property '{0}[Nullable=False]' of type '{1}' has a null value, which is not allowed.
 WriterValidationUtils_StreamPropertiesMustNotHaveNullValue=The stream property '{0}' has a null value, which is not allowed. In OData, stream properties cannot have null values.
@@ -423,8 +423,8 @@ WriterValidationUtils_OperationInRequest=An action or a function with metadata '
 WriterValidationUtils_AssociationLinkInRequest=An association link with name '{0}' could not be written to the request payload. Association links are only supported in responses.
 WriterValidationUtils_StreamPropertyInRequest=An stream property with name '{0}' could not be written to the request payload. Stream properties are only supported in responses.
 WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute=The service document URI '{0}' specified is invalid; it must be either null or an absolute URI.
-WriterValidationUtils_NavigationLinkMustSpecifyUrl=The ODataNavigationLink.Url property on an navigation link '{0}' is null. The ODataNavigationLink.Url property must be set to a non-null value that represents the entity or entities the navigation link references.
-WriterValidationUtils_NavigationLinkMustSpecifyIsCollection=The ODataNavigationLink.IsCollection property on a navigation link '{0}' is null. The ODataNavigationLink.IsCollection property must be specified when writing a link into a request.
+WriterValidationUtils_NavigationLinkMustSpecifyUrl=The ODataNestedResourceInfo.Url property on an navigation link '{0}' is null. The ODataNestedResourceInfo.Url property must be set to a non-null value that represents the entity or entities the navigation link references.
+WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection=The ODataNestedResourceInfo.IsCollection property on a nested resource info '{0}' is null. The ODataNestedResourceInfo.IsCollection property must be specified when writing a nested resource into a request.
 WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage=A JSON Padding function was specified on ODataMessageWriterSettings when trying to write a request message. JSON Padding is only for writing responses.
 
 XmlReaderExtension_InvalidNodeInStringValue=An XML node of type '{0}' was found in a string value. An element with a string value can only contain Text, CDATA, SignificantWhitespace, Whitespace or Comment nodes.
@@ -435,87 +435,28 @@ ODataMetadataInputContext_ErrorReadingMetadata=The metadata document could not b
 
 ODataMetadataOutputContext_ErrorWritingMetadata=The metadata document could not be written as specified.\r\n{0}
 
-ODataAtomReader_MediaLinkEntryMismatch=An Atom entry can be either a regular entry or a media link entry (MLE). This means that there cannot be data in both the {http://www.w3.org/2005/Atom}:content element, which indicates a regular entry, and the {http://docs.oasis-open.org/odata/ns/metadata}:properties element, which indicates an MLE. 
-ODataAtomReader_FeedNavigationLinkForResourceReferenceProperty=A navigation link '{0}' was found with type 'feed', but its matching navigation property is of kind EntityReference. A navigation link with type 'feed' must match a navigation property of kind EntitySetReference.
-ODataAtomReader_ExpandedFeedInEntryNavigationLink=An expanded feed was found in a navigation link of type entry; however, only an expanded entry can occur in a navigation link of type entry.
-ODataAtomReader_ExpandedEntryInFeedNavigationLink=An expanded entry was found in a navigation link of type feed; however, only an expanded feed can occur in a navigation link of type feed.
-ODataAtomReader_DeferredEntryInFeedNavigationLink=A deferred entry was found in a navigation link of type feed; however, only a deferred feed can occur in a navigation link of type feed.
-
 ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified=A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings.
 
-ODataAtomCollectionDeserializer_TypeOrNullAttributeNotAllowed=The root element of the collection cannot contain the {http://docs.oasis-open.org/odata/ns/metadata}:type attribute or the {http://docs.oasis-open.org/odata/ns/metadata}:null attribute.
-ODataAtomCollectionDeserializer_WrongCollectionItemElementName=A child element of the collection was named '{0}'. Each child element representing the value of the collection must be named 'element', and each must belong to the '{1}' namespace.
-ODataAtomCollectionDeserializer_TopLevelCollectionElementWrongNamespace=A root element in namespace '{0}' was found. A top-level collection must have the root element in the '{1}' namespace.
-
-ODataAtomPropertyAndValueDeserializer_TopLevelPropertyElementWrongNamespace=A root element in namespace '{0}' was found. A top-level property payload must have the root element in the '{1}' namespace.
 ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement=The element with name '{0}' is not a valid collection item. The name of the collection item element must be 'element' and it must belong to the '{1}' namespace.
 ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties=The property '{0}' on type '{1}' was found in the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element, and it is declared as a navigation property. Navigation properties in ATOM must be represented as {{http://www.w3.org/2005/Atom}}:link elements.
 
-ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation=Writing null value for the instance annotation '{0}' is not allowed. The instance annotation '{0}' has the expected type '{1}[Nullable=False]'.
+JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation=Writing null value for the instance annotation '{0}' is not allowed. The instance annotation '{0}' has the expected type '{1}[Nullable=False]'.
 
-EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex=Only collection properties that contain primitive types or enumeration types or complex types are supported.
 EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid=When resolving operations '{0}' the group returned has both actions and functions with an invalid IEdmModel.
 EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Invalid implementation of an IEdmModel, an operation '{0}' was found using the IEdmModel method 'FindDeclaredBoundOperations' should never return non-bound operations.
 EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Invalid implementation of an IEdmModel, an operation '{0}' was found using the IEdmModel method 'FindDeclaredBoundOperations' should never return bound operations without any parameters.
 EdmLibraryExtensions_ValueOverflowForUnderlyingType=Value '{0}' was either too large or too small for a '{1}'.
 
-ODataAtomEntryAndFeedDeserializer_ElementExpected=A node of type '{0}' was found where a node of type 'Element' was expected. An entry must be represented as an XML element.
-ODataAtomEntryAndFeedDeserializer_EntryElementWrongName=An element with name '{0}' in namespace '{1}' was found; however, an entry was expected. An entry must be represented as an {{http://www.w3.org/2005/Atom}}:entry element.
-ODataAtomEntryAndFeedDeserializer_ContentWithSourceLinkIsNotEmpty=The element {http://www.w3.org/2005/Atom}:content has non-empty content, and it has an attribute with name 'src'. When the {http://www.w3.org/2005/Atom}:content element has the 'src' attribute, it cannot also have content.
-ODataAtomEntryAndFeedDeserializer_ContentWithWrongType=The 'type' attribute on element {{http://www.w3.org/2005/Atom}}:content is either missing or has an invalid value '{0}'. Only 'application/xml' and 'application/atom+xml' are supported as the value of the 'type' attribute on the {{http://www.w3.org/2005/Atom}}:content element.
-ODataAtomEntryAndFeedDeserializer_ContentWithInvalidNode=An XML node '{0}' was found in the {{http://www.w3.org/2005/Atom}}:content element. The only valid child nodes of the {{http://www.w3.org/2005/Atom}}:content element are insignificant nodes and the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element.
-ODataAtomEntryAndFeedDeserializer_FeedElementWrongName=An element with name '{0}' in namespace '{1}' was found; however, a feed was expected. A feed must be represented as a {{http://www.w3.org/2005/Atom}}:feed element.
-ODataAtomEntryAndFeedDeserializer_UnknownElementInInline=An element with name '{0}' in namespace 'http://www.w3.org/2005/Atom' was found inside the {{http://docs.oasis-open.org/odata/ns/metadata}}:inline element. Only 'entry' and 'feed' elements from the 'http://www.w3.org/2005/Atom' namespace, or elements from other namespaces are allowed inside the {{http://docs.oasis-open.org/odata/ns/metadata}}:inline element.
-ODataAtomEntryAndFeedDeserializer_MultipleExpansionsInInline=Another expanded '{0}' was found in {{http://docs.oasis-open.org/odata/ns/metadata}}:inline, but it already contains an expanded feed or entry. Only one expanded feed or expanded entry is allowed in the {{http://docs.oasis-open.org/odata/ns/metadata}}:inline element.
-ODataAtomEntryAndFeedDeserializer_MultipleInlineElementsInLink=Multiple {http://docs.oasis-open.org/odata/ns/metadata}:inline elements were found in a {http://www.w3.org/2005/Atom}:link element. Each {http://www.w3.org/2005/Atom}:link element can contain no more than one {http://docs.oasis-open.org/odata/ns/metadata}:inline child element.
-ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleEditLinks=Multiple edit links were found for the stream property '{0}'. Only one edit link is allowed for a given stream property.
-ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleReadLinks=Multiple read links were found for the stream property '{0}'. Only one read link is allowed for a given stream property.
-ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleContentTypes=Multiple content type values were found for the stream property '{0}'. When a stream property is represented as two {{http://www.w3.org/2005/Atom}}:link elements that both have the 'type' attribute, then both values must be the same.
-ODataAtomEntryAndFeedDeserializer_StreamPropertyDuplicatePropertyName=Found a stream property '{0}', but there is already another property with the same name on the entity. The stream property name cannot conflict with the name of another property.
-ODataAtomEntryAndFeedDeserializer_StreamPropertyWithEmptyName=Found a stream property link with empty name. In OData, a stream property must have a non-empty name.
-ODataAtomEntryAndFeedDeserializer_OperationMissingMetadataAttribute=The 'metadata' attribute on the {{http://docs.oasis-open.org/odata/ns/metadata}}:{0} element is missing.
-ODataAtomEntryAndFeedDeserializer_OperationMissingTargetAttribute=The 'target' attribute on the {{http://docs.oasis-open.org/odata/ns/metadata}}:{0} element is missing.
-ODataAtomEntryAndFeedDeserializer_MultipleLinksInEntry=Multiple 'link' elements with a relation of '{0}' were found on an entry. In OData, at most one link element with a '{0}' relation is allowed.
-ODataAtomEntryAndFeedDeserializer_MultipleLinksInFeed=Multiple 'link' elements with a relation of '{0}' were found on a feed. In OData, at most one link element with a '{0}' relation is allowed.
-ODataAtomEntryAndFeedDeserializer_DuplicateElements=Duplicate '{{{0}}}:{1}' elements were found. In OData, at most one '{{{0}}}:{1}' element is allowed.
-ODataAtomEntryAndFeedDeserializer_InvalidTypeAttributeOnAssociationLink=The value of the 'type' attribute on the association link for the navigation property '{0}' is invalid. The value of the 'type' attribute on an association link must be 'application/xml'. 
-ODataAtomEntryAndFeedDeserializer_EncounteredAnnotationInNestedFeed=Encountered an 'annotation' element inside a nested feed. Annotations are not currently supported for nested feeds.
-ODataAtomEntryAndFeedDeserializer_EncounteredDeltaLinkInNestedFeed=Encountered a 'Delta Link' element inside a nested feed. Delta Links are not supported for nested feeds.
-ODataAtomEntryAndFeedDeserializer_AnnotationWithNonDotTarget=Encountered an 'annotation' element with a 'target' attribute value of '{0}' and a term name of '{1}'. When an 'annotation' element occurs as a direct child of an 'entry' or 'feed' element, it must have either no 'target' attribute or a 'target' attribute with a value of '.'.
+ODataAtomResourceDeserializer_ContentWithWrongType=The 'type' attribute on element {{http://www.w3.org/2005/Atom}}:content is either missing or has an invalid value '{0}'. Only 'application/xml' and 'application/atom+xml' are supported as the value of the 'type' attribute on the {{http://www.w3.org/2005/Atom}}:content element.
 
-ODataAtomServiceDocumentDeserializer_ServiceDocumentRootElementWrongNameOrNamespace=A root element with name '{0}' was found in namespace '{1}'. The root element of a service document must be named 'service' and it must belong to the 'http://www.w3.org/2007/app' namespace.
-ODataAtomServiceDocumentDeserializer_MissingWorkspaceElement=The service document is missing the 'workspace' element. A service document must contain a single {http://www.w3.org/2007/app}:workspace element.
-ODataAtomServiceDocumentDeserializer_MultipleWorkspaceElementsFound=Multiple 'workspace' elements were found inside the service document. A service document must contain a single {http://www.w3.org/2007/app}:workspace element.
-ODataAtomServiceDocumentDeserializer_UnexpectedElementInServiceDocument=An element with name '{0}' was found in namespace 'http://www.w3.org/2007/app'. With the exception of extension elements, a service document can contain only a single {{http://www.w3.org/2007/app}}:workspace element.
-ODataAtomServiceDocumentDeserializer_UnexpectedElementInWorkspace=An element with name '{0}' was found in namespace 'http://www.w3.org/2007/app'. A workspace element can only contain the {{http://www.w3.org/2005/Atom}}:title element, extension elements, and the {{http://www.w3.org/2007/app}}:collection element.
-ODataAtomServiceDocumentDeserializer_UnexpectedODataElementInWorkspace=An element with name '{0}' was found in namespace 'http://docs.oasis-open.org/odata/ns/metadata'. A singleton or function-import element can only contain the {{http://www.w3.org/2005/Atom}}:title element, extension elements, and the {{http://www.w3.org/2007/app}}:accept or {{http://www.w3.org/2007/app}}:categories element.
-ODataAtomServiceDocumentDeserializer_UnexpectedElementInResourceCollection=An element with name '{0}' was fond in namespace 'http://www.w3.org/2007/app'. A {{http://www.w3.org/2007/app}}:collection element can only contain the {{http://www.w3.org/2005/Atom}}:title element, extension elements, and the {{http://www.w3.org/2007/app}}:accept or {{http://www.w3.org/2007/app}}:categories element.
-
-ODataAtomEntryMetadataDeserializer_InvalidTextConstructKind=The type attribute with value '{0}' was fond on an Atom text construct element with local name '{1}'. The type attribute must be missing or else it must have a value 'text', 'html' or 'xhtml'.
-
-ODataAtomEntryMetadataDeserializer_InvalidLinkLengthValue='{0}' is not a valid value for 'atom:link/@length' attribute.
-
-ODataAtomMetadataDeserializer_MultipleSingletonMetadataElements=Multiple '{0}' elements were found inside a '{1}' element. A '{1}' element cannot contain more than one '{0}' element.
-
-ODataAtomErrorDeserializer_InvalidRootElement=The element with name '{0}' in namespace '{1}' is not a valid root element for an error. The root element of an error must be 'error' and must belong to the 'http://docs.oasis-open.org/odata/ns/metadata' namespace.
 ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName=Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in a top-level error value. In OData, the value of a top-level error value can have no more than one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element
 ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName=Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in an inner error value. In OData, the value of an inner error value can have at most one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element.
-
-ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinkStartElement=The element with name '{0}' in namespace '{1}' is not a valid start element for an entity reference link. The start element of an entity reference link must be 'ref' and it must belong to the 'http://docs.oasis-open.org/odata/ns/metadata' namespace.
-ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksStartElement=The element with name '{0}' in namespace '{1}' is not a valid start element for entity reference links. The start element of entity reference links must be 'feed' and it must belong to the 'http://www.w3.org/2005/Atom' namespace.
-ODataAtomEntityReferenceLinkDeserializer_MultipleEntityReferenceLinksElementsWithSameName=Multiple '{{{0}}}:{1}' elements were found in an entity reference links element. In OData, the value of an entity reference links element must have at most one '{{{0}}}:{1}' element.
-
-ODataAtomServiceDocumentMetadataDeserializer_InvalidFixedAttributeValue=A 'fixed' attribute with the value '{0}' was found on a 'categories' element.  When the 'fixed' attribute is not missing, it must have a value of either 'yes' or 'no'.
-ODataAtomServiceDocumentMetadataDeserializer_MultipleTitleElementsFound=Multiple 'title' elements were found inside a '{0}' element. A '{0}' element can only contain a single {{http://www.w3.org/2005/Atom}}:title element.
-ODataAtomServiceDocumentMetadataDeserializer_MultipleAcceptElementsFoundInCollection=Multiple 'accept' elements were found inside a 'collection' element. A 'collection' element can only contain a single {http://www.w3.org/2007/app}:accept element.
-
-ODataAtomServiceDocumentMetadataSerializer_ResourceCollectionNameAndTitleMismatch=The specified resource collection name '{0}' does not match the specified title '{1}' as set in AtomResourceCollectionMetadata.Title.
 
 CollectionWithoutExpectedTypeValidator_InvalidItemTypeKind=An invalid item type kind '{0}' was found. Items in a collection can only be of type kind 'Primitive' or 'Complex', but not of type kind '{0}'.
 CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind=An item of type kind '{0}' was found in a collection that otherwise has items of type kind '{1}'. In OData, all items in a collection must have the same type kind.
 CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName=An item with type name '{0}' was found in a collection of items with type name '{1}'. In OData, all items in a collection must have the same type name.
 
-FeedWithoutExpectedTypeValidator_IncompatibleTypes=An entry of type '{0}' was found in a feed that otherwise has entries of type '{1}'. In OData, all entries in a feed must have a common base type.
+ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes=A resource of type '{0}' was found in a resource set that otherwise has entries of type '{1}'. In OData, all entries in a resource set must have a common base type.
 
 MessageStreamWrappingStream_ByteLimitExceeded=The maximum number of bytes allowed to be read from the stream has been exceeded. After the last read operation, a total of {0} bytes has been read from the stream; however a maximum of {1} bytes is allowed.
 
@@ -533,12 +474,13 @@ ODataEdmStructuredValue_UndeclaredProperty=The property '{0}' is not declared on
 ODataMetadataBuilder_MissingEntitySetUri=The entity set '{0}' doesn't have the 'OData.EntitySetUri' annotation. This annotation is required.
 ODataMetadataBuilder_MissingSegmentForEntitySetUriSuffix=The entity set '{0}' has a URI '{1}' which has no path segments. An entity set URI suffix cannot be appended to a URI without path segments.
 ODataMetadataBuilder_MissingEntityInstanceUri=Neither the 'OData.EntityInstanceUri' nor the 'OData.EntitySetUriSuffix' annotation was found for entity set '{0}'. One of these annotations is required.
-ODataMetadataBuilder_MissingODataUri=ODataUri is missing when computing the id for contained instance, it may be caused by missing context url in the payload or missing ODataUri in the ODataMessageWriterSettings.
+ODataMetadataBuilder_MissingParentIdOrContextUrl=Parent id or contained context url is missing which is required to compute id for contained instance. Specify ODataUri in the ODataMessageWriterSettings or return parent id or context url in the payload.
+ODataMetadataBuilder_UnknownEntitySet=The Id cannot be computed, since the navigation source '{0}' cannot be resolved to a known entity set from model.
 
-ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType=The entity type '{0}' is not compatible with the base type '{1}' of the provided entity set '{2}'. When an entity type is specified for an OData feed or entry reader, it has to be the same or a subtype of the base type of the specified entity set.
+ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType=The entity type '{0}' is not compatible with the base type '{1}' of the provided entity set '{2}'. When an entity type is specified for an OData resource set or resource reader, it has to be the same or a subtype of the base type of the specified entity set.
 ODataJsonLightInputContext_PayloadKindDetectionForRequest=ODataMessageReader.DetectPayloadKind was called for a request payload. Payload kind detection is only supported for responses in JSON Light.
 ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader=The parameter '{0}' is specified with a null value. For JSON Light, the '{0}' argument to the 'CreateParameterReader' method cannot be null.
-ODataJsonLightInputContext_NoEntitySetForRequest=Parsing JSON Light feeds or entries in requests without entity set is not supported. Pass in the entity set as a parameter to ODataMessageReader.CreateODataEntryReader or ODataMessageReader.CreateODataFeedReader method.
+ODataJsonLightInputContext_NoEntitySetForRequest=Parsing JSON Light resource sets or entries in requests without entity set is not supported. Pass in the entity set as a parameter to ODataMessageReader.CreateODataResourceReader or ODataMessageReader.CreateODataResourceSetReader method.
 ODataJsonLightInputContext_ModelRequiredForReading=Parsing JSON Light payloads without a model is only supported for error payloads.
 ODataJsonLightInputContext_ItemTypeRequiredForCollectionReaderInRequests=An attempt to read a collection request payload without specifying a collection item type was detected. When reading collection payloads in requests, an expected item type has to be provided.
 
@@ -546,20 +488,20 @@ ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty=The required insta
 ODataJsonLightDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation=The annotation '{0}' was targeting the instance annotation '{1}'. Only the '{2}' annotation is allowed to target an instance annotation.
 ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue=The annotation '{0}' is found targeting the instance annotation '{1}'. However the value for the instance annotation '{1}' is not found immediately after. In JSON Light, an annotation targeting an instance annotation must be immediately followed by the value of the targeted instance annotation.
 
-ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest=An attempt to write an entity reference link inside a navigation link after a feed has been written inside the same navigation link in a request was detected. In JSON Light requests, all entity reference links inside a navigation link have to be written before all feeds inside the same navigation link.
-ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed=The ODataFeed.InstanceAnnotations collection must be empty for expanded feeds. Custom instance annotations are not supported on expanded feeds.
+ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest=An attempt to write an entity reference link inside a navigation link after a resource set has been written inside the same navigation link in a request was detected. In JSON Light requests, all entity reference links inside a navigation link have to be written before all resource sets inside the same navigation link.
+ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet=The ODataResourceSet.InstanceAnnotations collection must be empty for expanded resource sets. Custom instance annotations are not supported on expanded resource sets.
 
 ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest=Neither an expected type nor a type name in the OData object model was provided for a complex value. When writing a request payload, either an expected type or a type name has to be specified.
 ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest=Neither an expected type nor a type name in the OData object model was provided for a collection property. When writing a request payload, either an expected type or a type name has to be specified.
 
-ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing=When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataEntryWriter method or the ODataFeedAndEntrySerializationInfo must be set on the ODataEntry or ODataFeed that is being written.
-ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing=When writing a JSON response in full metadata mode with ODataMessageWriterSettings.AutoComputePayloadMetadataInJson set to true, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataEntryWriter method or the ODataEntry.TypeName must be set.
+ODataResourceTypeContext_MetadataOrSerializationInfoMissing=When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataResourceWriter method or the ODataResourceSerializationInfo must be set on the ODataResource or ODataResourceSet that is being written.
+ODataResourceTypeContext_ODataResourceTypeNameMissing=When writing a JSON response in full metadata mode, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataResourceWriter method or the ODataResource.TypeName must be set.
 
 ODataContextUriBuilder_ValidateDerivedType=The base type '{0}' of the entity set specified for writing a payload is not assignable from the specified entity type '{1}'. When an entity type is specified it has to be the same or derived from the base type of the entity set.
 ODataContextUriBuilder_TypeNameMissingForTopLevelCollection=The collection type name for the top level collection is unknown. When writing a response, the item type must be passed to the ODataMessageWriter.CreateODataCollectionWriter method or the ODataCollectionStartSerializationInfo must be set on the ODataCollectionStart.
 ODataContextUriBuilder_UnsupportedPayloadKind=Context URL for payload kind '{0}' is not supported.
-ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry=The stream value must be a property of an ODataEntry instance.
-ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed=The navigationSource for entry or feed is unknown. When writing a response, the navigation source must be passed to the ODataMessageWriter.CreateODataEntryWriter/ODataMessageWriter.CreateODataFeedWriter method or the ODataFeedAndEntrySerializationInfo must be set on the entry/feed.
+ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource=The stream value must be a property of an ODataResource instance.
+ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet=The navigationSource for resource or resource set is unknown or the Type is null. When writing a response, the navigation source or the type must be passed to the ODataMessageWriter.CreateODataResourceWriter/ODataMessageWriter.CreateODataResourceSetWriter method or the ODataResourceSerializationInfo must be set on the resource/resource set.
 ODataContextUriBuilder_ODataUriMissingForIndividualProperty=The ODataMessageWriterSetting.ODataUri must be set when writing individual property.
 ODataContextUriBuilder_TypeNameMissingForProperty=The type name for the top level property is unknown. When writing a response, the ODataValue must have a type name on itself or have a SerializationTypeNameAnnotation.
 ODataContextUriBuilder_ODataPathInvalidForContainedElement=The Path property '{0}' of ODataMessageWriterSetting.ODataUri must end with the navigation property which the contained elements being written belong to.
@@ -579,11 +521,14 @@ ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation=The 
 ODataJsonLightPropertyAndValueDeserializer_TypePropertyAfterValueProperty=The property with name '{0}' was found after the data property with name '{1}'. If a type is specified for a data property, it must appear before the data property.
 ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue=An '{0}' annotation was read inside a JSON object representing a primitive value; type annotations for primitive values have to be property annotations of the owning property.
 ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue=A top-level property with an invalid primitive null value was found. In OData, top-level properties with null value have to be serialized as JSON object with an '{0}' annotation that has the value '{1}'.
-ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty=Encountered a metadata reference property '{0}' in a scope other than an entry. In OData, a property name with a '#' character indicates a reference into the metadata and is only supported for describing operations bound to an entry.
+ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty=Encountered a metadata reference property '{0}' in a scope other than a resource. In OData, a property name with a '#' character indicates a reference into the metadata and is only supported for describing operations bound to a resource.
 ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload=The property with name '{0}' was found in a null payload. In OData, no properties or OData annotations can appear in a null payload.
+ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected=A collection type of '{0}' was specified for a non-collection value.
+ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected=A non-collection type of '{0}' was specified for a collection value.
 
 ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue=The value specified for the spatial property was not valid. You must specify a valid spatial value.
 
+ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource=If a primitive value is representing a resource, the resource must be null.
 ODataJsonLightReaderUtils_AnnotationWithNullValue=The '{0}' instance or property annotation has a null value. In OData, the '{0}' instance or property annotation must have a non-null string value.
 ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation=An '{0}' annotation was found with an invalid value. In OData, the only valid value for the '{0}' annotation is '{1}'.
 
@@ -592,50 +537,52 @@ JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection=The Instan
 ODataJsonLightContextUriParser_NullMetadataDocumentUri=A null metadata document URI was found in the payload. Metadata document URIs must not be null.
 ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind=The context URI '{0}' is not valid for the expected payload kind '{1}'.
 ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName=The context URI '{0}' references the entity set or type '{1}'. However, no entity set or type with name '{1}' is declared in the metadata.
-ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption=A '$select' query option was found for the payload kind '{0}'. In OData, a '$select' query option is only supported for payload kinds 'Entry' and 'Feed'.
+ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption=A '$select' query option was found for the payload kind '{0}'. In OData, a '$select' query option is only supported for payload kinds 'Resource' and 'ResourceSet'.
 ODataJsonLightContextUriParser_NoModel=No model was specified for the ODataMessageReader. A message reader requires a model for JSON Light payload to be specified in the ODataMessageReader constructor.
 ODataJsonLightContextUriParser_InvalidContextUrl=The context URL '{0}' is invalid.
 ODataJsonLightContextUriParser_LastSegmentIsKeySegment=Last segment in context URL '{0}' should not be KeySegment.
 ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute=The top level context URL '{0}' should be an absolute Uri.
 
-ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst=The 'odata.type' instance annotation in an entry object is preceded by an invalid property. In OData, the 'odata.type' instance annotation must be either the first property in the JSON object or the second if the 'odata.context' instance annotation is present.
-ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty=The '{0}' instance annotation in an entry object is preceded by a property or property annotation. In OData, the '{0}' instance annotation must be before any property or property annotation in an entry object.
-ODataJsonLightEntryAndFeedDeserializer_CannotReadFeedContentStart=A node of type '{0}' was read from the JSON reader when trying to read the start of the content of a feed; however, a node of type 'StartArray' was expected.
-ODataJsonLightEntryAndFeedDeserializer_ExpectedFeedPropertyNotFound=Did not find the required '{0}' property for the expected feed.
-ODataJsonLightEntryAndFeedDeserializer_InvalidNodeTypeForItemsInFeed=A node of type '{0}' was read from the JSON reader when trying to read the entries of a feed; however, a node of type 'StartObject' or 'EndArray' was expected.
-ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyAnnotationInTopLevelFeed=A property annotation for a property with name '{0}' was found when reading a top-level feed. No property annotations, only instance annotations are allowed when reading top-level feeds.
-ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyInTopLevelFeed=A property with name '{0}' was found when reading a top-level feed. No properties other than the feed property with name '{1}' are allowed.
-ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType=A property '{0}' which only has property annotations in the payload but no property value is declared to be of type '{1}'. In OData, only navigation properties and named streams can be represented as properties without values.
-ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue=A property '{0}' which only has property annotations in the payload but no property value is an open property. In OData, open property must be represented as a property with value.
-ODataJsonLightEntryAndFeedDeserializer_StreamPropertyInRequest=A stream property was found in a JSON Light request payload. Stream properties are only supported in responses.
-ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation=The stream property '{0}' has a property annotation '{1}'. Stream property can only have the 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaEtag' and 'odata.mediaContentType' property annotations.
-ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue=A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations.
-ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Deferred navigation links can only have the 'odata.navigationLink' and 'odata.associationLink' property annotations.
-ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue=A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected.
-ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue=A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartArray' node was expected.
-ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue=A 'PrimitiveValue' node with non-null value was found when trying to read the value of the navigation property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected.
-ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Expanded entry navigation links can only have the 'odata.context', 'odata.navigationLink' and 'odata.associationLink' property annotations.
-ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Expanded feed navigation links can only have the 'odata.context', 'odata.navigationLink', 'odata.associationLink' and 'odata.nextLink' property annotations.
-ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation=Multiple property annotations '{0}' were found when reading the expanded navigation link '{1}'. Only a single property annotation '{0}' can be specified for an expanded navigation link.
-ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed=A property annotation '{0}' was found after the property '{1}' it is annotating. Only the 'odata.nextLink' property annotation can be used after the property it is annotating.
-ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Navigation links in request payloads can only have the '{2}' property annotation.
-ODataJsonLightEntryAndFeedDeserializer_ArrayValueForSingletonBindPropertyAnnotation=The resource reference navigation property '{0}' has a property annotation '{1}' with an array value. Resource reference navigation properties can only have a property annotation '{1}' with a string value.
-ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation=The resource set reference navigation property '{0}' has a property annotation '{1}' with a string value. Resource set reference navigation properties can only have a property annotation '{1}' with an array value.
-ODataJsonLightEntryAndFeedDeserializer_EmptyBindArray=The value of '{0}' property annotation is an empty array. The '{0}' property annotation must have a non-empty array as its value.
-ODataJsonLightEntryAndFeedDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink=The navigation property '{0}' has no expanded value and no '{1}' property annotation. Navigation property in request without expanded value must have the '{1}' property annotation.
-ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue=The resource reference navigation property '{0}' has both the '{1}' property annotation as well as a value. Resource reference navigation properties can have either '{1}' property annotations or values, but not both.
-ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType=An undeclared property '{0}' which only has property annotations in the payload but no property value was found in the payload. In OData, only declared navigation properties and declared named streams can be represented as properties without values.
-ODataJsonLightEntryAndFeedDeserializer_OperationIsNotActionOrFunction=Encountered the operation '{0}' which can not be resolved to an ODataAction or ODataFunction.
-ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation=Multiple '{0}' properties were found for an operation '{1}'. In OData, an operation can have at most one '{0}' property.
-ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty=Multiple target bindings encountered for the operation '{0}' but the 'target' property was not found in an operation value. To differentiate between multiple target bindings, each operation value must have exactly one 'target' property.
-ODataJsonLightEntryAndFeedDeserializer_MetadataReferencePropertyInRequest=A metadata reference property was found in a JSON Light request payload. Metadata reference properties are only supported in responses.
+ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject=Invalid primitive value '{0}' for @removed annotation. @removed annotation must be a JSON object, optionally containing a 'reason' property.
+ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst=The 'odata.type' instance annotation in a resource object is preceded by an invalid property. In OData, the 'odata.type' instance annotation must be either the first property in the JSON object or the second if the 'odata.context' instance annotation is present.
+ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty=The '{0}' instance annotation in a resource object is preceded by a property or property annotation. In OData, the '{0}' instance annotation must be before any property or property annotation in a resource object.
+ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart=A node of type '{0}' was read from the JSON reader when trying to read the start of the content of a resource set; however, a node of type 'StartArray' was expected.
+ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound=Did not find the required '{0}' property for the expected resource set.
+ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet=A node of type '{0}' was read from the JSON reader when trying to read the entries of a typed resource set; however, a node of type 'StartObject' or 'EndArray', or a null value, was expected.
+ODataJsonLightResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet=A property annotation for a property with name '{0}' was found when reading a top-level resource set. No property annotations, only instance annotations are allowed when reading top-level resource sets.
+ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet=A property with name '{0}' was found when reading a top-level resource set. No properties other than the resource set property with name '{1}' are allowed.
+ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType=A property '{0}' which only has property annotations in the payload but no property value is declared to be of type '{1}'. In OData, only navigation properties and named streams can be represented as properties without values.
+ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue=A property '{0}' which only has property annotations in the payload but no property value is an open property. In OData, open property must be represented as a property with value.
+ODataJsonLightResourceDeserializer_StreamPropertyInRequest=A stream property was found in a JSON Light request payload. Stream properties are only supported in responses.
+ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation=The stream property '{0}' has a property annotation '{1}'. Stream property can only have the 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaEtag' and 'odata.mediaContentType' property annotations.
+ODataJsonLightResourceDeserializer_StreamPropertyWithValue=A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations.
+ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Deferred navigation links can only have the 'odata.navigationLink' and 'odata.associationLink' property annotations.
+ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource=A node of type '{0}' was read from the JSON reader when trying to read the contents of the property '{1}'; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected.
+ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource=A node of type '{0}' was read from the JSON reader when trying to read the contents of the property '{1}'; however, a 'StartArray' node was expected.
+ODataJsonLightResourceDeserializer_CannotReadNestedResource=A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected.
+ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Expanded resource navigation links can only have the 'odata.context', 'odata.navigationLink' and 'odata.associationLink' property annotations.
+ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Expanded resource set navigation links can only have the 'odata.context', 'odata.navigationLink', 'odata.associationLink' and 'odata.nextLink' property annotations
+ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation=The property '{0}' has a property annotation '{1}'. The complex collection property can only have the 'odata.count', 'odata.type' and 'odata.nextLink' property annotations.
+ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation=Multiple property annotations '{0}' were found when reading the nested resource '{1}'. Only a single property annotation '{0}' can be specified for a nested resource.
+ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet=A property annotation '{0}' was found after the property '{1}' it is annotating. Only the 'odata.nextLink' property annotation can be used after the property it is annotating.
+ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation=The navigation property '{0}' has a property annotation '{1}'. Navigation links in request payloads can only have the '{2}' property annotation.
+ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation=The resource reference navigation property '{0}' has a property annotation '{1}' with an array value. Resource reference navigation properties can only have a property annotation '{1}' with a string value.
+ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation=The resource set reference navigation property '{0}' has a property annotation '{1}' with a string value. Resource set reference navigation properties can only have a property annotation '{1}' with an array value.
+ODataJsonLightResourceDeserializer_EmptyBindArray=The value of '{0}' property annotation is an empty array. The '{0}' property annotation must have a non-empty array as its value.
+ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink=The navigation property '{0}' has no expanded value and no '{1}' property annotation. Navigation property in request without expanded value must have the '{1}' property annotation.
+ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue=The resource reference navigation property '{0}' has both the '{1}' property annotation as well as a value. Resource reference navigation properties can have either '{1}' property annotations or values, but not both.
+ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType=An undeclared property '{0}' which only has property annotations in the payload but no property value was found in the payload. In OData, only declared navigation properties and declared named streams can be represented as properties without values.
+ODataJsonLightResourceDeserializer_OperationIsNotActionOrFunction=Encountered the operation '{0}' which can not be resolved to an ODataAction or ODataFunction.
+ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation=Multiple '{0}' properties were found for an operation '{1}'. In OData, an operation can have at most one '{0}' property.
+ODataJsonLightResourceDeserializer_OperationMissingTargetProperty=Multiple target bindings encountered for the operation '{0}' but the 'target' property was not found in an operation value. To differentiate between multiple target bindings, each operation value must have exactly one 'target' property.
+ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest=A metadata reference property was found in a JSON Light request payload. Metadata reference properties are only supported in responses.
 
 ODataJsonLightValidationUtils_OperationPropertyCannotBeNull=The '{0}' property of the operation '{1}' cannot have a null value.
 ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported=Encountered a reference into metadata '{0}' which does not refer to the known metadata url '{1}'. Open metadata reference properties are not supported.
 
 ODataJsonLightDeserializer_RelativeUriUsedWithouODataMetadataAnnotation=A relative URI value '{0}' was specified in the payload, but the {1} annotation is missing from the payload. The payload must only contain absolute URIs or the {1} annotation must be on the payload.
 
-ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload=The {0} annotation is missing from the payload.
+ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload=The {0} annotation is missing from the payload.
 
 ODataJsonLightCollectionDeserializer_ExpectedCollectionPropertyNotFound=When trying to read the start of a collection, the expected collection property with name '{0}' was not found.
 ODataJsonLightCollectionDeserializer_CannotReadCollectionContentStart=A node of type '{0}' was read from the JSON reader when trying to read the items of a collection; however, a 'StartArray' node was expected.
@@ -655,7 +602,7 @@ ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityR
 ODataJsonLightEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound=Did not find the required '{0}' property for an entity reference links payload.
 
 ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull=The '{0}' property of an operation '{1}' in '{2}' cannot have a null value.
-ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue=Found a node of type '{1}' when starting to read the '{0}' operations value, however a node of type 'StartObject' was expected. The '{0}' operations value must have an object value. 
+ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue=Found a node of type '{1}' when starting to read the '{0}' operations value, however a node of type 'StartObject' was expected. The '{0}' operations value must have an object value.
 
 ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument=Multiple '{0}' properties were found in a service document. In OData, a service document must have exactly one '{0}' property.
 ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement=Multiple '{0}' properties were found in a service document element. In OData, a service document element must have exactly one '{0}' property.
@@ -686,9 +633,9 @@ ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty=A property
 ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties=The entity type '{0}' has no key properties. Entity types must define at least one key property.
 ODataConventionalUriBuilder_NullKeyValue=The key property '{0}' on type '{1}' has a null value. Key properties must not have null values.
 
-ODataEntryMetadataContext_EntityTypeWithNoKeyProperties=An ODataEntry of type '{0}' is found without key properties. When writing without a user model, each entry must contain at least one property whose 'ODataProperty.SerializationInfo.PropertyKind' set to 'ODataPropertyKind.Key'. When writing with a user model, the entity type '{0}' defined in the model must define at least one key property.
-ODataEntryMetadataContext_NullKeyValue=The key property '{0}' on type '{1}' has a null value. Key properties must not have null values.
-ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues=The property '{0}' on type '{1}' is a non-primitive value. All key and etag properties must be of primitive types.
+ODataResourceMetadataContext_EntityTypeWithNoKeyProperties=An ODataResource of type '{0}' is found without key properties. When writing without a user model, each resource must contain at least one property whose 'ODataProperty.SerializationInfo.PropertyKind' set to 'ODataPropertyKind.Key'. When writing with a user model, the entity type '{0}' defined in the model must define at least one key property.
+ODataResourceMetadataContext_NullKeyValue=The key property '{0}' on type '{1}' has a null value. Key properties must not have null values.
+ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues=The property '{0}' on type '{1}' is a non-primitive value. All key and etag properties must be of primitive types.
 
 EdmValueUtils_NonPrimitiveValue=The primitive property '{0}' on type '{1}' has a value which is not a primitive value.
 EdmValueUtils_PropertyDoesntExist=The entity instance value of type '{0}' doesn't have a value for property '{1}'. To compute an entity's metadata, its key and concurrency-token property values must be provided.
@@ -701,7 +648,6 @@ ODataInstanceAnnotation_ReservedNamesNotAllowed='{0}' is a reserved instance ann
 ODataInstanceAnnotation_BadTermName='{0}' is an invalid instance annotation name.
 ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue=The value of an instance annotation cannot be of type ODataStreamReferenceValue.
 
-ODataJsonLightValueSerializer_MissingTypeNameOnComplex=A type name was not provided for an instance of ODataComplexValue.
 ODataJsonLightValueSerializer_MissingTypeNameOnCollection=A type name was not provided for an instance of ODataCollectionValue.
 ODataJsonLightValueSerializer_MissingRawValueOnUntyped=A raw value was not provided for an instance of ODataUntypedValue.
 
@@ -737,7 +683,7 @@ UriQueryExpressionParser_CannotCreateStarTokenFromNonStar=Expecting a Star token
 UriQueryExpressionParser_RangeVariableAlreadyDeclared=The range variable '{0}' has already been declared.
 UriQueryExpressionParser_AsExpected='as' expected at position {0} in '{1}'.
 UriQueryExpressionParser_WithExpected='with' expected at position {0} in '{1}'.
-UriQueryExpressionParser_UnrecognizedWithVerb=Unrecognized with '{0}' at '{1}' in '{2}'.
+UriQueryExpressionParser_UnrecognizedWithMethod=Unrecognized with '{0}' at '{1}' in '{2}'.
 UriQueryExpressionParser_PropertyPathExpected=Expression expected at position {0} in '{1}'.
 UriQueryExpressionParser_KeywordOrIdentifierExpected='{0}' expected at position {1} in '{2}'.
 
@@ -781,17 +727,20 @@ MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument=Cast or IsOf Function must
 MetadataBinder_CastOrIsOfCollectionsNotSupported=The Cast and IsOf functions do not support collection arguments or types.
 MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease=Collection open properties are not supported in this release.
 MetadataBinder_IllegalSegmentType=Can only bind segments that are Navigation, Structural, Complex, or Collections. We found a segment '{0}' that isn't any of those. Please revise the query.
-MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities. 
+MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities.
 
 ApplyBinder_AggregateExpressionIncompatibleTypeForMethod=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
 ApplyBinder_UnsupportedAggregateMethod=$apply/aggregate does not support method '{0}'.
+ApplyBinder_UnsupportedAggregateKind=$apply/aggregate expression token kind '{0}' not supported.
 ApplyBinder_AggregateExpressionNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
 ApplyBinder_GroupByPropertyNotPropertyAccessValue=$apply/groupby grouping expression '{0}' must evaluate to a property access value.
 ApplyBinder_UnsupportedType=$apply clause does not support type '{0}'.
 ApplyBinder_UnsupportedGroupByChild=$apply/groupby not support '{0}' as child transformation
 
+AggregateTransformationNode_UnsupportedAggregateExpressions=There are unsupported aggregation expressions in the transformation node.
+
 FunctionCallBinder_CannotFindASuitableOverload=Cannot find a suitable overload for function '{0}' that takes '{1}' arguments.
-FunctionCallBinder_UriFunctionMustHaveHaveNullParent=Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens. 
+FunctionCallBinder_UriFunctionMustHaveHaveNullParent=Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens.
 FunctionCallBinder_CallingFunctionOnOpenProperty=Found a function '{0}' on an open property. Functions on open properties are not supported.
 FunctionCallParser_DuplicateParameterOrEntityKeyName=Parameter or entity key names must be unique. There is most likely an error in the model.
 
@@ -815,11 +764,12 @@ SelectBinder_MultiLevelPathInSelect=Found a path with multiple navigation proper
 
 ExpandItemBinder_TraversingANonNormalizedTree=Trying to traverse a non-normalized expand tree.
 ExpandItemBinder_CannotFindType=The type '{0}' is not defined in the model.
-ExpandItemBinder_PropertyIsNotANavigationProperty=Property '{0}' on type '{1}' is not a navigation property. Only navigation properties can be expanded.
+ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty=Property '{0}' on type '{1}' is not a navigation property or complex property. Only navigation properties can be expanded.
 ExpandItemBinder_TypeSegmentNotFollowedByPath=Found a path within a select or expand query option that isn't ended by a non-type segment.
 ExpandItemBinder_PathTooDeep=Trying to parse a type segment path that is too long.
 ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath=Found a path traversing multiple navigation properties. Please rephrase the query such that each expand path contains only type segments and navigation properties.
 ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType=The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' could not be cast to source entity type '{2}'.
+ExpandItemBinder_InvaidSegmentInExpand=Segment '{0}' is not valid in expand path. Before navigation property, only type segment or entity or complex property can exist.
 
 Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity=The navigation property must have a target multiplicity of 'One' or 'ZeroOrOne' to create a SingleNavigationNode.
 Nodes_NonentityParameterQueryNodeWithEntityType=An entity type '{0}' was given to NonEntityParameterQueryNode. Use EntityParameterQueryNode instead.
@@ -845,7 +795,7 @@ UriSelectParser_InvalidCountOption=Count option must be a boolean value, it is s
 UriSelectParser_InvalidLevelsOption=Levels option must be a non-negative integer or 'max', it is set to '{0}' instead.
 UriSelectParser_SystemTokenInSelectExpand=Found system token '{0}' in select or expand clause '{1}'.
 UriParser_MissingExpandOption=Missing expand option on navigation property '{0}'. If a parenthesis expression follows an expanded navigation property, then at least one expand option must be provided.
-UriParser_FullUriMustBeRelative=Parameter 'fullUri' must be a relative Uri if serviceRoot is not specified.
+UriParser_RelativeUriMustBeRelative=Parameter 'relativeUri' must be a relative Uri if serviceRoot is not specified.
 UriParser_NeedServiceRootForThisOverload=A service root URI must be provided to the ODataUriParser in order to use this method.
 UriParser_UriMustBeAbsolute=The URI '{0}' must be an absolute URI.
 UriParser_NegativeLimit=The limit must be greater than or equal to zero
@@ -864,12 +814,12 @@ PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
 PathParser_TypeMustBeRelatedToSet=The type '{0}' does not inherit from and is not a base type of '{1}'. The type of '{2}' must be related to the Type of the EntitySet.
 PathParser_TypeCastOnlyAllowedAfterStructuralCollection=Type cast segment '{0}' after a collection which is not of entity or complex type is not allowed.
 
-ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink=A feed may contain a next page link, a delta link or neither, but must not contain both.
+ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink=A resource set may contain a next page link, a delta link or neither, but must not contain both.
 
 ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty=The last segment, and only the last segment, must be a navigation property in $expand.
-ODataExpandPath_InvalidExpandPathSegment=Found a segment of type '{0} in an expand path, but only NavigationProperty and Type segments are allowed.
+ODataExpandPath_InvalidExpandPathSegment=Found a segment of type '{0} in an expand path, but only NavigationProperty, Property and Type segments are allowed.
 
-ODataSelectPath_CannotEndInTypeSegment=The last segment in a $select cannot be a TypeSegment.
+ODataSelectPath_CannotOnlyHaveTypeSegment=TypeSegment cannot be the only segment in a $select.
 ODataSelectPath_InvalidSelectPathSegmentType=Found a segment of type '{0} in a select path, but only TypeSegment, NavigationPropertySegment, PropertySegment, OperationSegment or OpenPropertySegments are allowed.
 ODataSelectPath_OperationSegmentCanOnlyBeLastSegment=An operation can only be the last segment in $select.
 ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment=A navigation property can only be the last segment in $select.
@@ -908,7 +858,7 @@ RequestUriProcessor_SegmentDoesNotSupportKeyPredicates=The request URI is not va
 RequestUriProcessor_ValueSegmentAfterScalarPropertySegment=The segment '{1}' in the request URI is not valid. The segment '{0}' refers to a primitive property, function, or service operation, so the only supported value from the next segment is '$value'.
 RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType=The type '{0}' specified in the URI is neither a base type nor a sub-type of the previously-specified type '{1}'.
 OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are not supported on OpenTypes. Property name: '{0}'.
-BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations. 
+BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations.
 DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.
 BadRequest_KeyCountMismatch=The number of keys specified in the URI does not match number of key properties for the resource '{0}'.
 RequestUriProcessor_KeysMustBeNamed=Segments with multiple key values must specify them in 'name=value' form.
@@ -980,3 +930,5 @@ JsonReaderExtensions_CannotReadPropertyValueAsString=Cannot read the value '{0}'
 JsonReaderExtensions_CannotReadValueAsString=Cannot read the value '{0}' as a quoted JSON string value.
 JsonReaderExtensions_CannotReadValueAsDouble=Cannot read the value '{0}' as a double numeric value.
 JsonReaderExtensions_UnexpectedInstanceAnnotationName=An unexpected instance annotation name '{0}' was found when reading from the JSON reader, In OData, Instance annotation name must start with @.
+
+ServiceProviderExtensions_NoServiceRegistered=No service for type '{0}' has been registered.

@@ -6,15 +6,13 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Metadata;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class ODataMetadataContextTests
     {
@@ -30,15 +28,15 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         {
             ODataMetadataContext context = new ODataMetadataContext(
                 true /*readingResponse*/,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified, 
-                new EdmTypeReaderResolver(this.edmModel, ODataReaderBehavior.DefaultBehavior), 
+                null,
+                new EdmTypeReaderResolver(this.edmModel, null),
                 this.edmModel,
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
-            ODataEntry entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
-            Action action = () => context.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = entry, SelectedProperties = SelectedPropertiesNode.EntireSubtree }, null);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
+            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
+            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = SelectedPropertiesNode.EntireSubtree, NavigationSource = set }, false);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
         }
 
         [Fact]
@@ -46,14 +44,14 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         {
             ODataMetadataContext context = new ODataMetadataContext(
                 true /*readingResponse*/,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified,
-                new EdmTypeReaderResolver(this.edmModel, ODataReaderBehavior.DefaultBehavior),
+                null,
+                new EdmTypeReaderResolver(this.edmModel, null),
                 this.edmModel,
                 new Uri("http://myservice.svc/$metadata", UriKind.Absolute),
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
-            ODataEntry entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
-            Action action = () => context.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = entry, SelectedProperties = new SelectedPropertiesNode("*")}, null);
+            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
+            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*"), NavigationSource = set }, false);
             action.ShouldNotThrow();
         }
 
@@ -62,16 +60,16 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         {
             var closedType = new EdmEntityType("NS", "Type1");
             var openType = new EdmEntityType("NS", "Type2", null, false, true);
-            
+
             ODataMetadataContext context = new ODataMetadataContext(
                 true /*readingResponse*/,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified,
-                new EdmTypeReaderResolver(this.edmModel, ODataReaderBehavior.DefaultBehavior),
+                null,
+                new EdmTypeReaderResolver(this.edmModel, null),
                 this.edmModel,
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);
-            context.OperationsBoundToEntityTypeMustBeContainerQualified(closedType).Should().BeFalse();
-            context.OperationsBoundToEntityTypeMustBeContainerQualified(openType).Should().BeTrue();
+            context.OperationsBoundToStructuredTypeMustBeContainerQualified(closedType).Should().BeFalse();
+            context.OperationsBoundToStructuredTypeMustBeContainerQualified(openType).Should().BeTrue();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -39,28 +39,33 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             foreach (var mimeType in mimeTypes)
             {
                 // $count collection of primitive type
-                List<ODataEntry> details = this.TestsHelper.QueryFeed("People?$filter=Emails/$count lt 2", mimeType);
+                List<ODataResource> details = this.TestsHelper.QueryFeed("People?$filter=Emails/$count lt 2", mimeType)
+                    .Where(r=>r != null && r.Id != null).ToList();
+
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(4, details.Count);
                 }
 
                 // $count collection of enum type
-                details = this.TestsHelper.QueryFeed("Products?$filter=CoverColors/$count lt 2", mimeType);
+                details = this.TestsHelper.QueryFeed("Products?$filter=CoverColors/$count lt 2", mimeType)
+                    .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(1, details.Count);
                 }
 
                 // $count collection of complex type
-                details = this.TestsHelper.QueryFeed("People?$filter=Addresses/$count eq 2", mimeType);
+                details = this.TestsHelper.QueryFeed("People?$filter=Addresses/$count eq 2", mimeType)
+                    .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(2, details.Count);
                 }
 
                 // $count collection of entity type
-                details = this.TestsHelper.QueryFeed("Customers?$filter=Orders/$count lt 2", mimeType);
+                details = this.TestsHelper.QueryFeed("Customers?$filter=Orders/$count lt 2", mimeType)
+                    .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(1, details.Count);

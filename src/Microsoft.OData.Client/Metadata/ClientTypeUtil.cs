@@ -14,7 +14,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using c = Microsoft.OData.Client;
 
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Returns MethodInfo instance for a generic type retrieved by using <paramref name="methodName"/> and gets 
+        /// Returns MethodInfo instance for a generic type retrieved by using <paramref name="methodName"/> and gets
         /// element type for the provided <paramref name="genericTypeDefinition"/>.
         /// </summary>
         /// <param name="propertyType">starting type</param>
@@ -279,6 +279,18 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
+        /// Is the type an structured type?
+        /// </summary>
+        /// <param name="t">Type to examine</param>
+        /// <param name="model">The client model.</param>
+        /// <returns>bool indicating whether or not structured type</returns>
+        internal static bool TypeIsStructured(Type t, ClientEdmModel model)
+        {
+            var typeKind = model.GetOrCreateEdmType(t).TypeKind;
+            return typeKind == EdmTypeKind.Entity || typeKind == EdmTypeKind.Complex;
+        }
+
+        /// <summary>
         /// Is the type or element type (in the case of nullableOfT or IEnumOfT) a Entity Type?
         /// </summary>
         /// <param name="type">Type to examine</param>
@@ -288,6 +300,18 @@ namespace Microsoft.OData.Client.Metadata
             type = TypeSystem.GetElementType(type);
             type = Nullable.GetUnderlyingType(type) ?? type;
             return !PrimitiveType.IsKnownType(type) && ClientTypeUtil.GetKeyPropertiesOnType(type) != null;
+        }
+
+        /// <summary>
+        /// Is the type or element type (in the case of nullableOfT or IEnumOfT) a structured type?
+        /// </summary>
+        /// <param name="type">Type to examine</param>
+        /// <returns>bool indicating whether or not structured type</returns>
+        internal static bool TypeOrElementTypeIsStructured(Type type)
+        {
+            type = TypeSystem.GetElementType(type);
+            type = Nullable.GetUnderlyingType(type) ?? type;
+            return !PrimitiveType.IsKnownType(type) && !type.IsEnum();
         }
 
         /// <summary>Checks whether the specified type is a DataServiceCollection type (or inherits from one).</summary>
@@ -340,11 +364,11 @@ namespace Microsoft.OData.Client.Metadata
                     //// we do support adding elements to collections
                     //// ICollection<PropertyType> { get; /*ignored set;*/ }
 
-                    //// indexed properties are not suported because 
+                    //// indexed properties are not suported because
                     //// we don't have anything to use as the index
                     //// PropertyType Property[object x] { /*ignored get;*/ /*ignored set;*/ }
 
-                    //// also ignored 
+                    //// also ignored
                     //// if PropertyType.IsPointer (like byte*)
                     //// if PropertyType.IsArray except for byte[] and char[]
                     //// if PropertyType == IntPtr or UIntPtr
@@ -365,7 +389,7 @@ namespace Microsoft.OData.Client.Metadata
                     }
 
                     // Ignore properties overriding abstract/virtual properties of a base type
-                    // when only getting the declared properties (otherwise the property will 
+                    // when only getting the declared properties (otherwise the property will
                     // only be included once in the property list anyways).
                     if (declaredOnly && IsOverride(type, propertyInfo))
                     {
@@ -448,7 +472,7 @@ namespace Microsoft.OData.Client.Metadata
                     throw c.Error.InvalidOperation(c.Strings.ClientType_KeysOnDifferentDeclaredType(typeName));
                 }
 
-                if (!PrimitiveType.IsKnownType(key.PropertyType))
+                if (!PrimitiveType.IsKnownType(key.PropertyType) && !(key.PropertyType.GetGenericTypeDefinition() == typeof(System.Nullable<>) && key.PropertyType.GetGenericArguments().First().IsEnum()))
                 {
                     throw c.Error.InvalidOperation(c.Strings.ClientType_KeysMustBeSimpleTypes(key.Name, typeName, key.PropertyType.FullName));
                 }
@@ -575,9 +599,9 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="t">The type used to get the client PropertyInfo.</param>
         /// <param name="serverDefinedName">Name from server.</param>
-        /// <param name="ignoreMissingProperties">Flag to ignore missing properties.</param>
+        /// <param name="undeclaredPropertyBehavior">Flag to support untyped properties.</param>
         /// <returns>Client PropertyInfo, or null if the method is not found.</returns>
-        internal static PropertyInfo GetClientPropertyInfo(Type t, string serverDefinedName, bool ignoreMissingProperties)
+        internal static PropertyInfo GetClientPropertyInfo(Type t, string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
             PropertyInfo propertyInfo = t.GetProperty(serverDefinedName);
             if (propertyInfo == null)
@@ -590,7 +614,7 @@ namespace Microsoft.OData.Client.Metadata
                          }).SingleOrDefault();
             }
 
-            if (propertyInfo == null && !ignoreMissingProperties)
+            if (propertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
             {
                 throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverDefinedName));
             }
@@ -603,11 +627,11 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="t">The type used to get the client property name.</param>
         /// <param name="serverDefinedName">Name from server.</param>
-        /// <param name="ignoreMissingProperties">Flag to ignore missing properties.</param>
+        /// <param name="undeclaredPropertyBehavior">Flag to support untyped properties.</param>
         /// <returns>Client property name, or null if the property is not found.</returns>
-        internal static string GetClientPropertyName(Type t, string serverDefinedName, bool ignoreMissingProperties)
+        internal static string GetClientPropertyName(Type t, string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
-            PropertyInfo propertyInfo = GetClientPropertyInfo(t, serverDefinedName, ignoreMissingProperties);
+            PropertyInfo propertyInfo = GetClientPropertyInfo(t, serverDefinedName, undeclaredPropertyBehavior);
             return propertyInfo == null ? serverDefinedName : propertyInfo.Name;
         }
 
@@ -699,7 +723,7 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Checks whether the specified <paramref name="type"/> is a 
+        /// Checks whether the specified <paramref name="type"/> is a
         /// closed constructed type of the generic type.
         /// </summary>
         /// <param name="type">Type to check.</param>

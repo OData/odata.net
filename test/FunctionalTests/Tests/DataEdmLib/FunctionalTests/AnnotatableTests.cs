@@ -11,12 +11,8 @@ namespace EdmLibTests.FunctionalTests
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
@@ -39,7 +35,7 @@ namespace EdmLibTests.FunctionalTests
                 try
                 {
                     model.SetAnnotationValue(annotatable, q.NamespaceName, q.Name, q.MyFullName);
-                    Assert.Fail("exception exptected");
+                    Assert.Fail("exception expected");
                 }
                 catch (ArgumentNullException)
                 {
@@ -289,7 +285,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsWhatsBeenSet()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsWhatsBeenSet()
         {
             var model = new EdmModel();
 
@@ -324,7 +320,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsWhatsBeenSetAsSets()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsWhatsBeenSetAsSets()
         {
             var model = new EdmModel();
 
@@ -368,7 +364,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsUpdatedValue()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsUpdatedValue()
         {
             var model = new EdmModel();
 
@@ -402,7 +398,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsNull_IfDeleted()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsNull_IfDeleted()
         {
             var model = new EdmModel();
 

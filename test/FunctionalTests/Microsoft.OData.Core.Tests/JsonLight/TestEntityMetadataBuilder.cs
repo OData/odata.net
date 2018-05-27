@@ -5,15 +5,15 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
-    internal class TestEntityMetadataBuilder : ODataEntityMetadataBuilder
+    internal class TestEntityMetadataBuilder : ODataResourceMetadataBuilder
     {
-        private ODataEntry entry;
+        private ODataResource entry;
 
-        internal TestEntityMetadataBuilder(ODataEntry entry)
+        internal TestEntityMetadataBuilder(ODataResource entry)
         {
             this.entry = entry;
         }

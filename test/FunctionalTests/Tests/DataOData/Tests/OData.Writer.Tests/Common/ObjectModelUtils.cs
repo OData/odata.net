@@ -9,12 +9,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Spatial;
+    using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
@@ -91,11 +89,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         public static readonly GeometryMultiLineString GeometryMultiLineStringValue;
         public static readonly GeometryMultiPolygon GeometryMultiPolygonValue;
 
-        private static readonly ODataFeedAndEntrySerializationInfo MySerializationInfo = new ODataFeedAndEntrySerializationInfo()
+        private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
-            NavigationSourceEntityTypeName = "Null",
             NavigationSourceName = "MySet",
-            ExpectedTypeName = "Null"
         };
 
         static ObjectModelUtils()
@@ -305,7 +301,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             };
         }
 
-        public static ODataProperty[] CreateDefaultComplexProperties(EdmModel model = null)
+        public static ODataItem[][] CreateDefaultComplexProperties(EdmModel model = null)
         {
             if (model != null)
             {
@@ -324,13 +320,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     .Property("NestedComplex", new EdmComplexTypeReference(nestedAddressType, true));
             }
 
-            return new ODataProperty[]
+            return new ODataItem[][]
             {
-                new ODataProperty()
+                new ODataItem[]
                 {
-                    Name = "ComplexAddress",
-                    Value = new ODataComplexValue()
-                    {
+                    new ODataResource()
+                     {
                         TypeName = "My.AddressType",
                         Properties = new []
                         {
@@ -339,31 +334,32 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                         }
                     }
                 },
-                new ODataProperty()
+
+                new ODataItem[]
                 {
-                    Name = "NestedComplex",
-                    Value = new ODataComplexValue()
+                    new ODataResource()
                     {
                         TypeName = "My.NestedAddressType",
                         Properties = new []
                         {
-                            new ODataProperty() 
-                            { 
-                                Name = "Street", 
-                                Value = new ODataComplexValue()
-                                {
-                                    TypeName = "My.StreetType",
-                                    Properties = new []
-                                    {
-                                        new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
-                                        new ODataProperty { Name = "Number", Value = 1234 },
-                                    }
-                                }
-                            },
-                            new ODataProperty() { Name = "City", Value = "Redmond " },
+                            new ODataProperty() { Name = "City", Value = "Redmond " }
+                        }
+                    },
+                    new ODataNestedResourceInfo()
+                    {
+                        Name = "Street",
+                        IsCollection = false
+                    },
+                    new ODataResource
+                    {
+                        TypeName = "My.StreetType",
+                        Properties = new []
+                        {
+                            new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
+                            new ODataProperty { Name = "Number", Value = 1234 },
                         }
                     }
-                },
+                }
             };
         }
 
@@ -380,8 +376,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     .Property("PrimitiveCollection", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))))
                     .Property("IntCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))))
                     .Property("StringCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false))))
-                    .Property("GeographyCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false))))
-                    .Property("ComplexCollection", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, true))));
+                    .Property("GeographyCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false))));
+                    //.Property("ComplexCollection", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, true))));
             }
 
             return new ODataProperty[]
@@ -401,7 +397,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     Value = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                        Items = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
+                        Items = new object[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
                     }
                 },
                 new ODataProperty
@@ -410,7 +406,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     Value = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                        Items = new int[] { 0, 1, 2 }
+                        Items = new object[] { 0, 1, 2 }
                     }
                 },
                 new ODataProperty
@@ -428,7 +424,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     Value = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Geography"),
-                        Items = new object[] 
+                        Items = new object[]
                         {
                             ObjectModelUtils.GeographyCollectionValue,
                             ObjectModelUtils.GeographyLineStringValue,
@@ -441,47 +437,47 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                         }
                     }
                 },
-                new ODataProperty
-                {
-                    Name = "ComplexCollection",
-                    Value = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType"),
-                        Items = new [] 
-                        { 
-                            new ODataComplexValue()
-                            {
-                                TypeName = "My.AddressType",
-                                Properties = new []
-                                {
-                                    new ODataProperty() { Name = "Street", Value = "One Redmond Way" },
-                                    new ODataProperty() { Name = "City", Value = " Redmond" },
-                                }
-                            },
-                            new ODataComplexValue()
-                            {
-                                TypeName = null,
-                                Properties = new []
-                                {
-                                    new ODataProperty() { Name = "Street", Value = "Am Euro Platz 3" },
-                                    new ODataProperty() { Name = "City", Value = "Vienna " },
-                                }
-                            }
-                        }
-                    }
-                },
+                //new ODataProperty
+                //{
+                //    Name = "ComplexCollection",
+                //    Value = new ODataCollectionValue()
+                //    {
+                //        TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType"),
+                //        Items = new []
+                //        {
+                //            new ODataComplexValue()
+                //            {
+                //                TypeName = "My.AddressType",
+                //                Properties = new []
+                //                {
+                //                    new ODataProperty() { Name = "Street", Value = "One Redmond Way" },
+                //                    new ODataProperty() { Name = "City", Value = " Redmond" },
+                //                }
+                //            },
+                //            new ODataComplexValue()
+                //            {
+                //                TypeName = null,
+                //                Properties = new []
+                //                {
+                //                    new ODataProperty() { Name = "Street", Value = "Am Euro Platz 3" },
+                //                    new ODataProperty() { Name = "City", Value = "Vienna " },
+                //                }
+                //            }
+                //        }
+                //    }
+                //},
             };
         }
 
         /// <summary>
-        /// Creates a an ODataFeed instance with default values for 'Id'
+        /// Creates a an ODataResourceSet instance with default values for 'Id'
         /// that can be used and modified in tests.
         /// </summary>
         /// <param name="entitySetName">The (optional) name of the entity set to create.</param>
         /// <param name="entityTypeName">The optional type name for the entries in this feed.</param>
         /// <param name="model">The product model to generate the type in (if not null).</param>
-        /// <returns>The created ODataFeed instance.</returns>
-        public static ODataFeed CreateDefaultFeed(string entitySetName = null, string entityTypeName = null, EdmModel model = null)
+        /// <returns>The created ODataResourceSet instance.</returns>
+        public static ODataResourceSet CreateDefaultFeed(string entitySetName = null, string entityTypeName = null, EdmModel model = null)
         {
             if (model != null && entityTypeName != null)
             {
@@ -498,7 +494,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 }
             }
 
-            return new ODataFeed()
+            return new ODataResourceSet()
             {
                 Id = DefaultFeedId,
                 SerializationInfo = MySerializationInfo
@@ -506,32 +502,27 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates a an ODataFeed instance with default values for 'Id' and 'Updated'
+        /// Creates a an ODataResourceSet instance with default values for 'Id' and 'Updated'
         /// that can be used and modified in tests.
         /// </summary>
-        /// <returns>The created ODataFeed instance.</returns>
-        public static ODataFeed CreateDefaultFeedWithAtomMetadata()
+        /// <returns>The created ODataResourceSet instance.</returns>
+        public static ODataResourceSet CreateDefaultFeedWithAtomMetadata()
         {
-            ODataFeed feed = new ODataFeed()
+            ODataResourceSet feed = new ODataResourceSet()
             {
                 Id = DefaultFeedId,
                 SerializationInfo = MySerializationInfo
             };
-            AtomFeedMetadata metadata = new AtomFeedMetadata()
-            {
-                Updated = DateTimeOffset.Parse(DefaultFeedUpdated)
-            };
-            feed.SetAnnotation<AtomFeedMetadata>(metadata);
             return feed;
         }
 
         /// <summary>
-        /// Creates a default ODataNavigationLink instance for a collection with only the Name and Url properties set.
+        /// Creates a default ODataNestedResourceInfo instance for a collection with only the Name and Url properties set.
         /// </summary>
-        /// <returns>The newly created ODataNavigationLink instances.</returns>
-        public static ODataNavigationLink CreateDefaultCollectionLink(string name = DefaultLinkName, bool? isCollection = true)
+        /// <returns>The newly created ODataNestedResourceInfo instances.</returns>
+        public static ODataNestedResourceInfo CreateDefaultCollectionLink(string name = DefaultLinkName, bool? isCollection = true)
         {
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = name,
                 Url = DefaultLinkUrl,
@@ -541,25 +532,25 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates an ODataNavigationLink instance with the default Name and Url property values and
+        /// Creates an ODataNestedResourceInfo instance with the default Name and Url property values and
         /// 'IsCollection' being set to false that can be used and modified in tests.
         /// </summary>
-        /// <returns>The newly created ODataNavigationLink instance.</returns>
-        public static ODataNavigationLink CreateDefaultSingletonLink(string name = DefaultLinkName)
+        /// <returns>The newly created ODataNestedResourceInfo instance.</returns>
+        public static ODataNestedResourceInfo CreateDefaultSingletonLink(string name = DefaultLinkName)
         {
-            ODataNavigationLink navigationLink = CreateDefaultCollectionLink(name);
+            ODataNestedResourceInfo navigationLink = CreateDefaultCollectionLink(name);
             navigationLink.IsCollection = false;
             return navigationLink;
         }
 
         /// <summary>
-        /// Creates an ODataNavigationLink instance with the default Name and Url property values and
+        /// Creates an ODataNestedResourceInfo instance with the default Name and Url property values and
         /// 'IsCollection' being set to false that can be used and modified in tests.
         /// </summary>
-        /// <returns>The newly created ODataNavigationLink instance.</returns>
-        public static ODataNavigationLink CreateDefaultNavigationLink(string name = DefaultLinkName, Uri associationLinkUrl = null)
+        /// <returns>The newly created ODataNestedResourceInfo instance.</returns>
+        public static ODataNestedResourceInfo CreateDefaultNavigationLink(string name = DefaultLinkName, Uri associationLinkUrl = null)
         {
-            ODataNavigationLink navigationLink = CreateDefaultSingletonLink(name);
+            ODataNestedResourceInfo navigationLink = CreateDefaultSingletonLink(name);
             navigationLink.AssociationLinkUrl = associationLinkUrl;
             return navigationLink;
         }
@@ -578,7 +569,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates a default <see cref="ODataEntityReferenceLinks"/> instance with a default 
+        /// Creates a default <see cref="ODataEntityReferenceLinks"/> instance with a default
         /// entity reference link inside (but no inline count or next link).
         /// </summary>
         /// <returns>The newly created <see cref="ODataEntityReferenceLinks"/> instance.</returns>
@@ -612,11 +603,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             };
         }
 
-        /// <summary>Special ODataEntry instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
-        private static ODataEntry nullEntry = new ODataEntry();
+        /// <summary>Special ODataResource instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
+        private static ODataResource nullEntry = new ODataResource();
 
-        /// <summary>Special ODataEntry instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
-        public static ODataEntry ODataNullEntry
+        /// <summary>Special ODataResource instance to represent 'null' value to help TestWriterUtils.WritePayload()</summary>
+        public static ODataResource ODataNullEntry
         {
             get
             {
@@ -625,20 +616,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>Compares entry with the special 'null' instance</summary>
-        public static bool IsNullEntry(this ODataEntry entry)
+        public static bool IsNullEntry(this ODataResource entry)
         {
             return entry == nullEntry;
         }
 
         /// <summary>
-        /// Creates an ODataEntry instance with the default value for 'Id' and 'ReadLink'
+        /// Creates an ODataResource instance with the default value for 'Id' and 'ReadLink'
         /// that can be used and modified in tests.
         /// </summary>
         /// <param name="typeName">The optional type name for the default entry.</param>
-        /// <returns>The newly created ODataEntry instance.</returns>
-        public static ODataEntry CreateDefaultEntry(string typeName = null)
+        /// <returns>The newly created ODataResource instance.</returns>
+        public static ODataResource CreateDefaultEntry(string typeName = null)
         {
-            return new ODataEntry()
+            return new ODataResource()
             {
                 Id = DefaultEntryId,
                 ReadLink = DefaultEntryReadLink,
@@ -648,13 +639,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates an ODataEntry instance with the default values for 'Id', 'ReadLink' and 'Updated'
+        /// Creates an ODataResource instance with the default values for 'Id', 'ReadLink' and 'Updated'
         /// that can be used and modified in tests.
         /// </summary>
         /// <param name="typeName">The optional type name for the default entry.</param>
         /// <param name="model">The product model to generate the type in (if not null).</param>
-        /// <returns>The newly created ODataEntry instance.</returns>
-        public static ODataEntry CreateDefaultEntryWithAtomMetadata(string entitySetName = null, string typeName = null, EdmModel model = null)
+        /// <returns>The newly created ODataResource instance.</returns>
+        public static ODataResource CreateDefaultEntryWithAtomMetadata(string entitySetName = null, string typeName = null, EdmModel model = null)
         {
             if (model != null && typeName != null)
             {
@@ -673,18 +664,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 }
             }
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 Id = DefaultEntryId,
                 ReadLink = DefaultEntryReadLink,
                 TypeName = typeName,
                 SerializationInfo = MySerializationInfo
             };
-            AtomEntryMetadata metadata = new AtomEntryMetadata()
-            {
-                Updated = DateTimeOffset.Parse(DefaultEntryUpdated)
-            };
-            entry.SetAnnotation<AtomEntryMetadata>(metadata);
             return entry;
         }
 
@@ -716,40 +702,50 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <returns>The created <see cref="ODataParameters"/> instance.</returns>
         public static ODataParameters CreateDefaultParameter()
         {
-            var complexValue = new ODataComplexValue()
+            var complex = new ODataResource()
             {
                 TypeName = "My.NestedAddressType",
                 Properties = new[]
                 {
-                    new ODataProperty() 
-                    { 
-                        Name = "Street", 
-                        Value = new ODataComplexValue()
-                        {
-                            TypeName = "My.StreetType",
-                            Properties = new []
-                            {
-                                new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
-                                new ODataProperty { Name = "Number", Value = 1234 },
-                            }
-                        }
-                    },
                     new ODataProperty() { Name = "City", Value = "Redmond " },
                 }
             };
 
-            var primitiveCollectionValue = new ODataCollectionStart();
-            primitiveCollectionValue.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { "Value1", "Value2", "Value3" });
+            var nestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = "Street",
+                IsCollection = false
+            };
 
-            var complexCollectionValue = new ODataCollectionStart();
-            complexCollectionValue.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { complexValue });
+            var nestedStreet = new ODataResource()
+            {
+                TypeName = "My.StreetType",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
+                    new ODataProperty { Name = "Number", Value = 1234 },
+                }
+            };
+
+            nestedInfo.SetAnnotation(new ODataNavigationLinkExpandedItemObjectModelAnnotation() { ExpandedItem = nestedStreet });
+
+            var navigationAnnotation = new ODataEntryNavigationLinksObjectModelAnnotation();
+            navigationAnnotation.Add(nestedInfo, 0);
+
+            complex.SetAnnotation(navigationAnnotation);
+
+            var primitiveCollection = new ODataCollectionStart();
+            primitiveCollection.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { "Value1", "Value2", "Value3" });
+
+            var complexCollection = new ODataResourceSet();
+            complexCollection.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { complex });
 
             return new ODataParameters()
             {
                 new KeyValuePair<string, object>("primitiveParameter", "StringValue"),
-                new KeyValuePair<string, object>("complexParameter", complexValue),
-                new KeyValuePair<string, object>("primitiveCollectionParameter", primitiveCollectionValue),
-                new KeyValuePair<string, object>("complexCollectionParameter", complexCollectionValue),
+                new KeyValuePair<string, object>("complexParameter", complex),
+                new KeyValuePair<string, object>("primitiveCollectionParameter", primitiveCollection),
+                new KeyValuePair<string, object>("complexCollectionParameter", complexCollection),
             };
         }
     }

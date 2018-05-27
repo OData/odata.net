@@ -72,7 +72,7 @@ namespace Microsoft.OData.Performance
             IEdmModel model;
             IEnumerable<EdmError> errors;
             var csdlStream = new MemoryStream(ReadTestResource(modelName));
-            bool parseResult = CsdlReader.TryParse(new[] { XmlReader.Create(csdlStream) }, out model, out errors);
+            bool parseResult = SchemaReader.TryParse(new[] { XmlReader.Create(csdlStream) }, out model, out errors);
             if (!parseResult)
             {
                 throw new InvalidOperationException("Failed to load model : " + string.Join(Environment.NewLine, errors.Select(e => e.ErrorMessage)));

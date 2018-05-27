@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #region Namespaces
     using System;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
@@ -23,9 +23,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             return ReflectionUtils.GetProperty(settings, "ReaderBehavior");
         }
 
-        public static Func<ODataEntry, XmlReader, Uri, XmlReader> GetAtomEntryXmlCustomizationCallback(this ODataMessageReaderSettings settings)
+        public static Func<ODataResource, XmlReader, Uri, XmlReader> GetAtomEntryXmlCustomizationCallback(this ODataMessageReaderSettings settings)
         {
-            return (Func<ODataEntry, XmlReader, Uri, XmlReader>)ReflectionUtils.GetProperty(settings, "AtomEntryXmlCustomizationCallback");
+            return (Func<ODataResource, XmlReader, Uri, XmlReader>)ReflectionUtils.GetProperty(settings, "AtomEntryXmlCustomizationCallback");
         }
     }
 #endif

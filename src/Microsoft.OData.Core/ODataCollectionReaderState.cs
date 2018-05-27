@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Enumeration of all possible states of an <see cref="ODataCollectionReader" />.
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
         /// No items have been read.
         /// </summary>
         /// <remarks>
-        /// In this state, the Item property of the <see cref="ODataCollectionReader"/> returns 
+        /// In this state, the Item property of the <see cref="ODataCollectionReader"/> returns
         /// an instance of <see cref="ODataCollectionStart"/>.
         /// </remarks>
         CollectionStart,
@@ -28,9 +28,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The reader read an item from the collection.
         /// </summary>
-        /// <remarks>In this state, the Item property of the <see cref="ODataCollectionReader"/> returns the read item (a primitive value, an ODataComplexValue or null).</remarks>
+        /// <remarks>In this state, the Item property of the <see cref="ODataCollectionReader"/> returns the read item (a primitive value or null).</remarks>
         Value,
-        
+
         /// <summary>
         /// The reader has finished reading and is reading the end element of the collection wrapper (if any).
         /// All items have been read.

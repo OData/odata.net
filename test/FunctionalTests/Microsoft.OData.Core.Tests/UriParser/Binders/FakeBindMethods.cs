@@ -4,35 +4,35 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Class that contains fake bind methods to help unit semantic tests from growing in scope.
     /// </summary>
     internal class FakeBindMethods
     {
-        private static readonly EntityRangeVariable DogsEntityRangeVariable = new EntityRangeVariable("A_DOG", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-        private static readonly EntityRangeVariable PeopleEntityRangeVariable = new EntityRangeVariable("A_PERSON", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
-        private static readonly EntityRangeVariable PaintingEntityRangeVariable = new EntityRangeVariable("A_PAINTING", HardCodedTestModel.GetPaintingTypeReference(), HardCodedTestModel.GetPaintingsSet());
-        private static readonly EntityRangeVariable LionsEntityRangeVariable = new EntityRangeVariable("A_LION", HardCodedTestModel.GetLionTypeReference(), HardCodedTestModel.GetLionSet());
+        private static readonly ResourceRangeVariable DogsEntityRangeVariable = new ResourceRangeVariable("A_DOG", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+        private static readonly ResourceRangeVariable PeopleEntityRangeVariable = new ResourceRangeVariable("A_PERSON", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
+        private static readonly ResourceRangeVariable PaintingEntityRangeVariable = new ResourceRangeVariable("A_PAINTING", HardCodedTestModel.GetPaintingTypeReference(), HardCodedTestModel.GetPaintingsSet());
+        private static readonly ResourceRangeVariable LionsEntityRangeVariable = new ResourceRangeVariable("A_LION", HardCodedTestModel.GetLionTypeReference(), HardCodedTestModel.GetLionSet());
         private const int KeyBinderConstantValue = 0xBAD;
         
         public static readonly ConstantNode KeyBinderConstantToken = new ConstantNode(KeyBinderConstantValue);
         
-        public static readonly EntityRangeVariableReferenceNode FakeDogNode = 
-            new EntityRangeVariableReferenceNode(DogsEntityRangeVariable.Name, DogsEntityRangeVariable);
+        public static readonly ResourceRangeVariableReferenceNode FakeDogNode = 
+            new ResourceRangeVariableReferenceNode(DogsEntityRangeVariable.Name, DogsEntityRangeVariable);
 
-        public static readonly EntityRangeVariableReferenceNode FakePersonNode = 
-            new EntityRangeVariableReferenceNode(PeopleEntityRangeVariable.Name, PeopleEntityRangeVariable);
+        public static readonly ResourceRangeVariableReferenceNode FakePersonNode = 
+            new ResourceRangeVariableReferenceNode(PeopleEntityRangeVariable.Name, PeopleEntityRangeVariable);
 
-        public static readonly EntityRangeVariableReferenceNode FakePaintingNode =
-            new EntityRangeVariableReferenceNode(PaintingEntityRangeVariable.Name, PaintingEntityRangeVariable);
+        public static readonly ResourceRangeVariableReferenceNode FakePaintingNode =
+            new ResourceRangeVariableReferenceNode(PaintingEntityRangeVariable.Name, PaintingEntityRangeVariable);
 
-        public static readonly SingleEntityNode FakeLionNode = 
-            new EntityRangeVariableReferenceNode(LionsEntityRangeVariable.Name, LionsEntityRangeVariable);        
+        public static readonly SingleResourceNode FakeLionNode = 
+            new ResourceRangeVariableReferenceNode(LionsEntityRangeVariable.Name, LionsEntityRangeVariable);        
 
         public static readonly SingleValueNode FakeSinglePrimitive =
             new ConstantNode("A_STRING");
@@ -43,39 +43,39 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         public static readonly SingleValueNode FakeSingleOpenProperty =
             new SingleValueOpenPropertyAccessNode(new ConstantNode(null), "A_OPENPROPERTY");
 
-        public static readonly EntityCollectionNode FakeEntityCollectionNode =
+        public static readonly CollectionResourceNode FakeEntityCollectionNode =
             new EntitySetNode(HardCodedTestModel.GetPeopleSet());
 
         public static readonly ConstantNode FakeNullLiteralNode =
             new ConstantNode(null);
 
-        public static readonly SingleValuePropertyAccessNode FakeSingleValueProperty =
-            new SingleValuePropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonAddressProp());
+        public static readonly SingleComplexNode FakeSingleComplexProperty =
+            new SingleComplexNode(FakePersonNode, HardCodedTestModel.GetPersonAddressProp());
 
         public static readonly SingleValuePropertyAccessNode FakePersonDogNameNode =
             new SingleValuePropertyAccessNode(
-                new SingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp(),FakePersonNode),HardCodedTestModel.GetAddressCityProperty());
+                new SingleNavigationNode(FakePersonNode, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog")),HardCodedTestModel.GetAddressCityProperty());
 
 
-        public static readonly CollectionPropertyAccessNode FakeCollectionValueProperty =
-            new CollectionPropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());
+        public static readonly CollectionComplexNode FakeCollectionComplexProperty =
+            new CollectionComplexNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());
 
-        public static SingleEntityNode BindMethodReturningASingleLion(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASingleLion(QueryToken token)
         {
             return FakeLionNode;
         }
 
-        public static SingleEntityNode BindMethodReturningASingleDog(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASingleDog(QueryToken token)
         {
             return FakeDogNode;
         }
 
-        public static SingleEntityNode BindMethodReturningASinglePerson(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASinglePerson(QueryToken token)
         {
             return FakePersonNode;
         }
 
-        public static SingleEntityNode BindMethodReturningASinglePainting(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASinglePainting(QueryToken token)
         {
             return FakePaintingNode;
         }
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             return FakeNullLiteralNode;
         }
 
-        public static EntityCollectionNode BindMethodThatReturnsEntitySetNode(QueryToken queryToken)
+        public static CollectionResourceNode BindMethodThatReturnsEntitySetNode(QueryToken queryToken)
         {
             return FakeEntityCollectionNode;
         }
@@ -115,9 +115,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             return null;
         }
 
-        public static SingleValuePropertyAccessNode BindSingleValueProperty(QueryToken queryToken)
+        public static SingleComplexNode BindSingleComplexProperty(QueryToken queryToken)
         {
-            return FakeSingleValueProperty;
+            return FakeSingleComplexProperty;
         }
 
         public static SingleValuePropertyAccessNode BindMethodReturnsPersonDogNameNavigation(QueryToken queryToken)
@@ -125,9 +125,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             return FakePersonDogNameNode;
         }
 
-        public static CollectionPropertyAccessNode BindCollectionProperty(QueryToken queryToken)
+        public static CollectionComplexNode BindCollectionComplex(QueryToken queryToken)
         {
-            return FakeCollectionValueProperty;
+            return FakeCollectionComplexProperty;
         }
     }
 }

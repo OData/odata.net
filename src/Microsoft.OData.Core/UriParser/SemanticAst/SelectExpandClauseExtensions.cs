@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.UriParser.Visitors;
 
     /// <summary>
     /// Extension methods for <see cref="SelectExpandClause"/>.
@@ -50,14 +47,15 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Gets the select and expand clauses as strings.
         /// </summary>
         /// <param name="selectExpandClause">The select expand clause to get the paths from.</param>
+        /// <param name="version">OData version.</param>
         /// <param name="selectClause">Returns the select clause.</param>
         /// <param name="expandClause">Returns the expand clause.</param>
-        internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, out string selectClause, out string expandClause)
+        internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, ODataVersion version, out string selectClause, out string expandClause)
         {
             Debug.Assert(selectExpandClause != null, "selectExpandCluase != null");
 
             StringBuilder selectClauseBuilder, expandClauseBuilder;
-            selectExpandClause.GetSelectExpandPaths(out selectClauseBuilder, out expandClauseBuilder);
+            selectExpandClause.GetSelectExpandPaths(version, out selectClauseBuilder, out expandClauseBuilder);
 
             selectClause = selectClauseBuilder.ToString();
             expandClause = expandClauseBuilder.ToString();
@@ -67,16 +65,17 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Gets the select and expand clauses as <see cref="StringBuilder"/>.
         /// </summary>
         /// <param name="selectExpandClause">The select expand clause to get the paths from.</param>
+        /// <param name="version">OData version.</param>
         /// <param name="selectClause">Returns the select clause.</param>
         /// <param name="expandClause">Returns the expand clause.</param>
-        internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, out StringBuilder selectClause, out StringBuilder expandClause)
+        internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, ODataVersion version, out StringBuilder selectClause, out StringBuilder expandClause)
         {
             Debug.Assert(selectExpandClause != null, "selectExpandClause != null");
 
             selectClause = new StringBuilder();
             expandClause = new StringBuilder();
             selectClause.Append(BuildTopLevelSelect(selectExpandClause));
-            expandClause.Append(BuildExpandsForNode(selectExpandClause));
+            expandClause.Append(BuildExpandsForNode(selectExpandClause, version));
         }
 
         /// <summary>
@@ -96,8 +95,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="selectExpandClause">The select expand clause for evaluation.</param>
         /// <param name="processSubResult">The method to deal with sub expand result.</param>
         /// <param name="combineSelectAndExpand">The method to combine select and expand result lists.</param>
+        /// <param name="version">OData version to use in traversing the selectExpand clause</param>
         /// <param name="result">The result of the traversing.</param>
-        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, out T result)
+        internal static void Traverse<T>(this SelectExpandClause selectExpandClause, Func<string, T, ODataVersion, T> processSubResult, Func<IList<string>, IList<T>, T> combineSelectAndExpand, ODataVersion version, out T result)
         {
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             List<T> expandList = new List<T>();
@@ -108,10 +108,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 T subResult = default(T);
                 if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
                 {
-                    Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, out subResult);
+                    Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, version, out subResult);
                 }
 
-                var expandItem = processSubResult(currentExpandClause, subResult);
+                var expandItem = processSubResult(currentExpandClause, subResult, version);
                 if (expandItem != null)
                 {
                     expandList.Add(expandItem);
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
                 currentExpandClause += "/$ref";
 
-                var expandItem = processSubResult(currentExpandClause, default(T));
+                var expandItem = processSubResult(currentExpandClause, default(T), version);
                 if (expandItem != null)
                 {
                     expandList.Add(expandItem);
@@ -179,15 +179,16 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// Build the expand clause for a given level in the selectExpandClause
         /// </summary>
         /// <param name="selectExpandClause">the current level select expand clause</param>
+        /// <param name="version">OData Version.</param>
         /// <returns>the expand clause for this level.</returns>
-        private static string BuildExpandsForNode(SelectExpandClause selectExpandClause)
+        private static string BuildExpandsForNode(SelectExpandClause selectExpandClause, ODataVersion version)
         {
             List<string> currentLevelExpandClauses = new List<string>();
             foreach (ExpandedNavigationSelectItem expandItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
                 string currentExpandClause = String.Join("/", expandItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
                 string expandStr;
-                expandItem.SelectAndExpand.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out expandStr);
+                expandItem.SelectAndExpand.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, version, out expandStr);
                 if (!string.IsNullOrEmpty(expandStr))
                 {
                     currentExpandClause += "(" + expandStr + ")";
@@ -209,8 +210,9 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>Process sub expand node, contact with subexpad result</summary>
         /// <param name="expandNode">The current expanded node.</param>
         /// <param name="subExpand">Generated sub expand node.</param>
+        /// <param name="version">OData version.</param>
         /// <returns>The generated expand string.</returns>
-        private static string ProcessSubExpand(string expandNode, string subExpand)
+        private static string ProcessSubExpand(string expandNode, string subExpand, ODataVersion version)
         {
             return string.IsNullOrEmpty(subExpand) ? expandNode : expandNode + "(" + subExpand + ")";
         }
@@ -241,5 +243,3 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
     }
 }
-
-#endif

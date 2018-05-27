@@ -25,11 +25,13 @@ namespace AstoriaUnitTests.Tests
     using System.Text;
     using System.Xml.Linq;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
     [TestClass]
     public class UriParserIntegrationTests
     {
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldFailIfExpandIsTooDeep()
         {
             string errorMessage = ODataLibResourceUtil.GetString("UriParser_ExpandDepthExceeded", 3, 2);
@@ -38,9 +40,9 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldNotFailIfExpandDepthIsIsExactlyAtMax()
         {
             ResponseShouldMatchXPath(
@@ -48,9 +50,9 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:feed", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldFailIfTooManyItemsAreExpanded()
         {
             string errorMessage = ODataLibResourceUtil.GetString("UriParser_ExpandCountExceeded", 4, 3);
@@ -59,9 +61,9 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldFailIfTooManyItemsAreExpandedAtMultipleLevels()
         {
             string errorMessage = ODataLibResourceUtil.GetString("UriParser_ExpandCountExceeded", 4, 3);
@@ -70,9 +72,9 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldFailIfTooManyItemsAreExpandedEvenIfTheRootOneIsDuplicated()
         {
             string errorMessage = DataServicesResourceUtil.GetString("DataService_ExpandCountExceeded", 4, 3);
@@ -81,9 +83,9 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldNotFailIfExpandCountMatchesLimit()
         {
             ResponseShouldMatchXPath(
@@ -91,9 +93,9 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:feed", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldFailIfExpandDepthIsHugeButNoLimitHasBeenSet()
         {
             string expand = "/Entities?";
@@ -113,9 +115,9 @@ namespace AstoriaUnitTests.Tests
 
             ResponseShouldHaveStatusCode(expand, 400);
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldNotFailIfExpandWidthIsHugeButNoLimitHasBeenSet()
         {
             ResponseShouldMatchXPath(
@@ -123,9 +125,9 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:feed", serviceType: typeof(UriParserIntegrationTestServiceWithNoLimits));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void RequestShouldFailIfExpandContainsNonNavigationProperties()
         {
             ResponseShouldHaveStatusCode("/Entities?$expand=ID", 400);
@@ -223,9 +225,10 @@ namespace AstoriaUnitTests.Tests
                 p => p.Replace("DoesNotExist", "HiddenNavigation"),
                 typeof (UriParserIntegrationTestServiceWithHiddenNavigation));
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void XmlKeyLookupShouldWork()
         {
             var bytes = Encoding.UTF8.GetBytes("'<fake/>'");
@@ -234,9 +237,10 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:entry/atom:id[text()=\"http://host/EntitiesWithXmlKeys('%3Cfake%20%2F%3E')\"]");
         }
-
-        [TestCategory("Partition2")]
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+        // [TestCategory("Partition2")]
+        // [TestMethod]
         public void XmlComparisonInFilterShouldNotWork()
         {
             ResponseShouldHaveStatusCode("/Entities?$filter=XmlProperty eq '<fake/>'", 400);

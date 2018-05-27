@@ -4,17 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Parsers.Common;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -24,7 +21,7 @@ namespace Microsoft.OData.Core.UriParser
     internal static class ExpressionLexerLiteralExtensions
     {
         /// <summary>
-        /// Returns whether the <paramref name="tokenKind"/> is a primitive literal type: 
+        /// Returns whether the <paramref name="tokenKind"/> is a primitive literal type:
         /// Binary, Boolean, DateTime, Decimal, Double, Guid, In64, Integer, Null, Single, or String.
         /// Internal for test use only
         /// </summary>
@@ -128,7 +125,7 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Parses a literal. 
+        /// Parses a literal.
         /// Precondition: lexer is at a literal token type: Boolean, DateTime, Decimal, Null, String, Int64, Integer, Double, Single, Guid, Binary.
         /// </summary>
         /// <param name="expressionLexer">The expression lexer.</param>

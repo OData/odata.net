@@ -8,10 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Contains fluent assertion APIs for testing Segments
@@ -58,12 +59,29 @@ namespace Microsoft.OData.Core.Tests.UriParser
             return new AndConstraint<TypeSegment>(typeSegment);
         }
 
+        public static AndConstraint<TypeSegment> ShouldBeTypeSegment(this ODataPathSegment segment, IEdmType actualType, IEdmType expectType)
+        {
+            segment.Should().BeOfType<TypeSegment>();
+            TypeSegment typeSegment = segment.As<TypeSegment>();
+            typeSegment.EdmType.ShouldBeEquivalentTo(actualType);
+            typeSegment.TargetEdmType.ShouldBeEquivalentTo(expectType);
+            return new AndConstraint<TypeSegment>(typeSegment);
+        }
+
         public static AndConstraint<PropertySegment> ShouldBePropertySegment(this ODataPathSegment segment, IEdmProperty expectedProperty)
         {
             segment.Should().BeOfType<PropertySegment>();
             PropertySegment propertySegment = segment.As<PropertySegment>();
             propertySegment.Property.Should().Be(expectedProperty);
             return new AndConstraint<PropertySegment>(propertySegment);
+        }
+
+        public static AndConstraint<AnnotationSegment> ShouldBeAnnotationSegment(this ODataPathSegment segment, IEdmTerm expectedTerm)
+        {
+            segment.Should().BeOfType<AnnotationSegment>();
+            AnnotationSegment annotationSegment = segment.As<AnnotationSegment>();
+            annotationSegment.Term.Should().Be(expectedTerm);
+            return new AndConstraint<AnnotationSegment>(annotationSegment);
         }
 
         public static AndConstraint<NavigationPropertySegment> ShouldBeNavigationPropertySegment(this ODataPathSegment segment, IEdmNavigationProperty navigationProperty)
@@ -74,12 +92,12 @@ namespace Microsoft.OData.Core.Tests.UriParser
             return new AndConstraint<NavigationPropertySegment>(navPropSegment);
         }
 
-        public static AndConstraint<OpenPropertySegment> ShouldBeOpenPropertySegment(this ODataPathSegment segment, string openPropertyName)
+        public static AndConstraint<DynamicPathSegment> ShouldBeDynamicPathSegment(this ODataPathSegment segment, string identifier)
         {
-            segment.Should().BeOfType<OpenPropertySegment>();
-            OpenPropertySegment openPropertySegment = segment.As<OpenPropertySegment>();
-            openPropertySegment.PropertyName.Should().Be(openPropertyName);
-            return new AndConstraint<OpenPropertySegment>(openPropertySegment);
+            segment.Should().BeOfType<DynamicPathSegment>();
+            DynamicPathSegment openPropertySegment = segment.As<DynamicPathSegment>();
+            openPropertySegment.Identifier.Should().Be(identifier);
+            return new AndConstraint<DynamicPathSegment>(openPropertySegment);
         }
 
         public static AndConstraint<OperationImportSegment> ShouldBeOperationImportSegment(this ODataPathSegment segment, params IEdmOperationImport[] operationImports)
@@ -177,7 +195,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             }
             else
             {
-                if (typeof(TValue).IsPrimitive || typeof(TValue) == typeof(decimal))
+                if (typeof(TValue).IsPrimitive() || typeof(TValue) == typeof(decimal))
                 {
                     // for int value --> long TValue
                     TValue tmp = (TValue)Convert.ChangeType(constantNode.Value, typeof(TValue));
@@ -240,6 +258,23 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var token = parameter.Value.As<ParameterAliasNode>();
             token.Alias.Should().Be(alias);
             return new AndConstraint<ParameterAliasNode>(token);
+        }
+
+        public static AndConstraint<ConvertNode> ShouldHaveConvertNode(this OperationSegmentParameter parameter,
+            string name, IEdmTypeReference typeReference = null)
+        {
+            parameter.Name.Should().Be(name);
+            var node = parameter.Value.As<ConvertNode>();
+            if (typeReference == null)
+            {
+                node.TypeReference.Should().BeNull();
+            }
+            else
+            {
+                node.TypeReference.FullName().Should().Be(typeReference.FullName());
+            }
+
+            return new AndConstraint<ConvertNode>(node);
         }
     }
 }

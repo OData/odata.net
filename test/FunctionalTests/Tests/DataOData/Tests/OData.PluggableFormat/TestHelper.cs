@@ -14,7 +14,7 @@ namespace Microsoft.Test.OData.PluggableFormat
     using System.Reflection;
     using System.Text;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
@@ -69,7 +69,7 @@ namespace Microsoft.Test.OData.PluggableFormat
                 {
                     edmxStream = null;
                     IEnumerable<EdmError> errors;
-                    bool valid = EdmxReader.TryParse(xmlReader, out model, out errors);
+                    bool valid = CsdlReader.TryParse(xmlReader, out model, out errors);
                     if (!valid)
                     {
                         ShowErrors(errors);
@@ -98,18 +98,20 @@ namespace Microsoft.Test.OData.PluggableFormat
 
         public static ODataMessageReader CreateMessageReader(
            Stream stream,
+           IServiceProvider container,
            string contenttype = "application/json",
-           ODataMediaTypeResolver resolver = null,
            IEdmModel model = null,
            bool isResponse = false)
         {
-            var message = new InMemoryMessage { Stream = stream };
+            var message = new InMemoryMessage { Stream = stream, Container = container };
             message.SetHeader("Content-Type", contenttype);
             var messageSettings = new ODataMessageReaderSettings()
             {
-                MediaTypeResolver = resolver ?? new ODataMediaTypeResolver(),
                 ShouldIncludeAnnotation = st => true,
             };
+
+            // Have untyped value in test
+            messageSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
             if (isResponse)
             {
@@ -123,19 +125,20 @@ namespace Microsoft.Test.OData.PluggableFormat
 
         public static ODataMessageWriter CreateMessageWriter(
            Stream stream,
+           IServiceProvider container,
            string contenttype = "application/json",
-           ODataMediaTypeResolver resolver = null,
            IEdmModel model = null,
            bool isResponse = true)
         {
-            var message = new InMemoryMessage { Stream = stream };
+            var message = new InMemoryMessage { Stream = stream, Container = container };
             message.SetHeader("Content-Type", contenttype);
             var messageSettings = new ODataMessageWriterSettings
             {
-                MediaTypeResolver = resolver ?? new ODataMediaTypeResolver(),
-                DisableMessageStreamDisposal = true,
-                Indent = true,
+                EnableMessageStreamDisposal = false,
             };
+
+            // Have untyped value in test
+            messageSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
             if (isResponse)
             {
@@ -149,17 +152,19 @@ namespace Microsoft.Test.OData.PluggableFormat
 
         public static string GetToplevelPropertyPayloadString(
             object value,
-            string contenttype = "application/json",
-            ODataMediaTypeResolver resolver = null)
+            IServiceProvider container,
+            string contenttype = "application/json")
         {
             Stream stream = null;
 
             try
             {
                 stream = new MemoryStream();
-                using (var omw = CreateMessageWriter(stream, contenttype, resolver, null, false))
+                using (var omw = CreateMessageWriter(stream, container, contenttype, null, false))
                 {
-                    omw.WriteProperty(new ODataProperty { Name = "fa", Value = value });
+                    var odataWriter = omw.CreateODataResourceWriter();
+                    odataWriter.WriteStart((ODataResource)value);
+                    odataWriter.WriteEnd();
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -180,18 +185,7 @@ namespace Microsoft.Test.OData.PluggableFormat
             return Math.Abs((a - b) / a) < e;
         }
 
-        public static bool EntryEqual(ODataEntry a, ODataEntry b)
-        {
-            if (a == null || b == null)
-            {
-                return false;
-            }
-
-            return PropertiesEqual(a.Properties, b.Properties);
-        }
-
-
-        public static bool ComplexValueEqual(ODataComplexValue a, ODataComplexValue b)
+        public static bool EntryEqual(ODataResource a, ODataResource b)
         {
             if (a == null || b == null)
             {
@@ -221,12 +215,6 @@ namespace Microsoft.Test.OData.PluggableFormat
                 {
                     if (!(bProp.Value is float)
                         || !FloatEqual((float)aProp.Value, (float)bProp.Value))
-                        return false;
-                }
-                else if (aProp.Value is ODataComplexValue)
-                {
-                    if (!(bProp.Value is ODataComplexValue)
-                        || !ComplexValueEqual((ODataComplexValue)aProp.Value, (ODataComplexValue)bProp.Value))
                         return false;
                 }
                 else if (aProp.Value is byte[])

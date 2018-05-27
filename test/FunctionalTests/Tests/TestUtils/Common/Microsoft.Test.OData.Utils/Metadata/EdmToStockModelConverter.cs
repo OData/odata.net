@@ -7,17 +7,10 @@
 namespace Microsoft.Test.OData.Utils.Metadata
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Common;
 
     public interface IEdmToStockModelConverter
@@ -106,17 +99,17 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
         private void AddStockVocabularies(IEdmModel edmModel, EdmModel stockModel)
         {
-            foreach (var valueTypeTerm in edmModel.SchemaElements.OfType<IEdmValueTerm>())
+            foreach (var valueTypeTerm in edmModel.SchemaElements.OfType<IEdmTerm>())
             {
                 var stockValueTerm = new EdmTerm(valueTypeTerm.Namespace, valueTypeTerm.Name, this.ConvertToStockTypeReference(valueTypeTerm.Type, stockModel));
                 stockModel.AddElement(stockValueTerm);
             }
 
-            foreach (var edmAnnotation in edmModel.VocabularyAnnotations.OfType<IEdmValueAnnotation>())
+            foreach (var edmAnnotation in edmModel.VocabularyAnnotations)
             {
-                var stockAnnotation = new EdmAnnotation(
+                var stockAnnotation = new EdmVocabularyAnnotation(
                     this.ConvertToStockVocabularyAnnotatable(edmAnnotation.Target, stockModel),
-                    stockModel.FindValueTerm(((IEdmSchemaElement)edmAnnotation.Term).FullName()),
+                    stockModel.FindTerm(((IEdmSchemaElement)edmAnnotation.Term).FullName()),
                     edmAnnotation.Qualifier,
                     this.ConvertToStockExpression(edmAnnotation.Value, stockModel)
                     // TODO: Do we need FullName()?  
@@ -626,8 +619,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                                         stockPropertyDeclaringType,
                                         edmProperty.Name,
                                         ConvertToStockTypeReference(edmProperty.Type, stockModel),
-                                        edmProperty.DefaultValueString,
-                                        edmProperty.ConcurrencyMode
+                                        edmProperty.DefaultValueString
                                      );
             ((EdmStructuredType)stockPropertyDeclaringType).AddProperty(stockProperty);
 

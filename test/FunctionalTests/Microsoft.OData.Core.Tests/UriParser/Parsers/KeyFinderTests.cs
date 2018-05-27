@@ -7,12 +7,11 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Unit tests for the KeyFinder class.
@@ -37,7 +36,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null));
-            callWithNullNavProp.ShouldThrow<ArgumentNullException>().WithMessage("currentNavigationProperty", ComparisonMode.EquivalentSubstring);
+            callWithNullNavProp.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("currentNavigationProperty"));
         }
 
         [Fact]
@@ -57,7 +56,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null));
-            callWithNullRawKey.ShouldThrow<ArgumentNullException>().WithMessage("rawKeyValues", ComparisonMode.EquivalentSubstring);
+            callWithNullRawKey.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("rawKeyValues"));
         }
 
         [Fact]

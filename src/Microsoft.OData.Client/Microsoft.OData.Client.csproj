@@ -7,13 +7,13 @@
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
     <SecurityMigration>false</SecurityMigration>
     <!-- process -->
-    <DefineConstants>$(DefineConstants);ASTORIA_CLIENT</DefineConstants>
+    <DefineConstants>$(DefineConstants);ODATA_CLIENT</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <!-- project -->
     <RootNamespace>System</RootNamespace>
     <ProjectGuid>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</ProjectGuid>
     <EnableLocalization>true</EnableLocalization>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <!-- References -->
   <Import Project="..\Build.props" />
@@ -61,8 +61,8 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\EdmValueUtils.cs">
       <Link>EdmValueUtils.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataEntityMetadataBuilder.cs">
-      <Link>ODataEntityMetadataBuilder.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataResourceMetadataBuilder.cs">
+      <Link>ODataResourceMetadataBuilder.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataUriBuilder.cs">
       <Link>ODataUriBuilder.cs</Link>
@@ -79,23 +79,14 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\KeySerializer.cs">
       <Link>KeySerializer.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs">
-      <Link>UrlConvention.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs">
       <Link>Metadata\EdmLibraryExtensions.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\InternalErrorCodesCommon.cs">
       <Link>InternalErrorCodesCommon.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs">
-      <Link>ALinq\UriParser\SyntacticAst\AggregateExpressionToken.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\AggregateToken.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\ApplyTransformationToken.cs">
-      <Link>ALinq\UriParser\SyntacticAst\ApplyTransformationToken.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\GroupByToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\GroupByToken.cs</Link>
@@ -108,6 +99,12 @@
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\BinaryOperatorToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\BinaryOperatorToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ComputeToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\ComputeToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ComputeExpressionToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>
@@ -145,6 +142,9 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\ISyntacticTreeVisitor.cs">
       <Link>ALinq\UriParser\Visitors\ISyntacticTreeVisitor.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Visitors\SyntacticTreeVisitor.cs">
+      <Link>ALinq\UriParser\Visitors\SyntacticTreeVisitor.cs</Link>
+    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\LambdaToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\LambdaToken.cs</Link>
     </Compile>
@@ -169,8 +169,8 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\QueryToken.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\TreeNodeKinds\QueryTokenKind.cs">
-      <Link>ALinq\UriParser\TreeNodeKinds\QueryTokenKind.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryTokenKind.cs">
+      <Link>ALinq\UriParser\SyntacticAst\QueryTokenKind.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\RangeVariableToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\RangeVariableToken.cs</Link>
@@ -190,8 +190,21 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\UnaryOperatorToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\UnaryOperatorToken.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\ApplyTransformationToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\ApplyTransformationToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\EntitySetAggregateToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\EntitySetAggregateToken.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateTokenBase.cs">
+      <Link>ALinq\UriParser\SyntacticAst\AggregateTokenBase.cs</Link>
+    </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\AggregateExpressionToken.cs</Link>
+    </Compile>
     <Compile Include="Annotation\AnnotationHelper.cs" />
     <Compile Include="Annotation\InstanceAnnotationDictWeakKeyComparer.cs" />
+    <Compile Include="Attribute\IgnoreClientPropertyAttribute.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="DataServiceActionQueryOfT.cs" />
     <Compile Include="ActionDescriptor.cs" />
@@ -220,8 +233,6 @@
     <Compile Include="Common.cs" />
     <Compile Include="ContentStream.cs" />
     <Compile Include="ConventionalODataEntityMetadataBuilder.cs" />
-    <Compile Include="DataServiceClientMessageWriterSettingsShim.cs" />
-    <Compile Include="DataServiceClientMessageReaderSettingsShim.cs" />
     <Compile Include="DataServiceQuerySingleOfT.cs" />
     <Compile Include="Materialization\EnumValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\InstanceAnnotationMaterializationPolicy.cs" />
@@ -233,7 +244,6 @@
     <Compile Include="MessageWriterSettingsArgs.cs" />
     <Compile Include="DataServiceClientConfigurations.cs" />
     <Compile Include="Materialization\CollectionValueMaterializationPolicy.cs" />
-    <Compile Include="Materialization\ComplexValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\EntityTrackingAdapter.cs" />
     <Compile Include="Materialization\EntryValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\MaterializationPolicy.cs" />
@@ -242,20 +252,25 @@
     <Compile Include="Materialization\PrimitiveValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\StructuralValueMaterializationPolicy.cs" />
     <Compile Include="MaterializedEntityArgs.cs" />
+    <Compile Include="ODataAnnotatableExtensions.cs" />
     <Compile Include="Serialization\DataServiceClientRequestMessage.cs" />
     <Compile Include="UriEntityOperationParameter.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="WeakDictionary.cs" />
+    <Compile Include="Wrappers\ODataItemWrapper.cs" />
+    <Compile Include="Wrappers\ODataNestedResourceInfoWrapper.cs" />
+    <Compile Include="Wrappers\ODataResourceSetWrapper.cs" />
+    <Compile Include="Wrappers\ODataResourceWrapper.cs" />
+    <Compile Include="Wrappers\ODataWriterHelper.cs" />
     <Compile Include="WritingEntityReferenceLinkArgs.cs" />
     <Compile Include="WritingEntryArgs.cs" />
-    <Compile Include="WritingNavigationLinkArgs.cs" />
+    <Compile Include="WritingNestedResourceInfoArgs.cs" />
     <Compile Include="DataServiceClientRequestPipelineConfiguration.cs" />
-    <Compile Include="ReadingNavigationLinkArgs.cs" />
+    <Compile Include="ReadingNestedResourceInfoArgs.cs" />
     <Compile Include="ReadingFeedArgs.cs" />
     <Compile Include="EntityTrackerBase.cs" />
     <Compile Include="Materialization\ODataMaterializerContext.cs" />
     <Compile Include="Materialization\IODataMaterializerContext.cs" />
-    <Compile Include="MessageSettingsHelper.cs" />
     <Compile Include="ReadingEntryArgs.cs" />
     <Compile Include="DataServiceClientResponsePipelineConfiguration.cs" />
     <Compile Include="Materialization\FeedAndEntryMaterializerAdapter.cs" />
@@ -399,8 +414,6 @@
     <Compile Include="MediaEntryAttribute.cs" />
     <Compile Include="MergeOption.cs" />
     <Compile Include="MimeTypePropertyAttribute.cs" />
-    <Compile Include="OpenObject.cs" />
-    <Compile Include="OpenObjectAttribute.cs" />
     <Compile Include="EntityDescriptor.cs" />
     <Compile Include="EntityStates.cs" />
     <Compile Include="SaveChangesOptions.cs" />
@@ -412,7 +425,7 @@
     <Compile Include="UriOperationParameter.cs" />
     <Compile Include="UriResolver.cs" />
     <Compile Include="UriUtil.cs" />
-    <Compile Include="DataServiceUrlConventions.cs" />
+    <Compile Include="DataServiceUrlKeyDelimiter.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="DataServiceContext.cs" />
     <Compile Include="DataServiceQueryOfT.cs" />

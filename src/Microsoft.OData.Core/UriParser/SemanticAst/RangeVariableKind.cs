@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Enumeration of the different kinds of RangeVariables.
@@ -12,13 +12,13 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     public static class RangeVariableKind
     {
         /// <summary>
-        /// A range variable that referrs to entity types.
+        /// A range variable that refers to entity type or a complex.
         /// </summary>
-        public const int Entity = 0;
+        public const int Resource = 0;
 
         /// <summary>
-        /// A range variable that referrs to non-entity types.
+        /// A range variable that refers to non-entity/complex types.
         /// </summary>
-        public const int Nonentity = 1;
+        public const int NonResource = 1;
     }
 }

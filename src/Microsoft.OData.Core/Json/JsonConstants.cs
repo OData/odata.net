@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
-namespace Microsoft.OData.Core.Json
-#endif
+namespace Microsoft.OData.Json
 {
     #region Namespaces
 
@@ -19,10 +15,10 @@ namespace Microsoft.OData.Core.Json
     /// </summary>
     internal static class JsonConstants
     {
-        /// <summary>"actions" header for entry metadata.</summary>
+        /// <summary>"actions" header for resource metadata.</summary>
         internal const string ODataActionsMetadataName = "actions";
 
-        /// <summary>"functions" header for entry metadata.</summary>
+        /// <summary>"functions" header for resource metadata.</summary>
         internal const string ODataFunctionsMetadataName = "functions";
 
         /// <summary>"title" header for "actions" and "functions" metadata.</summary>

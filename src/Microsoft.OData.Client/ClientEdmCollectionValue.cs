@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Implementation of <see cref="IEdmCollectionValue"/> which wraps client-side objects.
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Client
             /// <param name="value">The value.</param>
             public NullEdmDelayedValue(IEdmValue value)
             {
-                this.Value = value;   
+                this.Value = value;
             }
 
             /// <summary>

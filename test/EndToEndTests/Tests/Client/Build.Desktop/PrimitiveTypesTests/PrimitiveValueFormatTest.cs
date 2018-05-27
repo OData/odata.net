@@ -10,8 +10,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference;
@@ -35,6 +35,9 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
 
         private string dataPattern = "(" + @"[\+-]?\d\.?\d*E?[\+-]?\d*" + "|" + @"INF|-INF|NaN" + ")";
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void LongInFilterLinqQuery()
         {
@@ -50,7 +53,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
 
             int64QueryResult = contextWrapper.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id == int64Id);
             int count = 0;
-            foreach(var int64 in int64QueryResult)
+            foreach (var int64 in int64QueryResult)
             {
                 count++;
             }
@@ -59,7 +62,9 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
             var int64Query2 = contextWrapper.Context.EdmInt64Set.ByKey(new Dictionary<string, object> { { "Id", int64Id } });
             Assert.IsTrue(int64Query2.GetValue().Id == 1, "Expected one or more EdmInt64 entities could be returned ");
         }
-        
+
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void FloatInFilterLinqQuery()
         {
@@ -75,6 +80,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
 
         }
 
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void DoubleInFilterLinqQuery()
         {
@@ -89,6 +96,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
             Assert.IsTrue(doubleQueryResult.Count() > 0, "Expected one or more EdmDouble.MaxValue could be returned ");
         }
 
+        // NetCore: *QueryResult.Count() sends an synch query internally, so this needs to be re-written to be done asynch.
+        // Otherwise this test throws a System.NotSupportedException.
         [TestMethod]
         public void DecimalInFilterLinqQuery()
         {
@@ -102,13 +111,14 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
             decimalQueryResult = (from c in contextWrapper.Context.EdmDecimalSet where c.Id >= deciamlId select c) as DataServiceQuery<EdmDecimal>;
             Assert.IsTrue(decimalQueryResult.Count() > 0, "Expected one or more EdmDecimal entities could be returned ");
         }
+#endif
 
         [TestMethod]
         public void LongWithoutSuffixAsKeyInURL()
         {
             PrimitiveValueAsKeyInURL("EdmInt64Set(1)");
         }
-        
+
         [TestMethod]
         public void LongWithSuffixAsKeyInURL()
         {
@@ -273,14 +283,14 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, RetrieveServiceEdmModel()))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                var expectedKeySegment = keySegment.Substring(0, keySegment.IndexOf("(")) + "(1)";
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                var expectedKeySegment = keySegment.Substring(0, keySegment.IndexOf("(")) + "/1";
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsTrue(entry.Id.ToString().Contains(expectedKeySegment), "Expected : Entry's Id doesn't contain trailing when Key is Int64/float/double/decimal");
                                 if (mimeType.Equals(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata))
                                 {
@@ -309,16 +319,16 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, RetrieveServiceEdmModel()))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                string pattern = filterQuery.Substring(0, filterQuery.IndexOf("?")) + @"\(" + dataPattern + @"\)$";
+                                string pattern = filterQuery.Substring(0, filterQuery.IndexOf("?")) + "/" + dataPattern + "$";
                                 Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
 
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsTrue(rgx.Match(entry.Id.ToString()).Success, "Expected : Entry's Id doesn't contain trailing when Key is Int64/float/double/decimal");
                                 if (mimeType.Equals(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata))
                                 {
@@ -326,12 +336,12 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
                                     Assert.IsTrue(rgx.Match(entry.ReadLink.ToString()).Success, "Expected : Entry's ReadLink doesn't contain trailing when Key is Int64/float/double/decimal");
                                 }
                             }
-                            else if (reader.State == ODataReaderState.FeedEnd)
+                            else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
                                 //TODO: Nextlink is appened by data service. So whether L|F|D|M could be returned in nextLink
                                 var pattern = filterQuery.Substring(0, filterQuery.IndexOf("?")) + @"\?\$filter=Id\sge\s" + dataPattern + @"(L|F|D|M)?&\$skiptoken=\d+$";
                                 Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
-                                ODataFeed feed = reader.Item as ODataFeed;
+                                ODataResourceSet feed = reader.Item as ODataResourceSet;
                                 Assert.IsTrue(rgx.Match(feed.NextPageLink.ToString()).Success, "Expected : Feed's NextLink doesn't contain trailing when Key is Int64/float/double/decimal");
                             }
                         }
@@ -356,16 +366,16 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, RetrieveServiceEdmModel()))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                string pattern = skipTokenQuery.Substring(0, skipTokenQuery.IndexOf("?")) + @"\(" + dataPattern + @"\)$";
+                                string pattern = skipTokenQuery.Substring(0, skipTokenQuery.IndexOf("?")) + "/" + dataPattern + "$";
                                 Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
 
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsTrue(rgx.Match(entry.Id.ToString()).Success, "Expected : Entry's Id doesn't contain trailing when Key is Int64/float/double/decimal");
                                 if (mimeType.Equals(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata))
                                 {
@@ -373,11 +383,11 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
                                     Assert.IsTrue(rgx.Match(entry.ReadLink.ToString()).Success, "Expected : Entry's ReadLink doesn't contain trailing when Key is Int64/float/double/decimal");
                                 }
                             }
-                            else if (reader.State == ODataReaderState.FeedEnd)
+                            else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
                                 var pattern = skipTokenQuery.Substring(0, skipTokenQuery.IndexOf("?")) + @"\?\$skiptoken=" + dataPattern + "$";
                                 Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
-                                ODataFeed feed = reader.Item as ODataFeed;
+                                ODataResourceSet feed = reader.Item as ODataResourceSet;
                                 Assert.IsTrue(rgx.Match(feed.NextPageLink.ToString()).Success, "Expected : Feed's NextLink doesn't contain trailing when Key is Int64/float/double/decimal");
                             }
                         }
@@ -390,7 +400,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
         private DataServiceContextWrapper<Services.TestServices.PrimitiveKeysServiceReference.TestContext> CreateWrappedContext()
         {
             var contextWrapper = base.CreateWrappedContext<Services.TestServices.PrimitiveKeysServiceReference.TestContext>();
-            contextWrapper.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             return contextWrapper;
         }
     }

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces
@@ -102,7 +102,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>initial the async batch save changeset</summary>
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void BatchBeginRequest()
         {
             PerRequest pereq = null;
@@ -248,7 +247,7 @@ namespace Microsoft.OData.Client
                 queryComponents,
                 /*projectionPlan*/ null,
                 this.currentOperationResponse.CreateResponseMessage(),
-                ODataPayloadKind.Entry);
+                ODataPayloadKind.Resource);
         }
 
         /// <summary>
@@ -437,7 +436,7 @@ namespace Microsoft.OData.Client
                 Func<Stream> getResponseStream = () => this.ResponseStream;
 
                 // We are not going to use the responseVersion returned from this call, as the $batch request itself doesn't apply versioning
-                // of the responses on the root level. The responses are versioned on the part level. (Note that the version on the $batch level 
+                // of the responses on the root level. The responses are versioned on the part level. (Note that the version on the $batch level
                 // is actually used to version the batch itself, but we for now we only recognize a single version so to keep it backward compatible
                 // we don't check this here. Also note that the HandleResponse method will verify that we can support the version, that is it's
                 // lower than the highest version we understand).
@@ -472,7 +471,7 @@ namespace Microsoft.OData.Client
                     Encoding encoding;
                     Exception inner = contentTypeException;
                     ContentTypeUtil.ReadContentType(this.batchResponseMessage.GetHeader(XmlConstants.HttpContentType), out mime, out encoding);
-                    if (String.Equals(XmlConstants.MimeTextPlain, mime))
+                    if (String.Equals(XmlConstants.MimeTextPlain, mime, StringComparison.Ordinal))
                     {
                         inner = GetResponseText(
                             this.batchResponseMessage.GetStream,
@@ -561,10 +560,10 @@ namespace Microsoft.OData.Client
                     // by the enumerable of responses by now.
                 }
 
-                // Note that if we encounter any error in a batch request with a single changeset, 
-                // we throw here since all change operations in the changeset are rolled back on the server.  
-                // If we encounter any error in a batch request with independent operations, we don't want to throw 
-                // since some of the operations might succeed. 
+                // Note that if we encounter any error in a batch request with a single changeset,
+                // we throw here since all change operations in the changeset are rolled back on the server.
+                // If we encounter any error in a batch request with independent operations, we don't want to throw
+                // since some of the operations might succeed.
                 // Users need to inspect each OperationResponse to get the exception information from the failed operations.
                 if (exception != null)
                 {
@@ -611,7 +610,7 @@ namespace Microsoft.OData.Client
                         case ODataBatchReaderState.ChangesetStart:
                             if ((Util.IsBatchWithSingleChangeset(this.Options) && changesetFound) || (operationCount != 0))
                             {
-                                // Throw if we encounter multiple changesets when running in batch with single changeset mode 
+                                // Throw if we encounter multiple changesets when running in batch with single changeset mode
                                 // or if we encounter operations outside of a changeset.
                                 Error.ThrowBatchUnexpectedContent(InternalError.UnexpectedBeginChangeSet);
                             }
@@ -784,7 +783,6 @@ namespace Microsoft.OData.Client
         /// <param name="batchReader">The batch reader to get the operation response from.</param>
         /// <param name="isChangesetOperation">True if the current operation is inside a changeset (implying CUD, not query)</param>
         /// <returns>An exception if the operation response is an error response, null for success response.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We don't dispose the memory stream we create, but that's not necessary since it's just a memory stream and we need to keep it for the operation response to be processed.")]
         private Exception ProcessCurrentOperationResponse(ODataBatchReader batchReader, bool isChangesetOperation)
         {
             Debug.Assert(batchReader != null, "batchReader != null");

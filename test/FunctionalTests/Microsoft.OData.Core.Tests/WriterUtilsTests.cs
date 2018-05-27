@@ -5,12 +5,11 @@
 //---------------------------------------------------------------------
 
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class WriterUtilsTests
     {
@@ -27,7 +26,20 @@ namespace Microsoft.OData.Core.Tests
                 typeFromValue, 
                 /* isOpenProperty*/ false);
             result.Should().Be("Edm.GeographyPoint");
-            WriterUtils.RemoveEdmPrefixFromTypeName(result).Should().Be("GeographyPoint");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4).Should().Be("#GeographyPoint");
+        }
+
+        [Fact]
+        public void TypeNameShouldBeWrittenIfSpatialValueIsMoreDerivedThanMetadataType_401()
+        {
+            var typeFromMetadata = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, true);
+            var typeFromValue = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false);
+            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(Microsoft.Spatial.GeographyPoint.Create(42, 42)),
+                typeFromMetadata,
+                typeFromValue,
+                /* isOpenProperty*/ false);
+            result.Should().Be("Edm.GeographyPoint");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401).Should().Be("GeographyPoint");
         }
 
         [Fact]
@@ -46,20 +58,18 @@ namespace Microsoft.OData.Core.Tests
         {
             var typeFromMetadata = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), true);
             var typeFromValue = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), false);
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataComplexValue {TypeName = "Test.ComplexType"},
-                typeFromMetadata,
-                typeFromValue,
-                /* isOpenProperty*/ false).Should().BeNull();
+            this.typeNameOracle.GetResourceTypeNameForWriting(typeFromMetadata.FullName(),
+                new ODataResource { TypeName = "Test.ComplexType" },
+                /* isUndeclared*/ false).Should().BeNull();
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenForUndeclaredComplexProperty()
         {
             var typeFromValue = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), false);
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataComplexValue {TypeName = "Test.ComplexType"},
-                null,
-                typeFromValue,
-                /* isOpenProperty*/ true).Should().Be("Test.ComplexType");
+            this.typeNameOracle.GetResourceTypeNameForWriting(null, 
+                new ODataResource { TypeName = "Test.ComplexType" },
+                /* isUndeclared*/ true).Should().Be("Test.ComplexType");
         }
 
         [Fact]
@@ -82,7 +92,19 @@ namespace Microsoft.OData.Core.Tests
                 typeFromValue,
                 /* isOpenProperty*/ true);
             result.Should().Be("Collection(Edm.String)");
-            WriterUtils.RemoveEdmPrefixFromTypeName(result).Should().Be("Collection(String)");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V4).Should().Be("#Collection(String)");
+        }
+
+        [Fact]
+        public void TypeNameShouldBeWrittenForUndeclaredCollectionProperty_401()
+        {
+            var typeFromValue = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false));
+            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataCollectionValue() { TypeName = "Collection(String)" },
+                null,
+                typeFromValue,
+                /* isOpenProperty*/ true);
+            result.Should().Be("Collection(Edm.String)");
+            WriterUtils.PrefixTypeNameForWriting(result, ODataVersion.V401).Should().Be("Collection(String)");
         }
 
         [Fact]
@@ -110,9 +132,8 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void TypeNameShouldComeFromSerializationTypeNameAnnotationForPrimitiveValue()
         {
-            var stna = new SerializationTypeNameAnnotation() {TypeName = "FromSTNA"};
             var value = new ODataPrimitiveValue(42);
-            value.SetAnnotation(stna);
+            value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
             this.typeNameOracle.GetValueTypeNameForWriting(value,
                 EdmCoreModel.Instance.GetInt32(true),
                 EdmCoreModel.Instance.GetInt32(false),
@@ -122,21 +143,16 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void TypeNameShouldComeFromSerializationTypeNameAnnotationForComplexValue()
         {
-            var stna = new SerializationTypeNameAnnotation() {TypeName = "FromSTNA"};
-            var value = new ODataComplexValue() {TypeName = "Model.Bla"};
-            value.SetAnnotation(stna);
-            this.typeNameOracle.GetValueTypeNameForWriting(value,
-                new EdmComplexTypeReference(new EdmComplexType("Model", "Bla"), true),
-                new EdmComplexTypeReference(new EdmComplexType("Model", "Bla"), false),
-                /* isOpenProperty*/ false).Should().Be("FromSTNA");
+            var value = new ODataResource() {TypeName = "Model.Bla"};
+            value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
+            this.typeNameOracle.GetResourceTypeNameForWriting("Model.Bla", value, /* isUndeclared */ false).Should().Be("FromSTNA");
         }
 
         [Fact]
         public void TypeNameShouldComeFromSerializationTypeNameAnnotationForCollectionValue()
         {
-            var stna = new SerializationTypeNameAnnotation() {TypeName = "FromSTNA"};
             var value = new ODataCollectionValue() {TypeName = "Collection(Edm.String)"};
-            value.SetAnnotation(stna);
+            value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
             this.typeNameOracle.GetValueTypeNameForWriting(value,
                 EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true)),
                 EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false)),

@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
+
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -23,9 +23,9 @@ namespace Microsoft.OData.Core
     /// This class also implements the message interface since it is passed to the payload kind
     /// detection logic on the format implementations and manages the buffering read stream.
     /// </remarks>
-    internal sealed class ODataResponseMessage : ODataMessage, 
-#if ODATALIB_ASYNC
-        IODataResponseMessageAsync
+    internal sealed class ODataResponseMessage : ODataMessage,
+#if PORTABLELIB
+ IODataResponseMessageAsync
 #else
         IODataResponseMessage
 #endif
@@ -39,10 +39,10 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="responseMessage">The response message to wrap.</param>
         /// <param name="writing">true if the message is being written; false when it is read.</param>
-        /// <param name="disableMessageStreamDisposal">true if the stream returned should ignore dispose calls.</param>
+        /// <param name="enableMessageStreamDisposal">true if the stream returned should be disposed calls.</param>
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative number if no maximum applies).</param>
-        internal ODataResponseMessage(IODataResponseMessage responseMessage, bool writing, bool disableMessageStreamDisposal, long maxMessageSize)
-            : base(writing, disableMessageStreamDisposal, maxMessageSize)
+        internal ODataResponseMessage(IODataResponseMessage responseMessage, bool writing, bool enableMessageStreamDisposal, long maxMessageSize)
+            : base(writing, enableMessageStreamDisposal, maxMessageSize)
         {
             Debug.Assert(responseMessage != null, "responseMessage != null");
 
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Core
             return this.GetStream(this.responseMessage.GetStream, /*isRequest*/ false);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>

@@ -92,7 +92,6 @@ namespace Microsoft.OData.Client
         /// This class will not attempt to fix up any of the headers specified and
         /// will try to use them "as is".
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public Dictionary<string, string> Headers
         {
             get
@@ -112,7 +111,7 @@ namespace Microsoft.OData.Client
         /// <summary>Request header collection.</summary>
         internal HeaderCollection HeaderCollection
         {
-            get; 
+            get;
             private set;
         }
     }

@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Collections.Generic;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Formatter for Json Object
@@ -18,7 +17,7 @@ namespace Microsoft.Data.Spatial
         /// The implementation that created this instance.
         /// </summary>
         private readonly SpatialImplementation creator;
-        
+
         /// <summary>
         /// Spatial builder
         /// </summary>

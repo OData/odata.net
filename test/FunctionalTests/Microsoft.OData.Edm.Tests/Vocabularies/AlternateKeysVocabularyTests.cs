@@ -11,6 +11,7 @@ using System.Xml;
 using System.Text;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Xunit;
 
@@ -43,18 +44,17 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
 </Schema>";
 
-            var alternateKeysTerm = model.FindDeclaredValueTerm("OData.Community.Keys.V1.AlternateKeys");
+            var alternateKeysTerm = model.FindDeclaredTerm("OData.Community.Keys.V1.AlternateKeys");
             Assert.NotNull(alternateKeysTerm);
             Assert.Equal(AlternateKeysVocabularyModel.AlternateKeysTerm, alternateKeysTerm);
             Assert.Equal("OData.Community.Keys.V1", alternateKeysTerm.Namespace);
             Assert.Equal("AlternateKeys", alternateKeysTerm.Name);
-            Assert.Equal(EdmTermKind.Value, alternateKeysTerm.TermKind);
 
             StringWriter sw = new StringWriter();
             IEnumerable<EdmError> errors;
             using (var xw = XmlWriter.Create(sw, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
             {
-                Assert.True(model.TryWriteCsdl(xw, out errors));
+                Assert.True(model.TryWriteSchema(xw, out errors));
             }
 
             string output = sw.ToString();

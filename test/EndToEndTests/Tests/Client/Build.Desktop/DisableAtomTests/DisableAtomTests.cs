@@ -7,10 +7,11 @@
 namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.TestServices;
@@ -81,35 +82,47 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
         [TestMethod]
         public void UpdateUsingAtomShouldBeFailed()
         {
-            var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
-            entry.Properties = new[] 
+            var entryWrapper = new ODataResourceWrapper()
             {
-                new ODataProperty
+                Resource = new ODataResource()
                 {
-                    Name = "HomeAddress",
-                    Value = new ODataComplexValue
+                    TypeName = NameSpacePrefix + "Person"
+                },
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
                     {
-                        TypeName = NameSpacePrefix + "HomeAddress",
-                        Properties = new[]
+                        NestedResourceInfo = new ODataNestedResourceInfo()
                         {
-                            new ODataProperty
+                            Name = "HomeAddress",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
                             {
-                                Name = "City",
-                                Value = "Chengdu"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "FamilyName",
-                                Value = "Tigers"
+                                TypeName = NameSpacePrefix + "HomeAddress",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "City",
+                                        Value = "Chengdu"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "FamilyName",
+                                        Value = "Tigers"
+                                    }
+                                }
                             }
                         }
                     }
                 }
             };
+            
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadataInJson = true;
-
+            settings.BaseUri = ServiceBaseUri;
             var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
             var personSet = Model.EntityContainer.FindEntitySet("People");
 
@@ -122,11 +135,10 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             {
                 try
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(personSet, personType);
-                    odataWriter.WriteStart(entry);
-                    odataWriter.WriteEnd();
+                    var odataWriter = messageWriter.CreateODataResourceWriter(personSet, personType);
+                    ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
                 }
-                catch (Microsoft.OData.Core.ODataContentTypeException)
+                catch (Microsoft.OData.ODataContentTypeException)
                 {
                     return;
                 }
@@ -137,70 +149,86 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
         [TestMethod]
         public void PostUsingAtomShouldBeFailed()
         {
-            var entry = new ODataEntry() { TypeName = NameSpacePrefix + "Person" };
-            entry.Properties = new[]
+            var entryWrapper = new ODataResourceWrapper()
             {
-                new ODataProperty { Name = "PersonID", Value = 101 },
-                new ODataProperty { Name = "FirstName", Value = "Peter" },
-                new ODataProperty { Name = "LastName", Value = "Zhang" },
-                new ODataProperty
+                Resource = new ODataResource()
                 {
-                    Name = "HomeAddress",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = NameSpacePrefix + "HomeAddress",
-                        Properties = new[]
+                    TypeName = NameSpacePrefix + "Person",
+                    Properties = new[]
                         {
+                            new ODataProperty { Name = "PersonID", Value = 101 },
+                            new ODataProperty { Name = "FirstName", Value = "Peter" },
+                            new ODataProperty { Name = "LastName", Value = "Zhang" },
                             new ODataProperty
                             {
-                                Name = "Street",
-                                Value = "ZiXing Road"
+                                Name = "Home",
+                                Value = GeographyPoint.Create(32.1, 23.1)
                             },
                             new ODataProperty
                             {
-                                Name = "City",
-                                Value = "Chengdu"
+                                Name = "Numbers",
+                                Value = new ODataCollectionValue
+                                {
+                                    TypeName = "Collection(Edm.String)",
+                                    Items = new string[] { "12345" }
+                                }
                             },
                             new ODataProperty
                             {
-                                Name = "PostalCode",
-                                Value = "200241"
-                            },                            
-                            new ODataProperty
+                                Name = "Emails",
+                                Value = new ODataCollectionValue
+                                {
+                                    TypeName = "Collection(Edm.String)",
+                                    Items = new string[] { "a@b.cc" }
+                                }
+                            }
+                        }
+                },
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                    {
+                        new ODataNestedResourceInfoWrapper()
+                        {
+                            NestedResourceInfo = new ODataNestedResourceInfo()
                             {
-                                Name = "FamilyName",
-                                Value = "Tigers"
+                                Name = "HomeAddress",
+                                IsCollection = false
+                            },
+                            NestedResourceOrResourceSet = new ODataResourceWrapper()
+                            {
+                                Resource = new ODataResource()
+                                {
+                                    TypeName = NameSpacePrefix + "HomeAddress",
+                                    Properties = new[]
+                                    {
+                                        new ODataProperty
+                                        {
+                                            Name = "Street",
+                                            Value = "ZiXing Road"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "City",
+                                            Value = "Chengdu"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "PostalCode",
+                                            Value = "200241"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "FamilyName",
+                                            Value = "Tigers"
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                },
-                new ODataProperty
-                {
-                    Name = "Home",
-                    Value = GeographyPoint.Create(32.1, 23.1)
-                },
-                new ODataProperty
-                {
-                    Name = "Numbers",
-                    Value = new ODataCollectionValue
-                    {
-                        TypeName = "Collection(Edm.String)",
-                        Items = new string[] { "12345" }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "Emails",
-                    Value = new ODataCollectionValue
-                    {
-                        TypeName = "Collection(Edm.String)",
-                        Items = new string[] { "a@b.cc" }
-                    }
-                }
             };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
             var peopleSet = Model.EntityContainer.FindEntitySet("People");
@@ -213,11 +241,10 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             {
                 try
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(peopleSet, personType);
-                    odataWriter.WriteStart(entry);
-                    odataWriter.WriteEnd();
+                    var odataWriter = messageWriter.CreateODataResourceWriter(peopleSet, personType);
+                    ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
                 }
-                catch (Microsoft.OData.Core.ODataContentTypeException)
+                catch (Microsoft.OData.ODataContentTypeException)
                 {
                     return;
                 }
@@ -225,10 +252,11 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             }
         }
 
-        [TestMethod]
+        // [Ignore] // Remove Atom
+        // [TestMethod] // github issuse: #896
         public void QueryUsingAtomShouldBeFailedClientTest()
         {
-            TestClientContext.Format.UseAtom();
+            // TestClientContext.Format.UseAtom();
 
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
             try
@@ -244,7 +272,9 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             Assert.IsTrue(false);
         }
 
-        [TestMethod]
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
+        // [Ignore] // Remove Atom
+        // [TestMethod] // github issuse: #896
         public void UpdateUsingAtomShouldBeFailedClientTest()
         {
             TestClientContext.Format.UseJson(Model);
@@ -256,7 +286,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             var homeAddress = person.HomeAddress as Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.HomeAddress;
             Assert.IsNotNull(homeAddress);
 
-            TestClientContext.Format.UseAtom();
+            // TestClientContext.Format.UseAtom();
             homeAddress.City = "Shanghai";
             TestClientContext.UpdateObject(person);
 
@@ -273,10 +303,11 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             Assert.IsTrue(false);
         }
 
-        [TestMethod]
+        // [Ignore] // Remove Atom
+        // [TestMethod] // github issuse: #896
         public void InsertUsingAtomShouldBeFailedClientTest()
         {
-            TestClientContext.Format.UseAtom();
+            // TestClientContext.Format.UseAtom();
             
             Person newPerson = new Person()
             {
@@ -305,6 +336,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
                 return;
             }
         }
+#endif
 
         #endregion
 
@@ -320,7 +352,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             using (var messageReader = new ODataMessageReader(responseMessage))
             {
                 var error = messageReader.ReadError();
-                Assert.AreEqual(typeof(Microsoft.OData.Core.ODataError), error.GetType());
+                Assert.AreEqual(typeof(Microsoft.OData.ODataError), error.GetType());
                 Assert.AreEqual("UnsupportedMediaType", error.ErrorCode);
             }
         }

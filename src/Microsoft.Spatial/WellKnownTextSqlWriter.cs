@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.Spatial;
-    
+
     /// <summary>
     /// WellKnownText Writer
     /// </summary>
@@ -218,7 +217,7 @@ namespace Microsoft.Data.Spatial
             this.shapeWritten = default(bool);
             this.coordinateSystemWritten = default(bool);
 
-            // we are unable to reset the text writer, we will just 
+            // we are unable to reset the text writer, we will just
             // noop and start writing fresh
             ////this.writer.
         }

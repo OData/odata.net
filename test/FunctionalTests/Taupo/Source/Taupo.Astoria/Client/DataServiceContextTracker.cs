@@ -465,7 +465,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         /// <param name="entity">The entity.</param>
         /// <param name="name">The name of the stream or null to indicate the default stream.</param>
         /// <param name="saveStreamLogger">A logger for the save stream</param>
-        /// <param name="closeStream">A valud indicating whether or not to close the stream</param>
+        /// <param name="closeStream">A value indicating whether or not to close the stream</param>
         /// <param name="headers">The headers for the request</param>
         public static void TrackSetSaveStream(this DataServiceContextData data, object entity, string name, IStreamLogger saveStreamLogger, bool closeStream, IEnumerable<KeyValuePair<string, string>> headers)
         {

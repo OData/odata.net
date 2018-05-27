@@ -4,19 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Collections.Generic;
     #endregion Namespaces
 
     /// <summary>
-    /// Use this class to compare objects by reference in collections such as 
+    /// Use this class to compare objects by reference in collections such as
     /// dictionary or hashsets.
     /// </summary>
     /// <typeparam name="T">Type of objects to compare.</typeparam>
     /// <remarks>
-    /// Typically accessed statically as eg 
+    /// Typically accessed statically as eg
     /// ReferenceEqualityComparer&lt;Expression&gt;.Instance.
     /// </remarks>
     internal sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T : class
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="obj">Object to hash.</param>
         /// <returns>
-        /// Hash code for the object; shouldn't change through the lifetime 
+        /// Hash code for the object; shouldn't change through the lifetime
         /// of <paramref name="obj"/>.
         /// </returns>
         public int GetHashCode(T obj)

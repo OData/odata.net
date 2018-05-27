@@ -21,17 +21,15 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// <param name="returnType">The return type of the function.</param>
         /// <param name="isBound">if set to <c>true</c> [is bound].</param>
         /// <param name="entitySetPath">The entity set path.</param>
-        /// <param name="documentation">The documentation.</param>
         /// <param name="location">The location in the csdl document of the function.</param>
         public CsdlAction(
-            string name, 
-            IEnumerable<CsdlOperationParameter> parameters, 
-            CsdlTypeReference returnType, 
-            bool isBound, 
-            string entitySetPath, 
-            CsdlDocumentation documentation, 
+            string name,
+            IEnumerable<CsdlOperationParameter> parameters,
+            CsdlTypeReference returnType,
+            bool isBound,
+            string entitySetPath,
             CsdlLocation location)
-            : base(name, parameters, returnType, isBound, entitySetPath, documentation, location)
+            : base(name, parameters, returnType, isBound, entitySetPath, location)
         {
         }
     }

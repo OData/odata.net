@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Linq;
     using System.Collections.Generic;
     using System.Diagnostics;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -32,14 +32,14 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:        assumes that the JSON reader has not been used yet.
-        /// Post-Condition: JsonNodeType.EndOfInput  
+        /// Post-Condition: JsonNodeType.EndOfInput
         /// </remarks>
         internal ODataServiceDocument ReadServiceDocument()
         {
@@ -47,16 +47,16 @@ namespace Microsoft.OData.Core.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node
             this.ReadPayloadStart(
                 ODataPayloadKind.ServiceDocument,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            ODataServiceDocument serviceDocument = this.ReadServiceDocumentImplementation(duplicatePropertyNamesChecker);
+            ODataServiceDocument serviceDocument = this.ReadServiceDocumentImplementation(propertyAndAnnotationCollector);
 
             // Read the end of the response.
             this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
@@ -67,16 +67,16 @@ namespace Microsoft.OData.Core.JsonLight
             return serviceDocument;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>A task which returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:        assumes that the JSON reader has not been used yet.
-        /// Post-Condition: JsonNodeType.EndOfInput  
+        /// Post-Condition: JsonNodeType.EndOfInput
         /// </remarks>
         internal Task<ODataServiceDocument> ReadServiceDocumentAsync()
         {
@@ -84,18 +84,18 @@ namespace Microsoft.OData.Core.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node
             return this.ReadPayloadStartAsync(
                 ODataPayloadKind.ServiceDocument,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
 
                 .FollowOnSuccessWith(t =>
                     {
-                        ODataServiceDocument serviceDocument = this.ReadServiceDocumentImplementation(duplicatePropertyNamesChecker);
+                        ODataServiceDocument serviceDocument = this.ReadServiceDocumentImplementation(propertyAndAnnotationCollector);
 
                         // Read the end of the response.
                         this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
@@ -109,20 +109,20 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the top-level scope.</param>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property   The property right after the context URI property.
         ///                 JsonNodeType.EndObject  The EndObject of the service document.
         /// Post-Condition: Any                     The node after the EndObject of the service document.
         /// </remarks>
-        private ODataServiceDocument ReadServiceDocumentImplementation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataServiceDocument ReadServiceDocumentImplementation(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             List<ODataServiceDocumentElement>[] serviceDocumentElements = { null };
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Core.JsonLight
                 Func<string, object> readPropertyAnnotationInServiceDoc = annotationName => { throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocument(annotationName, JsonLightConstants.ODataValuePropertyName)); };
 
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     readPropertyAnnotationInServiceDoc,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -163,18 +163,18 @@ namespace Microsoft.OData.Core.JsonLight
 
                                     // Read the value of the 'value' property.
                                     this.JsonReader.ReadStartArray();
-                                    DuplicatePropertyNamesChecker resourceCollectionDuplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+                                    PropertyAndAnnotationCollector resourceCollectionPropertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
                                     while (this.JsonReader.NodeType != JsonNodeType.EndArray)
                                     {
-                                        ODataServiceDocumentElement serviceDocumentElement = this.ReadServiceDocumentElement(resourceCollectionDuplicatePropertyNamesChecker);
-                                        
+                                        ODataServiceDocumentElement serviceDocumentElement = this.ReadServiceDocumentElement(resourceCollectionPropertyAndAnnotationCollector);
+
                                         if (serviceDocumentElement != null)
                                         {
                                             serviceDocumentElements[0].Add(serviceDocumentElement);
                                         }
 
-                                        resourceCollectionDuplicatePropertyNamesChecker.Clear();
+                                        resourceCollectionPropertyAndAnnotationCollector.Reset();
                                     }
 
                                     this.JsonReader.ReadEndArray();
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads a resource collection within a service document.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The <see cref="DuplicatePropertyNamesChecker"/> to use for parsing annotations within the service document element object.</param>
+        /// <param name="propertyAndAnnotationCollector">The <see cref="PropertyAndAnnotationCollector"/> to use for parsing annotations within the service document element object.</param>
         /// <returns>A <see cref="ODataEntitySetInfo"/> representing the read resource collection.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.StartObject:     The beginning of the JSON object representing the service document element.
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Core.JsonLight
         ///                 JsonNodeType.EndArray:        The end of the array.
         ///                 other:                        Any other node type occuring after the end object of the current service document element. (Would be invalid).
         /// </remarks>
-        private ODataServiceDocumentElement ReadServiceDocumentElement(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataServiceDocumentElement ReadServiceDocumentElement(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             this.JsonReader.ReadStartObject();
             string[] name = { null };
@@ -236,7 +236,7 @@ namespace Microsoft.OData.Core.JsonLight
                 Func<string, object> propertyAnnotationValueReader = annotationName => { throw new ODataException(Strings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement(annotationName)); };
 
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     propertyAnnotationValueReader,
                     (propertyParsingResult, propertyName) =>
                     {

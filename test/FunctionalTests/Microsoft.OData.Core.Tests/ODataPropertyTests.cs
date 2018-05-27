@@ -8,7 +8,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataPropertyTests
     {
@@ -49,14 +49,6 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
-        public void IfValueIsComplexThenODataValueShouldBeReferenceEqual()
-        {
-            ODataComplexValue complexValue = new ODataComplexValue();
-            this.property.Value = complexValue;
-            this.property.ODataValue.Should().BeSameAs(complexValue);
-        }
-
-        [Fact]
         public void IfValueIsODataPrimitiveValueThenODataValueShouldBeReferenceEqual()
         {
             ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue(42);
@@ -68,7 +60,7 @@ namespace Microsoft.OData.Core.Tests
         public void SettingValueToNonPrimitiveTypeShouldThrow()
         {
             Action testSubject = () => this.property.Value = new ODataMessageWriterSettings();
-            testSubject.ShouldThrow<ODataException>().WithMessage(Strings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType("Microsoft.OData.Core.ODataMessageWriterSettings"));
+            testSubject.ShouldThrow<ODataException>().WithMessage(Strings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType("Microsoft.OData.ODataMessageWriterSettings"));
         }
 
         [Fact]

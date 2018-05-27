@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
         /// <summary>Set to true if the stream should be closed once we're done with it.</summary>
         private bool close;
 
-#if DEBUG 
+#if DEBUG
         /// <summary> True,if this instance is being deserialized via DataContractSerialization, false otherwise </summary>
         private bool deserializing;
 #endif
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Client
             this.stream = stream;
             this.close = close;
             this.args = args;
-#if DEBUG 
+#if DEBUG
             this.deserializing = false;
 #endif
         }
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Client
             set
             {
 #if DEBUG
-                Debug.Assert(this.deserializing, "Property can only be set when this instance is deserializing");   
+                Debug.Assert(this.deserializing, "Property can only be set when this instance is deserializing");
 #endif
                 this.args = value;
             }

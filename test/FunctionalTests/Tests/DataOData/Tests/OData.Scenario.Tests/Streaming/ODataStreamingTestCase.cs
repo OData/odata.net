@@ -6,20 +6,16 @@
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 {
-    using System;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Contracts;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.JsonLight;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
 
     public class ODataStreamingTestCase : ODataReaderTestCase
     {

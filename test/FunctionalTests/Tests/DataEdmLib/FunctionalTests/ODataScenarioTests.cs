@@ -14,13 +14,8 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -831,9 +826,9 @@ namespace EdmLibTests.FunctionalTests
                 return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
             }
 
-            public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+            public IEdmTerm FindDeclaredTerm(string qualifiedName)
             {
-                return this.baseModel.FindValueTerm(qualifiedName);
+                return this.baseModel.FindTerm(qualifiedName);
             }
 
             public IEnumerable<IEdmVocabularyAnnotation> FindDeclaredVocabularyAnnotations(IEdmVocabularyAnnotatable element)

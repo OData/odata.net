@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Spatial;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -25,7 +25,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     #endregion Namespaces
 
@@ -304,56 +303,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 // restricting the set of default format configurations to limiti runtime of the tests
-                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations.Where(tc =>!tc.MessageReaderSettings.DisableMessageStreamDisposal && !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations.Where(tc =>tc.MessageReaderSettings.EnableMessageStreamDisposal && !tc.IsRequest),
                 (testDescriptor, testConfig) =>
                 {
                     testConfig = new ReaderTestConfiguration(testConfig);
-                    testConfig.MessageReaderSettings.DisablePrimitiveTypeConversion = true;
+                    testConfig.MessageReaderSettings.EnablePrimitiveTypeConversion = false;
 
-                    testDescriptor.RunTest(testConfig);
-                });
-        }
-
-        
-
-        [TestMethod, TestCategory("Reader.PrimitiveValues"), Variation(Description = "Verifies correct reading of spatial properties when type conversion is disabled.")]
-        public void SpatialPropertyWithDisabledPrimitiveTypeConversionTest()
-        {
-            IEdmModel testModel = TestModels.BuildTestModel();
-
-            var testValues = new object[]
-                {
-                    GeographyFactory.Point(10, 20).Build(),
-                    GeometryFactory.Point(10, 20).Build()
-                };
-
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors =
-                TestValues.PrimitiveTypes.SelectMany(primitiveTypes => testValues.Select(testValue =>
-                {
-                    PrimitiveDataType targetType = EntityModelUtils.GetPrimitiveEdmType(primitiveTypes);
-                    ODataPayloadElement payloadElement = PayloadBuilder
-                        .Property(null, PayloadBuilder.PrimitiveValue(testValue))
-                        .ExpectedPropertyType(targetType);
-                    return new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        PayloadElement = payloadElement,
-                        PayloadEdmModel = testModel
-                    };
-                }));
-
-            // TODO: Task 1429690:Fix places where we've lost JsonVerbose coverage to add JsonLight
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                new bool[] { false, true },
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
-                (testDescriptor, disableStrictValidation, testConfig) =>
-                {
-                    testConfig = new ReaderTestConfiguration(testConfig);
-                    testConfig.MessageReaderSettings.DisablePrimitiveTypeConversion = true;
-                    if (disableStrictValidation)
-                    {
-                        testConfig = testConfig.CloneAndApplyBehavior(TestODataBehaviorKind.WcfDataServicesServer);
-                    }
                     testDescriptor.RunTest(testConfig);
                 });
         }

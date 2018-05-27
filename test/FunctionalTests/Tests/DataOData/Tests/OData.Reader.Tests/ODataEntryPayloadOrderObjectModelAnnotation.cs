@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>
@@ -48,10 +48,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Adds an ODataNavigationLink to the end of the payload order items.
+        /// Adds an ODataNestedResourceInfo to the end of the payload order items.
         /// </summary>
         /// <param name="navigationLink">The navigation link.</param>
-        public void AddODataNavigationLink(ODataNavigationLink navigationLink)
+        public void AddODataNavigationLink(ODataNestedResourceInfo navigationLink)
         {
             this.AddItem("NavigationLink_" + navigationLink.Name);
         }
@@ -75,11 +75,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Adds an item representing the end of the StartEntry state.
+        /// Adds an item representing the end of the StartResource state.
         /// </summary>
-        public void AddStartEntry()
+        public void AddStartResource()
         {
-            this.AddItem("__StartEntry__");
+            this.AddItem("__StartResource__");
         }
 
         /// <summary>

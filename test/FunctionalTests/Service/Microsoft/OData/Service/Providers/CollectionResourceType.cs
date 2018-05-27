@@ -11,7 +11,7 @@ namespace Microsoft.OData.Service.Providers
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
 
     #endregion Namespaces
 

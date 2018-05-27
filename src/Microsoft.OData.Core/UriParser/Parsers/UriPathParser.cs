@@ -4,19 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Parser which consumes the URI path and produces the lexical object model.
     /// </summary>
-    internal sealed class UriPathParser
+    public class UriPathParser
     {
         /// <summary>
         /// The maximum number of segments allowed.
@@ -26,35 +23,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="maxSegments">The maximum number of segments for each part of the query.</param>
-        internal UriPathParser(int maxSegments)
+        /// <param name="settings">The Uri parser settings.</param>
+        public UriPathParser(ODataUriParserSettings settings)
         {
-            this.maxSegments = maxSegments;
-        }
-
-        /// <summary>
-        /// Parses the <paramref name="escapedRelativePathUri"/> and returns a list of strings for each segment.
-        /// </summary>
-        /// <param name="escapedRelativePathUri">The relative URI which holds the query to parse.</param>
-        /// <returns>a list of strings for each segment in the uri.</returns>
-        internal string[] ParsePath(string escapedRelativePathUri)
-        {
-            if (escapedRelativePathUri == null || String.IsNullOrEmpty(escapedRelativePathUri.Trim()))
-            {
-                return new string[0];
-            }
-
-            // TODO: The code below has a bug that / in the named values will be considered a segment separator
-            //   so for example /Customers('abc/pqr') is treated as two segments, which is wrong.
-            string[] segments = escapedRelativePathUri.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-
-            // TODO: lookup astoria max segments...
-            if (segments.Length >= this.maxSegments)
-            {
-                throw new ODataException(Strings.UriQueryPathParser_TooManySegments);
-            }
-
-            return segments;
+            this.maxSegments = settings.PathLimit;
         }
 
         /// <summary>
@@ -63,7 +35,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="fullUri">The full URI of the request.</param>
         /// <param name="serviceBaseUri">The service base URI for the request.</param>
         /// <returns>List of unescaped segments.</returns>
-        internal ICollection<string> ParsePathIntoSegments(Uri fullUri, Uri serviceBaseUri)
+        public virtual ICollection<string> ParsePathIntoSegments(Uri fullUri, Uri serviceBaseUri)
         {
             if (serviceBaseUri == null)
             {
@@ -88,10 +60,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 // Skip over the base URI segments
 #if !ORCAS
                 // need to calculate the number of segments to skip in the full
-                // uri (so that we can skip over http://blah.com/basePath for example, 
-                // get only the odata specific parts of the path). 
-                // 
-                // because of differences in system.uri between portable lib and 
+                // uri (so that we can skip over http://blah.com/basePath for example,
+                // get only the odata specific parts of the path).
+                //
+                // because of differences in system.uri between portable lib and
                 // the desktop library, we need to handle this differently.
                 // in this case we get the number of segments to skip as simply
                 // then number of tokens in the serviceBaseUri split on slash, with

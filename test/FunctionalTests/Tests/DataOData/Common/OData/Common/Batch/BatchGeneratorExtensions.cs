@@ -11,8 +11,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Batch
     using System.Linq;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -190,7 +190,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Batch
                     contentType = payload.PayloadElement.GetDefaultContentType();
                 }
 
-                httpResponseData.Headers.Add(Microsoft.OData.Core.ODataConstants.ContentTypeHeader, contentType);
+                httpResponseData.Headers.Add(Microsoft.OData.ODataConstants.ContentTypeHeader, contentType);
 
                 // Convert the payload element to the byte[] representation
                 httpResponseData.Body = requestManager.BuildBody(contentType, /*ODataUri*/ null, payload.PayloadElement).SerializedValue;
@@ -232,7 +232,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Batch
                 }
 
                 contentType = HttpUtilities.BuildContentType(contentType, Encoding.UTF8.WebName, null);
-                request.Headers.Add(Microsoft.OData.Core.ODataConstants.ContentTypeHeader, contentType);
+                request.Headers.Add(Microsoft.OData.ODataConstants.ContentTypeHeader, contentType);
                 request.Body = requestManager.BuildBody(contentType, baseUri, payload.PayloadElement);
             }
 

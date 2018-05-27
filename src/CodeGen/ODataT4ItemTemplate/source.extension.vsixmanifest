@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="ODataT4ItemTemplate.2592cbe8-b1fe-45b6-9a18-7518079af6a8" Version="2.5.0" Language="en-US" Publisher="Microsoft" />
+        <DisplayName>OData v4 Client Code Generator</DisplayName>
+        <Description xml:space="preserve">An item template that simplifies the process of accessing OData v4 services by generating C# and VB.Net client-side proxy classes.</Description>
+        <MoreInfo>https://github.com/odata/odata.net</MoreInfo>
+        <License>ap-pl.txt</License>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.Spatial" Path="|Microsoft.Spatial|" AssemblyName="|Microsoft.Spatial;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.OData.Edm" Path="|Microsoft.OData.Edm|" AssemblyName="|Microsoft.OData.Edm;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.OData.Core" Path="|Microsoft.OData.Core|" AssemblyName="|Microsoft.OData.Core;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.Assembly" d:Source="Project" d:ProjectName="Microsoft.OData.Client" Path="|Microsoft.OData.Client|" AssemblyName="|Microsoft.OData.Client;AssemblyName|" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\ODataT4Template.CSharp.zip" />
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\ODataT4Template.VisualBasic.zip" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+</PackageManifest>

@@ -22,7 +22,7 @@ namespace Microsoft.OData.Service
     using System.Xml;
     using System.Xml.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Internal;
     using Microsoft.OData.Service.Providers;
@@ -337,7 +337,7 @@ namespace Microsoft.OData.Service
                 throw DataServiceException.CreateDeepRecursion(recursionLimit);
             }
         }
-        
+
         /// <summary>Marks the fact that a recursive method is leaving.</summary>
         /// <param name="recursionDepth">Depth of recursion.</param>
         internal static void RecurseLeave(ref int recursionDepth)
@@ -352,8 +352,8 @@ namespace Microsoft.OData.Service
         /// <remarks>This method can be used to provide a simpler API facade instead of identifier arrays.</remarks>
         internal static string[] StringToSimpleArray(string text)
         {
-            return String.IsNullOrEmpty(text) 
-                ? EmptyStringArray 
+            return String.IsNullOrEmpty(text)
+                ? EmptyStringArray
                 : text.Split(new char[] { ',' }, StringSplitOptions.None);
         }
 
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(type != null, "type != null");
             Debug.Assert(targetType != null, "targetType != null");
-            
+
             // Create the new instance of the type
             ConstructorInfo emptyConstructor = type.GetConstructor(Type.EmptyTypes);
             if (emptyConstructor == null)
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Service
             // Note that GetNonPrimitiveResourceType() will throw if we fail to get the resource type.
             ResourceType r = PrimitiveResourceTypeMap.TypeMap.GetPrimitive(obj.GetType()) ??
                              GetNonPrimitiveResourceType(provider, obj);
-            
+
             return r;
         }
 
@@ -494,8 +494,8 @@ namespace Microsoft.OData.Service
             Debug.Assert(obj != null, "obj != null");
 
             IProjectedResult projectedResult = obj as IProjectedResult;
-            ResourceType resourceType = projectedResult != null 
-                ? (String.IsNullOrEmpty(projectedResult.ResourceTypeName) ? null : provider.TryResolveResourceType(projectedResult.ResourceTypeName)) : 
+            ResourceType resourceType = projectedResult != null
+                ? (String.IsNullOrEmpty(projectedResult.ResourceTypeName) ? null : provider.TryResolveResourceType(projectedResult.ResourceTypeName)) :
                 provider.GetResourceType(obj);
 
             if (resourceType == null)
@@ -505,7 +505,7 @@ namespace Microsoft.OData.Service
                 {
                     return collectionValueEnumerable.ResourceType;
                 }
-            
+
                 throw new DataServiceException(500, Strings.BadProvider_InvalidTypeSpecified(obj.GetType().FullName));
             }
 
@@ -602,7 +602,7 @@ namespace Microsoft.OData.Service
         internal static bool IsElementIEnumerable(object element, out IEnumerable enumerable)
         {
             enumerable = element as IEnumerable;
-            
+
             if (enumerable == null)
             {
                 return false;
@@ -940,7 +940,7 @@ namespace Microsoft.OData.Service
                 }
             }
             while (reader.Read());
-            
+
             return false;
         }
 
@@ -991,7 +991,7 @@ namespace Microsoft.OData.Service
         {
             return inputType.IsGenericType && GenericExpandedWrapperTypes.SingleOrDefault(x => x.Type == inputType.GetGenericTypeDefinition()) != null;
         }
-        
+
         /// <summary>
         /// Returns an enumeration that picks one element from each enumerable and projects from them.
         /// </summary>
@@ -1055,7 +1055,7 @@ namespace Microsoft.OData.Service
             Debug.Assert(provider != null, "provider != null");
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(
-                (resourceProperty == null && propertyName != null) || (resourceProperty != null && propertyName == null), 
+                (resourceProperty == null && propertyName != null) || (resourceProperty != null && propertyName == null),
                 "One of resourceProperty or propertyName should be null and other non-null.");
 
             IProjectedResult projectedResult = resource as IProjectedResult;
@@ -1237,19 +1237,21 @@ namespace Microsoft.OData.Service
         internal static ODataMessageReaderSettings CreateMessageReaderSettings(IDataService dataService, bool enableODataServerBehavior)
         {
             ODataMessageReaderSettings messageReaderSettings = new ODataMessageReaderSettings();
-            messageReaderSettings.EnableAtomSupport();
 
-            // We do our own URL resolution through custom IODataUrlResolver and follow up processing of URLs
+            // messageReaderSettings.EnableAtomSupport();
+
+            // We do our own URL resolution through custom IODataPayloadUriConverter and follow up processing of URLs
             // as a result it doesn't matter which URI we use here (since we don't actually use its value anywhere).
             // So using the absolute URI of the service is the best we can do.
             messageReaderSettings.BaseUri = dataService.OperationContext.AbsoluteServiceUri;
-            messageReaderSettings.CheckCharacters = false;
-            messageReaderSettings.DisableMessageStreamDisposal = true;
-            messageReaderSettings.DisablePrimitiveTypeConversion = !dataService.Configuration.EnableTypeConversion;
+            messageReaderSettings.EnableMessageStreamDisposal = false;
+            messageReaderSettings.EnablePrimitiveTypeConversion = dataService.Configuration.EnableTypeConversion;
+            messageReaderSettings.EnableCharactersCheck = false;
 
             ODataProtocolVersion maxProtocolVersion = dataService.Configuration.DataServiceBehavior.MaxProtocolVersion;
-            messageReaderSettings.MaxProtocolVersion = maxProtocolVersion == ODataProtocolVersion.V4
-                ? ODataVersion.V4
+            messageReaderSettings.MaxProtocolVersion = 
+                maxProtocolVersion == ODataProtocolVersion.V4 ? ODataVersion.V4
+                : maxProtocolVersion == ODataProtocolVersion.V401 ? ODataVersion.V401 
                 : CommonUtil.ConvertToODataVersion(
                     dataService.Configuration.DataServiceBehavior.MaxProtocolVersion);
 
@@ -1257,7 +1259,8 @@ namespace Microsoft.OData.Service
 
             if (enableODataServerBehavior)
             {
-                messageReaderSettings.EnableODataServerBehavior();
+                messageReaderSettings.Validations &= ~(ValidationKinds.ThrowOnDuplicatePropertyNames | ValidationKinds.ThrowIfTypeConflictsWithMetadata);
+                messageReaderSettings.ClientCustomTypeResolver = null;
             }
 
             return messageReaderSettings;
@@ -1516,7 +1519,7 @@ namespace Microsoft.OData.Service
                 get;
                 set;
             }
-            
+
             /// <summary>Index</summary>
             internal int Index
             {

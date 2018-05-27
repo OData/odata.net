@@ -15,11 +15,8 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -97,7 +94,7 @@ namespace EdmLibTests.FunctionalTests
             List<XmlWriter> xmlWriters = new List<XmlWriter>();
             IEnumerable<EdmError> errors;
 
-            model.TryWriteCsdl(
+            model.TryWriteSchema(
                 s =>
                 {
                     stringBuilders.Add(new StringBuilder());
@@ -120,7 +117,7 @@ namespace EdmLibTests.FunctionalTests
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
+            var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
             Assert.IsTrue(isParsed, "Error occurs while deserializing csdl to model");
             return model;
         }
@@ -144,7 +141,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfBooleanProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfBooleanProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetBoolean(true)));
             var collectionOfBooleanTerm = new EdmTerm("NS", "CollectionOfBooleanTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetBoolean(true)));
             model.AddElement(collectionOfBooleanTerm);
-            var collectionOfBooleanAnnotation = new EdmAnnotation(collectionOfBooleanProperty, collectionOfBooleanTerm, new EdmCollectionExpression(
+            var collectionOfBooleanAnnotation = new EdmVocabularyAnnotation(collectionOfBooleanProperty, collectionOfBooleanTerm, new EdmCollectionExpression(
                 new EdmBooleanConstant(true),
                 new EdmBooleanConstant(false)));
             model.AddVocabularyAnnotation(collectionOfBooleanAnnotation);
@@ -153,7 +150,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfIntegerProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfIntegerProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(true)));
             var collectionOfIntegerTerm = new EdmTerm("NS", "CollectionOfIntegerTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(true)));
             model.AddElement(collectionOfIntegerTerm);
-            var collectionOfIntegerAnnotation = new EdmAnnotation(collectionOfIntegerProperty, collectionOfIntegerTerm, new EdmCollectionExpression(
+            var collectionOfIntegerAnnotation = new EdmVocabularyAnnotation(collectionOfIntegerProperty, collectionOfIntegerTerm, new EdmCollectionExpression(
                 new EdmIntegerConstant(1),
                 new EdmIntegerConstant(2),
                 new EdmIntegerConstant(3)));
@@ -163,7 +160,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfFloatingProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfFloatingProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDouble(true)));
             var collectionOfFloatingTerm = new EdmTerm("NS", "CollectionOfFloatingTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDouble(true)));
             model.AddElement(collectionOfFloatingTerm);
-            var collectionOfFloatingAnnotation = new EdmAnnotation(collectionOfFloatingProperty, collectionOfFloatingTerm, new EdmCollectionExpression(
+            var collectionOfFloatingAnnotation = new EdmVocabularyAnnotation(collectionOfFloatingProperty, collectionOfFloatingTerm, new EdmCollectionExpression(
                 new EdmFloatingConstant(1.23),
                 new EdmFloatingConstant(99.99)));
             model.AddVocabularyAnnotation(collectionOfFloatingAnnotation);
@@ -172,14 +169,14 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfGuidProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfGuidProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetGuid(true)));
             var collectionOfGuidTerm = new EdmTerm("NS", "CollectionOfGuidTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetGuid(true)));
             model.AddElement(collectionOfGuidTerm);
-            var collectionOfGuidAnnotation = new EdmAnnotation(collectionOfGuidProperty, collectionOfGuidTerm, new EdmCollectionExpression(new EdmGuidConstant(new Guid("00000000-0000-0000-0000-000000000000"))));
+            var collectionOfGuidAnnotation = new EdmVocabularyAnnotation(collectionOfGuidProperty, collectionOfGuidTerm, new EdmCollectionExpression(new EdmGuidConstant(new Guid("00000000-0000-0000-0000-000000000000"))));
             model.AddVocabularyAnnotation(collectionOfGuidAnnotation);
 
             // Collection of Binary
             var collectionOfBinaryProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfBinaryProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetBinary(true)));
             var collectionOfBinaryTerm = new EdmTerm("NS", "CollectionOfBinaryTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetBinary(true)));
             model.AddElement(collectionOfBinaryTerm);
-            var collectionOfBinaryAnnotation = new EdmAnnotation(collectionOfBinaryProperty, collectionOfBinaryTerm, new EdmCollectionExpression(
+            var collectionOfBinaryAnnotation = new EdmVocabularyAnnotation(collectionOfBinaryProperty, collectionOfBinaryTerm, new EdmCollectionExpression(
                 new EdmBinaryConstant(new byte[] { 0x41, 0x42 }),
                 new EdmBinaryConstant(new byte[] { 0x61, 0x62 }),
                 new EdmBinaryConstant(new byte[] { 0x4A, 0x4B, 0x6A, 0x6B })));
@@ -189,7 +186,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfDecimalProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfDecimalProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDecimal(true)));
             var collectionOfDecimalTerm = new EdmTerm("NS", "CollectionOfDecimalTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDecimal(true)));
             model.AddElement(collectionOfDecimalTerm);
-            var collectionOfDecimalAnnotation = new EdmAnnotation(collectionOfDecimalProperty, collectionOfDecimalTerm, new EdmCollectionExpression(
+            var collectionOfDecimalAnnotation = new EdmVocabularyAnnotation(collectionOfDecimalProperty, collectionOfDecimalTerm, new EdmCollectionExpression(
                 new EdmDecimalConstant(-1.0000000000m),
                 new EdmDecimalConstant(1234567890m),
                 new EdmDecimalConstant(99.9999999999m)));
@@ -200,7 +197,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfStringProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfStringProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true)));
             var collectionOfStringTerm = new EdmTerm("NS", "CollectionOfStringTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true)));
             model.AddElement(collectionOfStringTerm);
-            var collectionOfStringAnnotation = new EdmAnnotation(collectionOfStringProperty, collectionOfStringTerm, new EdmCollectionExpression(
+            var collectionOfStringAnnotation = new EdmVocabularyAnnotation(collectionOfStringProperty, collectionOfStringTerm, new EdmCollectionExpression(
                 new EdmStringConstant("12345"),
                 new EdmStringConstant("abcdABCD"),
                 new EdmStringConstant("Hello World!")));
@@ -211,7 +208,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfDateTimeOffsetProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfDateTimeOffsetProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDateTimeOffset(true)));
             var collectionOfDateTimeOffsetTerm = new EdmTerm("NS", "CollectionOfDateTimeOffsetTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDateTimeOffset(true)));
             model.AddElement(collectionOfDateTimeOffsetTerm);
-            var collectionOfDateTimeOffsetAnnotation = new EdmAnnotation(collectionOfDateTimeOffsetProperty, collectionOfDateTimeOffsetTerm, new EdmCollectionExpression(
+            var collectionOfDateTimeOffsetAnnotation = new EdmVocabularyAnnotation(collectionOfDateTimeOffsetProperty, collectionOfDateTimeOffsetTerm, new EdmCollectionExpression(
                 new EdmDateTimeOffsetConstant(new DateTimeOffset(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc))),
                 new EdmDateTimeOffsetConstant(new DateTimeOffset(new DateTime(2000, 12, 31, 23, 59, 59, DateTimeKind.Utc)))));
             collectionOfDateTimeOffsetAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
@@ -221,7 +218,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfDurationProperty = collectionOfPrimitiveTypeEntity.AddStructuralProperty("CollectionOfDurationProperty", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDuration(true)));
             var collectionOfDurationTerm = new EdmTerm("NS", "CollectionOfDurationTerm", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDuration(true)));
             model.AddElement(collectionOfDurationTerm);
-            var collectionOfDurationAnnotation = new EdmAnnotation(collectionOfDurationProperty, collectionOfDurationTerm, new EdmCollectionExpression(
+            var collectionOfDurationAnnotation = new EdmVocabularyAnnotation(collectionOfDurationProperty, collectionOfDurationTerm, new EdmCollectionExpression(
                 new EdmDurationConstant(new TimeSpan(1, 2, 3, 4)),
                 new EdmDurationConstant(new TimeSpan(23, 59, 59))));
             collectionOfDurationAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
@@ -348,7 +345,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfComplexTypeTerm = new EdmTerm("NS", "CollectionOfComplexTypeTerm", EdmCoreModel.GetCollection(new EdmComplexTypeReference(complexTypeElement, true)));
             model.AddElement(collectionOfComplexTypeTerm);
 
-            var inlineCollectionOfComplexTypeAnnotation = new EdmAnnotation(complexTypeElement, collectionOfComplexTypeTerm, new EdmCollectionExpression(
+            var inlineCollectionOfComplexTypeAnnotation = new EdmVocabularyAnnotation(complexTypeElement, collectionOfComplexTypeTerm, new EdmCollectionExpression(
                 new EdmRecordExpression(
                     new EdmPropertyConstructor("IntegerProperty", new EdmIntegerConstant(111)),
                     new EdmPropertyConstructor("StringProperty", new EdmStringConstant("Inline String 111"))),
@@ -358,7 +355,7 @@ namespace EdmLibTests.FunctionalTests
             inlineCollectionOfComplexTypeAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(inlineCollectionOfComplexTypeAnnotation);
 
-            var outlineCollectionOfComplexTypeAnnotation = new EdmAnnotation(collectionOfComplexTypeTerm, collectionOfComplexTypeTerm, new EdmCollectionExpression(
+            var outlineCollectionOfComplexTypeAnnotation = new EdmVocabularyAnnotation(collectionOfComplexTypeTerm, collectionOfComplexTypeTerm, new EdmCollectionExpression(
                 new EdmRecordExpression(
                     new EdmPropertyConstructor("IntegerProperty", new EdmIntegerConstant(333)),
                     new EdmPropertyConstructor("StringProperty", new EdmStringConstant("Outline String 333"))),
@@ -432,14 +429,14 @@ namespace EdmLibTests.FunctionalTests
             var entityTypeTerm = new EdmTerm("NS", "EntityTypeTerm", new EdmEntityTypeReference(entityTypeElement, true));
             model.AddElement(entityTypeTerm);
 
-            var inlineEntityTypeAnnotation = new EdmAnnotation(entityTypeElement, entityTypeTerm, new EdmRecordExpression(
+            var inlineEntityTypeAnnotation = new EdmVocabularyAnnotation(entityTypeElement, entityTypeTerm, new EdmRecordExpression(
                 new EdmPropertyConstructor("KeyProperty", new EdmIntegerConstant(1)),
                 new EdmPropertyConstructor("IntegerProperty", new EdmIntegerConstant(111)),
                 new EdmPropertyConstructor("StringProperty", new EdmStringConstant("Inline String 111"))));
             inlineEntityTypeAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(inlineEntityTypeAnnotation);
 
-            var outlineEntityTypeAnnotation = new EdmAnnotation(entityTypeTerm, entityTypeTerm, new EdmRecordExpression(
+            var outlineEntityTypeAnnotation = new EdmVocabularyAnnotation(entityTypeTerm, entityTypeTerm, new EdmRecordExpression(
                 new EdmPropertyConstructor("KeyProperty", new EdmIntegerConstant(2)),
                 new EdmPropertyConstructor("IntegerProperty", new EdmIntegerConstant(222)),
                 new EdmPropertyConstructor("StringProperty", new EdmStringConstant("Outline String 222"))));
@@ -497,7 +494,7 @@ namespace EdmLibTests.FunctionalTests
             var collectionOfEntityTypeTerm = new EdmTerm("NS", "CollectionOfEntityTypeTerm", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityTypeElement, true)));
             model.AddElement(collectionOfEntityTypeTerm);
 
-            var inlineCollectionOfEntityTypeAnnotation = new EdmAnnotation(entityTypeElement, collectionOfEntityTypeTerm, new EdmCollectionExpression(
+            var inlineCollectionOfEntityTypeAnnotation = new EdmVocabularyAnnotation(entityTypeElement, collectionOfEntityTypeTerm, new EdmCollectionExpression(
                 new EdmRecordExpression(
                     new EdmPropertyConstructor("KeyProperty", new EdmIntegerConstant(1)),
                     new EdmPropertyConstructor("IntegerProperty", new EdmIntegerConstant(111)),
@@ -513,7 +510,7 @@ namespace EdmLibTests.FunctionalTests
             inlineCollectionOfEntityTypeAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(inlineCollectionOfEntityTypeAnnotation);
 
-            var outlineCollectionOfEntityTypeAnnotation = new EdmAnnotation(collectionOfEntityTypeTerm, collectionOfEntityTypeTerm, new EdmCollectionExpression(
+            var outlineCollectionOfEntityTypeAnnotation = new EdmVocabularyAnnotation(collectionOfEntityTypeTerm, collectionOfEntityTypeTerm, new EdmCollectionExpression(
                 new EdmRecordExpression(
                     new EdmPropertyConstructor("KeyProperty", new EdmIntegerConstant(4)),
                     new EdmPropertyConstructor("IntegerProperty", new EdmIntegerConstant(444)),
@@ -588,24 +585,24 @@ namespace EdmLibTests.FunctionalTests
 
             var inlineWithoutAppliesToIntegerTerm = new EdmTerm("NS", "InlineWithoutAppliesToIntegerTerm", EdmCoreModel.Instance.GetInt32(true));
             model.AddElement(inlineWithoutAppliesToIntegerTerm);
-            var inlineWithoutAppliesToIntegerAnnotation = new EdmAnnotation(inlineWithoutAppliesToIntegerTerm, inlineWithoutAppliesToIntegerTerm, new EdmIntegerConstant(1));
+            var inlineWithoutAppliesToIntegerAnnotation = new EdmVocabularyAnnotation(inlineWithoutAppliesToIntegerTerm, inlineWithoutAppliesToIntegerTerm, new EdmIntegerConstant(1));
             inlineWithoutAppliesToIntegerAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(inlineWithoutAppliesToIntegerAnnotation);
 
             var inlineWithAppliesToIntegerTerm = new EdmTerm("NS", "InlineWithAppliesToIntegerTerm", EdmCoreModel.Instance.GetInt32(true), "Term Property");
             model.AddElement(inlineWithAppliesToIntegerTerm);
-            var inlineWithAppliesToIntegerAnnotation = new EdmAnnotation(inlineWithAppliesToIntegerTerm, inlineWithAppliesToIntegerTerm, new EdmIntegerConstant(2));
+            var inlineWithAppliesToIntegerAnnotation = new EdmVocabularyAnnotation(inlineWithAppliesToIntegerTerm, inlineWithAppliesToIntegerTerm, new EdmIntegerConstant(2));
             inlineWithAppliesToIntegerAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(inlineWithAppliesToIntegerAnnotation);
 
             var outlineWithoutAppliesToStringTerm = new EdmTerm("NS", "OutlineWithoutAppliesToStringTerm", EdmCoreModel.Instance.GetString(true));
             model.AddElement(outlineWithoutAppliesToStringTerm);
-            var outlineWithoutAppliesToStringAnnotation = new EdmAnnotation(outlineWithoutAppliesToStringTerm, outlineWithoutAppliesToStringTerm, new EdmStringConstant("this is 3"));
+            var outlineWithoutAppliesToStringAnnotation = new EdmVocabularyAnnotation(outlineWithoutAppliesToStringTerm, outlineWithoutAppliesToStringTerm, new EdmStringConstant("this is 3"));
             model.AddVocabularyAnnotation(outlineWithoutAppliesToStringAnnotation);
 
             var outlineWithAppliesToStringTerm = new EdmTerm("NS", "OutlineWithAppliesToStringTerm", EdmCoreModel.Instance.GetString(true), "Property Term");
             model.AddElement(outlineWithAppliesToStringTerm);
-            var outlineWithAppliesToStringAnnotation = new EdmAnnotation(outlineWithAppliesToStringTerm, outlineWithAppliesToStringTerm, new EdmStringConstant("this is 4"));
+            var outlineWithAppliesToStringAnnotation = new EdmVocabularyAnnotation(outlineWithAppliesToStringTerm, outlineWithAppliesToStringTerm, new EdmStringConstant("this is 4"));
             model.AddVocabularyAnnotation(outlineWithAppliesToStringAnnotation);
 
             return model;

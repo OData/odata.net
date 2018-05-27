@@ -15,10 +15,9 @@ namespace AstoriaUnitTests.Tests
     using System.Linq;
     using System.Text;
     using AstoriaUnitTests.ClientExtensions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Tests;
+    using Microsoft.OData;
+    using Microsoft.OData.Tests;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     #endregion Namespaces

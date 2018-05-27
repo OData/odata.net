@@ -6,7 +6,6 @@
 
 using System.IO;
 using System.Xml;
-using Microsoft.Data.Spatial;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests.ScenarioTests

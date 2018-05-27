@@ -10,7 +10,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     public static class NavigationTestModelBuilder
     {
@@ -1023,7 +1022,7 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
 
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
-            personSet.AddNavigationTarget(personToPet, petSet);
+            petSet.AddNavigationTarget(homeToPet.Partner, homeSet);
 
             model.AddElement(container);
 
@@ -1057,11 +1056,10 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToPet"" Type=""NS.Pet"" Nullable=""false"" Partner=""ToHome""  ContainsTarget=""true"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
+      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"" />
   </EntityContainer>
@@ -1108,9 +1106,6 @@ namespace EdmLibTests.FunctionalUtilities
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
             petSet.AddNavigationTarget(homeToPet.Partner, homeSet);
 
-            personSet.AddNavigationTarget(personToPet, petSet);
-            homeSet.AddNavigationTarget(homeToPet, petSet);
-
             model.AddElement(container);
 
             return model;
@@ -1143,16 +1138,12 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToPet"" Type=""NS.Pet"" Nullable=""false"" Partner=""ToHome"" ContainsTarget=""true"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
       <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
-    <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-    </EntitySet>
+    <EntitySet Name=""HomeSet"" EntityType=""NS.Home""/>
   </EntityContainer>
 </Schema>");
         }
@@ -1196,8 +1187,6 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
 
             // [EdmLib] EntitySet.AddNavigationTarget() ordering matters and results into some validation not appearing
-            personSet.AddNavigationTarget(personToPet, petSet);
-            homeSet.AddNavigationTarget(homeToPet, petSet);
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
             petSet.AddNavigationTarget(homeToPet.Partner, homeSet);
 
@@ -1243,9 +1232,6 @@ namespace EdmLibTests.FunctionalUtilities
             var petSet = container.AddEntitySet("PetSet", pet);
             var homeSet = container.AddEntitySet("HomeSet", home);
 
-            personSet.AddNavigationTarget(petToPerson.Partner, petSet);
-            personSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
-
             petSet.AddNavigationTarget(petToPerson, personSet);
             homeSet.AddNavigationTarget(homeToPerson, personSet);
             model.AddElement(container);
@@ -1280,10 +1266,7 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToPerson"" Type=""NS.Person"" Nullable=""false"" Partner=""ToHome"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
@@ -1413,9 +1396,9 @@ namespace EdmLibTests.FunctionalUtilities
 
             personSet.AddNavigationTarget(personToPet, petSet);
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
-            petSet.AddNavigationTarget(petToHome, homeSet);
+//            petSet.AddNavigationTarget(petToHome, homeSet);
             homeSet.AddNavigationTarget(petToHome.Partner, petSet);
-            homeSet.AddNavigationTarget(homeToPerson, personSet);
+//            homeSet.AddNavigationTarget(homeToPerson, personSet);
             personSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
 
             return model;
@@ -1451,16 +1434,13 @@ namespace EdmLibTests.FunctionalUtilities
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
       <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
-      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
       <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-      <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
   </EntityContainer>
 </Schema>");
@@ -1484,7 +1464,7 @@ namespace EdmLibTests.FunctionalUtilities
             var container = new EdmEntityContainer("NS", "Container");
             model.AddElement(container);
             var personSet = container.AddEntitySet("PersonSet", person);
-            personSet.AddNavigationTarget(personToFriends, personSet);
+            // personSet.AddNavigationTarget(personToFriends, personSet);
             personSet.AddNavigationTarget(personToFriends.Partner, personSet);
 
             return model;
@@ -1532,7 +1512,6 @@ namespace EdmLibTests.FunctionalUtilities
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToFriend"" Target=""PersonSet"" />
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
   </EntityContainer>
@@ -1580,9 +1559,7 @@ namespace EdmLibTests.FunctionalUtilities
     <EntitySet Name=""FriendSet"" EntityType=""NS.Person"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToFriend"" Target=""FriendSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
   </EntityContainer>
 </Schema>");
         }
@@ -1627,8 +1604,8 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
             var officeSet = container.AddEntitySet("OfficeSet", office);
 
-            homeSet.AddNavigationTarget(officeToEmployee, personSet);
-            personSet.AddNavigationTarget(officeToEmployee.Partner, homeSet);
+            officeSet.AddNavigationTarget(officeToEmployee, personSet);
+            homeSet.AddNavigationTarget(homeToPerson, personSet);
 
             return model;
         }
@@ -1658,14 +1635,14 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToEmployee"" Type=""NS.Employee"" Nullable=""false"" Partner=""ToOffice""  />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""NS.Employee/ToOffice"" Target=""HomeSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"" />
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
-      <NavigationPropertyBinding Path=""NS.Office/ToEmployee"" Target=""PersonSet"" />
+      <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
-    <EntitySet Name=""OfficeSet"" EntityType=""NS.Office"" />
+    <EntitySet Name=""OfficeSet"" EntityType=""NS.Office"">
+      <NavigationPropertyBinding Path=""ToEmployee"" Target=""PersonSet"" />
+    </EntitySet>
   </EntityContainer>
 </Schema>");
         }
@@ -1711,7 +1688,7 @@ namespace EdmLibTests.FunctionalUtilities
             var officeSet = container.AddEntitySet("OfficeSet", office);
 
             officeSet.AddNavigationTarget(homeToPerson, employeeSet);
-            employeeSet.AddNavigationTarget(homeToPerson.Partner, officeSet);
+            homeSet.AddNavigationTarget(homeToPerson, personSet);
 
             return model;
         }
@@ -1742,10 +1719,10 @@ namespace EdmLibTests.FunctionalUtilities
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""PersonSet"" EntityType=""NS.Person"" />
-    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"">
-      <NavigationPropertyBinding Path=""ToHome"" Target=""OfficeSet"" />
+    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee""/>
+    <EntitySet Name=""HomeSet"" EntityType=""NS.Home"" >
+      <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
-    <EntitySet Name=""HomeSet"" EntityType=""NS.Home"" />
     <EntitySet Name=""OfficeSet"" EntityType=""NS.Office"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""EmployeeSet"" />
     </EntitySet>
@@ -1794,9 +1771,9 @@ namespace EdmLibTests.FunctionalUtilities
             var officeSet = container.AddEntitySet("OfficeSet", office);
 
             officeSet.AddNavigationTarget(officeToEmployee, personSet);
-            personSet.AddNavigationTarget(officeToEmployee.Partner, officeSet);
+//            personSet.AddNavigationTarget(officeToEmployee.Partner, officeSet);
             homeSet.AddNavigationTarget(homeToPerson, employeeSet);
-            employeeSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
+//            employeeSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
 
             return model;
         }
@@ -1826,12 +1803,8 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToEmployee"" Type=""NS.Employee"" Nullable=""false"" Partner=""ToOffice"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""NS.Employee/ToOffice"" Target=""OfficeSet"" />
-    </EntitySet>
-    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"">
-      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"" />
+    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"" />
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""EmployeeSet"" />
     </EntitySet>
@@ -1969,7 +1942,7 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
 
             homeSet.AddNavigationTarget(officeToEmployee, personSet);
-            personSet.AddNavigationTarget(officeToEmployee.Partner, homeSet);
+//            personSet.AddNavigationTarget(officeToEmployee.Partner, homeSet);
 
             return model;
         }
@@ -2169,6 +2142,120 @@ namespace EdmLibTests.FunctionalUtilities
         public static IEdmModel NavigationZeroOnePrincipalWithAllNullableKeyDependentModel()
         {
             return NavigationPrincipalEndAndDependentPropertyModelBuilder(true, true, true, true, true, false);
+        }
+
+        public static IEdmModel MultiNavigationBindingModel()
+        {
+            var model = new EdmModel();
+
+            var entityType = new EdmEntityType("NS", "EntityType");
+            var id = entityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            entityType.AddKeys(id);
+
+            var containedEntityType = new EdmEntityType("NS", "ContainedEntityType");
+            var containedId = containedEntityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            containedEntityType.AddKeys(containedId);
+
+            var containedNav1 = entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Name = "ContainedNav1",
+                Target = containedEntityType,
+                TargetMultiplicity = EdmMultiplicity.One,
+                ContainsTarget = true
+            });
+
+            var containedNav2 = entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Name = "ContainedNav2",
+                Target = containedEntityType,
+                TargetMultiplicity = EdmMultiplicity.One,
+                ContainsTarget = true
+            });
+
+            var navEntityType = new EdmEntityType("NS", "NavEntityType");
+            var navEntityId = navEntityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            navEntityType.AddKeys(navEntityId);
+
+            var complex = new EdmComplexType("NS", "ComplexType");
+            complex.AddStructuralProperty("Prop1", EdmCoreModel.Instance.GetInt32(false));
+
+            var complxNavP = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "CollectionOfNavOnComplex",
+                    Target = navEntityType,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            entityType.AddStructuralProperty("complexProp1", new EdmComplexTypeReference(complex, false));
+            entityType.AddStructuralProperty("complexProp2", new EdmComplexTypeReference(complex, false));
+
+            var navOnContained = containedEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "NavOnContained",
+                    Target = navEntityType,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            model.AddElement(entityType);
+            model.AddElement(containedEntityType);
+            model.AddElement(navEntityType);
+            model.AddElement(complex);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+            var entitySet = new EdmEntitySet(entityContainer, "EntitySet", entityType);
+            var navEntitySet1 = new EdmEntitySet(entityContainer, "NavEntitySet1", navEntityType);
+            var navEntitySet2 = new EdmEntitySet(entityContainer, "NavEntitySet2", navEntityType);
+            entitySet.AddNavigationTarget(complxNavP, navEntitySet1, new EdmPathExpression("complexProp1/CollectionOfNavOnComplex"));
+            entitySet.AddNavigationTarget(complxNavP, navEntitySet2, new EdmPathExpression("complexProp2/CollectionOfNavOnComplex"));
+            entitySet.AddNavigationTarget(navOnContained, navEntitySet1, new EdmPathExpression("ContainedNav1/NavOnContained"));
+            entitySet.AddNavigationTarget(navOnContained, navEntitySet2, new EdmPathExpression("ContainedNav2/NavOnContained"));
+            entityContainer.AddElement(entitySet);
+            entityContainer.AddElement(navEntitySet1);
+            entityContainer.AddElement(navEntitySet2);
+
+            return model;
+        }
+
+        public static IEnumerable<XElement> MultiNavigationBindingModelCsdl()
+        {
+            const string csdl = "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                                "<EntityType Name=\"EntityType\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                    "<Property Name=\"complexProp1\" Type=\"NS.ComplexType\" Nullable=\"false\" />" +
+                                    "<Property Name=\"complexProp2\" Type=\"NS.ComplexType\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"ContainedNav1\" Type=\"NS.ContainedEntityType\" Nullable=\"false\" ContainsTarget=\"true\" />" +
+                                    "<NavigationProperty Name=\"ContainedNav2\" Type=\"NS.ContainedEntityType\" Nullable=\"false\" ContainsTarget=\"true\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"ContainedEntityType\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"NavOnContained\" Type=\"NS.NavEntityType\" Nullable=\"false\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"NavEntityType\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                "</EntityType>" +
+                                "<ComplexType Name=\"ComplexType\">" +
+                                    "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"CollectionOfNavOnComplex\" Type=\"Collection(NS.NavEntityType)\" />" +
+                                "</ComplexType>" +
+                                "<EntityContainer Name=\"Container\">" +
+                                "<EntitySet Name=\"EntitySet\" EntityType=\"NS.EntityType\">" +
+                                    "<NavigationPropertyBinding Path=\"complexProp1/CollectionOfNavOnComplex\" Target=\"NavEntitySet1\" />" +
+                                    "<NavigationPropertyBinding Path=\"complexProp2/CollectionOfNavOnComplex\" Target=\"NavEntitySet2\" />" +
+                                    "<NavigationPropertyBinding Path=\"ContainedNav1/NavOnContained\" Target=\"NavEntitySet1\" />" +
+                                    "<NavigationPropertyBinding Path=\"ContainedNav2/NavOnContained\" Target=\"NavEntitySet2\" />" +
+                                "</EntitySet>" +
+                                "<EntitySet Name=\"NavEntitySet1\" EntityType=\"NS.NavEntityType\" />" +
+                                "<EntitySet Name=\"NavEntitySet2\" EntityType=\"NS.NavEntityType\" />" +
+                                "</EntityContainer>" +
+                                "</Schema>";
+
+            return ConvertCsdlsToXElements(csdl);
         }
 
         private static IEdmModel NavigationPrincipalEndAndDependentPropertyModelBuilder(bool isPersonIdKey, bool isPersonNameKey, bool isPersonIdNullable, bool isPersonNameNullable, bool isPrincipalEndNullable, bool isPrincipalEndCollection)

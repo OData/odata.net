@@ -4,21 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Reflection;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
+using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
+using Microsoft.Test.OData.Services.ODataWCFService.UriHandlers;
+
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Net;
-    using System.Reflection;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
-    using Microsoft.Test.OData.Services.ODataWCFService.UriHandlers;
-
     internal class PathSegmentToExpressionTranslator : PathSegmentTranslator<Expression>
     {
         private readonly IEdmModel model;
@@ -346,7 +344,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// </summary>
         /// <param name="segment">The OpenPropertySegment</param>
         /// <returns>The linq expression</returns>
-        public override Expression Translate(OpenPropertySegment segment)
+        public override Expression Translate(DynamicPathSegment segment)
         {
             if (!(this.LastProcessedSegment is KeySegment
                || this.LastProcessedSegment is SingletonSegment
@@ -360,7 +358,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             // get OpenProperties
             var propertyAccessExpression = Expression.Property(this.ResultExpression, "OpenProperties");
             // key
-            var key = Expression.Constant(segment.PropertyName, typeof(string));
+            var key = Expression.Constant(segment.Identifier, typeof(string));
             // OpenProperties.ContainsKey(segment.PropertyName)
             MethodInfo containsKeyMethod = typeof(Dictionary<string, object>).GetMethod("ContainsKey", new[] { typeof(string) });
             var containsExpression = Expression.Call(propertyAccessExpression, containsKeyMethod, key);

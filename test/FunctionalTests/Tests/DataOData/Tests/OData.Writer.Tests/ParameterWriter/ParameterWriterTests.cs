@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -45,45 +44,45 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             };
 
         // build collection of one/multiple complex values
-        List<ODataComplexValue> complexValues = new List<ODataComplexValue>()
+        List<ODataResource> complexValues = new List<ODataResource>()
             {
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     TypeName = "TestModel.ComplexType",
                     Properties = new[] { new ODataProperty() { Name = "One", Value = 1 }}
                 },
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     TypeName = "TestModel.ComplexType",
                     Properties = new[] { new ODataProperty() { Name = "One", Value = 2 }}
                 },
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     TypeName = "TestModel.ComplexType",
                     Properties = new[] { new ODataProperty() { Name = "One", Value = 3 }}
                 },
             };
 
-        List<ODataComplexValue> complexValuesNoTypeName = new List<ODataComplexValue>()
+        List<ODataResource> complexValuesNoTypeName = new List<ODataResource>()
             {
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     Properties = new[] { new ODataProperty() { Name = "One", Value = 1 }}
                 },
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     Properties = new[] { new ODataProperty() { Name = "One", Value = 2 }}
                 },
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     Properties = new[] { new ODataProperty() { Name = "One", Value = 3 }}
                 },
             };
 
         // build collection of complex values containing collection properties
-        List<ODataComplexValue> complexWithCollections = new List<ODataComplexValue>()
+        List<ODataResource> complexWithCollections = new List<ODataResource>()
             {
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     TypeName = "TestModel.MyComplex",
                     Properties = new[]
@@ -100,7 +99,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         },
                     }
                 },
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     TypeName = "TestModel.MyComplex",
                     Properties = new[]
@@ -148,43 +147,43 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             return primitiveItemCollectionStart;
         }
 
-        private ODataCollectionStart GetComplexCollection(int noOfItems)
+        private ODataResourceSet GetComplexCollection(int noOfItems)
         {
-            ODataCollectionStart complexItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("TestModel.ComplexType") };
-            var complexItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
+            ODataResourceSet complexItemCollectionStart = new ODataResourceSet();
+            var complexItemAnnotation = new ODataFeedEntriesObjectModelAnnotation();
             int cnt = noOfItems == -1 ? complexValues.Count : noOfItems;
             for (int i = 0; i < cnt; ++i)
             {
                 complexItemAnnotation.Add(complexValues[i]);
             }
 
-            complexItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexItemAnnotation);
+            complexItemCollectionStart.SetAnnotation(complexItemAnnotation);
             return complexItemCollectionStart;
         }
 
-        private ODataCollectionStart GetComplexCollectionNoTypeName(int noOfItems)
+        private ODataResourceSet GetComplexCollectionNoTypeName(int noOfItems)
         {
-            ODataCollectionStart complexItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("ComplexValuesNoTypeName") };
-            var complexItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
+            ODataResourceSet complexItemCollectionStart = new ODataResourceSet();
+            var complexItemAnnotation = new ODataFeedEntriesObjectModelAnnotation();
             int cnt = noOfItems == -1 ? complexValuesNoTypeName.Count : noOfItems;
             for (int i = 0; i < cnt; ++i)
             {
                 complexItemAnnotation.Add(complexValuesNoTypeName[i]);
             }
 
-            complexItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexItemAnnotation);
+            complexItemCollectionStart.SetAnnotation(complexItemAnnotation);
             return complexItemCollectionStart;
         }
 
-        private ODataCollectionStart GetComplexCollectionContainingCollectionItem()
+        private ODataResourceSet GetComplexCollectionContainingCollectionItem()
         {
-            ODataCollectionStart complexWithCollectionItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("TestModel.MyComplex") };
-            var complexWithCollectionItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
-            foreach (ODataComplexValue cv in complexWithCollections)
+            ODataResourceSet complexWithCollectionItemCollectionStart = new ODataResourceSet();
+            var complexWithCollectionItemAnnotation = new ODataFeedEntriesObjectModelAnnotation();
+            foreach (ODataResource cv in complexWithCollections)
             {
                 complexWithCollectionItemAnnotation.Add(cv);
             }
-            complexWithCollectionItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexWithCollectionItemAnnotation);
+            complexWithCollectionItemCollectionStart.SetAnnotation(complexWithCollectionItemAnnotation);
 
             return complexWithCollectionItemCollectionStart;
         }
@@ -253,8 +252,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             });
         }
 
-        [TestMethod, Variation(Description = "Test different combinations of parameters in the payload.")]
-        public void ParameterPayloadTest()
+        private void ParameterPayloadTest(bool withModel)
         {
             EdmModel model = new EdmModel();
 
@@ -300,12 +298,72 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             entityType.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexProperty, true));
             model.AddElement(entityType);
 
+            var derivedEntityType = new EdmEntityType("TestModel", "TestDerivedEntityType", entityType);
+            model.AddElement(derivedEntityType);
             var container = new EdmEntityContainer("TestModel", "TestContainer");
             model.AddElement(container);
 
-            ODataEntry entry = new ODataEntry() { TypeName = "TestModel.TestEntityType", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 }, new ODataProperty() { Name = "Name", Value = "TestName" }, new ODataProperty() { Name = "ComplexProperty", Value = new ODataComplexValue() { } } } };
-            ODataFeed feed = new ODataFeed();
-            feed.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { entry });
+            #region Feed
+            ODataResource complex = new ODataResource();
+            var nestedComplexAnnotation = new ODataNavigationLinkExpandedItemObjectModelAnnotation()
+            {
+                ExpandedItem = complex
+            };
+            ODataNestedResourceInfo nestedComplexInfo = new ODataNestedResourceInfo() { Name = "ComplexProperty", IsCollection = false };
+            nestedComplexInfo.SetAnnotation(nestedComplexAnnotation);
+
+            var nestedInfosAnnotation = new ODataEntryNavigationLinksObjectModelAnnotation();
+            nestedInfosAnnotation.Add(nestedComplexInfo, 0);
+
+            ODataResource entry = new ODataResource() { TypeName = "TestModel.TestEntityType", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 }, new ODataProperty() { Name = "Name", Value = "TestName" } } };
+            entry.SetAnnotation(nestedInfosAnnotation);
+            ODataResourceSet feed1 = new ODataResourceSet();
+            feed1.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { entry });
+
+            ODataResource entry2 = new ODataResource() { TypeName = "TestModel.TestDerivedEntityType", Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 }, new ODataProperty() { Name = "Name", Value = "TestName" } } };
+            entry2.SetAnnotation(nestedInfosAnnotation);
+            ODataResourceSet feed2 = new ODataResourceSet() { TypeName = "Collection(TestModel.TestEntityType)" };
+            feed2.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { entry2 });
+
+            #endregion
+
+            #region Complex with Nested Complex
+
+            var complexWithNestedComplex_Nested = new ODataResource()
+            {
+                TypeName = "TestModel.TwoProperty",
+                Properties = new[]
+                {
+                    new ODataProperty() { Name = "TwoPropertyValue", Value = 2 },
+                }
+            };
+            var complexWithNestedComplex_NestdResourceAnnotation = new ODataNavigationLinkExpandedItemObjectModelAnnotation()
+            {
+                ExpandedItem = complexWithNestedComplex_Nested
+            };
+
+            var complexWithNestedComplex_NestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = "Two",
+                IsCollection = false
+            };
+            complexWithNestedComplex_NestedInfo.SetAnnotation(complexWithNestedComplex_NestdResourceAnnotation);
+
+            var complexWithNestedComplex_NestedInfoAnnotation = new ODataEntryNavigationLinksObjectModelAnnotation();
+            complexWithNestedComplex_NestedInfoAnnotation.Add(complexWithNestedComplex_NestedInfo, 0);
+
+            var complexWithNestedComplex = new ODataResource()
+            {
+                TypeName = "TestModel.ComplexProperty",
+                Properties = new[]
+                {
+                    new ODataProperty() { Name = "One", Value = 1 },
+                    new ODataProperty() { Name = "Three", Value = 3 },
+                }
+            };
+            complexWithNestedComplex.SetAnnotation(complexWithNestedComplex_NestedInfoAnnotation);
+
+            #endregion
 
             var testCases = new[]
             {
@@ -317,6 +375,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     JsonLight = "{}",
                 },
                 #endregion Empty parameters
+
                 #region Single primitive parameter
                 new
                 {
@@ -364,16 +423,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     JsonLight = "{\"p1\":\"2011-09-26T13:20:48Z\"}"
                 },
                 #endregion Single primitive parameter
+
                 #region Single complex parameter
+
                 new
                 {
                     DebugDescription = "One complex parameter: empty complex value.",
                     ParameterPayload = new ODataParameters()
                     {
-                        new KeyValuePair<string, object>("p2", new ODataComplexValue() { TypeName = "TestModel.EmptyComplex" })
+                        new KeyValuePair<string, object>("p2", new ODataResource() { TypeName = "TestModel.EmptyComplex" })
                     },
                     JsonLight = "{\"p2\":{}}",
                 },
+
                 new
                 {
                     DebugDescription = "One complex parameter: single primitive property.",
@@ -381,7 +443,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>(
                             "p1", 
-                            new ODataComplexValue()
+                            new ODataResource()
                             {
                                 TypeName = "TestModel.OneProperty",
                                 Properties = new[]
@@ -399,7 +461,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>(
                             "p1", 
-                            new ODataComplexValue()
+                            new ODataResource()
                             {
                                 TypeName = "TestModel.MultipleProperties",
                                 Properties = new[]
@@ -419,7 +481,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>(
                             "p1", 
-                            new ODataComplexValue()
+                            new ODataResource()
                             {
                                 TypeName = "TestModel.ManyProperties",
                                 Properties = new[]
@@ -444,31 +506,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     DebugDescription = "One complex parameter: nested complex value.",
                     ParameterPayload = new ODataParameters()
                     {
-                        new KeyValuePair<string, object>(
-                            "p1", 
-                            new ODataComplexValue()
-                            {
-                                TypeName = "TestModel.ComplexProperty",
-                                Properties = new[]
-                                {
-                                    new ODataProperty() { Name = "One", Value = 1 },
-                                    new ODataProperty() 
-                                    { 
-                                        Name = "Two", 
-                                        Value = new ODataComplexValue()
-                                                {
-                                                    TypeName = "TestModel.TwoProperty",
-                                                    Properties = new[]
-                                                    {
-                                                        new ODataProperty() { Name = "TwoPropertyValue", Value = 2 },
-                                                    }
-                                                } 
-                                    },
-                                    new ODataProperty() { Name = "Three", Value = 3 },
-                                }
-                            })
+                        new KeyValuePair<string, object>("p1", complexWithNestedComplex)
                     },
-                    JsonLight = "{\"p1\":{\"One\":1,\"Two\":{\"TwoPropertyValue\":2},\"Three\":3}}",
+                    JsonLight = "{\"p1\":{\"One\":1,\"Three\":3,\"Two\":{\"TwoPropertyValue\":2}}}",
                 },
                 new
                 {
@@ -477,7 +517,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>(
                             "p1", 
-                            new ODataComplexValue()
+                            new ODataResource()
                             {
                                 TypeName = "TestModel.CollectionProperty",
                                 Properties = new[]
@@ -495,7 +535,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     },
                     JsonLight = "{\"p1\":{\"One\":[\"item1\",\"item2\"]}}",
                 },
+
                 #endregion Single complex parameter
+
                 #region Single collection parameter
                 new
                 {
@@ -507,6 +549,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     JsonLight = "{\"p2\":[]}",
                 },
                 #endregion
+
                 #region Two parameters
                 new
                 {
@@ -524,7 +567,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     ParameterPayload = new ODataParameters()
                     {
                         new KeyValuePair<string, object>("p1", "foo"),
-                        new KeyValuePair<string, object>("p2", new ODataComplexValue() { TypeName = "TestModel.EmptyComplex" })
+                        new KeyValuePair<string, object>("p2", new ODataResource() { TypeName = "TestModel.EmptyComplex" })
                     },
                     JsonLight = "{\"p1\":\"foo\",\"p2\":{}}",
                 },
@@ -564,7 +607,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     ParameterPayload = new ODataParameters()
                     {
                         new KeyValuePair<string, object>("p1", entry),
-                        new KeyValuePair<string, object>("p2", new ODataComplexValue()
+                        new KeyValuePair<string, object>("p2", new ODataResource()
                             {
                                 TypeName = "TestModel.MultipleProperties",
                                 Properties = new[]
@@ -575,17 +618,27 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                                 }
                             })
                     },
-                    JsonLight = "{\"p1\":{\"@odata.type\":\"#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}},\"p2\":{\"One\":1,\"Two\":2,\"Three\":3}}",
+                    JsonLight = "{\"p1\":{\"@odata.context\":\"http://odata.org/test/$metadata#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}},\"p2\":{\"One\":1,\"Two\":2,\"Three\":3}}",
                 },
 
                 #endregion
+
                 #region Single feed
                 new
                 {
                     DebugDescription = "Single feed parameter.",
                     ParameterPayload = new ODataParameters()
                     {
-                        new KeyValuePair<string, object>("p1", feed)
+                        new KeyValuePair<string, object>("p1", feed1)
+                    },
+                    JsonLight = "{\"p1\":[{\"@odata.type\":\"#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}}]}",
+                },
+                new
+                {
+                    DebugDescription = "Single feed parameter with derived item.",
+                    ParameterPayload = new ODataParameters()
+                    {
+                        new KeyValuePair<string, object>("p1", feed2)
                     },
                     JsonLight = "{\"p1\":[{\"@odata.type\":\"#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}}]}",
                 },
@@ -614,7 +667,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 var testDescriptor = new PayloadWriterTestDescriptor<ODataParameters>(this.Settings, ObjectModelUtils.CreateDefaultParameter(), resultCallback)
                     {
                         DebugDescription = testCase.DebugDescription,
-                        Model = model,
+                        Model = withModel ? model : null
                     };
 
                 TestWriterUtils.WriteActionAndVerifyODataPayload<ODataParameters>(
@@ -627,6 +680,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     this.Assert,
                     this.Logger);
             });
+        }
+
+        [TestMethod, Variation(Description = "Test different combinations of parameters in the payload with model.")]
+        public void ParameterPayloadTest()
+        {
+            ParameterPayloadTest(true);
+        }
+
+        [TestMethod, Variation(Description = "Test different combinations of parameters in the payload without model.")]
+        public void ParameterPayloadTest_withoutModel()
+        {
+            ParameterPayloadTest(false);
         }
 
         [TestMethod, Variation(Description = "Test different combinations of parameters in the payload.")]
@@ -717,7 +782,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", "foo"),
                         new KeyValuePair<string, object>("p2", 12345),
                         new KeyValuePair<string, object>("p3", new DateTimeOffset(2011, 12, 31, 0, 0, 0, TimeSpan.Zero)),
-                        new KeyValuePair<string, object>("p4", new ODataComplexValue(){ TypeName = "TestModel.ComplexType", Properties = new[] { new ODataProperty() { Name = "One", Value = 2 }}}),
+                        new KeyValuePair<string, object>("p4", new ODataResource(){ TypeName = "TestModel.ComplexType", Properties = new[] { new ODataProperty() { Name = "One", Value = 2 }}}),
                         new KeyValuePair<string, object>("p5", this.GetPrimitiveStringCollection(3)),
                         new KeyValuePair<string, object>("p6", this.GetComplexCollection(-1)),
                         new KeyValuePair<string, object>("p7", null),
@@ -822,7 +887,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             IEdmOperationImport iedmFunctionImport_PrimitiveDouble = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Double").First();
 
             var testCases = new[]
-            {  
+            {
                 // The function import has one more parameter then specified in the payload. Expect failure.
                 new
                 {
@@ -954,7 +1019,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", new ODataCollectionValue())
                     },
                     FunctionImport = default(IEdmOperationImport),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.Core.ODataCollectionValue"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.ODataCollectionValue"),
                 },
                 new
                 {
@@ -963,7 +1028,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", new ODataStreamReferenceValue())
                     },
                     FunctionImport = default(IEdmOperationImport),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.Core.ODataStreamReferenceValue"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType", "p1", "Microsoft.OData.ODataStreamReferenceValue"),
                 },
                 // Calling WriteValue and CreateCollectionWriter with null parameterName
                 new
@@ -1044,23 +1109,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("complex", 6),
                     },
                     FunctionImport = functionImport_Complex,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_NonPrimitiveTypeForPrimitiveValue", "TestModel.ComplexType"),
-                },
-                         
-                // the function import states that the type is primitive, but we write complex in the payload.
-                new
-                {
-                    ParameterPayload = new ODataParameters()
-                    {
-                        new KeyValuePair<string, object>("primitive", 
-                            new ODataComplexValue() 
-                            {
-                                TypeName = "TestModel.ComplexType",
-                                Properties = new[] { new ODataProperty() { Name = "PrimitiveProperty", Value = "foo" } }
-                            }),
-                    },
-                    FunctionImport = functionImport_Primitive,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKind", "TestModel.ComplexType", "Primitive", "Complex"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind", "complex", "Complex"),
                 },
 
                 // complex type different in the payload and in the function import.
@@ -1069,7 +1118,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     ParameterPayload = new ODataParameters()
                     {
                         new KeyValuePair<string, object>("complex", 
-                            new ODataComplexValue() 
+                            new ODataResource() 
                             {
                                 TypeName = "TestModel.SomeComplexType",
                                 Properties = new[] { new ODataProperty() { Name = "One", Value = 1 } }
@@ -1085,13 +1134,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     ParameterPayload = new ODataParameters()
                     {
                         new KeyValuePair<string, object>("primitive", 
-                            new ODataComplexValue() 
+                            new ODataResource() 
                             {
                                 Properties = new[] { new ODataProperty() { Name = "One", Value = 1 } }
                             }),
                     },
                     FunctionImport = functionImport_Primitive,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKindNoTypeName", "Complex", "Primitive"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind", "primitive", "Primitive"),
                 },
 
                 // primitive collection in the payload, but complex collection in the function import.
@@ -1124,7 +1173,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("primitiveCollection", this.GetComplexCollection(1))
                     },
                     FunctionImport = functionImport_PrimitiveCollection,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKind", "TestModel.ComplexType", "Primitive", "Complex")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind", "primitiveCollection", "Collection")
                 },
 
                 // complex collection without payload types in the payload, but primitive collection in the function import.
@@ -1135,7 +1184,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("primitiveCollection", this.GetComplexCollectionNoTypeName(1))
                     },
                     FunctionImport = functionImport_PrimitiveCollection,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKindNoTypeName", "Complex", "Primitive")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind", "primitiveCollection", "Collection")
                 },
             };
 
@@ -1170,16 +1219,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             var container = new EdmEntityContainer("TestModel", "TestContainer");
             model.AddElement(container);
 
-            ODataCollectionStart complexItemCollectionStart = new ODataCollectionStart() { Name = EntityModelUtils.GetCollectionTypeName("TestModel.ComplexType") };
-            var complexItemAnnotation = new ODataCollectionItemsObjectModelAnnotation();
+            ODataResourceSet complexItemCollectionStart = new ODataResourceSet();
+            var complexItemAnnotation = new ODataFeedEntriesObjectModelAnnotation();
             complexItemAnnotation.Add(
-                new ODataComplexValue()
+                new ODataResource()
                 {
                     TypeName = "TestModel.ComplexType",
                     Properties = new[] { new ODataProperty() { Name = "PrimitiveProperty", Value = "foo" }, new ODataProperty() { Name = "ComplexProperty", Value = null } }
                 });
 
-            complexItemCollectionStart.SetAnnotation<ODataCollectionItemsObjectModelAnnotation>(complexItemAnnotation);
+            complexItemCollectionStart.SetAnnotation(complexItemAnnotation);
 
             foreach (bool value in bindable)
             {
@@ -1241,7 +1290,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         {
                             new KeyValuePair<string, object>(
                                 "complex", 
-                                new ODataComplexValue()
+                                new ODataResource()
                                 {
                                     TypeName = "TestModel.ComplexType",
                                     Properties = new[] { new ODataProperty() { Name = "PrimitiveProperty", Value = "foo" }, new ODataProperty() { Name="ComplexProperty", Value = null } }
@@ -1328,7 +1377,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     ParameterPayload = new ODataParameters()
                     {
                         new KeyValuePair<string, object>("p1", "foo"),
-                        new KeyValuePair<string, object>("p1", new ODataComplexValue())
+                        new KeyValuePair<string, object>("p1", new ODataResource())
                     },
                     FunctionImport = edmF1,
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_DuplicatedParameterNameNotAllowed", "p1"),

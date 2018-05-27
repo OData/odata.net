@@ -4,13 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Evaluation;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>Translates from an IPathSegment into an ODataPath</summary>
     internal static class ODataPathFactory

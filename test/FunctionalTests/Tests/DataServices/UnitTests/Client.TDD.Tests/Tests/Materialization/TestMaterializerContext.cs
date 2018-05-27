@@ -19,7 +19,7 @@ namespace AstoriaUnitTests.Tests
     {
         public TestMaterializerContext()
         {
-            this.IgnoreMissingProperties = false;
+            this.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException;
             this.ResponsePipeline = new DataServiceClientResponsePipelineConfiguration(this);
             this.Model = new ClientEdmModel(ODataProtocolVersion.V4);
             this.Context = new DataServiceContext();
@@ -27,7 +27,7 @@ namespace AstoriaUnitTests.Tests
 
         public Func<Type, string, ClientTypeAnnotation> ResolveTypeForMaterializationOverrideFunc { get; set; }
 
-        public bool IgnoreMissingProperties { get; set; }
+        public UndeclaredPropertyBehavior UndeclaredPropertyBehavior { get; set; }
 
         public ClientEdmModel Model { get; set; }
 

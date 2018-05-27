@@ -4,20 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// ExpandOption variant of an SelectExpandBinder, where the default selection item for a given level is based on the select at that level
     /// instead of the top level select clause. If nothing is selected for a given expand in the ExpandOption syntax, then we by default
@@ -41,19 +37,19 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private readonly IEdmStructuredType edmType;
 
         /// <summary>
-        /// Build the ExpandOption variant of an SelectExpandBinder
+        /// The segments parsed in path and query option.
         /// </summary>
-        /// <param name="configuration">The configuration used for binding.</param>
-        /// <param name="edmType">The type of the top level expand item.</param>
-        /// <param name="navigationSource">The navigation source of the top level expand item.</param>
-        public SelectExpandBinder(ODataUriParserConfiguration configuration, IEdmStructuredType edmType, IEdmNavigationSource navigationSource)
+        private List<ODataPathSegment> parsedSegments = new List<ODataPathSegment>();
+
+        public SelectExpandBinder(ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
-            ExceptionUtils.CheckArgumentNotNull(edmType, "edmType");
+            ExceptionUtils.CheckArgumentNotNull(odataPathInfo.TargetStructuredType, "edmType");
 
             this.configuration = configuration;
-            this.edmType = edmType;
-            this.navigationSource = navigationSource;
+            this.edmType = odataPathInfo.TargetStructuredType;
+            this.navigationSource = odataPathInfo.TargetNavigationSource;
+            this.parsedSegments = odataPathInfo.Segments.ToList();
         }
 
         /// <summary>
@@ -145,12 +141,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Generate a SubExpand based on the current nav property and the curren token
         /// </summary>
-        /// <param name="currentNavProp">the current navigation property</param>
         /// <param name="tokenIn">the current token</param>
         /// <returns>a new SelectExpand clause bound to the current token and nav prop</returns>
-        private SelectExpandClause GenerateSubExpand(IEdmNavigationProperty currentNavProp, ExpandTermToken tokenIn)
+        private SelectExpandClause GenerateSubExpand(ExpandTermToken tokenIn)
         {
-            SelectExpandBinder nextLevelBinder = new SelectExpandBinder(this.Configuration, currentNavProp.ToEntityType(), this.NavigationSource != null ? this.NavigationSource.FindNavigationTarget(currentNavProp) : null);
+            SelectExpandBinder nextLevelBinder = new SelectExpandBinder(this.Configuration, new ODataPathInfo(new ODataPath(this.parsedSegments)));
             return nextLevelBinder.BindSubLevel(tokenIn.ExpandOption);
         }
 
@@ -171,7 +166,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Build a expand clause for a nested expand.
         /// </summary>
         /// <returns>A new SelectExpandClause.</returns>
-        private SelectExpandClause BuildDefaultSubExpand()
+        private static SelectExpandClause BuildDefaultSubExpand()
         {
             return new SelectExpandClause(new Collection<SelectItem>(), true);
         }
@@ -185,16 +180,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
 
-            // ensure that we're always dealing with proper V4 syntax
-            if (tokenIn.PathToNavProp.NextToken != null && !tokenIn.PathToNavProp.IsNamespaceOrContainerQualified())
-            {
-                if (tokenIn.PathToNavProp.NextToken.Identifier != UriQueryConstants.RefSegment || tokenIn.PathToNavProp.NextToken.NextToken != null)
-                {
-                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
-                }
-            }
-
-            PathSegmentToken currentToken = tokenIn.PathToNavProp;
+            PathSegmentToken currentToken = tokenIn.PathToNavigationProp;
 
             IEdmStructuredType currentLevelEntityType = this.EdmType;
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
@@ -212,9 +198,21 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             IEdmNavigationProperty currentNavProp = edmProperty as IEdmNavigationProperty;
-            if (currentNavProp == null)
+            IEdmStructuralProperty currentComplexProp = edmProperty as IEdmStructuralProperty;
+            if (currentNavProp == null && currentComplexProp == null)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentLevelEntityType.FullTypeName()));
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, currentLevelEntityType.FullTypeName()));
+            }
+
+            if (currentComplexProp != null)
+            {
+                currentNavProp = ParseComplexTypesBeforeNavigation(currentComplexProp, ref firstNonTypeToken, pathSoFar);
+            }
+
+            // ensure that we're always dealing with proper V4 syntax
+            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.NextToken != null)
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
             }
 
             bool isRef = false;
@@ -231,14 +229,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
             }
 
-            pathSoFar.Add(new NavigationPropertySegment(currentNavProp, /*entitySet*/null));
-            ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
+            // Add the segments in select and expand to parsed segments
+            this.parsedSegments.AddRange(pathSoFar);
 
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)
             {
-                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp);
+                IEdmPathExpression bindingPath;
+                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
             }
+
+            NavigationPropertySegment navSegment = new NavigationPropertySegment(currentNavProp, targetNavigationSource);
+            pathSoFar.Add(navSegment);
+            this.parsedSegments.Add(navSegment);   // Add the navigation property segment to parsed segments for future usage.
+            ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
             // call MetadataBinder to build the filter clause
             FilterClause filterOption = null;
@@ -266,15 +270,23 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 searchOption = searchBinder.BindSearch(tokenIn.SearchOption);
             }
 
+            ComputeClause computeOption = null;
+            if (tokenIn.ComputeOption != null)
+            {
+                MetadataBinder binder = this.BuildNewMetadataBinder(targetNavigationSource);
+                ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
+                computeOption = computeBinder.BindCompute(tokenIn.ComputeOption);
+            }
+
             if (isRef)
             {
-                return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption);
+                return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, computeOption);
             }
 
             SelectExpandClause subSelectExpand;
             if (tokenIn.ExpandOption != null)
             {
-                subSelectExpand = this.GenerateSubExpand(currentNavProp, tokenIn);
+                subSelectExpand = this.GenerateSubExpand(tokenIn);
             }
             else
             {
@@ -283,8 +295,61 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption);
 
-            LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
-            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption);
+            LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
+            return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption);
+        }
+
+        private IEdmNavigationProperty ParseComplexTypesBeforeNavigation(IEdmStructuralProperty edmProperty, ref PathSegmentToken currentToken, List<ODataPathSegment> pathSoFar)
+        {
+            pathSoFar.Add(new PropertySegment(edmProperty));
+
+            if (currentToken.NextToken == null)
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, edmProperty.DeclaringType.FullTypeName()));
+            }
+
+            currentToken = currentToken.NextToken;
+
+            IEdmType complexType = edmProperty.Type.Definition;
+
+            IEdmCollectionType collectionType = complexType as IEdmCollectionType;
+            if (collectionType != null)
+            {
+                complexType = collectionType.ElementType.Definition;
+            }
+
+            IEdmStructuredType currentType = complexType as IEdmStructuredType;
+            if (currentType == null)
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_InvaidSegmentInExpand(currentToken.Identifier));
+            }
+
+            if (currentToken.IsNamespaceOrContainerQualified())
+            {
+                pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(currentToken, this.Model, this.Settings.SelectExpandLimit, this.configuration.Resolver, ref currentType, out currentToken));
+            }
+
+            IEdmProperty property = this.configuration.Resolver.ResolveProperty(currentType, currentToken.Identifier);
+            if (edmProperty == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentType.FullTypeName(), currentToken.Identifier));
+            }
+
+            IEdmStructuralProperty complexProp = property as IEdmStructuralProperty;
+            if (complexProp != null)
+            {
+                property = ParseComplexTypesBeforeNavigation(complexProp, ref currentToken, pathSoFar);
+            }
+
+            IEdmNavigationProperty navProp = property as IEdmNavigationProperty;
+            if (navProp != null)
+            {
+                return navProp;
+            }
+            else
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, currentType.FullTypeName()));
+            }
         }
 
         /// <summary>
@@ -295,7 +360,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="sourceType">The type of current level navigation source.</param>
         /// <param name="property">Navigation property for current expand.</param>
         /// <returns>The LevelsClause parsed, null if levelsOption is null</returns>
-        private LevelsClause ParseLevels(long? levelsOption, IEdmType sourceType, IEdmNavigationProperty property)
+        private static LevelsClause ParseLevels(long? levelsOption, IEdmType sourceType, IEdmNavigationProperty property)
         {
             if (!levelsOption.HasValue)
             {
@@ -317,7 +382,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="targetNavigationSource">The navigation source being expanded.</param>
         /// <returns>A new MetadataBinder ready to bind a Filter or Orderby clause.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource)
         {
             BindingState state = new BindingState(this.configuration)

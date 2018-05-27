@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using System.IO;
+
     #endregion Namespaces
 
     /// <summary>
-    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync. 
-    /// This stream communicates status changes to the owning batch reader (via IODataBatchOperationListener) 
+    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
+    /// This stream communicates status changes to the owning batch reader (via IODataBatchOperationListener)
     /// to prevent clients to use the batch reader while a content stream is still in use.
     /// </summary>
     internal abstract class ODataBatchOperationReadStream : ODataBatchOperationStream
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="batchReaderStream">The underlying stream to read from.</param>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
-        internal ODataBatchOperationReadStream(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
+        private ODataBatchOperationReadStream(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
             : base(listener)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");

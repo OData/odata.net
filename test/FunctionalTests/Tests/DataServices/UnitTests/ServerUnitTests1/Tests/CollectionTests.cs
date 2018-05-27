@@ -25,6 +25,8 @@ namespace AstoriaUnitTests.Tests
     using providers = Microsoft.OData.Service.Providers;
     using p=Microsoft.OData.Service.Providers;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
+    [Ignore] // Remove Atom
     [TestModule]
     public partial class UnitTestModule1
     {
@@ -126,7 +128,7 @@ namespace AstoriaUnitTests.Tests
             #endregion CustomEnumerable
 
             #region Serialization
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies serialization of collection properties in entity and complex types.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies serialization of collection properties in entity and complex types.")]
             public void Collection_CollectionPropertySerialization()
             {
                 // ItemType - type of a single item in the collection, either Type for primitive types, or String - name of the complex type
@@ -398,7 +400,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serialization fails with in-stream error when the value of the collection property is wrong.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serialization fails with in-stream error when the value of the collection property is wrong.")]
             public void Collection_InvalidValues()
             {
                 var testCases = new[]{
@@ -466,7 +468,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verify that if the actual values of items in a collection are a mix of mismatched types, the serializer correctly fails.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify that if the actual values of items in a collection are a mix of mismatched types, the serializer correctly fails.")]
             public void Collection_MismatchOfItemTypes()
             {
                 var testCases = new[] {
@@ -725,7 +727,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serializer correctly detects loops and fails.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that serializer correctly detects loops and fails.")]
             public void Collection_EndlessLoop()
             {
                 var testCases = new[] {
@@ -843,7 +845,7 @@ namespace AstoriaUnitTests.Tests
                 public IQueryable<ReflectionEntityType> Entities { get { return entities.AsQueryable(); } }
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verify that serialization works on reflection based collection.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verify that serialization works on reflection based collection.")]
             public void Collection_SerializationOfReflectionBasedCollection()
             {
                 var formats = new[] {
@@ -885,7 +887,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verify that in json light, we write the collection type name in full metadata")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verify that in json light, we write the collection type name in full metadata")]
             public void Collection_VerificationOfCollectionTypeNamesInJsonLightFullMetadata()
             {
                 var testCases = new[] {
@@ -1057,297 +1059,6 @@ namespace AstoriaUnitTests.Tests
                 public Func<string, DSPServiceDefinition, bool> IgnoreIf { get; set; }
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies deserialization of collection properties.")]
-            public void Collection_CollectionPropertyDeserialization()
-            {
-                var testCases = new DeserializationTestCase[] {
-                    new DeserializationTestCase {
-                        ItemType = (object)typeof(int),
-                        Values = new string[] {
-                            "<adsm:element>0</adsm:element>",
-                            "<adsm:element>1</adsm:element>",
-                            "<adsm:element adsm:type='Edm.Int32'>42</adsm:element>",
-                            "<adsm:element adsm:type='Edm.String'>43</adsm:element>"
-                        }
-                    },
-                    new DeserializationTestCase {
-                        ItemType = (object)typeof(string),
-                        Values = new string[] {
-                            "<adsm:element></adsm:element>",
-                            "<adsm:element/>",
-                            "<adsm:element>value</adsm:element>",
-                            "<adsm:element adsm:type='Edm.String'>value</adsm:element>",
-                            "<adsm:element xml:space='preserve'> </adsm:element>"
-                        }
-                    },
-                    new DeserializationTestCase {
-                        ItemType = (object)typeof(string),
-                        Values = new string[] {
-                            "<adsm:element adsm:type='Edm.Int32'>42</adsm:element>",
-                        },
-                        // We would create a payload in JSON where collection of strings contains a number,
-                        //   Since even for a simple string property JSON deserializer doesn't allow that when EnableTypeConversion = true (it will fail)
-                        //   even collection will fail (the same way)
-                        IgnoreIf = (format, service) => { return format == UnitTestsUtil.JsonLightMimeType && service.EnableTypeConversion.Value; }
-                    },
-                    new DeserializationTestCase {
-                        ItemType = (object)typeof(double?),
-                        Values = new string[] {
-                            "<adsm:element>1.52</adsm:element>",
-                            "<adsm:element adsm:type='Edm.Double'>-0.54</adsm:element>",
-                            "<adsm:element adsm:type='Edm.String'>2.34</adsm:element>"
-                        }
-                    },
-                    new DeserializationTestCase {
-                        ItemType = (object)"SimpleComplexType",
-                        Values = new string[] {
-                            "<adsm:element><adsm:Name>Bart</adsm:Name></adsm:element>",
-                            "<adsm:element adsm:type='TestNamespace.SimpleComplexType'><adsm:Name>Homer</adsm:Name></adsm:element>",
-                        }
-                    },
-                    new DeserializationTestCase {
-                        ItemType = (object)"SimpleComplexType",
-                        Values = new string[] {
-                            "<adsm:element><ads:InnerCollection adsm:type='Collection(Edm.Int32)'></ads:InnerCollection></adsm:element>",
-                            "<adsm:element><ads:InnerCollection adsm:type='Collection(Edm.Int32)'><adsm:element>1</adsm:element></ads:InnerCollection></adsm:element>",
-                            "<adsm:element><ads:InnerCollection adsm:type='Collection(Edm.Int32)'><adsm:element>1</adsm:element><adsm:element>42</adsm:element></ads:InnerCollection></adsm:element>",
-                        }
-                    },
-                    // Mix with elements from non-data namespace - those should be ignored and with whitespace and comments
-                    new DeserializationTestCase {
-                        ItemType = (object)typeof(string),
-                        Values = new string[] {
-                            "<adsm:element>value</adsm:element>",
-                            "<element></element>",
-                            " \r\n\t",
-                            "<!--comment-->",
-                            "<adsm:element></adsm:element>"
-                        },
-                        // XML comments and whitespaces don't make sense in JSON
-                        IgnoreIf = (format, server) => { return format == UnitTestsUtil.JsonLightMimeType; }
-                    },
-                    new DeserializationTestCase {
-                        ItemType = (object)typeof(string),
-                        Values = new string[] {
-                            "<adsm:element>value</adsm:element>",
-                            "<?pi value?>",
-                            "<adsm:element></adsm:element>",
-                        },
-                        // Processing instructions are not supported by Syndication deserializer (and they don't make sense in JSON)
-                        IgnoreIf = (format, service) => { return format != UnitTestsUtil.MimeApplicationXml; }
-                    },
-                };
-
-                var metadataShapes = new string[] {
-                    "BaseEntity",
-                    "OnComplexType",
-                    "OnDerivedEntity",
-                    "OnOpenComplexProperty"
-                };
-
-                var requestTypes = new[] {
-                    new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false, Method = "PUT" },
-                    new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false, Method = "PATCH" },
-                    new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false, Method = "POST" },
-                    new { Format = UnitTestsUtil.MimeApplicationXml, DirectPropertyRequest = true, Method = "PUT" },
-                    new { Format = UnitTestsUtil.MimeApplicationXml, DirectPropertyRequest = true, Method = "PATCH" },
-                };
-
-                TestUtil.RunCombinations(
-                    testCases,
-                    UnitTestsUtil.BooleanValues,
-                    UnitTestsUtil.BooleanValues,
-                    requestTypes,
-                    metadataShapes,
-                    (testCase, enableTypeConversion, typePresentInPayload, requestType, metadataShape) =>
-                    {
-                        DSPMetadata metadata = new DSPMetadata("TestCollection", "TestNamespace");
-                        var simpleComplexType = metadata.AddComplexType("SimpleComplexType", typeof(DSPResourceWithCollectionProperty), null, false);
-                        metadata.AddPrimitiveProperty(simpleComplexType, "Name", typeof(string));
-                        metadata.AddCollectionProperty(simpleComplexType, "InnerCollection", typeof(int));
-                        var derivedComplexType = metadata.AddComplexType("DerivedComplexType", typeof(DSPResourceWithCollectionProperty), simpleComplexType, false);
-                        metadata.AddPrimitiveProperty(derivedComplexType, "Surname", typeof(string));
-
-                        // Determine the resource type of a single item in the collection
-                        var itemResourceType = metadata.GetResourceTypeFromTestSpecification(testCase.ItemType);
-                        Type dspResourceWithCollectionPropertyType = typeof(DSPResourceWithCollectionProperty);
-                        Func<providers.ResourceType, DSPResource> createResourceWithCollectionProperty =
-                            (resourceType) => { return (DSPResource)Activator.CreateInstance(dspResourceWithCollectionPropertyType, resourceType); };
-
-                        var entityType = metadata.AddEntityType("EntityType", dspResourceWithCollectionPropertyType, null, false);
-                        metadata.AddResourceSet("Entities", entityType);
-                        metadata.AddKeyProperty(entityType, "ID", typeof(int));
-                        var derivedEntityType = metadata.AddEntityType("DerivedEntityType", dspResourceWithCollectionPropertyType, entityType, false);
-                        var complexTypeWithCollection = metadata.AddComplexType("ComplexTypeWithCollection", dspResourceWithCollectionPropertyType, null, false);
-                        metadata.AddPrimitiveProperty(complexTypeWithCollection, "Name", typeof(string));
-
-                        switch (metadataShape)
-                        {
-                            case "BaseEntity": metadata.AddCollectionProperty(entityType, "CollectionProperty", itemResourceType); break;
-                            case "OnComplexType":
-                                metadata.AddCollectionProperty(complexTypeWithCollection, "CollectionProperty", itemResourceType);
-                                metadata.AddComplexProperty(entityType, "ComplexProperty", complexTypeWithCollection);
-                                break;
-                            case "OnDerivedEntity":
-                                if (requestType.DirectPropertyRequest) return;
-                                metadata.AddCollectionProperty(derivedEntityType, "CollectionProperty", itemResourceType);
-                                break;
-                            case "OnOpenComplexProperty":
-                                if (requestType.DirectPropertyRequest) return;
-                                metadata.AddCollectionProperty(complexTypeWithCollection, "CollectionProperty", itemResourceType);
-                                entityType.IsOpenType = true;
-                                break;
-                        }
-
-                        // Create the values (for complex types they are funcs which create the resources based on the metadata)
-                        var collectionPropertyValues = testCase.Values.ToList().Combinations().ToList();
-                        // and add a special null value which represents empty short form of the collection <CollectionProperty/>
-                        collectionPropertyValues.Add(null);
-
-                        var usedEntityType = metadataShape == "OnDerivedEntity" ? derivedEntityType : entityType;
-
-                        DSPServiceDefinition service = new DSPServiceDefinition() { Metadata = metadata, Writable = true };
-                        service.CreateDataSource = (m) =>
-                        {
-                            DSPContext data = new DSPContext();
-                            var entities = data.GetResourceSetEntities("Entities");
-
-                            if (requestType.Method != "POST")
-                            {
-                                int id = 0;
-                                foreach (var value in collectionPropertyValues)
-                                {
-                                    var resource = createResourceWithCollectionProperty(usedEntityType);
-                                    entities.Add(resource);
-                                    resource.SetValue("ID", id);
-                                    var complex = createResourceWithCollectionProperty(complexTypeWithCollection);
-                                    complex.SetValue("Name", id.ToString());
-                                    complex.SetValue("InnerCollection", new List<object>());
-                                    resource.SetValue("ComplexProperty", complex);
-                                    id++;
-                                }
-                            }
-
-                            return data;
-                        };
-                        service.EnableTypeConversion = enableTypeConversion;
-
-                        if (testCase.IgnoreIf != null && testCase.IgnoreIf(requestType.Format, service))
-                        {
-                            return;
-                        }
-
-                        using (TestWebRequest request = service.CreateForInProcess())
-                        {
-                            List<XDocument> collectionPayloads = new List<XDocument>();
-
-                            for (int entryIndex = 0; entryIndex < collectionPropertyValues.Count; entryIndex++)
-                            {
-                                var collectionPropertyValue = collectionPropertyValues[entryIndex];
-
-                                StringBuilder propertyPayload = new StringBuilder();
-                                propertyPayload.Append("<ads:CollectionProperty " + TestUtil.CommonPayloadNamespaces);
-                                if (typePresentInPayload)
-                                {
-                                    propertyPayload.Append(" adsm:type='Collection(" + itemResourceType.FullName + ")'");
-                                }
-                                else if (requestType.Format == UnitTestsUtil.JsonLightMimeType)
-                                {
-                                    // If we're going to convert the payload to JSON we need to add a hint that this property is a collection and its type
-                                    //   since without the m:type attribute empty collection would look just like empty string property.
-                                    propertyPayload.Append(" xmlns:jsoninxml='" + UnitTestsUtil.JsonInXmlPayloadNamespace.NamespaceName + "'");
-                                    propertyPayload.Append(" jsoninxml:collectionPropertyType='Collection(" + itemResourceType.FullName + ")'");
-                                }
-
-                                if (collectionPropertyValue == null)
-                                {
-                                    propertyPayload.Append("/>");
-                                }
-                                else
-                                {
-                                    propertyPayload.Append(">");
-                                    foreach (var itemValue in collectionPropertyValue)
-                                    {
-                                        propertyPayload.Append(itemValue);
-                                    }
-                                    propertyPayload.Append("</ads:CollectionProperty>");
-                                }
-                                XDocument xmlPropertyPayload = XDocument.Parse(propertyPayload.ToString());
-                                collectionPayloads.Add(xmlPropertyPayload);
-
-                                XDocument payload;
-                                if (requestType.DirectPropertyRequest)
-                                {
-                                    payload = xmlPropertyPayload;
-                                }
-                                else
-                                {
-                                    XElement dataProperty = null;
-                                    switch (metadataShape)
-                                    {
-                                        case "BaseEntity":
-                                        case "OnDerivedEntity":
-                                            dataProperty = xmlPropertyPayload.Root; break;
-                                        case "OnComplexType":
-                                        case "OnOpenComplexProperty":
-                                            dataProperty = new XElement(UnitTestsUtil.DataNamespace + "ComplexProperty",
-                                                new XAttribute(UnitTestsUtil.MetadataNamespace + "type", complexTypeWithCollection.FullName),
-                                                xmlPropertyPayload.Root);
-                                            break;
-                                    }
-
-                                    payload = new XDocument(
-                                        new XElement(UnitTestsUtil.AtomNamespace + "entry",
-                                            new XElement(UnitTestsUtil.AtomNamespace + "category",
-                                                new XAttribute("term", usedEntityType.FullName),
-                                                new XAttribute("scheme", "http://docs.oasis-open.org/odata/ns/scheme")),
-                                            new XElement(UnitTestsUtil.AtomNamespace + "content",
-                                                new XAttribute("type", "application/xml"),
-                                                new XElement(UnitTestsUtil.MetadataNamespace + "properties",
-                                                    new XElement(UnitTestsUtil.DataNamespace + "ID", entryIndex.ToString()),
-                                                    dataProperty))));
-                                }
-
-                                request.SetRequestStreamAsText(payload.ToString());
-
-                                string requestUri = "/Entities";
-                                if (requestType.Method != "POST")
-                                {
-                                    requestUri += "(" + entryIndex.ToString() + ")";
-                                    if (requestType.DirectPropertyRequest)
-                                    {
-                                        if (metadataShape == "OnComplexType") requestUri += "/ComplexProperty";
-                                        requestUri += "/CollectionProperty";
-                                    }
-                                }
-
-                                request.RequestUriString = requestUri;
-                                request.RequestContentType = requestType.Format;
-                                request.Accept = requestType.Format;
-                                request.HttpMethod = requestType.Method;
-
-                                request.SendRequest();
-                            }
-
-                            var entities = service.CurrentDataSource.GetResourceSetEntities("Entities");
-                            for (int entryIndex = 0; entryIndex < collectionPropertyValues.Count; entryIndex++)
-                            {
-                                var resource = entities.Single(e => (int)((DSPResource)e).GetValue("ID") == entryIndex) as DSPResourceWithCollectionProperty;
-                                if (metadataShape == "OnComplexType" || metadataShape == "OnOpenComplexProperty") resource = (DSPResourceWithCollectionProperty)resource.GetValue("ComplexProperty");
-                                Assert.IsTrue(resource.CollectionPropertiesSet.Contains("CollectionProperty"), "The collection property was not set at all.");
-                                var collectionPropertyValue = resource.GetValue("OriginalCollectionProperty") as List<object>;
-
-                                VerifyDeserializedCollectionPropertyValue(
-                                    collectionPayloads[entryIndex].Root,
-                                    collectionPropertyValue,
-                                    providers.ResourceType.GetCollectionResourceType(itemResourceType),
-                                    service,
-                                    requestType.Format);
-                            }
-                        }
-                    });
-            }
-
             private class DeserializationInvalidTestCase
             {
                 public object ItemType { get; set; }
@@ -1458,7 +1169,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies failure to deserialize of invalid collection properties payloads.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies failure to deserialize of invalid collection properties payloads.")]
             public void Collection_DeserializationOfInvalidPayloads()
             {
                 var testCases = new DeserializationInvalidTestCase[] {
@@ -1975,7 +1686,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Deserialization
 
             #region Uri parsing and query options
-            [TestCategory("Partition1"), TestMethod, Variation("Verify that uri parsing correctly fails in case collection property is not addressed directly without any query options.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify that uri parsing correctly fails in case collection property is not addressed directly without any query options.")]
             public void Collection_UriParsing()
             {
                 var testCases = new[] {
@@ -2027,7 +1738,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verify that projections work correctly over collection properties.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify that projections work correctly over collection properties.")]
             public void Collection_Projections()
             {
                 var testCases = new[] {
@@ -2052,7 +1763,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verify expression tree shape used for projecting collection properties.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verify expression tree shape used for projecting collection properties.")]
             public void Collection_ProjectionExpressionTree()
             {
                 OpenWebDataServiceDefinition service = CreateServiceWithCollectionProperty(false, typeof(int), new List<int> { 1, 2, 3 });
@@ -2113,7 +1824,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Uri parsing and query options
 
             #region Open properties
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that open collection properties are supported.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that open collection properties are supported.")]
             public void Collection_NoOpenCollectionProperties()
             {
                 // Note that we expect these errors because the provider is reporting these types are Collections, not because of their actual CLR types
@@ -2229,7 +1940,7 @@ namespace AstoriaUnitTests.Tests
             #endregion
 
             #region DBNull handling
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties can correctly handle DBNull values from the provider.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies that collection properties can correctly handle DBNull values from the provider.")]
             public void Collection_DBNull()
             {
                 object[] itemTypes = new object[] { typeof(int), typeof(string), "Address" };
@@ -2409,7 +2120,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestCategory("Partition1"), TestMethod, Variation("Verifies server generates the right ETag values and uses them correctly even when collections are involved.")]
+            // [TestCategory("Partition1"), TestMethod, Variation("Verifies server generates the right ETag values and uses them correctly even when collections are involved.")]
             public void Collection_ETags()
             {
                 string[] requestTypes = new string[] {

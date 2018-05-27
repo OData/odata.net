@@ -22,7 +22,10 @@ namespace Microsoft.OData.Edm.Tests.Validation
         public void NewValidationRulesShouldBeInTheRuleSetExceptBaselinedExceptionRules()
         {
             var validationRules = new Dictionary<object, string>();
-            var items = typeof(ValidationRules).GetFields().Select(f=> new KeyValuePair<object, string>(f.GetValue(null), f.Name));
+            var items = typeof(ValidationRules).GetFields().Where(f =>
+                f.Name != "NavigationPropertyEntityMustNotIndirectlyContainItself" &&
+                f.Name != "EntityTypeKeyMissingOnEntityType")
+                .Select(f=> new KeyValuePair<object, string>(f.GetValue(null), f.Name));
             foreach (var item in items)
             {
                 validationRules.Add(item.Key, item.Value);
@@ -43,13 +46,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             }
 
             unFoundValidationRules.Should().HaveCount(0);
-
-            // The 4 remaining rules are deprecated:
-            // ComplexTypeMustContainProperties
-            // OnlyEntityTypesCanBeOpen
-            // ComplexTypeInvalidPolymorphicComplexType
-            // ComplexTypeInvalidAbstractComplexType
-            validationRules.ToList().Should().HaveCount(4);
+            validationRules.ToList().Should().HaveCount(0);
         }
     }
 }

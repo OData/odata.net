@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
@@ -27,7 +28,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// The change tracking term.
         /// </summary>
-        public static readonly IEdmValueTerm ChangeTrackingTerm;
+        public static readonly IEdmTerm ChangeTrackingTerm;
 
         /// <summary>
         /// Parse Capabilities Vocabulary Model from CapabilitiesVocabularies.xml
@@ -36,14 +37,22 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         {
             Assembly assembly = typeof(CapabilitiesVocabularyModel).GetAssembly();
 
-            using (Stream stream = assembly.GetManifestResourceStream("CapabilitiesVocabularies.xml"))
+            // Resource name has leading namespace and folder in .NetStandard dll.
+            string[] allResources = assembly.GetManifestResourceNames();
+            string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml"));
+            Debug.Assert(capabilitiesVocabularies != null, "CapabilitiesVocabularies.xml: not found.");
+
+            using (Stream stream = assembly.GetManifestResourceStream(capabilitiesVocabularies))
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "CapabilitiesVocabularies.xml: stream!=null");
-                EdmxReader.TryParse(XmlReader.Create(stream), out Instance, out errors);
+                CsdlReader.TryParse(XmlReader.Create(stream), out Instance, out errors);
             }
 
-            ChangeTrackingTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+            ChangeTrackingTerm = Instance.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+
+            // It needn't to list all other terms like CoreVocabularyModel.cs, because Capabilities model class is
+            // an internal class. Customers can call FindTerm(qualifiedName) method to get the corresponding term.
         }
     }
 }

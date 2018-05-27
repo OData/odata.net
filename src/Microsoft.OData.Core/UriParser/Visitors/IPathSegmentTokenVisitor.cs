@@ -4,19 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
-
     /// <summary>
     /// Visitor interface for walking the Path Tree.
     /// </summary>
     /// <typeparam name="T">Return type for the visitor methods on this visitor.</typeparam>
-    internal interface IPathSegmentTokenVisitor<T>
+    public interface IPathSegmentTokenVisitor<T>
     {
         /// <summary>
         /// Visit an SystemToken
@@ -36,7 +34,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
     /// <summary>
     /// Visitor interface for walking the Path Tree.
     /// </summary>
-    internal interface IPathSegmentTokenVisitor
+    public interface IPathSegmentTokenVisitor
     {
         /// <summary>
         /// Visit an SystemToken

@@ -7,9 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public EdmLocation Location
         {
-            get 
+            get
             {
                 if (this.Element == null || this.Element.Location == null)
                 {
@@ -128,21 +128,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             List<CsdlDirectValueAnnotation> annotations = this.Element.ImmediateValueAnnotations.ToList();
-            CsdlElementWithDocumentation elementWithDocumentation = this.Element as CsdlElementWithDocumentation;
-            CsdlDocumentation documentation = (elementWithDocumentation != null) ? elementWithDocumentation.Documentation : null;
-
-            if (documentation != null || annotations.FirstOrDefault() != null)
+            if (annotations.FirstOrDefault() != null)
             {
                 List<IEdmDirectValueAnnotation> wrappedAnnotations = new List<IEdmDirectValueAnnotation>();
 
                 foreach (CsdlDirectValueAnnotation annotation in annotations)
                 {
                     wrappedAnnotations.Add(new CsdlSemanticsDirectValueAnnotation(annotation, this.Model));
-                }
-
-                if (documentation != null)
-                {
-                    wrappedAnnotations.Add(new CsdlSemanticsDocumentation(documentation, this.Model));
                 }
 
                 return wrappedAnnotations;

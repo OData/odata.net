@@ -4,18 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Json;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -46,16 +42,16 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Reads the next parameter from the parameters payload.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker used to read a parameter payload.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker used to read a parameter payload.</param>
         /// <returns>true if a parameter was read from the payload; otherwise false.</returns>
         /// <remarks>
         /// Pre-Condition:  Property or EndObject   the property node of the parameter to read or the end object node if there are not parameters
         /// Post-Condition: Property or EndObject   the node after the property value of a primitive, complex or null collection parameter
         ///                 Any                     the start of the value representing a non-null collection parameter (the collection reader will fail if this is not a StartArray node)
         /// </remarks>
-        internal bool ReadNextParameter(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal bool ReadNextParameter(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             bool parameterRead = false;
@@ -63,7 +59,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 bool foundCustomInstanceAnnotation = false;
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     propertyAnnotationValueReader,
                     (propertyParsingResult, parameterName) =>
                     {
@@ -106,7 +102,7 @@ namespace Microsoft.OData.Core.JsonLight
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,
                                             primitiveTypeReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*propertyAndAnnotationCollector*/ null,
                                             /*collectionValidator*/ null,
                                             /*validateNullValue*/ true,
                                             /*isTopLevelPropertyValue*/ false,
@@ -120,7 +116,7 @@ namespace Microsoft.OData.Core.JsonLight
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,
                                             enumTypeReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*propertyAndAnnotationCollector*/ null,
                                             /*collectionValidator*/ null,
                                             /*validateNullValue*/ true,
                                             /*isTopLevelPropertyValue*/ false,
@@ -134,7 +130,7 @@ namespace Microsoft.OData.Core.JsonLight
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,
                                             typeDefinitionReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*propertyAndAnnotationCollector*/ null,
                                             /*collectionValidator*/ null,
                                             /*validateNullValue*/ true,
                                             /*isTopLevelPropertyValue*/ false,
@@ -144,21 +140,9 @@ namespace Microsoft.OData.Core.JsonLight
                                         break;
 
                                     case EdmTypeKind.Complex:
-                                        parameterValue = this.ReadNonEntityValue(
-                                            /*payloadTypeName*/ null,
-                                            parameterTypeReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
-                                            /*collectionValidator*/ null,
-                                            /*validateNullValue*/ true,
-                                            /*isTopLevelPropertyValue*/ false,
-                                            /*insideComplexValue*/ false,
-                                            parameterName);
-                                        state = ODataParameterReaderState.Value;
-                                        break;
-
                                     case EdmTypeKind.Entity:
                                         parameterValue = null;
-                                        state = ODataParameterReaderState.Entry;
+                                        state = ODataParameterReaderState.Resource;
                                         break;
 
                                     case EdmTypeKind.Collection:
@@ -174,9 +158,9 @@ namespace Microsoft.OData.Core.JsonLight
 
                                             state = ODataParameterReaderState.Value;
                                         }
-                                        else if (((IEdmCollectionType)parameterTypeReference.Definition).ElementType.TypeKind() == EdmTypeKind.Entity)
+                                        else if (((IEdmCollectionType)parameterTypeReference.Definition).ElementType.IsStructured())
                                         {
-                                            state = ODataParameterReaderState.Feed;
+                                            state = ODataParameterReaderState.ResourceSet;
                                         }
                                         else
                                         {
@@ -192,7 +176,7 @@ namespace Microsoft.OData.Core.JsonLight
                                 parameterRead = true;
                                 this.parameterReader.EnterScope(state, parameterName, parameterValue);
                                 Debug.Assert(
-                                    state == ODataParameterReaderState.Collection || state == ODataParameterReaderState.Entry || state == ODataParameterReaderState.Feed || this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
+                                    state == ODataParameterReaderState.Collection || state == ODataParameterReaderState.Resource || state == ODataParameterReaderState.ResourceSet || this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
                                     "Expected any node for a collection; 'Property' or 'EndObject' if it is a primitive or complex value.");
                                 break;
 
@@ -203,7 +187,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 if (foundCustomInstanceAnnotation)
                 {
-                    return this.ReadNextParameter(duplicatePropertyNamesChecker);
+                    return this.ReadNextParameter(propertyAndAnnotationCollector);
                 }
             }
 

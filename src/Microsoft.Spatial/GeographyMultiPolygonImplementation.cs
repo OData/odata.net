@@ -4,11 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
-    using System;
     using System.Collections.ObjectModel;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Geography Multi-Polygon
@@ -68,7 +66,7 @@ namespace Microsoft.Data.Spatial
         {
             get { return new ReadOnlyCollection<GeographyPolygon>(this.polygons); }
         }
-        
+
         /// <summary>
         /// Sends the current spatial object to the given sink
         /// </summary>

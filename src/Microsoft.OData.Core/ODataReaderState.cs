@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Enumeration of all possible states of an <see cref="ODataReader" />.
@@ -15,47 +15,47 @@ namespace Microsoft.OData.Core
         /// <remarks>In this state the Item property of the <see cref="ODataReader"/> returns null.</remarks>
         Start,
 
-        /// <summary>The start of a feed has been read.</summary>
+        /// <summary>The start of a resource set has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataFeed"/> but no properties may be filled in until the FeedEnd state is reached.
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataResourceSet"/> but no properties may be filled in until the ResourceSetEnd state is reached.
         /// </remarks>
-        FeedStart,
+        ResourceSetStart,
 
-        /// <summary>The end of a feed has been read.</summary>
+        /// <summary>The end of a resource set has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataFeed"/> with all properties filled in.
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataResourceSet"/> with all properties filled in.
         /// </remarks>
-        FeedEnd,
+        ResourceSetEnd,
 
-        /// <summary>The start of an entry has been read.</summary>
+        /// <summary>The start of a resource has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataEntry"/> but no properties may be filled in until the EntryEnd state is reached.
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataResource"/> but no properties may be filled in until the EntryEnd state is reached.
         /// </remarks>
-        EntryStart,
+        ResourceStart,
 
-        /// <summary>The end of an entry has been read.</summary>
+        /// <summary>The end of a resource has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataEntry"/> with all properties filled in.
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataResource"/> with all properties filled in.
         /// </remarks>
-        EntryEnd,
+        ResourceEnd,
 
-        /// <summary>The start of a navigation link has been read.</summary>
+        /// <summary>The start of a nested resource info has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataNavigationLink"/> but no properties may be filled in until the LinkEnd state is reached.
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataNestedResourceInfo"/> but no properties may be filled in until the LinkEnd state is reached.
         /// </remarks>
-        NavigationLinkStart,
+        NestedResourceInfoStart,
 
-        /// <summary>The end of a navigation link has been read.</summary>
+        /// <summary>The end of a nested resource info has been read.</summary>
         /// <remarks>
-        /// In this state the Item property of the <see cref="ODataReader"/> returns 
-        /// an <see cref="ODataNavigationLink"/> with all properties filled in.
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataNestedResourceInfo"/> with all properties filled in.
         /// </remarks>
-        NavigationLinkEnd,
+        NestedResourceInfoEnd,
 
         /// <summary>An entity reference link was read.</summary>
         /// <remarks>
@@ -76,5 +76,54 @@ namespace Microsoft.OData.Core
         /// In this state the Item property of the <see cref="ODataReader"/> returns null.
         /// </remarks>
         Completed,
+
+        /// <summary>The reader is positioned on a non-null primivite value within an untyped collection.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataPrimitiveValue"/>.
+        /// </remarks>
+        Primitive,
+
+        /// <summary>The start of a delta resource set has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaResourceSet"/>.
+        /// </remarks>
+        DeltaResourceSetStart,
+
+        /// <summary>The end of a delta resource set has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaResourceSet"/>.
+        /// </remarks>
+        DeltaResourceSetEnd,
+
+        /// <summary>The start of a deleted resource has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeletedResource"/>.
+        /// </remarks>
+        DeletedResourceStart,
+
+        /// <summary>The end of a deleted resource has been read.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeletedResource"/>.
+        /// </remarks>
+        DeletedResourceEnd,
+
+        /// <summary>The reder is positioned on a delta link.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaLink"/>.
+        /// </remarks>
+        DeltaLink,
+
+        /// <summary>The reader is positioned on a delta deleted link.</summary>
+        /// <remarks>
+        /// In this state the Item property of the <see cref="ODataReader"/> returns
+        /// an <see cref="ODataDeltaDeletedLink"/>.
+        /// </remarks>
+        DeltaDeletedLink,
     }
 }

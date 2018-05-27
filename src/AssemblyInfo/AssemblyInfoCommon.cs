@@ -14,7 +14,7 @@ using System.Security;
 
 #if !SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE
 #if PORTABLELIB
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 [assembly: TargetFramework(".NETPortable,Version=v4.5,Profile=Profile259", FrameworkDisplayName = ".NET Portable Subset")]
 #else
 [assembly: TargetFramework(".NETPortable,Version=v4.0,Profile=Profile328", FrameworkDisplayName = ".NET Portable Subset")]
@@ -46,12 +46,10 @@ using System.Security;
 [assembly: CLSCompliant(false)]
 #endif
 
-#if !SUPPRESS_COM_VISIBLE_ATTRIBUTE
 #if ASSEMBLY_ATTRIBUTE_COM_VISIBLE
 [assembly: ComVisible(true)]
 #else
 [assembly: ComVisible(false)]
-#endif
 #endif
 
 #if ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE

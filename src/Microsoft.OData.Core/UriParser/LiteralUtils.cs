@@ -4,13 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
-    using System;
     using System.IO;
     using Microsoft.Spatial;
-    using Microsoft.Data.Spatial;
     #endregion Namespaces
 
     /// <summary>

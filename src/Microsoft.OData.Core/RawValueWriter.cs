@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     using Microsoft.Spatial;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core
         private readonly ODataMessageWriterSettings settings;
 
         /// <summary>
-        /// Underlying stream. 
+        /// Underlying stream.
         /// </summary>
         private readonly Stream stream;
 
@@ -38,6 +38,11 @@ namespace Microsoft.OData.Core
         /// TextWriter instance for writing values.
         /// </summary>
         private TextWriter textWriter;
+
+        /// <summary>
+        /// JsonWriter instance for writing values.
+        /// </summary>
+        private JsonWriter jsonWriter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RawValueWriter"/> class.
@@ -59,10 +64,15 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal TextWriter TextWriter
         {
-            get
-            {
-                return this.textWriter;
-            }
+            get { return this.textWriter; }
+        }
+
+        /// <summary>
+        /// Gets the json writer.
+        /// </summary>
+        internal JsonWriter JsonWriter
+        {
+            get { return this.jsonWriter; }
         }
 
         /// <summary>
@@ -117,9 +127,9 @@ namespace Microsoft.OData.Core
             }
             else if (value is Geometry || value is Geography)
             {
-                PrimitiveConverter.Instance.TryWriteAtom(value, textWriter);
+                PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter);
             }
-            else if (AtomValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
+            else if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
             {
                 this.textWriter.Write(valueAsString);
             }
@@ -131,7 +141,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Flushes the RawValueWriter. 
+        /// Flushes the RawValueWriter.
         /// The call gets pushed to the TextWriter (if there is one). In production code, this is StreamWriter.Flush, which turns into Stream.Flush.
         /// In the synchronous case the underlying stream is the message stream itself, which will then Flush as well.
         /// In the async case the underlying stream is the async buffered stream, which ignores Flush call.
@@ -149,10 +159,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <remarks>This can only be called if the text writer was not yet initialized or it has been closed.
         /// It can be called several times with CloseWriter calls in between though.</remarks>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "We create a NonDisposingStream which doesn't need to be disposed, even though it's IDisposable.")]
         private void InitializeTextWriter()
         {
-            // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose 
+            // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose
             // the writer without disposing the underlying message stream.
             Stream nonDisposingStream;
             if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is AsyncBufferedStream)
@@ -166,6 +175,7 @@ namespace Microsoft.OData.Core
             }
 
             this.textWriter = new StreamWriter(nonDisposingStream, this.encoding);
+            this.jsonWriter = new JsonWriter(this.textWriter, isIeee754Compatible: false);
         }
     }
 }

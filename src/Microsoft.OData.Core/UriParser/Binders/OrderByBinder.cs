@@ -4,17 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class to handle the binding of orderby tokens.
@@ -75,7 +70,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // The order-by expressions need to be primitive / enumeration types
             SingleValueNode expressionResultNode = expressionNode as SingleValueNode;
             if (expressionResultNode == null ||
-                (expressionResultNode.TypeReference != null && !expressionResultNode.TypeReference.IsODataPrimitiveTypeKind() && !expressionResultNode.TypeReference.IsODataEnumTypeKind() && !expressionResultNode.TypeReference.IsODataTypeDefinitionTypeKind()))
+                (expressionResultNode.TypeReference != null &&
+                !expressionResultNode.TypeReference.IsODataPrimitiveTypeKind() &&
+                !expressionResultNode.TypeReference.IsODataEnumTypeKind() &&
+                !expressionResultNode.TypeReference.IsODataTypeDefinitionTypeKind()))
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_OrderByExpressionNotSingleValue);
             }

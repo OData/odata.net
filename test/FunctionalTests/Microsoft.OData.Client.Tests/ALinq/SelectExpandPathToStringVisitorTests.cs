@@ -7,7 +7,7 @@
 using System;
 using FluentAssertions;
 using Microsoft.OData.Client.ALinq.UriParser;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests.ALinq

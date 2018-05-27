@@ -7,10 +7,9 @@
 namespace Microsoft.Test.OData.PluggableFormat.VCard
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
-    using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
+    using Microsoft.OData;
 
     internal class VCardOutputContext : ODataOutputContext
     {
@@ -19,53 +18,22 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 
         internal VCardOutputContext(
             ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageWriterSettings messageWriterSettings,
-            bool writingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+            ODataMessageInfo messageInfo,
+            ODataMessageWriterSettings messageWriterSettings)
+            : base(format, messageInfo, messageWriterSettings)
         {
-            this.writer = new VCardWriter(new StreamWriter(messageStream, encoding));
-            this.outputStream = messageStream;
+            this.writer = new VCardWriter(new StreamWriter(messageInfo.MessageStream, messageInfo.Encoding));
+            this.outputStream = messageInfo.MessageStream;
         }
 
-        public override void WriteProperty(ODataProperty property)
+        public VCardWriter VCardWriter
         {
-            var val = property.Value as ODataComplexValue;
-            if (val == null)
-            {
-                throw new ApplicationException("only support write complex type property.");
-            }
+            get { return this.writer; }
+        }
 
-            this.writer.WriteStart();
-            foreach (ODataProperty prop in val.Properties)
-            {
-                string name = null;
-                string @params = string.Empty;
-
-                int idx = prop.Name.IndexOf('_');
-                if (idx < 0)
-                {
-                    name = prop.Name;
-                }
-                else
-                {
-                    name = prop.Name.Substring(0, idx);
-                    @params = string.Join(";", prop.Name.Substring(idx + 1).Split('_'));
-                }
-
-                foreach (ODataInstanceAnnotation anns in prop.InstanceAnnotations)
-                {
-                    @params += ";" + anns.Name.Substring(6) /*VCARD.*/ + "=" + ((ODataPrimitiveValue)anns.Value).Value;
-                }
-
-                this.writer.WriteItem(null, name, @params, (string)prop.Value);
-            }
-
-            this.writer.WriteEnd();
+        public override ODataWriter CreateODataResourceWriter(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+        {
+            return new ODataVCardWriter(this);
         }
 
         protected override void Dispose(bool disposing)

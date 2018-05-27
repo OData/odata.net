@@ -8,11 +8,11 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Json;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
     /// Unit tests for the JsonWriter class.
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Core.Tests.Json
         public JsonWriterTests()
         {
             this.builder = new StringBuilder();
-            this.writer = new JsonWriter(new StringWriter(builder), false /*indent*/, ODataFormat.Json, isIeee754Compatible: true);
+            this.writer = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
         private void VerifyWriterPrimitiveValueWithIeee754Compatible<T>(T parameter, string expected, bool isIeee754Compatible)
         {
-            this.writer = new JsonWriter(new StringWriter(builder), false, ODataFormat.Json, isIeee754Compatible);
+            this.writer = new JsonWriter(new StringWriter(builder), isIeee754Compatible);
             this.writer.WritePrimitiveValue(parameter);
             this.builder.ToString().Should().Be(expected);
         }

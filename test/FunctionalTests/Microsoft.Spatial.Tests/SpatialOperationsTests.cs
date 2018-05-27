@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Microsoft.Data.Spatial;
-using Microsoft.Spatial.Tests;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests

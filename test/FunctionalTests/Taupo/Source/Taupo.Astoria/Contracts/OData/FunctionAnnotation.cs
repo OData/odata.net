@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
 {
     using System.Globalization;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
 
     /// <summary>

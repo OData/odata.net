@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// Fixup step for a completed select expand clause.

@@ -127,7 +127,7 @@ namespace Microsoft.OData.Client {
         internal const string Collection_NullCollectionNotSupported = "Collection_NullCollectionNotSupported";
         internal const string Collection_NullNonPropertyCollectionNotSupported = "Collection_NullNonPropertyCollectionNotSupported";
         internal const string Collection_NullCollectionItemsNotSupported = "Collection_NullCollectionItemsNotSupported";
-        internal const string Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed = "Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed";
+        internal const string Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed = "Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed";
         internal const string Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed = "Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed";
         internal const string EntityDescriptor_MissingSelfEditLink = "EntityDescriptor_MissingSelfEditLink";
         internal const string HttpProcessUtility_ContentTypeMissing = "HttpProcessUtility_ContentTypeMissing";
@@ -275,13 +275,13 @@ namespace Microsoft.OData.Client {
         ResourceManager resources;
 
         internal TextRes() {
-#if !DNXCORE50
+#if !PORTABLELIB
             resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Client", this.GetType().GetTypeInfo().Assembly);
 #endif
         }
-        
+
         private static TextRes GetLoader() {
             if (loader == null) {
                 TextRes sr = new TextRes();
@@ -293,13 +293,13 @@ namespace Microsoft.OData.Client {
         private static CultureInfo Culture {
             get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources {
             get {
                 return GetLoader().resources;
             }
         }
-        
+
         public static string GetString(string name, params object[] args) {
             TextRes sys = GetLoader();
             if (sys == null)
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Client {
                 return null;
             return sys.resources.GetString(name, TextRes.Culture);
         }
-        
+
         public static string GetString(string name, out bool usedFallback) {
             // always false for this version of gensr
             usedFallback = false;

@@ -17,7 +17,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
+    [Ignore] // Remove Atom
+    // [TestClass]
     public class NamedStream_ProjectionTests
     {
         private static TestWebRequest request;
@@ -40,26 +42,28 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_SimpleProjectionWithoutStreams()
         {
             // Doing projection of non-stream properties should work and there should be no stream descriptors populated in the context
             DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-            context.EnableAtom = true;
-            context.Format.UseAtom();
+            //context.EnableAtom = true;
+            //context.Format.UseAtom();
             var query1 = context.CreateQuery<EntityWithNamedStreams1>("MySet1").AddQueryOption("$select", "ID");
             List<EntityWithNamedStreams1> entities = query1.Execute().ToList();
             Assert.AreEqual(entities.Count, 1, "There must be only 1 entities populated in the context");
             Assert.AreEqual(context.Entities[0].StreamDescriptors.Count, 0, "There must be no named streams associated with the entity yet, since we didn't specify the named streams in the projection query");
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_SimpleProjectionWithStreams()
         {
             // Doing projection of stream properties using AddQueryOption should work
             DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-            context.EnableAtom = true;
-            context.Format.UseAtom();
+            //context.EnableAtom = true;
+            //context.Format.UseAtom();
             var query1 = context.CreateQuery<EntityWithNamedStreams1>("MySet1").AddQueryOption("$select", "ID, Stream1");
             List<EntityWithNamedStreams1> entities = query1.Execute().ToList();
             Assert.AreEqual(context.Entities[0].StreamDescriptors.Count, 1, "There must be named streams associated with the entity");
@@ -95,6 +99,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_SimpleLinkProjection()
         {
@@ -102,8 +107,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Testing querying anonymous types and making sure one is able to project out the stream url
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new
                         {
@@ -125,8 +130,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Testing querying narrow entity types and making sure one is able to project out the stream url
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new EntityWithNamedStreams1
                         {
@@ -145,6 +150,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_ProjectingOnlyStreamLinkProperty()
         {
@@ -152,8 +158,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Testing querying anonymous types and making sure one is able to project out the stream url
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new
                         {
@@ -174,8 +180,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Testing querying narrow entity types and making sure one is able to project out the stream url
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new EntityWithNamedStreams1
                         {
@@ -248,14 +254,15 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_NonEntity_AccessPropertiesFromDifferentLevels()
         {
             // If the entity getting projected out in an anonymous type, one should be able to project out links from various levels
             {
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new
                         {
@@ -275,8 +282,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new
                         {
@@ -294,14 +301,15 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_Projection()
         {
             // Projection via selecting properties
             // Testing without projections (payload driven) and making sure one is able to project out the stream url
             DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-            context.EnableAtom = true;
-            context.Format.UseAtom();
+            //context.EnableAtom = true;
+            //context.Format.UseAtom();
             var q = from c in context.CreateQuery<EntityWithStreamLink>("MySet1")
                     select new EntityWithStreamLink()
                     {
@@ -317,6 +325,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_PayloadDrivenMaterialization()
         {
@@ -324,9 +333,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Testing without projections (payload driven) and making sure one is able to project out the stream url
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
-                context.IgnoreMissingProperties = true;
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
+                context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                 var q = context.CreateQuery<EntityWithStreamLink>("MySet1");
                 object entity = null;
 
@@ -365,6 +374,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_DeepLinkProjection()
         {
@@ -372,8 +382,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new
                         {
@@ -396,8 +406,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new EntityWithNamedStreams1
                         {
@@ -418,6 +428,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_DeepLinkProjection_MultipleParametersInScope()
         {
@@ -425,8 +436,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         where s.ID == 1
                         from c in s.Collection
@@ -448,8 +459,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         where s.ID == 1
                         from c in s.Collection
@@ -498,6 +509,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_NestedQuery_1()
         {
@@ -505,8 +517,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new EntityWithNamedStreams1
                         {
@@ -547,8 +559,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new
                         {
@@ -580,6 +592,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreams_NestedQuery_2()
         {
@@ -587,8 +600,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 DataServiceQuery<EntityWithNamedStreams1> q = (DataServiceQuery<EntityWithNamedStreams1>)from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new EntityWithNamedStreams1
                         {
@@ -655,8 +668,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 var q = from s in context.CreateQuery<EntityWithNamedStreams1>("MySet1")
                         select new
                         {

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     #endregion Namespaces
@@ -19,6 +19,13 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>The separator of property annotations.</summary>
         internal const char ODataPropertyAnnotationSeparatorChar = '@';
+
+        /// <summary>
+        /// The 'null' property name for the Json Light value property.
+        /// This is an OData 3.0 protocol element used for compatibility
+        /// with 6.x library version.
+        /// </summary>
+        internal const string ODataNullPropertyName = "null";
 
         /// <summary>The value 'true' for the OData null annotation.</summary>
         internal const string ODataNullAnnotationTrueValue = "true";
@@ -40,6 +47,9 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>The 'id' property name for the Json Light value property.</summary>
         internal const string ODataIdPropertyName = "id";
+
+        /// <summary>The 'delta' property name for the Json Light value property.</summary>
+        internal const string ODataDeltaPropertyName = "delta";
 
         /// <summary>The 'reason' property name for the Json Light value property.</summary>
         internal const string ODataReasonPropertyName = "reason";
@@ -98,7 +108,13 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>The simplified OData Context property name.</summary>
         internal const string SimplifiedODataContextPropertyName = "@context";
 
+        /// <summary>The simplified OData Id property name.</summary>
+        internal const string SimplifiedODataIdPropertyName = "@id";
+
         /// <summary>The simplified OData Type property name.</summary>
         internal const string SimplifiedODataTypePropertyName = "@type";
+
+        /// <summary>The simplified Removed property name.</summary>
+        internal const string SimplifiedODataRemovedPropertyName = "@removed";
     }
 }

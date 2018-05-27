@@ -41,7 +41,7 @@ namespace Microsoft.OData.Client
         internal LinkDescriptor(object source, string sourceProperty, object target, ClientEdmModel model)
             : this(source, sourceProperty, target, EntityStates.Unchanged)
         {
-            this.IsSourcePropertyCollection = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(source.GetType())).GetProperty(sourceProperty, false).IsEntityCollection;
+            this.IsSourcePropertyCollection = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(source.GetType())).GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
         }
 
         /// <summary>

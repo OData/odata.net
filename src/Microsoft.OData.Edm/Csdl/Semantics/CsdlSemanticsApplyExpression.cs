@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -19,8 +19,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly CsdlSemanticsSchema schema;
         private readonly IEdmEntityType bindingContext;
 
-        private readonly Cache<CsdlSemanticsApplyExpression, IEdmExpression> appliedOperationCache = new Cache<CsdlSemanticsApplyExpression, IEdmExpression>();
-        private static readonly Func<CsdlSemanticsApplyExpression, IEdmExpression> ComputeAppliedOperationFunc = (me) => me.ComputeAppliedOperation();
+        private readonly Cache<CsdlSemanticsApplyExpression, IEdmFunction> appliedFunctionCache = new Cache<CsdlSemanticsApplyExpression, IEdmFunction>();
+        private static readonly Func<CsdlSemanticsApplyExpression, IEdmFunction> ComputeAppliedFunctionFunc = (me) => me.ComputeAppliedFunction();
 
         private readonly Cache<CsdlSemanticsApplyExpression, IEnumerable<IEdmExpression>> argumentsCache = new Cache<CsdlSemanticsApplyExpression, IEnumerable<IEdmExpression>>();
         private static readonly Func<CsdlSemanticsApplyExpression, IEnumerable<IEdmExpression>> ComputeArgumentsFunc = (me) => me.ComputeArguments();
@@ -40,12 +40,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public override EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.OperationApplication; }
+            get { return EdmExpressionKind.FunctionApplication; }
         }
 
-        public IEdmExpression AppliedOperation
+        public IEdmFunction AppliedFunction
         {
-            get { return this.appliedOperationCache.GetValue(this, ComputeAppliedOperationFunc, null); }
+            get { return this.appliedFunctionCache.GetValue(this, ComputeAppliedFunctionFunc, null); }
         }
 
         public IEnumerable<IEdmExpression> Arguments
@@ -57,59 +57,49 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             get
             {
-                if (this.AppliedOperation is IUnresolvedElement)
+                if (this.AppliedFunction is IUnresolvedElement)
                 {
-                    return this.AppliedOperation.Errors();
+                    return this.AppliedFunction.Errors();
                 }
 
                 return Enumerable.Empty<EdmError>();
             }
         }
 
-        private IEdmExpression ComputeAppliedOperation()
+        private IEdmFunction ComputeAppliedFunction()
         {
             if (this.expression.Function == null)
             {
-                return CsdlSemanticsModel.WrapExpression(this.expression.Arguments.FirstOrDefault(null), this.bindingContext, this.schema);
+                return null;
             }
-            else
+
+            IEnumerable<IEdmFunction> candidateFunctions = this.schema.FindOperations(this.expression.Function).OfType<IEdmFunction>();
+            int candidateCount = candidateFunctions.Count();
+            if (candidateCount == 0)
             {
-                IEdmOperation referenced;
-                IEnumerable<IEdmOperation> candidateOperations = this.schema.FindOperations(this.expression.Function);
-                int candidateCount = candidateOperations.Count();
-                if (candidateCount == 0)
+                return new UnresolvedFunction(this.expression.Function, Edm.Strings.Bad_UnresolvedOperation(this.expression.Function), this.Location);
+            }
+
+            candidateFunctions = candidateFunctions.Where(this.IsMatchingFunction);
+            candidateCount = candidateFunctions.Count();
+            if (candidateCount > 1)
+            {
+                candidateFunctions = candidateFunctions.Where(this.IsExactMatch);
+                candidateCount = candidateFunctions.Count();
+                if (candidateCount != 1)
                 {
-                    referenced = new UnresolvedOperation(this.expression.Function, Edm.Strings.Bad_UnresolvedOperation(this.expression.Function), this.Location);
-                }
-                else
-                {
-                    candidateOperations = candidateOperations.Where(this.IsMatchingFunction);
-                    candidateCount = candidateOperations.Count();
-                    if (candidateCount > 1)
-                    {
-                        candidateOperations = candidateOperations.Where(this.IsExactMatch);
-                        candidateCount = candidateOperations.Count();
-                        if (candidateCount != 1)
-                        {
-                            referenced = new UnresolvedOperation(this.expression.Function, Edm.Strings.Bad_AmbiguousOperation(this.expression.Function), this.Location);
-                        }
-                        else
-                        {
-                            referenced = candidateOperations.Single();
-                        }
-                    }
-                    else if (candidateCount == 0)
-                    {
-                        referenced = new UnresolvedOperation(this.expression.Function, Edm.Strings.Bad_OperationParametersDontMatch(this.expression.Function), this.Location);
-                    }
-                    else
-                    {
-                        referenced = candidateOperations.Single();
-                    }
+                    return new UnresolvedFunction(this.expression.Function, Edm.Strings.Bad_AmbiguousOperation(this.expression.Function), this.Location);
                 }
 
-                return new Library.Expressions.EdmOperationReferenceExpression(referenced);
+                return candidateFunctions.Single();
             }
+
+            if (candidateCount == 0)
+            {
+                return new UnresolvedFunction(this.expression.Function, Edm.Strings.Bad_OperationParametersDontMatch(this.expression.Function), this.Location);
+            }
+
+            return candidateFunctions.Single();
         }
 
         private IEnumerable<IEdmExpression> ComputeArguments()

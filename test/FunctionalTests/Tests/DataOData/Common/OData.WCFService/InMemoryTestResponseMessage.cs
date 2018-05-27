@@ -12,7 +12,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Net;
     using System.ServiceModel.Web;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Internal implementation of IODataResponseMessage which uses a memory stream to write out the results to.

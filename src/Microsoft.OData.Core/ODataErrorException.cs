@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -28,13 +28,13 @@ namespace Microsoft.OData.Core
         /// <summary>The <see cref="ODataErrorExceptionSafeSerializationState"/> value containing <see cref="ODataError"/> instance representing the error
         /// read from the payload.
         /// </summary>
-#if ORCAS 
+#if ORCAS
         // Because we don't want the exception state to be serialized normally, we take care of that in the constructor.
         [NonSerialized]
 #endif
         private ODataErrorExceptionSafeSerializationState state;
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataErrorException" /> class with default values.</summary>
+        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with default values.</summary>
         /// <remarks>
         /// The Message property is initialized to a system-supplied message
         /// that describes the error. This message takes into account the
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataErrorException" /> class with an error message.</summary>
+        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <remarks>
         /// The Error property will be initialized with an empty <see cref="ODataError"/> instance.
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataErrorException" /> class with an error message and an inner exception.</summary>
+        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message and an inner exception.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>
         /// <remarks>
@@ -66,8 +66,8 @@ namespace Microsoft.OData.Core
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataErrorException" /> class with an <see cref="T:Microsoft.OData.Core.ODataError" /> object.</summary>
-        /// <param name="error">The <see cref="T:Microsoft.OData.Core.ODataError" /> instance representing the error read from the payload.</param>
+        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an <see cref="T:Microsoft.OData.ODataError" /> object.</summary>
+        /// <param name="error">The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
         /// <remarks>
         /// The Message property is initialized to a system-supplied message
         /// that describes the error. This message takes into account the
@@ -78,18 +78,18 @@ namespace Microsoft.OData.Core
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataErrorException" /> class with an error message and an <see cref="T:Microsoft.OData.Core.ODataError" /> object.</summary>
+        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message and an <see cref="T:Microsoft.OData.ODataError" /> object.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
-        /// <param name="error">The <see cref="T:Microsoft.OData.Core.ODataError" /> instance representing the error read from the payload.</param>
+        /// <param name="error">The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
         public ODataErrorException(string message, ODataError error)
             : this(message, null, error)
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataErrorException" /> class with an error message, an inner exception, and an <see cref="T:Microsoft.OData.Core.ODataError" /> object.</summary>
+        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message, an inner exception, and an <see cref="T:Microsoft.OData.ODataError" /> object.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>
-        /// <param name="error">The <see cref="T:Microsoft.OData.Core.ODataError" /> instance representing the error read from the payload.</param>
+        /// <param name="error">The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
         public ODataErrorException(string message, Exception innerException, ODataError error)
             : base(message, innerException)
         {
@@ -99,21 +99,21 @@ namespace Microsoft.OData.Core
 #if ORCAS
 #pragma warning disable 0628
         // Warning CS0628:
-        // A sealed class cannot introduce a protected member because no other class will be able to inherit from the 
+        // A sealed class cannot introduce a protected member because no other class will be able to inherit from the
         // sealed class and use the protected member.
         //
         // This method is used by the runtime when deserializing an exception.
 
         /// <summary>
-        /// Initializes a new instance of the ODataErrorException class from the 
+        /// Initializes a new instance of the ODataErrorException class from the
         /// specified SerializationInfo and StreamingContext instances.
         /// </summary>
         /// <param name="info">
-        /// A SerializationInfo containing the information required to serialize 
+        /// A SerializationInfo containing the information required to serialize
         /// the new ODataException.
         /// </param>
         /// <param name="context">
-        /// A StreamingContext containing the source of the serialized stream 
+        /// A StreamingContext containing the source of the serialized stream
         /// associated with the new ODataErrorException.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]
@@ -128,8 +128,8 @@ namespace Microsoft.OData.Core
 #pragma warning restore 0628
 #endif
 
-        /// <summary>Gets the <see cref="T:Microsoft.OData.Core.ODataError" /> instance representing the error read from the payload.</summary>
-        /// <returns>The <see cref="T:Microsoft.OData.Core.ODataError" /> instance representing the error read from the payload.</returns>
+        /// <summary>Gets the <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</summary>
+        /// <returns>The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</returns>
         public ODataError Error
         {
             get
@@ -143,11 +143,11 @@ namespace Microsoft.OData.Core
         /// Recreates the <see cref="ODataError"/> instance of the exception.
         /// </summary>
         /// <param name="info">
-        /// A SerializationInfo containing the information required to serialize 
+        /// A SerializationInfo containing the information required to serialize
         /// the ODataErrorException.
         /// </param>
         /// <param name="context">
-        /// A StreamingContext containing the source of the serialized stream 
+        /// A StreamingContext containing the source of the serialized stream
         /// associated with the new ODataErrorException.
         /// </param>
         [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]

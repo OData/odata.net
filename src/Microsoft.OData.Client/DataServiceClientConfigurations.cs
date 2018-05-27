@@ -24,7 +24,7 @@ namespace Microsoft.OData.Client
             this.ResponsePipeline = new DataServiceClientResponsePipelineConfiguration(sender);
             this.RequestPipeline = new DataServiceClientRequestPipelineConfiguration();
         }
-        
+
         /// <summary>
         /// Gets the response configuration pipeline.
         /// </summary>

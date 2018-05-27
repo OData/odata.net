@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -23,74 +23,132 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input to read the payload from.</param>
-        /// <param name="readingFeed">true if the reader is created for reading a feed; false when it is created for reading an entry.</param>
+        /// <param name="readingResourceSet">true if the reader is created for reading a resource set; false when it is created for reading a resource.</param>
         /// <param name="readingDelta">true if the reader is created for reading expanded navigation property in delta response; false otherwise.</param>
         /// <param name="listener">If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</param>
         protected ODataReaderCoreAsync(
-            ODataInputContext inputContext, 
-            bool readingFeed,
+            ODataInputContext inputContext,
+            bool readingResourceSet,
             bool readingDelta,
             IODataReaderWriterListener listener)
-            : base(inputContext, readingFeed, readingDelta, listener)
+            : base(inputContext, readingResourceSet, readingDelta, listener)
         {
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadAtStartImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'FeedStart'.
+        /// Implementation of the reader logic when in state 'ResourceSetStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtFeedStartImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceSetStartImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'FeedEnd'.
+        /// Implementation of the reader logic when in state 'ResourceSetEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtFeedEndImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceSetEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtEntryStartImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtEntryEndImplementationAsync();
+        protected abstract Task<bool> ReadAtResourceEndImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'NavigationLinkStart'.
+        /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtNavigationLinkStartImplementationAsync();
+        protected abstract Task<bool> ReadAtDeletedResourceEndImplementationAsync();
 
         /// <summary>
-        /// Implementation of the reader logic when in state 'NavigationLinkEnd'.
+        /// Implementation of the reader logic when in state 'Primitive'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
-        protected abstract Task<bool> ReadAtNavigationLinkEndImplementationAsync();
+        protected abstract Task<bool> ReadAtPrimitiveImplementationAsync();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected abstract Task<bool> ReadAtNestedResourceInfoStartImplementationAsync();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'NestedResourceInfoEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected abstract Task<bool> ReadAtNestedResourceInfoEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntityReferenceLink'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected abstract Task<bool> ReadAtEntityReferenceLinkAsync();
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaResourceSetStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetStartImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaResourceSetEndImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetEndImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceStart'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeletedResourceStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceStartImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadDeletedResourceEndImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceEndImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaLink'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaLinkImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaLinkImplementation);
+        }
+
+        /// <summary>
+        /// Implementation of the reader logic when in state 'DeltaDeletedLink'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtDeltaDeletedLinkImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaDeletedLinkImplementation);
+        }
 
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
@@ -98,7 +156,6 @@ namespace Microsoft.OData.Core
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         /// <remarks>The base class already implements this but only for fully synchronous readers, the implementation here
         /// allows fully asynchronous readers.</remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAsynchronously()
         {
             Task<bool> result;
@@ -108,34 +165,64 @@ namespace Microsoft.OData.Core
                     result = this.ReadAtStartImplementationAsync();
                     break;
 
-                case ODataReaderState.FeedStart:
-                    result = this.ReadAtFeedStartImplementationAsync();
+                case ODataReaderState.ResourceSetStart:
+                    result = this.ReadAtResourceSetStartImplementationAsync();
                     break;
 
-                case ODataReaderState.FeedEnd:
-                    result = this.ReadAtFeedEndImplementationAsync();
+                case ODataReaderState.ResourceSetEnd:
+                    result = this.ReadAtResourceSetEndImplementationAsync();
                     break;
 
-                case ODataReaderState.EntryStart:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseEntryDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtEntryStartImplementationAsync());
+                case ODataReaderState.ResourceStart:
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseResourceDepth())
+                        .FollowOnSuccessWithTask(t => this.ReadAtResourceStartImplementationAsync());
                     break;
 
-                case ODataReaderState.EntryEnd:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseEntryDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtEntryEndImplementationAsync());
+                case ODataReaderState.ResourceEnd:
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseResourceDepth())
+                        .FollowOnSuccessWithTask(t => this.ReadAtResourceEndImplementationAsync());
                     break;
 
-                case ODataReaderState.NavigationLinkStart:
-                    result = this.ReadAtNavigationLinkStartImplementationAsync();
+                case ODataReaderState.Primitive:
+                    result = this.ReadAtPrimitiveImplementationAsync();
                     break;
 
-                case ODataReaderState.NavigationLinkEnd:
-                    result = this.ReadAtNavigationLinkEndImplementationAsync();
+                case ODataReaderState.NestedResourceInfoStart:
+                    result = this.ReadAtNestedResourceInfoStartImplementationAsync();
+                    break;
+
+                case ODataReaderState.NestedResourceInfoEnd:
+                    result = this.ReadAtNestedResourceInfoEndImplementationAsync();
                     break;
 
                 case ODataReaderState.EntityReferenceLink:
                     result = this.ReadAtEntityReferenceLinkAsync();
+                    break;
+
+                case ODataReaderState.DeltaResourceSetStart:
+                    result = this.ReadAtDeltaResourceSetStartImplementationAsync();
+                    break;
+
+                case ODataReaderState.DeltaResourceSetEnd:
+                    result = this.ReadAtDeltaResourceSetEndImplementationAsync();
+                    break;
+
+                case ODataReaderState.DeletedResourceStart:
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseResourceDepth())
+                        .FollowOnSuccessWithTask(t => this.ReadAtDeletedResourceStartImplementationAsync());
+                    break;
+
+                case ODataReaderState.DeletedResourceEnd:
+                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseResourceDepth())
+                        .FollowOnSuccessWithTask(t => this.ReadAtDeletedResourceEndImplementationAsync());
+                    break;
+
+                case ODataReaderState.DeltaLink:
+                    result = this.ReadAtDeltaLinkImplementationAsync();
+                    break;
+
+                case ODataReaderState.DeltaDeletedLink:
+                    result = this.ReadAtDeltaDeletedLinkImplementationAsync();
                     break;
 
                 case ODataReaderState.Exception:    // fall through
@@ -149,15 +236,7 @@ namespace Microsoft.OData.Core
                     break;
             }
 
-            return result.FollowOnSuccessWith(t =>
-                {
-                    if ((this.State == ODataReaderState.EntryStart || this.State == ODataReaderState.EntryEnd) && this.Item != null)
-                    {
-                        ReaderValidationUtils.ValidateEntry(this.CurrentEntry);
-                    }
-
-                    return t.Result;
-                });
+            return result.FollowOnSuccessWith(t => t.Result);
         }
 #endif
     }

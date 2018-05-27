@@ -4,26 +4,35 @@
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
 
-  <!-- For ADO.NET Provider -->
-  <PropertyGroup Condition="'$(UseOfficeVersion)' == 'true'">
-    <VersionMajor Condition="'$(VersionMajor)' == ''">12</VersionMajor>
-    <VersionMinor Condition="'$(VersionMinor)' == ''">0</VersionMinor>
+  <!-- Set the version number: major, minor, build and release (i.e. alpha, beta or blank for RTM)-->
+  <PropertyGroup>
+    <VersionMajor Condition="'$(VersionMajor)' == ''">7</VersionMajor>
+    <VersionMinor Condition="'$(VersionMinor)' == ''">5</VersionMinor>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
-    <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">0</VersionBuildRevision>
+    <VersionRelease Condition="'$(VersionRelease)' == ''">beta</VersionRelease>
   </PropertyGroup>
 
-  <!-- For ODataLib -->
+  <!--
+      Revision number is a date code. Note that this only work for about 6 years before the year part (year-2017)
+      overflows the Int16. The system convert below will throw errors when this happens.
+    -->
   <PropertyGroup>
-    <VersionMajor Condition="'$(VersionMajor)' == ''">6</VersionMajor>
-    <VersionMinor Condition="'$(VersionMinor)' == ''">15</VersionMinor>
-    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
-    <VersionBuildRevision Condition="'$(VersionBuildRevision)' == ''">0</VersionBuildRevision>
+    <VersionStartYear Condition="'$(VersionStartYear)' == ''">2017</VersionStartYear>
+    <VersionDateCode>$([System.Convert]::ToInt16('$([MSBuild]::Add(1, $([MSBuild]::Subtract($([System.DateTime]::Now.Year), $(VersionStartYear)))))$([System.DateTime]::Now.ToString("MMdd"))'))</VersionDateCode>
+    <VersionRevision Condition="'$(VersionRevision)' == '' OR '$(VersionRevision)' == '0'">$([System.Convert]::ToString($(VersionDateCode)))</VersionRevision>
   </PropertyGroup>
 
   <!-- Product Version -->
   <PropertyGroup>
     <VersionFullSemantic>$(VersionMajor).$(VersionMinor).$(VersionBuildNumber)</VersionFullSemantic>
-    <VersionFull>$(VersionFullSemantic).$(VersionBuildRevision)</VersionFull>
+    <VersionFull>$(VersionFullSemantic).$(VersionRevision)</VersionFull>
+  </PropertyGroup>
+
+  <!-- For ADO.NET Provider -->
+  <PropertyGroup Condition="'$(UseOfficeVersion)' == 'true'">
+    <VersionMajor Condition="'$(VersionMajor)' == ''">12</VersionMajor>
+    <VersionMinor Condition="'$(VersionMinor)' == ''">0</VersionMinor>
+    <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
   </PropertyGroup>
 
   <!-- For T4 -->
@@ -37,8 +46,7 @@
   
   <!-- For NuGet Packages -->
   <PropertyGroup>
-    <VersionPrereleaseExtension></VersionPrereleaseExtension>
     <VersionNuGetSemantic>$(VersionFullSemantic)</VersionNuGetSemantic>
-    <VersionNuGetSemantic Condition="'$(VersionPrereleaseExtension)'!=''">$(VersionFullSemantic)-$(VersionPrereleaseExtension)</VersionNuGetSemantic>
+    <VersionNuGetSemantic Condition="'$(VersionRelease)'!=''">$(VersionFullSemantic)-$(VersionRelease)</VersionNuGetSemantic>
   </PropertyGroup>
 </Project>

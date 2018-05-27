@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client
     /// Deleting an inserted resource will detach it.
     /// After SaveChanges, deleted resources will become detached and Added &amp; Modified resources will become unchanged.
     /// </remarks>
-    [System.Flags()] 
+    [System.Flags()]
     public enum EntityStates
     {
         /// <summary>

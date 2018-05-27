@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AstoriaUnitTests.Tests
 {
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     [TestClass]
     public class SpatialQueryTests
     {
@@ -266,7 +267,8 @@ namespace AstoriaUnitTests.Tests
         }
 
         #region $filter
-        [TestCategory("Partition1"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1"), TestMethod]
         public void FilterBySpatialLengthFunction()
         {
             // FilterBySpatialProperty_LineStringLiteral
@@ -281,8 +283,8 @@ namespace AstoriaUnitTests.Tests
             VerifySpatialFilterResult("geo.length(GeometryLineString) eq 3.3699999999999974", 3); // entity property name is 'GeometryLineString'
             VerifySpatialFilterResult("geo.length(GeometryLineString) gt 3.3699999999999974", 0); // entity property name is 'GeometryLineString'
         }
-
-        [TestCategory("Partition1"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1"), TestMethod]
         public void FilterBySpatialIntersectsFunction()
         {
             // Geography:
@@ -315,8 +317,8 @@ namespace AstoriaUnitTests.Tests
             // TwoProperties
             VerifySpatialFilterResult("geo.intersects(GeometryPoint, GeometryPolygon)", 1);
         }
-
-        [TestCategory("Partition1"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1"), TestMethod]
         public void FilterBySpatialProperty()
         {
             // FilterBySpatialProperty_LiteralSecond
@@ -407,8 +409,8 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.AssertContains(ex.InnerException.Message, "At least one object must implement IComparable.");
             }
         }
-
-        [TestCategory("Partition1"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1"), TestMethod]
         public void OrderByDistanceToPoint()
         {
             SpatialImplementation.CurrentImplementation.Operations = new UnitTestSpatialOperationImpl();
@@ -428,8 +430,8 @@ namespace AstoriaUnitTests.Tests
         }
 
         #endregion
-
-        [TestCategory("Partition1"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1"), TestMethod]
         public void QueryEntitySetWithSpatialProperty()
         {
             using (var service = CreateTestService())
@@ -447,8 +449,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
         }
-
-        [TestCategory("Partition1"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1"), TestMethod]
         public void QueryAndUpdateSingleEntityWithSpatialProperty()
         {
             using (TestUtil.RestoreStaticValueOnDispose(typeof(BaseTestWebRequest), "HostInterfaceType"))
@@ -483,8 +485,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
         }
-
-        [TestCategory("Partition1"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition1"), TestMethod]
         public void QuerySpatialProperty()
         {
             using (var service = CreateTestService())

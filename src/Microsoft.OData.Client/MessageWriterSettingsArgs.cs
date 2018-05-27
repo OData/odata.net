@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Arguments used to configure the odata message writer settings.
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// Initializes a new instance of the <see cref="MessageWriterSettingsArgs"/> class.
         /// </summary>
         /// <param name="settings">The settings.</param>
-        public MessageWriterSettingsArgs(ODataMessageWriterSettingsBase settings)
+        public MessageWriterSettingsArgs(ODataMessageWriterSettings settings)
         {
             WebUtil.CheckArgumentNull(settings, "settings");
 
@@ -27,6 +27,6 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the settings.
         /// </summary>
-        public ODataMessageWriterSettingsBase Settings { get; private set; }
+        public ODataMessageWriterSettings Settings { get; private set; }
     }
 }

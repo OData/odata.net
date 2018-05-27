@@ -12,15 +12,9 @@ namespace EdmLibTests.FunctionalTests
     using System.Linq;
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -270,7 +264,6 @@ namespace EdmLibTests.FunctionalTests
             model.SetAnnotationValue(badEntityRef.Definition, "foo", "bar", new EdmStringConstant(new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false), "baz"));
             Assert.AreEqual(1, model.DirectValueAnnotations(badEntityRef.Definition).Count(), "Bad Entity can hold annotations");
             Assert.IsNotNull(model.GetAnnotationValue(badEntityRef.Definition, "foo", "bar"), "Bad Entity can find annotations");
-            Assert.AreEqual(EdmTermKind.Type, badEntityRef.EntityDefinition().TermKind, "EntityType has correct term kind");
 
             Assert.IsTrue(badComplexRef.IsComplex(), "Bad Complex is Bad");
             Assert.IsNull(badComplexRef.ComplexDefinition().FindProperty("PropertyName"), "Bad structured types return null for find property");
@@ -702,14 +695,13 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
         }
 
         [TestMethod]
         public void AsPrimitiveCanConvertIfTypeNotOrigionallyPrimitive()
         {
-
             const string csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Grumble"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -732,8 +724,8 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""myInt64"" Type=""Edm.Int64"" />
     <Property Name=""myByte"" Type=""Edm.Byte"" />
     <Property Name=""myStream"" Type=""Edm.Stream"" />
-    <Property Name=""myString"" Type=""Edm.String"" DefaultValue=""BorkBorkBork"" Collation=""Latin1_General_CS_AS_KS_WS ASC"" MaxLength=""128"" Unicode=""false"" />
-    <Property Name=""myStringMax"" Type=""Edm.String"" ConcurrencyMode=""Fixed"" MaxLength=""Max"" Unicode=""false"" />
+    <Property Name=""myString"" Type=""Edm.String"" DefaultValue=""BorkBorkBork"" MaxLength=""128"" Unicode=""false"" />
+    <Property Name=""myStringMax"" Type=""Edm.String"" MaxLength=""Max"" Unicode=""false"" />
     <Property Name=""myGeography"" Type=""Edm.Geography"" SRID=""1"" />
     <Property Name=""myPoint"" Type=""Edm.GeographyPoint"" SRID=""2"" />
     <Property Name=""myLineString"" Type=""Edm.GeographyLineString"" SRID=""3"" />
@@ -755,7 +747,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
 
             IEdmComplexType complex = (IEdmComplexType)model.FindType("Grumble.Smod");
@@ -861,17 +853,17 @@ namespace EdmLibTests.FunctionalTests
 </Schema>";
             IEnumerable<EdmError> errors;
             IEdmModel model;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)), XmlReader.Create(new StringReader(baseModelCsdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)), XmlReader.Create(new StringReader(baseModelCsdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
-            IEdmValueAnnotation valueAnnotation = (IEdmValueAnnotation)person.VocabularyAnnotations(model).First();
+            IEdmVocabularyAnnotation valueAnnotation = person.VocabularyAnnotations(model).First();
             var property = ((IEdmRecordExpression)valueAnnotation.Value).Properties.First();
-            IEdmOperation badOperation = ((IEdmOperationReferenceExpression)((IEdmApplyExpression)property.Value).AppliedOperation).ReferencedOperation;
+            IEdmOperation badOperation = ((IEdmApplyExpression)property.Value).AppliedFunction;
             Assert.AreEqual("foo", badOperation.Namespace, "Bad function has correct namespace.");
             Assert.AreEqual("BorkBorkBork", badOperation.Name, "Bad function has correct name.");
-            Assert.AreEqual(EdmSchemaElementKind.None, badOperation.SchemaElementKind, "Bad function has correct schema kind.");
+            Assert.AreEqual(EdmSchemaElementKind.Function, badOperation.SchemaElementKind, "Bad function has correct schema kind.");
             Assert.IsTrue(badOperation.ReturnType.Definition.IsBad(), "Bad function has bad return return type.");
             Assert.AreEqual(null, badOperation.FindParameter("Foo"), "Bad function returns null for parameters.");
             Assert.AreEqual(0, badOperation.Parameters.Count(), "Bad function has no parameters.");

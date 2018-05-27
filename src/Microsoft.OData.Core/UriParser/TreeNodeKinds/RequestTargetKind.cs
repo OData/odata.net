@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
-    /// Provides values to describe the kind of thing targetted by a 
+    /// Provides values to describe the kind of thing targetted by a
     /// client request.
     /// </summary>
     internal enum RequestTargetKind
@@ -18,11 +18,8 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>A top-level directory of service capabilities.</summary>
         ServiceDirectory,
 
-        /// <summary>Entity Resource is requested - it can be a collection or a single value.</summary>
+        /// <summary>Resource is requested - it can be a collection or a single value of entity type or complex type</summary>
         Resource,
-
-        /// <summary>A single complex value is requested (eg: an Address).</summary>
-        ComplexObject,
 
         /// <summary>A single primitive property is requested (eg: a Picture property).</summary>
         Primitive,
@@ -45,16 +42,16 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>The request is a batch request.</summary>
         Batch,
 
-        /// <summary>An open property is requested.</summary>
-        OpenProperty,
+        /// <summary>An unknown path or a dynamic property is requested.</summary>
+        Dynamic,
 
-        /// <summary>An open property value is requested.</summary>
-        OpenPropertyValue,
+        /// <summary>The value of an unknown path or a dynamic property value is requested.</summary>
+        DynamicValue,
 
         /// <summary>A stream property value is requested.</summary>
         MediaResource,
 
-        /// <summary>A single collection of primitive or complex values is requested.</summary>
+        /// <summary>A single collection of primitive or enum values is requested.</summary>
         Collection,
     }
 }

@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
-
     /// <summary>
     /// Interface for a class that can parse an identifier as a function and return a representitive QueryToken.
     /// </summary>
@@ -22,7 +20,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Parses an identifier that represents a function.
         /// </summary>
         /// <param name="parent">the syntactically bound parent of this identifier.</param>
-        /// <returns>QueryToken representing this function.</returns>
-        QueryToken ParseIdentifierAsFunction(QueryToken parent);
+        /// <param name="result">QueryToken representing this function.</param>
+        /// <returns>True if the parsing was successful.</returns>
+        bool TryParseIdentifierAsFunction(QueryToken parent, out QueryToken result);
     }
 }

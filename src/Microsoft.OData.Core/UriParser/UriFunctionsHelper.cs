@@ -4,16 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region NameSpaces
-    
-    using System;
+
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
     #endregion

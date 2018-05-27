@@ -12,7 +12,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.IO;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
 
     #endregion Namespaces

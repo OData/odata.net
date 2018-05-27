@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
+namespace Microsoft.OData.UriParser
 {
     /// <summary>Enumeration values for token kinds.</summary>
     internal enum ExpressionTokenKind
@@ -102,19 +102,22 @@ namespace Microsoft.OData.Core.UriParser.TreeNodeKinds
         /// <summary>ParameterAlias</summary>
         ParameterAlias = 30,
 
-        /// <summary>A Brace BracketedExpression is an expression within brackets or braces. It contains a JSON object or array.</summary>
-        BracketedExpression = 31,
+        /// <summary>A BracedExpression is an expression within braces. It contains a JSON object.</summary>
+        BracedExpression = 31,
+
+        /// <summary>A BracketedExpression is an expression within brackets. It contains a JSON array.</summary>
+        BracketedExpression = 32,
 
         /// <summary>Quoted</summary>
-        QuotedLiteral = 32,
+        QuotedLiteral = 33,
 
         /// <summary>Date literal.</summary>
-        DateLiteral = 33,
+        DateLiteral = 34,
 
         /// <summary>TimeOfDay literal.</summary>
-        TimeOfDayLiteral = 34,
+        TimeOfDayLiteral = 35,
 
         /// <summary>CustomType Literal.</summary>
-        CustomTypeLiteral = 35
+        CustomTypeLiteral = 36
     }
 }

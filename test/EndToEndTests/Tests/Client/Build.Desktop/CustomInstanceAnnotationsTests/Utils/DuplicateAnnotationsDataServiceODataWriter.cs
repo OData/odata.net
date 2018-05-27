@@ -7,7 +7,7 @@
 namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 {
     using Microsoft.OData.Service;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class DuplicateAnnotationsDataServiceODataWriter : DataServiceODataWriter
     {

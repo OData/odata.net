@@ -134,6 +134,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
       <Term Name=""SeoTerms"" Type=""Collection(Edm.String)"" AppliesTo=""EntitySet"" />
       <Term Name=""ReadableEntitySet"" Type=""Edm.String"" AppliesTo=""EntityContainer"" />
       <Term Name=""SearchRestrictions"" Type=""TripPin.SearchRestrictionsType"" />
+      <Term Name=""SearchRestrictions2"" Type=""Edm.Boolean"" />
       <Term Name=""UnsupportedExpressions"" Type=""TripPin.SearchRestrictions"" />
       <Term Name=""Gender"" Type=""TripPin.PersonGender"" />
       <ComplexType Name=""SearchRestrictionsType"" BaseType=""TripPin.SearchRestrictions"">
@@ -214,6 +215,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
         <Property Name=""Gender"" Type=""TripPin.PersonGender"" />
         <Property Name=""Age"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""Emails"" Type=""Collection(Edm.String)"">
+          <Annotation Term=""TripPin.SearchRestrictions2""/>
           <Annotation Term=""TripPin.SearchRestrictions"">
             <Record>
               <PropertyValue Property=""Searchable"" Bool=""true"" />
@@ -339,6 +341,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
               <Int>2</Int>
             </Collection>
           </Annotation>
+          <Annotation Term=""TripPin.SearchRestrictions2""/>
           <Annotation Term=""TripPin.SearchRestrictions"">
             <Record>
               <PropertyValue Property=""Searchable"" Bool=""true"" />
@@ -386,7 +389,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
                 }
                 finally
                 {

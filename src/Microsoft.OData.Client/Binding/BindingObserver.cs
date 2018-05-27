@@ -17,16 +17,16 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Client.Metadata;
-#endregion    
+#endregion
 
     /// <summary>The BindingObserver class</summary>
     internal sealed class BindingObserver
     {
         #region Fields
-        
+
         /// <summary>
-        /// The BindingGraph maps objects tracked by the DataServiceContext to vertices in a 
-        /// graph used to manage the information needed for data binding. The objects tracked 
+        /// The BindingGraph maps objects tracked by the DataServiceContext to vertices in a
+        /// graph used to manage the information needed for data binding. The objects tracked
         /// by the BindingGraph are entities, complex types and DataServiceCollections.
         /// </summary>
         private BindingGraph bindingGraph;
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         #region Constructor
-        
+
         /// <summary>Constructor</summary>
         /// <param name="context">The DataServiceContext associated with the BindingObserver.</param>
         /// <param name="entityChanged">EntityChanged delegate.</param>
@@ -44,13 +44,13 @@ namespace Microsoft.OData.Client
             Debug.Assert(context != null, "Must have been validated during DataServiceCollection construction.");
             this.Context = context;
             this.Context.ChangesSaved += this.OnChangesSaved;
-            
+
             this.EntityChanged = entityChanged;
             this.CollectionChanged = collectionChanged;
-            
+
             this.bindingGraph = new BindingGraph(this);
         }
-        
+
         #endregion
 
         #region Properties
@@ -94,9 +94,9 @@ namespace Microsoft.OData.Client
         /// Callback invoked when an DataServiceCollection tracked by the BindingObserver has changed.
         /// </summary>
         /// <remarks>
-        /// DataServiceCollection objects tracked by the BindingObserver implement INotifyCollectionChanged.  
-        /// Events of this type flow throw the EntityCollectionChanged callback. If this callback is not 
-        /// implemented by user code, or the user code implementation returns false, the BindingObserver executes 
+        /// DataServiceCollection objects tracked by the BindingObserver implement INotifyCollectionChanged.
+        /// Events of this type flow throw the EntityCollectionChanged callback. If this callback is not
+        /// implemented by user code, or the user code implementation returns false, the BindingObserver executes
         /// a default implementation for the callback.
         /// </remarks>
         internal Func<EntityCollectionChangedParams, bool> CollectionChanged
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         #region Methods
-        
+
         /// <summary>Start tracking the specified DataServiceCollection.</summary>
         /// <typeparam name="T">An entity type.</typeparam>
         /// <param name="collection">An DataServiceCollection.</param>
@@ -317,10 +317,10 @@ namespace Microsoft.OData.Client
             string targetEntitySet;
 
             this.bindingGraph.GetDataServiceCollectionInfo(
-                    collection, 
-                    out source, 
-                    out sourceProperty, 
-                    out sourceEntitySet, 
+                    collection,
+                    out source,
+                    out sourceProperty,
+                    out sourceEntitySet,
                     out targetEntitySet);
 
             switch (eventArgs.Action)
@@ -328,35 +328,35 @@ namespace Microsoft.OData.Client
                 case NotifyCollectionChangedAction.Add:
                     // This event is raised by ObservableCollection.InsertItem.
                     this.OnAddToDataServiceCollection(
-                            eventArgs, 
-                            source, 
-                            sourceProperty, 
-                            targetEntitySet, 
+                            eventArgs,
+                            source,
+                            sourceProperty,
+                            targetEntitySet,
                             collection);
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
                     // This event is raised by ObservableCollection.RemoveItem.
                     this.OnRemoveFromDataServiceCollection(
-                            eventArgs, 
-                            source, 
-                            sourceProperty, 
+                            eventArgs,
+                            source,
+                            sourceProperty,
                             collection);
                     break;
 
                 case NotifyCollectionChangedAction.Replace:
                     // This event is raised by ObservableCollection.SetItem.
                     this.OnRemoveFromDataServiceCollection(
-                            eventArgs, 
-                            source, 
-                            sourceProperty, 
+                            eventArgs,
+                            source,
+                            sourceProperty,
                             collection);
-                            
+
                     this.OnAddToDataServiceCollection(
-                            eventArgs, 
-                            source, 
-                            sourceProperty, 
-                            targetEntitySet, 
+                            eventArgs,
+                            source,
+                            sourceProperty,
+                            targetEntitySet,
                             collection);
                     break;
 
@@ -404,7 +404,7 @@ namespace Microsoft.OData.Client
                     out sourceProperty,
                     out collectionItemType);
 
-            // For complex types need to bind to any newly added items or unbind from removed items 
+            // For complex types need to bind to any newly added items or unbind from removed items
             if (!PrimitiveType.IsKnownNullableType(collectionItemType) && !collectionItemType.IsEnum())
             {
                 switch (e.Action)
@@ -458,11 +458,11 @@ namespace Microsoft.OData.Client
             {
                 return;
             }
-            
+
             Debug.Assert(
-                (source == null && sourceProperty == null) || (source != null && !String.IsNullOrEmpty(sourceProperty)), 
+                (source == null && sourceProperty == null) || (source != null && !String.IsNullOrEmpty(sourceProperty)),
                 "source and sourceProperty should either both be present or both be absent.");
-        
+
             Debug.Assert(target != null, "target must be provided by the caller.");
             Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model), "target must be an entity type.");
 
@@ -471,7 +471,7 @@ namespace Microsoft.OData.Client
             {
                 return;
             }
-            
+
             // Do we need an operation on context to handle the Add operation.
             EntityDescriptor targetDescriptor = this.Context.GetEntityDescriptor(target);
 
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Client
             // 1. Not a call to Load or constructions i.e. we have Add behavior and not Attach behavior
             // 2. Target entity is not being tracked
             // 3. Target is being tracked but there is no link between the source and target entity and target is in non-deleted state
-            bool contextOperationRequired = !this.AttachBehavior && 
+            bool contextOperationRequired = !this.AttachBehavior &&
                                            (targetDescriptor == null ||
                                            (source != null && !this.IsContextTrackingLink(source, sourceProperty, target) && targetDescriptor.State != EntityStates.Deleted));
 
@@ -513,17 +513,17 @@ namespace Microsoft.OData.Client
 
             // Default implementation.
             targetDescriptor = this.Context.GetEntityDescriptor(target);
-            
+
             if (source != null)
             {
                 if (this.AttachBehavior)
                 {
-                    // If the target entity is not being currently tracked, we attach both the 
+                    // If the target entity is not being currently tracked, we attach both the
                     // entity and the link between source and target entity.
                     if (targetDescriptor == null)
                     {
                         BindingUtils.ValidateEntitySetName(targetEntitySet, target);
-                        
+
                         this.Context.AttachTo(targetEntitySet, target);
                         this.Context.AttachLink(source, sourceProperty, target);
                     }
@@ -551,7 +551,7 @@ namespace Microsoft.OData.Client
                     else
                     if (targetDescriptor.State != EntityStates.Deleted && !this.IsContextTrackingLink(source, sourceProperty, target))
                     {
-                        // If the entity is already tracked, then we just add the link. 
+                        // If the entity is already tracked, then we just add the link.
                         // However, we would not do it if the target entity is already
                         // in a Deleted state.
                         this.Context.AddLink(source, sourceProperty, target);
@@ -563,7 +563,7 @@ namespace Microsoft.OData.Client
             {
                 // The source is null when the DataServiceCollection is the root collection.
                 BindingUtils.ValidateEntitySetName(targetEntitySet, target);
-                
+
                 if (this.AttachBehavior)
                 {
                     // Attach the target entity.
@@ -612,11 +612,11 @@ namespace Microsoft.OData.Client
                 return;
             }
 
-            // Do we need an operation on context to handle the Delete operation. 
-            // Detach behavior is special because it is only applicable in Clear 
+            // Do we need an operation on context to handle the Delete operation.
+            // Detach behavior is special because it is only applicable in Clear
             // cases, where we don't callback users for detach nofications.
             bool contextOperationRequired = this.IsContextTrackingEntity(target) && !this.DetachBehavior;
-            
+
             if (contextOperationRequired)
             {
                 // First give the user code a chance to handle Delete operation.
@@ -645,7 +645,7 @@ namespace Microsoft.OData.Client
                 throw new InvalidOperationException(Strings.DataBinding_BindingOperation_DetachedSource);
             }
 
-            // Default implementation. 
+            // Default implementation.
             // Remove the entity from the context if it is currently being tracked.
             if (this.IsContextTrackingEntity(target))
             {
@@ -695,7 +695,7 @@ namespace Microsoft.OData.Client
             // 1. Not a call to Load or constructions i.e. we have Add behavior and not Attach behavior
             // 2. Target entity is not being tracked
             // 3. Target is being tracked but there is no link between the source and target entity
-            bool contextOperationRequired = !this.AttachBehavior && 
+            bool contextOperationRequired = !this.AttachBehavior &&
                                             (targetDescriptor == null ||
                                             !this.IsContextTrackingLink(source, sourceProperty, target));
 
@@ -725,7 +725,7 @@ namespace Microsoft.OData.Client
                 throw new InvalidOperationException(Strings.DataBinding_BindingOperation_DetachedSource);
             }
 
-            // Default implementation. 
+            // Default implementation.
             targetDescriptor = target != null ? this.Context.GetEntityDescriptor(target) : null;
 
             if (target != null)
@@ -741,7 +741,7 @@ namespace Microsoft.OData.Client
                     }
                     else
                     {
-                        // If the entity set name is not known, then we must throw since we need to know the 
+                        // If the entity set name is not known, then we must throw since we need to know the
                         // entity set in order to add/attach the referenced object to it's entity set.
                         BindingUtils.ValidateEntitySetName(targetEntitySet, target);
 
@@ -754,7 +754,7 @@ namespace Microsoft.OData.Client
                             this.Context.AddObject(targetEntitySet, target);
                         }
                     }
-                    
+
                     targetDescriptor = this.Context.GetEntityDescriptor(target);
                 }
 
@@ -778,7 +778,7 @@ namespace Microsoft.OData.Client
             else
             {
                 Debug.Assert(!this.AttachBehavior, "During attach operations we must never perform operations for null values.");
-                
+
                 // The target could be null in which case we just need to set the link to null.
                 this.Context.SetLink(source, sourceProperty, null);
             }
@@ -834,11 +834,11 @@ namespace Microsoft.OData.Client
             if (this.EntityChanged != null)
             {
                 EntityChangedParams args = new EntityChangedParams(
-                                                this.Context, 
-                                                entity, 
-                                                propertyName, 
-                                                propertyValue, 
-                                                null, 
+                                                this.Context,
+                                                entity,
+                                                propertyName,
+                                                propertyValue,
+                                                null,
                                                 null);
 
                 if (this.EntityChanged(args))
@@ -870,7 +870,7 @@ namespace Microsoft.OData.Client
             object collection)
         {
             Debug.Assert(collection != null, "Must have a valid collection to which entities are added.");
-            
+
             if (eventArgs.NewItems != null)
             {
                 foreach (object target in eventArgs.NewItems)
@@ -887,10 +887,10 @@ namespace Microsoft.OData.Client
 
                     // Start tracking the target entity and synchronize the context with the Add operation.
                     this.bindingGraph.AddEntity(
-                            source, 
-                            sourceProperty, 
-                            target, 
-                            targetEntitySet, 
+                            source,
+                            sourceProperty,
+                            target,
+                            targetEntitySet,
                             collection);
                 }
             }
@@ -909,15 +909,15 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(collection != null, "Must have a valid collection from which entities are removed.");
             Debug.Assert(
-                (source == null && sourceProperty == null) || (source != null && !String.IsNullOrEmpty(sourceProperty)), 
+                (source == null && sourceProperty == null) || (source != null && !String.IsNullOrEmpty(sourceProperty)),
                 "source and sourceProperty must both be null or both be non-null.");
 
             if (eventArgs.OldItems != null)
             {
                 this.DeepRemoveDataServiceCollection(
-                        eventArgs.OldItems, 
-                        source ?? collection, 
-                        sourceProperty, 
+                        eventArgs.OldItems,
+                        source ?? collection,
+                        sourceProperty,
                         this.ValidateDataServiceCollectionItem);
             }
         }
@@ -1031,9 +1031,9 @@ namespace Microsoft.OData.Client
         /// <param name="parentProperty">Property by which <paramref name="parentEntity"/> refers to <paramref name="currentEntity"/></param>
         /// <param name="entitiesToUnTrack">List in which entities to be untracked are collected</param>
         private void CollectUnTrackingInfo(
-            object currentEntity, 
-            object parentEntity, 
-            string parentProperty, 
+            object currentEntity,
+            object parentEntity,
+            string parentProperty,
             IList<UnTrackingInfo> entitiesToUnTrack)
         {
             // We need to delete the child objects first before we delete the parent
@@ -1042,16 +1042,16 @@ namespace Microsoft.OData.Client
                                    .Where(x => x.ParentEntity == currentEntity && x.State == EntityStates.Added))
             {
                 this.CollectUnTrackingInfo(
-                        ed.Entity, 
-                        ed.ParentEntity, 
-                        ed.ParentPropertyForInsert, 
+                        ed.Entity,
+                        ed.ParentEntity,
+                        ed.ParentPropertyForInsert,
                         entitiesToUnTrack);
             }
-            
-            entitiesToUnTrack.Add(new UnTrackingInfo 
+
+            entitiesToUnTrack.Add(new UnTrackingInfo
                                   {
-                                    Entity = currentEntity, 
-                                    Parent = parentEntity, 
+                                    Entity = currentEntity,
+                                    Parent = parentEntity,
                                     ParentProperty = parentProperty
                                   });
         }
@@ -1070,10 +1070,10 @@ namespace Microsoft.OData.Client
 
             Debug.Assert(target != null, "target entity must be provided.");
             Debug.Assert(BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model), "target must be an entity with keys.");
-            
+
             return this.Context.GetLinkDescriptor(source, sourceProperty, target) != default(LinkDescriptor);
         }
-        
+
         /// <summary>Checks whether the given entity is in detached or deleted state.</summary>
         /// <param name="entity">Entity being checked.</param>
         /// <returns>true if the entity is detached or deleted, otherwise returns false.</returns>
@@ -1107,24 +1107,24 @@ namespace Microsoft.OData.Client
         private class UnTrackingInfo
         {
             /// <summary>Entity to untrack</summary>
-            public object Entity 
-            { 
-                get; 
-                set; 
+            public object Entity
+            {
+                get;
+                set;
             }
-            
+
             /// <summary>Parent object of <see cref="Entity"/></summary>
-            public object Parent 
-            { 
-                get; 
-                set; 
+            public object Parent
+            {
+                get;
+                set;
             }
-            
+
             /// <summary>Parent object property referring to <see cref="Entity"/></summary>
-            public string ParentProperty 
-            { 
-                get; 
-                set; 
+            public string ParentProperty
+            {
+                get;
+                set;
             }
         }
     }

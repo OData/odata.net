@@ -7,10 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library.Expressions;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -114,7 +112,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             foreach (var parameter in this.operation.Parameters)
             {
-                parameters.Add(new CsdlSemanticsOperationParameter(this, parameter));
+                if (parameter.IsOptional)
+                {
+                    parameters.Add(new CsdlSemanticsOptionalParameter(this, parameter, parameter.DefaultValue));
+                }
+                else
+                {
+                    parameters.Add(new CsdlSemanticsOperationParameter(this, parameter));
+                }
             }
 
             return parameters;

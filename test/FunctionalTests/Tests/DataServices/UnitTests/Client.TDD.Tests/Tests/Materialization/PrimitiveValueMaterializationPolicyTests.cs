@@ -11,10 +11,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData.Client.Materialization;
     using AstoriaUnitTests.Tests;
     using FluentAssertions;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using DSClient = Microsoft.OData.Client;
-    using OData = Microsoft.OData.Core;
 
     [TestClass]
     public class PrimitiveValueMaterializationPolicyTests
@@ -65,7 +64,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
 
         internal PrimitiveValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy()
         {
-            return new PrimitiveValueMaterializationPolicy(new TestMaterializerContext(), new SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(OData.ODataFormat.Json)));
+            return new PrimitiveValueMaterializationPolicy(new TestMaterializerContext(), new SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter()));
         }
 
         public class UnknownPoint

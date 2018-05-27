@@ -8,15 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     /// <summary>
     /// Unit tests for CaseInsensitiveODataUriResolver
@@ -33,7 +30,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People/TesTNS.PERsON",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmEntityTypeReference(PersonType, false))),
-                Strings.RequestUriProcessor_CannotQueryCollections("People"));
+                Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -46,15 +43,16 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 path => path.LastSegment.ShouldBeTypeSegment(AddrType),
                 Strings.RequestUriProcessor_ResourceNotFound("TestNS.ADDress"));
         }
-
+        
         [Fact]
         public void CaseInsensitiveTypeCastNameConflictInPath()
         {
             this.TestCaseInsensitiveConflict(
                 "People(1)/Pen2/TestNS.StarPencil",
+                "People(1)/Pen2/TestNS.StaRPeNcil",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeTypeSegment(StarPencil),
-                "More than one types match the name 'TestNS.StarPencil' were found in model.");
+                "More than one types match the name 'TestNS.StaRPeNcil' were found in model.");
         }
 
         [Fact]
@@ -63,7 +61,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People/NS.WHY",
                 parser => parser.ParsePath(),
-                Strings.RequestUriProcessor_CannotQueryCollections("People"));
+                Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -76,8 +74,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new ODataPathSegment[]
                 {
-                    new TypeSegment(PersonType, PeopleSet), 
-                    new PropertySegment(PersonNameProp), 
+                    new TypeSegment(PersonType, PeopleSet),
+                    new PropertySegment(PersonNameProp),
                 })),
                Strings.ExpandItemBinder_CannotFindType("TesTNS.PERsON"));
         }
@@ -93,7 +91,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                     new ODataPathSegment[]
                 {
                     new PropertySegment(AddrProperty),
-                    new TypeSegment(AddrType, null), 
+                    new TypeSegment(AddrType, null),
                 })),
                Strings.SelectBinder_MultiLevelPathInSelect);
         }
@@ -103,14 +101,15 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                 "People(1)/Pen2?$select=TestNS.StarPencil/Id",
+                "People(1)/Pen2?$select=TestNS.StaRPeNcil/Id",
                 parser => parser.ParseSelectAndExpand(),
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                       new ODataPathSegment[]
                 {
-                    new TypeSegment(StarPencil, PencilSet), 
-                    new PropertySegment(PencilId), 
+                    new TypeSegment(StarPencil, PencilSet),
+                    new PropertySegment(PencilId),
                 })),
-                "More than one types match the name 'TestNS.StarPencil' were found in model.");
+                "More than one types match the name 'TestNS.StaRPeNcil' were found in model.");
         }
 
         [Fact]
@@ -144,29 +143,30 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                Strings.CastBinder_ChildTypeIsNotEntity("TestNS.AddrESS"));
         }
 
-        [Fact(Skip = "TODO: Do not support built-in type name case insensitive. EnumValue's type name case insensitve also not supported.")]
-        public void CaseInsensitiveTypeCastInQueryOptionOrderBy2()
-        {
-            var uriParser = new ODataUriParser(
-                Model,
-                ServiceRoot,
-                new Uri("http://host/People?$orderby=cast(null, Edm.StRing)"))
-            {
-                Resolver = new ODataUriResolver() { EnableCaseInsensitive = true }
-            };
-
-            var clause = uriParser.ParseOrderBy();
-            clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("cast", EdmCoreModel.Instance.GetString(false));
-        }
+        //[Fact(Skip = "#582: Do not support built-in type name case insensitive. EnumValue's type name case insensitve also not supported.")]
+        //public void CaseInsensitiveTypeCastInQueryOptionOrderBy2()
+        //{
+        //    var uriParser = new ODataUriParser(
+        //        Model,
+        //        ServiceRoot,
+        //        new Uri("http://host/People?$orderby=cast(null, Edm.StRing)"))
+        //    {
+        //        Resolver = new ODataUriResolver() { EnableCaseInsensitive = true }
+        //    };
+        //
+        //    var clause = uriParser.ParseOrderBy();
+        //    clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("cast", EdmCoreModel.Instance.GetString(false));
+        //}
 
         [Fact]
         public void CaseInsensitiveTypeCastTypeNameConflictsInOrderby()
         {
             this.TestCaseInsensitiveConflict(
                 "People?$orderby=Pen2/TestNS.StarPencil/Id",
+                "People?$orderby=Pen2/TestNS.sTaRPencil/Id",
                 parser => parser.ParseOrderBy(),
                 clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId),
-                "More than one types match the name 'TestNS.StarPencil' were found in model.");
+                "More than one types match the name 'TestNS.sTaRPencil' were found in model.");
         }
 
         [Fact]
@@ -196,11 +196,12 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                "PencilSet",
+               "pencilSEt",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeEntitySetSegment(PencilSet),
-               "More than one navigation sources match the name 'PencilSet' were found in model.");
+               "More than one navigation sources match the name 'pencilSEt' were found in model.");
         }
-
+        
         [Fact]
         public void CaseInsensitiveSingletonName()
         {
@@ -217,9 +218,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                "BAJIE",
+               "BaJiE",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeSingletonSegment(BajieUpper),
-               "More than one navigation sources match the name 'BAJIE' were found in model.");
+               "More than one navigation sources match the name 'BaJiE' were found in model.");
         }
 
         [Fact]
@@ -230,7 +232,6 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                parser => parser.ParsePath(),
                Strings.RequestUriProcessor_ResourceNotFound("WUKONG"));
         }
-
 
         [Fact]
         public void CaseInsensitiveEntitySetKeyName()
@@ -248,6 +249,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                "PetSetCon(key=1, KEY='stm')",
+               "PetSetCon(KeY=1, kEy='stm')",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("key", 1), new KeyValuePair<string, object>("KEY", "stm")),
                "More than one keys match the name 'key' were found.");
@@ -289,15 +291,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                 "People(1)/Pen",
+                "People(1)/pEn",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeNavigationPropertySegment(PersonNavPen),
-                Strings.UriParserMetadata_MultipleMatchingPropertiesFound("Pen", "TestNS.Person"));
-
-            this.TestCaseInsensitiveConflict(
-                "People(1)/pen",
-                parser => parser.ParsePath(),
-                path => path.LastSegment.ShouldBePropertySegment(PersonPen),
-                Strings.UriParserMetadata_MultipleMatchingPropertiesFound("pen", "TestNS.Person"));
+                Strings.UriParserMetadata_MultipleMatchingPropertiesFound("pEn", "TestNS.Person"));
         }
 
         [Fact]
@@ -321,8 +318,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new ODataPathSegment[]
                     {
-                        new PropertySegment(AddrProperty), 
-                        new PropertySegment(ZipCodeProperty), 
+                        new PropertySegment(AddrProperty),
+                        new PropertySegment(ZipCodeProperty),
                     })),
                 Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "ADDR"));
         }
@@ -341,9 +338,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                 "People(1)?$expand=Pen",
+                "People(1)?$expand=PeN",
                 parser => parser.ParseSelectAndExpand(),
                 clause => clause.SelectedItems.Single().ShouldBeExpansionFor(PersonNavPen),
-                Strings.UriParserMetadata_MultipleMatchingPropertiesFound("Pen", "TestNS.Person"));
+                Strings.UriParserMetadata_MultipleMatchingPropertiesFound("PeN", "TestNS.Person"));
         }
 
         [Fact]
@@ -371,9 +369,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                 "People?$orderby=pen",
+                "People?$orderby=pEn",
                 parser => parser.ParseOrderBy(),
                 clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PersonPen),
-                "More than one properties match the name 'pen' were found in type 'TestNS.Person'.");
+                "More than one properties match the name 'pEn' were found in type 'TestNS.Person'.");
         }
 
         [Fact]
@@ -412,9 +411,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                "People(1)/TestNS.FindPencilsCon",
+               "People(1)/TestNS.FinDPenCilsCoN",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationSegment(FindPencilsCon),
-               Strings.FunctionOverloadResolver_NoSingleMatchFound("TestNS.FindPencilsCon", ""));
+               Strings.FunctionOverloadResolver_NoSingleMatchFound("TestNS.FinDPenCilsCoN", ""));
         }
 
         [Fact]
@@ -442,9 +442,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                "People(1)/TestNS.FindPencilCon(pid=5, PID=6)",
+               "People(1)/TestNS.FindPencilCon(pId=5, PID=6)",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationSegment(FindPencilCon),
-               "More than one parameters match the name 'pid' were found.");
+               "More than one parameters match the name 'pId' were found.");
         }
 
         [Fact]
@@ -485,9 +486,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         {
             this.TestCaseInsensitiveConflict(
                "FeedCon",
+               "fEEdCon",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationImportSegment(FeedConImport),
-               Strings.FunctionOverloadResolver_MultipleActionImportOverloads("FeedCon"));
+               Strings.FunctionOverloadResolver_MultipleActionImportOverloads("fEEdCon"));
         }
 
         [Fact]
@@ -506,9 +508,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             TestUriParserExtension(originalStr, caseInsensitiveStr, parse, verify, errorMessage, Model, parser => parser.Resolver = new ODataUriResolver() { EnableCaseInsensitive = true });
         }
 
-        private void TestCaseInsensitiveConflict<TResult>(string originalStr, Func<ODataUriParser, TResult> parse, Action<TResult> verify, string conflictMessage)
+        private void TestCaseInsensitiveConflict<TResult>(string originalStr, string caseInsensitiveStr, Func<ODataUriParser, TResult> parse, Action<TResult> verify, string errorMessage)
         {
-            this.TestConflict(originalStr, parse, verify, conflictMessage, Model, new ODataUriResolver() { EnableCaseInsensitive = true });
+            this.TestConflictWithExactMatch(originalStr, caseInsensitiveStr, parse, verify, errorMessage, Model, new ODataUriResolver() { EnableCaseInsensitive = true });
         }
 
         private void TestCaseInsensitiveNotExist<TResult>(string originalStr, Func<ODataUriParser, TResult> parse, string message)

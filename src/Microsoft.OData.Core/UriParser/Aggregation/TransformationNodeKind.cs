@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     /// <summary>
     /// Enumeration of kinds of transformation nodes.
@@ -25,5 +25,10 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         /// A filter clause
         /// </summary>
         Filter = 2,
+
+        /// <summary>
+        /// A Compute expressions
+        /// </summary>
+        Compute = 3,
     }
 }

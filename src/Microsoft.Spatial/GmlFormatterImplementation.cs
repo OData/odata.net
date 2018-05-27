@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Xml;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// The object to move spatial types to and from the GML format

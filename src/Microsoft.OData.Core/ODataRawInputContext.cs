@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
@@ -21,16 +21,16 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Implementation of the OData input for RAW OData format (raw value and batch).
     /// </summary>
-    internal sealed class ODataRawInputContext : ODataInputContext
+    internal class ODataRawInputContext : ODataInputContext
     {
+        /// <summary>The encoding to use to read from the batch stream.</summary>
+        protected readonly Encoding Encoding;
+
         /// <summary>Use a buffer size of 4k that is read from the stream at a time.</summary>
         private const int BufferSize = 4096;
 
         /// <summary>The <see cref="ODataPayloadKind"/> to read.</summary>
         private readonly ODataPayloadKind readerPayloadKind;
-
-        /// <summary>The encoding to use to read from the batch stream.</summary>
-        private readonly Encoding encoding;
 
         /// <summary>The input stream to read the data from.</summary>
         private Stream stream;
@@ -40,45 +40,29 @@ namespace Microsoft.OData.Core
 
         /// <summary>Constructor.</summary>
         /// <param name="format">The format for this input context.</param>
-        /// <param name="messageStream">The stream to read data from.</param>
-        /// <param name="encoding">The encoding to use to read the input.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        /// <param name="readerPayloadKind">The <see cref="ODataPayloadKind"/> to read.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        internal ODataRawInputContext(
+        public ODataRawInputContext(
             ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver,
-            ODataPayloadKind readerPayloadKind)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(format, messageInfo, messageReaderSettings)
         {
-            Debug.Assert(messageStream != null, "stream != null");
-            Debug.Assert(readerPayloadKind != ODataPayloadKind.Unsupported, "readerPayloadKind != ODataPayloadKind.Unsupported");
-
-            ExceptionUtils.CheckArgumentNotNull(format, "format");
-            ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
+            Debug.Assert(messageInfo.PayloadKind != ODataPayloadKind.Unsupported, "readerPayloadKind != ODataPayloadKind.Unsupported");
 
             try
             {
-                this.stream = messageStream;
-                this.encoding = encoding;
-                this.readerPayloadKind = readerPayloadKind;
+                this.stream = messageInfo.MessageStream;
+                this.Encoding = messageInfo.Encoding;
+                this.readerPayloadKind = messageInfo.PayloadKind;
             }
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && messageStream != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    messageStream.Dispose();
+                    messageInfo.MessageStream.Dispose();
                 }
 
                 throw;
@@ -88,7 +72,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The stream of the raw input context.
         /// </summary>
-        internal Stream Stream
+        public Stream Stream
         {
             get
             {
@@ -105,7 +89,7 @@ namespace Microsoft.OData.Core
             return this.CreateAsynchronousReaderImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
@@ -114,29 +98,6 @@ namespace Microsoft.OData.Core
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
-        }
-#endif
-
-        /// <summary>
-        /// Create a <see cref="ODataBatchReader"/>.
-        /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
-        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
-        internal override ODataBatchReader CreateBatchReader(string batchBoundary)
-        {
-            return this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ true);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Asynchronously create a <see cref="ODataBatchReader"/>.
-        /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
-        /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
-        internal override Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
-        {
-            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(batchBoundary, /*synchronous*/ false));
         }
 #endif
 
@@ -150,7 +111,7 @@ namespace Microsoft.OData.Core
             return this.ReadValueImplementation(expectedPrimitiveTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level value.
         /// </summary>
@@ -198,18 +159,7 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created <see cref="ODataAsynchronousReader"/>.</returns>
         private ODataAsynchronousReader CreateAsynchronousReaderImplementation()
         {
-            return new ODataAsynchronousReader(this, this.encoding);
-        }
-
-        /// <summary>
-        /// Create a <see cref="ODataBatchReader"/>.
-        /// </summary>
-        /// <param name="batchBoundary">The batch boundary to use.</param>
-        /// <param name="synchronous">If the reader should be created for synchronous or asynchronous API.</param>
-        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
-        private ODataBatchReader CreateBatchReaderImplementation(string batchBoundary, bool synchronous)
-        {
-            return new ODataBatchReader(this, batchBoundary, this.encoding, synchronous);
+            return new ODataAsynchronousReader(this, this.Encoding);
         }
 
         /// <summary>
@@ -244,7 +194,7 @@ namespace Microsoft.OData.Core
             else
             {
                 Debug.Assert(this.textReader == null, "this.textReader == null");
-                this.textReader = this.encoding == null ? new StreamReader(this.stream) : new StreamReader(this.stream, this.encoding);
+                this.textReader = this.Encoding == null ? new StreamReader(this.stream) : new StreamReader(this.stream, this.Encoding);
                 return this.ReadRawValue(expectedPrimitiveTypeReference);
             }
         }
@@ -295,9 +245,9 @@ namespace Microsoft.OData.Core
             string stringFromStream = this.textReader.ReadToEnd();
 
             object rawValue;
-            if (expectedPrimitiveTypeReference != null && !this.MessageReaderSettings.DisablePrimitiveTypeConversion)
+            if (expectedPrimitiveTypeReference != null && this.MessageReaderSettings.EnablePrimitiveTypeConversion)
             {
-                rawValue = AtomValueUtils.ConvertStringToPrimitive(stringFromStream, expectedPrimitiveTypeReference);
+                rawValue = ODataRawValueUtils.ConvertStringToPrimitive(stringFromStream, expectedPrimitiveTypeReference);
             }
             else
             {

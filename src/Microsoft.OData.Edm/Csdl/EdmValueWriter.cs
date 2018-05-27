@@ -4,27 +4,27 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_SERVER
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Xml;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
-#if ODATALIB || ODATALIB_QUERY
-namespace Microsoft.OData.Core
+#if ODATA_CORE
+namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Edm.Csdl
 #endif
 #endif
 #endif
 {
-    using System;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.Xml;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Values;
-
     /// <summary>
     /// Contains methods to convert primitive values to their string representation.
     /// </summary>
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         private static char[] Hex = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-#if !ODATALIB && !ODATALIB_QUERY && !ASTORIA_CLIENT && !ASTORIA_SERVER
+#if !ODATA_CORE && !ODATA_CLIENT && !ODATA_SERVICE
         /// <summary>
         /// Converts the IEdmPrimitiveValue to a String.
         /// </summary>
@@ -196,8 +196,8 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Converts the Date to a String.
         /// </summary>
-        /// <param name="d">The <see cref="Microsoft.OData.Edm.Library.Date"/> to be converted</param>
-        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Library.Date"/>.</returns>
+        /// <param name="d">The <see cref="Microsoft.OData.Edm.Date"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Date"/>.</returns>
         internal static string DateAsXml(Date d)
         {
             var value = d.ToString();
@@ -207,8 +207,8 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Converts the TimeOfDay to a String.
         /// </summary>
-        /// <param name="time">The <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/> to be converted</param>
-        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Library.TimeOfDay"/>.</returns>
+        /// <param name="time">The <see cref="Microsoft.OData.Edm.TimeOfDay"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.TimeOfDay"/>.</returns>
         internal static string TimeOfDayAsXml(TimeOfDay time)
         {
             var value = time.ToString();
@@ -223,6 +223,17 @@ namespace Microsoft.OData.Edm.Csdl
         internal static string GuidAsXml(Guid g)
         {
             return XmlConvert.ToString(g);
+        }
+
+        /// <summary>
+        /// Converts the Uri to a String.
+        /// </summary>
+        /// <param name="uri">The value to convert.</param>
+        /// <returns>A string representation of the Uri.</returns>
+        internal static string UriAsXml(Uri uri)
+        {
+            Debug.Assert(uri != null, "uri != null");
+            return uri.OriginalString;
         }
     }
 }

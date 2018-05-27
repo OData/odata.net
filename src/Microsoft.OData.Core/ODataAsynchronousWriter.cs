@@ -4,12 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
+    using System;
     using System.Diagnostics;
     using System.Globalization;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -25,6 +26,11 @@ namespace Microsoft.OData.Core
         private readonly ODataRawOutputContext rawOutputContext;
 
         /// <summary>
+        /// The optional dependency injection container to get related services for message writing.
+        /// </summary>
+        private readonly IServiceProvider container;
+
+        /// <summary>
         /// Prevent the response message from being created more than one time since an async response message can only contain one inner message.
         /// </summary>
         private bool responseMessageCreated;
@@ -38,6 +44,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(rawOutputContext != null, "rawOutputContext != null");
 
             this.rawOutputContext = rawOutputContext;
+            this.container = rawOutputContext.Container;
             this.rawOutputContext.InitializeRawValueWriter();
         }
 
@@ -52,7 +59,7 @@ namespace Microsoft.OData.Core
             return this.CreateResponseMessageImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates a message for writing an async response.
         /// </summary>
@@ -75,7 +82,7 @@ namespace Microsoft.OData.Core
             this.rawOutputContext.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -122,7 +129,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.rawOutputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataAsyncWriter_AsyncCallOnSyncWriter);
@@ -169,7 +176,7 @@ namespace Microsoft.OData.Core
         /// <returns>The message that can be used to write the response.</returns>
         private ODataAsynchronousResponseMessage CreateResponseMessageImplementation()
         {
-            var responseMessage = ODataAsynchronousResponseMessage.CreateMessageForWriting(rawOutputContext.OutputStream, this.WriteInnerEnvelope);
+            var responseMessage = ODataAsynchronousResponseMessage.CreateMessageForWriting(rawOutputContext.OutputStream, this.WriteInnerEnvelope, this.container);
 
             responseMessageCreated = true;
 

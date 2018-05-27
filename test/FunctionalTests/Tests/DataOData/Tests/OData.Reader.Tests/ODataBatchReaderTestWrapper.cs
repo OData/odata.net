@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 #if !SILVERLIGHT && !WINDOWS_PHONE
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces

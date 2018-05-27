@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -69,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                         {
                             ExpectedException = tc.IsRequest
-                                ? ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest")
+                                ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType")
                                 : ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty")
                         }
                 },
@@ -118,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}"),
                     PayloadEdmModel = model,
                     // For requests the context URI is ignored and thus there's no type information in this case the reading should fail.
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType"),
                     SkipTestConfiguration = tc => !tc.IsRequest
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
@@ -142,7 +141,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}"),
                     PayloadEdmModel = model,
                     SkipTestConfiguration = tc => !tc.IsRequest,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest")
+                    //ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -198,7 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -213,7 +212,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null })
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataIdAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataIdAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -228,7 +227,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataETagAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataETagAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -242,7 +241,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "Id")
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "Id")
                 },
             };
 
@@ -268,28 +267,28 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             var invalidValues = new[]
             {
-                new InvalidEntryInstanceAnnotationValue 
-                { 
+                new InvalidEntryInstanceAnnotationValue
+                {
                     Json = "null", 
                     // ID is allowed to be null (since that indicates a transient entity), but other annotations must not be null.
-                    ExpectedException = annotationName => 
-                        annotationName == JsonLightConstants.ODataIdAnnotationName 
-                        ? null 
+                    ExpectedException = annotationName =>
+                        annotationName == JsonLightConstants.ODataIdAnnotationName
+                        ? null
                         : ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", annotationName)
                 },
-                new InvalidEntryInstanceAnnotationValue 
-                { 
-                    Json = "42", 
+                new InvalidEntryInstanceAnnotationValue
+                {
+                    Json = "42",
                     ExpectedException = annotationName => ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", annotationName)
                 },
-                new InvalidEntryInstanceAnnotationValue 
-                { 
-                    Json = "{}", 
+                new InvalidEntryInstanceAnnotationValue
+                {
+                    Json = "{}",
                     ExpectedException = annotationName => ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject")
                 },
-                new InvalidEntryInstanceAnnotationValue 
-                { 
-                    Json = "[]", 
+                new InvalidEntryInstanceAnnotationValue
+                {
+                    Json = "[]",
                     ExpectedException = annotationName => ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray")
                 },
             };
@@ -360,7 +359,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     new
                     {
                         InjectedJSON = "\"@custom.annotation\": null, \"@custom.annotation\": 42",
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "custom.annotation")
+                        ExpectedException = (ExpectedException)null
                     },
                 };
 
@@ -444,7 +443,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 "\"Name\": \"Value\"" +
                             "}",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst")
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst")
                     },
                     new
                     {
@@ -462,15 +461,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate custom property annotation - should be fail.",
+                        Description = "Duplicate custom property annotation - should not fail.",
                         Json = "{" +
                                 "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities()/$entity\"," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": null," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": 42," +
-                                "\"Name\": \"Value\"" +
+                                "\"Name\": \"Value\"," +
+                                "\"Id\":1" +
                             "}",
-                        ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "custom.annotation", "Name")
+                        ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType")
+                            .PrimitiveProperty("Name", "Value")
+                            .PrimitiveProperty("Id", 1),
+                        ExpectedException = (ExpectedException)null
                     },
                     new
                     {
@@ -493,7 +495,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": null" +
                             "}",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "custom.annotation", "Name")
+                        ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "custom.annotation", "Name")
                     },
                     new
                     {
@@ -511,7 +513,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate odata property annotation.",
+                        Description = "Duplicate odata property annotation - should fail.",
                         Json = "{" +
                                 "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities()/$entity\"," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", JsonLightConstants.ODataTypeAnnotationName) + "\": \"Edm.Int32\"," +
@@ -519,7 +521,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 "\"Name\": \"Value\"" +
                             "}",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataTypeAnnotationName, "Name")
+                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataTypeAnnotationName, "Name")
                     },
                 };
 
@@ -563,27 +565,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Property with object value and type name annotation - should fail.",
                     ExpectedProperty = PayloadBuilder.Property("TestProperty", PayloadBuilder.ComplexValue("TestModel.Address")),
                     EdmPropertyType = new EdmComplexTypeReference(addressType, false),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.Address\"," +
                         "\"TestProperty\":{}",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new DataPropertyTestCase
                 {
-                    DebugDescription = "String property with type annotation after the property - should fail.",
-                    ExpectedProperty = PayloadBuilder.PrimitiveProperty("TestProperty", "value"),
-                    EdmPropertyType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false),
-                    Json = 
-                        "\"TestProperty\":\"value\"," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.String\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", JsonLightConstants.ODataTypeAnnotationName, "TestProperty"),
-                },
-                new DataPropertyTestCase
-                {
                     DebugDescription = "String property with null type annotation - should fail.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("TestProperty", "value"),
                     EdmPropertyType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":null," +
                         "\"TestProperty\":\"value\"",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_InvalidTypeName", string.Empty)
@@ -593,33 +585,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "null property with unknown type annotation (declared) - should fail.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("TestProperty", "value"),
                     EdmPropertyType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Unknown\"," +
                         "\"TestProperty\":null",
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKind", "Unknown", "Primitive", "Complex"),
                     OnlyOnDeclaredProperty = true
-                },
-                new DataPropertyTestCase
-                {
-                    DebugDescription = "null property with unknown type annotation (open) - should fail.",
-                    ExpectedProperty = PayloadBuilder.PrimitiveProperty("TestProperty", "value"),
-                    EdmPropertyType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false),
-                    Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Unknown\"," +
-                        "\"TestProperty\":null",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnrecognizedTypeName", "Unknown"),
-                    OnlyOnOpenProperty = true
-                },
-                new DataPropertyTestCase
-                {
-                    DebugDescription = "Open property with navigation link annotation should fail.",
-                    ExpectedProperty = PayloadBuilder.Property("TestProperty", PayloadBuilder.PrimitiveMultiValue()),
-                    EdmPropertyType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), false),
-                    Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Int32\"," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/link\"," +
-                        "\"TestProperty\":42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation", "TestProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName)
                 },
             };
 
@@ -675,7 +645,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 return new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = testCase.DebugDescription + " (open property)",
-                    PayloadElement = PayloadBuilder.Entity("TestModel.Entity")
+                    PayloadElement = PayloadBuilder.Entity("TestModel.EntityType")
                         .Property(testCase.ExpectedProperty)
                         .JsonRepresentation("{" +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Entities/TestModel.EntityType/$entity\"," +
@@ -726,7 +696,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "String open property with string type information.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", "value"),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.String\"," +
                         "\"OpenProperty\":\"value\"",
                 },
@@ -740,7 +710,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "DateTimeOffset open property with type information.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", new DateTimeOffset(2012, 4, 13, 2, 43, 10, 215, TimeSpan.Zero)),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.DateTimeOffset\"," +
                         "\"OpenProperty\":\"2012-04-13T02:43:10.215Z\"",
                 },
@@ -748,35 +718,32 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Spatial open property with type information - should work.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", GeographyFactory.Point(25.0, 23.2).Build()),
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.GeographyPoint\"," + 
+                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.GeographyPoint\"," +
                            "\"OpenProperty\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, GeographyFactory.Point(25.0, 23.2).Build()),
-                },
-                new OpenPropertyTestCase
-                {
-                    DebugDescription = "Empty complex open property with type information.",
-                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address")),
-                    Json = "\"OpenProperty\":{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\"}",
-                },
-                new OpenPropertyTestCase
-                {
-                    DebugDescription = "Complex property with data with type information.",
-                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address").PrimitiveProperty("Street", "First")),
-                    Json = "\"OpenProperty\":{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\", \"Street\":\"First\"}",
                 },
                 new OpenPropertyTestCase
                 {
                     DebugDescription = "String open property with complex type information - should fail.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", "value"),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.Address\"," +
                         "\"OpenProperty\":\"value\"",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadNestedResource","OpenProperty")
+                },
+                new OpenPropertyTestCase
+                {
+                    DebugDescription = "String open property with complex type information - should fail.",
+                    ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", "value"),
+                    Json =
+                        "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.Address\"," +
+                        "\"OpenProperty\":null",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation")
                 },
                 new OpenPropertyTestCase
                 {
                     DebugDescription = "Open collection property - should pass.",
                     ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.Int32")).Item(1)),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Collection(Edm.Int32)\"," +
                         "\"OpenProperty\":[1]",
                 },
@@ -1369,7 +1336,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType")
                         .PrimitiveProperty("Id", 1)
                         .ExpandedNavigationProperty(
-                            "CityHall", 
+                            "CityHall",
                             PayloadBuilder.EntitySet(new EntityInstance[]
                             {
                                 PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1).AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null }),

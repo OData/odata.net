@@ -13,6 +13,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.UserDefinedClient
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
+    using Microsoft.OData.Edm.Vocabularies;
 
     public class UserDefinedServiceContainer : DataServiceContext
     {
@@ -224,7 +225,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.UserDefinedClient
             : base(serviceRoot)
         {
             XmlReader reader = XmlReader.Create(new StringReader(edmModelString));
-            edmModel = EdmxReader.Parse(reader);
+            edmModel = CsdlReader.Parse(reader);
             this.Format.LoadServiceModel = () => edmModel;
             this.Format.UseJson();
         }
@@ -260,6 +261,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.UserDefinedClient
                 .SingleOrDefault();
         }
 
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public QueryOperationResponse<CT> FunctionWithoutParameter(ET entity)
         {
             return this.Execute(
@@ -299,6 +301,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.UserDefinedClient
                 "POST",
                 new BodyOperationParameter("", entity));
         }
+#endif
     }
 
     [Key("UserName")]

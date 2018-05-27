@@ -17,10 +17,8 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -125,7 +123,7 @@ namespace EdmLibTests.FunctionalTests
                 using (var xw = XmlWriter.Create(tw))
                 {
                     IEnumerable<EdmError> errors;
-                    EdmxWriter.TryWriteEdmx(BaseModel, xw, EdmxTarget.OData, out errors);
+                    CsdlWriter.TryWriteCsdl(BaseModel, xw, CsdlTarget.OData, out errors);
                 }
             }
             catch (Exception)
@@ -142,7 +140,7 @@ namespace EdmLibTests.FunctionalTests
                 tr = new StringReader(builder.ToString());
                 using (var xr = XmlReader.Create(tr))
                 {
-                    Model = EdmxReader.Parse(xr);
+                    Model = CsdlReader.Parse(xr);
                 }
             }
             catch (Exception)
@@ -242,7 +240,7 @@ namespace EdmLibTests.FunctionalTests
         public void ParseEnumTypeInParallel()
         {
             var color = new EdmEnumType("ns", "color");
-            color.AddMember("White", new EdmIntegerConstant(0));
+            color.AddMember("White", new EdmEnumMemberValue(0));
             int errorCount = 0;
             Parallel.ForEach(
                 Enumerable.Range(0, 20),
@@ -272,7 +270,7 @@ namespace EdmLibTests.FunctionalTests
             for (int i = 0; i < annotationCount; i++)
             {
                 EdmTerm term = new EdmTerm("NS", "Test" + i, EdmPrimitiveTypeKind.String);
-                EdmVocabularyAnnotation annotation = new EdmAnnotation(
+                EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(
                             container,
                             term,
                             new EdmStringConstant("desc" + i));
@@ -285,14 +283,14 @@ namespace EdmLibTests.FunctionalTests
                 var xw = XmlWriter.Create(ms, new XmlWriterSettings { Indent = true });
 
                 IEnumerable<EdmError> errors;
-                var res = EdmxWriter.TryWriteEdmx(edmModel, xw, EdmxTarget.OData, out errors);
+                var res = CsdlWriter.TryWriteCsdl(edmModel, xw, CsdlTarget.OData, out errors);
                 xw.Flush();
                 ms.Flush();
                 ms.Seek(0, SeekOrigin.Begin);
                 using (var sr = new StreamReader(ms))
                 {
                     var metadata = sr.ReadToEnd();
-                    loadedEdmModel = EdmxReader.Parse(XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(metadata))));
+                    loadedEdmModel = CsdlReader.Parse(XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(metadata))));
                 }
             }
             container = loadedEdmModel.EntityContainer;
@@ -332,7 +330,7 @@ namespace EdmLibTests.FunctionalTests
             this.RunParallelTestsWithEdmParModel(
                 edmParModel =>
                 {
-                    EdmVocabularyAnnotation annotation = new EdmAnnotation(
+                    EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(
                         edmParModel.Person,
                         CoreVocabularyModel.DescriptionTerm,
                         new EdmStringConstant("desc"));

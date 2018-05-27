@@ -23,7 +23,7 @@ namespace Microsoft.Spatial
         /// <summary>Gets a collection of points.</summary>
         /// <returns>A collection of points.</returns>
         public abstract ReadOnlyCollection<GeographyPoint> Points { get; }
-        
+
         /// <summary>Determines whether this instance and another specified geography instance have the same value.</summary>
         /// <returns>true if the value of the value parameter is the same as this instance; otherwise, false.</returns>
         /// <param name="other">The geography to compare to this instance.</param>

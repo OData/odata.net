@@ -9,7 +9,7 @@ using System.Globalization;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataPreferenceHeaderTests
     {
@@ -149,6 +149,13 @@ namespace Microsoft.OData.Core.Tests
         public void AnnotationFilterShouldReturnNullWhenODataAnnotationsPreferenceIsMissing()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference);
+            this.preferHeader.AnnotationFilter.Should().BeNull();
+        }
+
+        [Fact]
+        public void AnnotationFilterShouldReturnNullWhenODataAnnotationsPreferenceValueIsNotSet()
+        {
+            this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference + "," + ODataAnnotationPreferenceToken);
             this.preferHeader.AnnotationFilter.Should().BeNull();
         }
 

@@ -6,14 +6,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
     internal static class RegistrationHelper
     {
-        internal static void RegisterSchemaElement(IEdmSchemaElement element, Dictionary<string, IEdmSchemaType> schemaTypeDictionary, Dictionary<string, IEdmValueTerm> valueTermDictionary, Dictionary<string, IList<IEdmOperation>> functionGroupDictionary, Dictionary<string, IEdmEntityContainer> containerDictionary)
+        internal static void RegisterSchemaElement(IEdmSchemaElement element, Dictionary<string, IEdmSchemaType> schemaTypeDictionary, Dictionary<string, IEdmTerm> valueTermDictionary, Dictionary<string, IList<IEdmOperation>> functionGroupDictionary, Dictionary<string, IEdmEntityContainer> containerDictionary)
         {
             string qualifiedName = element.FullName();
             switch (element.SchemaElementKind)
@@ -25,8 +24,8 @@ namespace Microsoft.OData.Edm
                 case EdmSchemaElementKind.TypeDefinition:
                     AddElement((IEdmSchemaType)element, qualifiedName, schemaTypeDictionary, CreateAmbiguousTypeBinding);
                     break;
-                case EdmSchemaElementKind.ValueTerm:
-                    AddElement((IEdmValueTerm)element, qualifiedName, valueTermDictionary, CreateAmbiguousValueTermBinding);
+                case EdmSchemaElementKind.Term:
+                    AddElement((IEdmTerm)element, qualifiedName, valueTermDictionary, CreateAmbiguousTermBinding);
                     break;
                 case EdmSchemaElementKind.EntityContainer:
                     // Only one entity container can be added.
@@ -116,16 +115,16 @@ namespace Microsoft.OData.Edm
             return new AmbiguousTypeBinding(first, second);
         }
 
-        internal static IEdmValueTerm CreateAmbiguousValueTermBinding(IEdmValueTerm first, IEdmValueTerm second)
+        internal static IEdmTerm CreateAmbiguousTermBinding(IEdmTerm first, IEdmTerm second)
         {
-            var ambiguous = first as AmbiguousValueTermBinding;
+            var ambiguous = first as AmbiguousTermBinding;
             if (ambiguous != null)
             {
                 ambiguous.AddBinding(second);
                 return ambiguous;
             }
 
-            return new AmbiguousValueTermBinding(first, second);
+            return new AmbiguousTermBinding(first, second);
         }
 
         internal static IEdmEntitySet CreateAmbiguousEntitySetBinding(IEdmEntitySet first, IEdmEntitySet second)

@@ -4,7 +4,7 @@ $filter = Microsoft.Test.Taupo.OData.WCFService.Within(Location=@a, Distance=@b)
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Customers
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]

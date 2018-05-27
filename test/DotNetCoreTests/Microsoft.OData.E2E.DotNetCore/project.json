@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0-*",
+  "testRunner": "xunit",
+  "dependencies": {
+    "System.ComponentModel.EventBasedAsync": "4.3.0",
+    "xunit": "2.2.0"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        },
+        "dotnet-test-xunit": "2.2.0-preview2-build1029",
+        "Microsoft.OData.Client.NetStandard": {
+          "target": "project"
+        },
+        "Microsoft.Test.OData.Framework.NetStandard": {
+          "target": "project"
+        },
+        "Microsoft.Test.OData.Services.TestServices.NetStandard": {
+          "target": "project"
+        }
+      }
+    }
+  }
+}

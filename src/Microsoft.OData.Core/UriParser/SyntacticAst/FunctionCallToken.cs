@@ -4,25 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
     #region Namespaces
 
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
 
     #endregion Namespaces
 
     /// <summary>
     /// Lexical token representing a function call.
     /// </summary>
-    internal sealed class FunctionCallToken : QueryToken
+    public sealed class FunctionCallToken : QueryToken
     {
         /// <summary>
         /// The name of the function to call.
@@ -49,8 +47,8 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(name, "name");
 
             this.name = name;
-            this.arguments = argumentValues == null ? 
-                new ReadOnlyEnumerableForUriParser<FunctionParameterToken>(FunctionParameterToken.EmptyParameterList) : 
+            this.arguments = argumentValues == null ?
+                new ReadOnlyEnumerableForUriParser<FunctionParameterToken>(FunctionParameterToken.EmptyParameterList) :
                 new ReadOnlyEnumerableForUriParser<FunctionParameterToken>(argumentValues.Select(v => new FunctionParameterToken(null, v)));
             this.source = null;
         }

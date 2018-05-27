@@ -4,21 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Edm.Vocabularies;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Builds segments from tokens within $select.
@@ -33,14 +29,32 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="edmType">the type of the current scope based on type segments.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <returns>The segment created from the token.</returns>
-        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver = null)
+        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver)
         {
-            if (resolver == null)
-            {
-                resolver = ODataUriResolver.Default;
-            }
+            ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
             ODataPathSegment nextSegment;
+            if (UriParserHelper.IsAnnotation(tokenIn.Identifier))
+            {
+                if (TryBindAsDeclaredTerm(tokenIn, model, resolver, out nextSegment))
+                {
+                    return nextSegment;
+                }
+
+                string qualifiedTermName = tokenIn.Identifier.Remove(0, 1);
+                int separator = qualifiedTermName.LastIndexOf(".", StringComparison.Ordinal);
+                string namespaceName = qualifiedTermName.Substring(0, separator);
+                string termName = qualifiedTermName.Substring(separator == 0 ? 0 : separator + 1);
+
+                // Don't allow selecting odata control information
+                if (String.Compare(namespaceName, ODataConstants.ODataPrefix, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(tokenIn.Identifier));
+                }
+
+                return new AnnotationSegment(new EdmTerm(namespaceName, termName, EdmCoreModel.Instance.GetUntyped()));
+            }
+
             if (TryBindAsDeclaredProperty(tokenIn, edmType, resolver, out nextSegment))
             {
                 return nextSegment;
@@ -54,7 +68,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return nextSegment;
                 }
 
-                // If an action or function is requested in a selectItem using a qualifiedActionName or a qualifiedFunctionName 
+                // If an action or function is requested in a selectItem using a qualifiedActionName or a qualifiedFunctionName
                 // and that operation cannot be bound to the entities requested, the service MUST ignore the selectItem.
                 if (!edmType.IsOpen)
                 {
@@ -64,7 +78,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (edmType.IsOpen)
             {
-                return new OpenPropertySegment(tokenIn.Identifier);
+                return new DynamicPathSegment(tokenIn.Identifier);
             }
 
             throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier));
@@ -111,14 +125,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="entityType">the current entity type to use as the binding type when looking for operations.</param>
         /// <param name="segment">Bound segment if the token was bound to an operation successfully, or null.</param>
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static bool TryBindAsOperation(PathSegmentToken pathToken, IEdmModel model, IEdmStructuredType entityType, out ODataPathSegment segment)
         {
             Debug.Assert(pathToken != null, "pathToken != null");
             Debug.Assert(entityType != null, "bindingType != null");
 
             List<IEdmOperation> possibleFunctions = new List<IEdmOperation>();
+            IList<string> parameterNames = new List<string>();
 
             // Catch all catchable exceptions as FindDeclaredBoundOperations is implemented by anyone.
             // If an exception occurs it will be supressed and the possible functions will be empty and return false.
@@ -133,7 +146,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 else
                 {
                     NonSystemToken nonSystemToken = pathToken as NonSystemToken;
-                    IList<string> parameterNames = new List<string>();
                     if (nonSystemToken != null && nonSystemToken.NamedValues != null)
                     {
                         parameterNames = nonSystemToken.NamedValues.Select(s => s.Name).ToList();
@@ -166,6 +178,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 possibleFunctions = possibleFunctions.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(entityType).ToList();
             }
 
+            // If more than one overload matches, try to select based on optional parameters
+            if (possibleFunctions.Count > 1 && parameterNames.Count > 0)
+            {
+                possibleFunctions = possibleFunctions.FindBestOverloadBasedOnParameters(parameterNames).ToList();
+            }
+
             if (possibleFunctions.Count <= 0)
             {
                 segment = null;
@@ -184,7 +202,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <param name="segment">Bound segment if the token was bound to a declared property successfully, or null.</param>
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         private static bool TryBindAsDeclaredProperty(PathSegmentToken tokenIn, IEdmStructuredType edmType, ODataUriResolver resolver, out ODataPathSegment segment)
         {
             IEdmProperty prop = resolver.ResolveProperty(edmType, tokenIn.Identifier);
@@ -207,6 +224,33 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             throw new ODataException(ODataErrorStrings.SelectExpandBinder_UnknownPropertyType(prop.Name));
+        }
+
+        /// <summary>
+        /// Tries to bind a given token as a declared annotation term.
+        /// </summary>
+        /// <param name="tokenIn">Token to bind.</param>
+        /// <param name="model">The model to search for this term</param>
+        /// <param name="resolver">Resolver for uri parser.</param>
+        /// <param name="segment">Bound segment if the token was bound to a declared term successfully, or null.</param>
+        /// <returns>True if the token was bound successfully, or false otherwise.</returns>
+        private static bool TryBindAsDeclaredTerm(PathSegmentToken tokenIn, IEdmModel model, ODataUriResolver resolver, out ODataPathSegment segment)
+        {
+            if (!UriParserHelper.IsAnnotation(tokenIn.Identifier))
+            {
+                segment = null;
+                return false;
+            }
+
+            IEdmTerm term = resolver.ResolveTerm(model, tokenIn.Identifier.Remove(0, 1));
+            if (term == null)
+            {
+                segment = null;
+                return false;
+            }
+
+            segment = new AnnotationSegment(term);
+            return true;
         }
     }
 }

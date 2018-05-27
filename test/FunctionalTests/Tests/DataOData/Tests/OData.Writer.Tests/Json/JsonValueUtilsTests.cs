@@ -260,8 +260,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
 
             static JsonValueUtils()
             {
-                classType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.Json.JsonValueUtils");
-                formatEnumType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.ODataJsonDateTimeFormat");
+                classType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.JsonValueUtils");
+                formatEnumType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.ODataJsonDateTimeFormat");
             }
 
             public static void WriteObjectValue(TextWriter writer, object value)

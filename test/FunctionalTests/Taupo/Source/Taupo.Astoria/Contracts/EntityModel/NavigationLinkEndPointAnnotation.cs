@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="NavigationLinkEndPointAnnotation.cs" company="Microsoft">
+// <copyright file="NestedResourceInfoEndPointAnnotation.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,12 +16,12 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.EntityModel
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
 
     /// <summary>
-    /// NavigationLinkEndPointAnnotation holds all the required for the RelayService to replace relationship links in payloads
+    /// NestedResourceInfoEndPointAnnotation holds all the required for the RelayService to replace relationship links in payloads
     /// </summary>
-    public class NavigationLinkEndPointAnnotation : Annotation, ICustomAnnotationSerializer
+    public class NestedResourceInfoEndPointAnnotation : Annotation, ICustomAnnotationSerializer
     {
         /// <summary>
-        /// Initializes a new instance of the NavigationLinkEndPointAnnotation class
+        /// Initializes a new instance of the NestedResourceInfoEndPointAnnotation class
         /// </summary>
         /// <param name="name">Name of EndPoint</param>
         /// <param name="navigationPropertyName">Name of navigation property that the entityset relates to</param>
@@ -29,7 +29,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.EntityModel
         /// <param name="removeLinkHref">Whether to remove href from the relationship link from payload</param>
         /// <param name="injectEntitySetRelationshipLink">Whether to inject relationship link for this property</param>
         /// <param name="customHostName">Custom host name to inject in link uri</param>
-        public NavigationLinkEndPointAnnotation(
+        public NestedResourceInfoEndPointAnnotation(
             string name, string navigationPropertyName, bool removeNavigationLink, bool removeLinkHref, bool injectEntitySetRelationshipLink, string customHostName)
             : base()
         {
@@ -44,7 +44,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.EntityModel
         }
 
         /// <summary>
-        /// Initializes a new instance of the NavigationLinkEndPointAnnotation class
+        /// Initializes a new instance of the NestedResourceInfoEndPointAnnotation class
         /// </summary>
         /// <param name="name">Name of EndPoint</param>
         /// <param name="navigationPropertyName">Name of navigation property that the entityset relates to</param>
@@ -54,7 +54,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.EntityModel
         /// <param name="customHostName">Custom host name to inject in link uri</param>
         /// <param name="appendRequestIdToName">Whether to append request Id to the annotation name</param>
         /// <param name="useRelativeLink">Whether to use relative Uri</param>
-        public NavigationLinkEndPointAnnotation(
+        public NestedResourceInfoEndPointAnnotation(
             string name, string navigationPropertyName, bool removeNavigationLink, bool removeLinkHref, bool injectEntitySetRelationshipLink, string customHostName, bool appendRequestIdToName, bool useRelativeLink)
             : this(name, navigationPropertyName, removeNavigationLink, removeLinkHref, injectEntitySetRelationshipLink, customHostName)
         {
@@ -63,10 +63,10 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.EntityModel
         }
 
         /// <summary>
-        /// Initializes a new instance of the NavigationLinkEndPointAnnotation class
+        /// Initializes a new instance of the NestedResourceInfoEndPointAnnotation class
         /// </summary>
         /// <param name="element">XElement that contains the information</param>
-        public NavigationLinkEndPointAnnotation(XElement element)
+        public NestedResourceInfoEndPointAnnotation(XElement element)
         {
             this.Name = element.Attribute("Name").Value;
             this.NavigationPropertyName = element.Attribute("NavigationPropertyName").Value;
@@ -125,7 +125,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.EntityModel
         public XObject GetXObject()
         {
             return new XElement(
-                XName.Get("NavigationLinkEndPointAnnotation", EdmConstants.TaupoAnnotationsNamespace.NamespaceName),
+                XName.Get("NestedResourceInfoEndPointAnnotation", EdmConstants.TaupoAnnotationsNamespace.NamespaceName),
                 new XAttribute("Name", this.Name),
                 new XAttribute("NavigationPropertyName", this.NavigationPropertyName),
                 new XAttribute("RemoveNavigationLink", Convert.ToString(this.RemoveNavigationLink, CultureInfo.InvariantCulture)),

@@ -23,7 +23,6 @@ namespace Microsoft.Test.OData.Tests.Client
                 return new Uri("http://localhost:19691/DefaultService/");
             }
             return new Uri("http://localhost:6630/DefaultService.svc/");
-
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;

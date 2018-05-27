@@ -67,7 +67,8 @@ namespace Microsoft.OData.Service.Serializers
             this.recursionDepth = parent.recursionDepth;
             this.service = parent.service;
             this.tracker = parent.tracker;
-            this.update = parent.update;
+            //this.update = parent.update;
+            this.update = false;
             this.description = parent.description;
         }
 
@@ -108,11 +109,6 @@ namespace Microsoft.OData.Service.Serializers
         {
             get { return this.objectCount; }
         }
-
-        /// <summary>
-        /// Gets a value indicating whether the request is Atom
-        /// </summary>
-        protected abstract bool IsAtomRequest { get; }
 
         /// <summary>
         /// Gets a value indicating whether the request is json light
@@ -164,7 +160,7 @@ namespace Microsoft.OData.Service.Serializers
 
             Debug.Assert(
                 (!update /*POST*/ && dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.POST) ||
-                (update /*PUT,PATCH*/ && (dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PUT || 
+                (update /*PUT,PATCH*/ && (dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PUT ||
                     dataService.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PATCH)),
                 "For PUT and PATCH, update must be true; for POST, update must be false");
 
@@ -662,7 +658,7 @@ namespace Microsoft.OData.Service.Serializers
                 {
                     DataServiceConfiguration.CheckResourceRights(requestDescription.LastSegmentInfo.TargetResourceSet, EntitySetRights.WriteAppend);
                 }
-                
+
                 resourceInPayload = this.ReadEntity(out targetResourceType);
                 Debug.Assert(targetResourceType != null, "targetResourceType != null");
 
@@ -870,7 +866,7 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Returns the target/child resource to bind to an resource, which might be getting inserted or modified.
+        /// Returns the target/child resource to bind to a resource, which might be getting inserted or modified.
         /// Since this is a target resource, null is a valid value here (for e.g. /Customers(1)/BestFriend value
         /// can be null)
         /// </summary>
@@ -885,7 +881,7 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Returns the target/child resource to bind to an resource, which might be getting inserted or modified.
+        /// Returns the target/child resource to bind to a resource, which might be getting inserted or modified.
         /// Since this is a target resource, null is a valid value here (for e.g. /Customers(1)/BestFriend value
         /// can be null)
         /// </summary>
@@ -941,9 +937,9 @@ namespace Microsoft.OData.Service.Serializers
             else
             {
                 resourceCookie = Deserializer.GetResource(
-                    segmentInfo, 
-                    resourceType != null ? resourceType.FullName : null, 
-                    this.Service, 
+                    segmentInfo,
+                    resourceType != null ? resourceType.FullName : null,
+                    this.Service,
                     checkForNull);
 
                 // We only need to check etag if the resource is not cross-referenced. If the resource is cross-referenced,
@@ -993,7 +989,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(this.Service != null, "this.Service != null");
             Debug.Assert(this.Service.Provider != null, "this.Service.Provider != null");
             Debug.Assert(resourceType != null, "Must have valid resource type");
-            Debug.Assert(resourceType.ResourceTypeKind == ResourceTypeKind.EntityType, "resourceType.ResourceTypeKind == ResourceTypeKind.EntityType");
+            Debug.Assert(resourceType.ResourceTypeKind == ResourceTypeKind.EntityType || resourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "resourceType is structured type");
             Debug.Assert(this.RequestDescription != null, "this.RequestDescription != null");
             Debug.Assert(this.RequestDescription.LastSegmentInfo != null, "this.RequestDescription.LastSegmentInfo != null");
             Debug.Assert(this.RequestDescription.LastSegmentInfo.TargetResourceSet != null, "this.RequestDescription.LastSegmentInfo.TargetContainer != null");
@@ -1011,10 +1007,7 @@ namespace Microsoft.OData.Service.Serializers
                 // can get a more specific version this way
                 ResourceSetWrapper resourceSet = this.RequestDescription.LastSegmentInfo.TargetResourceSet;
                 Version minimumPayloadVersion = resourceType.GetMinimumResponseVersion(this.Service, resourceSet);
-                if (!this.IsAtomRequest)
-                {
-                    minimumPayloadVersion = resourceType.GetMinimumResponseVersion(this.Service, resourceSet);
-                }
+                minimumPayloadVersion = resourceType.GetMinimumResponseVersion(this.Service, resourceSet);
 
                 this.RequestDescription.VerifyAndRaiseResponseVersion(minimumPayloadVersion, this.Service);
             }
@@ -1075,7 +1068,7 @@ namespace Microsoft.OData.Service.Serializers
             {
                 Debug.Assert(!requestDescription.LastSegmentInfo.HasKeyValues, "CreateSegments must have caught this issue.");
                 ResourceType requestResourceType = requestDescription.LastSegmentInfo.TargetResourceType;
-                
+
                 // If this open property is collection, use resourceType in requestValue.
                 var requestCollectionValue = requestValue as CollectionPropertyValueEnumerable;
                 if (requestResourceType == null && requestCollectionValue != null)

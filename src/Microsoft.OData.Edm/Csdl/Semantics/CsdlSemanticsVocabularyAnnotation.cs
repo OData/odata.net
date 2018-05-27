@@ -8,23 +8,24 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     /// <summary>
-    /// Common base class for CsdlSemanticsTypeAnnotation and CsdlSemanticsValueAnnotation.
+    /// Provides semantics for a CsdlAnnotation.
     /// </summary>
-    internal abstract class CsdlSemanticsVocabularyAnnotation : CsdlSemanticsElement, IEdmVocabularyAnnotation, IEdmCheckable
+    internal class CsdlSemanticsVocabularyAnnotation : CsdlSemanticsElement, IEdmVocabularyAnnotation, IEdmCheckable
     {
         protected readonly CsdlAnnotation Annotation;
         private readonly CsdlSemanticsSchema schema;
         private readonly string qualifier;
         private readonly IEdmVocabularyAnnotatable targetContext;
         private readonly CsdlSemanticsAnnotations annotationsContext;
+        private readonly Cache<CsdlSemanticsVocabularyAnnotation, IEdmExpression> valueCache = new Cache<CsdlSemanticsVocabularyAnnotation, IEdmExpression>();
+        private static readonly Func<CsdlSemanticsVocabularyAnnotation, IEdmExpression> ComputeValueFunc = (me) => me.ComputeValue();
 
         private readonly Cache<CsdlSemanticsVocabularyAnnotation, IEdmTerm> termCache = new Cache<CsdlSemanticsVocabularyAnnotation, IEdmTerm>();
         private static readonly Func<CsdlSemanticsVocabularyAnnotation, IEdmTerm> ComputeTermFunc = (me) => me.ComputeTerm();
@@ -33,7 +34,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable> targetCache = new Cache<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable>();
         private static readonly Func<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable> ComputeTargetFunc = (me) => me.ComputeTarget();
 
-        protected CsdlSemanticsVocabularyAnnotation(CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, CsdlAnnotation annotation, string qualifier)
+        public CsdlSemanticsVocabularyAnnotation(CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, CsdlAnnotation annotation, string qualifier)
             : base(annotation)
         {
             this.schema = schema;
@@ -115,7 +116,20 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        protected abstract IEdmTerm ComputeTerm();
+        public IEdmExpression Value
+        {
+            get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
+        }
+
+        protected IEdmTerm ComputeTerm()
+        {
+            return this.Schema.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.Schema.UnresolvedName(this.Annotation.Term));
+        }
+
+        private IEdmExpression ComputeValue()
+        {
+            return CsdlSemanticsModel.WrapExpression((this.Annotation).Expression, TargetBindingContext, this.Schema);
+        }
 
         private IEdmVocabularyAnnotatable ComputeTarget()
         {
@@ -140,7 +154,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return type;
                     }
 
-                    IEdmValueTerm term = this.schema.FindValueTerm(elementName);
+                    IEdmTerm term = this.schema.FindTerm(elementName);
                     if (term != null)
                     {
                         return term;
@@ -172,7 +186,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             return containerElement;
                         }
 
-                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(targetSegments[1], container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+                        IEdmOperationImport operationImport = FindParameterizedOperationImport(targetSegments[1], container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
                         if (operationImport != null)
                         {
                             return operationImport;
@@ -218,7 +232,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     container = this.Model.FindEntityContainer(containerName);
                     if (container != null)
                     {
-                        IEdmOperationImport operationImport = this.FindParameterizedOperationImport(operationName, container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+                        IEdmOperationImport operationImport = FindParameterizedOperationImport(operationName, container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
                         if (operationImport != null)
                         {
                             IEdmOperationParameter parameter = operationImport.Operation.FindParameter(parameterName);
@@ -240,7 +254,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        private IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
+        private static IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
         {
             IEnumerable<IEdmOperationImport> matchingFunctions = findFunctions(parameterizedName);
             if (matchingFunctions.Count() == 0)

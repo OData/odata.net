@@ -109,20 +109,29 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-        
+
         /// <summary>
-        /// Convert from primitive value to an xml payload string. 
+        /// Convert from primitive value to an xml payload string.
         /// </summary>
         /// <param name="propertyValue">incoming object value</param>
         /// <returns>converted value</returns>
         internal static string ToString(object propertyValue)
         {
             Debug.Assert(null != propertyValue, "null should be handled by caller");
+            Debug.Assert(!(propertyValue is ODataUntypedValue), "!(propertyValue is ODataUntypedValue)");
 
             PrimitiveType primitiveType;
             if (PrimitiveType.TryGetPrimitiveType(propertyValue.GetType(), out primitiveType) && primitiveType.TypeConverter != null)
             {
                 return primitiveType.TypeConverter.ToString(propertyValue);
+            }
+
+            // If the type of a property is enum on server side, but it is System.String on client side,
+            // then propertyValue should be ODataEnumValue. We should return the enumValue.Value.
+            var enumValue = propertyValue as ODataEnumValue;
+            if (enumValue != null)
+            {
+                return enumValue.Value;
             }
 
             Debug.Assert(false, "new StorageType without update to knownTypes");
@@ -137,6 +146,12 @@ namespace Microsoft.OData.Client
             PrimitiveType primitiveType;
             if (PrimitiveType.TryGetPrimitiveType(propertyType, out primitiveType))
             {
+                // Map DateTime to DateTimeOffset
+                if (primitiveType.ClrType == typeof(DateTime))
+                {
+                    return XmlConstants.EdmDateTimeOffsetTypeName;
+                }
+
                 if (primitiveType.EdmTypeName != null)
                 {
                     return primitiveType.EdmTypeName;

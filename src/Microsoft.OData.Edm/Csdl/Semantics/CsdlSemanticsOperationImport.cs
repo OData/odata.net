@@ -6,10 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library.Expressions;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -52,11 +50,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         }
 
         public IEdmExpression EntitySet
-        { 
-            get 
+        {
+            get
             {
                 return this.entitySetCache.GetValue(this, ComputeEntitySetFunc, null);
-            } 
+            }
         }
 
         public abstract EdmContainerElementKind ContainerElementKind { get; }
@@ -70,33 +68,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             if (this.operationImport.EntitySet != null)
             {
-                // if its a target path then create as such otherwise its targeting an entityset.
-                if (this.operationImport.EntitySet.IndexOf("/", StringComparison.Ordinal) > -1)
-                {
-                    return new OperationImportPathExpression(this.operationImport.EntitySet) { Location = this.Location };
-                }
-                else
-                {
-                    IEdmEntitySet entitySet = this.container.FindEntitySetExtended(this.operationImport.EntitySet) ?? new UnresolvedEntitySet(this.operationImport.EntitySet, this.Container, this.Location);
-                    return new OperationImportEntitySetReferenceExpression(entitySet) { Location = this.Location };
-                }
+                return new OperationImportPathExpression(this.operationImport.EntitySet) { Location = this.Location };
             }
 
             return null;
-        }
-
-        private sealed class OperationImportEntitySetReferenceExpression : EdmEntitySetReferenceExpression, IEdmLocatable
-        {
-            internal OperationImportEntitySetReferenceExpression(IEdmEntitySet referencedEntitySet)
-                : base(referencedEntitySet)
-            {
-            }
-
-            public EdmLocation Location
-            {
-                get;
-                set;
-            }
         }
 
         private sealed class OperationImportPathExpression : EdmPathExpression, IEdmLocatable

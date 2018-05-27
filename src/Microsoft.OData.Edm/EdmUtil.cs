@@ -4,23 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm
 {
-    #region Namespaces
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-    #endregion Namespaces
-
     /// <summary>
     /// Utilities for Edm.
     /// </summary>
@@ -236,7 +231,11 @@ namespace Microsoft.OData.Edm
             foreach (IEdmOperationParameter parameter in operation.Parameters)
             {
                 string typeName = "";
-                if (parameter.Type.IsCollection())
+                if (parameter.Type == null)
+                {
+                    typeName = CsdlConstants.TypeName_Untyped;
+                }
+                else if (parameter.Type.IsCollection())
                 {
                     typeName = CsdlConstants.Value_Collection + "(" + parameter.Type.AsCollection().ElementType().FullName() + ")";
                 }
@@ -451,7 +450,7 @@ namespace Microsoft.OData.Edm
                 if (!dictionary.TryGetValue(key, out val))
                 {
                     val = computedValue;
-                    dictionary.Add(key, computedValue);                    
+                    dictionary.Add(key, computedValue);
                 }
             }
 
@@ -459,7 +458,31 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Checks whether the <paramref name="annotatable"/> has a value annotation.
+        /// Query dictionary for certain key, return default if not present
+        /// </summary>
+        /// <typeparam name="TKey">Key type for dictionary</typeparam>
+        /// <typeparam name="TValue">Value type for dictionary</typeparam>
+        /// <param name="dictionary">The dictionary to look up</param>
+        /// <param name="key">The key property</param>
+        /// <returns>The value for the key, or default if the value does not exist</returns>
+        internal static TValue DictionarySafeGet<TKey, TValue>(
+            IDictionary<TKey, TValue> dictionary,
+            TKey key)
+        {
+            CheckArgumentNull(dictionary, "dictionary");
+
+            TValue val;
+
+            lock (dictionary)
+            {
+                dictionary.TryGetValue(key, out val);
+            }
+
+            return val;
+        }
+
+        /// <summary>
+        /// Checks whether the <paramref name="annotatable"/> has an annotation.
         /// </summary>
         /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
         /// <param name="annotatable">The <see cref="IEdmElement"/> to check.</param>

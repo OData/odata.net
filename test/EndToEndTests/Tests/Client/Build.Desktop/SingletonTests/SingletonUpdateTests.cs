@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -33,19 +33,19 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             for (int i = 0; i < mimeTypes.Length; i++)
             {
-                ODataEntry entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> entries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(cities[i], entry.Properties.Single(p => p.Name == "City").Value);
+                    Assert.AreEqual(cities[i], entries[1].Properties.Single(p => p.Name == "City").Value);
                 }
 
                 var properties = new[] { new ODataProperty { Name = "City", Value = cities[i + 1] } };
                 this.UpdateEntry("Customer", "VipCustomer", mimeTypes[i], properties);
 
-                ODataEntry updatedEntry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> updatedEntries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(cities[i + 1], updatedEntry.Properties.Single(p => p.Name == "City").Value);
+                    Assert.AreEqual(cities[i + 1], updatedEntries[1].Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         [TestMethod]
         public void UpdateSingletonComplexProperty()
         {
-            ODataComplexValue complexValue0 = new ODataComplexValue()
+            ODataResource complex0 = new ODataResource()
             {
                 TypeName = NameSpacePrefix + "Address",
                 Properties = new[]
@@ -64,9 +64,10 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 }
             };
 
-            ODataProperty homeAddress0 = new ODataProperty() { Name = "HomeAddress", Value = complexValue0 };
+            ODataNestedResourceInfo homeAddress0 = new ODataNestedResourceInfo() { Name = "HomeAddress", IsCollection = false };
+            homeAddress0.SetAnnotation(complex0);
 
-            ODataComplexValue complexValue1 = new ODataComplexValue()
+            ODataResource complex1 = new ODataResource()
             {
                 TypeName = NameSpacePrefix + "Address",
                 Properties = new[]
@@ -76,45 +77,48 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                     new ODataProperty() {Name = "PostalCode", Value = "1111"}
                 }
             };
-            ODataProperty homeAddress1 = new ODataProperty() { Name = "HomeAddress", Value = complexValue1 };
+            ODataNestedResourceInfo homeAddress1 = new ODataNestedResourceInfo() { Name = "HomeAddress", IsCollection = false };
+            homeAddress1.SetAnnotation(complex1);
 
             for (int i = 0; i < mimeTypes.Length; i++)
             {
-                ODataProperty currentHomeAddress;
-                ODataProperty updatedHomeAddress;
+                ODataResource currentHomeAddress;
+                ODataResource updatedHomeAddress;
 
+                object[] properties;
                 if (i % 2 == 0)
                 {
-                    currentHomeAddress = homeAddress0;
-                    updatedHomeAddress = homeAddress1;
+                    currentHomeAddress = complex0;
+                    updatedHomeAddress = complex1;
+                    properties = new[] { homeAddress1 };
                 }
                 else
                 {
-                    currentHomeAddress = homeAddress1;
-                    updatedHomeAddress = homeAddress0;
+                    currentHomeAddress = complex1;
+                    updatedHomeAddress = complex0;
+                    properties = new[] { homeAddress0 };
                 }
-                ODataEntry entry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> entries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertyAreEqual((ODataProperty)entry.Properties.Single(p => p.Name == "HomeAddress"), currentHomeAddress);
+                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceAreEqual(currentHomeAddress, entries[0] );
                 }
 
-                var properties = new[] { updatedHomeAddress };
                 this.UpdateEntry("Customer", "VipCustomer", mimeTypes[i], properties);
 
-                ODataEntry updatedentry = this.QueryEntry("VipCustomer", mimeTypes[i]);
+                List<ODataResource> updatedentries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertyAreEqual(updatedHomeAddress, (ODataProperty)updatedentry.Properties.Single(p => p.Name == "HomeAddress"));
+                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceAreEqual(updatedHomeAddress, updatedentries[0]);
                 }
             }
         }
 
         #region Help function
 
-        private ODataEntry QueryEntry(string requestUri, string mimeType)
+        private List<ODataResource> QueryEntry(string requestUri, string mimeType)
         {
-            ODataEntry entry = null;
+            List<ODataResource> entries = new List<ODataResource>();
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
@@ -126,28 +130,32 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
 
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
-                            entry = reader.Item as ODataEntry;
+                            entries.Add(reader.Item as ODataResource);
                         }
                     }
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);
                 }
             }
-            return entry;
+            return entries;
         }
 
-        private void UpdateEntry(string singletonType, string singletonName, string mimeType, IEnumerable<ODataProperty> properties)
+        private void UpdateEntry(string singletonType, string singletonName, string mimeType, IEnumerable<object> properties)
         {
-            ODataEntry entry = new ODataEntry() { TypeName = NameSpacePrefix + singletonType };
-            entry.Properties = properties;
+            ODataResource entry = new ODataResource() { TypeName = NameSpacePrefix + singletonType };
+            var elementType = properties != null && properties.Count() > 0 ? properties.ElementAt(0).GetType() : null;
+            if (elementType == typeof(ODataProperty))
+            {
+                entry.Properties = properties.Cast<ODataProperty>();
+            }
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var customerType = Model.FindDeclaredType(NameSpacePrefix + singletonType) as IEdmEntityType;
             var customerSet = Model.EntityContainer.FindSingleton(singletonName);
@@ -159,8 +167,19 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(customerSet, customerType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(customerSet, customerType);
                 odataWriter.WriteStart(entry);
+                if (elementType == typeof(ODataNestedResourceInfo))
+                {
+                    foreach (var p in properties)
+                    {
+                        var nestedInfo = (ODataNestedResourceInfo)p;
+                        odataWriter.WriteStart(nestedInfo);
+                        odataWriter.WriteStart(nestedInfo.GetAnnotation<ODataResource>());
+                        odataWriter.WriteEnd();
+                        odataWriter.WriteEnd();
+                    }
+                }
                 odataWriter.WriteEnd();
             }
 

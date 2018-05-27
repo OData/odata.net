@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using System;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -88,7 +86,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the resouce type of a single item from the collection represented by this node.
+        /// Gets the resource type of a single item from the collection represented by this node.
         /// </summary>
         public override IEdmTypeReference ItemType
         {

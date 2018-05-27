@@ -87,7 +87,7 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(asyncResult, "asyncResult");
             return Context.EndExecute<T>(asyncResult);
         }
-        
+
 #if !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the query and returns the results as a collection.

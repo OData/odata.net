@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using ApprovalTests.Reporters;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
@@ -28,13 +28,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ExceptionUtilities = Microsoft.Test.Taupo.Common.ExceptionUtilities;
-    
+
     /// <summary>
     /// Base class for ODataLib Tests with extra assembly added for unit test
     /// </summary>
 #if !SILVERLIGHT
     [UseReporter(typeof(LoggingReporter))]
-    [DeploymentItem("Atom")]
     [DeploymentItem("CollectionWriter")]
     [DeploymentItem("JsonLight")]
     [DeploymentItem("ParameterWriter")]
@@ -202,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
             else
             {
-                ExceptionUtilities.Assert(format == ODataFormat.Atom, "Format not supported: {0}", format);
+                ExceptionUtilities.Assert(false, "Format not supported: {0}", format);
                 contentType = MimeTypes.ApplicationAtomXml;
             }
 

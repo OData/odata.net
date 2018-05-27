@@ -322,7 +322,7 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
                 typeof(FullTrust.TrustedMethods).Assembly, // this is a special case for the fully-trusted-methods assembly, which must always be copied
                 typeof(Microsoft.Spatial.ISpatial).Assembly,
                 typeof(Microsoft.OData.Edm.IEdmModel).Assembly,
-                typeof(Microsoft.OData.Core.ODataException).Assembly,
+                typeof(Microsoft.OData.ODataException).Assembly,
                 typeof(Microsoft.OData.Client.DataServiceContext).Assembly,
 #if !ClientSKUFramework
                 typeof(Microsoft.OData.Service.DataService<>).Assembly,

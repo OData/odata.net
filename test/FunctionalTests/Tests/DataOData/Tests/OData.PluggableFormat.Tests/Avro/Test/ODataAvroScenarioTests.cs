@@ -7,15 +7,15 @@
 #if ENABLE_AVRO
 namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 {
+    using System;
     using System.Collections.Generic;
-    using System.Data.Metadata.Edm;
     using System.IO;
     using System.Linq;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Container;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -28,7 +28,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         private static Product product3 = new Product { Id = 3, Weight = 2.3f };
         private static Address address0 = new Address { Road = "Road1", ZipCode = "Zip1" };
 
-        private static ODataEntry entry0 = new ODataEntry
+        private static ODataResource entry0 = new ODataResource
             {
                 TypeName = ProductNamespace,
                 Properties = new[]
@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 },
             };
 
-        private static ODataEntry entry1 = new ODataEntry
+        private static ODataResource entry1 = new ODataResource
             {
                 TypeName = ProductNamespace,
                 Properties = new[]
@@ -48,7 +48,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 },
             };
 
-        private static ODataEntry entry2 = new ODataEntry
+        private static ODataResource entry2 = new ODataResource
             {
                 TypeName = ProductNamespace,
                 Properties = new[]
@@ -58,7 +58,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                     },
             };
 
-        private static ODataEntry entry3 = new ODataEntry
+        private static ODataResource entry3 = new ODataResource
             {
                 TypeName = ProductNamespace,
                 Properties = new[]
@@ -68,20 +68,22 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                     },
             };
 
-        private static ODataComplexValue complexValue0 = new ODataComplexValue()
-            {
-                TypeName = "Microsoft.Test.OData.PluggableFormat.Avro.Test.Address",
-                Properties = new[]
+        private static ODataResource complexResource = new ODataResource()
+        {
+            TypeName = "Microsoft.Test.OData.PluggableFormat.Avro.Test.Address",
+            Properties = new[]
                 {
                     new ODataProperty{Name = "Road", Value = "Road1"},
                     new ODataProperty{Name = "ZipCode", Value = "Zip1"},
                 }
-            };
+        };
 
         private static IEdmEntityType EntryType;
         private static IEdmComplexType ComplexType;
         private static IEdmAction AddProduct;
         private static IEdmAction GetMaxId;
+
+        private static IServiceProvider container;
 
         static ODataAvroScenarioTests()
         {
@@ -104,6 +106,9 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             action = new EdmAction("Microsoft.Test.OData.PluggableFormat.Avro.Test", "GetMaxId", EdmCoreModel.Instance.GetInt32(false));
             action.AddParameter("Products", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(EntryType, false))));
             GetMaxId = action;
+
+            container = ContainerBuilderHelper.BuildContainer(builder =>
+                builder.AddService<ODataMediaTypeResolver, AvroMediaTypeResolver>(ServiceLifetime.Singleton));
         }
 
         [TestMethod]
@@ -111,9 +116,9 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         {
             MemoryStream ms = new MemoryStream();
 
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
-                var entryWriter = omw.CreateODataEntryWriter(null, EntryType);
+                var entryWriter = omw.CreateODataResourceWriter(null, EntryType);
                 entryWriter.WriteStart(entry0);
                 entryWriter.WriteEnd();
                 entryWriter.Flush();
@@ -160,15 +165,15 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             }
 
             ms.Seek(0, SeekOrigin.Begin);
-            ODataEntry entry = null;
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            ODataResource entry = null;
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary"))
             {
-                var reader = omr.CreateODataEntryReader();
+                var reader = omr.CreateODataResourceReader();
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entry = (ODataEntry)reader.Item;
+                        entry = (ODataResource)reader.Item;
                     }
                 }
             }
@@ -195,15 +200,15 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             }
 
             ms.Seek(0, SeekOrigin.Begin);
-            var entries = new List<ODataEntry>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            var entries = new List<ODataResource>();
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary"))
             {
-                var reader = omr.CreateODataFeedReader();
+                var reader = omr.CreateODataResourceSetReader();
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entries.Add((ODataEntry)reader.Item);
+                        entries.Add((ODataResource)reader.Item);
                     }
                 }
             }
@@ -220,10 +225,10 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         {
             MemoryStream ms = new MemoryStream();
 
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
-                var entryWriter = omw.CreateODataFeedWriter(null, EntryType);
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = omw.CreateODataResourceSetWriter(null, EntryType);
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry0);
                 entryWriter.WriteEnd();
                 entryWriter.WriteStart(entry1);
@@ -274,7 +279,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             var values = new List<string>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary"))
             {
                 var reader = omr.CreateODataCollectionReader();
                 while (reader.Read())
@@ -295,7 +300,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         public void TestWriteCollection()
         {
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
                 var cw = omw.CreateODataCollectionWriter();
                 cw.WriteStart(new ODataCollectionStart());
@@ -320,18 +325,16 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         }
 
         [TestMethod]
-        public void TestWriteProperty()
+        public void TestWriteComplexResource()
         {
-            ODataProperty prop = new ODataProperty()
-            {
-                Name = "prop1",
-                Value = complexValue0
-            };
-
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
-                omw.WriteProperty(prop);
+                var entryWriter = omw.CreateODataResourceWriter(null, ComplexType);
+                entryWriter.WriteStart(complexResource);
+                entryWriter.WriteEnd();
+                entryWriter.Flush();
             }
 
             ms.Seek(0, SeekOrigin.Begin);
@@ -357,18 +360,55 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         }
 
         [TestMethod]
+        public void TestWriteProperty()
+        {
+            ODataProperty prop = new ODataProperty{Name = "Road", Value = "Road1"};
+
+            MemoryStream ms = new MemoryStream();
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
+            {
+                omw.WriteProperty(prop);
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            string road;
+            IAvroReader<string> reader = null;
+            try
+            {
+                reader = AvroContainer.CreateReader<string>(ms);
+
+                using (var seqReader = new SequentialReader<string>(reader))
+                {
+                    reader = null;
+                    road = seqReader.Objects.First();
+                }
+            }
+            finally
+            {
+                if (reader != null) reader.Dispose();
+            }
+
+            Assert.AreEqual("Road1", road);
+        }
+
+        [TestMethod]
         public void TestWriteParameter()
         {
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel(), false))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary", new EdmModel(), false))
             {
                 var opw = omw.CreateODataParameterWriter(AddProduct);
-                var ew = opw.CreateEntryWriter("Product");
+                var ew = opw.CreateResourceWriter("Product");
                 ew.WriteStart(entry0);
                 ew.WriteEnd();
                 ew.Flush();
 
-                opw.WriteValue("Location", complexValue0);
+                var ew1 = opw.CreateResourceWriter("Location");
+                ew1.WriteStart(complexResource);
+                ew1.WriteEnd();
+                ew1.Flush();
+
                 opw.WriteEnd();
                 opw.Flush();
             }
@@ -401,11 +441,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         public void TestWriteParameterWithFeed()
         {
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel(), false))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary", new EdmModel(), false))
             {
                 var opw = omw.CreateODataParameterWriter(GetMaxId);
-                var ew = opw.CreateFeedWriter("Products");
-                ew.WriteStart(new ODataFeed());
+                var ew = opw.CreateResourceSetWriter("Products");
+                ew.WriteStart(new ODataResourceSet());
                 ew.WriteStart(entry0);
                 ew.WriteEnd();
                 ew.WriteStart(entry1);
@@ -456,7 +496,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             var result = new Dictionary<string, object>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel()))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary", new EdmModel()))
             {
                 var reader = omr.CreateODataParameterReader(AddProduct);
                 while (reader.Read())
@@ -466,11 +506,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                         case ODataParameterReaderState.Value:
                             result.Add(reader.Name, reader.Value);
                             break;
-                        case ODataParameterReaderState.Entry:
-                            var entryReader = reader.CreateEntryReader();
+                        case ODataParameterReaderState.Resource:
+                            var entryReader = reader.CreateResourceReader();
                             while (entryReader.Read())
                             {
-                                if (entryReader.State == ODataReaderState.EntryEnd)
+                                if (entryReader.State == ODataReaderState.ResourceEnd)
                                 {
                                     result.Add(reader.Name, entryReader.Item);
                                     break;
@@ -482,8 +522,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             }
 
             Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(TestHelper.ComplexValueEqual(complexValue0, (ODataComplexValue)result["Location"]));
-            Assert.IsTrue(TestHelper.EntryEqual(entry0, (ODataEntry)result["Product"]));
+            Assert.IsTrue(TestHelper.EntryEqual(complexResource, (ODataResource)result["Location"]));
+            Assert.IsTrue(TestHelper.EntryEqual(entry0, (ODataResource)result["Product"]));
         }
 
         [TestMethod]
@@ -499,7 +539,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             var result = new Dictionary<string, object>();
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel()))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary", new EdmModel()))
             {
                 var reader = omr.CreateODataParameterReader(GetMaxId);
                 while (reader.Read())
@@ -509,25 +549,25 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                         case ODataParameterReaderState.Value:
                             result.Add(reader.Name, reader.Value);
                             break;
-                        case ODataParameterReaderState.Entry:
-                            var entryReader = reader.CreateEntryReader();
+                        case ODataParameterReaderState.Resource:
+                            var entryReader = reader.CreateResourceReader();
                             while (entryReader.Read())
                             {
-                                if (entryReader.State == ODataReaderState.EntryEnd)
+                                if (entryReader.State == ODataReaderState.ResourceEnd)
                                 {
                                     result.Add(reader.Name, entryReader.Item);
                                     break;
                                 }
                             }
                             break;
-                        case ODataParameterReaderState.Feed:
-                            var feedReader = reader.CreateFeedReader();
-                            IList<ODataEntry> entryList = new List<ODataEntry>();
+                        case ODataParameterReaderState.ResourceSet:
+                            var feedReader = reader.CreateResourceSetReader();
+                            IList<ODataResource> entryList = new List<ODataResource>();
                             while (feedReader.Read())
                             {
-                                if (feedReader.State == ODataReaderState.EntryEnd)
+                                if (feedReader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    entryList.Add((ODataEntry)feedReader.Item);
+                                    entryList.Add((ODataResource)feedReader.Item);
                                 }
                             }
 
@@ -538,7 +578,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             }
 
             Assert.AreEqual(1, result.Count);
-            var feed = result["Products"] as IList<ODataEntry>;
+            var feed = result["Products"] as IList<ODataResource>;
             Assert.IsNotNull(feed);
             Assert.AreEqual(2, feed.Count);
             Assert.IsTrue(TestHelper.EntryEqual(entry0, feed[0]));
@@ -556,7 +596,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             };
 
             MemoryStream ms = new MemoryStream();
-            using (var omw = TestHelper.CreateMessageWriter(ms, "avro/binary", AvroMediaTypeResolver.Instance))
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
                 omw.WriteError(odataError, false);
             }
@@ -589,7 +629,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             ms.Seek(0, SeekOrigin.Begin);
             ODataError error = null;
-            using (var omr = TestHelper.CreateMessageReader(ms, "avro/binary", AvroMediaTypeResolver.Instance, new EdmModel(), true))
+            using (var omr = TestHelper.CreateMessageReader(ms, container, "avro/binary", new EdmModel(), true))
             {
                 error = omr.ReadError();
             }

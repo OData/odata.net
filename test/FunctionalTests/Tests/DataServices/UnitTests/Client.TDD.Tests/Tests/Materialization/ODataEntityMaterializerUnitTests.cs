@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client.Materialization;
     using System.Xml.Linq;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
@@ -34,9 +34,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void AfterEntryMaterializedShouldOccur()
         {
-            foreach (ODataFormat format in new ODataFormat[] {ODataFormat.Atom, ODataFormat.Json})
+            foreach (ODataFormat format in new ODataFormat[] { ODataFormat.Json })
             {
-                var entity = new SimpleEntity() {ID = 1};
+                var entity = new SimpleEntity() { ID = 1 };
                 var odataEntry = CreateEntryWithMaterializerEntry(format, entity);
                 MaterializedEntityArgs found = null;
                 this.context.Configurations.ResponsePipeline.OnEntityMaterialized((MaterializedEntityArgs materializedEntryEventArgs) => found = materializedEntryEventArgs);
@@ -48,9 +48,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             }
         }
 
-        private ODataEntry CreateEntryWithMaterializerEntry(ODataFormat format, object resolvedObject)
+        private ODataResource CreateEntryWithMaterializerEntry(ODataFormat format, object resolvedObject)
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             entry.Id = new Uri("http://www.odata.org/Northwind.Svc/Customer(1)");
             entry.Properties = new ODataProperty[] { new ODataProperty() { Name = "ID", Value = 1 } };
 

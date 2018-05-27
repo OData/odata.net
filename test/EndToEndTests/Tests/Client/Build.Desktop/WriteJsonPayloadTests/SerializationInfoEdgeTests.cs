@@ -9,10 +9,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -37,33 +36,33 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             foreach (var mimeType in this.testMimeTypes)
             {
                 var settings = new ODataMessageWriterSettings();
-                settings.ODataUri = new ODataUri() {ServiceRoot = this.ServiceUri};
+                settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
 
                 // write entry without serialization info
                 var responseMessageWithoutModel = new StreamResponseMessage(new MemoryStream());
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
                     var expectedError = mimeType.Contains(MimeTypes.ODataParameterNoMetadata)
                                                ? null
-                                               : "ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing";
+                                               : "ODataResourceTypeContext_MetadataOrSerializationInfoMissing";
                     AssertThrows<ODataException>(() => odataWriter.WriteStart(entry), expectedError);
                 }
-                
+
                 // write feed without serialization info
                 responseMessageWithoutModel = new StreamResponseMessage(new MemoryStream());
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataFeedWriter();
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter();
                     var feed = this.CreatePersonFeed();
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
-                    entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                    entry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
                     var expectedError = mimeType.Contains(MimeTypes.ODataParameterNoMetadata)
                                                ? null
-                                               : "ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing";
+                                               : "ODataResourceTypeContext_MetadataOrSerializationInfoMissing";
                     AssertThrows<ODataException>(() => odataWriter.WriteStart(feed), expectedError);
                 }
 
@@ -73,7 +72,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
                     var odataWriter = messageWriter.CreateODataCollectionWriter();
-                    var collectionStart = new ODataCollectionStart() {Name = "BackupContactInfo"};
+                    var collectionStart = new ODataCollectionStart() { Name = "BackupContactInfo" };
                     var expectedError = mimeType.Contains(MimeTypes.ODataParameterNoMetadata)
                                                ? null
                                                : "ODataContextUriBuilder_TypeNameMissingForTopLevelCollection";
@@ -85,14 +84,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var link = new ODataEntityReferenceLink() {Url = new Uri(this.ServiceUri + "Order(-10)")};
+                    var link = new ODataEntityReferenceLink() { Url = new Uri(this.ServiceUri + "Order(-10)") };
                     messageWriter.WriteEntityReferenceLink(link);
 
-                    // No exception is expected. Simply verify the writing succeeded. 
+                    // No exception is expected. Simply verify the writing succeeded.
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         Stream stream = responseMessageWithoutModel.GetStream();
-                        Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#$ref"));    
+                        Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#$ref"));
                     }
                 }
 
@@ -110,13 +109,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     };
                     messageWriter.WriteEntityReferenceLinks(links);
 
-                    // No exception is expected. Simply verify the writing succeeded. 
+                    // No exception is expected. Simply verify the writing succeeded.
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         Stream stream = responseMessageWithoutModel.GetStream();
-                        Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#Collection($ref)"));    
+                        Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#Collection($ref)"));
                     }
-                    
+
                 }
 
                 // write request message containing an entry
@@ -125,7 +124,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 requestMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(requestMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
@@ -150,11 +149,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataFeedWriter();
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter();
                     var feed = this.CreatePersonFeed();
-                    feed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                    feed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
 
-                    var entry = new ODataEntry()
+                    var entry = new ODataResource()
                     {
                         Id = new Uri(ServiceUri + "Person(-5)"),
                         TypeName = NameSpace + "Employee"
@@ -170,18 +169,22 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     var personEntryP3 = new ODataProperty { Name = "ManagersPersonId", Value = -465010984 };
 
                     entry.Properties = new[] { personEntryP1, personEntryP2, personEntryP3 };
-                    entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                    entry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
 
                     odataWriter.WriteStart(feed);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                     odataWriter.WriteEnd();
                     Stream stream = responseMessageWithoutModel.GetStream();
-                    string result =  WritePayloadHelper.ReadStreamContent(stream);
-                    Assert.IsTrue(result.Contains(NameSpace + "Employee"));
+                    string result = WritePayloadHelper.ReadStreamContent(stream);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
+                        Assert.IsTrue(result.Contains(NameSpace + "Employee"));
                         Assert.IsTrue(result.Contains("$metadata#Person"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains(NameSpace + "Employee"));
                     }
                 }
             }
@@ -203,18 +206,23 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
 
-                    entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                    entry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person" });
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    Assert.IsTrue(result.Contains("\"PersonId\":-5"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata
                         Assert.IsTrue(result.Contains("$metadata#Parsen/$entity"));
+                        Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains("Person(-5)\",\"PersonId\":-5"));
                     }
                 }
 
@@ -223,46 +231,61 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataFeedWriter();
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter();
 
                     var feed = this.CreatePersonFeed();
-                    feed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                    feed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person" });
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
                     odataWriter.WriteStart(feed);
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                     odataWriter.WriteEnd();
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    Assert.IsTrue(result.Contains("\"PersonId\":-5"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata
                         Assert.IsTrue(result.Contains("$metadata#Parsen\""));
+                        Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains("Person(-5)\",\"PersonId\":-5"));
                     }
                 }
 
-                // wrong collection type name
+                // wrong complex collection type name
                 responseMessageWithoutModel = new StreamResponseMessage(new MemoryStream());
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataCollectionWriter();
-                    var collctionStart = new ODataCollectionStart() {Name = "BackupContactInfo"};
-                    collctionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo()
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter();
+                    var complexCollection = new ODataResourceSetWrapper()
+                    {
+                        ResourceSet = new ODataResourceSet(),
+                        Resources = new List<ODataResourceWrapper>()
                         {
-                            CollectionTypeName = "Collection(" + NameSpace + "ContactDETAIL)"
-                        });
+                            WritePayloadHelper.CreatePrimaryContactODataWrapper()
+                        }
+                    };
 
-                    odataWriter.WriteStart(collctionStart);
-                    odataWriter.WriteItem(
-                        WritePayloadHelper.CreatePrimaryContactODataComplexValue());
-                    odataWriter.WriteEnd();
+                    complexCollection.ResourceSet.SetSerializationInfo(new ODataResourceSerializationInfo()
+                    {
+                        ExpectedTypeName = NameSpace + "ContactDETAIL"
+                    });
+                    ODataWriterHelper.WriteResourceSet(odataWriter, complexCollection);
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("value\":[{\"EmailBag\":["));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
+                        // [{"@odata.type":"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails","EmailBag@odata.type":"#Collection(String)"...
+                        Assert.IsTrue(result.Contains("\"value\":[{\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\",\"EmailBag"));
+
                         // no metadata does not write odata.metadata
                         Assert.IsTrue(result.Contains("$metadata#Collection(" + NameSpace + "ContactDETAIL)"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains("\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\""));
                     }
                 }
 
@@ -316,23 +339,22 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         [TestMethod]
         public void WriteEntryWithWrongSerializationInfoWithModel()
         {
-            bool[] autoComputeMetadataBools = new bool[] {true, false,};
+            bool[] autoComputeMetadataBools = new bool[] { true, false, };
             foreach (var mimeType in this.testMimeTypes)
             {
                 foreach (var autoComputeMetadata in autoComputeMetadataBools)
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.AutoComputePayloadMetadataInJson = autoComputeMetadata;
 
                     var responseMessageWithoutModel = new StreamResponseMessage(new MemoryStream());
                     responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                     using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings, WritePayloadHelper.Model))
                     {
-                        var odataWriter = messageWriter.CreateODataEntryWriter(WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType);
+                        var odataWriter = messageWriter.CreateODataResourceWriter(WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType);
                         var entry = this.CreatePersonEntryWithoutSerializationInfo();
 
-                        entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() {NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person"});
+                        entry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person" });
                         odataWriter.WriteStart(entry);
                         odataWriter.WriteEnd();
                         var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
@@ -362,12 +384,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter();
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
 
-                    entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                    entry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
                     odataWriter.WriteStart(entry);
-                    entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo() { NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                    entry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Parsen", NavigationSourceEntityTypeName = NameSpace + "Person" });
                     odataWriter.WriteEnd();
 
                     Stream stream = responseMessageWithoutModel.GetStream();
@@ -412,29 +434,25 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataEntryWriter(entitySet, edmEntityType);
+                    var odataWriter = messageWriter.CreateODataResourceWriter(entitySet, edmEntityType);
 
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
-                    string expectedError = null;
+                    odataWriter.WriteStart(entry);
+                    odataWriter.WriteEnd();
+
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
-                        expectedError = "ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing";
+                        Assert.IsTrue(
+                            WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream())
+                                .Contains("Person/$entity"));
                     }
-
-                    AssertThrows<ODataException>(
-                        () =>
-                        {
-                            odataWriter.WriteStart(entry);
-                            odataWriter.WriteEnd();
-                        },
-                        expectedError);
                 }
             }
         }
 
-        private ODataEntry CreatePersonEntryWithoutSerializationInfo()
+        private ODataResource CreatePersonEntryWithoutSerializationInfo()
         {
-            var personEntry = new ODataEntry()
+            var personEntry = new ODataResource()
             {
                 Id = new Uri(ServiceUri + "Person(-5)"),
                 TypeName = NameSpace + "Person"
@@ -452,9 +470,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return personEntry;
         }
 
-        private ODataFeed CreatePersonFeed()
+        private ODataResourceSet CreatePersonFeed()
         {
-            var orderFeed = new ODataFeed()
+            var orderFeed = new ODataResourceSet()
             {
                 Id = new Uri(this.ServiceUri + "Person"),
             };

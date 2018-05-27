@@ -8,10 +8,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using FluentAssertions;
+    using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -29,13 +30,20 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             }
 
             var dictionary = new HeaderCollection(headers);
+#if (NETCOREAPP1_0 || NETCOREAPP2_0)
+            // Implementation of BeEquivalentTo changed in newer version of FluentAssertions so use Contain
+            dictionary.HeaderNames.Should().Contain(expectedKeys);
+#else
             dictionary.HeaderNames.Should().BeEquivalentTo(expectedKeys);
+#endif
         }
 
         [TestMethod]
         public void HeaderDictionaryLookupsShouldBeCaseInsensitive()
         {
-            var dictionary = new HeaderCollection(new WebHeaderCollection { { "CONTENT-TYPE", "something" } });
+            WebHeaderCollection webHeaderCollection = new WebHeaderCollection();
+            webHeaderCollection["CONTENT-TYPE"] = "something";
+            var dictionary = new HeaderCollection(webHeaderCollection);
             dictionary.GetHeader("Content-Type").Should().Be("something");
             dictionary.GetHeader("content-type").Should().Be("something");
         }
@@ -105,7 +113,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var headers = new HeaderCollection();
             headers.SetUserAgent();
             headers.HeaderNames.Count().Should().Be(1);
-            headers.GetHeader("User-Agent").Should().Be("Microsoft ADO.NET Data Services");
+
+            Version assemblyVersion = typeof(HeaderCollection).GetAssembly().GetName().Version;
+            headers.GetHeader("User-Agent").Should().Be(string.Format(CultureInfo.InvariantCulture, "Microsoft.OData.Client/{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
         }
 
         [TestMethod]

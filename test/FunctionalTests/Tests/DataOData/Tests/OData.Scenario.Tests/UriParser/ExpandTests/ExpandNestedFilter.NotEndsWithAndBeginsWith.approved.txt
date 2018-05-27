@@ -10,7 +10,7 @@ SelectExpandQueryOption
 			FilterQueryOption
 				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
 				Parameter = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = Products
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -25,11 +25,11 @@ SelectExpandQueryOption
 										Property = Name
 										TypeReference = [Edm.String Nullable=True Unicode=True]
 										Source = 
-										EntityRangeVariableReferenceNode
+										ResourceRangeVariableReferenceNode
 											Name = $it
 											NavigationSource = Products
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 									milk(Type: [Edm.String Nullable=True Unicode=True])
 						)
 					And
@@ -42,11 +42,11 @@ SelectExpandQueryOption
 									Property = Name
 									TypeReference = [Edm.String Nullable=True Unicode=True]
 									Source = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = $it
 										NavigationSource = Products
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 								word(Type: [Edm.String Nullable=True Unicode=True])
 				Or
 						SingleValueFunctionCallNode
@@ -58,11 +58,11 @@ SelectExpandQueryOption
 									Property = QuantityPerUnit
 									TypeReference = [Edm.String Nullable=True Unicode=True]
 									Source = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = $it
 										NavigationSource = Products
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					Equal
 						15(Type: [Edm.Int32 Nullable=False])
 			SelectExpandQueryOption

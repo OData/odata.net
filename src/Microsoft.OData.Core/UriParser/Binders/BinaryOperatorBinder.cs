@@ -4,16 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class that knows how to bind binary operators.
@@ -38,7 +33,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         internal BinaryOperatorBinder(Func<QueryToken, QueryNode> bindMethod, ODataUriResolver resolver)
         {
             this.bindMethod = bindMethod;
-            this.resolver = resolver ?? ODataUriResolver.Default;
+            this.resolver = resolver;
         }
 
         /// <summary>
@@ -65,11 +60,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="binaryOperatorKind">the operator kind</param>
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
-        internal static void PromoteOperandTypes(BinaryOperatorKind binaryOperatorKind, ref SingleValueNode left, ref SingleValueNode right)
+        /// <param name="facetsPromotionRules">Promotion rules for type facets.</param>
+        internal static void PromoteOperandTypes(BinaryOperatorKind binaryOperatorKind, ref SingleValueNode left, ref SingleValueNode right, TypeFacetsPromotionRules facetsPromotionRules)
         {
             IEdmTypeReference leftType;
             IEdmTypeReference rightType;
-            if (!TypePromotionUtils.PromoteOperandTypes(binaryOperatorKind, left, right, out leftType, out rightType))
+            if (!TypePromotionUtils.PromoteOperandTypes(binaryOperatorKind, left, right, out leftType, out rightType, facetsPromotionRules))
             {
                 string leftTypeName = left.TypeReference == null ? "<null>" : left.TypeReference.FullName();
                 string rightTypeName = right.TypeReference == null ? "<null>" : right.TypeReference.FullName();

@@ -16,12 +16,14 @@ using t = System.Data.Test.Astoria;
 
 namespace AstoriaUnitTests.Tests.Server
 {
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     [TestClass]
     public class ActionBatchTests
     {
         private static readonly Version V4 = new Version(4, 0);
 
-        [TestCategory("Partition1"), TestMethod, Variation("Batch tests with actions in them")]
+        [Ignore] // Ignore this currently, it is for testing the WCF DS.
+        // [TestCategory("Partition1"), TestMethod, Variation("Batch tests with actions in them")]
         public void BatchedActionTests()
         {
             #region Test Cases
@@ -586,7 +588,7 @@ X-Content-Type-Options: nosniff
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
-{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""The parameter 'value3' in the request payload is not a valid parameter for the operation 'ActionOnEntityCollectionWithParam_Primitive_Primitive'."",""type"":""Microsoft.OData.Core.ODataException"",""stacktrace"":""",
+{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""The parameter 'value3' in the request payload is not a valid parameter for the operation 'ActionOnEntityCollectionWithParam_Primitive_Primitive'."",""type"":""Microsoft.OData.ODataException"",""stacktrace"":""",
 
 @"""}}}
 --changesetresponse--
@@ -953,7 +955,7 @@ X-Content-Type-Options: nosniff
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
-{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""Multiple parameters with the name 'value1' were found in the request payload."",""type"":""Microsoft.OData.Core.ODataException"",""stacktrace""",
+{""error"":{""code"":"""",""message"":""An error occurred while processing this request."",""innererror"":{""message"":""Multiple parameters with the name 'value1' were found in the request payload."",""type"":""Microsoft.OData.ODataException"",""stacktrace""",
 @"""}}}
 --changesetresponse--
 --batchresponse--
@@ -1272,7 +1274,7 @@ Cache-Control: no-cache
             });
         }
 
-        [TestCategory("Partition1"), TestMethod, Variation("Verify that $metadata in batch passes the right operation context instance.")]
+        // [TestCategory("Partition1"), TestMethod, Variation("Verify that $metadata in batch passes the right operation context instance.")]
         public void BatchedActionMetadataTest()
         {
             var service = ActionTests.ModelWithActions();

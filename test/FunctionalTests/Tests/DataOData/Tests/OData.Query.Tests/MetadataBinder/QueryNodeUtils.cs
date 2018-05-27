@@ -10,16 +10,12 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.Query.Tests.UriParser;
+
     #endregion Namespaces
 
     /// <summary>
@@ -91,11 +87,11 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     case InternalQueryNodeKind.Convert:
                         VerifyConvertQueryNodesAreEqual((ConvertNode)expected, (ConvertNode)actual, assert);
                         break;
-                    case InternalQueryNodeKind.NonentityRangeVariableReference:
-                        VerifyNonentityRangeVariableReferenceNodesAreEqual((NonentityRangeVariableReferenceNode) expected, (NonentityRangeVariableReferenceNode) actual,assert);
+                    case InternalQueryNodeKind.NonResourceRangeVariableReference:
+                        VerifyNonResourceRangeVariableReferenceNodesAreEqual((NonResourceRangeVariableReferenceNode) expected, (NonResourceRangeVariableReferenceNode) actual,assert);
                         break;
-                    case InternalQueryNodeKind.EntityRangeVariableReference:
-                        VerifyEntityRangeVariableReferenceNodesAreEqual((EntityRangeVariableReferenceNode)expected, (EntityRangeVariableReferenceNode)actual, assert);
+                    case InternalQueryNodeKind.ResourceRangeVariableReference:
+                        VerifyResourceRangeVariableReferenceNodesAreEqual((ResourceRangeVariableReferenceNode)expected, (ResourceRangeVariableReferenceNode)actual, assert);
                         break;
                     case InternalQueryNodeKind.BinaryOperator:
                         VerifyBinaryOperatorQueryNodesAreEqual((BinaryOperatorNode)expected, (BinaryOperatorNode)actual, assert);
@@ -105,6 +101,9 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                         break;
                     case InternalQueryNodeKind.SingleValuePropertyAccess:
                         VerifyPropertyAccessQueryNodesAreEqual((SingleValuePropertyAccessNode)expected, (SingleValuePropertyAccessNode)actual, assert);
+                        break;
+                    case InternalQueryNodeKind.SingleComplexNode:
+                        VerifySingleComplexNodeAreEqual((SingleComplexNode)expected, (SingleComplexNode)actual, assert);
                         break;
                     case InternalQueryNodeKind.SingleValueFunctionCall:
                         VerifySingleValueFunctionCallQueryNodesAreEqual((SingleValueFunctionCallNode)expected, (SingleValueFunctionCallNode)actual, assert);
@@ -143,12 +142,12 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
             VerifyQueryNodesAreEqual(expected.Source, actual.Source, assert);
         }
 
-        private static void VerifyNonentityRangeVariableReferenceNodesAreEqual(NonentityRangeVariableReferenceNode expected, NonentityRangeVariableReferenceNode actual, AssertionHandler assert)
+        private static void VerifyNonResourceRangeVariableReferenceNodesAreEqual(NonResourceRangeVariableReferenceNode expected, NonResourceRangeVariableReferenceNode actual, AssertionHandler assert)
         {
             QueryTestUtils.VerifyTypesAreEqual(expected.TypeReference, actual.TypeReference, assert);
         }
 
-        private static void VerifyEntityRangeVariableReferenceNodesAreEqual(EntityRangeVariableReferenceNode expected, EntityRangeVariableReferenceNode actual, AssertionHandler assert)
+        private static void VerifyResourceRangeVariableReferenceNodesAreEqual(ResourceRangeVariableReferenceNode expected, ResourceRangeVariableReferenceNode actual, AssertionHandler assert)
         {
             QueryTestUtils.VerifyTypesAreEqual(expected.TypeReference, actual.TypeReference, assert);
         }
@@ -167,6 +166,12 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
         }
 
         private static void VerifyPropertyAccessQueryNodesAreEqual(SingleValuePropertyAccessNode expected, SingleValuePropertyAccessNode actual, AssertionHandler assert)
+        {
+            VerifyQueryNodesAreEqual(expected.Source, actual.Source, assert);
+            QueryTestUtils.VerifyPropertiesAreEqual(expected.Property, actual.Property, assert);
+        }
+
+        private static void VerifySingleComplexNodeAreEqual(SingleComplexNode expected, SingleComplexNode actual, AssertionHandler assert)
         {
             VerifyQueryNodesAreEqual(expected.Source, actual.Source, assert);
             QueryTestUtils.VerifyPropertiesAreEqual(expected.Property, actual.Property, assert);
@@ -205,8 +210,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     var convert = (ConvertNode)node;
                     result = convert.Source.ToDebugString() + ".Convert(" + convert.TypeReference.TestFullName() + ")";
                     break;
-                case InternalQueryNodeKind.NonentityRangeVariableReference:
-                    var rangeVariable = (NonentityRangeVariableReferenceNode)node;
+                case InternalQueryNodeKind.NonResourceRangeVariableReference:
+                    var rangeVariable = (NonResourceRangeVariableReferenceNode)node;
                     result = "Parameter(" + rangeVariable.TypeReference.TestFullName() + ")";
                     break;
                 case InternalQueryNodeKind.BinaryOperator:
@@ -221,7 +226,15 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     var singlePropertyAccess = (SingleValuePropertyAccessNode)node;
                     result = singlePropertyAccess.Source + "/" + singlePropertyAccess.Property.Name;
                     break;
+                case InternalQueryNodeKind.SingleComplexNode:
+                    var singleComplexProperty = (SingleComplexNode)node;
+                    result = singleComplexProperty.Source + "/" + singleComplexProperty.Property.Name;
+                    break;
                 case InternalQueryNodeKind.CollectionPropertyAccess:
+                    var collectionComplexProperty = (CollectionComplexNode)node;
+                    result = collectionComplexProperty.Source + "/" + collectionComplexProperty.Property.Name;
+                    break;
+                case InternalQueryNodeKind.CollectionComplexNode:
                     var collectionPropertyAccess = (CollectionPropertyAccessNode)node;
                     result = collectionPropertyAccess.Source + "/" + collectionPropertyAccess.Property.Name;
                     break;

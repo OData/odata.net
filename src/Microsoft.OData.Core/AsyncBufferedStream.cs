@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -203,13 +203,13 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
 
         /// <summary>
         /// Asynchronous flush operation. This will flush all buffered bytes to the underlying stream through asynchronous writes.
         /// </summary>
         /// <returns>The task representing the asynchronous flush operation.</returns>
-#if DNX451 || DNXCORE50
+#if PORTABLELIB
         internal new Task FlushAsync()
 #else
         internal Task FlushAsync()
@@ -278,14 +278,14 @@ namespace Microsoft.OData.Core
 
             this.bufferToAppendTo = null;
 
-            // clear the buffer queue to leave the stream in a 'clean' state even if 
+            // clear the buffer queue to leave the stream in a 'clean' state even if
             // flushing fails
             Queue<DataBuffer> buffers = this.bufferQueue;
             this.bufferQueue = new Queue<DataBuffer>();
             return buffers;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Returns enumeration of tasks to run to flush all pending buffers to the underlying stream.
         /// </summary>
@@ -365,7 +365,7 @@ namespace Microsoft.OData.Core
                 stream.Write(this.buffer, 0, this.storedCount);
             }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
             /// <summary>
             /// Creates a task which writes the buffer to the specified stream.
             /// </summary>
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Core
             public Task WriteToStreamAsync(Stream stream)
             {
                 Debug.Assert(stream != null, "stream != null");
-#if DNXCORE50
+#if PORTABLELIB
                 return stream.WriteAsync(this.buffer, 0, this.storedCount);
 #else
                 return Task.Factory.FromAsync(

@@ -15,7 +15,7 @@ namespace Microsoft.Spatial
     {
         /// <summary>The action to be executed on dispose</summary>
         private Action action;
-        
+
         /// <summary>
         /// Constructs an instance of the ActonOnDispose object
         /// </summary>

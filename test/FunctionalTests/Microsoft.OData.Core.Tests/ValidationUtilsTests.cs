@@ -6,10 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ValidationUtilsTests
     {
@@ -20,14 +20,14 @@ namespace Microsoft.OData.Core.Tests
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(null, ODataFormat.Json);
             test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
-        
+
         [Fact]
         public void ServiceDocumentElementHasNullUrlShouldThrow()
         {
-            Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo(){Name="good"}, ODataFormat.Json);
+            Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo() { Name = "good" }, ODataFormat.Json);
             test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_ResourceMustSpecifyUrl);
         }
-        
+
         [Fact]
         public void ServiceDocumentElementHasNullNameShouldThrowIfJson()
         {
@@ -36,14 +36,6 @@ namespace Microsoft.OData.Core.Tests
             test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_ResourceMustSpecifyName(uri.OriginalString));
         }
 
-        [Fact]
-        public void ServiceDocumentElementHasNullNameShouldNotThrowIfAtom()
-        {
-            var uri = new Uri("http://link/foo");
-            Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo() { Url = uri }, ODataFormat.Atom);
-            test.ShouldNotThrow();
-        }
-        
         [Fact]
         public void ServiceDocumentElementShouldNotThrow()
         {

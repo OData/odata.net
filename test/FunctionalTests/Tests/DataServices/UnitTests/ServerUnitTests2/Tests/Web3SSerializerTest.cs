@@ -28,6 +28,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
     /// <summary>
     /// This is a test class for Web3SSerializer and is intended
     /// to contain all Web3SSerializer Unit Tests.
@@ -128,7 +129,8 @@ namespace AstoriaUnitTests.Tests
         /// Verifies that all interesting primitve types round-trip when going
         /// through the XML serializer.
         /// </summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void SerializerBasicTest()
         {
             string arr = JsonValidator.ArrayString;
@@ -209,7 +211,8 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Ensures that links in Atom resolve to the expected resource.</summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void AtomSerializerLinks()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -258,7 +261,8 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Ensures spaces are encoded as %20 rather than + in URIs.</summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void AtomSerializerUriSpaces()
         {
             string modelText = "ET1 = entitytype { Name string key; }; ES1: ET1;";
@@ -284,7 +288,8 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Ensures commas between values aren't encoded in URIs.</summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void AtomSerializerUriCommas()
         {
             string modelText = "ET1 = entitytype { Name string key; OtherName string key; }; ES1: ET1;";
@@ -304,39 +309,9 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        /// <summary>Verifies that cache-control is set to no-cache by default.</summary>
-        [TestCategory("Partition2"), TestMethod]
-        [Ignore]
-        public void AtomSerializerCacheControlTest()
-        {
-            CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                new Dimension("WebServerLocation", new object[] { WebServerLocation.InProcess, WebServerLocation.InProcessWcf, WebServerLocation.Local }));
-            TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
-            {
-                WebServerLocation location = (WebServerLocation)values["WebServerLocation"];
-                using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
-                {
-                    request.DataServiceType = typeof(CustomDataContext);
-                    request.RequestUriString = "/Customers";
-                    request.SendRequest();
-                    using (StreamReader reader = new StreamReader(request.GetResponseStream()))
-                    {
-                        string text = reader.ReadToEnd();
-                        if (request.ResponseStatusCode == 304)
-                        {
-                            AstoriaTestLog.IsNull(request.ResponseCacheControl);  
-                        }
-                        else
-                        {
-                            AstoriaTestLog.AreEqual("no-cache", request.ResponseCacheControl);  
-                        }   
-                    }
-                }
-            });
-        }
-
         /// <summary>Verifies that all serializers return correct date values.</summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void GeneralSerializerDates()
         {
             // JSON and XML dates return different values.
@@ -412,154 +387,6 @@ namespace AstoriaUnitTests.Tests
 
         private static readonly char[] CharsBadRequest = new char[] { ':', '.', '/' };
 
-        /// <summary>Verifies that resource IDs are returned correctly for queries.</summary>
-        [TestCategory("Partition1"), TestMethod]
-        [Ignore]
-        public void Web3SSerializerUriTest()
-        {
-            CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                new Dimension("ServiceModelData", ServiceModelData.Values),
-                new Dimension("SerializationFormatData", SerializationFormatData.StructuredValues),
-                new Dimension("WebServerLocation", TestWebRequest.LocalWebServerLocations));
-
-            TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values) 
-            {
-                ServiceModelData modelData = (ServiceModelData)values["ServiceModelData"];
-                SerializationFormatData format = (SerializationFormatData)values["SerializationFormatData"];
-                WebServerLocation location = (WebServerLocation)values["WebServerLocation"];
-                if (!modelData.IsValid)
-                {
-                    return;
-                }
-
-                if (modelData.ServiceModelType == typeof(AstoriaUnitTests.Stubs.Sql.SqlNorthwindDataContext))
-                {
-                    return;
-                }
-
-                bool countEveryObject = !modelData.IsObjectContextBased;
-                object modelInstance = Activator.CreateInstance(modelData.ServiceModelType);
-                using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
-                {
-                    request.DataServiceType = modelData.ServiceModelType;
-                    request.RequestMaxVersion = "4.0;";
-                    request.Accept = format.MimeTypes[0];
-                    foreach (string containerName in modelData.ContainerNames)
-                    {
-                        request.RequestUriString = "/" + containerName;
-                        if (!countEveryObject)
-                        {
-                            request.RequestUriString += "?$top=3";
-                        }
-
-                        if (format == SerializationFormatData.JsonLight)
-                        {
-                            request.Accept = UnitTestsUtil.JsonLightMimeTypeFullMetadata;
-                        }
-
-                        Trace.WriteLine(request.RequestUriString);
-                        request.SendRequest();
-
-                        XmlDocument document = format.LoadXmlDocumentFromStream(request.GetResponseStream());
-                        string elementsXPath;
-                        string elementUriXPath;
-                        if (format == SerializationFormatData.JsonLight)
-                        {
-                            elementsXPath = "//Array/*";
-                            elementUriXPath = "odata.editLink";
-                        }
-                        else
-                        {
-                            Debug.Assert(format == SerializationFormatData.Atom, "format == SerializationFormatData.Atom");
-                            elementsXPath = "/atom:feed/atom:entry";
-                            elementUriXPath = "atom:id";
-                        }
-
-                        XmlNodeList elementsList = document.SelectNodes(elementsXPath, TestNamespaceManager);
-
-                        // Verify that we have as many entities as we do in the result type.
-                        if (countEveryObject)
-                        {
-                            List<object> resources = new List<object>();
-                            foreach (object o in modelData.GetContainerQueryable(modelInstance, containerName))
-                            {
-                                resources.Add(o);
-                            }
-
-                            Assert.AreEqual(
-                                resources.Count,
-                                elementsList.Count,
-                                "Element count [" + elementsList.Count + "] matches resource count [" + resources.Count + "] for " + containerName + ".");
-                        }
-
-                        int elementsRetrieved = 0;
-                        foreach (XmlElement element in elementsList)
-                        {
-                            XmlElement uriElement = (XmlElement)element.SelectSingleNode(elementUriXPath, TestNamespaceManager);
-                            Assert.IsNotNull(uriElement, "element has Web3S uri within.");
-
-                            string baseUri = GetBaseUri(uriElement);
-
-                            if (format == SerializationFormatData.Atom)
-                            {
-                                request.RequestUriString = uriElement.InnerText;
-                            }
-                            else
-                            {
-                                if (baseUri != null)
-                                {
-                                    request.RequestUriString = baseUri;
-                                    if (!request.RequestUriString.EndsWith("/"))
-                                    {
-                                        request.RequestUriString += "/";
-                                    }
-                                }
-                                else
-                                {
-                                    request.RequestUriString = "";
-                                }
-
-                                request.RequestUriString += uriElement.InnerText;
-                            }
-
-                            if (request.RequestUriString.StartsWith("./"))
-                            {
-                                request.RequestUriString = request.RequestUriString.Substring(2);
-                            }
-
-                            // The test stub prepends the path to the service, unless it already has it.
-                            if (!(new Uri(request.RequestUriString, UriKind.RelativeOrAbsolute).IsAbsoluteUri))
-                            {
-                                if (request.RequestUriString.Length > 0 &&
-                                    request.RequestUriString[0] != '/')
-                                {
-                                    request.RequestUriString = "/" + request.RequestUriString;
-                                }
-                            }
-
-                            if (0 <= request.RequestUriString.IndexOfAny(CharsBadRequest))
-                            {	// TODO: .:/ are unsupported characters
-                                continue;
-                            }
-
-                            Trace.WriteLine(request.RequestUriString);
-                            request.SendRequest();
-
-
-                            XmlDocument resourceDocument = format.LoadXmlDocumentFromStream(request.GetResponseStream());
-
-                            // Limit the number of elements we retrieve.
-                            elementsRetrieved++;
-                            if (elementsRetrieved > 2)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
         /// <summary>
         /// Gets the base uri defined in the document that is in scope
         /// for the specified element.
@@ -573,7 +400,8 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Verifies that cycles can be detected correctly.</summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerCycleDetectionTest()
         {
             EventHandler handler = new EventHandler((sender, e) =>
@@ -609,7 +437,8 @@ namespace AstoriaUnitTests.Tests
         /// Verifies that all interesting primitive types round-trip when going
         /// through the XML serializer.
         /// </summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerBasicTypesTest()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -717,7 +546,8 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerInheritanceTest()
         {
             VerifyPayload("/Customers", typeof(CustomDataContext), null,
@@ -729,8 +559,8 @@ namespace AstoriaUnitTests.Tests
                 new string[] { JsonValidator.GetJsonTypeXPath(typeof(CustomerWithBirthday), true) },
                 new string[0]);
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerOtherNamespaceTest()
         {
             VerifyPayload("/Regions", typeof(CustomDataContext), null,
@@ -870,7 +700,8 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verifies that both valid and invalid container names can be resolved correctly.
         /// </summary>
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerServicesTest()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -922,8 +753,8 @@ namespace AstoriaUnitTests.Tests
                 Expression.Equal(Expression.Property(element, "ID"), Expression.Constant(key)), element);
             return context.CreateQuery<TElement>(entitySetName).Where(predicate);
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void CountTest()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -944,8 +775,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
                     
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<Customer>("Customers");
                     q = includeCount ? q.IncludeTotalCount() : q;
 
@@ -997,8 +828,8 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void SerializerKeyTypesTest()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(

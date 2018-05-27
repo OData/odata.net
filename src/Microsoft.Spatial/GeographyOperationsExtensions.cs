@@ -6,9 +6,7 @@
 
 namespace Microsoft.Spatial
 {
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.Data.Spatial;
 
     /// <summary>
     ///   Extension methods for the Geography operations

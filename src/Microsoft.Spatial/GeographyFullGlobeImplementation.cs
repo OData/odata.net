@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Implementation of FullGlobe

@@ -8,15 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     public class ExpandBinderTests
     {
@@ -26,22 +23,22 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
 
         public ExpandBinderTests()
         {
-            this.binderForPerson = new SelectExpandBinder(this.V4configuration, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            this.binderForAddress = new SelectExpandBinder(this.V4configuration, HardCodedTestModel.GetAddressType(), null);
+            this.binderForPerson = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
+            this.binderForAddress = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetAddressType(), null));
         }
 
         [Fact]
         public void TopLevelEntityTypeCannotBeNull()
         {
             Action createWithNullTopLevelEntityType =
-                () => new SelectExpandBinder(this.V4configuration, null, HardCodedTestModel.GetPeopleSet());
+                () => new SelectExpandBinder(this.V4configuration, new ODataPathInfo(null, HardCodedTestModel.GetPeopleSet()));
             createWithNullTopLevelEntityType.ShouldThrow<Exception>(Error.ArgumentNull("topLevelEntityType").ToString());
         }
 
         [Fact]
         public void TopLevelEntitySetCanBeNull()
         {
-            SelectExpandBinder binder = new SelectExpandBinder(this.V4configuration, ModelBuildingHelpers.BuildValidEntityType(), null);
+            SelectExpandBinder binder = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(ModelBuildingHelpers.BuildValidEntityType(), null));
             binder.NavigationSource.Should().BeNull();
         }
 
@@ -62,9 +59,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         public void BindingOnTreeWithWithMultipleNavPropPathsThrows()
         {
             NonSystemToken topLevelSegment = new NonSystemToken("MyDog", null, null);
-            NonSystemToken navProp = new NonSystemToken("MyPeople", null, topLevelSegment);
+            NonSystemToken navProp = new NonSystemToken("MyDog", null, topLevelSegment);
             ExpandTermToken expandTerm = new ExpandTermToken(navProp);
-            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] {expandTerm});
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { expandTerm });
             Action bindTreeWithMultipleNavPropPaths = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
             bindTreeWithMultipleNavPropPaths.ShouldThrow<ODataException>()
                                 .WithMessage(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
@@ -75,7 +72,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         public void SingleLevelExpandTermTokenWorks()
         {
             ExpandTermToken expandTermToken = new ExpandTermToken(new NonSystemToken("MyDog", null, null));
-            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] {expandTermToken});
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { expandTermToken });
             var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
             item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And.SelectAndExpand.AllSelected.Should().BeTrue();
         }
@@ -86,9 +83,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             ExpandTermToken innerExpandTerm = new ExpandTermToken(new NonSystemToken("MyPeople", null, null));
             ExpandTermToken outerExpandTerm = new ExpandTermToken(new NonSystemToken("MyDog", null, null), null,
-                                                                  new ExpandToken(new ExpandTermToken[]
-                                                                      {innerExpandTerm}));
-            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] {outerExpandTerm});
+                                                                  new ExpandToken(new ExpandTermToken[] { innerExpandTerm }));
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { outerExpandTerm });
             var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
             var subSelectExpand = item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()).And.SelectAndExpand;
             subSelectExpand.AllSelected.Should().BeTrue();
@@ -106,9 +102,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                                                       {
                                                                           new NonSystemToken("Color", null, null)
                                                                       }),
-                                                                  new ExpandToken(new ExpandTermToken[]
-                                                                      {innerExpandTerm}));
-            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] {outerExpandTerm});
+                                                                  new ExpandToken(new ExpandTermToken[] { innerExpandTerm }));
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { outerExpandTerm });
             var item = this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
             var subExpand =
                 item.SelectedItems.First()
@@ -117,14 +112,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             subExpand.AllSelected.Should().BeFalse();
             subExpand.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetDogMyPeopleNavProp())
                 .And.SelectAndExpand.AllSelected.Should().BeTrue();
-            subExpand.SelectedItems.Last(x => x is PathSelectItem).ShouldBePathSelectionItem(new ODataPath( new PropertySegment(HardCodedTestModel.GetDogColorProp())));
+            subExpand.SelectedItems.Last(x => x is PathSelectItem).ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
         }
 
         // $expand=Blah
         [Fact]
         public void NonexistentPropertyThrowsUsefulError()
         {
-            ExpandToken expandToken = new ExpandToken(new[] {new ExpandTermToken(new NonSystemToken("Blah", null, null))});
+            ExpandToken expandToken = new ExpandToken(new[] { new ExpandTermToken(new NonSystemToken("Blah", null, null)) });
             Action bind = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
             bind.ShouldThrow<ODataException>()
                                .WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType().FullName(), "Blah"));
@@ -134,9 +129,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         [Fact]
         public void NonNavigationPropertyThrowsUsefulErrorIfKnobIsNotFlipped()
         {
-            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] {new ExpandTermToken(new NonSystemToken("Shoe", null, null))});
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(new NonSystemToken("Shoe", null, null)) });
             Action bind = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            bind.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty("Shoe", HardCodedTestModel.GetPersonType().FullName()));
+            bind.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty("Shoe", HardCodedTestModel.GetPersonType().FullName()));
         }
 
         // $select=<foo>&$expand=MyDog
@@ -194,8 +189,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             ExpandTermToken innerExpandTermToken = new ExpandTermToken(new NonSystemToken("MyDog", null, null));
             ExpandToken innerExpandToken = new ExpandToken(new ExpandTermToken[] { innerExpandTermToken });
-            ExpandTermToken topLevelExpandTermToken = new ExpandTermToken(new SystemToken(ExpressionConstants.It, /*nextToken*/null), new SelectToken(new List<PathSegmentToken>(){new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null)}), innerExpandToken);
-            ExpandToken topLevelExpandToken = new ExpandToken(new ExpandTermToken[]{topLevelExpandTermToken});
+            ExpandTermToken topLevelExpandTermToken = new ExpandTermToken(new SystemToken(ExpressionConstants.It, /*nextToken*/null), new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null) }), innerExpandToken);
+            ExpandToken topLevelExpandToken = new ExpandToken(new ExpandTermToken[] { topLevelExpandTermToken });
             var item = this.binderForPerson.Bind(topLevelExpandToken);
             item.SelectedItems.Should().HaveCount(2);
             item.SelectedItems.First().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp());
@@ -205,7 +200,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         [Fact]
         public void CanSelectPropertyOnNonEntityType()
         {
-            ExpandTermToken expandTermToken = new ExpandTermToken(new SystemToken(ExpressionConstants.It, null), new SelectToken(new List<PathSegmentToken>(){new NonSystemToken("City", null, null)}), null );
+            ExpandTermToken expandTermToken = new ExpandTermToken(new SystemToken(ExpressionConstants.It, null), new SelectToken(new List<PathSegmentToken>() { new NonSystemToken("City", null, null) }), null);
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { expandTermToken });
             var item = this.binderForAddress.Bind(expandToken);
             item.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetAddressCityProperty())));
@@ -216,7 +211,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             ExpandToken lowerLevelExpand = new ExpandToken(new List<ExpandTermToken>());
             ExpandTermToken topLevelExpandTermToken = new ExpandTermToken(new NonSystemToken("MyDog", /*namedValues*/null, /*nextToken*/null), null, lowerLevelExpand);
-            ExpandToken topLevelExpand = new ExpandToken(new List<ExpandTermToken>(){topLevelExpandTermToken});
+            ExpandToken topLevelExpand = new ExpandToken(new List<ExpandTermToken>() { topLevelExpandTermToken });
             Action bindWithEmptySelectedItemsList = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(topLevelExpand));
             bindWithEmptySelectedItemsList.ShouldNotThrow();
         }

@@ -4,17 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
+    using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Binders;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
-    #endregion Namespaces
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class that knows how to bind an end path token, which could be several things.
@@ -45,13 +40,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="parentNode">The semantically bound source node of this end path token</param>
         /// <param name="property">The <see cref="IEdmProperty"/> that will be bound to this node. Must not be primitive collection</param>
+        /// <param name="state">The state of binding.</param>
         /// <returns>QueryNode bound to this property.</returns>
-        internal static QueryNode GeneratePropertyAccessQueryNode(SingleValueNode parentNode, IEdmProperty property)
+        internal static QueryNode GeneratePropertyAccessQueryNode(SingleResourceNode parentNode, IEdmProperty property, BindingState state)
         {
-            ExceptionUtils.CheckArgumentNotNull(parentNode, "parent");
+            ExceptionUtils.CheckArgumentNotNull(parentNode, "parentNode");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
-            // TODO: Remove this check. 
+            // TODO: Remove this check.
             // We should verify that the top level of an expression is a bool rather than arbitrarily restrict property types.
             // We can get here if there is a query like $filter=MyCollectionProperty eq 'foo' or something.
             // If it was $filter=MyCollectionProperty/any(...) then we would have gone down the 'NonRootSegment' code path instead of this one
@@ -59,20 +55,31 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 // if this happens to be a top level node (i.e. $filter=MyCollection), then it will fail further up the chain, so
                 // don't need to worry about checking for that here.
-                return new CollectionPropertyAccessNode(parentNode, property);
+                if (property.Type.IsStructuredCollectionType())
+                {
+                    return new CollectionComplexNode(parentNode, property);
+                }
+                else
+                {
+                    return new CollectionPropertyAccessNode(parentNode, property);
+                }
             }
 
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 // These are error cases in practice, but we let ourselves throw later for better context-sensitive error messages
-                var edmNavigationProperty = (IEdmNavigationProperty)property;
-                var singleEntityParentNode = (SingleEntityNode)parentNode;
+                IEdmNavigationProperty edmNavigationProperty = (IEdmNavigationProperty)property;
                 if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
-                    return new CollectionNavigationNode(edmNavigationProperty, singleEntityParentNode);
+                    return new CollectionNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
                 }
 
-                return new SingleNavigationNode(edmNavigationProperty, singleEntityParentNode);
+                return new SingleNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
+            }
+
+            if (property.Type.IsComplex())
+            {
+                return new SingleComplexNode(parentNode, property);
             }
 
             return new SingleValuePropertyAccessNode(parentNode, property);
@@ -104,8 +111,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
         internal SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
         {
-            if (parentNode.TypeReference == null || 
-                parentNode.TypeReference.Definition.IsOpenType() || 
+            if (parentNode.TypeReference == null ||
+                parentNode.TypeReference.Definition.IsOpen() ||
                 IsAggregatedProperty(endPathToken.Identifier))
             {
                 return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
@@ -119,7 +126,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Binds a an end path token into a PropertyAccessToken, OpenPropertyToken, or FunctionCallToken.
+        /// Binds an end path token into a PropertyAccessToken, OpenPropertyToken, or FunctionCallToken.
         /// </summary>
         /// <param name="endPathToken">The property access token to bind.</param>
         /// <returns>A Query node representing this endpath token, bound to metadata.</returns>
@@ -134,48 +141,67 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             QueryNode boundFunction;
 
             SingleValueNode singleValueParent = parent as SingleValueNode;
-            if (singleValueParent == null)
+            if (singleValueParent != null)
             {
-                if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
+                // Now that we have the parent type, can find its corresponding EDM type
+                IEdmStructuredTypeReference structuredParentType =
+                    singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
+
+                IEdmProperty property =
+                    structuredParentType == null ? null : this.Resolver.ResolveProperty(structuredParentType.StructuredDefinition(), endPathToken.Identifier);
+
+                if (property != null)
+                {
+                    return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
+                }
+
+                if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
                 {
                     return boundFunction;
                 }
 
-                // Collection with any or all expression is already supported and handled separately.
-                // Add support of collection with $count segment.
-                CollectionNode colNode = parent as CollectionNode;
-                if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
+                if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
                 {
-                    // create a collection count node for collection node property.
-                    return new CountNode(colNode);
+                    return new CountVirtualPropertyNode();
                 }
 
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
+                return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);
             }
 
-
-            // Now that we have the parent type, can find its corresponding EDM type
-            IEdmStructuredTypeReference structuredParentType =
-                singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
-
-            IEdmProperty property =
-                structuredParentType == null ? null : this.Resolver.ResolveProperty(structuredParentType.StructuredDefinition(), endPathToken.Identifier);
-
-            if (property != null)
+            // Collection with any or all expression is already supported and handled separately.
+            // Add support of collection with $count segment.
+            CollectionNode colNode = parent as CollectionNode;
+            if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
             {
-                return GeneratePropertyAccessQueryNode(singleValueParent, property);
+                // create a collection count node for collection node property.
+                return new CountNode(colNode);
             }
 
-            if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
+            CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
+            if (collectionParent != null)
+            {
+                IEdmEntityTypeReference parentType = collectionParent.EntityItemType;
+                IEdmProperty property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
+
+                if (property.PropertyKind == EdmPropertyKind.Structural
+                    && !property.Type.IsCollection()
+                    && this.state.AggregatedPropertyNames != null
+                    && this.state.AggregatedPropertyNames.Any(p => p == collectionParent.NavigationProperty.Name))
+                {
+                    return new AggregatedCollectionPropertyNode(collectionParent, property);
+                }
+            }
+
+            if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
             {
                 return boundFunction;
             }
 
-            return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);
+            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
         }
 
         /// <summary>
-        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we 
+        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we
         /// use the implicit parameter from the BindingState as the parent node.
         /// </summary>
         /// <param name="segmentToken">Token to determine the parent node for.</param>

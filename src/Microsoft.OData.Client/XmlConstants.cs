@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Service
@@ -43,12 +43,12 @@ namespace Microsoft.OData.Service
         internal const string HttpODataMaxVersion = "OData-MaxVersion";
 
         /// <summary>
-        /// 'Prefer' - HTTP request header name for client preferences. 
+        /// 'Prefer' - HTTP request header name for client preferences.
         /// Refer to: http://tools.ietf.org/id/draft-snell-http-prefer-02.txt for details.
         /// </summary>
         internal const string HttpPrefer = "Prefer";
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>Return no content Prefer header hint value.</summary>
         internal const string HttpPreferReturnNoContent = "return=minimal";
 
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Service
         internal const string HttpPreferReturnContent = "return=representation";
 #endif
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// 'Preference-Applied' - HTTP response header name for client preference response.
         /// </summary>
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Service
 
         /// <summary>An 'X-Content-Type-Options' HTTP header argument to instruct IE8/9 not to sniff the content and instead display it according to the content-type header.</summary>
         internal const string XContentTypeOptionNoSniff = "nosniff";
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>multi-part mixed batch separator</summary>
         internal const string HttpMultipartBoundaryBatch = "batch";
 
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Service
 
         /// <summary>MIME type general binary bodies (http://www.iana.org/assignments/media-types/application/).</summary>
         internal const string MimeApplicationOctetStream = "application/octet-stream";
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>MIME type for ATOM bodies (http://www.iana.org/assignments/media-types/application/).</summary>
         internal const string MimeApplicationAtom = "application/atom+xml";
 
@@ -270,11 +270,11 @@ namespace Microsoft.OData.Service
         /// <summary>Content-Transfer-Encoding value for batch requests.</summary>
         internal const string BatchRequestContentTransferEncoding = "binary";
 
-#if !ASTORIA_CLIENT || PORTABLELIB
+#if !ODATA_CLIENT || PORTABLELIB
         /// <summary>text for the utf8 encoding</summary>
         internal const string Utf8Encoding = "UTF-8";
 #endif
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>Default encoding used for writing textual media link entries</summary>
         internal const string MimeTypeUtf8Encoding = ";charset=UTF-8";
 #endif
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Service
         /// <summary>XML element name to mark link element in Atom.</summary>
         internal const string AtomLinkElementName = "link";
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>'scheme' - XML attribute name for ATOM 'scheme' attribute for categories.</summary>
         internal const string AtomCategorySchemeAttributeName = "scheme";
 
@@ -813,9 +813,6 @@ namespace Microsoft.OData.Service
 
         /// <summary>The attribute name of the 'SRID' facet.</summary>
         internal const string CsdlSridAttributeName = "SRID";
-
-        /// <summary>Name of the concurrency attribute.</summary>
-        internal const string CsdlConcurrencyAttributeName = "ConcurrencyMode";
 
         /// <summary>Name of the default value attribute.</summary>
         internal const string CsdlDefaultValueAttributeName = "DefaultValue";

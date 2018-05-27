@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
+
     #endregion Namespaces
 
     /// <summary>
@@ -21,35 +21,14 @@ namespace Microsoft.OData.Core
     internal static class WriterUtils
     {
         /// <summary>
-        /// Determines if a property should be written or skipped.
+        /// Prepare the type name for writing.
+        /// 1) If it is primitive type, remove the Edm. prefix.
+        /// 2) If it is a non-primitive type or 4.0, prefix with #.
         /// </summary>
-        /// <param name="projectedProperties">The projected properties annotation to use (can be null).</param>
-        /// <param name="propertyName">The name of the property to check.</param>
-        /// <returns>true if the property should be skipped, false to write the property.</returns>
-        internal static bool ShouldSkipProperty(this ProjectedPropertiesAnnotation projectedProperties, string propertyName)
-        {
-            if (projectedProperties == null)
-            {
-                return false;
-            }
-            else if (object.ReferenceEquals(ProjectedPropertiesAnnotation.EmptyProjectedPropertiesInstance, projectedProperties))
-            {
-                return true;
-            }
-            else if (object.ReferenceEquals(ProjectedPropertiesAnnotation.AllProjectedPropertiesInstance, projectedProperties))
-            {
-                return false;
-            }
-
-            return !projectedProperties.IsPropertyProjected(propertyName);
-        }
-
-        /// <summary>
-        /// Remove the Edm. prefix from the type name if it is primitive type.
-        /// </summary>
-        /// <param name="typeName">The type name to remove the Edm. prefix</param>
-        /// <returns>The type name without the Edm. Prefix</returns>
-        internal static string RemoveEdmPrefixFromTypeName(string typeName)
+        /// <param name="typeName">The type name to write</param>
+        /// <param name="version">OData Version of payload being written</param>
+        /// <returns>The type name for writing</returns>
+        internal static string PrefixTypeNameForWriting(string typeName, ODataVersion version)
         {
             if (!string.IsNullOrEmpty(typeName))
             {
@@ -59,7 +38,8 @@ namespace Microsoft.OData.Core
                     IEdmSchemaType primitiveType = EdmLibraryExtensions.ResolvePrimitiveTypeName(typeName);
                     if (primitiveType != null)
                     {
-                        return primitiveType.ShortQualifiedName();
+                        typeName = primitiveType.ShortQualifiedName();
+                        return version < ODataVersion.V401 ? PrefixTypeName(typeName) : typeName;
                     }
                 }
                 else
@@ -67,12 +47,30 @@ namespace Microsoft.OData.Core
                     IEdmSchemaType primitiveType = EdmLibraryExtensions.ResolvePrimitiveTypeName(itemTypeName);
                     if (primitiveType != null)
                     {
-                        return EdmLibraryExtensions.GetCollectionTypeName(primitiveType.ShortQualifiedName());
+                        typeName = EdmLibraryExtensions.GetCollectionTypeName(primitiveType.ShortQualifiedName());
+                        return version < ODataVersion.V401 ? PrefixTypeName(typeName) : typeName;
                     }
                 }
             }
 
-            return typeName;
+            return PrefixTypeName(typeName);
+        }
+
+        /// <summary>
+        /// For JsonLight writer, always prefix the type name with # for payload writting.
+        /// </summary>
+        /// <param name="typeName">The type name to prefix</param>
+        /// <returns>The (#) prefixed type name.</returns>
+        private static string PrefixTypeName(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName))
+            {
+                return typeName;
+            }
+
+            Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "before prefix");
+
+            return ODataConstants.TypeNamePrefix + typeName;
         }
     }
 }

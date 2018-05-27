@@ -8,24 +8,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Test code for end-to-end parsing of the full uri.
     /// </summary>
     public class FullUriFunctionalTests
     {
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParsePathWithLinks()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/MyDog/$ref"));
@@ -36,7 +33,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             path[2].ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp());
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParsePathWithValue()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/$value"));
@@ -47,7 +44,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             path[2].ShouldBeValueSegment();
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParseFilter()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$filter=Name eq 'Bob'"));
@@ -57,7 +54,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             equalOperator.Right.ShouldBeConstantQueryNode("Bob");
         }
 
-       [Fact(Skip = "This test currently fails.")]
+        [Fact]
+        public void ParseCompute()
+        {
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$compute=tolower(Name) as Name"));
+            ODataUri parsedUri = parser.ParseUri();
+            parsedUri.Compute.ComputedItems.Single().Expression.ShouldBeSingleValueFunctionCallQueryNode();
+        }
+
+        [Fact]
         public void ParseOrderby()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$orderby=Name asc"));
@@ -74,20 +79,31 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             parseWithNonEntity.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriParser_TypeInvalidForSelectExpand("Edm.String"));
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParseSelectExpand()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/Dogs?$select=Color, MyPeople&$expand=MyPeople"));
             ODataUri parsedUri = parser.ParseUri();
-            parsedUri.SelectAndExpand.SelectedItems.First().ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
-            var myPeopleExpand = parsedUri.SelectAndExpand.SelectedItems.Last().ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>().And;
-            myPeopleExpand.PathToNavigationProperty.Single().ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
+            parsedUri.SelectAndExpand.SelectedItems.Count().Should().Be(3);
+            parsedUri.SelectAndExpand.SelectedItems.ElementAt(2).ShouldBePathSelectionItem(
+                new ODataSelectPath(
+                    new NavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp(), HardCodedTestModel.GetPeopleSet())));
+
+            parsedUri.SelectAndExpand.SelectedItems.ElementAt(1).ShouldBePathSelectionItem(
+                new ODataSelectPath(new PropertySegment(HardCodedTestModel.GetDogColorProp())));
+
+            var myPeopleExpand = parsedUri.SelectAndExpand.SelectedItems.First()
+                .ShouldBeSelectedItemOfType<ExpandedNavigationSelectItem>().And;
+
+            myPeopleExpand.PathToNavigationProperty.Single()
+                .ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
+
             var myPeopleSelectExpand = myPeopleExpand.SelectAndExpand;
             myPeopleSelectExpand.AllSelected.Should().BeTrue();
             myPeopleSelectExpand.SelectedItems.Should().BeEmpty();
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParseTop()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$top=1"));
@@ -95,15 +111,20 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             parsedUri.Top.Should().Be(1);
         }
 
-        [Fact(Skip = "This test currently fails.")]
-        public void TopOnlyValidOnEntities()
+        [Fact]
+        public void ParseTopOnComplex()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/MyAddress?$top=1"));
-            Action parseWitnNonEntity = () => parser.ParseUri();
-            parseWitnNonEntity.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_QueryOptionNotApplicable("$top"));
+            ODataUri parsedUri = parser.ParseUri();
+            parsedUri.Top.Should().Be(1);
+
+            // This test was originally written to expect an error but there currently
+            // is no error in this case.
+            //Action parseWitnNonEntity = () => parser.ParseUri();
+            //parseWitnNonEntity.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_QueryOptionNotApplicable("$top"));
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParseSkip()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$skip=1"));
@@ -111,15 +132,20 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             parsedUri.Skip.Should().Be(1);
         }
 
-        [Fact(Skip = "This test currently fails.")]
-        public void SkipOnlyValidOnEntities()
+        [Fact]
+        public void ParseSkipOnComplex()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/MyAddress?$skip=1"));
-            Action parseWitnNonEntity = () => parser.ParseUri();
-            parseWitnNonEntity.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_QueryOptionNotApplicable("$skip"));
+            ODataUri parsedUri = parser.ParseUri();
+            parsedUri.Skip.Should().Be(1);
+
+            // This test was originally written to expect an error but there currently
+            // is no error in this case.
+            //Action parseWitnNonEntity = () => parser.ParseUri();
+            //parseWitnNonEntity.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_QueryOptionNotApplicable("$skip"));
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParseCount()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$count=false"));

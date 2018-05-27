@@ -19,6 +19,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Tests.Server;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
     /// <summary>
     /// Tests to ensure that service authors can overwrite header values in our public hooks and the changes are persisted.
     /// </summary>
@@ -197,7 +198,8 @@ namespace AstoriaUnitTests.Tests
         /// Tests that both the ProcessingRequest event and OnStartProcessingRequest can overrwite the header values of various types
         /// with a query item and the server uses the new value. Also test multiple query string headers in Uri.
         /// </summary>
-        [TestMethod, TestCategory("Partition1")]
+        [Ignore] // Remove Atom
+        // [TestMethod, TestCategory("Partition1")]
         public void SetOverrideVariousTypeHeaderValueWithQueryString()
         {
             Action<TestWebRequest> configureRequest = (TestWebRequest request) =>
@@ -256,7 +258,8 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Tests GetQueryStringValue(headerName) behaviors with edge case headerName values.
         /// </summary>
-        [TestMethod, TestCategory("Partition1")]
+        [Ignore] // Remove Atom
+        // [TestMethod, TestCategory("Partition1")]
         public void GetQueryStringItemEdgeTest()
         {
             using (TestWebRequest webRequest = TestWebRequest.CreateForInProcessWcf())
@@ -377,7 +380,8 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Tests that server does not honor Content-Type, Content-Length header values from query string.
         /// </summary>
-        [TestMethod, TestCategory("Partition1")]
+        [Ignore] // Remove Atom
+        // [TestMethod, TestCategory("Partition1")]
         public void OverloadUpdateRequestWithContentTypeContentLengthHeader()
         {
             using (CustomDataContext.CreateChangeScope())
@@ -435,7 +439,7 @@ namespace AstoriaUnitTests.Tests
             var test = new SimpleBatchTestCase
             {
                 RequestPayload = new BatchInfo(new BatchQuery(new Operation(batchQueryOperation.ToString()))),
-                ExpectedResponsePayloadContains = new[] { "OData-Version: 4.0;", "Content-Type: application/json;odata.metadata=minimal" },
+                ExpectedResponsePayloadContains = new[] { "OData-Version: 4.0", "Content-Type: application/json;odata.metadata=minimal" },
                 ResponseStatusCode = 202, 
                 ResponseETag = default(string), 
                 ResponseVersion = V4, 
@@ -475,7 +479,8 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verify behaviors of overriding accept header of $batch request and its inner request in OnStartProcessingRequest/ProcessingRequest   
         /// </summary>
-        [TestMethod, TestCategory("Partition1")]
+        [Ignore] // Remove Atom
+        // [TestMethod, TestCategory("Partition1")]
         public void CanOverrideAcceptHeaderToBatchRequestWithQueryItem()
         {
             StringBuilder batchQueryOperation = new StringBuilder();
@@ -565,7 +570,8 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verify that $format will fail when used in a batch uri
         /// </summary>
-        [TestMethod, TestCategory("Partition1")]
+        [Ignore] // Remove Atom
+        // [TestMethod, TestCategory("Partition1")]
         public void DollarFormatShouldFailOnTopLevelBatch()
         {
             StringBuilder batchQueryOperation = new StringBuilder();

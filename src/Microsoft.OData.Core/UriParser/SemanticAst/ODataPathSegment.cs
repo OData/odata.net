@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+using System;
+
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -19,7 +18,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// <summary>
     /// The semantic representation of a segment in a path.
     /// </summary>
-    public abstract class ODataPathSegment : ODataAnnotatable
+    public abstract class ODataPathSegment
     {
         /// <summary>
         /// Creates a new Segment and copies values from another Segment.
@@ -43,10 +42,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <remarks>This property can be null. Not all segments have a Type, such as a <see cref="BatchSegment"/>.</remarks>
         public abstract IEdmType EdmType { get; }
 
-#region Temporary Internal Properties
         /// <summary>Returns the identifier for this segment i.e. string part without the keys.</summary>
-        internal string Identifier { get; set; }
+        public string Identifier { get; set; }
 
+        #region Temporary Internal Properties
         /// <summary>Whether the segment targets a single result or not.</summary>
         internal bool SingleResult { get; set; }
 
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
 
         /// <summary>The kind of resource targeted by this segment.</summary>
         internal RequestTargetKind TargetKind { get; set; }
-#endregion
+        #endregion
 
         /// <summary>
         /// Translate a <see cref="ODataPathSegment"/> using an implementation of<see cref="PathSegmentTranslator{T}"/>.
@@ -91,8 +90,10 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             Debug.Assert(Enum.IsDefined(typeof(RequestTargetKind), this.TargetKind), "enum value is not valid");
             Debug.Assert(
                 this.TargetKind != RequestTargetKind.Resource ||
-                this.TargetEdmNavigationSource != null || 
-                this.TargetKind == RequestTargetKind.OpenProperty ||
+                this.TargetEdmNavigationSource != null ||
+                this.TargetEdmType != null ||
+                this.EdmType != null ||
+                this.TargetKind == RequestTargetKind.Dynamic ||
                 this is OperationSegment ||
                 this is OperationImportSegment,
                 "All resource targets (except for some service operations and open properties) should have a container.");

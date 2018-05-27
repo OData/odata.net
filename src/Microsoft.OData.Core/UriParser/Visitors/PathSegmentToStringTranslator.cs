@@ -4,14 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
-
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -65,6 +62,17 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Translate an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public override string Translate(AnnotationSegment segment)
+        {
+            Debug.Assert(segment != null, "segment != null");
+            return segment.Term.FullName();
+        }
+
+        /// <summary>
         /// Translate a OperationSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
@@ -91,12 +99,10 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
-        public override string Translate(OpenPropertySegment segment)
+        public override string Translate(DynamicPathSegment segment)
         {
             Debug.Assert(segment != null, "segment != null");
-            return segment.PropertyName;
+            return segment.Identifier;
         }
     }
 }
-
-#endif

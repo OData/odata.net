@@ -5,7 +5,7 @@ OrderByClause
 	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
 	Direction = Ascending
 	Range Variable = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = People
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
@@ -14,16 +14,18 @@ OrderByClause
 		Property = HomeNO
 		TypeReference = [Edm.String Nullable=True Unicode=True]
 		Source = 
-		SingleValueCastNode
-			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+		SingleResourceCastNode
+			Type Reference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+			NavigationSource = People
+			Entity Type Reference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
 			Source = 
-			SingleValuePropertyAccessNode
+			SingleComplexNode
 				Property = HomeAddress
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
 				Source = 
-				EntityRangeVariableReferenceNode
+				ResourceRangeVariableReferenceNode
 					Name = $it
 					NavigationSource = People
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	Then By = 

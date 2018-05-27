@@ -7,19 +7,19 @@
 namespace Microsoft.Test.Taupo.OData.Common
 {
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
     using Microsoft.Spatial;
-    using Microsoft.OData.Core;
-    using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.EntityModel;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
     using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Spatial.EntityModel;
+
     #endregion Namespaces
 
     /// <summary>

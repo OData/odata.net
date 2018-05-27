@@ -1,0 +1,27 @@
+$orderby = CollectionOfNavOnComplex/$count
+
+
+OrderByClause
+	Item Type = [NS.ComplexType Nullable=False]
+	Direction = Ascending
+	Range Variable = 
+	ResourceRangeVariable
+		Name = $it
+		NavigationSource = EntitySet
+		TypeReference = [NS.ComplexType Nullable=False]
+	Expression = 
+	CountNode
+		Source = 
+		CollectionNavigationNode
+			ItemType = [NS.NavEntityType Nullable=False]
+			Entity Item Type = [NS.NavEntityType Nullable=False]
+			NavigationSource = NavEntitySet1
+			Multiplicity = Many
+			Navigation Property = CollectionOfNavOnComplex
+			Source = 
+			ResourceRangeVariableReferenceNode
+				Name = $it
+				NavigationSource = EntitySet
+				TypeReference = [NS.ComplexType Nullable=False]
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
+	Then By = 

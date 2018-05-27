@@ -14,24 +14,23 @@
 
   <PropertyGroup>
     <RelativeOutputPath>Product\$(RelativeOutputPath)</RelativeOutputPath>
-    <EnableStyleCop>true</EnableStyleCop>
+    <EnableStyleCop Condition="'$(TargetFrameworkVersion)' == 'v3.5'">false</EnableStyleCop>
     <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Common.StyleCop</StyleCopOverrideSettingsFile>
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">Delay</SigningScenario>
     <SigningType Condition="'$(SigningType)' == ''">Product</SigningType>
     <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == '' and '$(MSBuildProjectExtension)' != '.nuproj' and '$(MSBuildProjectExtension)' != '.wixproj'">true</ShouldGenerateAssemblyAttributeFile>
-    <CodeAnalysisUseAdditionalODataRules Condition="'$(CodeAnalysisUseAdditionalODataRules)' == ''">true</CodeAnalysisUseAdditionalODataRules>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(CodeAnalysisUseAdditionalODataRules)' == 'true'">
-    <!-- The DataWebRules ruleset also pulls in the SDL 6.0 rules, so we remain in SDL compliance -->
-    <CodeAnalysisRuleSet>DataWebRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == '' and '$(TargetFrameworkVersion)' != 'v3.5'">true</RunCodeAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
-    <CodeAnalysisDictionary Include="$(MSBuildThisFileDirectory)CommonCustomDictionary.xml"/>
+    <CodeAnalysisDictionary Include="$(MSBuildThisFileDirectory)CustomDictionary.xml"/>
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <StyleCopAdditionalAddinPaths Include="$(NuGetPack)\Microsoft.OData.StyleCop.1.0.0\lib" />
+  </ItemGroup>
+
   <Import Project="..\Build.props" />
   <Import Project="$(CustomBuildExtensionsPath)\Versioning.props" />
 

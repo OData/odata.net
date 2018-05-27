@@ -4,11 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Validation;
-
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     /// <summary>
@@ -16,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class UnresolvedFunction : UnresolvedOperation, IEdmFunction
     {
-        public UnresolvedFunction(string qualifiedName, string errorMessage, EdmLocation location) 
+        public UnresolvedFunction(string qualifiedName, string errorMessage, EdmLocation location)
             : base(qualifiedName, errorMessage, location)
         {
         }
@@ -29,6 +24,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public new EdmSchemaElementKind SchemaElementKind
         {
             get { return EdmSchemaElementKind.Function; }
-        } 
+        }
     }
 }

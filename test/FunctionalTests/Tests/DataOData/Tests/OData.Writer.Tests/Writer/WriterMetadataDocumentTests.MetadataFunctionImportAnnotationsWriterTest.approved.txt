@@ -1,40 +1,4 @@
 Combination: 1; TestConfiguration = Format: , Request: False, Synchronous: True
 Model Present: true
-<?xml version="1.0" encoding="utf-8"?>
-<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
-  <edmx:DataServices>
-    <Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <ComplexType Name="Address">
-        <Property Name="Street" Type="Edm.String" />
-        <Property Name="Zip" Type="Edm.Int32" Nullable="false" />
-      </ComplexType>
-      <EntityType Name="PersonType" HasStream="true">
-        <Key>
-          <PropertyRef Name="Id" />
-        </Key>
-        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" Nullable="false" />
-        <Property Name="Address" Type="TestModel.Address" Nullable="false" />
-        <Property Name="Picture" Type="Edm.Stream" Nullable="false" />
-      </EntityType>
-      <Function Name="ServiceOperation1">
-        <Parameter Name="a" Type="Edm.Int32" />
-        <Parameter Name="b" Type="Edm.String" />
-        <ReturnType Type="Edm.Int32" />
-      </Function>
-      <Action Name="ActionImport_GET" IsBound="true" />
-      <Action Name="ActionImport_POST" IsBound="true" />
-      <Action Name="ActionImport_" IsBound="true" />
-      <Action Name="ActionImport_45" IsBound="true" />
-      <EntityContainer Name="DefaultContainer">
-        <EntitySet Name="People" EntityType="TestModel.PersonType" />
-        <FunctionImport Name="ServiceOperation1" Function="TestModel.ServiceOperation1" />
-        <ActionImport Name="ActionImport_GET" Action="TestModel.ActionImport_GET" />
-        <ActionImport Name="ActionImport_POST" Action="TestModel.ActionImport_POST" />
-        <ActionImport Name="ActionImport_" Action="TestModel.ActionImport_" />
-        <ActionImport Name="ActionImport_45" Action="TestModel.ActionImport_45" />
-      </EntityContainer>
-    </Schema>
-  </edmx:DataServices>
-</edmx:Edmx>
+<?xml version="1.0" encoding="utf-8"?><edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"><edmx:DataServices><Schema Namespace="TestModel" xmlns="http://docs.oasis-open.org/odata/ns/edm"><ComplexType Name="Address"><Property Name="Street" Type="Edm.String" /><Property Name="Zip" Type="Edm.Int32" Nullable="false" /></ComplexType><EntityType Name="PersonType" HasStream="true"><Key><PropertyRef Name="Id" /></Key><Property Name="Id" Type="Edm.Int32" Nullable="false" /><Property Name="Name" Type="Edm.String" Nullable="false" /><Property Name="Address" Type="TestModel.Address" Nullable="false" /><Property Name="Picture" Type="Edm.Stream" Nullable="false" /></EntityType><Function Name="ServiceOperation1"><Parameter Name="a" Type="Edm.Int32" /><Parameter Name="b" Type="Edm.String" /><ReturnType Type="Edm.Int32" /></Function><Action Name="ActionImport_GET" IsBound="true" /><Action Name="ActionImport_POST" IsBound="true" /><Action Name="ActionImport_" IsBound="true" /><Action Name="ActionImport_45" IsBound="true" /><EntityContainer Name="DefaultContainer"><EntitySet Name="People" EntityType="TestModel.PersonType" /><FunctionImport Name="ServiceOperation1" Function="TestModel.ServiceOperation1" /><ActionImport Name="ActionImport_GET" Action="TestModel.ActionImport_GET" /><ActionImport Name="ActionImport_POST" Action="TestModel.ActionImport_POST" /><ActionImport Name="ActionImport_" Action="TestModel.ActionImport_" /><ActionImport Name="ActionImport_45" Action="TestModel.ActionImport_45" /></EntityContainer></Schema></edmx:DataServices></edmx:Edmx>
 

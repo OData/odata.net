@@ -3,6 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{70CCA883-E9EC-41C8-9A42-F910C4A6FCB6}</ProjectGuid>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.Taupo.OData.Reader.Tests</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.OData.Reader.Tests</AssemblyName>
@@ -83,28 +84,13 @@
     <Compile Include="JsonLight\UndelcaredPropertyReaderJsonLightTests.cs" />
     <Compile Include="Json\InStreamErrorReaderJsonTests.cs" />
     <Compile Include="AtomPayloadElementPropertyOrderNormalizer.cs" />
-    <Compile Include="Atom\AtomMetadataReaderTests.cs" />
-    <Compile Include="Atom\CollectionReaderAtomTests.cs" />
-    <Compile Include="Atom\AtomObjectModelToPayloadElementConverter.cs" />
-    <Compile Include="Atom\ComplexValueReaderAtomTests.cs" />
-    <Compile Include="Atom\PayloadKindDetectionAtomTests.cs" />
-    <Compile Include="Atom\ElementValueTests.cs" />
-    <Compile Include="Atom\EncodingAtomTests.cs" />
-    <Compile Include="Atom\EntityReferenceLinkReaderAtomTests.cs" />
-    <Compile Include="Atom\EntryPayloadOrderReaderAtomTests.cs" />
-    <Compile Include="Atom\EntryReaderAtomMetadataTests.cs" />
-    <Compile Include="Atom\EntryReaderAtomTests.cs" />
-    <Compile Include="Atom\ErrorReaderAtomTests.cs" />
     <Compile Include="Atom\ErrorMessageNormalizer.cs" />
-    <Compile Include="Atom\FeedPayloadOrderReaderAtomTests.cs" />
     <Compile Include="Batch\BatchReaderCrossReferenceTests.cs" />
     <Compile Include="Batch\BatchReaderHttpStreamSimulationTests.cs" />
     <Compile Include="Batch\BatchReaderMixedEncodingTests.cs" />
     <Compile Include="Batch\BatchReaderStreamBufferState.cs" />
     <Compile Include="Batch\BatchReaderStreamOrBufferTestCase.cs" />
     <Compile Include="Batch\BatchReaderStreamTestCase.cs" />
-    <Compile Include="Atom\FeedReaderAtomMetadataTests.cs" />
-    <Compile Include="Atom\ODataAtomMetadataReaderTestCase.cs" />
     <Compile Include="Batch\BatchReaderTestExpectedResults.cs" />
     <Compile Include="Batch\BatchReaderTests.cs" />
     <Compile Include="Batch\BatchReaderStreamBufferWrapper.cs" />
@@ -129,6 +115,7 @@
     <Compile Include="ConvertFromUriLiteralTests.cs" />
     <Compile Include="Common\ConvertAtomMetadataForConfigurationPayloadElementNormalizer.cs" />
     <Compile Include="Common\RemoveAssociationLinkPayloadElementNormalizer.cs" />
+    <Compile Include="ReaderDefaultODataObjectModelValidator.cs" />
     <Compile Include="Reader\ReaderSyncAsyncMismatchTests.cs" />
     <Compile Include="RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.cs" />
     <Compile Include="JsonLight\CollectionValueReaderJsonLightTests.cs" />
@@ -157,14 +144,6 @@
     <Compile Include="ODataFeedPayloadOrderObjectModelAnnotation.cs" />
     <Compile Include="ODataParameterReaderTestWrapper.cs" />
     <Compile Include="JsonPayloadElementPropertyOrderNormalizer.cs" />
-    <Compile Include="Atom\OperationReaderAtomTests.cs" />
-    <Compile Include="Atom\FeedReaderAtomTests.cs" />
-    <Compile Include="Atom\CollectionValueReaderAtomTests.cs" />
-    <Compile Include="Atom\NavigationLinkReaderAtomTests.cs" />
-    <Compile Include="Atom\PropertiesElementAtomValues.cs" />
-    <Compile Include="Atom\ReadPropertyAtomTests.cs" />
-    <Compile Include="Atom\ServiceDocumentReaderAtomTests.cs" />
-    <Compile Include="Atom\StreamReferenceValueReaderAtomTests.cs" />
     <Compile Include="MetadataReaderTestExpectedResult.cs" />
     <Compile Include="MetadataReaderTestDescriptor.cs" />
     <Compile Include="Atom\XmlBaseReaderTests.cs" />
@@ -184,7 +163,6 @@
     <Compile Include="Reader\ParameterReaderTests.cs" />
     <Compile Include="Reader\MetadataDocumentReaderErrorTests.cs" />
     <Compile Include="Reader\MetadataDocumentReaderTests.cs" />
-    <Compile Include="Reader\OperationReaderTests.cs" />
     <Compile Include="Reader\ReaderContentTypeTests.cs" />
     <Compile Include="RemoveAtomMetadataFromPayloadElementVisitor.cs" />
     <Compile Include="RemoveCollectionNameFromCollectionPayloadElementVisitor.cs" />
@@ -222,7 +200,6 @@
     <Compile Include="ODataMessageReaderTestWrapper.cs" />
     <Compile Include="ODataReaderTestsTestModule.cs" />
     <Compile Include="ODataReaderTestWrapper.cs" />
-    <Compile Include="ReaderDefaultODataObjectModelValidator.cs" />
     <Compile Include="PayloadReaderTestDescriptor.cs" />
     <Compile Include="PayloadReaderTestExpectedResult.cs" />
     <Compile Include="ReaderTestConfiguration.cs" />

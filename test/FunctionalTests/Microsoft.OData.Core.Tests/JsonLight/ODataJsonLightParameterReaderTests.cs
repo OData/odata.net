@@ -11,17 +11,16 @@ using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     /// <summary>
     /// Tests the use of ODataParameterReader class when the payload is JSON.
-    /// 
-    /// TODO: For error tests, see Microsoft.Test.Taupo.OData.Reader.Tests.Reader.ParameterReaderTests. 
+    ///
+    /// TODO: For error tests, see Microsoft.Test.Taupo.OData.Reader.Tests.Reader.ParameterReaderTests.
     /// These should eventually be migrated here.
     /// </summary>
     public class ODataJsonLightParameterReaderTests
@@ -93,9 +92,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             string payload = "{\"address\" : { \"StreetName\": \"Bla\", \"StreetNumber\" : 61 } }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
-            var complexValue = result.Values.Single().Value;
-            complexValue.Should().BeOfType<ODataComplexValue>();
+            result.Entries.Should().HaveCount(1);
+            result.Entries.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
+
+            result.Entries.SingleOrDefault().Value.Should().OnlyContain(item => item is ODataResource);
         }
 
         [Fact]
@@ -110,9 +110,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             string payload = "{\"address\" : { \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" } }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
-            var complexValue = result.Values.Single().Value;
-            complexValue.Should().BeOfType<ODataComplexValue>();
+            result.Entries.Should().HaveCount(1);
+            result.Entries.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
+
+            result.Entries.SingleOrDefault().Value.Should().OnlyContain(item => item is ODataResource); ;
         }
 
         [Fact]
@@ -127,10 +128,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             string payload = "{\"addresses\" : [{ \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" }, { \"StreetName\": \"Bla2\" }]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Collections.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
-            var collectioItems = result.Collections.Single().Value.Items;
+            result.Feeds.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
+            var collectioItems = result.Entries.First().Value;
             collectioItems.Should().HaveCount(2);
-            collectioItems.Should().OnlyContain(item => item is ODataComplexValue);
+            collectioItems.Should().OnlyContain(item => item is ODataResource);
         }
 
         [Fact]
@@ -141,10 +142,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             string payload = "{\"addresses\" : [{ \"StreetName\": \"Bla\", \"StreetNumber\" : 61 }, { \"StreetName\": \"Bla2\", \"StreetNumber\" : 64 }]}";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Collections.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
-            var collectioItems = result.Collections.Single().Value.Items;
+            result.Feeds.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("addresses"));
+            var collectioItems = result.Entries.First().Value;
             collectioItems.Should().HaveCount(2);
-            collectioItems.Should().OnlyContain(item => item is ODataComplexValue);
+            collectioItems.Should().OnlyContain(item => item is ODataResource);
         }
 
         [Fact]
@@ -241,13 +242,16 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var result = this.RunParameterReaderTest(payload);
             var pair = result.Entries.First();
             pair.Key.Should().Be("entry");
-            pair.Value.Count().Should().Be(1);
-            var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
+            pair.Value.Count().Should().Be(2);
+            var complex = pair.Value.ElementAt(0);
+            complex.Properties.First().Value.Should().Be("ComplexName");
+            var entry = pair.Value.Last();
+            entry.Properties.Count().Should().Be(1);
             entry.Properties.First().Value.Should().Be(1);
-            entry.Properties.ElementAt(1).Value.Should().BeOfType<ODataComplexValue>();
-            result.Values.Count().Should().Be(1);
-            result.Values.First().Value.Should().BeOfType<ODataComplexValue>();
+            var pair2 = result.Entries.Last();
+            pair2.Key.Should().Be("complex");
+            pair2.Value.Count().Should().Be(1);
+            pair2.Value.Single().Properties.Count().Should().Be(1);
         }
 
         [Fact]
@@ -264,7 +268,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             pair.Value.Count().Should().Be(1);
             var entry = pair.Value.First();
             entry.Properties.Count().Should().Be(2);
-            entry.Properties.ElementAt(1).Value.Should().Be("DynamicValue");
+            entry.Properties.ElementAt(1).Value.As<ODataUntypedValue>().RawValue.Should().Be("\"DynamicValue\"");
         }
 
         [Fact]
@@ -286,7 +290,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             entry.Properties.ElementAt(1).Value.Should().Be("TestName");
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ReadNullEntity()
         {
             var entityType = this.referencedModel.EntityType("EntityType", "NS").Property("ID", EdmPrimitiveTypeKind.Int32);
@@ -299,9 +303,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             pair.Key.Should().Be("entry");
             pair.Value.Count().Should().Be(1);
             var entry = pair.Value.First();
-            entry.Properties.Count().Should().Be(2);
-            entry.Properties.First().Value.Should().Be(1);
-            entry.Properties.ElementAt(1).Value.Should().Be("TestName");
+            entry.Should().BeNull();
         }
 
         [Fact]
@@ -448,8 +450,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var entryA = result.Entries.First().Value.First();
             entryA.Properties.Count().Should().Be(1);
             entryA.Properties.First().Value.Should().Be(1);
-            result.Values.Count().Should().Be(1);
-            result.Values.First().Value.Should().BeOfType<ODataComplexValue>();
+
+            var entryB = result.Entries.Last().Value.Single();
+            entryB.Properties.Count().Should().Be(1);
+            entryB.Properties.First().Value.Should().Be("ComplexName");
         }
 
         [Fact]
@@ -478,8 +482,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var entityType = this.referencedModel.EntityType("EntityType").Property("ID", EdmPrimitiveTypeKind.Int32);
             var enumType = this.referencedModel.EnumType("Color");
-            enumType.AddMember("Blue", new EdmIntegerConstant(0));
-            enumType.AddMember("Red", new EdmIntegerConstant(1));
+            enumType.AddMember("Blue", new EdmEnumMemberValue(0));
+            enumType.AddMember("Red", new EdmEnumMemberValue(1));
             this.action.AddParameter("feed", EdmCoreModel.GetCollection(new EdmEntityTypeReference(entityType, false)));
             this.action.AddParameter("enum", new EdmEnumTypeReference(enumType, false));
             string payload = "{\"feed\":[{\"ID\":1}],\"enum\":\"Blue\"}";
@@ -658,43 +662,43 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 }
                                 break;
                             }
-                        case ODataParameterReaderState.Entry:
+                        case ODataParameterReaderState.Resource:
                             {
-                                var entryReader = parameterReader.CreateEntryReader();
+                                var entryReader = parameterReader.CreateResourceReader();
 
-                                var entryList = new List<ODataEntry>();
-                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
+                                var entryList = new List<ODataResource>();
+                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataResource>>(parameterReader.Name, entryList));
                                 while (entryReader.Read())
                                 {
                                     switch (entryReader.State)
                                     {
-                                        case ODataReaderState.EntryEnd:
-                                            entryList.Add((ODataEntry)entryReader.Item);
+                                        case ODataReaderState.ResourceEnd:
+                                            entryList.Add((ODataResource)entryReader.Item);
                                             break;
 
                                     }
                                 }
                                 break;
                             }
-                        case ODataParameterReaderState.Feed:
+                        case ODataParameterReaderState.ResourceSet:
                             {
-                                var entryReader = parameterReader.CreateFeedReader();
+                                var entryReader = parameterReader.CreateResourceSetReader();
 
-                                var entryList = new List<ODataEntry>();
-                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataEntry>>(parameterReader.Name, entryList));
+                                var entryList = new List<ODataResource>();
+                                parameterReaderResult.Entries.Add(new KeyValuePair<string, IList<ODataResource>>(parameterReader.Name, entryList));
 
-                                var feedList = new List<ODataFeed>();
-                                parameterReaderResult.Feeds.Add(new KeyValuePair<string, IList<ODataFeed>>(parameterReader.Name, feedList));
+                                var feedList = new List<ODataResourceSet>();
+                                parameterReaderResult.Feeds.Add(new KeyValuePair<string, IList<ODataResourceSet>>(parameterReader.Name, feedList));
 
                                 while (entryReader.Read())
                                 {
                                     switch (entryReader.State)
                                     {
-                                        case ODataReaderState.EntryEnd:
-                                            entryList.Add((ODataEntry)entryReader.Item);
+                                        case ODataReaderState.ResourceEnd:
+                                            entryList.Add((ODataResource)entryReader.Item);
                                             break;
-                                        case ODataReaderState.FeedEnd:
-                                            feedList.Add((ODataFeed)entryReader.Item);
+                                        case ODataReaderState.ResourceSetEnd:
+                                            feedList.Add((ODataResourceSet)entryReader.Item);
                                             break;
                                     }
                                 }
@@ -711,15 +715,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             public IList<KeyValuePair<string, object>> Values { get; set; }
             public IList<KeyValuePair<string, ParameterReaderCollection>> Collections { get; set; }
-            public IList<KeyValuePair<string, IList<ODataEntry>>> Entries { get; set; }
-            public IList<KeyValuePair<string, IList<ODataFeed>>> Feeds { get; set; }
+            public IList<KeyValuePair<string, IList<ODataResource>>> Entries { get; set; }
+            public IList<KeyValuePair<string, IList<ODataResourceSet>>> Feeds { get; set; }
 
             public ParameterReaderResult()
             {
                 Values = new List<KeyValuePair<string, object>>();
                 Collections = new List<KeyValuePair<string, ParameterReaderCollection>>();
-                Entries = new List<KeyValuePair<string, IList<ODataEntry>>>();
-                Feeds = new List<KeyValuePair<string, IList<ODataFeed>>>();
+                Entries = new List<KeyValuePair<string, IList<ODataResource>>>();
+                Feeds = new List<KeyValuePair<string, IList<ODataResourceSet>>>();
             }
         }
 

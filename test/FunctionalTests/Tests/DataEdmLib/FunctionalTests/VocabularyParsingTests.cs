@@ -4,8 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.FunctionalTests
 {
+    #if SILVERLIGHT
+    using Microsoft.Silverlight.Testing;
+#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -14,20 +19,12 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.Community.V1;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -39,67 +36,67 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void Parsing_Simple_ValueTerms()
+        public void Parsing_Simple_Terms()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleValueTerms());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleTerms());
         }
 
         [TestMethod]
-        public void Parsing_Simple_ValueTerm_WithDuplicate()
+        public void Parsing_Simple_Term_WithDuplicate()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleValueTermWithDuplicate());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleTermWithDuplicate());
         }
 
         [TestMethod]
-        public void Parsing_Simple_ValueTerm_InV10()
+        public void Parsing_Simple_Term_InV10()
         {
-            var model = VocabularyTestModelBuilder.SimpleValueTermInV10();
+            var model = VocabularyTestModelBuilder.SimpleTermInV10();
             var definitionCsdls = new VocabularyDefinitionCsdlGenerator().GenerateDefinitionCsdl(EdmVersion.V40, model);
             IEdmModel parsedModel = this.GetParserResult(definitionCsdls);
             this.VerifyParsedModel(model, parsedModel);
         }
 
         [TestMethod]
-        public void Parsing_Simple_ValueAnnotation()
+        public void Parsing_Simple_VocabularyAnnotation()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleValueAnnotation());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleVocabularyAnnotation());
         }
 
         [TestMethod]
-        public void Parsing_Simple_ValueAnnotation_WithQualifiers()
+        public void Parsing_Simple_VocabularyAnnotation_WithQualifiers()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleValueAnnotationWithQualifiers());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleVocabularyAnnotationWithQualifiers());
         }
 
         [TestMethod]
-        public void Parsing_Simple_ValueAnnotation_Confict()
+        public void Parsing_Simple_VocabularyAnnotation_Confict()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleValueAnnotationConfict());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleVocabularyAnnotationConfict());
         }
 
         [TestMethod]
-        public void Parsing_Multiple_ValueAnnotations()
+        public void Parsing_Multiple_VocabularyAnnotations()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.MultipleValueAnnotations());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.MultipleVocabularyAnnotations());
         }
 
         // [EdmLib] vocabulary annotation Parsing does not work on EntityContainer
         [TestMethod]
-        public void Parsing_Simple_ValueAnnotation_OnContainerAndEntitySet()
+        public void Parsing_Simple_VocabularyAnnotation_OnContainerAndEntitySet()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleValueAnnotationOnContainerAndEntitySet());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.SimpleVocabularyAnnotationOnContainerAndEntitySet());
         }
 
         [TestMethod]
-        public void Parsing_Structured_ValueAnnotation()
+        public void Parsing_Structured_VocabularyAnnotation()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.StructuredValueAnnotation());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.StructuredVocabularyAnnotation());
         }
 
         [TestMethod]
-        public void Parsing_ValueTermOfStructuredDataType()
+        public void Parsing_TermOfStructuredDataType()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.ValueTermOfStructuredDataType());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.TermOfStructuredDataType());
         }
 
         [TestMethod]
@@ -115,15 +112,15 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void Parsing_ValueAnnotationWithRecord()
+        public void Parsing_VocabularyAnnotationWithRecord()
         {
-            this.PerfomCommonParserTest(VocabularyTestModelBuilder.ValueAnnotationWithRecord());
+            this.PerfomCommonParserTest(VocabularyTestModelBuilder.VocabularyAnnotationWithRecord());
         }
 
         [TestMethod]
-        public void Parsing_InvalidPropertyValueAnnotation()
+        public void Parsing_InvalidPropertyVocabularyAnnotation()
         {
-            var model = this.GetParserResult(VocabularyTestModelBuilder.InvalidPropertyValueAnnotationCsdl());
+            var model = this.GetParserResult(VocabularyTestModelBuilder.InvalidPropertyVocabularyAnnotationCsdl());
 
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -152,37 +149,37 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void Parsing_InlineValueAnnotationEntityTypeUsingAlias()
+        public void Parsing_InlineVocabularyAnnotationEntityTypeUsingAlias()
         {
-            var inlineValueAnnotationEntityType = VocabularyTestModelBuilder.InlineValueAnnotationEntityTypeUsingAlias();
+            var inlineValueAnnotationEntityType = VocabularyTestModelBuilder.InlineVocabularyAnnotationEntityTypeUsingAlias();
             var model = this.GetParserResult(inlineValueAnnotationEntityType);
 
-            var stringTerm = model.FindValueTerm("AnnotationNamespace.StringTerm");
-            Assert.IsNotNull(stringTerm, "Invalid value term name.");
-            Assert.IsTrue(stringTerm.Type.IsString(), "Invalid value term type.");
+            var stringTerm = model.FindTerm("AnnotationNamespace.StringTerm");
+            Assert.IsNotNull(stringTerm, "Invalid term name.");
+            Assert.IsTrue(stringTerm.Type.IsString(), "Invalid term type.");
 
             var carVocabularyAnnotations = model.FindEntityType("DefaultNamespace.Car").VocabularyAnnotations(model);
             Assert.AreEqual(1, carVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
 
-            var annotationFound = this.CheckForValueAnnotation(carVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            var annotationFound = this.CheckForVocabularyAnnotation(carVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(annotationFound, "Annotation can't be found.");
         }
 
         [TestMethod]
-        public void Parsing_OutOfLineValueAnnotationEntityType()
+        public void Parsing_OutOfLineVocabularyAnnotationEntityType()
         {
             var outOfLineAnnotationEntityType = VocabularyTestModelBuilder.OutOfLineAnnotationEntityType();
             var model = this.GetParserResult(outOfLineAnnotationEntityType);
 
-            var stringTerm = model.FindValueTerm("AnnotationNamespace.StringTerm");
-            Assert.IsNotNull(stringTerm, "Invalid value term name.");
-            Assert.IsTrue(stringTerm.Type.IsString(), "Invalid value term type.");
+            var stringTerm = model.FindTerm("AnnotationNamespace.StringTerm");
+            Assert.IsNotNull(stringTerm, "Invalid term name.");
+            Assert.IsTrue(stringTerm.Type.IsString(), "Invalid term type.");
 
             var carType = model.FindEntityType("DefaultNamespace.Car");
             var carVocabularyAnnotations = carType.VocabularyAnnotations(model);
             Assert.AreEqual(1, carVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(carVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") }, "DefaultNamespace.Car");
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(carVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") }, "DefaultNamespace.Car");
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -209,7 +206,7 @@ namespace EdmLibTests.FunctionalTests
             var ownerNameVocabularyAnnotations = ownerEntityType.Properties().Where(x => x.Name == "Name").SingleOrDefault().VocabularyAnnotations(model);
             Assert.AreEqual(1, ownerNameVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(ownerNameVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(ownerNameVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -226,7 +223,7 @@ namespace EdmLibTests.FunctionalTests
             var wheelsVocabularyAnnotations = carEntityType.Properties().Where(x => x.Name.Equals("Wheels")).SingleOrDefault().VocabularyAnnotations(model);
             Assert.AreEqual(1, wheelsVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(wheelsVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(wheelsVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var ownerEntityType = model.FindEntityType("DefaultNamespace.Owner");
@@ -253,10 +250,6 @@ namespace EdmLibTests.FunctionalTests
 
             var carNavigationVocabularyAnnotations = ownerEntityType.NavigationProperties().Where(x => x.Name == "Car").SingleOrDefault().VocabularyAnnotations(model);
             Assert.AreEqual(1, carNavigationVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
-
-            // [EdmLib] Some expression evaluation is not implemented - postponed. 
-            // var valueAnnotationFound = this.CheckForValueAnnotation(carNavigationVocabularyAnnotations, EdmExpressionKind.EnumMemberReference, new List<PropertyValue> { new PropertyValue("Very") });
-            // Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var carEntityType = model.FindEntityType("DefaultNamespace.Car");
             var carVocabularyAnnotations = carEntityType.VocabularyAnnotations(model);
@@ -289,7 +282,7 @@ namespace EdmLibTests.FunctionalTests
             var ownerNavigationVocabularyAnnotations = carEntityType.NavigationProperties().Where(x => x.Name == "Owner").SingleOrDefault().VocabularyAnnotations(model);
             Assert.AreEqual(1, ownerNavigationVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(ownerNavigationVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(ownerNavigationVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -304,7 +297,7 @@ namespace EdmLibTests.FunctionalTests
 
             var entityContainerVocabularyAnnotation = model.EntityContainer.VocabularyAnnotations(model);
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(entityContainerVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(entityContainerVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -324,7 +317,7 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("Mary"), 
                                                                             new PropertyValue("Justin") 
                                                                         };
-            var valueAnnotationFound = this.CheckForValueAnnotation(entityContainerVocabularyAnnotation, EdmExpressionKind.Collection, listOfPeople);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(entityContainerVocabularyAnnotation, EdmExpressionKind.Collection, listOfPeople);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             List<PropertyValue> address = new List<PropertyValue>   { 
@@ -332,7 +325,7 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("City", "bar")
                                                                     };
 
-            valueAnnotationFound = this.CheckForValueAnnotation(entityContainerVocabularyAnnotation, EdmExpressionKind.Record, address);
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(entityContainerVocabularyAnnotation, EdmExpressionKind.Record, address);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -355,7 +348,7 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("City", "bar")
                                                                     };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(petVocabularyAnnotation, EdmExpressionKind.Record, address);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(petVocabularyAnnotation, EdmExpressionKind.Record, address);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -378,7 +371,7 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("Mary"), 
                                                                             new PropertyValue("Justin") 
                                                                         };
-            var valueAnnotationFound = this.CheckForValueAnnotation(petVocabularyAnnotation, EdmExpressionKind.Collection, listOfPeople);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(petVocabularyAnnotation, EdmExpressionKind.Collection, listOfPeople);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -406,7 +399,7 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("Justin") 
                                                                         };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(nameVocabularyAnnotation, EdmExpressionKind.Collection, listOfPeople);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(nameVocabularyAnnotation, EdmExpressionKind.Collection, listOfPeople);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -433,7 +426,7 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("City", "bar")
                                                                     };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(ownerIdVocabularyAnnotation, EdmExpressionKind.Record, address);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(ownerIdVocabularyAnnotation, EdmExpressionKind.Record, address);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -452,7 +445,7 @@ namespace EdmLibTests.FunctionalTests
             var peopleCountVocabularyAnnotation = peopleCount.VocabularyAnnotations(model);
             Assert.AreEqual(1, peopleCountVocabularyAnnotation.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(peopleCountVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(peopleCountVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -477,7 +470,7 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("51") 
                                                                     };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(peopleCountVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(peopleCountVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -499,7 +492,7 @@ namespace EdmLibTests.FunctionalTests
             var peopleListVocabularyAnnotation = peopleCount.Parameters.Where(x => x.Name.Equals("PeopleList")).SingleOrDefault().VocabularyAnnotations(model);
             Assert.AreEqual(1, peopleListVocabularyAnnotation.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(peopleListVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(peopleListVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -527,7 +520,7 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("51") 
                                                                     };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(peopleListVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(peopleListVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -555,7 +548,7 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("51") 
                                                                         };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(medianAgeVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(medianAgeVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -577,7 +570,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(1, medianAge.VocabularyAnnotations(model).Count(), "Invalid count of vocabulary annotation.");
             var medianAgeVocabularyAnnotation = medianAge.VocabularyAnnotations(model);
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(medianAgeVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(medianAgeVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -609,7 +602,7 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("51") 
                                                                         };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(peopleAgeVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(peopleAgeVocabularyAnnotation, EdmExpressionKind.Collection, listOfAge);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -635,7 +628,7 @@ namespace EdmLibTests.FunctionalTests
             var peopleAgeVocabularyAnnotation = peopleAge.VocabularyAnnotations(model);
             Assert.AreEqual(1, peopleAgeVocabularyAnnotation.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(peopleAgeVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(peopleAgeVocabularyAnnotation, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("3") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -657,7 +650,7 @@ namespace EdmLibTests.FunctionalTests
             var petDogVocabularyAnnotation = petDog.VocabularyAnnotations(model);
             Assert.AreEqual(1, petDogVocabularyAnnotation.Count(), "Invalid count of vocabulary annotation.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(petDogVocabularyAnnotation, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(petDogVocabularyAnnotation, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -684,7 +677,7 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("City", "bar")
                                                                     };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(petDogVocabularyAnnotation, EdmExpressionKind.Record, address);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(petDogVocabularyAnnotation, EdmExpressionKind.Record, address);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -703,7 +696,7 @@ namespace EdmLibTests.FunctionalTests
             var popularityVocabularyAnnotation = popularity.VocabularyAnnotations(model);
             Assert.AreEqual(1, popularityVocabularyAnnotation.Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(popularityVocabularyAnnotation, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(popularityVocabularyAnnotation, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -727,7 +720,7 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("City", "bar")
                                                                     };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(popularityVocabularyAnnotation, EdmExpressionKind.Record, address);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(popularityVocabularyAnnotation, EdmExpressionKind.Record, address);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -735,14 +728,14 @@ namespace EdmLibTests.FunctionalTests
         public void Parsing_InlineAnnotationEnumMember()
         {
             var model = this.GetParserResult(VocabularyTestModelBuilder.inlineAnnotationEnumMember());
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid annotation count.");
 
             //Call FindVocabularyAnnotations to get vocabulary annotations.
             var enumType = model.FindDeclaredType("DefaultNamespace.MyEnumType") as IEdmEnumType;
             var vocabularyAnnotatable = enumType.Members.First();
-            var valueAnnotations1 = model.FindVocabularyAnnotations(vocabularyAnnotatable).OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(1, valueAnnotations1.Count(), "Invalid value annotation count.");
+            var valueAnnotations1 = model.FindVocabularyAnnotations(vocabularyAnnotatable);
+            Assert.AreEqual(1, valueAnnotations1.Count(), "Invalid annotation count.");
 
             var intValue = valueAnnotations1.First().Value as IEdmIntegerConstantExpression;
             Assert.IsNotNull(intValue, "Invalid integer value.");
@@ -750,16 +743,16 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void Parsing_InlineAnnotationValueTerm()
+        public void Parsing_InlineAnnotationTerm()
         {
-            var inLineAnnotationValueTerm = VocabularyTestModelBuilder.InlineAnnotationValueTerm();
+            var inLineAnnotationValueTerm = VocabularyTestModelBuilder.InlineAnnotationTerm();
             var model = this.GetParserResult(inLineAnnotationValueTerm);
 
             var vocabularyAnnotations = model.VocabularyAnnotations;
             Assert.AreEqual(1, vocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
 
-            var valueTerm = model.FindValueTerm("DefaultNamespace.ValueTerm");
-            Assert.IsNotNull(valueTerm, "Invalid value term.");
+            var valueTerm = model.FindTerm("DefaultNamespace.ValueTerm");
+            Assert.IsNotNull(valueTerm, "Invalid term.");
 
             var valueTermVocabularyAnnotation = valueTerm.VocabularyAnnotations(model);
             Assert.AreEqual(1, valueTermVocabularyAnnotation.Count(), "Invalid vocabulary annotation count.");
@@ -769,33 +762,33 @@ namespace EdmLibTests.FunctionalTests
                                                                         new PropertyValue("City", "bar")
                                                                     };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(valueTermVocabularyAnnotation, EdmExpressionKind.Record, address);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(valueTermVocabularyAnnotation, EdmExpressionKind.Record, address);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
         [TestMethod]
-        public void Parsing_OutOfLineAnnotationValueTerm()
+        public void Parsing_OutOfLineAnnotationTerm()
         {
-            var outOfLineAnnotationValueTerm = VocabularyTestModelBuilder.OutOfLineAnnotationValueTerm();
+            var outOfLineAnnotationValueTerm = VocabularyTestModelBuilder.OutOfLineAnnotationTerm();
             var model = this.GetParserResult(outOfLineAnnotationValueTerm);
 
             var vocabularyAnnotations = model.VocabularyAnnotations;
             Assert.AreEqual(1, vocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
 
-            var valueTerm = model.FindValueTerm("DefaultNamespace.ValueTerm");
-            Assert.IsNotNull(valueTerm, "Invalid value term.");
+            var valueTerm = model.FindTerm("DefaultNamespace.ValueTerm");
+            Assert.IsNotNull(valueTerm, "Invalid term.");
 
             var valueTermVocabularyAnnotation = valueTerm.VocabularyAnnotations(model);
             Assert.AreEqual(1, valueTermVocabularyAnnotation.Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(valueTermVocabularyAnnotation, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") }, "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm");
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(valueTermVocabularyAnnotation, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") }, "Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm");
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
         //[TestMethod, Variation(Id = 327, SkipReason = @"[EdmLib] Vocabulary annotation within vocabulary annotation can not be parsed by csdlreader -- postponed")]
-        public void Parsing_InlineAnnotationInValueAnnotation()
+        public void Parsing_InlineAnnotationInVocabularyAnnotation()
         {
-            var inLineAnnotationInValueAnnotation = VocabularyTestModelBuilder.InlineAnnotationInValueAnnotation();
+            var inLineAnnotationInValueAnnotation = VocabularyTestModelBuilder.InlineAnnotationInVocabularyAnnotation();
             var model = this.GetParserResult(inLineAnnotationInValueAnnotation);
 
             var vocabularyAnnotations = model.VocabularyAnnotations;
@@ -807,7 +800,7 @@ namespace EdmLibTests.FunctionalTests
             var entityContainerVocabularyAnnotation = entityContainer.VocabularyAnnotations(model);
             Assert.AreEqual(1, entityContainerVocabularyAnnotation.Count(), "Invalid vocabulary annotation count.");
 
-            //To do - get vocabulary annotation from value annotation
+            //To do - get vocabulary annotation from annotation
         }
 
         [TestMethod]
@@ -818,7 +811,7 @@ namespace EdmLibTests.FunctionalTests
 
             var vocabularyAnnotations = model.VocabularyAnnotations;
             Assert.AreEqual(1, vocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
-            var valueAnnotationFound = this.CheckForValueAnnotation(vocabularyAnnotations, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") }, "BadUnresolvedType:bar.foo");
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(vocabularyAnnotations, EdmExpressionKind.IntegerConstant, new List<PropertyValue> { new PropertyValue("22") }, "BadUnresolvedType:bar.foo");
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var container = model.FindEntityContainer("Container");
@@ -833,16 +826,16 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(dogName, "Invalid entity type property.");
             Assert.AreEqual(0, dogName.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
-            var ageTerm = model.FindValueTerm("AnnotationNamespace.Age");
-            Assert.IsNotNull(ageTerm, "Invalid value term.");
+            var ageTerm = model.FindTerm("AnnotationNamespace.Age");
+            Assert.IsNotNull(ageTerm, "Invalid term.");
             Assert.AreEqual(0, ageTerm.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
             var personAddressType = model.FindEntityType("AnnotationNamespace.PersonAddress");
-            Assert.IsNotNull(personAddressType, "Invalid value term.");
+            Assert.IsNotNull(personAddressType, "Invalid term.");
             Assert.AreEqual(0, personAddressType.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
             var addressType = model.FindType("AnnotationNamespace.Address");
-            Assert.IsNotNull(addressType, "Invalid value term.");
+            Assert.IsNotNull(addressType, "Invalid term.");
             Assert.AreEqual(0, addressType.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
         }
 
@@ -861,7 +854,7 @@ namespace EdmLibTests.FunctionalTests
                                                                     };
 
             // BadUnresolvedType:.DefaultNamespace is not good name, but is to test the annotation is there.
-            var valueAnnotationFound = this.CheckForValueAnnotation(vocabularyAnnotations, EdmExpressionKind.Record, personAddress, "BadUnresolvedType:.DefaultNamespace");
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(vocabularyAnnotations, EdmExpressionKind.Record, personAddress, "BadUnresolvedType:.DefaultNamespace");
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var container = model.FindEntityContainer("Container");
@@ -901,7 +894,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueAnnotation_NoTerm()
+        public void VocabularyAnnotation_NoTerm()
         {
             string csdl = @"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -918,15 +911,15 @@ namespace EdmLibTests.FunctionalTests
             List<string> csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
-            Assert.IsFalse(isParsed, "CsdlReader.TryParse failed");
+            var isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            Assert.IsFalse(isParsed, "SchemaReader.TryParse failed");
             Assert.AreEqual(2, errors.Count(), "Invalid error count.");
             Assert.AreEqual(EdmErrorCode.MissingAttribute, errors.ElementAt(0).ErrorCode, "Invalid error code.");
             Assert.AreEqual(EdmErrorCode.MissingAttribute, errors.ElementAt(1).ErrorCode, "Invalid error code.");
         }
 
         [TestMethod]
-        public void ParsingValueAnnotationWithTrueBooleanValue()
+        public void ParsingVocabularyAnnotationWithTrueBooleanValue()
         {
             var csdls = new List<string> { @"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -948,8 +941,8 @@ namespace EdmLibTests.FunctionalTests
 </Schema>" };
 
             var model = this.GetParserResult(csdls);
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(6, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(6, valueAnnotations.Count(), "Invalid annotation count.");
 
             foreach (var valueAnnotation in valueAnnotations)
             {
@@ -960,7 +953,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ParsingValueAnnotationWithFalseBooleanValue()
+        public void ParsingVocabularyAnnotationWithFalseBooleanValue()
         {
             var csdls = new List<string> { @"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -982,8 +975,8 @@ namespace EdmLibTests.FunctionalTests
 </Schema>" };
 
             var model = this.GetParserResult(csdls);
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(6, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(6, valueAnnotations.Count(), "Invalid annotation count.");
 
             foreach (var valueAnnotation in valueAnnotations)
             {
@@ -994,9 +987,9 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyOutOfLineValueAnnotationWithoutExpressionCsdl()
+        public void ConstructibleVocabularyOutOfLineVocabularyAnnotationWithoutExpressionCsdl()
         {
-            var outOfLineAnnotationNamespaceAsAnnotationTarget = VocabularyTestModelBuilder.OutOfLineValueAnnotationWithoutExpressionCsdl();
+            var outOfLineAnnotationNamespaceAsAnnotationTarget = VocabularyTestModelBuilder.OutOfLineVocabularyAnnotationWithoutExpressionCsdl();
             var model = this.GetParserResult(outOfLineAnnotationNamespaceAsAnnotationTarget);
             var errors = new EdmLibTestErrors()
             {
@@ -1007,7 +1000,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyAddingInlineValueAnnotationToExistingElement()
+        public void ConstructibleVocabularyAddingInlineVocabularyAnnotationToExistingElement()
         {
             EdmModel model = VocabularyTestModelBuilder.InlineAnnotationSimpleModel();
 
@@ -1023,7 +1016,7 @@ namespace EdmLibTests.FunctionalTests
                 new EdmStringConstant("Mary"),
                 new EdmLabeledExpression("Justin", new EdmStringConstant("Justin")));
 
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 container,
                 listOfNamesTerm,
                 collectionOfNames);
@@ -1039,11 +1032,11 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("Justin")
                                                                         };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(vocabularyAnnotations, EdmExpressionKind.Collection, listOfNames);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(vocabularyAnnotations, EdmExpressionKind.Collection, listOfNames);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var containerVocabularyAnnotations = container.VocabularyAnnotations(model);
-            valueAnnotationFound = this.CheckForValueAnnotation(containerVocabularyAnnotations, EdmExpressionKind.Collection, listOfNames);
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(containerVocabularyAnnotations, EdmExpressionKind.Collection, listOfNames);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -1075,7 +1068,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1099,69 +1092,6 @@ namespace EdmLibTests.FunctionalTests
     </EntitySet>
     <EntitySet Name=""Students"" EntityType=""DefaultNamespace.Person"">
       <Annotation Term=""Org.OData.Core.V1.OptimisticConcurrency"">
-        <Collection>
-          <PropertyPath>Concurrency</PropertyPath>
-        </Collection>
-      </Annotation>
-    </EntitySet>
-  </EntityContainer>
-</Schema>";
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void TestCoreOptimisticConcurrencyControlInlineAnnotation()
-        {
-            EdmModel model = new EdmModel();
-
-            EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
-            EdmEntityType personType = new EdmEntityType("DefaultNamespace", "Person");
-            EdmStructuralProperty propertyId = personType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
-            personType.AddKeys(propertyId);
-            IEdmStructuralProperty concurrencyProperty = personType.AddStructuralProperty("Concurrency", EdmCoreModel.Instance.GetInt32(true));
-            model.AddElement(personType);
-            container.AddEntitySet("People", personType);
-            model.AddElement(container);
-            container.AddEntitySet("Students", personType);
-
-            IEdmEntitySet peopleSet = model.FindDeclaredEntitySet("People");
-            model.SetOptimisticConcurrencyControlAnnotation(peopleSet, new[] { concurrencyProperty });
-            model.SetOptimisticConcurrencyControlAnnotation(peopleSet, new[] { concurrencyProperty });
-
-            IEdmEntitySet studentSet = model.FindDeclaredEntitySet("Students");
-            model.SetOptimisticConcurrencyControlAnnotation(studentSet, new[] { concurrencyProperty });
-
-            IEnumerable<EdmError> errors;
-            StringWriter sw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.Encoding = System.Text.Encoding.UTF8;
-            XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
-            xw.Flush();
-            xw.Close();
-            var actual = sw.ToString();
-
-            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <EntityType Name=""Person"">
-    <Key>
-      <PropertyRef Name=""Id"" />
-    </Key>
-    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Concurrency"" Type=""Edm.Int32"" />
-  </EntityType>
-  <EntityContainer Name=""Container"">
-    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
-      <Annotation Term=""Org.OData.Core.V1.OptimisticConcurrencyControl"">
-        <Collection>
-          <PropertyPath>Concurrency</PropertyPath>
-        </Collection>
-      </Annotation>
-    </EntitySet>
-    <EntitySet Name=""Students"" EntityType=""DefaultNamespace.Person"">
-      <Annotation Term=""Org.OData.Core.V1.OptimisticConcurrencyControl"">
         <Collection>
           <PropertyPath>Concurrency</PropertyPath>
         </Collection>
@@ -1256,7 +1186,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1265,7 +1195,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
@@ -1282,7 +1212,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(personTypeLongDescription, parsedModel.GetLongDescriptionAnnotation(parsedPersonType));
             Assert.AreEqual(structuralPropertyDescription, parsedModel.GetDescriptionAnnotation((parsedPersonType.FindProperty("Concurrency"))));
             Assert.AreEqual(propertyIdDescription, parsedModel.GetDescriptionAnnotation(parsedPersonType.FindProperty("Id")));
-            Assert.AreEqual(stringTermDescription, parsedModel.GetDescriptionAnnotation(parsedModel.FindValueTerm("Ns.HomeAddress")));
+            Assert.AreEqual(stringTermDescription, parsedModel.GetDescriptionAnnotation(parsedModel.FindTerm("Ns.HomeAddress")));
             Assert.AreEqual(entitySetDescription, parsedModel.GetDescriptionAnnotation(parsedModel.FindDeclaredEntitySet("People")));
             Assert.AreEqual(singletonDescription, parsedModel.GetDescriptionAnnotation(parsedModel.FindDeclaredSingleton("Boss")));
             Assert.IsNull(parsedModel.GetDescriptionAnnotation(parsedModel.FindDeclaredEntitySet("Drivers")));
@@ -1321,7 +1251,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1434,13 +1364,13 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
             // EntitySet: People
             var peopleSet = parsedModel.FindDeclaredEntitySet("People");
-            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(peopleSet, CapabilitiesVocabularyModel.ChangeTrackingTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(peopleSet, CapabilitiesVocabularyModel.ChangeTrackingTerm).FirstOrDefault();
             Assert.IsNotNull(annotation);
             IEdmRecordExpression record = annotation.Value as IEdmRecordExpression;
             Assert.IsNotNull(record);
@@ -1449,14 +1379,14 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(supported.Value);
             IEdmCollectionExpression filterable = record.FindProperty("FilterableProperties").Value as IEdmCollectionExpression;
             Assert.IsNotNull(filterable);
-            Assert.AreEqual(((IEdmPathExpression)filterable.Elements.Single()).Path.Single(), "Age");
+            Assert.AreEqual(((IEdmPathExpression)filterable.Elements.Single()).PathSegments.Single(), "Age");
             IEdmCollectionExpression expandable = record.FindProperty("ExpandableProperties").Value as IEdmCollectionExpression;
             Assert.IsNotNull(expandable);
-            Assert.AreEqual(((IEdmPathExpression)expandable.Elements.Single()).Path.Single(), "MyDept");
+            Assert.AreEqual(((IEdmPathExpression)expandable.Elements.Single()).PathSegments.Single(), "MyDept");
 
             // EntitySet: Depts
             var deptsSet = parsedModel.FindDeclaredEntitySet("Depts");
-            annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(deptsSet, CapabilitiesVocabularyModel.ChangeTrackingTerm).FirstOrDefault();
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(deptsSet, CapabilitiesVocabularyModel.ChangeTrackingTerm).FirstOrDefault();
             Assert.IsNotNull(annotation);
             record = annotation.Value as IEdmRecordExpression;
             Assert.IsNotNull(record);
@@ -1503,7 +1433,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1586,12 +1516,12 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
             var container = parsedModel.FindEntityContainer("Container");
-            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(container, CapabilitiesVocabularyModel.ChangeTrackingTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(container, CapabilitiesVocabularyModel.ChangeTrackingTerm).FirstOrDefault();
             Assert.IsNotNull(annotation);
             IEdmRecordExpression record = annotation.Value as IEdmRecordExpression;
             Assert.IsNotNull(record);
@@ -1604,6 +1534,226 @@ namespace EdmLibTests.FunctionalTests
             IEdmCollectionExpression expandable = record.FindProperty("ExpandableProperties").Value as IEdmCollectionExpression;
             Assert.IsNotNull(expandable);
             Assert.IsFalse(expandable.Elements.Any());
+        }
+
+        [TestMethod]
+        public void TestAuthorizationAnnotationInlineAndOutLineAnnotationOnEntitySetAndSingleton()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            EdmStructuralProperty deptId = entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            entity.AddKeys(deptId);
+            model.AddElement(entity);
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("Entities", entity);
+            var singleton = container.AddSingleton("Me", entity);
+            model.AddElement(container);
+
+            IEdmTerm term = model.FindTerm("Org.OData.Authorization.V1.Authorizations");
+            Assert.IsNotNull(term);
+
+            // OpenIDConnect
+            IEdmComplexType complexType = model.FindType("Org.OData.Authorization.V1.OpenIDConnect") as IEdmComplexType;
+            Assert.IsNotNull(complexType);
+            IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>();
+            properties.Add(new EdmPropertyConstructor("IssuerUrl", new EdmStringConstant("http://any")));
+            properties.Add(new EdmPropertyConstructor("Name", new EdmStringConstant("OpenIDConnect Name")));
+            properties.Add(new EdmPropertyConstructor("Description", new EdmStringConstant("OpenIDConnect Description")));
+            EdmRecordExpression record1 = new EdmRecordExpression(new EdmComplexTypeReference(complexType, true), properties);
+
+            complexType = model.FindType("Org.OData.Authorization.V1.Http") as IEdmComplexType;
+            Assert.IsNotNull(complexType);
+            properties = new List<IEdmPropertyConstructor>();
+            properties.Add(new EdmPropertyConstructor("BearerFormat", new EdmStringConstant("Http BearerFormat")));
+            properties.Add(new EdmPropertyConstructor("Scheme", new EdmStringConstant("Http Scheme")));
+            properties.Add(new EdmPropertyConstructor("Name", new EdmStringConstant("Http Name")));
+            properties.Add(new EdmPropertyConstructor("Description", new EdmStringConstant("Http Description")));
+            EdmRecordExpression record2 = new EdmRecordExpression(new EdmComplexTypeReference(complexType, true), properties);
+
+            EdmCollectionExpression collection = new EdmCollectionExpression(record1, record2);
+
+            // for entity set
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(entitySet, term, collection);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            // for singleton
+            annotation = new EdmVocabularyAnnotation(singleton, term, collection);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteSchema(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Entity"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Entities"" EntityType=""NS.Entity"">
+      <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+        <Collection>
+          <Record Type=""Org.OData.Authorization.V1.OpenIDConnect"">
+            <PropertyValue Property=""IssuerUrl"" String=""http://any"" />
+            <PropertyValue Property=""Name"" String=""OpenIDConnect Name"" />
+            <PropertyValue Property=""Description"" String=""OpenIDConnect Description"" />
+          </Record>
+          <Record Type=""Org.OData.Authorization.V1.Http"">
+            <PropertyValue Property=""BearerFormat"" String=""Http BearerFormat"" />
+            <PropertyValue Property=""Scheme"" String=""Http Scheme"" />
+            <PropertyValue Property=""Name"" String=""Http Name"" />
+            <PropertyValue Property=""Description"" String=""Http Description"" />
+          </Record>
+        </Collection>
+      </Annotation>
+    </EntitySet>
+    <Singleton Name=""Me"" Type=""NS.Entity"" />
+  </EntityContainer>
+  <Annotations Target=""NS.Container/Me"">
+    <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+      <Collection>
+        <Record Type=""Org.OData.Authorization.V1.OpenIDConnect"">
+          <PropertyValue Property=""IssuerUrl"" String=""http://any"" />
+          <PropertyValue Property=""Name"" String=""OpenIDConnect Name"" />
+          <PropertyValue Property=""Description"" String=""OpenIDConnect Description"" />
+        </Record>
+        <Record Type=""Org.OData.Authorization.V1.Http"">
+          <PropertyValue Property=""BearerFormat"" String=""Http BearerFormat"" />
+          <PropertyValue Property=""Scheme"" String=""Http Scheme"" />
+          <PropertyValue Property=""Name"" String=""Http Name"" />
+          <PropertyValue Property=""Description"" String=""Http Description"" />
+        </Record>
+      </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingAuthorizationAnnotationInlineAndOutLineAnnotationOnEntityContainerAndEntitySet()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Entity"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Entities"" EntityType=""NS.Entity"">
+      <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+        <Collection>
+          <Record Type=""Org.OData.Authorization.V1.OpenIDConnect"">
+            <PropertyValue Property=""IssuerUrl"" String=""http://any"" />
+            <PropertyValue Property=""Name"" String=""OpenIDConnect Name"" />
+            <PropertyValue Property=""Description"" String=""OpenIDConnect Description"" />
+          </Record>
+        </Collection>
+      </Annotation>
+    </EntitySet>
+    <Singleton Name=""Me"" Type=""NS.Entity"" />
+  </EntityContainer>
+  <Annotations Target=""NS.Container"">
+    <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+      <Collection>
+        <Record Type=""Org.OData.Authorization.V1.OAuth2ClientCredentials"">
+          <PropertyValue Property=""TokenUrl"" String=""http://TokenUrl"" />
+          <PropertyValue Property=""RefreshUrl"" String=""http://RefreshUrl"" />
+          <PropertyValue Property=""Name"" String=""OAuth2ClientCredentials Name"" />
+          <PropertyValue Property=""Description"" String=""OAuth2ClientCredentials Description"" />
+          <PropertyValue Property=""Scopes"">
+            <Collection>
+              <Record>
+                 <PropertyValue Property=""Scope"" String=""Scope1"" />
+                 <PropertyValue Property=""Description"" String=""Description 1"" />
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+        <Record Type=""Org.OData.Authorization.V1.Http"">
+          <PropertyValue Property=""BearerFormat"" String=""Http BearerFormat"" />
+          <PropertyValue Property=""Scheme"" String=""Http Scheme"" />
+          <PropertyValue Property=""Name"" String=""Http Name"" />
+          <PropertyValue Property=""Description"" String=""Http Description"" />
+        </Record>
+      </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            IEdmTerm term = parsedModel.FindTerm("Org.OData.Authorization.V1.Authorizations");
+            Assert.IsNotNull(term);
+
+            var container = parsedModel.EntityContainer;
+            Assert.IsNotNull(container);
+
+            // entity container
+            IEdmVocabularyAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(container, term).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+
+            IEdmCollectionExpression collection = annotation.Value as IEdmCollectionExpression;
+            Assert.IsNotNull(collection);
+            Assert.AreEqual(2, collection.Elements.Count());
+
+            // First one on container
+            IEdmRecordExpression record = collection.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            Assert.AreEqual("Org.OData.Authorization.V1.OAuth2ClientCredentials", record.DeclaredType.FullName());
+
+            IEdmStringConstantExpression description = record.FindProperty("Description").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(description);
+            Assert.AreEqual("OAuth2ClientCredentials Description", description.Value);
+
+            // second one on container
+            record = collection.Elements.Last() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            Assert.AreEqual("Org.OData.Authorization.V1.Http", record.DeclaredType.FullName());
+
+            description = record.FindProperty("Description").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(description);
+            Assert.AreEqual("Http Description", description.Value);
+
+            // entity set
+            IEdmEntitySet entitySet = container.FindEntitySet("Entities");
+            Assert.IsNotNull(entitySet);
+
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(entitySet, term).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+
+            collection = annotation.Value as IEdmCollectionExpression;
+            Assert.IsNotNull(collection);
+            Assert.AreEqual(1, collection.Elements.Count());
+
+            record = collection.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            Assert.AreEqual("Org.OData.Authorization.V1.OpenIDConnect", record.DeclaredType.FullName());
+
+            description = record.FindProperty("Description").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(description);
+            Assert.AreEqual("OpenIDConnect Description", description.Value);
         }
 
         [TestMethod]
@@ -1627,7 +1777,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1722,13 +1872,13 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
             var bookType = parsedModel.FindDeclaredType("ns.book");
             Assert.IsNotNull(bookType);
-            IEdmValueAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(bookType, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(bookType, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
             Assert.IsNotNull(annotation);
             IEdmCollectionExpression collect = annotation.Value as IEdmCollectionExpression;
             Assert.IsNotNull(collect);
@@ -1747,7 +1897,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("s2", alias.Value);
             IEdmPathExpression name = element.FindProperty("Name").Value as IEdmPathExpression;
             Assert.IsNotNull(name);
-            Assert.AreEqual("prop2", name.Path.Single());
+            Assert.AreEqual("prop2", name.PathSegments.Single());
 
             // #2
             record = collect.Elements.Last() as IEdmRecordExpression;
@@ -1764,7 +1914,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("s3", alias.Value);
             name = element.FindProperty("Name").Value as IEdmPathExpression;
             Assert.IsNotNull(name);
-            Assert.AreEqual("prop3", name.Path.Single());
+            Assert.AreEqual("prop3", name.PathSegments.Single());
 
             // #2.2
             element = keyCollection.Elements.Last() as IEdmRecordExpression;
@@ -1774,7 +1924,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("s4", alias.Value);
             name = element.FindProperty("Name").Value as IEdmPathExpression;
             Assert.IsNotNull(name);
-            Assert.AreEqual("prop4", name.Path.Single());
+            Assert.AreEqual("prop4", name.PathSegments.Single());
         }
 
         [TestMethod]
@@ -1790,31 +1940,31 @@ namespace EdmLibTests.FunctionalTests
             model.AddElement(personType);
             var entitySet = container.AddEntitySet("People", personType);
             var permissionType = new EdmEnumType("Ns", "Permissions", true);
-            var read = permissionType.AddMember("Read", new EdmIntegerConstant(1));
-            var write = permissionType.AddMember("Write", new EdmIntegerConstant(2));
-            var delete = permissionType.AddMember("Delete", new EdmIntegerConstant(4));
+            var read = permissionType.AddMember("Read", new EdmEnumMemberValue(1));
+            var write = permissionType.AddMember("Write", new EdmEnumMemberValue(2));
+            var delete = permissionType.AddMember("Delete", new EdmEnumMemberValue(4));
             model.AddElement(permissionType);
 
             var enumTerm = new EdmTerm("Ns", "Permission", new EdmEnumTypeReference(permissionType, false));
             model.AddElement(enumTerm);
             model.AddElement(container);
 
-            EdmAnnotation personIdAnnotation = new EdmAnnotation(propertyId, enumTerm, new EdmEnumMemberExpression(read));
+            EdmVocabularyAnnotation personIdAnnotation = new EdmVocabularyAnnotation(propertyId, enumTerm, new EdmEnumMemberExpression(read));
             personIdAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(personIdAnnotation);
 
-            EdmAnnotation structuralPropertyAnnotation = new EdmAnnotation(structuralProperty, enumTerm, new EdmEnumMemberExpression(read, write));
+            EdmVocabularyAnnotation structuralPropertyAnnotation = new EdmVocabularyAnnotation(structuralProperty, enumTerm, new EdmEnumMemberExpression(read, write));
             structuralPropertyAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(structuralPropertyAnnotation);
 
-            EdmAnnotation entitySetAnnotation = new EdmAnnotation(entitySet, enumTerm, new EdmEnumMemberExpression(read, write, delete));
+            EdmVocabularyAnnotation entitySetAnnotation = new EdmVocabularyAnnotation(entitySet, enumTerm, new EdmEnumMemberExpression(read, write, delete));
             structuralPropertyAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(entitySetAnnotation);
 
-            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(propertyId, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
-            var structuralPropertyAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(structuralProperty, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
-            var entitySetAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(entitySet, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
-            var enumTypeAnnotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(permissionType, enumTerm).FirstOrDefault();
+            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(propertyId, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var structuralPropertyAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(structuralProperty, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var entitySetAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(entitySet, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var enumTypeAnnotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(permissionType, enumTerm).FirstOrDefault();
 
             Assert.AreEqual(1, idAnnotationValue.Count());
             Assert.AreEqual(2, structuralPropertyAnnotationValue.Count());
@@ -1860,7 +2010,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1922,30 +2072,30 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
 
             var parsedPersonType = parsedModel.FindType("Ns.Person") as IEdmEntityType;
-            var term = parsedModel.FindDeclaredValueTerm("Ns.Permission");
-            var parsedIdAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedPersonType.FindProperty("Id"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
-            var parsedStructuralAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedPersonType.FindProperty("Concurrency"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
-            var parsedEntitySetAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedModel.FindDeclaredEntitySet("People"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var term = parsedModel.FindDeclaredTerm("Ns.Permission");
+            var parsedIdAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedPersonType.FindProperty("Id"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var parsedStructuralAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedPersonType.FindProperty("Concurrency"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var parsedEntitySetAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedModel.FindDeclaredEntitySet("People"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
 
             Assert.AreEqual(1, parsedIdAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedIdAnnotationValue.Single().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedIdAnnotationValue.Single().Value.Value);
 
             Assert.AreEqual(2, parsedStructuralAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedStructuralAnnotationValue.First().Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(2, (parsedStructuralAnnotationValue.Last().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedStructuralAnnotationValue.First().Value.Value);
+            Assert.AreEqual(2, parsedStructuralAnnotationValue.Last().Value.Value);
 
             Assert.AreEqual(3, parsedEntitySetAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedEntitySetAnnotationValue.First().Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(2, (parsedEntitySetAnnotationValue.ElementAt(1).Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(4, (parsedEntitySetAnnotationValue.Last().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedEntitySetAnnotationValue.First().Value.Value);
+            Assert.AreEqual(2, parsedEntitySetAnnotationValue.ElementAt(1).Value.Value);
+            Assert.AreEqual(4, parsedEntitySetAnnotationValue.Last().Value.Value);
 
             var peopleAnnotations = parsedModel.FindVocabularyAnnotations(parsedModel.FindDeclaredEntitySet("People"));
             Assert.AreEqual(2, peopleAnnotations.Count());
-            var navigabilityAnnotation = (IEdmValueAnnotation)peopleAnnotations.First();
+            var navigabilityAnnotation = peopleAnnotations.First();
             IEdmRecordExpression navigabilityRecord = (IEdmRecordExpression)navigabilityAnnotation.Value;
             var navigabilityProperty = navigabilityRecord.FindProperty("Navigability");
             var navigabilityEnumExpression = (IEdmEnumMemberExpression)navigabilityProperty.Value;
@@ -2002,16 +2152,16 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
 
             var parsedPersonType = parsedModel.FindType("Ns.Person") as IEdmEntityType;
-            var term = parsedModel.FindDeclaredValueTerm("Ns.Permission");
-            var parsedIdAnnotationValue = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedPersonType.FindProperty("Id"), term).FirstOrDefault().Value as IEdmEnumMemberExpression;
+            var term = parsedModel.FindDeclaredTerm("Ns.Permission");
+            var parsedIdAnnotationValue = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedPersonType.FindProperty("Id"), term).FirstOrDefault().Value as IEdmEnumMemberExpression;
             var parsedIdAnnotationErrors = parsedIdAnnotationValue.Errors();
-            var parsedStructuralAnnotationValue = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedPersonType.FindProperty("Concurrency"), term).FirstOrDefault().Value as IEdmEnumMemberExpression;
+            var parsedStructuralAnnotationValue = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedPersonType.FindProperty("Concurrency"), term).FirstOrDefault().Value as IEdmEnumMemberExpression;
             var parsedStructuralAnnotationErrors = parsedStructuralAnnotationValue.Errors();
-            var parsedEntitySetAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedModel.FindDeclaredEntitySet("People"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var parsedEntitySetAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedModel.FindDeclaredEntitySet("People"), term).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
 
             Assert.IsNull(parsedIdAnnotationValue.EnumMembers);
             Assert.AreEqual("'Ns.Permissions/ReadWrite' is not a valid enum member path.", parsedIdAnnotationErrors.Last().ErrorMessage);
@@ -2020,9 +2170,9 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("'Ns.Permissions/Read Ns.Permissions/Modify' is not a valid enum member path.", parsedStructuralAnnotationErrors.Last().ErrorMessage);
 
             Assert.AreEqual(3, parsedEntitySetAnnotationValue.Count());
-            Assert.AreEqual(1, (parsedEntitySetAnnotationValue.First().Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(2, (parsedEntitySetAnnotationValue.ElementAt(1).Value as EdmIntegerConstant).Value);
-            Assert.AreEqual(4, (parsedEntitySetAnnotationValue.Last().Value as EdmIntegerConstant).Value);
+            Assert.AreEqual(1, parsedEntitySetAnnotationValue.First().Value.Value);
+            Assert.AreEqual(2, parsedEntitySetAnnotationValue.ElementAt(1).Value.Value);
+            Assert.AreEqual(4, parsedEntitySetAnnotationValue.Last().Value.Value);
         }
 
         [TestMethod]
@@ -2061,7 +2211,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errs.Count());
             Assert.AreEqual("'Ns.Permissions/Read Ns.Color/Write' is not a valid enum member path.", errs.First().ErrorMessage);
@@ -2069,7 +2219,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void AnnotationValueAsEnumMemberReferenceExpressionSerializationTest()
+        public void AnnotationValueAsEnumMemberExpressionSerializationTest()
         {
             EdmModel model = new EdmModel();
 
@@ -2081,31 +2231,31 @@ namespace EdmLibTests.FunctionalTests
             model.AddElement(personType);
             var entitySet = container.AddEntitySet("People", personType);
             var permissionType = new EdmEnumType("Ns", "Permissions", true);
-            var read = permissionType.AddMember("Read", new EdmIntegerConstant(1));
-            var write = permissionType.AddMember("Write", new EdmIntegerConstant(2));
-            var delete = permissionType.AddMember("Delete", new EdmIntegerConstant(4));
+            var read = permissionType.AddMember("Read", new EdmEnumMemberValue(1));
+            var write = permissionType.AddMember("Write", new EdmEnumMemberValue(2));
+            var delete = permissionType.AddMember("Delete", new EdmEnumMemberValue(4));
             model.AddElement(permissionType);
 
             var enumTerm = new EdmTerm("Ns", "Permission", new EdmEnumTypeReference(permissionType, false));
             model.AddElement(enumTerm);
             model.AddElement(container);
 
-            EdmAnnotation personIdAnnotation = new EdmAnnotation(propertyId, enumTerm, new EdmEnumMemberReferenceExpression(read));
+            EdmVocabularyAnnotation personIdAnnotation = new EdmVocabularyAnnotation(propertyId, enumTerm, new EdmEnumMemberExpression(read));
             personIdAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(personIdAnnotation);
 
-            EdmAnnotation structuralPropertyAnnotation = new EdmAnnotation(structuralProperty, enumTerm, new EdmEnumMemberExpression(read, write));
+            EdmVocabularyAnnotation structuralPropertyAnnotation = new EdmVocabularyAnnotation(structuralProperty, enumTerm, new EdmEnumMemberExpression(read, write));
             structuralPropertyAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(structuralPropertyAnnotation);
 
-            EdmAnnotation entitySetAnnotation = new EdmAnnotation(entitySet, enumTerm, new EdmEnumMemberReferenceExpression(delete));
+            EdmVocabularyAnnotation entitySetAnnotation = new EdmVocabularyAnnotation(entitySet, enumTerm, new EdmEnumMemberExpression(delete));
             structuralPropertyAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(entitySetAnnotation);
 
-            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(propertyId, enumTerm).FirstOrDefault().Value as IEdmEnumMemberReferenceExpression).ReferencedEnumMember;
-            var structuralPropertyAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(structuralProperty, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
-            var entitySetAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(entitySet, enumTerm).FirstOrDefault().Value as IEdmEnumMemberReferenceExpression).ReferencedEnumMember;
-            var enumTypeAnnotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(permissionType, enumTerm).FirstOrDefault();
+            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(propertyId, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers.Single();
+            var structuralPropertyAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(structuralProperty, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
+            var entitySetAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(entitySet, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers.Single();
+            var enumTypeAnnotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(permissionType, enumTerm).FirstOrDefault();
 
             Assert.AreEqual(read, idAnnotationValue);
             Assert.AreEqual(2, structuralPropertyAnnotationValue.Count());
@@ -2151,7 +2301,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -2193,7 +2343,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errs.Count());
             Assert.AreEqual("The schema element 'EnumMemberReference' was not expected in the given context.", errs.First().ErrorMessage);
@@ -2217,26 +2367,26 @@ namespace EdmLibTests.FunctionalTests
             model.AddElement(stringTerm);
             model.AddElement(container);
 
-            IEdmValueTerm term = CoreVocabularyModel.IsLanguageDependentTerm;
+            IEdmTerm term = CoreVocabularyModel.IsLanguageDependentTerm;
             IEdmBooleanConstantExpression trueExpression = new EdmBooleanConstant(true);
             IEdmBooleanConstantExpression falseExpression = new EdmBooleanConstant(false);
 
-            EdmAnnotation personIdAnnotation = new EdmAnnotation(propertyId, term, trueExpression);
+            EdmVocabularyAnnotation personIdAnnotation = new EdmVocabularyAnnotation(propertyId, term, trueExpression);
             personIdAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(personIdAnnotation);
 
-            EdmAnnotation structuralPropertyAnnotation = new EdmAnnotation(structuralProperty, term, falseExpression);
+            EdmVocabularyAnnotation structuralPropertyAnnotation = new EdmVocabularyAnnotation(structuralProperty, term, falseExpression);
             structuralPropertyAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(structuralPropertyAnnotation);
 
-            EdmAnnotation stringTermAnnotation = new EdmAnnotation(stringTerm, term, trueExpression);
+            EdmVocabularyAnnotation stringTermAnnotation = new EdmVocabularyAnnotation(stringTerm, term, trueExpression);
             stringTermAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(stringTermAnnotation);
 
-            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(propertyId, term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
-            var structuralPropertyAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(structuralProperty, term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
-            var stringTermAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(stringTerm, term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
-            var entitySetAnnotation = model.FindVocabularyAnnotations<IEdmValueAnnotation>(entitySet, term).FirstOrDefault();
+            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(propertyId, term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
+            var structuralPropertyAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(structuralProperty, term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
+            var stringTermAnnotationValue = (model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(stringTerm, term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
+            var entitySetAnnotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(entitySet, term).FirstOrDefault();
 
             Assert.AreEqual(true, idAnnotationValue);
             Assert.AreEqual(false, structuralPropertyAnnotationValue);
@@ -2270,7 +2420,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -2279,14 +2429,14 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
-            var idAnnotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(propertyId, term).FirstOrDefault();
-            var propertyAnnotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(structuralProperty, term).FirstOrDefault();
-            var termAnnotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(stringTerm, term).FirstOrDefault();
-            entitySetAnnotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(entitySet, term).FirstOrDefault();
+            var idAnnotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(propertyId, term).FirstOrDefault();
+            var propertyAnnotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(structuralProperty, term).FirstOrDefault();
+            var termAnnotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(stringTerm, term).FirstOrDefault();
+            entitySetAnnotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(entitySet, term).FirstOrDefault();
 
             Assert.AreEqual(null, propertyAnnotation);
             Assert.AreEqual(null, idAnnotation);
@@ -2294,10 +2444,10 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(null, entitySetAnnotation);
 
             var parsedPersonType = parsedModel.FindType("Ns.Person") as IEdmEntityType;
-            idAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedPersonType.FindProperty("Id"), term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
-            structuralPropertyAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedPersonType.FindProperty("Concurrency"), term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
-            stringTermAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedModel.FindValueTerm("Ns.HomeAddress"), term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
-            entitySetAnnotation = parsedModel.FindVocabularyAnnotations<IEdmValueAnnotation>(parsedModel.FindDeclaredEntitySet("People"), term).FirstOrDefault();
+            idAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedPersonType.FindProperty("Id"), term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
+            structuralPropertyAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedPersonType.FindProperty("Concurrency"), term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
+            stringTermAnnotationValue = (parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedModel.FindTerm("Ns.HomeAddress"), term).FirstOrDefault().Value as IEdmBooleanConstantExpression).Value;
+            entitySetAnnotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(parsedModel.FindDeclaredEntitySet("People"), term).FirstOrDefault();
 
             Assert.IsNotNull(parsedPersonType);
             Assert.AreEqual(false, structuralPropertyAnnotationValue);
@@ -2307,7 +2457,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyAddingOutOfLineValueAnnotationToExistingElement()
+        public void ConstructibleVocabularyAddingOutOfLineVocabularyAnnotationToExistingElement()
         {
             EdmModel model = VocabularyTestModelBuilder.InlineAnnotationSimpleModel();
 
@@ -2325,7 +2475,7 @@ namespace EdmLibTests.FunctionalTests
                 new EdmPropertyConstructor("Id", new EdmIntegerConstant(22)),
                 new EdmPropertyConstructor("Name", new EdmStringConstant("Johnny")));
 
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 container,
                 personTerm,
                 recordOfPerson);
@@ -2339,16 +2489,16 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("Name", "Johnny")
                                                                         };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(vocabularyAnnotations, EdmExpressionKind.Record, listOfNames);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(vocabularyAnnotations, EdmExpressionKind.Record, listOfNames);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var containerVocabularyAnnotations = container.VocabularyAnnotations(model);
-            valueAnnotationFound = this.CheckForValueAnnotation(containerVocabularyAnnotations, EdmExpressionKind.Record, listOfNames);
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(containerVocabularyAnnotations, EdmExpressionKind.Record, listOfNames);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyAddingValueAnnotationToNewElement()
+        public void ConstructibleVocabularyAddingVocabularyAnnotationToNewElement()
         {
             EdmModel model = VocabularyTestModelBuilder.InlineAnnotationSimpleModel();
 
@@ -2371,7 +2521,7 @@ namespace EdmLibTests.FunctionalTests
                 new EdmPropertyConstructor("Id", new EdmIntegerConstant(22)),
                 new EdmPropertyConstructor("Name", new EdmStringConstant("Johnny")));
 
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 carSet,
                 personTerm,
                 recordOfPerson);
@@ -2387,7 +2537,7 @@ namespace EdmLibTests.FunctionalTests
                                                                             new PropertyValue("Name", "Johnny")
                                                                         };
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(vocabularyAnnotations, EdmExpressionKind.Record, listOfNames);
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(vocabularyAnnotations, EdmExpressionKind.Record, listOfNames);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var containerCarSet = container.EntitySets().Where(x => x.Name.Equals("CarSet")).SingleOrDefault() as EdmEntitySet;
@@ -2396,7 +2546,7 @@ namespace EdmLibTests.FunctionalTests
             var carSetVocabularAnnotation = containerCarSet.VocabularyAnnotations(model);
             Assert.AreEqual(1, carSetVocabularAnnotation.Count(), "Invalid vocabulary annotation count.");
 
-            valueAnnotationFound = this.CheckForValueAnnotation(carSetVocabularAnnotation, EdmExpressionKind.Record, listOfNames);
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(carSetVocabularAnnotation, EdmExpressionKind.Record, listOfNames);
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
         }
 
@@ -2421,7 +2571,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyRemovingValueAnnotationToNewElement()
+        public void ConstructibleVocabularyRemovingVocabularyAnnotationToNewElement()
         {
             var model = new FunctionalUtilities.ModelWithRemovableElements<EdmModel>(VocabularyTestModelBuilder.InlineAnnotationSimpleModel());
             Assert.AreEqual(1, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
@@ -2433,7 +2583,7 @@ namespace EdmLibTests.FunctionalTests
             EdmTerm hiddenName = new EdmTerm("AnnotationNamespace", "HiddenName", EdmCoreModel.Instance.GetString(true));
             model.WrappedModel.AddElement(hiddenName);
 
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 carType,
                 hiddenName,
                 new EdmStringConstant("Gray"));
@@ -2442,8 +2592,8 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
             Assert.AreEqual(1, carType.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(carType.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Gray") });
-            Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(carType.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Gray") });
+            Assert.IsTrue(valueAnnotationFound, "Annotation cannot be found.");
 
             model.RemoveVocabularyAnnotation(valueAnnotation);
             Assert.AreEqual(1, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
@@ -2451,7 +2601,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyAddingValueAnnotationAndDeleteTargetedElement()
+        public void ConstructibleVocabularyAddingVocabularyAnnotationAndDeleteTargetedElement()
         {
             var model = new FunctionalUtilities.ModelWithRemovableElements<EdmModel>(VocabularyTestModelBuilder.InlineAnnotationSimpleModel());
 
@@ -2461,10 +2611,10 @@ namespace EdmLibTests.FunctionalTests
             var container = model.FindEntityContainer("Container") as EdmEntityContainer;
             Assert.IsNotNull(container, "Invalid entity container name.");
 
-            var stringTerm = model.FindValueTerm("AnnotationNamespace.StringTerm") as EdmTerm;
-            Assert.IsNotNull(stringTerm, "Invalid value term.");
+            var stringTerm = model.FindTerm("AnnotationNamespace.StringTerm") as EdmTerm;
+            Assert.IsNotNull(stringTerm, "Invalid term.");
 
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 container,
                 stringTerm,
                 new EdmStringConstant("foo"));
@@ -2472,11 +2622,11 @@ namespace EdmLibTests.FunctionalTests
             model.WrappedModel.AddVocabularyAnnotation(valueAnnotation);
             Assert.AreEqual(2, vocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(vocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(vocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             var containerVocabularyAnnotations = container.VocabularyAnnotations(model);
-            valueAnnotationFound = this.CheckForValueAnnotation(containerVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(containerVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             model.RemoveElement(container);
@@ -2486,7 +2636,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyEditingValueAnnotationToExistElement()
+        public void ConstructibleVocabularyEditingVocabularyAnnotationToExistElement()
         {
             EdmModel model = VocabularyTestModelBuilder.InlineAnnotationSimpleModel();
             Assert.AreEqual(1, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
@@ -2499,11 +2649,11 @@ namespace EdmLibTests.FunctionalTests
             var carWheelsVocabularyAnnotations = carWheels.VocabularyAnnotations(model);
             Assert.AreEqual(1, carWheelsVocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(carWheelsVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(carWheelsVocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("foo") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
-            var valueAnnotation = carWheelsVocabularyAnnotations.ElementAt(0) as FunctionalTests.MutableValueAnnotation;
-            Assert.IsNotNull(valueAnnotation, "Invalid value annotation.");
+            var valueAnnotation = carWheelsVocabularyAnnotations.ElementAt(0) as FunctionalTests.MutableVocabularyAnnotation;
+            Assert.IsNotNull(valueAnnotation, "Invalid annotation.");
 
             Assert.AreEqual(0, carType.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
@@ -2514,14 +2664,14 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(1, carWheels.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
             Assert.AreEqual(1, carType.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
-            valueAnnotationFound = this.CheckForValueAnnotation(carType.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("bar") });
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(carType.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("bar") });
             Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
 
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyEditingValueAnnotationToNewElement()
+        public void ConstructibleVocabularyEditingVocabularyAnnotationToNewElement()
         {
             EdmModel model = VocabularyTestModelBuilder.InlineAnnotationSimpleModel();
             Assert.AreEqual(1, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
@@ -2534,7 +2684,7 @@ namespace EdmLibTests.FunctionalTests
             EdmTerm hiddenName = new EdmTerm("AnnotationNamespace", "HiddenName", EdmCoreModel.Instance.GetString(true));
             model.AddElement(hiddenName);
 
-            var valueAnnotation = new FunctionalTests.MutableValueAnnotation()
+            var valueAnnotation = new FunctionalTests.MutableVocabularyAnnotation()
             {
                 Target = carType,
                 Term = hiddenName,
@@ -2545,8 +2695,8 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
             Assert.AreEqual(1, carType.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(carType.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Gray") });
-            Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(carType.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Gray") });
+            Assert.IsTrue(valueAnnotationFound, "Annotation cannot be found.");
 
             var container = model.FindEntityContainer("Container");
             Assert.IsNotNull(container, "Invalid entity container name.");
@@ -2555,11 +2705,11 @@ namespace EdmLibTests.FunctionalTests
             valueAnnotation.Value = new EdmStringConstant("Blue");
             model.AddVocabularyAnnotation(valueAnnotation);
 
-            valueAnnotationFound = this.CheckForValueAnnotation(model.VocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Blue") });
-            Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(model.VocabularyAnnotations, EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Blue") });
+            Assert.IsTrue(valueAnnotationFound, "Annotation cannot be found.");
 
-            valueAnnotationFound = this.CheckForValueAnnotation(container.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Blue") });
-            Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(container.VocabularyAnnotations(model), EdmExpressionKind.StringConstant, new List<PropertyValue> { new PropertyValue("Blue") });
+            Assert.IsTrue(valueAnnotationFound, "Annotation cannot be found.");
 
             Assert.AreEqual(1, carType.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
             Assert.AreEqual(1, container.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
@@ -2567,7 +2717,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ConstructibleVocabularyAddingValueAnnotationWithEnum()
+        public void ConstructibleVocabularyAddingVocabularyAnnotationWithEnum()
         {
             EdmModel model = VocabularyTestModelBuilder.InlineAnnotationSimpleModel();
             Assert.AreEqual(1, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
@@ -2577,27 +2727,27 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(0, container.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
 
             EdmEnumType popularity = new EdmEnumType("DefaultNamespace", "Popularity", EdmPrimitiveTypeKind.String, false);
-            EdmEnumMember very = popularity.AddMember("Very", new EdmStringConstant("3"));
+            EdmEnumMember very = popularity.AddMember("Very", new EdmEnumMemberValue(3));
             model.AddElement(popularity);
 
             EdmTerm popularityTerm = new EdmTerm("DefaultNamespace", "PopularityTerm", new EdmEnumTypeReference(popularity, false));
             model.AddElement(popularityTerm);
 
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 container,
                 popularityTerm,
-                new EdmEnumMemberReferenceExpression(very));
+                new EdmEnumMemberExpression(very));
 
             model.AddVocabularyAnnotation(valueAnnotation);
 
             Assert.AreEqual(1, container.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(model.VocabularyAnnotations, EdmExpressionKind.EnumMemberReference, new List<PropertyValue>() { new PropertyValue("3") });
-            Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
+            var valueAnnotationFound = this.CheckForVocabularyAnnotation(model.VocabularyAnnotations, EdmExpressionKind.EnumMember, new List<PropertyValue>() { new PropertyValue("3") });
+            Assert.IsTrue(valueAnnotationFound, "Annotation cannot be found.");
 
-            valueAnnotationFound = this.CheckForValueAnnotation(container.VocabularyAnnotations(model), EdmExpressionKind.EnumMemberReference, new List<PropertyValue>() { new PropertyValue("3") });
-            Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
+            valueAnnotationFound = this.CheckForVocabularyAnnotation(container.VocabularyAnnotations(model), EdmExpressionKind.EnumMember, new List<PropertyValue>() { new PropertyValue("3") });
+            Assert.IsTrue(valueAnnotationFound, "Annotation cannot be found.");
         }
 
         [TestMethod]
@@ -2618,7 +2768,7 @@ namespace EdmLibTests.FunctionalTests
             var petTerm = new EdmTerm("DefaultNamespace", "PetTerm", new EdmEntityTypeReference(petType, false));
             model.WrappedModel.AddElement(petType);
 
-            EdmAnnotation annotation = new EdmAnnotation(
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(
                 addressStreet,
                 petTerm,
                 new EdmRecordExpression(new EdmPropertyConstructor(petBreed.Name, new EdmStringConstant("Fluffy"))));
@@ -2631,60 +2781,60 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ParsingSimpleValueAnnotationWithComplexTypeCsdl()
+        public void ParsingSimpleVocabularyAnnotationWithComplexTypeCsdl()
         {
-            var csdls = VocabularyTestModelBuilder.SimpleValueAnnotationWithComplexTypeCsdl();
+            var csdls = VocabularyTestModelBuilder.SimpleVocabularyAnnotationWithComplexTypeCsdl();
             var model = this.GetParserResult(csdls);
 
             IEnumerable<EdmError> errors;
             model.Validate(out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid annotation count.");
 
             var person = model.FindType("ßÆœÇèÒöæ.Person") as IEdmStructuredType;
-            var valueTerm = model.FindValueTerm("ßÆœÇèÒöæ.PersonInfo");
+            var valueTerm = model.FindTerm("ßÆœÇèÒöæ.PersonInfo");
             var valueAnnotation = valueAnnotations.First().Value as IEdmRecordExpression;
 
             this.ValidateAnnotationWithExactPropertyAsType(model, person, valueAnnotation.Properties);
         }
 
         [TestMethod]
-        public void ParsingValueAnnotationComplexTypeWithFewerPropertiesCsdl()
+        public void ParsingVocabularyAnnotationComplexTypeWithFewerPropertiesCsdl()
         {
-            var csdls = VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithFewerPropertiesCsdl();
+            var csdls = VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithFewerPropertiesCsdl();
             var model = this.GetParserResult(csdls);
 
             IEnumerable<EdmError> errors;
             model.Validate(out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid annotation count.");
 
             var person = model.FindType("NS.Person") as IEdmStructuredType;
-            var valueTerm = model.FindValueTerm("NS.PersonInfo");
+            var valueTerm = model.FindTerm("NS.PersonInfo");
             var valueAnnotation = valueAnnotations.First().Value as IEdmRecordExpression;
 
             this.ValidateAnnotationWithFewerPropertyThanType(model, person, valueAnnotation.Properties);
         }
 
         [TestMethod]
-        public void ParsingValueAnnotationComplexTypeWithNullValuesCsdl()
+        public void ParsingVocabularyAnnotationComplexTypeWithNullValuesCsdl()
         {
-            var csdls = VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithNullValuesCsdl();
+            var csdls = VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithNullValuesCsdl();
             var model = this.GetParserResult(csdls);
 
             IEnumerable<EdmError> errors;
             model.Validate(out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid annotation count.");
 
             var person = model.FindType("NS.Person") as IEdmStructuredType;
-            var valueTerm = model.FindValueTerm("NS.PersonInfo");
+            var valueTerm = model.FindTerm("NS.PersonInfo");
             var valueAnnotation = valueAnnotations.First().Value as IEdmRecordExpression;
 
             this.ValidateAnnotationWithExactPropertyAsType(model, person, valueAnnotation.Properties);
@@ -2700,11 +2850,11 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid annotation count.");
 
             var annotation = valueAnnotations.First();
-            var appliedFunction = ((IEdmOperationReferenceExpression)((IEdmApplyExpression)annotation.Value).AppliedOperation).ReferencedOperation;
+            var appliedFunction = ((IEdmApplyExpression)annotation.Value).AppliedFunction;
             Assert.AreEqual("Edm.Int32", appliedFunction.ReturnType.FullName(), "Correct function return type");
         }
 
@@ -2718,11 +2868,11 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>();
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
+            var valueAnnotations = model.VocabularyAnnotations;
+            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid annotation count.");
 
             var annotation = valueAnnotations.First();
-            var appliedFunction = ((IEdmOperationReferenceExpression)((IEdmApplyExpression)annotation.Value).AppliedOperation).ReferencedOperation;
+            var appliedFunction = ((IEdmApplyExpression)annotation.Value).AppliedFunction;
             Assert.AreEqual("Edm.Int32", appliedFunction.ReturnType.FullName(), "Correct function return type");
         }
 
@@ -2755,7 +2905,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            bool isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            bool isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
 
             Assert.IsTrue(isParsed, "Expected the CSDL to be successfully parsed.");
             Assert.AreEqual(1, edmModel.VocabularyAnnotations.Count(), "Expected CSDL to have exactly one vocabulary annotation.");
@@ -2789,7 +2939,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            bool isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            bool isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
 
             Assert.IsTrue(isParsed, "Expected the CSDL to be successfully parsed.");
             Assert.AreEqual(1, edmModel.VocabularyAnnotations.Count(), "Expected CSDL to have exactly one vocabulary annotation.");
@@ -2824,7 +2974,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            bool isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            bool isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
 
             Assert.IsTrue(isParsed, "Expected the CSDL to be successfully parsed.");
             Assert.AreEqual(1, edmModel.VocabularyAnnotations.Count(), "Expected CSDL to have exactly one vocabulary annotation.");
@@ -2880,25 +3030,25 @@ namespace EdmLibTests.FunctionalTests
             personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
             var colorType = new EdmEnumType("TestNS2", "Color", true);
             edmModel.AddElement(colorType);
-            colorType.AddMember("Cyan", new EdmIntegerConstant(1));
-            colorType.AddMember("Blue", new EdmIntegerConstant(2));
+            colorType.AddMember("Cyan", new EdmEnumMemberValue(1));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(2));
             var outColorTerm = new EdmTerm("TestNS", "OutColor", new EdmEnumTypeReference(colorType, true));
             edmModel.AddElement(outColorTerm);
             var exp = new EdmEnumMemberExpression(
-                new EdmEnumMember(colorType, "Blue", new EdmIntegerConstant(2)),
-                new EdmEnumMember(colorType, "Cyan", new EdmIntegerConstant(1))
+                new EdmEnumMember(colorType, "Blue", new EdmEnumMemberValue(2)),
+                new EdmEnumMember(colorType, "Cyan", new EdmEnumMemberValue(1))
             );
 
-            var annotation = new EdmAnnotation(personType, outColorTerm, exp);
+            var annotation = new EdmVocabularyAnnotation(personType, outColorTerm, exp);
             annotation.SetSerializationLocation(edmModel, EdmVocabularyAnnotationSerializationLocation.Inline);
             edmModel.SetVocabularyAnnotation(annotation);
             var stream = new MemoryStream();
 
-            Assert.IsFalse(edmModel.Validate(out errors));
+            Assert.IsTrue(edmModel.Validate(out errors));
 
             using (var xw = XmlWriter.Create(stream, new XmlWriterSettings() { Indent = true }))
             {
-                Assert.IsTrue(EdmxWriter.TryWriteEdmx(edmModel, xw, EdmxTarget.OData, out errors));
+                Assert.IsTrue(CsdlWriter.TryWriteCsdl(edmModel, xw, CsdlTarget.OData, out errors));
             }
 
             stream.Seek(0, SeekOrigin.Begin);
@@ -2909,8 +3059,8 @@ namespace EdmLibTests.FunctionalTests
             #endregion
 
 
-            Assert.IsTrue(EdmxReader.TryParse(XmlReader.Create(new StringReader(csdl)), out model, out errors), "parsed");
-            Assert.IsFalse(model.Validate(out validationErrors));
+            Assert.IsTrue(CsdlReader.TryParse(XmlReader.Create(new StringReader(csdl)), out model, out errors), "parsed");
+            Assert.IsTrue(model.Validate(out validationErrors));
 
             TestEnumMember(model);
         }
@@ -2957,13 +3107,13 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> validationErrors;
 
             Assert.IsTrue(
-                EdmxReader.TryParse(
+                CsdlReader.TryParse(
                     XmlReader.Create(new StringReader(csdl)),
                     uri => XmlReader.Create(new StringReader(csdl2)),
                     out model,
                     out errors),
                 "parsed");
-            Assert.IsFalse(model.Validate(out validationErrors));
+            Assert.IsTrue(model.Validate(out validationErrors));
 
             TestEnumMember(model);
         }
@@ -2972,7 +3122,7 @@ namespace EdmLibTests.FunctionalTests
         {
             var color = (IEdmEnumType)model.FindType("TestNS2.Color");
             var person = (IEdmEntityType)model.FindType("TestNS.Person");
-            var annotation = model.FindVocabularyAnnotations<IEdmValueAnnotation>(person, "TestNS.OutColor").Single();
+            var annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(person, "TestNS.OutColor").Single();
             var memberExp = (IEdmEnumMemberExpression)annotation.Value;
             var members = memberExp.EnumMembers.ToList();
             Assert.AreEqual(2, members.Count);
@@ -3138,18 +3288,17 @@ namespace EdmLibTests.FunctionalTests
             return actualCount == expectedCount;
         }
 
-        private bool CheckForValueAnnotation(IEnumerable<IEdmVocabularyAnnotation> vocabularyAnnotations, EdmExpressionKind expressionKind, List<PropertyValue> values)
+        private bool CheckForVocabularyAnnotation(IEnumerable<IEdmVocabularyAnnotation> vocabularyAnnotations, EdmExpressionKind expressionKind, List<PropertyValue> values)
         {
-            return this.CheckForValueAnnotation(vocabularyAnnotations, expressionKind, values, null);
+            return this.CheckForVocabularyAnnotation(vocabularyAnnotations, expressionKind, values, null);
         }
 
-        private bool CheckForValueAnnotation(IEnumerable<IEdmVocabularyAnnotation> vocabularyAnnotations, EdmExpressionKind expressionKind, List<PropertyValue> values, string target)
+        private bool CheckForVocabularyAnnotation(IEnumerable<IEdmVocabularyAnnotation> vocabularyAnnotations, EdmExpressionKind expressionKind, List<PropertyValue> values, string target)
         {
             bool annotationFounded = false;
-            var valueAnnotations = vocabularyAnnotations.OfType<IEdmValueAnnotation>();
             List<PropertyValue> annotationValues;
 
-            foreach (IEdmValueAnnotation valueAnnotation in valueAnnotations)
+            foreach (IEdmVocabularyAnnotation valueAnnotation in vocabularyAnnotations)
             {
                 if (null != valueAnnotation && (null == target || valueAnnotation.Target.ToString().Equals(target)))
                 {
@@ -3166,7 +3315,7 @@ namespace EdmLibTests.FunctionalTests
             return annotationFounded;
         }
 
-        private List<PropertyValue> GetAnnotationValueList(EdmExpressionKind expressionKind, IEdmValueAnnotation valueAnnotation)
+        private List<PropertyValue> GetAnnotationValueList(EdmExpressionKind expressionKind, IEdmVocabularyAnnotation valueAnnotation)
         {
             return this.GetAnnotationValueList(expressionKind, valueAnnotation.Value);
         }
@@ -3177,27 +3326,15 @@ namespace EdmLibTests.FunctionalTests
 
             switch (expressionKind)
             {
-                case EdmExpressionKind.EnumMemberReference:
-                    var enumReferenceExpression = expression as IEdmEnumMemberReferenceExpression;
+                case EdmExpressionKind.EnumMember:
+                    var enumReferenceExpression = expression as IEdmEnumMemberExpression;
                     if (null != enumReferenceExpression)
                     {
-                        if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == Microsoft.OData.Edm.Values.EdmValueKind.String)
-                        {
-                            var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmStringConstant;
+                        var enumValue = enumReferenceExpression.EnumMembers.Single().Value as EdmEnumMemberValue;
 
-                            if (null != enumValue)
-                            {
-                                annotationValues.Add(new PropertyValue(enumValue.Value));
-                            }
-                        }
-                        else if (enumReferenceExpression.ReferencedEnumMember.Value.ValueKind == Microsoft.OData.Edm.Values.EdmValueKind.Integer)
+                        if (null != enumValue)
                         {
-                            var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmIntegerConstant;
-
-                            if (null != enumValue)
-                            {
-                                annotationValues.Add(new PropertyValue(enumValue.Value.ToString()));
-                            }
+                            annotationValues.Add(new PropertyValue(enumValue.Value.ToString()));
                         }
                     }
                     break;

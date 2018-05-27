@@ -7,17 +7,15 @@
 namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 {
     #region Namespaces
+
     using System;
     using System.Globalization;
     using System.Linq;
-    using Microsoft.Spatial;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.Spatial;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Common.Annotations;
@@ -25,8 +23,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.OData.JsonLight;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Edm.Library;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
+
     #endregion Namespaces
 
     /// <summary>
@@ -69,7 +67,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     new
                     {
                         InjectedJSON = "\"@custom.annotation\": null, \"@custom.annotation\": 42",
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "custom.annotation")
+                        ExpectedException = (ExpectedException)null
                     },
                 };
 
@@ -79,7 +77,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         Json = "{{ " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue +
+                            "\"value\": null" +
                             "{1}{0}" +
                         "}}",
                     },
@@ -159,7 +157,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate custom property annotation - should fail.",
+                        Description = "Duplicate custom property annotation - should not fail.",
                         Json = "{ " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
                             "\"" + JsonLightUtils.GetPropertyAnnotationName("value", "custom.annotation") + "\": null," +
@@ -167,137 +165,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\": 42" +
                         "}",
                         ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "custom.annotation", "value")
-                    },
-                    new
-                    {
-                        Description = "Custom property annotation before odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("value", "custom.annotation") + "\": 42," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty", "value")
-                    },
-                    new
-                    {
-                        Description = "Custom instance annotation before odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"@custom.annotation\": 42," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataNullAnnotationName)
-                    },
-                    new
-                    {
-                        Description = "OData property annotation before odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("value", JsonLightConstants.ODataTypeAnnotationName) + "\": 42," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation", JsonLightConstants.ODataTypeAnnotationName)
-                    },
-                    new
-                    {
-                        Description = "OData instance annotation before odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\": \"SomeId\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataIdAnnotationName)
-                    },
-                    new
-                    {
-                        Description = "Regular property before odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"custom\": 42," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName", "custom", JsonLightConstants.ODataValuePropertyName)
-                    },
-                    new
-                    {
-                        Description = "Custom instance annotation after odata.null - should work.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue + "," +
-                            "\"@custom.annotation\": 42" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = (ExpectedException)null,
-                    },
-                    new
-                    {
-                        Description = "Custom instance annotation after odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue + "," +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("value", "custom.annotation") + "\": 42" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty", "value")
-                    },
-                    new
-                    {
-                        Description = "OData property annotation after odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue + "," +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("value", JsonLightConstants.ODataTypeAnnotationName) + "\": 42" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation", JsonLightConstants.ODataTypeAnnotationName)
-                    },
-                    new
-                    {
-                        Description = "OData instance annotation after odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue + "," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\": 42" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataTypeAnnotationName)
-                    },
-                    new
-                    {
-                        Description = "Regular property after odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": " + JsonLightConstants.ODataNullAnnotationTrueValue + "," +
-                            "\"custom\": 42" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload", "custom")
-                    },
-                    new
-                    {
-                        Description = "Invalid value (boolean false) for odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": false" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation", JsonLightConstants.ODataNullAnnotationName, JsonLightConstants.ODataNullAnnotationTrueValue)
-                    },
-                    new
-                    {
-                        Description = "Invalid value (integer) for odata.null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\": 2" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation", JsonLightConstants.ODataNullAnnotationName, JsonLightConstants.ODataNullAnnotationTrueValue)
+                        ExpectedException = (ExpectedException)null
                     },
                     new
                     {
@@ -319,7 +187,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightUtils.GetPropertyAnnotationName("value", "custom.annotation") + "\": null" +
                         "}",
                         ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "custom.annotation", "value")
+                        ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "custom.annotation", "value")
                     },
                     new
                     {
@@ -334,7 +202,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate type property.",
+                        Description = "Duplicate odata.type property should fail.",
                         Json = "{ " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\": \"Edm.Int32\"," +
@@ -342,7 +210,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\": 42" +
                         "}",
                         ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
+                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
                     },
                     new
                     {
@@ -365,17 +233,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "}",
                         ReaderMetadata = readerMetadata,
                         ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKind", "Collection(Edm.Int32)", "Primitive", "Collection")
-                    },
-                    new
-                    {
-                        Description = "Type information for top-level null - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\": \"Edm.Int32\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\": null" +
-                        "}",
-                        ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue", JsonLightConstants.ODataNullAnnotationName, JsonLightConstants.ODataNullAnnotationTrueValue)
                     },
                     new
                     {
@@ -493,7 +350,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedPropertyWhenTypeUnavailable = PayloadBuilder.PrimitiveProperty("OpenProperty", null),
                     ExpectedPropertyType = EdmCoreModel.Instance.GetString(true),
                     JsonTypeInformation = string.Empty,
-                    Json = "{0}{1}\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
+                    Json = "{0}{1}\"value\":null",
                 },
                 new OpenPropertyTestCase
                 {
@@ -627,9 +484,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     JsonTypeInformation = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\",",
                     Json = "{0}{1}\"Street\":\"First\"",
                 },
+
+                new OpenPropertyTestCase
+                {
+                    DebugDescription = "Complex property with data.",
+                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address").PrimitiveProperty("Street", "First")),
+                    ExpectedPropertyType = addressType.ToTypeReference(),
+                    JsonTypeInformation = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\",",
+                    Json = "{0}{1}\"Street\":\"First\"",
+                },
             };
 
-            bool[] withExpectedTypes = new bool[] { true, false };
+            bool[] withExpectedTypes = new bool[] { true, false};
             bool[] withPayloadTypes = new bool[] { true, false };
             bool[] includeContextUri = new bool[] { true, false };
 
@@ -683,9 +549,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         string firstPropertyName = isEmpty ? null : complexValue.Properties.First().Name;
 
                         // An open property without expected and payload type cannot be read; expect an exception.
-                        expectedException = isEmpty
-                            ? ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload")
-                            : ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName", firstPropertyName, JsonLightConstants.ODataValuePropertyName);
+                        expectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType");
                     }
 
                     PayloadReaderTestDescriptor testDescriptor = new PayloadReaderTestDescriptor(this.Settings)
@@ -751,18 +615,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.String\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"" + JsonLightConstants.ODataValuePropertyName + "\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"" + JsonLightConstants.ODataValuePropertyName + "\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
                 },
                 new OpenPropertyTestCase
                 {
-                    DebugDescription = "Duplicate type property - should fail.",
+                    DebugDescription = "Duplicate odata.type property - should fail.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", "value").ExpectedPropertyType(EdmCoreModel.Instance.GetString(true)),
                     Json = 
                         "{0}" +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.String\"," +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.String\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"" + JsonLightConstants.ODataValuePropertyName + "\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new OpenPropertyTestCase
                 {

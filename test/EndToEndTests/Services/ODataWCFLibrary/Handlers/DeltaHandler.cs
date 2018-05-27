@@ -11,9 +11,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
 
     public class DeltaHandler : RequestHandler
@@ -101,14 +100,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         /// <param name="relationShip">Navigation property name, string.Empty for first level</param>
         private void GenerateDeltaItemFromEntry(object entry, IEdmNavigationSource entitySet, ODataVersion targetVersion, SelectExpandClause selectExpandClause, string parentId, string relationShip)
         {
-            var deltaEntry = ODataObjectModelConverter.ConvertToODataEntry(entry, entitySet, targetVersion);
+            var deltaEntry = ODataObjectModelConverter.ConvertToODataEntry(entry, entitySet, targetVersion).Resource;
 
             // Verify entry if need to be written
             DateTime lastestUpdated = ((ClrObject)entry).UpdatedTime;
             if (lastestUpdated > DeltaSnapshot.TimeStamp)
             {
                 var lastSegmentOfDeltaEntry = new ODataUriParser(this.DataSource.Model, ServiceConstants.ServiceBaseUri, deltaEntry.Id).ParsePath().LastSegment as KeySegment;
-                deltaEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo
+                deltaEntry.SetSerializationInfo(new ODataResourceSerializationInfo
                 {
                     NavigationSourceEntityTypeName = lastSegmentOfDeltaEntry.EdmType.ToString(),
                     NavigationSourceKind = lastSegmentOfDeltaEntry.NavigationSource.NavigationSourceKind(),
@@ -195,7 +194,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 if (entry.ParentId == parentId && entry.RelationShip == relationShip)
                 {
                     // Verify if the entry is deleted now, since some of them may dispare because $filter
-                    var verifyresult = new QueryContext(this.ServiceRootUri, new Uri(entry.Id), this.DataSource.Model);
+                    var verifyresult = new QueryContext(this.ServiceRootUri, new Uri(entry.Id), this.DataSource.Model, this.RequestContainer);
                     object queryResults = verifyresult.ResolveQuery(this.DataSource);
 
                     if (queryResults == null)

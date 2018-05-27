@@ -6,10 +6,8 @@
 
 namespace Microsoft.OData.Client
 {
-    using System;
     using System.Diagnostics;
-    using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Helper class for creating ODataLib writers, settings, and other write-related classes based on an instance of <see cref="RequestInfo"/>.
@@ -33,34 +31,25 @@ namespace Microsoft.OData.Client
         /// Create message writer settings for producing requests.
         /// </summary>
         /// <param name="isBatchPartRequest">if set to <c>true</c> indicates that this is a part of a batch request.</param>
-        /// <param name="enableAtom">Whether to enable ATOM.</param>
-        /// <param name="odataSimplified">Whether to enable OData Simplified.</param>
+        /// <param name="enableWritingODataAnnotationWithoutPrefix">Whether to enable writing odata annotation without prefix.</param>
         /// <returns>Newly created message writer settings.</returns>
-        internal ODataMessageWriterSettings CreateSettings(bool isBatchPartRequest, bool enableAtom, bool odataSimplified)
+        internal ODataMessageWriterSettings CreateSettings(bool isBatchPartRequest, bool enableWritingODataAnnotationWithoutPrefix)
         {
             ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
             {
-                CheckCharacters = false,
-                Indent = false,
-                ODataSimplified = odataSimplified,
+                EnableCharactersCheck = false,
 
                 // For operations inside batch, we need to dispose the stream. For top level requests,
                 // we do not need to dispose the stream. Since for inner batch requests, the request
                 // message is an internal implementation of IODataRequestMessage in ODataLib,
                 // we can do this here.
-                DisableMessageStreamDisposal = !isBatchPartRequest
+                EnableMessageStreamDisposal = isBatchPartRequest
             };
-#if !DNXCORE50
-            if (enableAtom)
-            {
-                // Enable ATOM for client
-                writerSettings.EnableAtomSupport();
-            }
-#endif
-            CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 
-            // Enable the Astoria client behavior in ODataLib.
-            writerSettings.EnableWcfDataServicesClientBehavior();
+            // [#623] As client does not support DI currently, odata simplifiedoptions cannot be customize pre request.
+            // Now, we just change the global options.
+            // TODO: After finish the issue #623, need add the customize code of ODataAnnotationWithoutPrefix for each request
+            CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 
             this.requestInfo.Configurations.RequestPipeline.ExecuteWriterSettingsConfiguration(writerSettings);
 
@@ -79,7 +68,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(requestMessage != null, "requestMessage != null");
             Debug.Assert(writerSettings != null, "writerSettings != null");
 
-            this.requestInfo.Context.Format.ValidateCanWriteRequestFormat(requestMessage, isParameterPayload);
+            DataServiceClientFormat.ValidateCanWriteRequestFormat(requestMessage);
 
             // When calling Execute() to invoke an Action, the client doesn't support parsing the target url
             // to determine which IEdmOperationImport to pass to the ODL writer. So the ODL writer is

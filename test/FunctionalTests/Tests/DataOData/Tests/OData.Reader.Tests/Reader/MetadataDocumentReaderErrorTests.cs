@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -86,7 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             this.CombinatorialEngineProvider.RunCombinations(
                 errorDescriptors,
-                this.ReaderTestConfigurationProvider.AtomFormatConfigurations.Where(tc => tc.Synchronous && !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.Synchronous && !tc.IsRequest),
                 (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
         }
 

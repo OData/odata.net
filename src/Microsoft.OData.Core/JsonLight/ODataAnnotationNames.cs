@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>
@@ -26,30 +26,29 @@ namespace Microsoft.OData.Core.JsonLight
                 new[]
                 {
                     ODataContext,
-                    ODataNull,
                     ODataType,
-                    ODataId, 
-                    ODataETag, 
-                    ODataEditLink, 
-                    ODataReadLink, 
-                    ODataMediaEditLink, 
-                    ODataMediaReadLink, 
-                    ODataMediaContentType, 
-                    ODataMediaETag, 
-                    ODataCount, 
-                    ODataNextLink, 
-                    ODataBind, 
-                    ODataAssociationLinkUrl, 
+                    ODataId,
+                    ODataETag,
+                    ODataEditLink,
+                    ODataReadLink,
+                    ODataMediaEditLink,
+                    ODataMediaReadLink,
+                    ODataMediaContentType,
+                    ODataMediaETag,
+                    ODataCount,
+                    ODataNextLink,
+                    ODataBind,
+                    ODataAssociationLinkUrl,
                     ODataNavigationLinkUrl,
-                    ODataDeltaLink
+                    ODataDeltaLink,
+                    ODataRemoved,
+                    ODataDelta,
+                    ODataNull,
                 },
                 StringComparer.Ordinal);
 
         /// <summary>The OData Context annotation name.</summary>
         internal const string ODataContext = "odata.context";
-
-        /// <summary>The OData 'null' annotation name.</summary>
-        internal const string ODataNull = "odata.null";
 
         /// <summary>The OData Type annotation name.</summary>
         internal const string ODataType = "odata.type";
@@ -95,6 +94,18 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>The 'odata.deltaLink' annotation name.</summary>
         internal const string ODataDeltaLink = "odata.deltaLink";
+
+        /// <summary>The 'odata.removed' annotation name.</summary>
+        internal const string ODataRemoved = "odata.removed";
+
+        /// <summary>The 'odata.delta' annotation name.</summary>
+        internal const string ODataDelta = "odata.delta";
+
+        /// <summary>
+        /// The OData Null annotation name. This is an OData 3.0 protocol element
+        /// used for compatibility with 6.x library version.
+        /// </summary>
+        internal const string ODataNull = "odata.null";
 
         /// <summary>
         /// Returns true if the <paramref name="annotationName"/> starts with "odata.", false otherwise.

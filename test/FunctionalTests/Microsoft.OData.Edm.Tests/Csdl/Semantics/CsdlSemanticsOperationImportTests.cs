@@ -11,9 +11,7 @@ using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Tests;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
@@ -31,7 +29,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         public void EnsureEntitySetResolvesToEdmPathExpression()
         {
             var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "Nav1/Nav2" /*entitySet*/, null /*documentation*/, testLocation);
+            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "Nav1/Nav2" /*entitySet*/, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
 
             var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
@@ -42,73 +40,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             semanticActionImport.Action.Should().NotBeNull();
             semanticActionImport.Action.Name.Should().Be("Checkout");
             var pathExpression = (IEdmPathExpression)semanticActionImport.EntitySet;
-            var items = pathExpression.Path.ToList();
+            var items = pathExpression.PathSegments.ToList();
             items[0].Should().Be("Nav1");
             items[1].Should().Be("Nav2");
-        }
-
-        [Fact]
-        public void EnsureEntitySetReferenceResolvesCorrectly()
-        {
-            var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "EntitySet" /*entitySet*/, null /*documentation*/, testLocation);
-            var csdlEntitySet = new CsdlEntitySet("EntitySet", "FQ.NS.EntityType", Enumerable.Empty<CsdlNavigationPropertyBinding>(), null, testLocation);
-            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", entitySets: new CsdlEntitySet[] { csdlEntitySet });
-
-            var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
-            var semanticAction = new CsdlSemanticsAction(semanticSchema, action);
-
-            var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
-            var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
-            var edmEntitySetReference = (IEdmEntitySetReferenceExpression)semanticActionImport.EntitySet;
-            edmEntitySetReference.ReferencedEntitySet.Name.Should().Be("EntitySet");
-        }
-
-        [Fact]
-        public void EnsureEntitySetResolvesToUnknownEntitySet()
-        {
-            var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "OtherSet" /*entitySet*/, null /*documentation*/, testLocation);
-            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
-
-            var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
-            var semanticAction = new CsdlSemanticsAction(semanticSchema, action);
-
-            var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
-            var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
-            var edmEntitySetReference = (IEdmEntitySetReferenceExpression)semanticActionImport.EntitySet;
-            edmEntitySetReference.ReferencedEntitySet.Name.Should().Be("OtherSet");
-        }
-
-        [Fact]
-        public void EnsureEntitySetReferenceNotResolveToSingleton()
-        {
-            var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "Singleton" /*entitySet*/, null /*documentation*/, testLocation);
-            var csdlSingleton = new CsdlSingleton("Singleton", "FQ.NS.EntityType", Enumerable.Empty<CsdlNavigationPropertyBinding>(), null, testLocation);
-            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", singletons: new[] { csdlSingleton });
-
-            var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
-            var semanticAction = new CsdlSemanticsAction(semanticSchema, action);
-
-            var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
-            var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
-            var edmEntitySetReference = (IEdmEntitySetReferenceExpression)semanticActionImport.EntitySet;
-            edmEntitySetReference.ReferencedEntitySet.GetType().Should().Be(typeof(UnresolvedEntitySet));
-            edmEntitySetReference.ReferencedEntitySet.Name.Should().Be("Singleton");
         }
 
         [Fact]
         public void CsdlSemanticsActionImportPropertiesShouldBeInitializedCorrectly()
         {
             var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", null, null /*documentation*/, testLocation);
+            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", null, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
 
             var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
@@ -130,7 +71,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             // Added to ensure this is filtered out
             var function = CsdlBuilder.Function("GetStuff");
             
-            var functionImport = new CsdlFunctionImport("GetStuff", "FQ.NS.GetStuff", null /*entitySet*/, true /*includeInServiceDocument*/, null /*documentation*/, testLocation);
+            var functionImport = new CsdlFunctionImport("GetStuff", "FQ.NS.GetStuff", null /*entitySet*/, true /*includeInServiceDocument*/, testLocation);
             var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
 
             var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, function);
@@ -149,7 +90,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
         private static CsdlSemanticsSchema CreateCsdlSemanticsSchema(CsdlEntityContainer csdlEntityContainer, params CsdlOperation[] operations)
         {
-            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, new Collection<CsdlProperty>(), new BindingList<CsdlNavigationProperty>(), null, null);
+            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, new Collection<CsdlProperty>(), new System.Collections.Generic.List<CsdlNavigationProperty>(), null);
             var schema = CsdlBuilder.Schema("FQ.NS", csdlOperations: operations, csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer }, csdlStructuredTypes: new CsdlStructuredType[] { csdlEntityType });
             var csdlModel = new CsdlModel();
             csdlModel.AddSchema(schema);

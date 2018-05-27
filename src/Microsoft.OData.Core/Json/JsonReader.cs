@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
-namespace Microsoft.OData.Core.Json
-#endif
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
@@ -17,9 +13,6 @@ namespace Microsoft.OData.Core.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-#if SPATIAL
-    using Microsoft.Spatial;
-#endif
     using System.Text;
     #endregion Namespaces
 
@@ -27,12 +20,7 @@ namespace Microsoft.OData.Core.Json
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {Value}")]
-#if ODATALIB_PUBLICJSONREADER
-    public
-#else
-    internal
-#endif
-    class JsonReader
+    internal class JsonReader : IJsonReader
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -66,7 +54,7 @@ namespace Microsoft.OData.Core.Json
         /// Stack of scopes.
         /// </summary>
         /// <remarks>
-        /// At the beginning the Root scope is pushed to the stack and stays there for the entire parsing 
+        /// At the beginning the Root scope is pushed to the stack and stays there for the entire parsing
         ///   (so that we don't have to check for empty stack and also to track the number of root-level values)
         /// Each time a new object or array is started the Object or Array scope is pushed to the stack.
         /// If a property inside an Object is found, the Property scope is pushed to the stack.
@@ -75,7 +63,7 @@ namespace Microsoft.OData.Core.Json
         /// </remarks>
         private readonly Stack<Scope> scopes;
 
-        /// <summary>true if annotations are allowed and thus the reader has to 
+        /// <summary>true if annotations are allowed and thus the reader has to
         /// accept more characters in property names than we do normally; otherwise false.</summary>
         private readonly bool allowAnnotations;
 
@@ -126,12 +114,10 @@ namespace Microsoft.OData.Core.Json
         /// Constructor.
         /// </summary>
         /// <param name="reader">The text reader to read input characters from.</param>
-        /// <param name="jsonFormat">The specific JSON-based format expected by the reader.</param>
         /// <param name="isIeee754Compatible">If it is isIeee754Compatible</param>
-        public JsonReader(TextReader reader, ODataFormat jsonFormat, bool isIeee754Compatible)
+        public JsonReader(TextReader reader, bool isIeee754Compatible)
         {
             Debug.Assert(reader != null, "reader != null");
-            Debug.Assert(jsonFormat == ODataFormat.Json, "Expected a json-based format to create a JsonReader");
 
             this.nodeType = JsonNodeType.None;
             this.nodeValue = null;
@@ -141,7 +127,7 @@ namespace Microsoft.OData.Core.Json
             this.tokenStartIndex = 0;
             this.endOfInputReached = false;
             this.isIeee754Compatible = isIeee754Compatible;
-            this.allowAnnotations = jsonFormat == ODataFormat.Json;
+            this.allowAnnotations = true;
             this.scopes = new Stack<Scope>();
             this.scopes.Push(new Scope(ScopeType.Root));
         }
@@ -367,11 +353,7 @@ namespace Microsoft.OData.Core.Json
                     break;
 
                 default:
-#if SPATIAL
-                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_InternalError);
-#else
                     throw JsonReaderExtensions.CreateException(Strings.General_InternalError(InternalErrorCodes.JsonReader_Read));
-#endif
             }
 
             Debug.Assert(
@@ -674,7 +656,7 @@ namespace Microsoft.OData.Core.Json
             // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
             string token = this.ParseName();
 
-            if (!string.Equals(token, JsonConstants.JsonNullLiteral))
+            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
             {
                 throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedToken(token));
             }
@@ -696,12 +678,12 @@ namespace Microsoft.OData.Core.Json
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
             string token = this.ParseName();
 
-            if (string.Equals(token, JsonConstants.JsonFalseLiteral))
+            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
             {
                 return false;
             }
-            
-            if (string.Equals(token, JsonConstants.JsonTrueLiteral))
+
+            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
             {
                 return true;
             }
@@ -760,12 +742,12 @@ namespace Microsoft.OData.Core.Json
             {
                 return decimalValue;
             }
-            
+
             if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
             {
                 return doubleValue;
             }
-            
+
             throw JsonReaderExtensions.CreateException(Strings.JsonReader_InvalidNumberFormat(numberString));
         }
 
@@ -946,7 +928,7 @@ namespace Microsoft.OData.Core.Json
             {
                 return false;
             }
-            
+
             // We need to make sure we have more room in the buffer to read characters into
             if (this.storedCharacterCount == this.characterBuffer.Length)
             {
@@ -989,7 +971,7 @@ namespace Microsoft.OData.Core.Json
 
                     // And switch the buffers
                     this.characterBuffer = newCharacterBuffer;
-                    
+
                     // Note that the number of characters stored in the buffer remains unchanged
                     // as well as the token start index which is 0.
                 }

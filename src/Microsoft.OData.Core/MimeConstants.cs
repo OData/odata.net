@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Constant values related to media types.
@@ -53,11 +53,14 @@ namespace Microsoft.OData.Core
         /// <summary>Parameter name for 'type' parameters.</summary>
         internal const string MimeTypeParameterName = "type";
 
-        /// <summary>Parameter value for type 'entry'.</summary>
-        internal const string MimeTypeParameterValueEntry = "entry";
+        /// <summary>Parameter value for type 'resource'.</summary>
+        internal const string MimeTypeParameterValueEntry = "resource";
 
         /// <summary>Parameter value for type 'feed'.</summary>
         internal const string MimeTypeParameterValueFeed = "feed";
+
+        /// <summary>JSON Light 4.01 short parameter name for 'metadata' parameter.</summary>
+        internal const string MimeShortMetadataParameterName = "metadata";
 
         /// <summary>JSON Light parameter name for 'odata.metadata' parameter.</summary>
         internal const string MimeMetadataParameterName = "odata.metadata";
@@ -73,6 +76,9 @@ namespace Microsoft.OData.Core
 
         /// <summary>JSON Light parameter value 'none'.</summary>
         internal const string MimeMetadataParameterValueNone = "none";
+
+        /// <summary>JSON Light 4.01 short parameter name for 'streaming' parameter.</summary>
+        internal const string MimeShortStreamingParameterName = "streaming";
 
         /// <summary>JSON Light Parameter name for 'odata.streaming' parameter.</summary>
         internal const string MimeStreamingParameterName = "odata.streaming";
@@ -92,7 +98,7 @@ namespace Microsoft.OData.Core
         /// <summary>Media type for ATOM payloads.</summary>
         internal const string MimeApplicationAtomXml = MimeApplicationType + Separator + MimeAtomXmlSubType;
 
-        /// <summary>Media type for links referencing a single entry.</summary>
+        /// <summary>Media type for links referencing a single resource.</summary>
         internal const string MimeApplicationAtomXmlTypeEntry = MimeApplicationAtomXml + ";" + MimeTypeParameterName + "=" + MimeTypeParameterValueEntry;
 
         /// <summary>Media type for links referencing a collection of entries.</summary>
@@ -112,7 +118,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Media type for raw content (except binary).</summary>
         internal const string MimeTextPlain = MimeTextType + Separator + MimePlainSubType;
-        
+
         /// <summary>Media type for javascript content.</summary>
         internal const string TextJavaScript = MimeTextType + Separator + MimeJavaScriptType;
 

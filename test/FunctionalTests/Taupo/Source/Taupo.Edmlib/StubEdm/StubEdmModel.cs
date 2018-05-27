@@ -11,9 +11,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of the EdmModel
@@ -88,18 +86,18 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         }
 
         /// <summary>
-        /// Finds a value term by name
+        /// Finds a term by name
         /// </summary>
         /// <param name="qualifiedName">the qualified name of the element</param>
-        /// <returns>the value term</returns>
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        /// <returns>the term</returns>
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
             if (qualifiedName == null)
             {
                 throw new ArgumentNullException("qualifiedName");
             }
 
-            return this.schemaElements.OfType<IEdmValueTerm>().FirstOrDefault(e => e.FullName() == qualifiedName);
+            return this.schemaElements.OfType<IEdmTerm>().FirstOrDefault(e => e.FullName() == qualifiedName);
         }
 
         /// <summary>
@@ -260,7 +258,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
             /// Gets annotations associated with an element.
             /// </summary>
             /// <param name="element">The annotated element.</param>
-            /// <returns>The immediate value annotations for the element.</returns>
+            /// <returns>The immediate annotations for the element.</returns>
             public IEnumerable<IEdmDirectValueAnnotation> GetDirectValueAnnotations(IEdmElement element)
             {
                 return this.FindAnnotations(element, false) ?? Enumerable.Empty<IEdmDirectValueAnnotation>();

@@ -9,19 +9,23 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
+using Microsoft.OData.Json;
 using Microsoft.Spatial;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
     /// Unit tests for the JsonLightInstanceAnnotationWriter.
-    /// 
+    ///
     /// Uses mocks to test that the methods call the correct functions on JsonWriter and ODataJsonLightValueSerializer.
     /// </summary>
     public class JsonLightInstanceAnnotationWriterTests
@@ -44,7 +48,8 @@ namespace Microsoft.OData.Core.Tests.Json
             model = TestUtils.WrapReferencedModelsToMainModel(referencedModel);
 
             // Version will be V3+ in production since it's JSON Light only
-            this.valueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") } };
+            var stream = new MemoryStream();
+            this.valueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter));
             this.jsonLightInstanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(this.valueWriter, new JsonMinimalMetadataTypeNameOracle());
         }
 
@@ -226,6 +231,7 @@ namespace Microsoft.OData.Core.Tests.Json
             verifierCalls.Should().Be(4);
         }
 
+        /*
         [Fact]
         public void WriteInstanceAnnotation_ForComplexShouldUseComplexCodePath()
         {
@@ -250,12 +256,12 @@ namespace Microsoft.OData.Core.Tests.Json
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, complexValue));
             verifierCalls.Should().Be(2);
         }
-
+        */
         [Fact]
         public void WriteInstanceAnnotation_ForCollectionShouldUseCollectionCodePath()
         {
             var collectionValue = new ODataCollectionValue() { TypeName = "Collection(String)" };
-            collectionValue.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = null });
+            collectionValue.TypeAnnotation = new ODataTypeAnnotation();
             const string term = "some.term";
             var verifierCalls = 0;
 
@@ -302,9 +308,32 @@ namespace Microsoft.OData.Core.Tests.Json
         }
 
         [Fact]
+        public void WriteInstanceAnnotation_ForEnumValue()
+        {
+            var enumValue = new ODataEnumValue("ReadOnly", "Org.OData.Core.V1.Permission");
+            string term = CoreVocabularyModel.PermissionsTerm.FullName();
+            var verifierCalls = 0;
+
+            this.jsonWriter.WriteNameVerifier = (name) =>
+            {
+                name.Should().Be("@" + term);
+                verifierCalls++;
+            };
+            this.valueWriter.WriteEnumVerifier = (value, expectedType) =>
+            {
+                value.Should().Be(enumValue);
+                expectedType.Definition.Should().Be(CoreVocabularyModel.Instance.SchemaElements.FirstOrDefault(e => e.FullName() == "Org.OData.Core.V1.Permission"));
+                verifierCalls.Should().Be(1);
+                verifierCalls++;
+            };
+            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, enumValue));
+            verifierCalls.Should().Be(2);
+        }
+
+        [Fact]
         public void WriteInstanceAnnotationWithNullValueShouldPassIfTheTermIsNullableInTheModel()
         {
-            // Add a value term of type Collection(Edm.String) to the model.
+            // Add a term of type Collection(Edm.String) to the model.
             this.referencedModel.AddElement(new EdmTerm(
                 "My.Namespace",
                 "Nullable",
@@ -330,7 +359,7 @@ namespace Microsoft.OData.Core.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationWithNullValueShouldThrowIfTheTermIsNotNullableInTheModel()
         {
-            // Add a value term of type Collection(Edm.String) to the model.
+            // Add a term of type Collection(Edm.String) to the model.
             this.referencedModel.AddElement(new EdmTerm(
                 "My.Namespace",
                 "NotNullable",
@@ -338,7 +367,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             string term = "My.Namespace.NotNullable";
             Action action = () => this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
         }
 
         [Fact]
@@ -489,7 +518,7 @@ namespace Microsoft.OData.Core.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationShouldPassPrimitiveTypeFromModelToUnderlyingWriter()
         {
-            // Add a value term of type DateTimeOffset to the model.
+            // Add a term of type DateTimeOffset to the model.
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "DateTimeTerm", EdmPrimitiveTypeKind.DateTimeOffset));
             var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.DateTimeTerm", new ODataPrimitiveValue(DateTimeOffset.MinValue));
 
@@ -509,7 +538,7 @@ namespace Microsoft.OData.Core.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationShouldWriteValueTypeIfMoreDerivedThanMetadataType()
         {
-            // Add a value term of type Geography to the model.
+            // Add a term of type Geography to the model.
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "GeographyTerm", EdmPrimitiveTypeKind.Geography));
             var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.GeographyTerm", new ODataPrimitiveValue(GeographyPoint.Create(0.0, 0.0)));
 
@@ -536,11 +565,12 @@ namespace Microsoft.OData.Core.Tests.Json
             wroteTypeName.Should().BeTrue();
         }
 
+        /*
         [Fact]
         public void WriteInstanceAnnotationShouldPassComplexTypeFromModelToUnderlyingWriter()
         {
-            // Add a value term of a complex type to the model.
-            var complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("My.Namespace", "ComplexType"), false /*isNullable*/);
+            // Add a term of a complex type to the model.
+            var complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("My.Namespace", "ComplexType"), false);
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "StructuredTerm", complexTypeReference));
             var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.StructuredTerm", new ODataComplexValue { TypeName = "ComplexType" });
 
@@ -557,11 +587,12 @@ namespace Microsoft.OData.Core.Tests.Json
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
             calledWriteComplex.Should().BeTrue();
         }
+        */
 
         [Fact]
         public void WriteInstanceAnnotationShouldPassCollectionTypeFromModelToUnderlyingWriter()
         {
-            // Add a value term of type Collection(Edm.String) to the model.
+            // Add a term of type Collection(Edm.String) to the model.
             this.referencedModel.AddElement(new EdmTerm(
                 "My.Namespace",
                 "CollectionTerm",
@@ -628,6 +659,7 @@ namespace Microsoft.OData.Core.Tests.Json
             testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.Guid", /*nullability*/ "False", "Edm.DateTimeOffset", /*nullability*/ "True"));
         }
 
+        /*
         [Fact]
         public void WritingComplexAnnotationShouldNotIncludeTypeNameIfDeclaredOnTermMetadata()
         {
@@ -658,6 +690,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             result.Should().Contain("\"@custom.namespace.AddressTerm\":{\"@odata.type\":\"#custom.namespace.Address\"");
         }
+        */
 
         [Fact]
         public void WritingCollectionAnnotationShouldNotIncludeTypeNameIfDeclaredOnTermMetadata()
@@ -666,7 +699,7 @@ namespace Microsoft.OData.Core.Tests.Json
             edmModel.AddElement(new EdmTerm("custom.namespace", "CollectionValueTerm", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)))));
 
             var result = WriteInstanceAnnotation(
-                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new[] { 42, 54 }, TypeName = "Collection(Int32)" }),
+                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new object[] { 42, 54 }, TypeName = "Collection(Int32)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
             result.Should().Contain("{\"@custom.namespace.CollectionValueTerm\":[42,54]}");
@@ -679,12 +712,13 @@ namespace Microsoft.OData.Core.Tests.Json
             EdmModel edmModel = new EdmModel();
 
             var result = WriteInstanceAnnotation(
-                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new[] { 42, 54 }, TypeName = "Collection(Int32)" }),
+                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new object[] { 42, 54 }, TypeName = "Collection(Int32)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
             result.Should().Contain("\"custom.namespace.CollectionValueTerm@odata.type\":\"#Collection(Int32)\"");
         }
 
+        /*
         [Fact]
         public void WritingComplexAnnotationWithNotDefinedComplexTypeShouldThrow()
         {
@@ -697,6 +731,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("custom.namespace.Address"));
         }
+        */
 
         [Fact]
         public void WritingComplexAnnotationWithCollectionOfNotDefinedComplexTypeShouldThrow()
@@ -705,7 +740,7 @@ namespace Microsoft.OData.Core.Tests.Json
             EdmModel edmModel = new EdmModel();
 
             Action testSubject = () => WriteInstanceAnnotation(
-                new ODataInstanceAnnotation("custom.namespace.CollectionOfAddressTerm", new ODataCollectionValue { Items = Enumerable.Empty<ODataComplexValue>(), TypeName = "Collection(custom.namespace.Address)" }),
+                new ODataInstanceAnnotation("custom.namespace.CollectionOfAddressTerm", new ODataCollectionValue { Items = Enumerable.Empty<ODataEnumValue>(), TypeName = "Collection(custom.namespace.Address)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
             testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("Collection(custom.namespace.Address)"));
@@ -715,10 +750,9 @@ namespace Microsoft.OData.Core.Tests.Json
         {
             var stringWriter = new StringWriter();
             var outputContext = new ODataJsonLightOutputContext(
-                ODataFormat.Json,
                 stringWriter,
-                new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") },
-                model);
+                new ODataMessageInfo { Model = model, IsResponse = false, IsAsync = false },
+                new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") });
 
             var valueSerializer = new ODataJsonLightValueSerializer(outputContext);
 
@@ -742,7 +776,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => verifierCalls++;
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
-            this.valueWriter.Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = name => name == "ns1.name" };
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name == "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
             verifierCalls.Should().Be(2);
@@ -756,7 +790,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => verifierCalls++;
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
-            this.valueWriter.Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = name => name != "ns1.name" };
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name != "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
             verifierCalls.Should().Be(0);
@@ -765,7 +799,8 @@ namespace Microsoft.OData.Core.Tests.Json
         [Fact]
         public void ShouldNotWriteAnyAnnotationByDefault()
         {
-            var defaultValueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 } };
+            var stream = new MemoryStream();
+            var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
             var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
 
             var annotations = new Collection<ODataInstanceAnnotation>();
@@ -783,7 +818,8 @@ namespace Microsoft.OData.Core.Tests.Json
         [Fact]
         public void ShouldWriteAnyAnnotationByDefaultWithIgnoreFilterSetToTrue()
         {
-            var defaultValueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 } };
+            var stream = new MemoryStream();
+            var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
             var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
 
             var annotations = new Collection<ODataInstanceAnnotation>();
@@ -801,7 +837,8 @@ namespace Microsoft.OData.Core.Tests.Json
         [Fact]
         public void TestWriteInstanceAnnotationsForError()
         {
-            var defaultValueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 } };
+            var stream = new MemoryStream();
+            var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
             var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
 
             var annotations = new Collection<ODataInstanceAnnotation>();
@@ -814,6 +851,33 @@ namespace Microsoft.OData.Core.Tests.Json
 
             defaultAnnotationWriter.WriteInstanceAnnotationsForError(annotations);
             verifierCalls.Should().Be(4);
+        }
+
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel model, IJsonWriter jsonWriter, ODataMessageWriterSettings settings = null)
+        {
+            if (settings == null)
+            {
+                settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+                settings.SetServiceDocumentUri(new Uri("http://example.com/"));
+                settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            }
+
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = model,
+                Container =
+                    ContainerBuilderHelper.BuildContainer(
+                        builder =>
+                            builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new MockJsonWriterFactory(jsonWriter))),
+
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
     }
 }

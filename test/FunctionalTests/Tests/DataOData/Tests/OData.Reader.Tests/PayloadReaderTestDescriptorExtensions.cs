@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -218,36 +218,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             ODataPayloadElement wrappedPayloadElement = null;
             ExpectedException expectedException = null;
 
-            if (format == ODataFormat.Atom)
-            {
-                var atomRepresentation = (XmlPayloadElementRepresentationAnnotation)descriptor.PayloadElement.GetAnnotation(typeof(XmlPayloadElementRepresentationAnnotation));
-                ExceptionUtilities.Assert(atomRepresentation != null, "Expected a format-specific annotation.");
-                XNode xmlRepresentation = atomRepresentation.XmlNodes.Single();
-
-                XElement wrapperObject = new XElement(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomEntryElementName,
-                    new XElement(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomCategoryElementName,
-                        new XAttribute(TestAtomConstants.AtomCategoryTermAttributeName, "TestModel.CityType"),
-                        new XAttribute(TestAtomConstants.AtomCategorySchemeAttributeName, TestAtomConstants.ODataSchemeNamespace),
-                    new XElement(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomContentElementName,
-                        new XAttribute(TestAtomConstants.AtomTypeAttributeName, "application/xml"),
-                        new XElement(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomPropertiesElementName,
-                            new XElement(TestAtomConstants.ODataXNamespace + "PoliceStation", xmlRepresentation)))));
-
-                // replace the payload and ATOM representation of the test descriptor and set the expected error message
-                wrappedPayloadElement = PayloadBuilder.Entity("TestModel.CityType").XmlRepresentation(wrapperObject);
-
-                if (isValidTopLevelError)
-                {
-                    // if we have a valid top-level error we expect an ODataErrorException to be thrown.
-                    ODataError error = ConvertErrorPayload((ODataErrorPayload)descriptor.PayloadElement, /*forAtom*/true);
-                    expectedException = ODataExpectedExceptions.ODataErrorException(error, "ODataErrorException_GeneralError");
-                }
-                else
-                {
-                    expectedException = descriptor.ExpectedException;
-                }
-            }
-            else if (format == ODataFormat.Json)
+            if (format == ODataFormat.Json)
             {
                 IEdmEntitySet citiesSet = testModel.EntityContainer.FindEntitySet("Cities");
                 IEdmEntityType cityType = testModel.FindType("TestModel.CityType") as IEdmEntityType;

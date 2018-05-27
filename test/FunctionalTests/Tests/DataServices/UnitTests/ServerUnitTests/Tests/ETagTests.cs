@@ -23,12 +23,14 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         /// <summary>This is a test class for etags test</summary>
         [TestClass, TestCase]
         public class ETagTests : AstoriaTestCase
         {
             #region GET tests
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void GetTopLevelEntitySet()
             {
                 string[] jsonXPaths = new string[] {
@@ -43,7 +45,8 @@ namespace AstoriaUnitTests.Tests
                 GetResponseFromReflectionBasedProvider("/Customers", UnitTestsUtil.AtomFormat, atomXPaths);
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void CannotPassETagInGetTopLevelEntitySet()
             {
                 var ifMatch = new KeyValuePair<string, string>("If-Match", "W/\"foo\"");
@@ -56,7 +59,8 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForAllProviders("/Customers", 400, ifMatch, ifNoneMatch);
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void GetSingleEntityFromTopLevelEntitySet()
             {
                 string[] jsonXPaths = new string[] {
@@ -71,7 +75,8 @@ namespace AstoriaUnitTests.Tests
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)", UnitTestsUtil.AtomFormat, atomXPaths, true/*verifyETagScenarios*/);
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void GetComplexProperty()
             {
                 string[] jsonXPaths = new string[] {
@@ -86,7 +91,8 @@ namespace AstoriaUnitTests.Tests
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/Address", UnitTestsUtil.MimeApplicationXml, atomXPaths, true/*verifyETagScenarios*/);
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void GetPrimitiveProperty()
             {
                 string[] jsonXPaths = new string[] {
@@ -101,7 +107,8 @@ namespace AstoriaUnitTests.Tests
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/Name", UnitTestsUtil.MimeApplicationXml, atomXPaths, true/*verifyETagScenarios*/);
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void GetResourceFromReferenceNavigationProperty()
             {
                 string[] jsonXPaths = new string[] {
@@ -116,7 +123,8 @@ namespace AstoriaUnitTests.Tests
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/BestFriend", UnitTestsUtil.AtomFormat, atomXPaths, true/*verifyETagScenarios*/);
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void GetNullValuedResourceFromReferenceNavigationProperty()
             {
                 TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, "/Customers(0)/BestFriend", typeof(CustomDataContext), null, "GET");
@@ -127,7 +135,8 @@ namespace AstoriaUnitTests.Tests
                 VerifyEmptyStream(request.GetResponseStream());
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void GetSingleEntityFromTopLevelEntitySetWithoutETagProperties()
             {
                 string[] jsonXPaths = new string[] {
@@ -166,7 +175,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod]
+            [Ignore] // Remove Atom
+            // [TestMethod]
             public void Validate304HasNoHeaders()
             {
                 var serviceUri = new Uri("http://" + Environment.MachineName + ":" + NetworkUtil.GetRandomPortNumber() + "/" + System.Guid.NewGuid() + "/Service/");
@@ -263,7 +273,8 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "/Orders", 400, headerValues, "POST", jsonPayload);
             }
 
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void ETag_VerifyETagInPayloadInTopLevelPost()
             {
                 string jsonPayload = "{ " +
@@ -316,7 +327,8 @@ namespace AstoriaUnitTests.Tests
             #region PUT/PATCH Tests
             // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an ATOM payload entry has no content and no links (and it's a V1 entry)
             // We decided to break the old behavior and always check the ETag.
-            [TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation]
             public void ETag_PUTPATCHResourceWithNoContent()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(

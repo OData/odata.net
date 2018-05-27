@@ -14,9 +14,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Implementation of <see cref="IEdmStructuredValue"/> which wraps client-side objects.
@@ -52,7 +50,7 @@ namespace Microsoft.OData.Client
             else
             {
                 Debug.Assert(clientTypeAnnotation.EdmType.TypeKind == EdmTypeKind.Entity, "Only complex and entity values supported");
-                
+
                 // TODO: nullable?
                 this.Type = new EdmEntityTypeReference((IEdmEntityType)clientTypeAnnotation.EdmType, true);
             }
@@ -96,7 +94,7 @@ namespace Microsoft.OData.Client
         /// </returns>
         public IEdmPropertyValue FindPropertyValue(string propertyName)
         {
-            var propertyAnnotation = this.typeAnnotation.GetProperty(propertyName, true);
+            var propertyAnnotation = this.typeAnnotation.GetProperty(propertyName, UndeclaredPropertyBehavior.Support);
             if (propertyAnnotation == null)
             {
                 return null;
@@ -158,7 +156,7 @@ namespace Microsoft.OData.Client
             if (edmPropertyType.IsEnum())
             {
                 // Need to handle underlying type(Int16, Int32, Int64)
-                return new EdmEnumValue(edmPropertyType as IEdmEnumTypeReference, new EdmIntegerConstant(Convert.ToInt64(propertyValue, CultureInfo.InvariantCulture)));
+                return new EdmEnumValue(edmPropertyType as IEdmEnumTypeReference, new EdmEnumMemberValue(Convert.ToInt64(propertyValue, CultureInfo.InvariantCulture)));
             }
 
             var primitiveType = edmPropertyType as IEdmPrimitiveTypeReference;

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -28,6 +28,11 @@ namespace Microsoft.OData.Core
         private readonly ODataRawInputContext rawInputContext;
 
         /// <summary>
+        /// The optional dependency injection container to get related services for message writing.
+        /// </summary>
+        private readonly IServiceProvider container;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="rawInputContext">The input context to read the content from.</param>
@@ -35,7 +40,7 @@ namespace Microsoft.OData.Core
         internal ODataAsynchronousReader(ODataRawInputContext rawInputContext, Encoding encoding)
         {
             Debug.Assert(rawInputContext != null, "rawInputContext != null");
-            
+
             // Currently we only support single-byte UTF8 in async reader.
             if (encoding != null)
             {
@@ -43,6 +48,7 @@ namespace Microsoft.OData.Core
             }
 
             this.rawInputContext = rawInputContext;
+            this.container = rawInputContext.Container;
         }
 
         /// <summary>
@@ -56,7 +62,7 @@ namespace Microsoft.OData.Core
             return this.CreateResponseMessageImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously returns a message for reading the content of an async response.
         /// </summary>
@@ -92,7 +98,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.rawInputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataAsyncReader_AsyncCallOnSyncReader);
@@ -129,7 +135,7 @@ namespace Microsoft.OData.Core
 
             this.ReadInnerEnvelope(out statusCode, out headers);
 
-            return ODataAsynchronousResponseMessage.CreateMessageForReading(this.rawInputContext.Stream, statusCode, headers);
+            return ODataAsynchronousResponseMessage.CreateMessageForReading(this.rawInputContext.Stream, statusCode, headers, this.container);
         }
 
         /// <summary>
@@ -141,7 +147,8 @@ namespace Microsoft.OData.Core
         {
             string responseLine = this.ReadFirstNonEmptyLine();
 
-            statusCode = this.ParseResponseLine(responseLine);
+            Debug.Assert(this.rawInputContext.ReadingResponse, "Must only be called for responses.");
+            statusCode = ParseResponseLine(responseLine);
             headers = this.ReadHeaders();
         }
 
@@ -166,10 +173,8 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="responseLine">The response line as a string.</param>
         /// <returns>The parsed status code from the response line.</returns>
-        private int ParseResponseLine(string responseLine)
+        private static int ParseResponseLine(string responseLine)
         {
-            Debug.Assert(this.rawInputContext.ReadingResponse, "Must only be called for responses.");
-
             // Async Response: HTTP/1.1 200 Ok
             // Since the http status code strings have spaces in them, we cannot use the same
             // logic. We need to check for the second space and anything after that is the error
@@ -259,7 +264,7 @@ namespace Microsoft.OData.Core
             headerName = headerLine.Substring(0, colon).Trim();
             headerValue = headerLine.Substring(colon + 1).Trim();
         }
-        
+
         /// <summary>
         /// Reads a line from the underlying stream.
         /// </summary>

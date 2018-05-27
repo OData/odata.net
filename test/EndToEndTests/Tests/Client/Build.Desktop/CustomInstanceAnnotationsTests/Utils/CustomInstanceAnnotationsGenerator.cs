@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Spatial;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference;
 
@@ -55,28 +55,30 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             Values.Add(Data<String>.CollectionValue);
             Values.Add(Data<Geography>.CollectionValue);
             Values.Add(Data<Geometry>.CollectionValue);
+            Values.Add(new ODataPrimitiveValue(true));
 
-            Values.Add(new ODataComplexValue
-            {
-                TypeName = ResolveName(typeof(ComplexWithAllPrimitiveTypes)),
-                Properties = new[] 
-                { 
-                    new ODataProperty { Name = "Binary", Value = Data<Byte[]>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "Boolean", Value = Data<Boolean>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "Byte", Value = Data<Byte>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "DateTimeOffset", Value = Data<DateTimeOffset>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "Decimal", Value = Data<Decimal>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "Double", Value = Data<Double>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "Int16", Value = Data<Int16>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "Int32", Value = Data<Int32>.Values.FirstOrDefault()  },
-                    new ODataProperty { Name = "Int64", Value = Data<Int64>.Values.FirstOrDefault()  },
-                    new ODataProperty { Name = "SByte", Value = Data<SByte>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "String", Value = Data<String>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "Single", Value = Data<Single>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "GeographyPoint", Value = Data<Geography>.Values.FirstOrDefault() },
-                    new ODataProperty { Name = "GeometryPoint", Value = Data<Geometry>.Values.FirstOrDefault() },
-                }
-            });
+            // TODO : Fix #625
+            //Values.Add(new ODataComplexValue
+            //{
+            //    TypeName = ResolveName(typeof(ComplexWithAllPrimitiveTypes)),
+            //    Properties = new[] 
+            //    { 
+            //        new ODataProperty { Name = "Binary", Value = Data<Byte[]>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "Boolean", Value = Data<Boolean>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "Byte", Value = Data<Byte>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "DateTimeOffset", Value = Data<DateTimeOffset>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "Decimal", Value = Data<Decimal>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "Double", Value = Data<Double>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "Int16", Value = Data<Int16>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "Int32", Value = Data<Int32>.Values.FirstOrDefault()  },
+            //        new ODataProperty { Name = "Int64", Value = Data<Int64>.Values.FirstOrDefault()  },
+            //        new ODataProperty { Name = "SByte", Value = Data<SByte>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "String", Value = Data<String>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "Single", Value = Data<Single>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "GeographyPoint", Value = Data<Geography>.Values.FirstOrDefault() },
+            //        new ODataProperty { Name = "GeometryPoint", Value = Data<Geometry>.Values.FirstOrDefault() },
+            //    }
+            //});
         }
 
         private static string GetNextName(string namePrefix = null)

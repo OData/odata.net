@@ -137,7 +137,7 @@ namespace Microsoft.OData.Client
             {
                 return this.Context.Execute<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, true).SingleOrDefault();
             }
-            
+
             return this.Query.Execute().SingleOrDefault();
         }
 #endif
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Client
             {
                 return this.Context.BeginExecute<TElement>(this.RequestUri, callback, state, XmlConstants.HttpMethodGet, true);
             }
-            
+
             return this.Query.BeginExecute(callback, state);
         }
 
@@ -172,11 +172,11 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(asyncResult, "asyncResult");
             if (this.isFunction)
             {
-                return this.Context.EndExecute<TElement>(asyncResult).Single();
+                return this.Context.EndExecute<TElement>(asyncResult).SingleOrDefault();
             }
             else
             {
-                return this.Query.EndExecute(asyncResult).Single();
+                return this.Query.EndExecute(asyncResult).SingleOrDefault();
             }
         }
 

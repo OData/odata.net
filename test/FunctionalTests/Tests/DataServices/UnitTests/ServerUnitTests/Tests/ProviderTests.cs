@@ -334,7 +334,9 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Test QueryIntercepters defined on the subclass of DataService<T>")]
+            // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+            [Ignore] // Remove Atom
+            // [TestMethod, Variation("Test QueryIntercepters defined on the subclass of DataService<T>")]
             public void IDSPQueryIntercepterTest()
             {
                 MakeRequestForIDSPIntercepterTest(null, "/$metadata", "GET", null, null, null);
@@ -2540,8 +2542,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             #endregion
-
-            [TestMethod, Variation("Test that we correctly Dispose query results.")]
+            // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+            // [TestMethod, Variation("Test that we correctly Dispose query results.")]
             public void EnumeratorDisposeAfterQuery()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(

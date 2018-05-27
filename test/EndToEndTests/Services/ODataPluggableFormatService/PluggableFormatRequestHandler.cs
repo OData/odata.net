@@ -9,8 +9,9 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
     using System;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
+    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.Test.OData.Services.ODataWCFService;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
     using Microsoft.Test.OData.Services.ODataWCFService.Handlers;
@@ -36,6 +37,9 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
         public override Stream Process(Stream requestStream)
         {
+            ServiceScopeWrapper serviceScope = this.RootContainer.CreateServiceScope();
+            this.RequestContainer = serviceScope.ServiceProvider;
+
             try
             {
                 RequestHandler handler = this.DispatchHandler();
@@ -51,6 +55,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
             {
                 ErrorHandler handler = new PluggableFormatErrorHandler(this, e);
                 return handler.Process(null);
+            }
+            finally
+            {
+                serviceScope.Dispose();
             }
         }
     }
@@ -69,14 +77,6 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 
             return base.DispatchHandler();
         }
-
-        protected override ODataMessageWriterSettings GetWriterSettings()
-        {
-            var settings = base.GetWriterSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
-
-            return settings;
-        }
     }
 
     internal class PluggableFormatOperationHandler : OperationHandler
@@ -84,27 +84,12 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         public PluggableFormatOperationHandler(RequestHandler other, HttpMethod httpMethod)
             : base(other, httpMethod)
         { }
-
-        protected override ODataMessageReaderSettings GetReaderSettings()
-        {
-            var settings = base.GetReaderSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
-            return settings;
-        }
     }
 
     internal class PluggableFormatQueryHandler : QueryHandler
     {
         public PluggableFormatQueryHandler(RequestHandler other)
             : base(other) { }
-
-        protected override ODataMessageWriterSettings GetWriterSettings()
-        {
-            var settings = base.GetWriterSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
-
-            return settings;
-        }
     }
 
     internal class PluggableFormatErrorHandler : ErrorHandler
@@ -117,7 +102,6 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         protected override ODataMessageWriterSettings GetWriterSettings()
         {
             var settings = base.GetWriterSettings();
-            settings.MediaTypeResolver = PluggableFormatResolver.Instance;
             settings.SetContentType(string.IsNullOrEmpty(this.QueryContext.FormatOption) ? this.RequestAcceptHeader : this.QueryContext.FormatOption, Encoding.UTF8.WebName);
             return settings;
         }

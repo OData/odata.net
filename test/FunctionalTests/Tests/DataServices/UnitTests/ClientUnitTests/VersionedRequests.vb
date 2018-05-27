@@ -19,15 +19,15 @@ Imports System.Text
 Imports System.Web
 Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
-Imports Microsoft.OData.Core
+Imports Microsoft.OData
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel
 
 Partial Public Class ClientModule
 
-    <TestClass()> _
-        Public Class VersionedRequests
+    <TestClass()>
+    Public Class VersionedRequests
         Inherits AstoriaTestCase
 
         Private Shared web As TestWebRequest = Nothing
@@ -47,15 +47,15 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
             Me.ctx = Nothing
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub AtomRequestsAreValid()
             Dim se As New SimpleEntity()
             se.ID = "the id"
@@ -71,36 +71,36 @@ Partial Public Class ClientModule
             TestUtil.AssertContains(payload, "</author>")
             TestUtil.AssertContains(payload, "<id />")
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub ALinqShouldUseTypeResolverForCastAndTypeIs()
             ' ALinq should use typeresolver for cast and typeis
             ctx.ResolveName = AddressOf ResolveNameCallback
             Try
-                Dim q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong") _
-                        Where TypeOf e Is SimpleEntityWithLongSubType _
+                Dim q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong")
+                        Where TypeOf e Is SimpleEntityWithLongSubType
                         Select e
                 Dim payload = ExtractPlayback(q)
                 TestUtil.AssertContains(payload, "$filter=isof('ResolvedType_SimpleEntityWithLongSubType'")
 
                 ' http://localhost:6000/TheTest/SimpleEntityWithLong()?$filter=cast('ResolvedType_SimpleEntityWithLongSubType')/SubID%20eq%201
-                q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong") _
-                    Where DirectCast(e, SimpleEntityWithLongSubType).SubID = 1 _
+                q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong")
+                    Where DirectCast(e, SimpleEntityWithLongSubType).SubID = 1
                     Select e
                 payload = ExtractPlayback(q)
                 TestUtil.AssertContains(payload, "$filter=cast('ResolvedType_SimpleEntityWithLongSubType')/SubID")
 
                 ' Candidate bug?
                 ' GET http://localhost:6000/TheTest/SimpleEntityWithLong(1L)
-                q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong") _
-                    Where TryCast(e, SimpleEntityWithLongSubType).ID = 1 _
+                q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong")
+                    Where TryCast(e, SimpleEntityWithLongSubType).ID = 1
                     Select e
                 payload = ExtractPlayback(q)
 
                 ' Candidate bug?
                 ' The expression ((As SimpleEntityWithLongSubType).SubID = 1) is not supported. - why?
-                q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong") _
-                    Where TryCast(e, SimpleEntityWithLongSubType).SubID = 1 _
+                q = From e In ctx.CreateQuery(Of SimpleEntityWithLong)("SimpleEntityWithLong")
+                    Where TryCast(e, SimpleEntityWithLongSubType).SubID = 1
                     Select e
                 payload = ExtractPlayback(q)
             Finally
@@ -112,7 +112,7 @@ Partial Public Class ClientModule
             Return "ResolvedType_" + t.Name
         End Function
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub LinqRepros()
 
             'TODO: really should create seperate Linq module for these.
@@ -133,7 +133,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub LinqExpressionNestingTest()
             ' This is a complementary test for AstoriaUnitTests.LinqTests.ExpressionNestingTest, but using the comprehension syntax
             ' A separate LINQ module should be created for these
@@ -148,77 +148,77 @@ Partial Public Class ClientModule
             ' following dimensions: precedence, associativity and where the parentheses are.
             Dim queriesAndExpectedUris() As Tuple(Of IQueryable, String) =
             {
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID > o.OrderID + (o.OrderID * o.OrderID), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID > o.OrderID + (o.OrderID * o.OrderID),
                     "TheTest/Orders?$filter=OrderID gt OrderID add OrderID mul OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID > o.OrderID - (o.OrderID \ o.OrderID), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID > o.OrderID - (o.OrderID \ o.OrderID),
                     "TheTest/Orders?$filter=OrderID gt OrderID sub OrderID div OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID < (o.OrderID + o.OrderID) - o.OrderID, _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID < (o.OrderID + o.OrderID) - o.OrderID,
                     "/TheTest/Orders?$filter=OrderID lt OrderID add OrderID sub OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID < o.OrderID \ (o.OrderID * o.OrderID), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID < o.OrderID \ (o.OrderID * o.OrderID),
                     "/TheTest/Orders?$filter=OrderID lt OrderID div (OrderID mul OrderID)"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where ((o.OrderID = o.OrderID) AndAlso (o.OrderID >= o.OrderID)) OrElse (o.OrderID < o.OrderID), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where ((o.OrderID = o.OrderID) AndAlso (o.OrderID >= o.OrderID)) OrElse (o.OrderID < o.OrderID),
                     "/TheTest/Orders?$filter=OrderID eq OrderID and OrderID ge OrderID or OrderID lt OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID = (o.OrderID + o.OrderID) * o.OrderID, _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID = (o.OrderID + o.OrderID) * o.OrderID,
                     "/TheTest/Orders?$filter=OrderID eq (OrderID add OrderID) mul OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where (((((((o.OrderID * o.OrderID >= o.OrderID))))))), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where (((((((o.OrderID * o.OrderID >= o.OrderID))))))),
                     "/TheTest/Orders?$filter=OrderID mul OrderID ge OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID >= (o.OrderID + (o.OrderID Mod o.OrderID)), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID >= (o.OrderID + (o.OrderID Mod o.OrderID)),
                     "/TheTest/Orders?$filter=OrderID ge OrderID add OrderID mod OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID <= o.OrderID * o.OrderID * o.OrderID, _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID <= o.OrderID * o.OrderID * o.OrderID,
                     "/TheTest/Orders?$filter=OrderID le OrderID mul OrderID mul OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
                     Where o.OrderID >= o.OrderID <> False,
                     "/TheTest/Orders?$filter=OrderID ge OrderID ne false"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID <> o.OrderID - o.OrderID * o.OrderID, _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID <> o.OrderID - o.OrderID * o.OrderID,
                     "/TheTest/Orders?$filter=OrderID ne OrderID sub OrderID mul OrderID"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where True = ((o.OrderID Mod o.OrderID) < o.OrderID) = False, _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where True = ((o.OrderID Mod o.OrderID) < o.OrderID) = False,
                     "/TheTest/Orders?$filter=true eq (OrderID mod OrderID lt OrderID) eq false"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID <> o.OrderID * (o.OrderID - o.OrderID \ (o.OrderID * (o.OrderID + o.OrderID))), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID <> o.OrderID * (o.OrderID - o.OrderID \ (o.OrderID * (o.OrderID + o.OrderID))),
                     "/TheTest/Orders?$filter=OrderID ne OrderID mul (OrderID sub OrderID div (OrderID mul (OrderID add OrderID)))"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID > 1 AndAlso (((o.OrderID > 1))) Or (o.OrderID > 1 And o.OrderID > 1), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID > 1 AndAlso (((o.OrderID > 1))) Or (o.OrderID > 1 And o.OrderID > 1),
                     "/TheTest/Orders?$filter=OrderID gt 1 and OrderID gt 1 or OrderID gt 1 and OrderID gt 1"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID > 1 AndAlso ((o.OrderID > 1 Or o.OrderID > 1) And o.OrderID > 1), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID > 1 AndAlso ((o.OrderID > 1 Or o.OrderID > 1) And o.OrderID > 1),
                     "/TheTest/Orders?$filter=OrderID gt 1 and (OrderID gt 1 or OrderID gt 1) and OrderID gt 1"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID > o.OrderID * (o.OrderID \ o.OrderID), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID > o.OrderID * (o.OrderID \ o.OrderID),
                     "/TheTest/Orders?$filter=OrderID gt OrderID mul (OrderID div OrderID)"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID > o.OrderID * (o.OrderID Mod o.OrderID), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID > o.OrderID * (o.OrderID Mod o.OrderID),
                     "/TheTest/Orders?$filter=OrderID gt OrderID mul (OrderID mod OrderID)"),
-                New Tuple(Of IQueryable, String)( _
-                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders") _
-                    Where o.OrderID > o.OrderID + (o.OrderID - o.OrderID), _
+                New Tuple(Of IQueryable, String)(
+                    From o In ctx.CreateQuery(Of northwindClient.Orders)("Orders")
+                    Where o.OrderID > o.OrderID + (o.OrderID - o.OrderID),
                     "/TheTest/Orders?$filter=OrderID gt OrderID add (OrderID sub OrderID)")
             }
 
@@ -232,7 +232,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub DeletionUriShouldWorkWhenServerSupportDataLiterals()
             ' Astoria Silverlight Client : The URI Produced by the Client for deletion of resources 
             ' does not work after upgrading the server to support data literals
@@ -249,18 +249,18 @@ Partial Public Class ClientModule
             Dim lines = playback.Split(Chr(13))
             TestUtil.AssertContains(lines(0), "SimpleEntityWithLong(1)")
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub TranslationShouldBeCorrectInFilterPredicate()
             ' ALinq: incorrect translation in query with traversal+key lookup in filter predicate
             Dim typedContext = New SimpleContext(web.ServiceRoot)
-            typedContext.EnableAtom = True
+            'typedContext.EnableAtom = True
             Dim q = From r In typedContext.RelatedThings Where r.OneEntity.ID = 1 Select r
             Dim playback = ExtractPlayback(q)
             TestUtil.AssertContains(playback, "/RelatedThings?$filter=OneEntity/ID%20eq%201")
         End Sub
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub BytesConsistency()
             ' Astoria Client: byte[] and Binary used as keys are supported inconsistently
             Dim ctx = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
@@ -279,7 +279,7 @@ Partial Public Class ClientModule
             TestUtil.AssertContains(lines(0), "SimpleEntityWithLong(binary'AQ==')")
         End Sub
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub BinaryConsistency()
             ' Astoria Client: byte[] and Binary used as keys are supported inconsistently
             Dim ctx = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
@@ -298,7 +298,7 @@ Partial Public Class ClientModule
             TestUtil.AssertContains(lines(0), "SimpleEntityWithLong(binary'AQ==')")
         End Sub
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub ClientShouldNotRequireContentTypeOfEmptyBodyResponses()
             ' Client should not require content type for responses with empty bodies
             Dim etags = ",foo".Split(","c)
@@ -309,8 +309,8 @@ Partial Public Class ClientModule
                     For Each responseStatusCode In responseStatusCodes
                         For Each contentType In contentTypes
 
-                            Dim playback = _
-                                "HTTP/1.1 " & responseStatusCode & " Ok" & vbNewLine & _
+                            Dim playback =
+                                "HTTP/1.1 " & responseStatusCode & " Ok" & vbNewLine &
                                 "Location: http://abc-pqr.com/" & vbNewLine &
                                 "OData-EntityId: http://abc-pqr.com/"
                             If etag.Length > 0 Then
@@ -344,17 +344,19 @@ Partial Public Class ClientModule
 
 
 #Region "EntryHasInstreamError"
-        <TestCategory("Partition2")> <TestMethod()> Public Sub EntryHasInstreamError()
+        'Remove Atom
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub EntryHasInstreamError()
             Using PlaybackService.OverridingPlayback.Restore
-                PlaybackService.OverridingPlayback.Value = _
-                "HTTP/1.1 200 OK" & vbCrLf & _
-                "Content-Type: application/atom+xml" & vbCrLf & _
-                vbCrLf & _
-                "<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='NorthwindModel.Customers' xmlns='http://www.w3.org/2005/Atom'>" & _
-                "  <id>http://localhost:3000/northwind.svc/Customers(ALFKI)</id>" & _
-                "  <content type='application/xml'>" & _
-                "    <m:properties>" & _
-                "      <d:CustomerID>ALFKI</d:CustomerID>" & _
+                PlaybackService.OverridingPlayback.Value =
+                "HTTP/1.1 200 OK" & vbCrLf &
+                "Content-Type: application/atom+xml" & vbCrLf &
+                vbCrLf &
+                "<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' m:type='NorthwindModel.Customers' xmlns='http://www.w3.org/2005/Atom'>" &
+                "  <id>http://localhost:3000/northwind.svc/Customers(ALFKI)</id>" &
+                "  <content type='application/xml'>" &
+                "    <m:properties>" &
+                "      <d:CustomerID>ALFKI</d:CustomerID>" &
                 "<m:error>broken</m:error>"
 
                 Try
@@ -371,15 +373,15 @@ Partial Public Class ClientModule
             End Using
         End Sub
 #End Region
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub VersionSentOnGet()
             Dim q = ctx.CreateQuery(Of SimpleEntity)("/Blah")
             Dim payload = ExtractPlayback(q)
             TestUtil.AssertContains(payload, "OData-Version: 4.0")
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub VersionSentOnUpdates()
             Dim e = New SimpleEntity()
             e.ID = "123"

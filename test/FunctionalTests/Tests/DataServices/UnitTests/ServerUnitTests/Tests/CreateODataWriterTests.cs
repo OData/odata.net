@@ -9,19 +9,20 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData.Service;
     using System.Net;
     using AstoriaUnitTests.Stubs;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Service.Providers;
-    using System.Reflection;
     using test = System.Data.Test.Astoria;
+    using BindingFlags = System.Reflection.BindingFlags;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
     [TestClass]
     public class CreateODataWriterTests
     {
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void CreateODataWriterDelegateTest()
         {
             int createODataWriterDelegateCount = 0;
@@ -103,7 +104,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void CreateODataWriterInlinecountTest()
         {
             foreach (string acceptType in new string[] { "application/atom+xml", "application/json;odata.metadata=minimal" })
@@ -271,8 +273,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void CreateODataWriterDelegateTestForOpenProvider()
         {
             var testInfo = new[] {
@@ -351,7 +353,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void ChangingFeedCollectionValueForTopLevel()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -393,7 +396,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         if (args.Feed.Id.OriginalString.Contains("Customers"))
                         {
-                            testODataWriter.CallBaseWriteStart(new ODataFeed() { Id = args.Feed.Id, Count = 88 });
+                            testODataWriter.CallBaseWriteStart(new ODataResourceSet() { Id = args.Feed.Id, Count = 88 });
                             return true;
                         }
 
@@ -433,53 +436,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
-        public void WritingExpandedValue()
-        {
-            using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
-            using (MyODataWriter.WriteEntryStart.Restore())
-            using (MyODataWriter.WriteLinkStart.Restore())
-            using (var request = TestWebRequest.CreateForInProcess())
-            {
-                MyODataWriter testODataWriter = null;
-                request.HttpMethod = "GET";
-                request.DataServiceType = typeof(CustomDataContext);
-                OpenWebDataServiceHelper.CreateODataWriterDelegate.Value = (odataWriter) =>
-                {
-                    testODataWriter = new MyODataWriter(odataWriter);
-                    return testODataWriter;
-                };
-
-                object mostRecentEntry = null;
-                MyODataWriter.WriteEntryStart.Value = (args) =>
-                {
-                    mostRecentEntry = args.Instance;
-                    return false;
-                };
-
-                MyODataWriter.WriteLinkStart.Value = (args) =>
-                    {
-                        if (args.NavigationLink.Name == "BestFriend")
-                        {
-                            testODataWriter.CallBaseWriteStart(args.NavigationLink);
-                            var entry = CreateEntry(((Customer)mostRecentEntry).BestFriend, args.OperationContext);
-                            testODataWriter.CallBaseWriteStart(entry);
-                            testODataWriter.WriteEnd();
-                            return true;
-                        }
-
-                        return false;
-                    };
-
-                request.RequestUriString = "/Customers?$format=atom";
-                request.SendRequest();
-                var response = request.GetResponseStreamAsXDocument();
-
-                UnitTestsUtil.VerifyXPathResultCount(response, 2, new string[] { "/atom:feed/atom:entry/atom:link[@title='BestFriend']/adsm:inline/atom:entry" });
-            }
-        }
-
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void DataServiceOdataWriterWriteEndForEntryTest()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -543,7 +501,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void DataServiceOdataWriterWriteEndForLinksTest()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -586,8 +545,8 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-
-        [TestMethod]
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void DataServiceOdataWriterWriteEndForFeedTest()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -670,57 +629,6 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        private ODataEntry CreateEntry(Customer customer, DataServiceOperationContext operationContext)
-        {
-            if (customer == null) return null;
-
-            var entry = new ODataEntry();
-            entry.EditLink = new Uri(operationContext.AbsoluteServiceUri, "Customers(" + customer.ID + ")");
-            entry.Id = entry.EditLink;
-
-            var metadataProvider = (IDataServiceMetadataProvider)operationContext.GetService(typeof(IDataServiceMetadataProvider));
-            ResourceType rt;
-            metadataProvider.TryResolveResourceType(customer.GetType().FullName, out rt);
-            entry.Properties = GetProperties(customer, rt);
-            entry.TypeName = rt.FullName;
-            return entry;
-        }
-
-        private IEnumerable<ODataProperty> GetProperties(object instance, ResourceType resourceType)
-        {
-            List<ODataProperty> properties = new List<ODataProperty>();
-            foreach (var property in resourceType.Properties)
-            {
-                object value = instance.GetType().GetProperty(property.Name, BindingFlags.Public | BindingFlags.Instance).GetValue(instance, null);
-                
-                if (property.ResourceType.ResourceTypeKind == ResourceTypeKind.Primitive)
-                {
-                    if (value.GetType() == typeof(DateTime))
-                    {
-                        DateTime dt = (DateTime)value;
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                        {
-                            value = new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
-                        }
-                        else
-                        {
-                            value = new DateTimeOffset(dt);
-                        }
-                    }
-                    var odataProperty = new ODataProperty() { Name = property.Name, Value = value };
-                    properties.Add(odataProperty);
-                }
-                else if (property.ResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
-                {
-                    var odataProperty = new ODataProperty() { Name = property.Name };
-                    odataProperty.Value = new ODataComplexValue() { TypeName = property.ResourceType.FullName, Properties = GetProperties(value, property.ResourceType) };
-                    properties.Add(odataProperty);
-                }
-            }
-
-            return properties;
-        }
-
         private class MyODataWriter : DataServiceODataWriter
         {
             private static test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>> writeFeedStart = new test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>>();
@@ -729,8 +637,8 @@ namespace AstoriaUnitTests.Tests
             private static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> writeEntryStart = new test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>>();
             public static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> WriteEntryStart { get { return writeEntryStart; } }
 
-            private static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> writeLinkStart = new test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>>();
-            public static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> WriteLinkStart { get { return writeLinkStart; } }
+            private static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> writeLinkStart = new test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>>();
+            public static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> WriteLinkStart { get { return writeLinkStart; } }
 
             private static test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>> writeFeedEnd = new test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>>();
             public static test.Restorable<Func<DataServiceODataWriterFeedArgs, bool>> WriteFeedEnd { get { return writeFeedEnd; } }
@@ -738,8 +646,8 @@ namespace AstoriaUnitTests.Tests
             private static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> writeEntryEnd = new test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>>();
             public static test.Restorable<Func<DataServiceODataWriterEntryArgs, bool>> WriteEntryEnd { get { return writeEntryEnd; } }
 
-            private static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> writeLinkEnd = new test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>>();
-            public static test.Restorable<Func<DataServiceODataWriterNavigationLinkArgs, bool>> WriteLinkEnd { get { return writeLinkEnd; } }
+            private static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> writeLinkEnd = new test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>>();
+            public static test.Restorable<Func<DataServiceODataWriterNestedResourceInfoArgs, bool>> WriteLinkEnd { get { return writeLinkEnd; } }
 
             private static test.Restorable<Func<bool>> writeEnd = new test.Restorable<Func<bool>>();
             public static test.Restorable<Func<bool>> WriteEndDelegate { get { return writeEnd; } }
@@ -771,7 +679,7 @@ namespace AstoriaUnitTests.Tests
                 base.WriteStart(args);
             }
 
-            public override void WriteStart(DataServiceODataWriterNavigationLinkArgs args)
+            public override void WriteStart(DataServiceODataWriterNestedResourceInfoArgs args)
             {
                 if (WriteLinkStart.Value != null)
                 {
@@ -811,7 +719,7 @@ namespace AstoriaUnitTests.Tests
                 base.WriteEnd(args);
             }
 
-            public override void WriteEnd(DataServiceODataWriterNavigationLinkArgs args)
+            public override void WriteEnd(DataServiceODataWriterNestedResourceInfoArgs args)
             {
                 if (WriteLinkEnd.Value != null)
                 {
@@ -821,17 +729,17 @@ namespace AstoriaUnitTests.Tests
                 base.WriteEnd(args);
             }
 
-            public void CallBaseWriteStart(ODataFeed feed)
+            public void CallBaseWriteStart(ODataResourceSet feed)
             {
                 this.odataWriter.WriteStart(feed);
             }
 
-            public void CallBaseWriteStart(ODataEntry entry)
+            public void CallBaseWriteStart(ODataResource entry)
             {
                 this.odataWriter.WriteStart(entry);
             }
 
-            public void CallBaseWriteStart(ODataNavigationLink navigationLink)
+            public void CallBaseWriteStart(ODataNestedResourceInfo navigationLink)
             {
                 this.odataWriter.WriteStart(navigationLink);
             }

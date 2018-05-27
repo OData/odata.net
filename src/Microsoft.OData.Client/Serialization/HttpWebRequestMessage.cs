@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Xml;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary> IODataRequestMessage interface implementation. </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Returning MemoryStream which doesn't require disposal")]
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="args">Arguments for creating the request message.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors", Justification = "SetHeader is a safe virtual method to be called from the constructor")]
-        public HttpWebRequestMessage(DataServiceClientRequestMessageArgs args) 
+        public HttpWebRequestMessage(DataServiceClientRequestMessageArgs args)
             : base(args.ActualMethod)
         {
             Util.CheckArgumentNull(args, "args");
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client
             this.requestUrl = args.RequestUri;
 
             this.httpRequest = HttpWebRequestMessage.CreateRequest(this.ActualMethod, this.Url, args);
-            
+
             // Now set the headers.
             foreach (var keyValue in args.Headers)
             {
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the
-        ///  Internet resource. 
+        ///  Internet resource.
         /// </summary>
         public override bool SendChunked
         {
@@ -259,7 +259,6 @@ namespace Microsoft.OData.Client
         /// <param name="callback">The System.AsyncCallback delegate.</param>
         /// <param name="state">The state object for this request.</param>
         /// <returns>An System.IAsyncResult that references the asynchronous request.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
         {
             // Currently this method cannot get called from SendingRequest2 event - But if we expose these
@@ -277,7 +276,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="asyncResult">The pending request for a stream.</param>
         /// <returns>A System.IO.Stream to use to write request data.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override Stream EndGetRequestStream(IAsyncResult asyncResult)
         {
             return this.httpRequest.EndGetRequestStream(asyncResult);
@@ -289,7 +287,6 @@ namespace Microsoft.OData.Client
         /// <param name="callback">The System.AsyncCallback delegate.</param>
         /// <param name="state">The state object for this request.</param>
         /// <returns>An System.IAsyncResult that references the asynchronous request for a response.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
         {
             return this.httpRequest.BeginGetResponse(callback, state);
@@ -300,7 +297,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="asyncResult">The pending request for a response.</param>
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
         {
             Debug.Assert(this.httpRequest != null, "this.httpRequest != null");
@@ -326,7 +322,6 @@ namespace Microsoft.OData.Client
         /// Returns a response from an Internet resource.
         /// </summary>
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0013:HttpWebResponseMustBeEncapsulated", Justification = "Particular Silverlight stacks use HttpWebResponse others use XmlHttp.")]
         public override IODataResponseMessage GetResponse()
         {
             try
@@ -418,7 +413,7 @@ namespace Microsoft.OData.Client
 
             bool headerSet = false;
 
-            // Weird behavior, looks like this won't work in silverlight on the .net portable libaries. 
+            // Weird behavior, looks like this won't work in silverlight on the .net portable libaries.
             // http://social.msdn.microsoft.com/Forums/en-US/netfxbcl/thread/7440fc9d-3490-4823-ac93-73706b535c6a/
             // http://connect.microsoft.com/VisualStudio/feedback/details/770104/cannot-set-useragent-of-a-httpwebrequest-in-portable-class-and-winrt-libraries
             // On Windows 8 store throws InvalidOperationException when setting the UserAgent
@@ -570,7 +565,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="webException">WebException instance.</param>
         /// <returns>an instance of DataServiceWebException that abstracts the WebException.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Caller will dispose the message later.")]
         private static DataServiceTransportException ConvertToDataServiceWebException(WebException webException)
         {
             HttpWebResponseMessage errorResponseMessage = null;

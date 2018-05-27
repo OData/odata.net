@@ -7,11 +7,10 @@
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.ExpandTests
 {
     #region namespaces
-    using System;
+
     using System.Runtime.CompilerServices;
-    using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion namespaces

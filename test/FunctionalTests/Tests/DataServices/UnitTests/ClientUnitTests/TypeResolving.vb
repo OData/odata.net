@@ -33,8 +33,10 @@ Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel
 
 Partial Public Class ClientModule
-
-    <TestClass()> Public Class TypeResolving
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
+    'Remove Atom
+    ' <TestClass()>
+    Public Class TypeResolving
 
 #Region "ClassInitialize, ClassCleanup, TestInitialize, TestCleanup"
         Private Shared web As TestWebRequest = Nothing
@@ -49,8 +51,8 @@ Partial Public Class ClientModule
             web.StartService()
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
         End Sub
 
         <ClassCleanup()> Public Shared Sub PerClassCleanup()
@@ -62,8 +64,8 @@ Partial Public Class ClientModule
         <TestInitialize()> Public Sub PerTestSetup()
             Client.TypeResolveContext.ResetData()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -307,10 +309,10 @@ Partial Public Class ClientModule
             ValidateETagUpdate(ca, entities.First().ETag, g, False, False, True, False)
         End Sub
 
-        Private Sub ValidateETagUpdate(ByVal ca As OtherClient.VBAllType, ByVal etag As String, _
-                                       ByVal g As System.Data.Linq.Binary, _
-                                       ByVal unchangedClientsMatchServer As Boolean, _
-                                       ByVal emodified As Boolean, ByVal binary As Boolean, _
+        Private Sub ValidateETagUpdate(ByVal ca As OtherClient.VBAllType, ByVal etag As String,
+                                       ByVal g As System.Data.Linq.Binary,
+                                       ByVal unchangedClientsMatchServer As Boolean,
+                                       ByVal emodified As Boolean, ByVal binary As Boolean,
                                        ByVal deletedClientsMatchServer As Boolean)
             Assert.IsTrue(ctx.Detach(ca))
             ca.PBinary = g
@@ -389,8 +391,8 @@ Partial Public Class ClientModule
                 Client.TypeResolveContext.ResetData()
 
                 ctx = New DataServiceContext(ctx.BaseUri)
-                ctx.EnableAtom = True
-                ctx.Format.UseAtom()
+                'ctx.EnableAtom = True
+                'ctx.Format.UseAtom()
                 ctx.MergeOption = merge
 
                 For i As Int32 = 0 To instancesToAddToFirstCollections
@@ -1269,8 +1271,8 @@ Partial Public Class ClientModule
             web.StartService()
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
         End Sub
 
         <ClassCleanup()> Public Shared Sub PerClassCleanup()
@@ -1282,35 +1284,14 @@ Partial Public Class ClientModule
         <TestInitialize()> Public Sub PerTestSetup()
             Client.TypeResolveContext.ResetData()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
             Me.ctx = Nothing
         End Sub
 #End Region
-
-        <Ignore()>
-        <TestCategory("Partition2")> <ExpectedException(GetType(InvalidOperationException))> _
-        <TestMethod()> Public Sub ZeroBatchQueryFailure()
-            Dim response = ctx.ExecuteBatch( _
-                ctx.CreateQuery(Of Client.VBAllType)("ListAllType"), _
-                ctx.CreateQuery(Of Client.VBSimpleType)("ListSimpleType"))
-
-            BatchZeroFailure(response)
-        End Sub
-
-        <Ignore()>
-        <TestCategory("Partition2")> <ExpectedException(GetType(InvalidOperationException))> _
-        <TestMethod()> Public Sub ZeroBatchAsyncQueryFailure()
-            Dim result = ctx.BeginExecuteBatch(Nothing, Nothing, _
-                ctx.CreateQuery(Of Client.VBAllType)("ListAllType"), _
-                ctx.CreateQuery(Of Client.VBSimpleType)("ListSimpleType"))
-            Dim response = ctx.EndExecuteBatch(result)
-
-            BatchZeroFailure(response)
-        End Sub
 
         Private Sub BatchZeroFailure(ByVal response As DataServiceResponse)
             For Each x As QueryOperationResponse In response
@@ -1324,25 +1305,10 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <Ignore()>
-        <TestCategory("Partition2")> <ExpectedException(GetType(DataServiceRequestException))> _
-        <TestMethod()> Public Sub ZeroBatchSaveFailure()
-            Dim j = New OtherClient.VBSimpleType_Foo()
-            j.PInt32 = 333
-            ctx.AddObject("ListSimpleType", j)
-
-            Try
-                Util.SaveChanges(ctx, SaveChangesOptions.BatchWithSingleChangeset)
-                Assert.Fail("Expected DataServiceRequestException")
-            Catch ex As DataServiceRequestException
-                Assert.IsInstanceOfType(ex.InnerException, GetType(DataServiceClientException))
-                Assert.IsTrue(ex.InnerException.Message.Contains("The batch request exceeds the maximum 0 operations per request."))
-                Throw
-            End Try
-        End Sub
     End Class
 
-    <TestClass()> _
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
+    ' <TestClass()>
     Public Class ProjectionRoundTrippingTests
 
 #Region "ClassInitialize, ClassCleanup, TestInitialize, TestCleanup"
@@ -1363,8 +1329,8 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -1372,7 +1338,7 @@ Partial Public Class ClientModule
         End Sub
 #End Region
 
-        <EntityType()> _
+        <EntityType()>
         Public Class NarrowCustomer
             Implements INotifyPropertyChanged
 
@@ -1415,7 +1381,7 @@ Partial Public Class ClientModule
             End Property
         End Class
 
-        <EntityType()> _
+        <EntityType()>
         Public Class NarrowCustomerWithOrders
             Inherits NarrowCustomer
 
@@ -1427,7 +1393,7 @@ Partial Public Class ClientModule
             End Property
         End Class
 
-        <EntityType()> _
+        <EntityType()>
         Public Class NarrowCustomerWithKeyedOrders
             Inherits NarrowCustomer
             Private m_orders As DataServiceCollection(Of NarrowOrdersWithKey) = New DataServiceCollection(Of NarrowOrdersWithKey)(Nothing, TrackingMode.None)
@@ -1438,7 +1404,7 @@ Partial Public Class ClientModule
             End Property
         End Class
 
-        <EntityType()> _
+        <EntityType()>
         Public Class NarrowOrders
             Implements INotifyPropertyChanged
 
@@ -1479,8 +1445,8 @@ Partial Public Class ClientModule
                 End Set
             End Property
         End Class
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedEntityWithNoKey()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedEntityWithNoKey()
             ProjectedCustomerRoundTripTest(Of NarrowCustomer)("/Customers?$select=Name")
 
             ' Attach
@@ -1491,11 +1457,12 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedEntityWithKey()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedEntityWithKey()
             ProjectedCustomerRoundTripTest(Of NarrowCustomerWithKey)("/Customers?$select=Name,ID")
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedRelatedLinksWithKeyTest()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedRelatedLinksWithKeyTest()
             Dim cust = ctx.Execute(Of NarrowCustomerWithKeyedOrders)(New Uri("/Customers?$select=Name&$expand=Orders($select=DollarAmount,ID)", UriKind.Relative)).FirstOrDefault()
             Assert.AreEqual(3, ctx.Entities.Count)
             Assert.AreEqual(2, ctx.Links.Count)
@@ -1513,12 +1480,12 @@ Partial Public Class ClientModule
             ' AddRelatedObject
             Dim newOrder = New NarrowOrdersWithKey()
             newOrder.ID = 90001
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             ctx.AddRelatedObject(cust, "Orders", newOrder)
             Assert.AreEqual(1, ctx.SaveChanges().Count())
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedAddRelatedNoKeyTest()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedAddRelatedNoKeyTest()
             Dim cust = ctx.Execute(Of NarrowCustomerWithOrders)(New Uri("/Customers?$select=Name&$expand=Orders($select=DollarAmount)", UriKind.Relative)).FirstOrDefault()
             ' Add related
             Dim newOrder = New NarrowOrders()
@@ -1531,8 +1498,8 @@ Partial Public Class ClientModule
                 TestUtil.AssertContains(innerEx.Message, "Entity with the same key already present. EntityType: 'Order'")
             End Try
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedRelatedLinksNoKeyTest()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedRelatedLinksNoKeyTest()
             Using CustomDataContext.CreateChangeScope()
                 Dim cust = ctx.Execute(Of NarrowCustomerWithOrders)(New Uri("/Customers?$select=Name&$expand=Orders($select=DollarAmount)", UriKind.Relative)).FirstOrDefault()
                 Assert.AreEqual(3, ctx.Entities.Count)
@@ -1548,9 +1515,9 @@ Partial Public Class ClientModule
                 End Try
 
                 ' load property - with ignore missing
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
                 ctx.LoadProperty(cust, "Orders")
-                ctx.IgnoreMissingProperties = False
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
 
                 ' load property with uri
                 Dim custDescriptor = ctx.GetEntityDescriptor(cust)
@@ -1558,8 +1525,8 @@ Partial Public Class ClientModule
                 ctx.LoadProperty(cust, "Orders", projectedOrdersUri)
             End Using
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedBindingTest()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedBindingTest()
             Using CustomDataContext.CreateChangeScope()
                 Dim q = ctx.Execute(Of NarrowCustomerWithOrders)(New Uri("/Customers?$select=Name&$expand=Orders($select=DollarAmount)", UriKind.Relative))
                 Dim custs = New DataServiceCollection(Of NarrowCustomerWithOrders)(ctx)
@@ -1569,17 +1536,17 @@ Partial Public Class ClientModule
                 custs(0).Name = "New Cust"
                 custs.Remove(custs(1))
                 ctx.ResolveName = AddressOf ResolveNameFromType
-                ctx.IgnoreMissingProperties = True
-                
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
+
                 Try
                     Assert.AreEqual(2, ctx.SaveChanges().Count())
                 Finally
-                    ctx.IgnoreMissingProperties = False
+                    ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
                 End Try
             End Using
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedBindingNestedTrackingTest()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedBindingNestedTrackingTest()
             Using CustomDataContext.CreateChangeScope()
                 Dim q = ctx.Execute(Of NarrowCustomerWithKeyedOrders)(New Uri("/Customers?$select=Name&$expand=Orders($select=DollarAmount,ID)", UriKind.Relative))
                 Dim custs = New DataServiceCollection(Of NarrowCustomerWithKeyedOrders)(ctx)
@@ -1598,17 +1565,17 @@ Partial Public Class ClientModule
                 newOrder.ID = 90001
                 newOrder.DollarAmount = 20
                 cust.Orders.Add(newOrder)
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
                 Assert.AreEqual(1, ctx.SaveChanges().Count())
-                ctx.IgnoreMissingProperties = False
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
 
                 ' delete
                 cust.Orders.Remove(newOrder)
                 Assert.AreEqual(1, ctx.SaveChanges().Count())
             End Using
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedCodeGenResolverSequenceTest()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub ProjectedCodeGenResolverSequenceTest()
             Using CustomDataContext.CreateChangeScope()
                 Dim q = ctx.Execute(Of NarrowCustomerWithOrders)(New Uri("/Customers?$select=Name", UriKind.Relative))
                 Dim custs = New DataServiceCollection(Of NarrowCustomerWithOrders)(ctx)
@@ -1620,8 +1587,8 @@ Partial Public Class ClientModule
                 custs(0).Name = "New Cust"
                 ' user supplied resolver - should be called
                 ctx.ResolveName = AddressOf ResolveNameFromType
-                ctx.IgnoreMissingProperties = True
-                
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
+
                 Try
                     Assert.AreEqual(1, ctx.SaveChanges().Count())
                     Assert.AreEqual(1, userResolverCallCount)
@@ -1634,12 +1601,12 @@ Partial Public Class ClientModule
                     Assert.AreEqual(0, codeGenResolverCallCount)
 
                 Finally
-                    ctx.IgnoreMissingProperties = False
+                    ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
                 End Try
             End Using
         End Sub
-
-        <TestCategory("Partition3")> <TestMethod()> Public Sub EntityDescriptorAPI()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition3")> <TestMethod()> Public Sub EntityDescriptorAPI()
             ' CRUD of entities and check the state of entity descriptor
 
             ' Create:
@@ -1681,8 +1648,8 @@ Partial Public Class ClientModule
 
             ' AttachTo
             ctx = New DataServiceContext(web.ServiceRoot)
-            ctx.EnableAtom = True
-            ctx.Format.UseAtom()
+            'ctx.EnableAtom = True
+            'ctx.Format.UseAtom()
 
             ctx.AttachTo("Customers", cust)
             ' check generated edit link
@@ -1723,9 +1690,9 @@ Partial Public Class ClientModule
                 ' restore deleted object
                 ctx.ResolveName = AddressOf ResolveNameFromType
                 ctx.AddObject("Customers", firstDescriptor.Entity)
-                ctx.IgnoreMissingProperties = True
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
                 Assert.AreEqual(1, ctx.SaveChanges().Count())
-                ctx.IgnoreMissingProperties = False
+                ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             End Using
         End Sub
 
@@ -1743,7 +1710,7 @@ Partial Public Class ClientModule
             End If
         End Function
 
-        <System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Service.Design", "1.0.0")> _
+        <System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Service.Design", "1.0.0")>
         Private Function CodeGenResolver(ByVal type As Type) As String
             codeGenResolverCallCount = codeGenResolverCallCount + 1
 
@@ -2043,7 +2010,7 @@ Namespace Client
 #End Region
 
 #Region "VBAllType"
-    <ETag("PBinary")> _
+    <ETag("PBinary")>
     Public Class VBAllType
         Implements System.IEquatable(Of VBAllType)
 
@@ -2406,12 +2373,12 @@ Namespace Client
 
 #Region "Equals"
         Public Overloads Function Equals(ByVal other As VBAllType) As Boolean Implements System.IEquatable(Of VBAllType).Equals
-            Return (Me.PInt16 = other.PInt16) And _
-                   (Me.PInt32 = other.PInt32) And _
-                   (Me.PInt64 = other.PInt64) And _
-                   (Me.PString = other.PString) And _
-                   (Me.PCharArray = other.PCharArray) And _
-                   (Me.PStruct.PInt32 = other.PStruct.PInt32) And _
+            Return (Me.PInt16 = other.PInt16) And
+                   (Me.PInt32 = other.PInt32) And
+                   (Me.PInt64 = other.PInt64) And
+                   (Me.PString = other.PString) And
+                   (Me.PCharArray = other.PCharArray) And
+                   (Me.PStruct.PInt32 = other.PStruct.PInt32) And
                    (Me.PStruct.PString = other.PStruct.PString)
         End Function
 #End Region
@@ -2494,7 +2461,7 @@ Namespace Client
 
 #Region "Equals"
         Public Overloads Function Equals(ByVal other As VBSimpleType) As Boolean Implements System.IEquatable(Of VBSimpleType).Equals
-            Return (Me.ID = other.ID) And _
+            Return (Me.ID = other.ID) And
                    (Me.PInt32 = other.PInt32)
         End Function
 #End Region
@@ -2563,11 +2530,11 @@ Namespace OtherClient
 
 #Region "Equals"
         Public Overloads Function Equals(ByVal other As VBAllType) As Boolean Implements System.IEquatable(Of VBAllType).Equals
-            Return (Me.PInt16 = other.PInt16) And _
-                   (Me.PInt32 = other.PInt32) And _
-                   (Me.PInt64 = other.PInt64) And _
-                   (Me.PString Is other.PString) And _
-                   (Me.PStruct.PInt32 = other.PStruct.PInt32) And _
+            Return (Me.PInt16 = other.PInt16) And
+                   (Me.PInt32 = other.PInt32) And
+                   (Me.PInt64 = other.PInt64) And
+                   (Me.PString Is other.PString) And
+                   (Me.PStruct.PInt32 = other.PStruct.PInt32) And
                    (Me.PStruct.PString Is other.PStruct.PString)
         End Function
 #End Region
@@ -2954,7 +2921,7 @@ Namespace OtherClient
 
 #Region "Equals"
         Public Overloads Function Equals(ByVal other As VBSimpleType_Foo) As Boolean Implements System.IEquatable(Of VBSimpleType_Foo).Equals
-            Return (Me.ID = other.ID) And _
+            Return (Me.ID = other.ID) And
                    (Me.PInt32 = other.PInt32)
         End Function
 #End Region

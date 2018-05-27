@@ -6,57 +6,45 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Metadata;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
+namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 {
     public class KeyAsSegmentTemplateIntegrationTests
     {
-        private const string UrlUsingKeyAsSegmentConvention = "http://temp.org/FakeSet/1";
+        private const string UrlUsingSlashAsKeyDelimiter = "http://temp.org/FakeSet/1";
 
-        private const string UrlUsingDefaultConvention = "http://temp.org/FakeSet(1)";
+        private const string UrlUsingParenthesesAsKeyDelimiter = "http://temp.org/FakeSet(1)";
 
         [Fact]
-        public void ComputedIdentityShouldUseCorrectUrlConvention()
+        public void ComputedIdentityShouldUseCorrectKeyDelimiter()
         {
-            var entry0 = CreateEntryWithKeyAsSegmentConvention(true, null);
-            entry0.Id.Should().Be(UrlUsingKeyAsSegmentConvention);
+            var entry1 = CreateEntryWithKeyAsSegmentConvention(false);
+            entry1.Id.Should().Be(UrlUsingParenthesesAsKeyDelimiter);
 
-            var entry1 = CreateEntryWithKeyAsSegmentConvention(true, false);
-            entry1.Id.Should().Be(UrlUsingDefaultConvention);
-
-            var entry2 = CreateEntryWithKeyAsSegmentConvention(false, true);
-            entry2.Id.Should().Be(UrlUsingKeyAsSegmentConvention);
+            var entry2 = CreateEntryWithKeyAsSegmentConvention(true);
+            entry2.Id.Should().Be(UrlUsingSlashAsKeyDelimiter);
         }
 
         [Fact]
-        public void ComputedEditLinkShouldUseCorrectUrlConvention()
+        public void ComputedEditLinkShouldUseCorrectKeyDelimiter()
         {
-            var entry0 = CreateEntryWithKeyAsSegmentConvention(true, null);
-            entry0.EditLink.Should().Be(UrlUsingKeyAsSegmentConvention);
+            var entry1 = CreateEntryWithKeyAsSegmentConvention(false);
+            entry1.EditLink.Should().Be(UrlUsingParenthesesAsKeyDelimiter);
 
-            var entry1 = CreateEntryWithKeyAsSegmentConvention(true, false);
-            entry1.EditLink.Should().Be(UrlUsingDefaultConvention);
-
-            var entry2 = CreateEntryWithKeyAsSegmentConvention(false, true);
-            entry2.EditLink.Should().Be(UrlUsingKeyAsSegmentConvention);
+            var entry2 = CreateEntryWithKeyAsSegmentConvention(true);
+            entry2.EditLink.Should().Be(UrlUsingSlashAsKeyDelimiter);
         }
 
-        private static ODataEntry CreateEntryWithKeyAsSegmentConvention(bool addAnnotation, bool? useKeyAsSegment)
+        private static ODataResource CreateEntryWithKeyAsSegmentConvention(bool useKeyAsSegment)
         {
             var model = new EdmModel();
             var container = new EdmEntityContainer("Fake", "Container");
             model.AddElement(container);
-            if (addAnnotation)
-            {
-                model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));                
-            }
-            
+
             EdmEntityType entityType = new EdmEntityType("Fake", "FakeType");
             entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             model.AddElement(entityType);
@@ -66,15 +54,15 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
             var metadataContext = new ODataMetadataContext(
                 true,
-                ODataReaderBehavior.DefaultBehavior.OperationsBoundToEntityTypeMustBeContainerQualified,
-                new EdmTypeReaderResolver(model, ODataReaderBehavior.DefaultBehavior),
+                null,
+                new EdmTypeReaderResolver(model, null),
                 model,
                 new Uri("http://temp.org/$metadata"),
                 null /*requestUri*/);
 
-            var thing = new ODataEntry {Properties = new[] {new ODataProperty {Name = "Id", Value = 1}}};
-            thing.SetAnnotation(new ODataTypeAnnotation(entitySet, entityType));
-            thing.MetadataBuilder = metadataContext.GetEntityMetadataBuilderForReader(new TestJsonLightReaderEntryState { Entry = thing, SelectedProperties = new SelectedPropertiesNode("*")}, useKeyAsSegment);
+            var thing = new ODataResource { Properties = new[] { new ODataProperty { Name = "Id", Value = 1 } } };
+            thing.TypeAnnotation = new ODataTypeAnnotation(entityType.FullTypeName());
+            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*"), NavigationSource = entitySet}, useKeyAsSegment);
             return thing;
         }
     }

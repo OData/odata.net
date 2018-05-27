@@ -7,11 +7,11 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightErrorDeserializerTests
     {
@@ -61,16 +61,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private ODataJsonLightInputContext GetInputContext(string payload)
         {
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = JsonLightUtils.JsonLightStreamingMediaType,
+                IsAsync = false,
+                Model = new EdmModel(),
+            };
+
             return new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                new MemoryStream(Encoding.UTF8.GetBytes(payload)),
-                JsonLightUtils.JsonLightStreamingMediaType,
-                Encoding.UTF8,
-                new ODataMessageReaderSettings(),
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                new EdmModel(),
-                /*urlResolver*/ null);
+                new StringReader(payload),
+                messageInfo,
+                new ODataMessageReaderSettings());
         }
     }
 }

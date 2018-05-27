@@ -4,7 +4,7 @@ $filter = round(UnitPrice) eq floor(UnitPrice) and round(UnitPrice) ne ceiling(U
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = SpecialProduct
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -21,11 +21,11 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Equal
 			SingleValueFunctionCallNode
 				Name = floor
@@ -39,11 +39,11 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	And
 			SingleValueFunctionCallNode
 				Name = round
@@ -57,11 +57,11 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		NotEqual
 			SingleValueFunctionCallNode
 				Name = ceiling
@@ -75,8 +75,8 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable

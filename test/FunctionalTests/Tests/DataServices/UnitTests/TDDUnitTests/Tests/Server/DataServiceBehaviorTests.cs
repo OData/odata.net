@@ -7,12 +7,12 @@
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using System;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Service.Configuration;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Client;
     using Microsoft.OData.Service;
-    
+    using Microsoft.OData.Service.Configuration;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class DataServiceBehaviorTests
     {
@@ -47,14 +47,14 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void GenerateKeyAsSegmentsShouldBeOffByDefault()
         {
-            new DataServiceBehavior().UrlConventions.Should().BeSameAs(DataServiceUrlConventions.Default);
+            new DataServiceBehavior().UrlKeyDelimiter.Should().BeSameAs(DataServiceUrlKeyDelimiter.Parentheses);
         }
 
         [TestMethod]
         public void UrlConventionShouldNotAllowNull()
         {
-            Action setToNull = () => new DataServiceBehavior().UrlConventions = null;
-            setToNull.ShouldThrow<ArgumentNullException>().WithMessage("UrlConventions", ComparisonMode.Substring);
+            Action setToNull = () => new DataServiceBehavior().UrlKeyDelimiter = null;
+            setToNull.ShouldThrow<ArgumentNullException>().WithMessage("UrlKeyDelimiter", ComparisonMode.Substring);
         }
 
         private class TestReplaceFeature : DataServicesReplaceFunctionFeature

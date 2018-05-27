@@ -408,7 +408,7 @@ namespace DataSpatialUnitTests.Utils
                 return true;
             }
 
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+            if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
                 var keyProperty = type.GetProperty("Key");
                 var valueProperty = type.GetProperty("Value");
@@ -453,7 +453,7 @@ namespace DataSpatialUnitTests.Utils
                 return builder.ToString();
             }
 
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
+            if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
             {
                 var keyProperty = type.GetProperty("Key");
                 var valueProperty = type.GetProperty("Value");

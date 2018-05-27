@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client
 #else
 namespace Microsoft.OData.Service
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Service
     /// </summary>
     internal static class UriUtil
     {
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>forward slash char array for triming uris</summary>
         internal static readonly char[] ForwardSlash = new char[1] { '/' };
 #endif
@@ -34,14 +34,13 @@ namespace Microsoft.OData.Service
         /// </summary>
         /// <param name="uri">The uri instance</param>
         /// <returns>The string representation of the uri</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of OriginalString is safe in this context")]
         internal static string UriToString(Uri uri)
         {
             Debug.Assert(uri != null, "uri != null");
             return uri.IsAbsoluteUri ? uri.AbsoluteUri : uri.OriginalString;
         }
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>new Uri(string uriString, UriKind uriKind)</summary>
         /// <param name="value">value</param>
         /// <param name="kind">kind</param>
@@ -106,8 +105,8 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Determines whether the <paramref name="current"/> Uri instance is a 
-        /// base of the specified Uri instance. 
+        /// Determines whether the <paramref name="current"/> Uri instance is a
+        /// base of the specified Uri instance.
         /// </summary>
         /// <param name="current">Candidate base URI.</param>
         /// <param name="uri">The specified Uri instance to test.</param>
@@ -124,7 +123,7 @@ namespace Microsoft.OData.Service
         }
 #endif
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
         /// <summary>
         /// Appends the absolute baseUri with the relativeUri to create a new absolute uri
         /// </summary>
@@ -174,7 +173,7 @@ namespace Microsoft.OData.Service
             builder.Port = 80;
             builder.Scheme = "http";
             return builder.Uri;
-        } 
+        }
 #endif
     }
 }

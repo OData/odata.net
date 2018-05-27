@@ -7,7 +7,7 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 {
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class BatchHandler : RequestHandler
     {
@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 var batchWriter = batchRequestMessageWriter.CreateODataBatchWriter();
                 batchWriter.WriteStartBatch();
 
-                using (var batchRequestMessageReader = this.CreateMessageReader(requestMessage))
+                using (var batchRequestMessageReader = this.CreateBatchMessageReader(requestMessage))
                 {
                     var batchReader = batchRequestMessageReader.CreateODataBatchReader();
 
@@ -79,5 +79,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             }
 
         }
+
+        private ODataMessageReader CreateBatchMessageReader(IODataRequestMessage message)
+        {
+            return new ODataMessageReader(
+                message,
+                new ODataMessageReaderSettings
+                {
+                    BaseUri = ServiceConstants.ServiceBaseUri
+                });
+        }
+
     }
 }

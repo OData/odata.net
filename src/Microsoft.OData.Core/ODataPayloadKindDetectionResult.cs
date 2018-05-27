@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     #endregion Namespaces
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>Gets the detected payload kind.</summary>
         /// <returns>The detected payload kind.</returns>
-        public ODataPayloadKind PayloadKind 
+        public ODataPayloadKind PayloadKind
         {
             get { return this.payloadKind; }
         }

@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Class to describe errors thrown by transport layer.

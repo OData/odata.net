@@ -4,16 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    using System;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -26,7 +22,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// The collection to be counted, could be any type of collection includes primitive type, enum type, complex type or entity type collection.
         /// </summary>
         private readonly CollectionNode source;
-        
+
         /// <summary>
         /// Constructs a new <see cref="CountNode"/>.
         /// </summary>
@@ -46,7 +42,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get { return this.source; }
         }
-        
+
         /// <summary>
         /// Gets the value type this node represents.
         /// </summary>
@@ -63,7 +59,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         {
             get
             {
-                return InternalQueryNodeKind.CollectionCount;
+                return InternalQueryNodeKind.Count;
             }
         }
 

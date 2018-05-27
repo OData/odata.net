@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core
         /// <summary>The maximum number of bytes that should be read from the message.</summary>
         private long maxReceivedMessageSize;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageQuotas" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageQuotas" /> class.</summary>
         public ODataMessageQuotas()
         {
             this.maxPartsPerBatch = ODataConstants.DefaultMaxPartsPerBatch;
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Core
             this.maxReceivedMessageSize = ODataConstants.DefaultMaxReadMessageSize;
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataMessageQuotas" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageQuotas" /> class.</summary>
         /// <param name="other">The instance to copy.</param>
         public ODataMessageQuotas(ODataMessageQuotas other)
         {

@@ -4,22 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.ComponentModel;
+using System.Xml;
+
 namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 {
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Text;
-    using System.Xml;
     using Microsoft.CSharp;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Design.T4;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Framework.Server;
@@ -33,19 +34,22 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     [DeploymentItem(@"VBDSCReferences\", "VBDSCReferences")]
     [DeploymentItem(@"VBReferences\", "VBReferences")]
 #if !WIN8 && !WINDOWSPHONE
-    [DeploymentItem(@"EntityFramework.5.0.0\lib\net40\EntityFramework.dll")]
+    [DeploymentItem(@"EntityFramework.dll")]
 #endif
     [TestClass]
     public class T4CodeGenerationTests
     {
         private const string NameSpacePrefixReference = "Microsoft.Test.OData.Services.TestServices.";
         private const string NameSpacePrefixCodeGenerationTests = "CodeGenerationTests.";
-        private const string T4Version = "2.4.0";
+        private const string T4Version = "#VersionNumber#";
+        private const string SystemIO = "System.IO.dll";
+        private const string SystemRuntime = "System.Runtime.dll";
+        private const string SystemXmlReaderWriter = "System.Xml.ReaderWriter.dll";
 
         private static readonly Dictionary<string, ServiceDescriptor> TestServiceDescriptors = new Dictionary<string, ServiceDescriptor>()
         {
             // CS + UseDataServiceCollection codegen results of the following services are referenced by client tests  
-            {NameSpacePrefixReference + "AstoriaDefaultServiceReference", ServiceDescriptors.AstoriaDefaultService}, 
+            {NameSpacePrefixReference + "AstoriaDefaultServiceReference", ServiceDescriptors.AstoriaDefaultService},
             {NameSpacePrefixReference + "ActionOverloadingServiceReference", ServiceDescriptors.ActionOverloadingService},
             {NameSpacePrefixReference + "KeyAsSegmentServiceReference", ServiceDescriptors.KeyAsSegmentService},
             {NameSpacePrefixReference + "ODataWriterDefaultServiceReference", ServiceDescriptors.ODataWriterService},
@@ -97,7 +101,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 
                             // To generate the updated client layer files, uncomment this, and then copy the resulting files under folder 
                             // CSDSCReferences & CSReferences & VBDSCReferences & VBReferences to the reference projects
-                            //this.GenerateClientCodeFile(edmx, path, descriptor.Key, languageOption, useDataServiceCollection);
+                            // this.GenerateClientCodeFile(edmx, path, descriptor.Key, languageOption, useDataServiceCollection);
                         }
                     }
                 }
@@ -191,13 +195,16 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                 WarningLevel = 4,
                 ReferencedAssemblies =
                 {
-                    typeof(DataServiceContext).Assembly.Location, 
-                    typeof(IEdmModel).Assembly.Location, 
+                    typeof(DataServiceContext).Assembly.Location,
+                    typeof(IEdmModel).Assembly.Location,
                     typeof(GeographyPoint).Assembly.Location,
-                    typeof(Uri).Assembly.Location, 
-                    typeof(IQueryable).Assembly.Location, 
-                    typeof(INotifyPropertyChanged).Assembly.Location, 
+                    typeof(Uri).Assembly.Location,
+                    typeof(IQueryable).Assembly.Location,
+                    typeof(INotifyPropertyChanged).Assembly.Location,
                     typeof(XmlReader).Assembly.Location,
+                    SystemIO,
+                    SystemRuntime,
+                    SystemXmlReaderWriter
                 }
             };
 

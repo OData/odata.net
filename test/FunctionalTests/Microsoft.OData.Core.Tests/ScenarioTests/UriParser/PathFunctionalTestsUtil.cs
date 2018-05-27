@@ -6,12 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// Class that contains common methods to test URI Path related Functional tests
@@ -31,7 +30,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
         internal static void RunParseErrorPath(string path, string expectedMessage)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldygook/" + path));
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldygook/" + path)) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
             Action parse = () => parser.ParsePath();
             parse.ShouldThrow<ODataException>().WithMessage(expectedMessage);
         }

@@ -13,9 +13,9 @@ namespace Microsoft.OData.Service.Serializers
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Service;
     using Microsoft.OData.Service.Providers;
     #endregion Namespaces
 
@@ -74,10 +74,10 @@ namespace Microsoft.OData.Service.Serializers
                     Debug.Assert(this.Service.OperationContext != null, "this.Service.OperationContext != null");
 
                     this.operationSerializer = new OperationSerializer(
-                        this.PayloadMetadataParameterInterpreter, 
-                        this.PayloadMetadataPropertyManager, 
-                        this.Service.ActionProvider.AdvertiseServiceAction, 
-                        this.Service.Provider.ContainerNamespace, 
+                        this.PayloadMetadataParameterInterpreter,
+                        this.PayloadMetadataPropertyManager,
+                        this.Service.ActionProvider.AdvertiseServiceAction,
+                        this.Service.Provider.ContainerNamespace,
                         this.contentFormat,
                         this.Service.OperationContext.MetadataUri);
                 }
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Service.Serializers
         {
             // Astoria-ODataLib-Integration: Astoria does not call flush before calling the IDataServiceHost.ProcessException method
             // If the request is for an entry/feed and the data source throws an error while these results are being enumerated and written,
-            // the server doesn't flush the writer's stream before it calls HandleException and starts writing out the error. 
+            // the server doesn't flush the writer's stream before it calls HandleException and starts writing out the error.
             // To handle this case, we'll make the EntitySerializer expose a method that calls Flush on the underlying ODL writer instance.
             if (this.dataServicesODataWriter != null)
             {
@@ -198,21 +198,13 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType, "expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType");
             this.IncrementSegmentResultCount();
 
-            ODataEntry entry = new ODataEntry();
+            ODataResource entry = new ODataResource();
             if (!resourceInstanceInFeed)
             {
-                entry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
+                entry.SetSerializationInfo(new ODataResourceSerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
             }
 
             string title = expectedType.Name;
-#pragma warning disable 618
-            if (this.contentFormat == ODataFormat.Atom)
-#pragma warning restore 618
-            {
-                AtomEntryMetadata entryAtom = new AtomEntryMetadata();
-                entryAtom.EditLink = new AtomLinkMetadata { Title = title };
-                entry.SetAnnotation(entryAtom);
-            }
 
             ResourceType actualResourceType = WebUtil.GetNonPrimitiveResourceType(this.Provider, element);
             if (actualResourceType.ResourceTypeKind != ResourceTypeKind.EntityType)
@@ -237,7 +229,7 @@ namespace Microsoft.OData.Service.Serializers
 
             // Write the etag property, if the type has etag properties
             this.PayloadMetadataPropertyManager.SetETag(entry, () => this.GetETagValue(element, actualResourceType));
-            
+
             IEnumerable<ProjectionNode> projectionNodes = this.GetProjections();
             if (projectionNodes != null)
             {
@@ -248,9 +240,6 @@ namespace Microsoft.OData.Service.Serializers
 
                 // Because we are going to enumerate through these multiple times, create a list.
                 projectionNodes = projectionNodes.ToList();
-
-                // And add the annotation to tell ODataLib which properties to write into content (the projections)
-                entry.SetAnnotation(new ProjectedPropertiesAnnotation(projectionNodes.Select(p => p.PropertyName)));
             }
 
             // Populate the advertised actions
@@ -269,6 +258,8 @@ namespace Microsoft.OData.Service.Serializers
             // And start the entry
             var args = new DataServiceODataWriterEntryArgs(entry, element, this.Service.OperationContext);
             this.dataServicesODataWriter.WriteStart(args);
+
+            this.WriteAllNestedComplexProperties(entityToSerialize, projectionNodes);
 
             // Now write all the navigation properties
             this.WriteNavigationProperties(expanded, entityToSerialize, resourceInstanceInFeed, projectionNodes);
@@ -320,13 +311,6 @@ namespace Microsoft.OData.Service.Serializers
 
                 // If the stream provider did not provider a read link, then we should use the edit link as the read link.
                 this.PayloadMetadataPropertyManager.SetReadLink(mediaResource, () => readStreamUri ?? lazyStreamEditLink.Value);
-#pragma warning disable 618
-                if (this.contentFormat == ODataFormat.Atom)
-#pragma warning restore 618
-                {
-                    AtomStreamReferenceMetadata mediaResourceAtom = new AtomStreamReferenceMetadata() { EditLink = new AtomLinkMetadata { Title = title } };
-                    mediaResource.SetAnnotation(mediaResourceAtom);
-                }
 
                 if (!string.IsNullOrEmpty(mediaETag))
                 {
@@ -350,7 +334,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
             Debug.Assert(namedStreamProperty != null, "namedStreamProperty != null");
             Debug.Assert(namedStreamProperty.IsOfKind(ResourcePropertyKind.Stream), "namedStreamProperty.IsOfKind(ResourcePropertyKind.Stream)");
-            
+
             string mediaETag;
             Uri readStreamUri;
             string mediaContentType;
@@ -402,22 +386,11 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType, "expectedType != null && expectedType.ResourceTypeKind == ResourceTypeKind.EntityType");
             Debug.Assert(!string.IsNullOrEmpty(title), "!string.IsNullOrEmpty(title)");
 
-            ODataFeed feed = new ODataFeed();
-            feed.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
+            ODataResourceSet feed = new ODataResourceSet();
+            feed.SetSerializationInfo(new ODataResourceSerializationInfo { NavigationSourceName = this.CurrentContainer.Name, NavigationSourceEntityTypeName = this.CurrentContainer.ResourceType.FullName, ExpectedTypeName = expectedType.FullName });
 
             // Write the other elements for the feed
             this.PayloadMetadataPropertyManager.SetId(feed, () => getAbsoluteUri());
-
-#pragma warning disable 618
-            if (this.contentFormat == ODataFormat.Atom)
-#pragma warning restore 618
-            {
-                // Create the atom feed metadata and set the self link and title value.
-                AtomFeedMetadata feedMetadata = new AtomFeedMetadata();
-                feed.SetAnnotation(feedMetadata);
-                feedMetadata.Title = new AtomTextConstruct { Text = title };
-                feedMetadata.SelfLink = new AtomLinkMetadata { Href = getRelativeUri(), Title = title };
-            }
 
             // support for $count
             // in ATOM we write it at the beginning (we always have)
@@ -500,8 +473,8 @@ namespace Microsoft.OData.Service.Serializers
             }
             finally
             {
-                // The matching call to RecurseLeave is in a try/finally block not because it's necessary in the 
-                // presence of an exception (progress will halt anyway), but because it's easier to maintain in the 
+                // The matching call to RecurseLeave is in a try/finally block not because it's necessary in the
+                // presence of an exception (progress will halt anyway), but because it's easier to maintain in the
                 // code in the presence of multiple exit points (returns).
                 this.RecurseLeave();
             }
@@ -514,11 +487,13 @@ namespace Microsoft.OData.Service.Serializers
         private IEnumerable<ODataProperty> GetAllEntityProperties(EntityToSerialize entityToSerialize)
         {
             Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
-            
+
             List<ODataProperty> properties = new List<ODataProperty>(entityToSerialize.ResourceType.Properties.Count);
             foreach (ResourceProperty property in this.Provider.GetResourceSerializableProperties(this.CurrentContainer, entityToSerialize.ResourceType))
             {
-                if (property.TypeKind != ResourceTypeKind.EntityType)
+                if (property.TypeKind != ResourceTypeKind.EntityType
+                    && property.TypeKind != ResourceTypeKind.ComplexType
+                    && !(property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType))
                 {
                     properties.Add(this.GetODataPropertyForEntityProperty(entityToSerialize, property));
                 }
@@ -562,7 +537,8 @@ namespace Microsoft.OData.Service.Serializers
                 var resourceProperty = projectionNode.Property;
                 if (resourceProperty != null)
                 {
-                    if (resourceProperty.TypeKind != ResourceTypeKind.EntityType)
+                    if (resourceProperty.TypeKind != ResourceTypeKind.EntityType && resourceProperty.TypeKind != ResourceTypeKind.ComplexType
+                        && !(resourceProperty.TypeKind == ResourceTypeKind.Collection && resourceProperty.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType))
                     {
                         properties.Add(this.GetODataPropertyForEntityProperty(entityToSerialize, resourceProperty));
                     }
@@ -576,6 +552,24 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             return properties;
+        }
+
+        private void WriteAllNestedComplexProperties(EntityToSerialize entityToSerialize, IEnumerable<ProjectionNode> projectionNodesForCurrentResourceType)
+        {
+            Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
+
+            var properties = projectionNodesForCurrentResourceType == null
+                ? this.Provider.GetResourceSerializableProperties(this.CurrentContainer, entityToSerialize.ResourceType)
+                : projectionNodesForCurrentResourceType.Select(p=>p.Property);
+
+            foreach (ResourceProperty property in properties)
+            {
+                if (property != null && (property.TypeKind == ResourceTypeKind.ComplexType
+                    || (property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)))
+                {
+                    ODataWriterHelper.WriteNestedResourceInfo(this.dataServicesODataWriter.InnerWriter, this.GetODataNestedResourceForComplexProperty(entityToSerialize, property));
+                }
+            }
         }
 
         /// <summary>Writes all the navigation properties of the specified entity type.</summary>
@@ -602,7 +596,7 @@ namespace Microsoft.OData.Service.Serializers
             foreach (ResourceProperty property in navProperties)
             {
                 ResourcePropertyInfo navProperty = this.GetNavigationPropertyInfo(expanded, entityToSerialize.Entity, entityToSerialize.ResourceType, property);
-                ODataNavigationLink navLink = this.GetNavigationLink(entityToSerialize, navProperty.Property);
+                ODataNestedResourceInfo navLink = this.GetNavigationLink(entityToSerialize, navProperty.Property);
 
                 // WCF Data Services show performance degradation with JsonLight when entities have > 25 Navgations on writing entries
                 // DEVNOTE: for performance reasons, if the link has no content due to the metadata level, and is not expanded
@@ -612,7 +606,7 @@ namespace Microsoft.OData.Service.Serializers
                     continue;
                 }
 
-                var linkArgs = new DataServiceODataWriterNavigationLinkArgs(navLink, this.Service.OperationContext);
+                var linkArgs = new DataServiceODataWriterNestedResourceInfoArgs(navLink, this.Service.OperationContext);
                 this.dataServicesODataWriter.WriteStart(linkArgs);
 
                 if (navProperty.Expand)
@@ -675,13 +669,13 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
         /// <param name="navigationProperty">The metadata for the navigation property.</param>
         /// <returns>The navigation link for the given property.</returns>
-        private ODataNavigationLink GetNavigationLink(EntityToSerialize entityToSerialize, ResourceProperty navigationProperty)
+        private ODataNestedResourceInfo GetNavigationLink(EntityToSerialize entityToSerialize, ResourceProperty navigationProperty)
         {
             Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
 
             string navLinkName = navigationProperty.Name;
-            ODataNavigationLink navLink = new ODataNavigationLink
+            ODataNestedResourceInfo navLink = new ODataNestedResourceInfo
             {
                 Name = navLinkName,
                 IsCollection = navigationProperty.Kind == ResourcePropertyKind.ResourceSetReference
@@ -733,6 +727,33 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             return odataProperty;
+        }
+
+        /// <summary>Gets ODataProperty for the given <paramref name="property"/>.</summary>
+        /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
+        /// <param name="property">ResourceProperty instance in question.</param>
+        /// <returns>A instance of ODataProperty for the given <paramref name="property"/>.</returns>
+        private ODataNestedResourceInfoWrapper GetODataNestedResourceForComplexProperty(EntityToSerialize entityToSerialize, ResourceProperty property)
+        {
+            Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
+            Debug.Assert(property != null && entityToSerialize.ResourceType.Properties.Contains(property), "property != null && currentResourceType.Properties.Contains(property)");
+
+            ODataItemWrapper odataPropertyResourceWrapper;
+            object propertyValue = WebUtil.GetPropertyValue(this.Provider, entityToSerialize.Entity, entityToSerialize.ResourceType, property, null);
+            odataPropertyResourceWrapper = this.GetPropertyResourceOrResourceSet(property.Name, property.ResourceType, propertyValue, false /*openProperty*/);
+
+            ODataNestedResourceInfo odataNestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = property.Name,
+                IsCollection = property.Kind == ResourcePropertyKind.Collection,
+            };
+            odataNestedInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
+
+            return new ODataNestedResourceInfoWrapper()
+            {
+                NestedResourceInfo = odataNestedInfo,
+                NestedResourceOrResourceSet = odataPropertyResourceWrapper
+            };
         }
 
         /// <summary>
@@ -798,7 +819,7 @@ namespace Microsoft.OData.Service.Serializers
             List<OperationWrapper> serviceOperationWrapperList;
             if (expandedProjectionNode == null || expandedProjectionNode.ProjectAllOperations)
             {
-                // Note that if the service does not implement IDataServiceActionProvider and the MaxProtocolVersion < V3, 
+                // Note that if the service does not implement IDataServiceActionProvider and the MaxProtocolVersion < V3,
                 // GetServiceActionsByBindingParameterType() would simply return an empty ServiceOperationWrapper collection.
                 serviceOperationWrapperList = this.Service.ActionProvider.GetServiceActionsByBindingParameterType(entityToSerialize.ResourceType);
             }
@@ -837,8 +858,8 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             ODataWriter odataWriter = forFeed
-                ? this.messageWriter.CreateODataFeedWriter(entitySet, entityType)
-                : this.messageWriter.CreateODataEntryWriter(entitySet, entityType);
+                ? this.messageWriter.CreateODataResourceSetWriter(entitySet, entityType)
+                : this.messageWriter.CreateODataResourceWriter(entitySet, entityType);
 
             return this.Service.CreateODataWriterWrapper(odataWriter);
         }

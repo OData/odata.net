@@ -3,6 +3,7 @@
   <PropertyGroup>
     <ProjectGuid>{DB742DF2-9873-44CF-8439-DA5ACFF69A46}</ProjectGuid>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.Taupo.OData.Writer.Tests</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.OData.Writer.Tests</AssemblyName>
@@ -62,18 +63,6 @@
   </ItemGroup>
   <!-- Source files -->
   <ItemGroup>
-    <Compile Include="Atom\AtomResourceCollectionMetadataTests.cs" />
-    <Compile Include="Atom\AtomCategoryMetadataTests.cs" />
-    <Compile Include="Atom\AtomEntryMetadataTests.cs" />
-    <Compile Include="Atom\AtomFeedMetadataTests.cs" />
-    <Compile Include="Atom\AtomGeneratorMetadataTests.cs" />
-    <Compile Include="Atom\AtomLinkMetadataTests.cs" />
-    <Compile Include="Atom\AtomPersonMetadataTests.cs" />
-    <Compile Include="Atom\AtomTextConstructMetadataTests.cs" />
-    <Compile Include="Atom\AtomXmlTests.cs" />
-    <Compile Include="Atom\AtomCollectionWriterTests.cs" />
-    <Compile Include="Atom\WriterEntryAtomTests.cs" />
-    <Compile Include="Atom\WriterFeedAtomTests.cs" />
     <Compile Include="Atom\WriterMetadataDocumentAtomTests.cs" />
     <Compile Include="BatchWriter\BatchPayloadWriterTestDescriptor.cs" />
     <Compile Include="BatchWriter\BatchWriterStatesTests.cs" />
@@ -151,7 +140,6 @@
     <Compile Include="Common\ODataPayloadKindUtils.cs" />
     <Compile Include="Json\JsonUtils.cs" />
     <Compile Include="ODataWriterTestsTestModule.cs" />
-    <Compile Include="Writer\WriterProjectedPropertyTests.cs" />
     <Compile Include="Writer\MessageWriterTests.cs" />
     <Compile Include="Writer\UriHandlingTests.cs" />
     <Compile Include="Writer\WriterActionAndFunctionTests.cs" />
@@ -182,30 +170,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Atom\AtomCategoryMetadataTests.CategoryMetadataOnWorkspaceCollectionCategoriesWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomCollectionWriterTests.CollectionNoErroronEmptyCollectionnTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomResourceCollectionMetadataTests.AtomCategoriesMetadataTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomResourceCollectionMetadataTests.AtomResourceCollectionMetadataTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomTextConstructMetadataTests.AtomTextConstructMetadataOnODataWorkspaceWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomXmlTests.RootElementNamespaces.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomXmlTests.RootElementNamespaces_CustomDataNamespace.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomXmlTests.XmlBaseOnRootElement.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="CollectionWriter\CollectionWriterTests.CollectionPayloadTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -213,6 +177,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CollectionWriter\CollectionWriterTests.HomogeneousCollectionWriterWithoutMetadataTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="JsonLight\JsonLightEntryWriterTests.OpenPropertiesInEntryTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteFloatingPointValue.approved.txt">
@@ -224,10 +191,10 @@
     <Content Include="JsonLight\JsonLightPropertyWriterTests.TopLevelSpatialPropertiesTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="JsonLight\JsonLightPropertyWriterTests.WritePropertyWithoutOwningType.approved.txt">
+    <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteUntypedValueTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteUntypedValueTest.approved.txt">
+    <Content Include="ParameterWriter\ParameterWriterTests.ParameterPayloadTest_withoutModel.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterContentTypeTests.AppJsonContentComplexTypeVersioningTest.approved.txt">
@@ -251,64 +218,10 @@
     <Content Include="Writer\WriterEntryTests.NullPropertyNameTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Atom\AtomCategoryMetadataTests.CategoryMetadataOnEntryWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomEntryMetadataTests.EntryMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomFeedMetadataTests.DeltaLinkInFeedMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomFeedMetadataTests.FeedMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomGeneratorMetadataTests.GeneratorMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomLinkMetadataTests.AssociationLinkMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomLinkMetadataTests.DefaultStreamEditLinkMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomLinkMetadataTests.EntryReadAndEditLinkMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomLinkMetadataTests.NamedStreamReadAndEditLinkMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomLinkMetadataTests.NavigationLinkMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomPersonMetadataTests.PersonMetadataWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomTextConstructMetadataTests.AtomTextConstructMetadataOnODataItemWriterTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomXmlTests.RootElementNamespaces.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomXmlTests.RootElementNamespaces_CustomDataNamespace.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\AtomXmlTests.XmlBaseOnRootElement.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\WriterEntryAtomTests.PayloadOrderTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\WriterFeedAtomTests.FeedIdTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Atom\WriterFeedAtomTests.PayloadOrderTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="JsonLight\JsonLightEntryWriterTests.ActionAndFunctionPayloadOrderTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="JsonLight\JsonLightEntryWriterTests.OpenPropertiesInEntryTest.approved.txt">
+    <Content Include="JsonLight\JsonLightEntryWriterTests.TopLevelOpenComplexProperties.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="JsonLight\JsonLightEntryWriterTests.PayloadOrderTest.approved.txt">
@@ -482,6 +395,9 @@
     <Content Include="Writer\WriterPropertyTests.CollectionValueSerializationTypeNameAnnotationTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Writer\WriterPropertyTests.ComplexPropertyTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Writer\WriterPropertyTests.ComplexValueSerializationTypeNameAnnotationTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -498,6 +414,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterPropertyTests.PrimitiveValueSerializationTypeNameAnnotationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.ComplexCollectionPropertyTests.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterPropertyTests.PropertyTests.approved.txt">
@@ -534,9 +453,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterNavigationLinkTests.NavigationLinksInResponse.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Writer\WriterProjectedPropertyTests.ProjectedPropertiesTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterPropertyTests.NonNullablePropertyOnEntryTest.approved.txt">

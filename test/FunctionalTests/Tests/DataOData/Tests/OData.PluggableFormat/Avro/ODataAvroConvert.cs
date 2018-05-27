@@ -12,14 +12,14 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using System.Linq;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Schema;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     internal static class ODataAvroConvert
     {
         public static object FromODataObject(object value, Schema schema)
         {
-            var complexValue = value as ODataComplexValue;
-            if (complexValue != null)
+            var entry = value as ODataResource;
+            if (entry != null)
             {
                 RecordSchema recordSchema = schema as RecordSchema;
 
@@ -37,29 +37,10 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 }
 
                 var record = new AvroRecord(recordSchema);
-                foreach (var prop in complexValue.Properties)
-                {
-                    if (prop.Value is ODataComplexValue)
-                    {
-                        continue;
-                    }
-
-                    record[prop.Name] = prop.Value;
-                }
-
-                return record;
-            }
-
-            var entry = value as ODataEntry;
-            if (entry != null)
-            {
-                var record = new AvroRecord(schema);
                 foreach (var property in entry.Properties)
                 {
-                    var recordSchema = (RecordSchema)schema;
                     RecordField field;
                     recordSchema.TryGetField(property.Name, out field);
-
                     record[property.Name] = FromODataObject(property.Value, field != null ? field.TypeSchema : null);
                 }
 
@@ -89,22 +70,34 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             return value;
         }
 
-        public static ODataEntry ToODataEntry(AvroRecord record)
+        public static object UpdateNestedInfoFromODataObject(object currentObj, ODataResource entry, ODataNestedResourceInfo property, Schema schema)
         {
-            return new ODataEntry
+            var record = currentObj as AvroRecord;
+            if (record != null)
+            {
+                var recordSchema = (RecordSchema)schema;
+                RecordField field;
+                recordSchema.TryGetField(property.Name, out field);
+
+                record[property.Name] = FromODataObject(entry, field != null ? field.TypeSchema : null);
+            }
+
+            return record;
+        }
+
+        public static ODataResource ToODataEntry(AvroRecord record)
+        {
+            return new ODataResource
             {
                 TypeName = record.Schema.FullName,
                 Properties = GetProperties(record)
             };
         }
 
-        public static ODataComplexValue ToODataComplexValue(AvroRecord record)
+        public static ODataResource ToODataEntry(AvroRecord parentRecord, string fieldName)
         {
-            return new ODataComplexValue
-            {
-                TypeName = record.Schema.FullName,
-                Properties = GetProperties(record)
-            };
+            var subRecord = parentRecord[fieldName] as AvroRecord;
+            return ToODataEntry(subRecord);
         }
 
         public static ODataValue ToODataValue(object obj)
@@ -112,7 +105,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             var array = obj as Array;
             if (array != null && !(array is byte[]))
             {
-                return new ODataCollectionValue { Items = array };
+                return new ODataCollectionValue { Items = array.Cast<object>() };
             }
 
             return new ODataPrimitiveValue(obj);
@@ -121,14 +114,24 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
         private static IEnumerable<ODataProperty> GetProperties(AvroRecord record)
         {
             return record.Schema.Fields
+                .Where(field => !(record[field.Name] is AvroRecord))
                 .Select(field => new ODataProperty
                 {
                     Name = field.Name,
-                    Value = record[field.Name] is AvroRecord
-                        ? ToODataComplexValue((AvroRecord)record[field.Name])
-                        : ToODataValue(record[field.Name]),
+                    Value = ToODataValue(record[field.Name]),
                 });
+        }
 
+        public static ODataNestedResourceInfo GetNestedResourceInfo(AvroRecord record)
+        {
+            return record.Schema.Fields
+                .Where(field => (record[field.Name] is AvroRecord))
+                .Select(field => new ODataNestedResourceInfo
+                {
+                    Name = field.Name,
+                    IsCollection = false
+                })
+                .SingleOrDefault();
         }
     }
 }

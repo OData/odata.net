@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
@@ -133,18 +133,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// Creates an <see cref="ODataReader" /> to read a feed.
         /// </summary>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataFeedReader()
+        public ODataReader CreateODataResourceSetReader()
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataFeedReader(), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceSetReader(), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataFeedReaderAsync().ContinueWith(
+                return this.messageReader.CreateODataResourceSetReaderAsync().ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -157,18 +157,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the feed.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataFeedReader(IEdmEntityType expectedBaseEntityType)
+        public ODataReader CreateODataResourceSetReader(IEdmStructuredType expectedBaseEntityType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataFeedReader(expectedBaseEntityType), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceSetReader(expectedBaseEntityType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataFeedReaderAsync(expectedBaseEntityType).ContinueWith(
+                return this.messageReader.CreateODataResourceSetReaderAsync(expectedBaseEntityType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -182,18 +182,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entities in the feed.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataFeedReader(IEdmEntitySet entitySet, IEdmEntityType expectedBaseEntityType)
+        public ODataReader CreateODataResourceSetReader(IEdmEntitySet entitySet, IEdmStructuredType expectedBaseEntityType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataFeedReader(entitySet, expectedBaseEntityType), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceSetReader(entitySet, expectedBaseEntityType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataFeedReaderAsync(entitySet, expectedBaseEntityType).ContinueWith(
+                return this.messageReader.CreateODataResourceSetReaderAsync(entitySet, expectedBaseEntityType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -205,18 +205,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataEntryReader()
+        public ODataReader CreateODataResourceReader()
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataEntryReader(), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceReader(), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataEntryReaderAsync().ContinueWith(
+                return this.messageReader.CreateODataResourceReaderAsync().ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -227,20 +227,20 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="expectedResourceType">The expected entity type for the entry to be read.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataEntryReader(IEdmEntityType expectedEntityType)
+        public ODataReader CreateODataResourceReader(IEdmStructuredType expectedResourceType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataEntryReader(expectedEntityType), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceReader(expectedResourceType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataEntryReaderAsync(expectedEntityType).ContinueWith(
+                return this.messageReader.CreateODataResourceReaderAsync(expectedResourceType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -252,20 +252,20 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// Creates an <see cref="ODataReader" /> to read an entry.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="expectedResourceType">The expected entity type for the entry to be read.</param>
         /// <returns>The created reader.</returns>
-        public ODataReader CreateODataEntryReader(IEdmEntitySet entitySet, IEdmEntityType expectedEntityType)
+        public ODataReader CreateODataResourceReader(IEdmEntitySet entitySet, IEdmStructuredType expectedResourceType)
         {
             if (this.testConfiguration.Synchronous)
             {
-                return new ODataReaderTestWrapper(this.messageReader.CreateODataEntryReader(entitySet, expectedEntityType), this.testConfiguration);
+                return new ODataReaderTestWrapper(this.messageReader.CreateODataResourceReader(entitySet, expectedResourceType), this.testConfiguration);
             }
             else
             {
 #if SILVERLIGHT || WINDOWS_PHONE
                 throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
 #else
-                return this.messageReader.CreateODataEntryReaderAsync(entitySet, expectedEntityType).ContinueWith(
+                return this.messageReader.CreateODataResourceReaderAsync(entitySet, expectedResourceType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
@@ -603,15 +603,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             this.messageReader.Dispose();
             if (this.message != null && this.message.TestStream != null && this.message.StreamRetrieved)
             {
-                bool disableMessageStreamDisposal = testConfiguration.MessageReaderSettings.DisableMessageStreamDisposal;
+                bool enableMessageStreamDisposal = testConfiguration.MessageReaderSettings.EnableMessageStreamDisposal;
                 TestStream messageStream = this.message.TestStream;
-                if (disableMessageStreamDisposal && messageStream != null)
+                if (enableMessageStreamDisposal == false && messageStream != null)
                 {
-                    ExceptionUtilities.Assert(messageStream.DisposeCount == 0, "Dispose method on the stream must not be called when DisableMessageStreamDisposal is set to true.");
+                    ExceptionUtilities.Assert(messageStream.DisposeCount == 0, "Dispose method on the stream must not be called when EnableMessageStreamDisposal is set to false.");
                 }
                 else
                 {
-                    ExceptionUtilities.Assert(messageStream.DisposeCount == 1, "Dispose method on the stream must be called exactly once when DisableMessageStreamDisposal is set to false.");
+                    ExceptionUtilities.Assert(messageStream.DisposeCount == 1, "Dispose method on the stream must be called exactly once when EnableMessageStreamDisposal is set to true.");
                 }
             }
         }

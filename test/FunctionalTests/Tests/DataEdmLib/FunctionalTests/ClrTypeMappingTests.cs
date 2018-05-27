@@ -10,22 +10,12 @@ namespace EdmLibTests.FunctionalTests
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.EdmToClrConversion;
-    using Microsoft.OData.Edm.Evaluation;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     [TestClass]
     public class ClrTypeMappingTests : EdmLibTestCaseBase
@@ -45,66 +35,66 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationClassTypeBasicTest()
+        public void ClrTypeMappingVocabularyAnnotationClassTypeBasicTest()
         {
             this.InitializeOperationDefinitions();
 
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
 
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(),
                    new Coordination() { X = 10, Y = 20 });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single(),
                    new Person() { Id = 10, FirstName = "Young", LastName = "Hong" });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(),
                    new DisplayCoordination() { X = 10, Y = 20, Origin = new Coordination() { X = 10, Y = 20 } });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(),
                    new Coordination() { X = 10, Y = 20 });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(),
                    (IEnumerable<Coordination>)new List<Coordination>() { new Coordination() { X = 10, Y = 20 }, new Coordination() { X = 30, Y = 40 } });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "LabledMultiMonitors").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "LabledMultiMonitors").Single(),
                    (IEnumerable<Coordination>)new List<Coordination>() { new Coordination() { X = 10, Y = 20 } });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "EmptyCollection").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "EmptyCollection").Single(),
                    (IEnumerable<Coordination>)new List<Coordination>());
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationConvertBetweenCollectionValueAndSingularObject()
+        public void ClrTypeMappingVocabularyAnnotationConvertBetweenCollectionValueAndSingularObject()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
             Action action = null;
 
             action = () =>
-                 this.ValidateClrObjectConverter<IEnumerable<Coordination>>(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(), null);
+                 this.ValidateClrObjectConverter<IEnumerable<Coordination>>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(), null);
             this.VerifyThrowsException(typeof(InvalidCastException), action);
 
             action = () =>
-                this.ValidateClrObjectConverter<Coordination>(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(), null);
+                this.ValidateClrObjectConverter<Coordination>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(), null);
             this.VerifyThrowsException(typeof(InvalidCastException), action);
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationConvertBetweenCollectionValueToCollectionType()
+        public void ClrTypeMappingVocabularyAnnotationConvertBetweenCollectionValueToCollectionType()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
             this.VerifyThrowsException
                             (
-                                typeof(InvalidCastException), 
-                                () => 
+                                typeof(InvalidCastException),
+                                () =>
                                     this.ValidateClrObjectConverter
                                                 (
-                                                    this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(), 
-                                                    new List<Coordination>() 
-                                                        { 
-                                                            new Coordination() { X = 10, Y = 20 }, 
-                                                            new Coordination() { X = 30, Y = 40 } 
+                                                    this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(),
+                                                    new List<Coordination>()
+                                                        {
+                                                            new Coordination() { X = 10, Y = 20 },
+                                                            new Coordination() { X = 30, Y = 40 }
                                                         }
-                                                 ), 
+                                                 ),
                                 "EdmToClr_CannotConvertEdmCollectionValueToClrType"
                             );
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationRecordValueTypeTest()
+        public void ClrTypeMappingVocabularyAnnotationRecordValueTypeTest()
         {
             var csdls = new List<XElement>();
             csdls.Add(XElement.Parse(
@@ -149,7 +139,7 @@ namespace EdmLibTests.FunctionalTests
                         new EdmPropertyValue("LastName", new EdmStringConstant("Nobody"))
                     });
 
-           
+
             var edmValue = edmModel.GetTermValue(dummyPerson, "NS1.InspectedBy", new EdmToClrEvaluator(null));
             Assert.AreEqual(edmValue.Type.Definition, differentPerson, "The InspectedBy annotation's type should be same as type defined in the term.");
         }
@@ -158,8 +148,8 @@ namespace EdmLibTests.FunctionalTests
         public void ClrTypeMappingPrimitiveTypeToObject()
         {
             var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.PrimitiveTypeBasicTest());
-            var annotation = edmModel.FindVocabularyAnnotations(edmModel.FindType("NS1.Person")).Where(n => n.Term == edmModel.FindValueTerm("NS1.Title1")).Single();
-            var edmValue = new EdmToClrEvaluator(null).Evaluate(((IEdmValueAnnotation)annotation).Value);
+            var annotation = edmModel.FindVocabularyAnnotations(edmModel.FindType("NS1.Person")).Where(n => n.Term == edmModel.FindTerm("NS1.Title1")).Single();
+            var edmValue = new EdmToClrEvaluator(null).Evaluate(annotation.Value);
 
             this.VerifyThrowsException(typeof(InvalidCastException), () => new EdmToClrConverter().AsClrValue<Coordination>(edmValue));
         }
@@ -169,22 +159,22 @@ namespace EdmLibTests.FunctionalTests
         {
             this.InitializeOperationDefinitions();
 
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
 
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(),
                    new Coordination2() { X = 10, Y = 20 });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single(),
                new Person2() { Id = 10, FirstName = "Young", LastName = "Hong" });
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "AdoptPet").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "AdoptPet").Single(),
                new Pet() { Name = "Jacquine", Breed = "Bull Dog", Age = 3 });
         }
 
         [TestMethod]
         public void ClrTypeMappingPrivateConstructor()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
 
             this.VerifyThrowsException(typeof(MissingMethodException), () => ConvertToClrObject<Person3>(valueAnnotation));
 
@@ -196,9 +186,9 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ClrTypeMappingPrivateProperties()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation, new Person6());
 
@@ -214,9 +204,9 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ClrTypeMappingGenerics()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation, new Person9<string>() { Id = 10, FirstName = "Young", LastName = "Hong" });
         }
@@ -226,9 +216,9 @@ namespace EdmLibTests.FunctionalTests
         {
             this.InitializeOperationDefinitions();
 
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation, new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } });
             this.ValidateClrObjectConverter(valueAnnotation, new Display1() { X = 10, Y = 20 });
@@ -242,17 +232,17 @@ namespace EdmLibTests.FunctionalTests
 
             Func<string, IEdmIntegerConstantExpression> GetIntegerExpression = (termName) =>
             {
-                var valueAnnotation = annotations.Single(n => n.Term.Name == termName) as IEdmValueAnnotation;
+                var valueAnnotation = annotations.Single(n => n.Term.Name == termName);
                 return (IEdmIntegerConstantExpression)valueAnnotation.Value;
             };
             Func<string, IEdmFloatingConstantExpression> GetFloatExpression = (termName) =>
             {
-                var valueAnnotation = annotations.Single(n => n.Term.Name == termName) as IEdmValueAnnotation;
+                var valueAnnotation = annotations.Single(n => n.Term.Name == termName);
                 return (IEdmFloatingConstantExpression)valueAnnotation.Value;
             };
             Func<string, IEdmValue> GetEdmValue = (termName) =>
             {
-                var valueAnnotation = annotations.Single(n => n.Term.Name == termName) as IEdmValueAnnotation;
+                var valueAnnotation = annotations.Single(n => n.Term.Name == termName);
                 var edmToClrEvaluator = new EdmToClrEvaluator(null);
                 return edmToClrEvaluator.Evaluate(valueAnnotation.Value);
             };
@@ -270,74 +260,74 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationClassTypeRecursiveTest()
+        public void ClrTypeMappingVocabularyAnnotationClassTypeRecursiveTest()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeRecursiveTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeRecursiveTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "RecursiveProperty").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "RecursiveProperty").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation, new RecursiveProperty() { X = 1, Y = 2, Origin = new RecursiveProperty() { X = 3, Y = 4 } });
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationClassTypeWithNewProperties()
+        public void ClrTypeMappingVocabularyAnnotationClassTypeWithNewProperties()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeWithNewProperties());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeWithNewProperties());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "RecursivePropertyWithNewProperties").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "RecursivePropertyWithNewProperties").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation, new DerivedRecursiveProperty() { X = 1, Y = 2, Origin = 4 });
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationCollectionPropertyTest()
+        public void ClrTypeMappingVocabularyAnnotationCollectionPropertyTest()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationCollectionPropertyTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationCollectionPropertyTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation,
                                             new ClassWithCollectionProperty()
-                                                        {
-                                                            X = new int[] { 4, 5 },
-                                                            Y = new int[] { 6, 7 },
-                                                            Z = new int[] { 8, 9 },
-                                                            C = new Display1[] { 
-                                                                new Display1() { X = 10, Y = 11 }, 
-                                                                new Display1() { X = 12, Y = 13 } 
+                                            {
+                                                X = new int[] { 4, 5 },
+                                                Y = new int[] { 6, 7 },
+                                                Z = new int[] { 8, 9 },
+                                                C = new Display1[] {
+                                                                new Display1() { X = 10, Y = 11 },
+                                                                new Display1() { X = 12, Y = 13 }
                                                             },
-                                                        });
+                                            });
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationCollectionOfCollectionPropertyTest()
+        public void ClrTypeMappingVocabularyAnnotationCollectionOfCollectionPropertyTest()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationCollectionOfCollectionPropertyTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationCollectionOfCollectionPropertyTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation,
                                             new ClassWithCollectionOfCollectionProperty()
-                                                        {
-                                                            C = new int[][] { new int[] { 8, 9 } }
-                                                        });
+                                            {
+                                                C = new int[][] { new int[] { 8, 9 } }
+                                            });
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationEnumTest()
+        public void ClrTypeMappingVocabularyAnnotationEnumTest()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationEnumTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationEnumTest());
             var annotations = edmModel.FindVocabularyAnnotations(edmModel.FindType("NS1.Person"));
 
             Func<string, IEdmIntegerConstantExpression> GetIntegerExpression = (termName) =>
             {
-                var valueAnnotation = annotations.Single(n => n.Term.Name == termName) as IEdmValueAnnotation;
+                var valueAnnotation = annotations.Single(n => n.Term.Name == termName);
                 return (IEdmIntegerConstantExpression)valueAnnotation.Value;
             };
 
             Func<string, IEdmValue> GetEdmValue = (termName) =>
             {
-                var valueAnnotation = annotations.Single(n => n.Term.Name == termName) as IEdmValueAnnotation;
+                var valueAnnotation = annotations.Single(n => n.Term.Name == termName);
                 var edmToClrEvaluator = new EdmToClrEvaluator(null);
                 return edmToClrEvaluator.Evaluate(valueAnnotation.Value);
             };
@@ -348,90 +338,90 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(new EdmToClrEvaluator(null).EvaluateToClrValue<EnumInt>(GetIntegerExpression("PersonValueAnnotation3")), EnumInt.Member1, "It should return Infinit for Single when the value is greater than Single.MaxValue.");
             Assert.AreEqual(new EdmToClrEvaluator(null).EvaluateToClrValue<EnumInt>(GetIntegerExpression("PersonValueAnnotation4")), (EnumInt)(-2), "It should return Infinit for Single when the value is greater than Single.MaxValue.");
 #if !SILVERLIGHT
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
                    new ClassWithEnum()
-                        {
-                            EnumInt = EnumInt.Member1,
-                            EnumByte = (EnumByte)10,
-                            EnumULong = EnumULong.Member2
-                        });
+                   {
+                       EnumInt = EnumInt.Member1,
+                       EnumByte = (EnumByte)10,
+                       EnumULong = EnumULong.Member2
+                   });
 #endif
             this.VerifyThrowsException(typeof(InvalidCastException), () => new EdmToClrEvaluator(null).EvaluateToClrValue<EnumInt>(GetIntegerExpression("PersonValueAnnotation2")));
 #if !SILVERLIGHT
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation8").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation8").Single(),
                    new ClassWithEnum()
-                        {
-                            EnumInt = (EnumInt)10,
-                        });
+                   {
+                       EnumInt = (EnumInt)10,
+                   });
 #endif
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationDuplicatePropertyNameTests()
+        public void ClrTypeMappingVocabularyAnnotationDuplicatePropertyNameTests()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationDuplicatePropertyNameTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationDuplicatePropertyNameTest());
 #if !SILVERLIGHT
             this.VerifyThrowsException(typeof(InvalidCastException),
-                            () => this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithEnum())
+                            () => this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithEnum())
                         );
 #endif
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationEmptyValueAnnotations()
+        public void ClrTypeMappingVocabularyAnnotationEmptyVocabularyAnnotations()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationEmptyValueAnnotations());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationEmptyVocabularyAnnotations());
 #if !SILVERLIGHT
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
                                 new ClassWithEnum()
-                                    {
-                                        EnumInt = EnumInt.Member2,
-                                        EnumByte = EnumByte.Member1,
-                                        EnumULong = (EnumULong)0
-                                    });
+                                {
+                                    EnumInt = EnumInt.Member2,
+                                    EnumByte = EnumByte.Member1,
+                                    EnumULong = (EnumULong)0
+                                });
 #endif
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionProperty());
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionOfCollectionProperty());
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new DisplayCoordination());
-            this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new EmptyClass());
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionProperty());
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionOfCollectionProperty());
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new DisplayCoordination());
+            this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new EmptyClass());
 
             this.VerifyThrowsException(typeof(InvalidCastException),
                             () =>
-                                this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), (int)1)
+                                this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), (int)1)
                         );
             this.VerifyThrowsException(typeof(ArgumentNullException),
                             () =>
-                                this.ConvertToClrObject<int>(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation2").Single())
+                                this.ConvertToClrObject<int>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation2").Single())
                         );
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationConversionToStructType()
+        public void ClrTypeMappingVocabularyAnnotationConversionToStructType()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
-            this.VerifyThrowsException(typeof(InvalidCastException), () => this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(), new Display1StructType()));
-            this.VerifyThrowsException(typeof(InvalidCastException), () => this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(), new Display2StructTypeWithObjectProperty() { X = 10, Y = 20, Origin = new Display1() }));
-            this.VerifyThrowsException(typeof(InvalidCastException), () => this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(), new Display2StructTypeWithStructProperty() { X = 10, Y = 20, Origin = new Display1StructType() }));
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
+            this.VerifyThrowsException(typeof(InvalidCastException), () => this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(), new Display1StructType()));
+            this.VerifyThrowsException(typeof(InvalidCastException), () => this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(), new Display2StructTypeWithObjectProperty() { X = 10, Y = 20, Origin = new Display1() }));
+            this.VerifyThrowsException(typeof(InvalidCastException), () => this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single(), new Display2StructTypeWithStructProperty() { X = 10, Y = 20, Origin = new Display1StructType() }));
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationConversionToAbstractType()
+        public void ClrTypeMappingVocabularyAnnotationConversionToAbstractType()
         {
             this.InitializeOperationDefinitions();
 
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
-            this.VerifyThrowsException(typeof(MissingMethodException), () => this.ConvertToClrObject<AbstractClass>(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single()));
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
+            this.VerifyThrowsException(typeof(MissingMethodException), () => this.ConvertToClrObject<AbstractClass>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single()));
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationTryCreateObjectInstance()
+        public void ClrTypeMappingVocabularyAnnotationTryCreateObjectInstance()
         {
             this.InitializeOperationDefinitions();
 
             EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
 
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
-            var value = ev.Evaluate(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
+            var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
 
             var isObjectPopulated = true;
             var isObjectInitialized = true;
@@ -501,14 +491,14 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationTryPopulateObjectInstance()
+        public void ClrTypeMappingVocabularyAnnotationTryPopulateObjectInstance()
         {
             this.InitializeOperationDefinitions();
 
             EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
 
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
-            var value = ev.Evaluate(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
+            var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
 
             var isObjectPopulated = false;
             var isObjectInitialized = true;
@@ -537,21 +527,21 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationInterfacePropertyTest()
+        public void ClrTypeMappingVocabularyAnnotationInterfacePropertyTest()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
 
             this.VerifyThrowsException(typeof(InvalidCastException), () => this.ConvertToClrObject<ClassWithInterfaceProperty>(valueAnnotation));
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationVirtualMemberTest()
+        public void ClrTypeMappingVocabularyAnnotationVirtualMemberTest()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
 
             this.ValidateClrObjectConverter(valueAnnotation, new ClassWithVirtualMember() { X = 10 });
             this.ValidateClrObjectConverter(valueAnnotation, new DerivedClassWithVirtualMember() { X = 10 });
@@ -562,27 +552,27 @@ namespace EdmLibTests.FunctionalTests
         {
             this.InitializeOperationDefinitions();
 
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest(), this.operationDeclarationModel);
 
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
 
             this.VerifyThrowsException(typeof(InvalidCastException), () => this.ConvertToClrObject<ClassWithStructProperty>(valueAnnotation));
         }
 
         [TestMethod]
-        public void ClrTypeMappingValueAnnotationCollectionPropertyToNullListTest()
+        public void ClrTypeMappingVocabularyAnnotationCollectionPropertyToNullListTest()
         {
-            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationCollectionPropertyTest());
-            var valueAnnotation = this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
+            var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationCollectionPropertyTest());
+            var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
             this.VerifyThrowsException(typeof(System.ArgumentException), () => this.ConvertToClrObject<ClassWithNullCollectionProperty>(valueAnnotation));
         }
 
-        private IEnumerable<IEdmValueAnnotation> GetValueAnnotations(IEdmModel edmModel, IEdmVocabularyAnnotatable targetElement, string termName)
+        private IEnumerable<IEdmVocabularyAnnotation> GetVocabularyAnnotations(IEdmModel edmModel, IEdmVocabularyAnnotatable targetElement, string termName)
         {
-            return edmModel.FindVocabularyAnnotations(targetElement).Where(n => n.Term.Name.Equals(termName)).OfType<IEdmValueAnnotation>();
+            return edmModel.FindVocabularyAnnotations(targetElement).Where(n => n.Term.Name.Equals(termName));
         }
 
-        private T ConvertToClrObject<T>(IEdmValueAnnotation valueAnnotation)
+        private T ConvertToClrObject<T>(IEdmVocabularyAnnotation valueAnnotation)
         {
             var edmClrEvaluator = new EdmToClrEvaluator(this.operationDefinitions);
             var edmClrConverter = new EdmToClrConverter();
@@ -624,7 +614,7 @@ namespace EdmLibTests.FunctionalTests
                 return false;
             }
             bool result = true;
-            // TODO: We can update this function for the propertieys of the collection type such as Item. 
+            // TODO: We can update this function for the properties of the collection type such as Item. 
             foreach (var property in typeX.GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (!typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
@@ -672,7 +662,7 @@ namespace EdmLibTests.FunctionalTests
             }
         }
 
-        private void ValidateClrObjectConverter<T>(IEdmValueAnnotation valueAnnotation, T expected)
+        private void ValidateClrObjectConverter<T>(IEdmVocabularyAnnotation valueAnnotation, T expected)
         {
             switch (valueAnnotation.Value.ExpressionKind)
             {

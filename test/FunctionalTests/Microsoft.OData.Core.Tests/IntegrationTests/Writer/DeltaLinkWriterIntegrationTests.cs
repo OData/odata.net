@@ -8,10 +8,9 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
+namespace Microsoft.OData.Tests.IntegrationTests.Writer
 {
     public class DeltaLinkWriterIntegrationTests
     {
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
 
         protected void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, EnableAtom = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(format);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
                 IODataRequestMessage requestMessageToWrite = new InMemoryMessage { Method = "GET", Stream = stream };
                 using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataFeedWriter(EntitySet, EntityType) : messageWriter.CreateODataEntryWriter(EntitySet, EntityType);
+                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataResourceSetWriter(EntitySet, EntityType) : messageWriter.CreateODataResourceWriter(EntitySet, EntityType);
                     action(odataWriter);
                 }
             }
@@ -65,20 +64,13 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer
                 IODataResponseMessage responseMessageToWrite = new InMemoryMessage { StatusCode = 200, Stream = stream };
                 using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataFeedWriter(EntitySet, EntityType) : messageWriter.CreateODataEntryWriter(EntitySet, EntityType);
+                    ODataWriter odataWriter = createFeedWriter ? messageWriter.CreateODataResourceSetWriter(EntitySet, EntityType) : messageWriter.CreateODataResourceWriter(EntitySet, EntityType);
                     action(odataWriter);
                 }
             }
 
             stream.Position = 0;
             string payload = (new StreamReader(stream)).ReadToEnd();
-            if (format == ODataFormat.Atom)
-            {
-                // The <updated> element is computed dynamically, so we remove it from the both the baseline and the actual payload.
-                payload = Regex.Replace(payload, "<updated>[^<]*</updated>", "");
-                expectedPayload = Regex.Replace(expectedPayload, "<updated>[^<]*</updated>", "");
-            }
-
             Assert.Equal(expectedPayload, payload);
         }
     }

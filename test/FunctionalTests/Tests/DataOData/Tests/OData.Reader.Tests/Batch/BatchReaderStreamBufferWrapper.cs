@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
@@ -25,7 +25,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <summary>
         /// The type of the stream buffer class in the product code.
         /// </summary>
-        private static readonly Type streamBufferType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchReaderStreamBuffer");
+        private static readonly Type streamBufferType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchReaderStreamBuffer");
 
         /// <summary>
         /// The stream buffer instance from the product code.
@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <param name="batchReaderStream">The batch reader stream instance to get the buffer from.</param>
         public BatchReaderStreamBufferWrapper(object batchReaderStream)
         {
-            this.batchReaderStreamBuffer = ReflectionUtils.GetField(batchReaderStream, "batchBuffer");
+            this.batchReaderStreamBuffer = ReflectionUtils.GetField(batchReaderStream, "BatchBuffer");
         }
 
         /// <summary>

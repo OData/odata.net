@@ -8,7 +8,7 @@ namespace Microsoft.OData.Service.Parsing
 {
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
     using Microsoft.Spatial;
     using Strings = Microsoft.OData.Service.Strings;
 

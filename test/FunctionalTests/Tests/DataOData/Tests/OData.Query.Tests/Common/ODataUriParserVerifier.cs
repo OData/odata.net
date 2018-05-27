@@ -7,13 +7,10 @@
 namespace Microsoft.Test.Taupo.OData.Query.Tests.Common
 {
     using System;
-    using System.Collections;
-    using System.Linq.Expressions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria;
     using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.Query.Contracts;

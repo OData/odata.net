@@ -150,7 +150,7 @@ namespace Microsoft.OData.Client
             ResourceExpression re = e as ResourceExpression;
             Type lastSegmentType = re.Projection == null ? re.ResourceType : re.Projection.Selector.Parameters[0].Type;
             LambdaExpression selector = re.Projection == null ? null : re.Projection.Selector;
-            return new QueryComponents(uri, version, lastSegmentType, selector, normalizerRewrites); 
+            return new QueryComponents(uri, version, lastSegmentType, selector, normalizerRewrites);
         }
     }
 }

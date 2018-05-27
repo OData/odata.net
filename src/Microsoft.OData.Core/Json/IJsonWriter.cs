@@ -4,16 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     using System;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Interface for a class that can write arbitrary JSON.
-    /// Internally we want the interface for mocks.
     /// </summary>
-    internal interface IJsonWriter
+    [CLSCompliant(false)]
+    public interface IJsonWriter
     {
         /// <summary>
         /// Start the padding function scope.

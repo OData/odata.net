@@ -11,7 +11,7 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using System.Net;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class HttpWebResponseMessage : IODataResponseMessageAsync
     {

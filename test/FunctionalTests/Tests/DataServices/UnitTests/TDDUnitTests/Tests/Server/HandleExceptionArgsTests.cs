@@ -8,7 +8,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using FluentAssertions;
     using Microsoft.OData.Service;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

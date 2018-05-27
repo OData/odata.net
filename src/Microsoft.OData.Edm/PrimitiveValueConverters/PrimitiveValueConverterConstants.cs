@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.PrimitiveValueConverters
+namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// The constants for primitive value converters.

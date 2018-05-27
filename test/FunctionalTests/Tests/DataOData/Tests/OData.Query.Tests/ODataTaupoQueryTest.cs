@@ -14,7 +14,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
     using Microsoft.Test.Taupo.Astoria.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
-    using Microsoft.Test.Taupo.Astoria.LinqToAstoria;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.DependencyInjection;
     using Microsoft.Test.Taupo.Execution;
@@ -25,7 +24,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
     using Microsoft.Test.Taupo.Query.Common;
     using Microsoft.Test.Taupo.Query.Contracts;
     using Microsoft.Test.Taupo.Query.Contracts.Linq;
-    using Microsoft.Test.Taupo.Query.Linq;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
@@ -104,24 +102,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
 
             container.RegisterInstance(container);
             container.InjectDependenciesInto(this);
-        }
-
-        /// <summary>
-        /// Sample test to ensure query test infrastructure is not broken
-        /// </summary>
-        [Ignore] // Not fixing later as this whole test suite is deprecated. 
-        [TestMethod, Variation]
-        public void TaupoQueryTest()
-        {
-            var entitySet = this.Workspace.ConceptualModel.EntityContainers.First().EntitySets.SingleOrDefault(e => e.Name == "Customer");
-            var root = CommonQueryBuilder.Root(entitySet);
-            var query = root.Where(c => c.Property("CustomerId").EqualTo(CommonQueryBuilder.Constant(1)));
-            this.Verifier.Verify(query);
-
-            entitySet = this.Workspace.ConceptualModel.EntityContainers.First().EntitySets.SingleOrDefault(e => e.Name == "Customer");
-            root = CommonQueryBuilder.Root(entitySet);
-            query = root.OrderBy(cust => cust.Property("CustomerId"));
-            this.Verifier.Verify(query);
         }
     }
 }

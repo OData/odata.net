@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.Tests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Used for short integration client tests

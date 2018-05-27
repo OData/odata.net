@@ -147,7 +147,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Records that a member initialization expression has been entered 
+        /// Records that a member initialization expression has been entered
         /// when visting a projection.
         /// </summary>
         /// <param name="init">Expression for initialization.</param>
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Client
         /// <summary>Records that a lambda scope has been left when visting a projection.</summary>
         internal void LeaveLambdaScope()
         {
-            this.entityInScope.Pop(); 
+            this.entityInScope.Pop();
             this.parameterExpressions.Pop();
             this.parameterExpressionTypes.Pop();
             this.parameterEntries.Pop();
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Records that a member initialization expression has been left when 
+        /// Records that a member initialization expression has been left when
         /// visting a projection.
         /// </summary>
         internal void LeaveMemberInit()
@@ -295,24 +295,24 @@ namespace Microsoft.OData.Client
         internal class MemberInitRewrite
         {
             /// <summary>Sequence of member names to match.</summary>
-            internal string[] MemberNames 
-            { 
-                get; 
-                set; 
+            internal string[] MemberNames
+            {
+                get;
+                set;
             }
 
             /// <summary>Root of member access path, typically a source tree parameter of entity type.</summary>
-            internal Expression Root 
-            { 
-                get; 
-                set; 
+            internal Expression Root
+            {
+                get;
+                set;
             }
-         
+
             /// <summary>Rewrite expressions for the last member path.</summary>
             internal Expression RewriteExpression
-            { 
-                get; 
-                set; 
+            {
+                get;
+                set;
             }
         }
 

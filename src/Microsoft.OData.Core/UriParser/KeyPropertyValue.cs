@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
+
     #endregion Namespaces
 
     /// <summary>
     /// Class representing a single key property value in a key lookup.
     /// </summary>
-    public sealed class KeyPropertyValue
+    internal sealed class KeyPropertyValue
     {
         /// <summary>
         /// Gets or sets the key property.

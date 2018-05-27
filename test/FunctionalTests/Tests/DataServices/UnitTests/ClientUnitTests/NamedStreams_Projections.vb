@@ -15,18 +15,20 @@ Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports p = Microsoft.OData.Service.Providers
 
-<TestClass()> _
+' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
+'Remove Atom
+' <TestClass()>
 Public Class NamedStream_ProjectionTests_VB
     Private Shared request As TestWebRequest
 
-    <ClassInitialize()> _
+    <ClassInitialize()>
     Public Shared Sub ClassInitialize(ByVal testContext As TestContext)
         Dim service As DSPServiceDefinition = SetUpNamedStreamService()
         request = service.CreateForInProcessWcf()
         request.StartService()
     End Sub
 
-    <ClassCleanup()> _
+    <ClassCleanup()>
     Public Shared Sub ClassCleanup()
         If request IsNot Nothing Then
             request.Dispose()
@@ -34,38 +36,38 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("Doing projection of non-stream properties should work and there should be no stream descriptors populated in the context")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("Doing projection of non-stream properties should work and there should be no stream descriptors populated in the context")>
     Public Sub NamedStreams_SimpleProjectionWithoutStreams()
         Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-        context.Format.UseAtom()
-        context.EnableAtom = True
+        'context.Format.UseAtom()
+        'context.EnableAtom = True
         Dim query1 = context.CreateQuery(Of StreamType1)("MySet1").AddQueryOption("$select", "ID")
         Dim entities As List(Of StreamType1) = query1.Execute().ToList()
         Assert.AreEqual(entities.Count, 1, "There must be only 1 entities populated in the context")
         Assert.AreEqual(context.Entities(0).StreamDescriptors.Count, 0, "There must be no named streams associated with the entity yet, since we didn't specify the named streams in the projection query")
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("Doing projection of stream properties using AddQueryOption should work")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("Doing projection of stream properties using AddQueryOption should work")>
     Public Sub NamedStreams_SimpleProjectionWithStreams()
         Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-        context.EnableAtom = True
-        context.Format.UseAtom()
+        'context.EnableAtom = True
+        'context.Format.UseAtom()
         Dim query1 = context.CreateQuery(Of StreamType1)("MySet1").AddQueryOption("$select", "ID, Stream1")
         Dim entities As List(Of StreamType1) = query1.Execute().ToList()
         Assert.AreEqual(context.Entities(0).StreamDescriptors.Count, 1, "There must be named streams associated with the entity")
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("One should not be able to project out named streams as normal properties")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("One should not be able to project out named streams as normal properties")>
     Public Sub NamedStreams_CannotProjectStreamAsNormalProperties()
         Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-        context.EnableAtom = True
-        context.Format.UseAtom()
-        Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-            Select New StreamType1() With { _
-                .ID = s.ID, _
-                .Stream1 = s.Stream1, _
-                .Stream2 = s.Stream2 _
-            }
+        'context.EnableAtom = True
+        'context.Format.UseAtom()
+        Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                Select New StreamType1() With {
+                    .ID = s.ID,
+                    .Stream1 = s.Stream1,
+                    .Stream2 = s.Stream2
+                }
 
         Try
             Dim entities As List(Of StreamType1) = q.ToList()
@@ -74,12 +76,12 @@ Public Class NamedStream_ProjectionTests_VB
         End Try
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("One should not be able to get named streams via load property api")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("One should not be able to get named streams via load property api")>
     Public Sub NamedStreams_LoadPropertyTest()
         ' populate the context
         Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-        context.EnableAtom = True
-        context.Format.UseAtom()
+        'context.EnableAtom = True
+        'context.Format.UseAtom()
         Dim entity As StreamType1 = context.CreateQuery(Of StreamType1)("MySet1").AddQueryOption("$select", "ID, Stream1").Take(1).[Single]()
         Try
             context.LoadProperty(entity, "Stream1")
@@ -88,18 +90,18 @@ Public Class NamedStream_ProjectionTests_VB
         End Try
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("Simple projections to get stream url in DSSL property - both narrow type and anonymous type")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("Simple projections to get stream url in DSSL property - both narrow type and anonymous type")>
     Public Sub NamedStreams_SimpleLinkProjection()
         If True Then
             ' Testing querying anonymous types and making sure one is able to project out the stream url
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New With { _
-              .Name = s.Name, _
-              .Stream11 = s.Stream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New With {
+                     .Name = s.Name,
+                     .Stream11 = s.Stream1
+                    }
 
             Assert.AreEqual(q.ToString(), Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$select=Name,Stream1", "make sure the right uri is produced by the linq translator")
             For Each o In q
@@ -114,13 +116,13 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Testing querying narrow entity types and making sure one is able to project out the stream url
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New StreamType1() With { _
-              .ID = s.ID, _
-              .Stream1 = s.Stream1
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New StreamType1() With {
+                     .ID = s.ID,
+                     .Stream1 = s.Stream1
+                    }
 
             Assert.AreEqual(q.ToString(), Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$select=ID,Stream1", "make sure the right uri is produced by the linq translator")
             For Each o As StreamType1 In q
@@ -132,17 +134,17 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("Just project out the link properties in an entity, no data properties - both narrow type and anonymous type")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("Just project out the link properties in an entity, no data properties - both narrow type and anonymous type")>
     Public Sub NamedStreams_SimpleLinkProjection_1()
         If True Then
             ' Testing querying anonymous types and making sure one is able to project out the stream url
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New With { _
-              .Stream11 = s.Stream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New With {
+                     .Stream11 = s.Stream1
+                    }
 
             Assert.AreEqual(q.ToString(), Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$select=Stream1", "make sure the right uri is produced by the linq translator")
             For Each o In q
@@ -157,12 +159,12 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Testing querying narrow entity types and making sure one is able to project out the stream url
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New StreamType1() With { _
-              .Stream1 = s.Stream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New StreamType1() With {
+                     .Stream1 = s.Stream1
+                    }
 
             Assert.AreEqual(q.ToString(), Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$select=Stream1", "make sure the right uri is produced by the linq translator")
             For Each o As StreamType1 In q
@@ -174,19 +176,19 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("If the entity getting projected out in an entity, one should not be able to refer deep links")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("If the entity getting projected out in an entity, one should not be able to refer deep links")>
     Public Sub NamedStreams_CannotReferenceDeepLinksDuringEntityMaterialization()
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New StreamType1() With { _
-              .ID = s.ID, _
-              .Name = s.Name, _
-              .RefStream1 = s.Ref.RefStream1
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New StreamType1() With {
+                     .ID = s.ID,
+                     .Name = s.Name,
+                     .RefStream1 = s.Ref.RefStream1
+                    }
 
             Try
                 For Each o In q
@@ -201,12 +203,12 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot)
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New StreamType1() With { _
-              .ID = s.Ref.ID, _
-              .Name = s.Ref.Name, _
-              .Stream1 = s.Stream1
-             }
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New StreamType1() With {
+                     .ID = s.Ref.ID,
+                     .Name = s.Ref.Name,
+                     .Stream1 = s.Stream1
+                    }
 
             Try
                 For Each o In q
@@ -219,18 +221,18 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("If the entity getting projected out in an anonymous type, one should be able to project out links from various levels")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("If the entity getting projected out in an anonymous type, one should be able to project out links from various levels")>
     Public Sub NamedStreams_NonEntity_AccessPropertiesFromDifferentLevels()
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New With { _
-              .Name = s.Name, _
-              .RefStream1 = s.Ref.RefStream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New With {
+                     .Name = s.Name,
+                     .RefStream1 = s.Ref.RefStream1
+                    }
 
             For Each o In q
                 Assert.AreEqual(o.RefStream1.EditLink.AbsoluteUri, Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet2(3)/RefStream1", "link must be populated")
@@ -242,13 +244,13 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New With { _
-              .Name = s.Ref.Name, _
-              .Stream1Url = s.Stream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New With {
+                     .Name = s.Ref.Name,
+                     .Stream1Url = s.Stream1
+                    }
 
             For Each o In q
                 Assert.AreEqual(o.Stream1Url.EditLink.AbsoluteUri, Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1(1)/Stream1", "link must be populated")
@@ -258,14 +260,14 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("Make sure DSSL properties can materialized and populated with the right url in non-projection cases")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("Make sure DSSL properties can materialized and populated with the right url in non-projection cases")>
     Public Sub NamedStreams_PayloadDrivenMaterialization()
         If True Then
             ' Testing without projections (payload driven) and making sure one is able to project out the stream url
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            context.IgnoreMissingProperties = True
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             Dim q = context.CreateQuery(Of StreamWithUrl)("MySet1")
 
             For Each o As StreamWithUrl In q
@@ -276,18 +278,18 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property - both narrow type and anonymous type")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property - both narrow type and anonymous type")>
     Public Sub DeepLinkProjection()
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New With { _
-              .Name = s.Ref.Name, _
-              .Url = s.Ref.RefStream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New With {
+                     .Name = s.Ref.Name,
+                     .Url = s.Ref.RefStream1
+                    }
 
             Assert.AreEqual(Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$expand=Ref($select=Name),Ref($select=RefStream1)", q.ToString(), "make sure the right uri is produced by the linq translator")
 
@@ -303,13 +305,13 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New StreamType1() With { _
-              .ID = s.Ref.ID, _
-              .RefStream1 = s.Ref.RefStream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New StreamType1() With {
+                     .ID = s.Ref.ID,
+                     .RefStream1 = s.Ref.RefStream1
+                    }
 
             Assert.AreEqual(Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$expand=Ref($select=ID),Ref($select=RefStream1)", q.ToString(), "make sure the right uri is produced by the linq translator")
 
@@ -323,20 +325,20 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property with multiple parameters in scope - both narrow type and anonymous type")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property with multiple parameters in scope - both narrow type and anonymous type")>
     Public Sub DeepLinkProjection_MultipleParametersInScope()
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Where s.ID = 1 _
-             From c In s.Collection _
-             Select New With { _
-              .Name = c.Name, _
-              .Url = c.ColStream _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Where s.ID = 1
+                    From c In s.Collection
+                    Select New With {
+                     .Name = c.Name,
+                     .Url = c.ColStream
+                    }
 
             Assert.AreEqual(q.ToString(), Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1(1)/Collection?$select=Name,ColStream", "make sure the right uri is produced by the linq translator")
 
@@ -350,15 +352,15 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Where s.ID = 1 _
-             From c In s.Collection _
-             Select New StreamType2() With { _
-              .ID = c.ID, _
-              .ColStream = c.ColStream _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Where s.ID = 1
+                    From c In s.Collection
+                    Select New StreamType2() With {
+                     .ID = c.ID,
+                     .ColStream = c.ColStream
+                    }
 
             Assert.AreEqual(q.ToString(), Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1(1)/Collection?$select=ID,ColStream", "make sure the right uri is produced by the linq translator")
 
@@ -370,20 +372,20 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property with multiple parameters in scope - both narrow type and anonymous type")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property with multiple parameters in scope - both narrow type and anonymous type")>
     Public Sub DeepEntityProjection_CannotAccessEntitiesAcrossLevels()
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Where s.ID = 1 _
-             From c In s.Collection _
-             Select New StreamType2() With { _
-              .ID = c.ID, _
-              .Stream1 = s.Stream1 _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Where s.ID = 1
+                    From c In s.Collection
+                    Select New StreamType2() With {
+                     .ID = c.ID,
+                     .Stream1 = s.Stream1
+                    }
 
             Try
                 q.ToList()
@@ -395,27 +397,27 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property - both narrow type and anonymous type")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out deep links to get stream url in DSSL property - both narrow type and anonymous type")>
     Public Sub NamedStreams_NestedQuery_1()
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New StreamType1() With { _
-              .ID = s.ID, _
-              .Stream1 = s.Stream1, _
-              .Ref = New StreamType1() With { _
-               .ID = s.Ref.ID, _
-               .RefStream1 = s.Ref.RefStream1 _
-              }, _
-              .Collection = (From c In s.Collection _
-               Select New StreamType2() With { _
-                .ID = c.ID, _
-                .ColStream = c.ColStream _
-               }).ToList() _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New StreamType1() With {
+                     .ID = s.ID,
+                     .Stream1 = s.Stream1,
+                     .Ref = New StreamType1() With {
+                      .ID = s.Ref.ID,
+                      .RefStream1 = s.Ref.RefStream1
+                     },
+                     .Collection = (From c In s.Collection
+                                    Select New StreamType2() With {
+                       .ID = c.ID,
+                       .ColStream = c.ColStream
+                      }).ToList()
+                    }
 
             Assert.AreEqual(Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$expand=Ref($select=ID),Ref($select=RefStream1),Collection($select=ID),Collection($select=ColStream)&$select=ID,Stream1", q.ToString(), "make sure the right uri is produced by the linq translator")
 
@@ -438,22 +440,22 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New With { _
-              .Name = s.Name, _
-              .Stream1Url = s.Stream1, _
-              .Ref = New With { _
-               .Name = s.Ref.Name, _
-               .Stream1Url = s.Ref.RefStream1 _
-              }, _
-              .Collection = (From c In s.Collection _
-               Select New With { _
-                .Name = c.Name, _
-                .Stream1Url = c.ColStream _
-               }).ToList() _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New With {
+                     .Name = s.Name,
+                     .Stream1Url = s.Stream1,
+                     .Ref = New With {
+                      .Name = s.Ref.Name,
+                      .Stream1Url = s.Ref.RefStream1
+                     },
+                     .Collection = (From c In s.Collection
+                                    Select New With {
+                       .Name = c.Name,
+                       .Stream1Url = c.ColStream
+                      }).ToList()
+                    }
 
             Assert.AreEqual(Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$expand=Ref($select=Name),Ref($select=RefStream1),Collection($select=Name),Collection($select=ColStream)&$select=Name,Stream1", q.ToString(), "make sure the right uri is produced by the linq translator")
 
@@ -468,28 +470,28 @@ Public Class NamedStream_ProjectionTests_VB
         End If
     End Sub
 
-    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out collection of collection properties - both narrow type and anonymous type")> _
+    <TestCategory("Partition2")> <TestMethod(), Variation("projecting out collection of collection properties - both narrow type and anonymous type")>
     Public Sub NamedStreams_NestedQuery_2()
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New StreamType1() With { _
-              .ID = s.ID, _
-              .Stream1 = s.Stream1, _
-              .Collection = (From c In s.Collection _
-               Select New StreamType2() With { _
-                .ID = c.ID, _
-                .ColStream = c.ColStream, _
-                .Collection1 = (From c1 In c.Collection1 _
-                 Select New StreamType1() With { _
-                  .ID = c1.ID, _
-                  .RefStream1 = c1.RefStream1 _
-                 }).ToList() _
-               }).ToList() _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New StreamType1() With {
+                     .ID = s.ID,
+                     .Stream1 = s.Stream1,
+                     .Collection = (From c In s.Collection
+                                    Select New StreamType2() With {
+                       .ID = c.ID,
+                       .ColStream = c.ColStream,
+                       .Collection1 = (From c1 In c.Collection1
+                                       Select New StreamType1() With {
+                         .ID = c1.ID,
+                         .RefStream1 = c1.RefStream1
+                        }).ToList()
+                      }).ToList()
+                    }
 
             Assert.AreEqual(Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$expand=Collection($select=ID),Collection($select=ColStream),Collection($expand=Collection1($select=ID)),Collection($expand=Collection1($select=RefStream1))&$select=ID,Stream1", q.ToString(), "make sure the right uri is produced by the linq translator")
 
@@ -513,23 +515,23 @@ Public Class NamedStream_ProjectionTests_VB
         If True Then
             ' Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
             Dim context As New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            context.EnableAtom = True
-            context.Format.UseAtom()
-            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1") _
-             Select New With { _
-              .Name = s.Name, _
-              .Stream1Url = s.Stream1,
-              .Collection = (From c In s.Collection _
-               Select New With { _
-                .Name = c.Name, _
-                .Stream1Url = c.ColStream, _
-                .Collection1 = (From c1 In c.Collection1 _
-                 Select New With { _
-                  .Name = c1.Name, _
-                  .Stream1Url = c1.RefStream1 _
-                 }).ToList() _
-               }).ToList() _
-             }
+            'context.EnableAtom = True
+            'context.Format.UseAtom()
+            Dim q = From s In context.CreateQuery(Of StreamType1)("MySet1")
+                    Select New With {
+                     .Name = s.Name,
+                     .Stream1Url = s.Stream1,
+                     .Collection = (From c In s.Collection
+                                    Select New With {
+                       .Name = c.Name,
+                       .Stream1Url = c.ColStream,
+                       .Collection1 = (From c1 In c.Collection1
+                                       Select New With {
+                         .Name = c1.Name,
+                         .Stream1Url = c1.RefStream1
+                        }).ToList()
+                      }).ToList()
+                    }
 
             Assert.AreEqual(Convert.ToString(request.ServiceRoot.AbsoluteUri) & "/MySet1?$expand=Collection($select=Name),Collection($select=ColStream),Collection($expand=Collection1($select=Name)),Collection($expand=Collection1($select=RefStream1))&$select=Name,Stream1", q.ToString(), "make sure the right uri is produced by the linq translator")
 

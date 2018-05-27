@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonMinimalMetadataLevelTests
     {
@@ -19,26 +19,14 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void MinimalMetadataLevelShouldReturnMinimalMetadataTypeOracleWhenKnobIsSet()
         {
-            testSubject.GetTypeNameOracle( /*autoComputePayloadMetadataInJson*/ true).Should().BeOfType<JsonMinimalMetadataTypeNameOracle>();
-        }
-
-        [Fact]
-        public void MinimalMetadataLevelShouldReturnMinimalMetadataTypeOracleWhenKnobIsOff()
-        {
-            testSubject.GetTypeNameOracle( /*autoComputePayloadMetadataInJson*/ false).Should().BeOfType<JsonMinimalMetadataTypeNameOracle>();
-        }
-
-        [Fact]
-        public void MinimalMetadataLevelShouldHaveContextUrlLevelOnDemand()
-        {
-            testSubject.ContextUrlLevel.Should().Be(ODataContextUrlLevel.OnDemand);
+            testSubject.GetTypeNameOracle().Should().BeOfType<JsonMinimalMetadataTypeNameOracle>();
         }
 
         [Fact]
         public void MinimalMetadataLevelShouldReturnNullForCreateEntityMetadataBuilder()
         {
-            testSubject.CreateEntityMetadataBuilder(
-                new ODataEntry(),
+            testSubject.CreateResourceMetadataBuilder(
+                new ODataResource(),
                 /*typeContext*/ null,
                 /*serializationInfo*/ null,
                 /*actualEntityType*/ null,
@@ -51,16 +39,16 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldNotSetBuilderOnEntry()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             testSubject.InjectMetadataBuilder(entry, builder);
-            entry.MetadataBuilder.Should().BeOfType<NoOpEntityMetadataBuilder>();
+            entry.MetadataBuilder.Should().BeOfType<NoOpResourceMetadataBuilder>();
         }
 
         [Fact]
         public void InjectMetadataBuilderShouldNotSetBuilderOnEntryMediaResource()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             entry.MediaResource = new ODataStreamReferenceValue();
             testSubject.InjectMetadataBuilder(entry, builder);
@@ -70,7 +58,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldNotSetBuilderOnEntryNamedStreamProperties()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             var stream1 = new ODataStreamReferenceValue();
             var stream2 = new ODataStreamReferenceValue();
@@ -87,7 +75,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldNotSetBuilderOnEntryActions()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             var action1 = new ODataAction { Metadata = new Uri("http://service/$metadata#action1", UriKind.Absolute) };
             var action2 = new ODataAction { Metadata = new Uri("http://service/$metadata#action2", UriKind.Absolute) };
@@ -103,7 +91,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void InjectMetadataBuilderShouldNotSetBuilderOnEntryFunctions()
         {
-            var entry = new ODataEntry();
+            var entry = new ODataResource();
             var builder = new TestEntityMetadataBuilder(entry);
             var function1 = new ODataFunction { Metadata = new Uri("http://service/$metadata#function1", UriKind.Absolute) };
             var function2 = new ODataFunction { Metadata = new Uri("http://service/$metadata#function2", UriKind.Absolute) };

@@ -4,18 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using Microsoft.OData.Service;
-using Microsoft.OData.Service.Providers;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace AstoriaUnitTests.Tests.Server
 {
-    using Microsoft.OData.Client;
     using AstoriaUnitTests.Tests.Server.Simulators;
+    using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -29,7 +24,7 @@ namespace AstoriaUnitTests.Tests.Server
         {
             var metadataSimulator = new DataServiceProviderSimulator();
             var dataServiceConfiguration = new DataServiceConfiguration(metadataSimulator);
-            dataServiceConfiguration.DataServiceBehavior.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            dataServiceConfiguration.DataServiceBehavior.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             Assert.IsTrue(dataServiceConfiguration.HasAnnotations());
         }
 
@@ -38,7 +33,7 @@ namespace AstoriaUnitTests.Tests.Server
         {
             var metadataSimulator = new DataServiceProviderSimulator();
             var dataServiceConfiguration = new DataServiceConfiguration(metadataSimulator);
-            dataServiceConfiguration.AnnotationsBuilder = (IEdmModel model) => new IEdmModel[] {model};
+            dataServiceConfiguration.AnnotationsBuilder = (IEdmModel model) => new IEdmModel[] { model };
             Assert.IsTrue(dataServiceConfiguration.HasAnnotations());
         }
 

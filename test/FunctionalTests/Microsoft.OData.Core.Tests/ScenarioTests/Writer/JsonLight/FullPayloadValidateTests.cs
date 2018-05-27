@@ -10,13 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
     public class FullPayloadValidateTests
     {
@@ -27,31 +26,31 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         private static readonly EdmModel Model;
         private static readonly EdmModel ModelWithFunction;
 
-        private ODataEntry entryWithOnlyData1;
-        private ODataEntry entryWithOnlyData2;
-        private ODataEntry entryWithOnlyData3;
+        private ODataResource entryWithOnlyData1;
+        private ODataResource entryWithOnlyData2;
+        private ODataResource entryWithOnlyData3;
 
-        private readonly ODataNavigationLink expandedCollectionNavLink = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo expandedCollectionNavLink = new ODataNestedResourceInfo()
         {
             Url = new Uri("http://example.org/odata.svc/navigation"),
             IsCollection = true,
             Name = "ExpandedCollectionNavProp",
         };
 
-        private readonly ODataNavigationLink expandedNavLink = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo expandedNavLink = new ODataNestedResourceInfo()
         {
             IsCollection = false,
             Name = "ExpandedNavProp",
         };
 
-        private readonly ODataNavigationLink containedCollectionNavLink = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo containedCollectionNavLink = new ODataNestedResourceInfo()
         {
             Url = new Uri("http://example.org/odata.svc/navigation"),
             IsCollection = true,
             Name = "ContainedCollectionNavProp",
         };
 
-        private readonly ODataNavigationLink containedNavLink = new ODataNavigationLink()
+        private readonly ODataNestedResourceInfo containedNavLink = new ODataNestedResourceInfo()
         {
             IsCollection = false,
             Name = "ContainedNavProp",
@@ -59,9 +58,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
         static FullPayloadValidateTests()
         {
-            EntityType = new EdmEntityType("Namespace", "EntityType", null, false, false, false);
+            EntityType = new EdmEntityType("Namespace", "EntityType", null, false, true, false);
             EntityType.AddKeys(EntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
-            EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null, EdmConcurrencyMode.Fixed);
+            IEdmStructuralProperty nameProperty = EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null);
             DerivedType = new EdmEntityType("Namespace", "DerivedType", EntityType, false, true);
 
             var expandedCollectionNavProp = EntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
@@ -104,6 +103,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             Model.AddElement(EntityType);
             Model.AddElement(DerivedType);
             Model.AddElement(container);
+            Model.SetOptimisticConcurrencyAnnotation(EntitySet, new[] { nameProperty });
 
             ModelWithFunction = new EdmModel();
             ModelWithFunction.AddElement(EntityType);
@@ -123,9 +123,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
         public FullPayloadValidateTests()
         {
-            this.entryWithOnlyData1 = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 101 }, new ODataProperty { Name = "Name", Value = "Alice" } }, };
-            this.entryWithOnlyData2 = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 102 }, new ODataProperty { Name = "Name", Value = "Bob" } }, };
-            this.entryWithOnlyData3 = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 103 }, new ODataProperty { Name = "Name", Value = "Charlie" } }, };
+            this.entryWithOnlyData1 = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 101 }, new ODataProperty { Name = "Name", Value = "Alice" } }, };
+            this.entryWithOnlyData2 = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 102 }, new ODataProperty { Name = "Name", Value = "Bob" } }, };
+            this.entryWithOnlyData3 = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 103 }, new ODataProperty { Name = "Name", Value = "Charlie" } }, };
         }
         #endregion Declaration & Initialization
 
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData2
+                new ODataResourceSet(), this.entryWithOnlyData2
             };
 
             IEdmNavigationProperty containedNavProp = EntityType.FindProperty("ContainedCollectionNavProp") as IEdmNavigationProperty;
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(), this.entryWithOnlyData2
+                new ODataResourceSet(), this.entryWithOnlyData2
             };
 
             IEdmNavigationProperty containedNavProp = EntityType.FindProperty("ContainedCollectionNavProp") as IEdmNavigationProperty;
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void WritingFeedWithFunctionAndAction()
         {
-            ODataFeed feed = new ODataFeed();
+            ODataResourceSet feed = new ODataResourceSet();
             feed.AddAction(new ODataAction { Metadata = new Uri("http://example.org/odata.svc/$metadata#Action"), Target = new Uri("http://example.org/odata.svc/DoAction"), Title = "ActionTitle" });
             feed.AddFunction(new ODataFunction() { Metadata = new Uri("http://example.org/odata.svc/$metadata#Function"), Target = new Uri("http://example.org/odata.svc/DoFunction"), Title = "FunctionTitle" });
 
@@ -274,25 +274,25 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            List<ODataFeed> feedList = new List<ODataFeed>();
+            List<ODataResourceSet> feedList = new List<ODataResourceSet>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, ModelWithFunction))
             {
-                messageReader.DetectPayloadKind().Single().PayloadKind.Should().Be(ODataPayloadKind.Feed);
+                messageReader.DetectPayloadKind().Single().PayloadKind.Should().Be(ODataPayloadKind.ResourceSet);
 
-                var reader = messageReader.CreateODataFeedReader();
+                var reader = messageReader.CreateODataResourceSetReader();
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.FeedEnd:
-                            feedList.Add(reader.Item as ODataFeed);
+                        case ODataReaderState.ResourceSetEnd:
+                            feedList.Add(reader.Item as ODataResourceSet);
                             break;
                     }
                 }
             }
 
-            ODataFeed feed = feedList[0];
+            ODataResourceSet feed = feedList[0];
             feed.Actions.Count().Should().Be(1);
             feed.Functions.Count().Should().Be(1);
         }
@@ -302,13 +302,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData2,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData3,
             };
 
@@ -317,17 +317,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet");
 
             const string expectedPayload = "{\"" +
-                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp,ContainedCollectionNavProp(ContainedCollectionNavProp))\"," +
+                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ContainedCollectionNavProp))\"," +
                                                 "\"value\":[" +
                                                     "{" +
                                                          "\"ID\":101,\"Name\":\"Alice\"," +
-                                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ContainedCollectionNavProp)\"," +
                                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                         "\"ContainedCollectionNavProp\":" +
                                                             "[" +
                                                                 "{" +
                                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                                    "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(102)/ContainedCollectionNavProp\"," +
                                                                     "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                                     "\"ContainedCollectionNavProp\":" +
                                                                         "[" +
@@ -347,7 +345,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData1,
                 this.containedNavLink,
                 this.entryWithOnlyData2,
@@ -359,15 +357,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ContainedNavProp($select=ContainedNavProp;$expand=ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedNavProp,ContainedNavProp(ContainedNavProp))\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedNavProp(ContainedNavProp))\"," +
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedNavProp(ContainedNavProp)/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                         "{" +
                                                             "\"ID\":102,\"Name\":\"Bob\"," +
-                                                            "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedNavProp/ContainedNavProp/$entity\"," +
                                                             "\"ContainedNavProp\":" +
                                                             "{" +
                                                                 "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -386,7 +382,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData2,
                 this.containedNavLink,
                 this.entryWithOnlyData3,
@@ -396,15 +392,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ContainedCollectionNavProp($select=ContainedNavProp;$expand=ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp,ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ContainedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":" +
                                             "[" +
                                                 "{" +
                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(102)/ContainedNavProp/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                     "{" +
                                                         "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -422,7 +416,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.expandedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData2,
                 this.containedNavLink,
                 this.entryWithOnlyData3
@@ -433,14 +427,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
             string expectedPayload = "{" +
-                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ExpandedCollectionNavProp,ExpandedCollectionNavProp(ContainedNavProp))/$entity\"," +
+                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ExpandedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
                                         "\"ExpandedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ExpandedCollectionNavProp\":" +
                                             "[" +
                                                 "{" +
                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(102)/ContainedNavProp/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                         "{" +
                                                             "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -459,7 +452,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData2,
                 this.expandedNavLink,
                 this.entryWithOnlyData3
@@ -470,9 +463,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
             string expectedPayload = "{" +
-                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp,ContainedCollectionNavProp(ExpandedNavProp))/$entity\"," +
+                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ExpandedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ExpandedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":" +
                                             "[" +
@@ -493,13 +485,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData2,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData3,
             };
 
@@ -508,17 +500,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet");
 
             const string expectedPayload = "{\"" +
-                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp,Namespace.DerivedType/ContainedCollectionNavProp(Namespace.DerivedType/ContainedCollectionNavProp))\"," +
+                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp(Namespace.DerivedType/ContainedCollectionNavProp))\"," +
                                                 "\"value\":[" +
                                                     "{" +
                                                          "\"ID\":101,\"Name\":\"Alice\"," +
-                                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(Namespace.DerivedType/ContainedCollectionNavProp)\"," +
                                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                         "\"ContainedCollectionNavProp\":" +
                                                             "[" +
                                                                 "{" +
                                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                                    "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(102)/Namespace.DerivedType/ContainedCollectionNavProp\"," +
                                                                     "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                                     "\"ContainedCollectionNavProp\":" +
                                                                         "[" +
@@ -537,7 +527,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData1,
                 this.containedNavLink,
                 this.entryWithOnlyData2,
@@ -549,15 +539,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ContainedNavProp($select=Namespace.DerivedType/ContainedNavProp;$expand=Namespace.DerivedType/ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, DerivedType, selectClause, expandClause, "EntitySet/Namespace.DerivedType");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/Namespace.DerivedType(ContainedNavProp,ContainedNavProp(Namespace.DerivedType/ContainedNavProp))\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/Namespace.DerivedType(ContainedNavProp(Namespace.DerivedType/ContainedNavProp))\"," +
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedNavProp(Namespace.DerivedType/ContainedNavProp)/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                         "{" +
                                                             "\"ID\":102,\"Name\":\"Bob\"," +
-                                                            "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedNavProp/Namespace.DerivedType/ContainedNavProp/$entity\"," +
                                                             "\"ContainedNavProp\":" +
                                                             "{" +
                                                                 "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -576,7 +564,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData2,
                 this.containedNavLink,
                 this.entryWithOnlyData3,
@@ -586,15 +574,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "Namespace.DerivedType/ContainedCollectionNavProp($select=ContainedNavProp;$expand=ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp,Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":" +
                                             "[" +
                                                 "{" +
                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(102)/ContainedNavProp/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                     "{" +
                                                         "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -627,27 +613,27 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataEntryReader();
+                var reader = messageReader.CreateODataResourceReader();
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            entryList.Add(reader.Item as ODataEntry);
+                        case ODataReaderState.ResourceEnd:
+                            entryList.Add(reader.Item as ODataResource);
                             break;
                     }
                 }
             }
 
-            ODataEntry charileEntry = entryList[0];
-            ODataEntry bobEntry = entryList[1];
-            ODataEntry aliceEntry = entryList[2];
+            ODataResource charileEntry = entryList[0];
+            ODataResource bobEntry = entryList[1];
+            ODataResource aliceEntry = entryList[2];
 
-            charileEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(102)/ContainedNavProp");
+            charileEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)/ContainedNavProp");
             bobEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)");
             aliceEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)");
         }
@@ -662,7 +648,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 this.entryWithOnlyData2,
                 new ODataNavigationLinkEnd(),
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData2,
                 new ODataNavigationLinkEnd(),
                 this.containedNavLink,
@@ -673,15 +659,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ExpandedNavProp,ContainedCollectionNavProp($select=ID),ContainedNavProp($select=ID,Name)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ID,Name,ExpandedNavProp,ContainedCollectionNavProp,ContainedNavProp,ContainedCollectionNavProp(ID),ContainedNavProp(ID,Name))/$entity\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ID,Name,ExpandedNavProp,ContainedCollectionNavProp(ID),ContainedNavProp(ID,Name))/$entity\"," +
                                             "\"ID\":101,\"Name\":\"Alice\"," +
                                             "\"ExpandedNavProp\":{\"ID\":102,\"Name\":\"Bob\"}," +
-                                            "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ID)\"," +
                                             "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                             "\"ContainedCollectionNavProp\":[" +
                                                 "{\"ID\":102,\"Name\":\"Bob\"}" +
                                             "]," +
-                                            "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedNavProp(ID,Name)/$entity\"," +
                                             "\"ContainedNavProp\":{\"ID\":103,\"Name\":\"Charlie\"}" +
                                         "}";
             result.Should().Be(expectedPayload);
@@ -704,26 +688,26 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            List<ODataResource> entryList = new List<ODataResource>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataEntryReader();
+                var reader = messageReader.CreateODataResourceReader();
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            entryList.Add(reader.Item as ODataEntry);
+                        case ODataReaderState.ResourceEnd:
+                            entryList.Add(reader.Item as ODataResource);
                             break;
                     }
                 }
             }
 
-            ODataEntry bobEntry = entryList[0];
-            ODataEntry containedBobEntry = entryList[1];
-            ODataEntry containedCharileEntry = entryList[2];
-            ODataEntry topLevelAliceEntry = entryList[3];
+            ODataResource bobEntry = entryList[0];
+            ODataResource containedBobEntry = entryList[1];
+            ODataResource containedCharileEntry = entryList[2];
+            ODataResource topLevelAliceEntry = entryList[3];
 
             bobEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(102)");
             containedBobEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)");
@@ -732,7 +716,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
-        public void ReadingContainedWithSubContextUrlShouldThrow()
+        public void ReadingContainedWithSubContextUrl()
         {
             string payload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ID,Name,ExpandedNavProp,ContainedCollectionNavProp,ContainedNavProp,ContainedCollectionNavProp(ID),ContainedNavProp(ID,Name))/$entity\"," +
                                             "\"ID\":101,\"Name\":\"Alice\"," +
@@ -744,31 +728,27 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            List<ODataEntry> entryList = new List<ODataEntry>();
+            List<ODataResource> entryList = new List<ODataResource>();
 
-            Action readContainedEntry = () =>
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
+                var reader = messageReader.CreateODataResourceReader();
+                while (reader.Read())
                 {
-                    var reader = messageReader.CreateODataEntryReader();
-                    while (reader.Read())
+                    switch (reader.State)
                     {
-                        switch (reader.State)
-                        {
-                            case ODataReaderState.EntryEnd:
-                                entryList.Add(reader.Item as ODataEntry);
-                                break;
-                        }
+                        case ODataReaderState.ResourceEnd:
+                            entryList.Add(reader.Item as ODataResource);
+                            break;
                     }
                 }
+            }
 
-                foreach (var oDataEntry in entryList)
-                {
-                    oDataEntry.Id.Should().NotBeNull();
-                }
-            };
+            foreach (var oDataEntry in entryList)
+            {
+                oDataEntry.Id.Should().NotBeNull();
+            }
 
-            readContainedEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataMetadataBuilder_MissingODataUri);
         }
         #endregion Containment Tests
 
@@ -776,7 +756,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void WritingTopLevelInlinecountTest()
         {
-            ODataFeed feed = new ODataFeed { Count = 1 };
+            ODataResourceSet feed = new ODataResourceSet { Count = 1 };
 
             ODataItem[] itemsToWrite = new ODataItem[]
             {
@@ -802,11 +782,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void WritingNestedInlinecountTest()
         {
-            ODataFeed feed = new ODataFeed { Count = 1 };
+            ODataResourceSet feed = new ODataResourceSet { Count = 1 };
 
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataFeed(),
+                new ODataResourceSet(),
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
                 feed
@@ -820,7 +800,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
-                                                    "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp\"," +
                                                     "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                     "\"ContainedCollectionNavProp@odata.count\":1," +
                                                     "\"ContainedCollectionNavProp\":[]" +
@@ -845,23 +824,23 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            List<ODataFeed> feedList = new List<ODataFeed>();
+            List<ODataResourceSet> feedList = new List<ODataResourceSet>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataFeedReader();
+                var reader = messageReader.CreateODataResourceSetReader();
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.FeedEnd:
-                            feedList.Add(reader.Item as ODataFeed);
+                        case ODataReaderState.ResourceSetEnd:
+                            feedList.Add(reader.Item as ODataResourceSet);
                             break;
                     }
                 }
             }
 
-            ODataFeed topFeed = feedList[0];
+            ODataResourceSet topFeed = feedList[0];
             topFeed.Count.Should().Be(1881);
         }
 
@@ -883,39 +862,40 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            List<ODataFeed> feedList = new List<ODataFeed>();
+            List<ODataResourceSet> feedList = new List<ODataResourceSet>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                var reader = messageReader.CreateODataFeedReader();
+                var reader = messageReader.CreateODataResourceSetReader();
                 while (reader.Read())
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.FeedEnd:
-                            feedList.Add(reader.Item as ODataFeed);
+                        case ODataReaderState.ResourceSetEnd:
+                            feedList.Add(reader.Item as ODataResourceSet);
                             break;
                     }
                 }
             }
 
-            ODataFeed innerFeed = feedList[0];
+            ODataResourceSet innerFeed = feedList[0];
             innerFeed.Count.Should().Be(1900);
-            ODataFeed topFeed = feedList[1];
+            ODataResourceSet topFeed = feedList[1];
             topFeed.Count.Should().Be(null);
         }
         #endregion Inlinecount Tests
 
         [Fact]
-        public void ShouldAlwaysWriteAdditionalPropertyWhenWriteResponse()
+        public void ShouldAlwaysWriteAdditionalPropertyForOpenType()
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Properties = new[]
                 {
                     new ODataProperty { Name = "ID", Value = 102 },
                     new ODataProperty { Name = "Name", Value = "Bob" },
-                    new ODataProperty { Name = "Prop1", Value = "Var1" }
+                    new ODataProperty { Name = "Prop1", Value = "Var1" },
+                    new ODataProperty { Name = "UntypedProperty", Value = new ODataUntypedValue {RawValue="\"rawValue\"" } }
                 },
             };
 
@@ -924,7 +904,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string expectedPayload =
                                   "{\"" +
                                     "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$entity\"," +
-                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\"" +
+                                    "\"ID\":102,\"Name\":\"Bob\",\"Prop1\":\"Var1\",\"UntypedProperty\":\"rawValue\"" +
                                   "}";
 
             string result = this.GetWriterOutputForContentTypeAndKnobValue(
@@ -934,7 +914,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
-                enableFullValidation: true);
+                enableBasicValidation: true);
             result.Should().Be(expectedPayload);
 
             result = this.GetWriterOutputForContentTypeAndKnobValue(
@@ -944,17 +924,17 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 Model,
                 EntitySet,
                 EntityType,
-                enableFullValidation: false);
+                enableBasicValidation: false);
             result.Should().Be(expectedPayload);
         }
 
-        [Fact(Skip = "Ignore this until writing nested context URL is supported")]
+        [Fact]
         public void ShouldWriteNestedContextUrlIfCanNotBeInferred()
         {
-            var entryWithOnlyData2WithSerializationInfo = new ODataEntry
+            var entryWithOnlyData2WithSerializationInfo = new ODataResource
             {
                 Properties = new[] { new ODataProperty { Name = "ID", Value = 102 }, new ODataProperty { Name = "Name", Value = "Bob" } },
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                SerializationInfo = new ODataResourceSerializationInfo()
                 {
                     NavigationSourceName = "FooSet",
                     NavigationSourceEntityTypeName = "NS.BarType"
@@ -965,7 +945,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 this.entryWithOnlyData1,
                 this.containedCollectionNavLink,
-                new ODataFeed(),
+                new ODataResourceSet(),
                 entryWithOnlyData2WithSerializationInfo,
             };
 
@@ -975,17 +955,33 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedNavProp)/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":[{\"ID\":102,\"Name\":\"Bob\"}]" +
                                       "}";
             result.Should().Be(expectedPayload);
         }
 
+        [Fact]
+        public void WriteContextMetadataEntityApplyComputeProperties()
+        {
+            ODataItem[] itemsToWrite = new ODataItem[]
+            {
+                new ODataResourceSet(), this.entryWithOnlyData2
+            };
+
+            IEdmNavigationProperty containedNavProp = EntityType.FindProperty("ContainedCollectionNavProp") as IEdmNavigationProperty;
+            IEdmEntitySetBase contianedEntitySet = EntitySet.FindNavigationTarget(containedNavProp) as IEdmEntitySetBase;
+            string resourcePath = "EntitySet(123)/ContainedCollectionNavProp";
+            string applyClause = "compute(ID mul 2 as idMul2,length(Name) as nameLenght)";
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, contianedEntitySet, EntityType, null, null, resourcePath, applyClause);
+
+            result.Should().StartWith("{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedCollectionNavProp(idMul2,nameLenght)");
+        }
+
         #region Help Methods
         private string GetWriterOutputForContentTypeAndKnobValue(
             string contentType,
-            bool autoComputePayloadMetadataInJson,
+            bool autoComputePayloadMetadata,
             ODataItem[] itemsToWrite,
             EdmModel edmModel,
             IEdmEntitySetBase edmEntitySet,
@@ -993,24 +989,26 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string selectClause = null,
             string expandClause = null,
             string resourcePath = null,
-            bool enableFullValidation = true)
+            string applyClause = null,
+            bool enableBasicValidation = true)
         {
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
-                AutoComputePayloadMetadataInJson = autoComputePayloadMetadataInJson,
-                EnableFullValidation = enableFullValidation
+                Validations = (enableBasicValidation ? ValidationKinds.All : ValidationKinds.None),
             };
 
-            var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();
+            var parser = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause }, { "$apply", applyClause } });
+            var result = parser.ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()
             {
                 ServiceRoot = new Uri("http://example.org/odata.svc"),
-                SelectAndExpand = result
-            };
+                SelectAndExpand = parser.ParseSelectAndExpand(),
+                Apply = parser.ParseApply()
+        };
 
             if (resourcePath != null)
             {
@@ -1026,14 +1024,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 int currentIdx = 0;
 
-                if (itemsToWrite[currentIdx] is ODataFeed)
+                if (itemsToWrite[currentIdx] is ODataResourceSet)
                 {
-                    ODataWriter writer = messageWriter.CreateODataFeedWriter(edmEntitySet, edmEntityType);
+                    ODataWriter writer = messageWriter.CreateODataResourceSetWriter(edmEntitySet, edmEntityType);
                     this.WriteFeed(writer, itemsToWrite, ref currentIdx);
                 }
-                else if (itemsToWrite[currentIdx] is ODataEntry)
+                else if (itemsToWrite[currentIdx] is ODataResource)
                 {
-                    ODataWriter writer = messageWriter.CreateODataEntryWriter(edmEntitySet, edmEntityType);
+                    ODataWriter writer = messageWriter.CreateODataResourceWriter(edmEntitySet, edmEntityType);
                     this.WriteEntry(writer, itemsToWrite, ref currentIdx);
                 }
                 else
@@ -1054,9 +1052,9 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             if (currentIdx < itemsToWrite.Length)
             {
-                ODataFeed feed = (ODataFeed)itemsToWrite[currentIdx++];
+                ODataResourceSet feed = (ODataResourceSet)itemsToWrite[currentIdx++];
                 writer.WriteStart(feed);
-                while (currentIdx < itemsToWrite.Length && itemsToWrite[currentIdx] is ODataEntry)
+                while (currentIdx < itemsToWrite.Length && itemsToWrite[currentIdx] is ODataResource)
                 {
                     this.WriteEntry(writer, itemsToWrite, ref currentIdx);
                 }
@@ -1069,11 +1067,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             if (currentIdx < itemsToWrite.Length)
             {
-                ODataEntry entry = (ODataEntry)itemsToWrite[currentIdx++];
+                ODataResource entry = (ODataResource)itemsToWrite[currentIdx++];
                 writer.WriteStart(entry);
                 while (currentIdx < itemsToWrite.Length)
                 {
-                    if (itemsToWrite[currentIdx] is ODataNavigationLink)
+                    if (itemsToWrite[currentIdx] is ODataNestedResourceInfo)
                     {
                         this.WriteLink(writer, itemsToWrite, ref currentIdx);
                     }
@@ -1097,15 +1095,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         {
             if (currentIdx < itemsToWrite.Length)
             {
-                ODataNavigationLink link = (ODataNavigationLink)itemsToWrite[currentIdx++];
+                ODataNestedResourceInfo link = (ODataNestedResourceInfo)itemsToWrite[currentIdx++];
                 writer.WriteStart(link);
                 if (currentIdx < itemsToWrite.Length)
                 {
-                    if (itemsToWrite[currentIdx] is ODataEntry)
+                    if (itemsToWrite[currentIdx] is ODataResource)
                     {
                         this.WriteEntry(writer, itemsToWrite, ref currentIdx);
                     }
-                    else if (itemsToWrite[currentIdx] is ODataFeed)
+                    else if (itemsToWrite[currentIdx] is ODataResourceSet)
                     {
                         this.WriteFeed(writer, itemsToWrite, ref currentIdx);
                     }

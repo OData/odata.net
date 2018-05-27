@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class HttpHeaderValueElementTests
     {
@@ -17,21 +17,21 @@ namespace Microsoft.OData.Core.Tests
         public void NullNameShouldThrow()
         {
             Action test = () => new HttpHeaderValueElement(null, null, new KeyValuePair<string, string>[0]);
-            test.ShouldThrow<ArgumentNullException>().WithMessage("name", ComparisonMode.Substring);
+            test.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("name"));
         }
 
         [Fact]
         public void EmptyNameShouldThrow()
         {
             Action test = () => new HttpHeaderValueElement("", "", new KeyValuePair<string, string>[0]);
-            test.ShouldThrow<ArgumentNullException>().WithMessage("name", ComparisonMode.Substring);
+            test.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("name"));
         }
 
         [Fact]
         public void NullParametersShouldThrow()
         {
             Action test = () => new HttpHeaderValueElement("name", null, null);
-            test.ShouldThrow<ArgumentNullException>().WithMessage("parameters", ComparisonMode.Substring);
+            test.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("parameters"));
         }
 
         [Fact]

@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Reflection;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
 
@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client.Materialization
         private DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComplexValueMaterializationPolicy" /> class.
+        /// Initializes a new instance of the <see cref="StructuralValueMaterializationPolicy" /> class.
         /// </summary>
         /// <param name="materializerContext">The materializer context.</param>
         /// <param name="lazyPrimitivePropertyConverter">The lazy primitive property converter.</param>
@@ -117,6 +117,13 @@ namespace Microsoft.OData.Client.Materialization
             if (!property.HasMaterializedValue())
             {
                 object value = property.Value;
+                ODataUntypedValue untypedVal = value as ODataUntypedValue;
+                if ((untypedVal != null)
+                    && this.MaterializerContext.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
+                {
+                    value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                }
+
                 object materializedValue = this.PrimitivePropertyConverter.ConvertPrimitiveValue(value, type);
                 property.SetMaterializedValue(materializedValue);
             }
@@ -150,7 +157,7 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(instance != null, "instance != null");
 
-            var prop = type.GetProperty(property.Name, this.MaterializerContext.IgnoreMissingProperties);
+            var prop = type.GetProperty(property.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
             if (prop == null)
             {
                 return;
@@ -170,11 +177,6 @@ namespace Microsoft.OData.Client.Materialization
                 if (property.Value is string)
                 {
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MixedTextWithComment);
-                }
-
-                if (property.Value is ODataComplexValue)
-                {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidCollectionItem(property.Name));
                 }
 
                 // ODataLib already parsed the data and materialized all the primitive types. There is nothing more to materialize
@@ -215,57 +217,8 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                object propertyValue = property.Value;
-                ODataComplexValue complexValue = propertyValue as ODataComplexValue;
-                if (propertyValue != null && complexValue != null)
-                {
-                    if (!prop.EdmProperty.Type.IsComplex())
-                    {
-                        // The error message is a bit odd, but it's compatible with V1.
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_ExpectingSimpleValue);
-                    }
-
-                    // Complex type.
-                    bool needToSet = false;
-
-                    ClientEdmModel edmModel = this.MaterializerContext.Model;
-                    ClientTypeAnnotation complexType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(prop.PropertyType));
-                    object complexInstance = prop.GetValue(instance);
-
-                    // Validating property inheritance in complexvalue and instance
-                    if (prop.PropertyType.Name != property.Name)
-                    {
-                        complexType = this.MaterializerContext.ResolveTypeForMaterialization(prop.PropertyType, complexValue.TypeName);
-
-                        // recreate complexInstance with derived type
-                        complexInstance = null;
-                    }
-
-                    if (complexValue.Properties.Any() || complexInstance == null)
-                    {
-                        complexInstance = this.CreateNewInstance(complexType.EdmTypeReference, complexType.ElementType);
-                        needToSet = true;
-                    }
-
-                    this.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.IgnoreMissingProperties);
-                    this.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
-
-                    if (needToSet)
-                    {
-                        prop.SetValue(instance, complexInstance, property.Name, true /* allowAdd? */);
-                    }
-
-                    if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
-                    {
-                        // Set instance annotation for this complex instance
-                        this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(property, complexInstance);
-                    }
-                }
-                else
-                {
-                    this.MaterializePrimitiveDataValue(prop.NullablePropertyType, property);
-                    prop.SetValue(instance, property.GetMaterializedValue(), property.Name, true /* allowAdd? */);
-                }
+                this.MaterializePrimitiveDataValue(prop.NullablePropertyType, property);
+                prop.SetValue(instance, property.GetMaterializedValue(), property.Name, true /* allowAdd? */);
             }
 
             if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
@@ -280,14 +233,14 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="actualType">Actual type for properties being materialized.</param>
         /// <param name="values">List of values to materialize.</param>
-        /// <param name="ignoreMissingProperties">
-        /// Whether properties missing from the client types should be ignored.
+        /// <param name="undeclaredPropertyBehavior">
+        /// Whether properties missing from the client types should be supported or throw exception.
         /// </param>
         /// <remarks>
         /// Values are materialized in-place withi each <see cref="ODataProperty"/>
         /// instance.
         /// </remarks>
-        internal void MaterializeDataValues(ClientTypeAnnotation actualType, IEnumerable<ODataProperty> values, bool ignoreMissingProperties)
+        internal void MaterializeDataValues(ClientTypeAnnotation actualType, IEnumerable<ODataProperty> values, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
             Debug.Assert(actualType != null, "actualType != null");
             Debug.Assert(values != null, "values != null");
@@ -301,7 +254,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 string propertyName = odataProperty.Name;
 
-                var property = actualType.GetProperty(propertyName, ignoreMissingProperties); // may throw
+                var property = actualType.GetProperty(propertyName, undeclaredPropertyBehavior); // may throw
                 if (property == null)
                 {
                     continue;
@@ -316,8 +269,8 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (property.IsKnownType)
                 {
-                    // Note: MaterializeDataValue materializes only properties of primitive types. Materialization specific 
-                    // to complex types and collections is done later. 
+                    // Note: MaterializeDataValue materializes only properties of primitive types. Materialization specific
+                    // to complex types and collections is done later.
                     this.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
                 }
             }

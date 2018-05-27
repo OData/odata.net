@@ -11,18 +11,21 @@ using System.Text;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataMediaTypeResolverTests
     {
         private static readonly List<ODataMediaTypeFormat> JsonMediaTypes = new List<ODataMediaTypeFormat>();
 
+        // List of media type mappings for Batch payload.
+        private static readonly List<ODataMediaTypeFormat> BatchMediaTypes = new List<ODataMediaTypeFormat>();
+
         /// <summary>
         /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/>, ATOM excluded.
-        /// Here is a comparsion baseline
+        /// Here is a comparison baseline
         /// </summary>
         /// <remarks>
-        /// The set of supported media types is ordered (desc) by their precedence/priority with respect to (1) format and (2) media type.
+        /// The set of supported media types is ordered (descending) by their precedence/priority with respect to (1) format and (2) media type.
         /// As a result the default media type for a given payloadKind is the first entry in the MediaTypeWithFormat array.
         /// </remarks>
         private static readonly IList<ODataMediaTypeFormat>[] MediaTypeCollection = {
@@ -38,12 +41,12 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // value
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType),ODataFormat.RawValue),
             },
             // binary
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeOctetStreamSubType) ,ODataFormat.RawValue),
             },
             // collection
@@ -52,29 +55,24 @@ namespace Microsoft.OData.Core.Tests
             JsonMediaTypes,
             // metadata document
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata),
             },
             // error
             JsonMediaTypes,
             // batch
-            new ODataMediaTypeFormat[]
-            { 
-                // Note that as per spec the multipart/mixed must have a boundary parameter which is not specified here. We will add that parameter
-                // when using this mime type because we need to generate a new boundary every time.
-                new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType) ,ODataFormat.Batch),
-            },
+            BatchMediaTypes,
             // parameter
             JsonMediaTypes,
             // individual property
             JsonMediaTypes,
             // delta
             new ODataMediaTypeFormat[]
-            { 
+            {
             },
             // async
             new ODataMediaTypeFormat[]
-            { 
+            {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeHttpSubType) ,ODataFormat.RawValue),
             },
         };
@@ -112,12 +110,15 @@ namespace Microsoft.OData.Core.Tests
                     }
                 }
             }
+
+            BatchMediaTypes.Add(new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType), ODataFormat.Batch));
+            BatchMediaTypes.AddRange(JsonMediaTypes);
         }
 
         [Fact]
         public void TestJsonMediaType()
         {
-            var resolver = ODataMediaTypeResolver.GetMediaTypeResolver(false);
+            var resolver = ODataMediaTypeResolver.GetMediaTypeResolver(null);
             foreach (var payloadKind in Enum.GetValues(typeof(ODataPayloadKind)).Cast<ODataPayloadKind>())
             {
                 if (payloadKind == ODataPayloadKind.Unsupported)
@@ -176,15 +177,13 @@ namespace Microsoft.OData.Core.Tests
                 ODataMediaType mediaType;
                 Encoding encoding;
                 ODataPayloadKind selectedPayloadKind;
-                string batchBoundary;
-                ODataFormat actual = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { payloadKind }, resolver, out mediaType, out encoding, out selectedPayloadKind, out batchBoundary);
+                ODataFormat actual = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { payloadKind }, resolver, out mediaType, out encoding, out selectedPayloadKind);
 
                 Console.WriteLine(payloadKind);
                 actual.ShouldBeEquivalentTo(MyFormat.Instance);
                 mediaType.ShouldBeEquivalentTo(expectedMediaType);
                 encoding.ShouldBeEquivalentTo(payloadKind == ODataPayloadKind.BinaryValue ? null : Encoding.UTF8);
                 selectedPayloadKind.ShouldBeEquivalentTo(payloadKind);
-                batchBoundary.ShouldBeEquivalentTo(expectedBoundary);
             }
         }
 

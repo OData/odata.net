@@ -4,16 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Linq;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Class that knows how to bind ParameterQueryTokens.
     /// </summary>
@@ -28,7 +23,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         internal static SingleValueNode BindRangeVariableToken(RangeVariableToken rangeVariableToken, BindingState state)
         {
             ExceptionUtils.CheckArgumentNotNull(rangeVariableToken, "rangeVariableToken");
-            
+
             RangeVariable rangeVariable = state.RangeVariables.SingleOrDefault(p => p.Name == rangeVariableToken.Name);
 
             if (rangeVariable == null)

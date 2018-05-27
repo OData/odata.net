@@ -31,7 +31,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         /// Initializes a new instance of the ReadWriteOnlyStreamProxy class
         /// </summary>
         /// <param name="underlying">The underlying stream to contain</param>
-        /// <param name="writable">A valud indicating whether the stream can be written to</param>
+        /// <param name="writable">A value indicating whether the stream can be written to</param>
         public ReadWriteOnlyStreamProxy(Stream underlying, bool writable)
         {
             ExceptionUtilities.CheckArgumentNotNull(underlying, "underlying");
@@ -44,10 +44,10 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         /// </summary>
         public override bool CanRead
         {
-            get 
+            get
             {
                 ExceptionUtilities.CheckObjectNotNull(this.Underlying, "Underlying stream was null");
-                return this.Underlying.CanRead; 
+                return this.Underlying.CanRead;
             }
         }
 
@@ -56,13 +56,13 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         /// </summary>
         public override bool CanWrite
         {
-            get 
+            get
             {
                 ExceptionUtilities.CheckObjectNotNull(this.Underlying, "Underlying stream was null");
                 return this.writeable && this.Underlying.CanWrite;
             }
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether the stream can seek. Throws exception if called.
         /// </summary>
@@ -145,7 +145,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         }
 
         internal Stream Underlying { get; private set; }
-        
+
         /// <summary>
         /// Flushes the underlying stream
         /// </summary>
@@ -232,7 +232,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             ExceptionUtilities.CheckObjectNotNull(this.Underlying, "Underlying stream was null");
             return this.Underlying.BeginWrite(buffer, offset, count, callback, state);
         }
-        
+
         /// <summary>
         /// Closes the stream
         /// </summary>
@@ -306,7 +306,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         {
             throw new TaupoNotSupportedException(NotSupportedMessage);
         }
-      
+
 #if !WIN8
         /// <summary>
         /// Ends an async write to the underlying stream.
@@ -329,7 +329,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         {
             throw new TaupoNotSupportedException(NotSupportedMessage);
         }
-        
+
         /// <summary>
         /// Returns whether or not the current object is equal to the one given. Throws exception if called.
         /// </summary>

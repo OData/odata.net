@@ -10,18 +10,16 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Query.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core.UriParser.Semantic;
+
     #endregion Namespaces
 
     /// <summary>
@@ -282,8 +280,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
         public static IEnumerable<FilterTestCase> PropertyAccessTestCases(IEdmModel model)
         {
             // Accessing a primitive property on the entity type
-            EntityRangeVariable customersEntityRangeVariable = new EntityRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
-            SingleValuePropertyAccessNode propertyAccessNode = new SingleValuePropertyAccessNode(new EntityRangeVariableReferenceNode(customersEntityRangeVariable.Name, customersEntityRangeVariable),
+            ResourceRangeVariable customersEntityRangeVariable = new ResourceRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
+            SingleValuePropertyAccessNode propertyAccessNode = new SingleValuePropertyAccessNode(new ResourceRangeVariableReferenceNode(customersEntityRangeVariable.Name, customersEntityRangeVariable),
                         model.ResolveProperty("TestNS.Customer.Name"));
             yield return new FilterTestCase()
             {
@@ -293,8 +291,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
             // Accessing a complex on entity and primitive on complex
             SingleValuePropertyAccessNode propertyAccessNode2 = new SingleValuePropertyAccessNode(
-                new SingleValuePropertyAccessNode(
-                    new EntityRangeVariableReferenceNode(customersEntityRangeVariable.Name, customersEntityRangeVariable),
+                new SingleComplexNode(
+                    new ResourceRangeVariableReferenceNode(customersEntityRangeVariable.Name, customersEntityRangeVariable),
                     model.ResolveProperty("TestNS.Customer.Address")
                     ),
                 model.ResolveProperty("TestNS.Address.City")
@@ -308,13 +306,13 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
         public static IEnumerable<FilterTestCase> TopFilterExpressionTestCases(IEdmModel model)
         {
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dummy", model.ResolveTypeReference("TestNS.TypeWithPrimitiveProperties", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("TypesWithPrimitiveProperties"));
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dummy", model.ResolveTypeReference("TestNS.TypeWithPrimitiveProperties", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("TypesWithPrimitiveProperties"));
             yield return new FilterTestCase()
             {
                 EntitySetName = "TypesWithPrimitiveProperties",
                 Filter = "BoolProperty",
                 ExpectedFilterCondition = new SingleValuePropertyAccessNode(
-                 new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
+                 new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
                  model.ResolveProperty("TestNS.TypeWithPrimitiveProperties.BoolProperty")
              )
             };
@@ -324,7 +322,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                 EntitySetName = "TypesWithPrimitiveProperties",
                 Filter = "NullableBoolProperty",
                 ExpectedFilterCondition = new SingleValuePropertyAccessNode(
-              new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
+              new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
               model.ResolveProperty("TestNS.TypeWithPrimitiveProperties.NullableBoolProperty")
           )
             };
@@ -527,10 +525,10 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
                     // construct the expected filter node
                     var entitySet = model.FindDeclaredEntitySet(testCase.EntitySetName);
-                    EntityCollectionNode entityCollectionNode = new EntitySetNode(entitySet);
+                    CollectionResourceNode entityCollectionNode = new EntitySetNode(entitySet);
                     var expectedFilter = new FilterClause(
                         testCase.ExpectedFilterCondition,
-                        new EntityRangeVariable(ExpressionConstants.It, entitySet.EntityType().ToTypeReference(false).AsEntity(), entityCollectionNode)
+                        new ResourceRangeVariable(ExpressionConstants.It, entitySet.EntityType().ToTypeReference(false).AsEntity(), entityCollectionNode)
                         );
 
                     QueryNodeUtils.VerifyFilterClausesAreEqual(

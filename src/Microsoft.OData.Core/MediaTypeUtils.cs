@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -22,8 +22,8 @@ namespace Microsoft.OData.Core
         /// <summary>An array of all the supported payload kinds.</summary>
         private static readonly ODataPayloadKind[] allSupportedPayloadKinds = new ODataPayloadKind[]
         {
-            ODataPayloadKind.Feed,
-            ODataPayloadKind.Entry,
+            ODataPayloadKind.ResourceSet,
+            ODataPayloadKind.Resource,
             ODataPayloadKind.Property,
             ODataPayloadKind.MetadataDocument,
             ODataPayloadKind.ServiceDocument,
@@ -42,12 +42,12 @@ namespace Microsoft.OData.Core
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
-        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not 
+        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not
         /// process the payload correctly when included.
-        /// 
+        ///
         /// Because the data service should include the encoding as part of the Content-Type in the response,
         /// there should be no ambiguity as to what encoding is being used.
-        /// 
+        ///
         /// For further information, see http://www.unicode.org/faq/utf_bom.html#BOM.
         /// </remarks>
         private static readonly UTF8Encoding encodingUtf8NoPreamble = new UTF8Encoding(false, true);
@@ -64,12 +64,12 @@ namespace Microsoft.OData.Core
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
-        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not 
+        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not
         /// process the payload correctly when included.
-        /// 
+        ///
         /// Because the data service should include the encoding as part of the Content-Type in the response,
         /// there should be no ambiguity as to what encoding is being used.
-        /// 
+        ///
         /// For further information, see http://www.unicode.org/faq/utf_bom.html#BOM.
         /// </remarks>
         internal static UTF8Encoding EncodingUtf8NoPreamble
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Core
                 // Starting in V3 we replace all occurrences of application/json with application/json;odata.metadata=minimal
                 // before handing the acceptable media types to the conneg code. This is necessary because for an accept
                 // header 'application/json, we want to the result to be 'application/json;odata.metadata=minimal'
-                ConvertApplicationJsonInAcceptableMediaTypes(specifiedTypes);
+                ConvertApplicationJsonInAcceptableMediaTypes(specifiedTypes, settings.Version ?? ODataVersion.V4);
 
                 ODataMediaTypeFormat selectedMediaTypeWithFormat;
                 string specifiedCharset = null;
@@ -176,6 +176,21 @@ namespace Microsoft.OData.Core
                 format = selectedMediaTypeWithFormat.Format;
                 mediaType = selectedMediaTypeWithFormat.MediaType;
 
+                // If any accept types in request used non-prefixed odata metadata or streaming type parameter,
+                // use the non-prefixed version in the response
+                if (specifiedTypes != null && mediaType.Parameters != null)
+                {
+                    if (specifiedTypes.Any(t => t.Key.Parameters != null && t.Key.Parameters.Any(p => String.Compare(p.Key, MimeConstants.MimeShortMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0)))
+                    {
+                        mediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, mediaType.Parameters.Select(p => new KeyValuePair<string, string>(String.Compare(p.Key, MimeConstants.MimeMetadataParameterName, StringComparison.OrdinalIgnoreCase) == 0 ? MimeConstants.MimeShortMetadataParameterName : p.Key, p.Value)));
+                    }
+
+                    if (specifiedTypes.Any(t => t.Key.Parameters != null && t.Key.Parameters.Any(p => String.Compare(p.Key, MimeConstants.MimeShortStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0)))
+                    {
+                        mediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, mediaType.Parameters.Select(p => new KeyValuePair<string, string>(String.Compare(p.Key, MimeConstants.MimeStreamingParameterName, StringComparison.OrdinalIgnoreCase) == 0 ? MimeConstants.MimeShortStreamingParameterName : p.Key, p.Value)));
+                    }
+                }
+
                 // If a charset was specified with the accept header, consider it for the encoding
                 string acceptableCharsets = settings.AcceptableCharsets;
                 if (specifiedCharset != null)
@@ -184,71 +199,6 @@ namespace Microsoft.OData.Core
                 }
 
                 encoding = GetEncoding(acceptableCharsets, payloadKind, mediaType, /*useDefaultEncoding*/ true);
-            }
-
-            return format;
-        }
-
-        /// <summary>
-        /// Determine the <see cref="ODataFormat"/> to use for the given <paramref name="contentTypeHeader"/>. If no supported content type
-        /// is found an exception is thrown.
-        /// </summary>
-        /// <param name="contentTypeHeader">The name of the content type to be checked.</param>
-        /// <param name="supportedPayloadKinds">All possiblel kinds of payload that can be read with this content type.</param>
-        /// <param name="mediaTypeResolver">The media type resolver to use when interpreting the content type.</param>
-        /// <param name="mediaType">The media type parsed from the <paramref name="contentTypeHeader"/>.</param>
-        /// <param name="encoding">The encoding from the content type or the default encoding for the <paramref name="mediaType" />.</param>
-        /// <param name="selectedPayloadKind">
-        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the 
-        /// specified <paramref name="contentTypeHeader"/>.
-        /// </param>
-        /// <param name="batchBoundary">The batch boundary read from the content type for batch payloads; otherwise null.</param>
-        /// <returns>The <see cref="ODataFormat"/> for the <paramref name="contentTypeHeader"/>.</returns>
-        internal static ODataFormat GetFormatFromContentType(
-            string contentTypeHeader,
-            ODataPayloadKind[] supportedPayloadKinds,
-            ODataMediaTypeResolver mediaTypeResolver,
-            out ODataMediaType mediaType,
-            out Encoding encoding,
-            out ODataPayloadKind selectedPayloadKind,
-            out string batchBoundary)
-        {
-            Debug.Assert(!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported), "!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported)");
-
-            ODataFormat format = GetFormatFromContentType(contentTypeHeader, supportedPayloadKinds, mediaTypeResolver, out mediaType, out encoding, out selectedPayloadKind);
-
-            // for batch payloads, read the batch boundary from the content type header; this is the only
-            // content type parameter we support (and that is required for batch payloads)
-            if (selectedPayloadKind == ODataPayloadKind.Batch)
-            {
-                KeyValuePair<string, string> boundaryPair = default(KeyValuePair<string, string>);
-                IEnumerable<KeyValuePair<string, string>> parameters = mediaType.Parameters;
-                if (parameters != null)
-                {
-                    bool boundaryPairFound = false;
-                    foreach (KeyValuePair<string, string> pair in parameters.Where(p => HttpUtils.CompareMediaTypeParameterNames(ODataConstants.HttpMultipartBoundary, p.Key)))
-                    {
-                        if (boundaryPairFound)
-                        {
-                            throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
-                        }
-
-                        boundaryPair = pair;
-                        boundaryPairFound = true;
-                    }
-                }
-
-                if (boundaryPair.Key == null)
-                {
-                    throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
-                }
-
-                batchBoundary = boundaryPair.Value;
-                ValidationUtils.ValidateBoundaryString(batchBoundary);
-            }
-            else
-            {
-                batchBoundary = null;
             }
 
             return format;
@@ -332,7 +282,7 @@ namespace Microsoft.OData.Core
         /// <param name="mediaType">The media type to check the parameters for.</param>
         /// <param name="parameterName">The name of the expected parameter.</param>
         /// <param name="parameterValue">The value of the expected parameter.</param>
-        /// <returns>true if the <paramref name="mediaType"/> has a parameter called <paramref name="parameterName"/> 
+        /// <returns>true if the <paramref name="mediaType"/> has a parameter called <paramref name="parameterName"/>
         /// with value <paramref name="parameterValue"/>; otherwise false.</returns>
         internal static bool MediaTypeHasParameterWithValue(this ODataMediaType mediaType, string parameterName, string parameterValue)
         {
@@ -413,16 +363,16 @@ namespace Microsoft.OData.Core
         /// is found an exception is thrown.
         /// </summary>
         /// <param name="contentTypeName">The name of the content type to be checked.</param>
-        /// <param name="supportedPayloadKinds">All possiblel kinds of payload that can be read with this content type.</param>
+        /// <param name="supportedPayloadKinds">All possible kinds of payload that can be read with this content type.</param>
         /// <param name="mediaTypeResolver">The media type resolver to use when interpreting the content type.</param>
         /// <param name="mediaType">The media type parsed from the <paramref name="contentTypeName"/>.</param>
         /// <param name="encoding">The encoding from the content type or the default encoding for the <paramref name="mediaType" />.</param>
         /// <param name="selectedPayloadKind">
-        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the 
+        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the
         /// specified <paramref name="contentTypeName"/>.
         /// </param>
         /// <returns>The <see cref="ODataFormat"/> for the <paramref name="contentTypeName"/>.</returns>
-        private static ODataFormat GetFormatFromContentType(string contentTypeName, ODataPayloadKind[] supportedPayloadKinds, ODataMediaTypeResolver mediaTypeResolver, out ODataMediaType mediaType, out Encoding encoding, out ODataPayloadKind selectedPayloadKind)
+        internal static ODataFormat GetFormatFromContentType(string contentTypeName, ODataPayloadKind[] supportedPayloadKinds, ODataMediaTypeResolver mediaTypeResolver, out ODataMediaType mediaType, out Encoding encoding, out ODataPayloadKind selectedPayloadKind)
         {
             Debug.Assert(!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported), "!supportedPayloadKinds.Contains(ODataPayloadKind.Unsupported)");
 
@@ -498,8 +448,8 @@ namespace Microsoft.OData.Core
         {
             for (int i = 0; i < supportedMediaTypes.Count; ++i)
             {
-                // NOTE: the supportedMediaTypes are sorted (desc) by format and media type; so the 
-                //       default format and media type is the first entry in the list
+                // NOTE: the supportedMediaTypes are sorted (DESC) by format and media type; so the
+                //       default format and media type is the first resource in the list
                 ODataMediaTypeFormat supportedMediaType = supportedMediaTypes[i];
                 if (specifiedFormat == null || supportedMediaType.Format == specifiedFormat)
                 {
@@ -512,7 +462,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Parses the accepted charsets and matches them against the supported encodings for the given <paramref name="payloadKind"/>.
+        /// Parses the accepted char sets and matches them against the supported encodings for the given <paramref name="payloadKind"/>.
         /// </summary>
         /// <param name="acceptCharsetHeader">The Accept-Charset header of the request.</param>
         /// <param name="payloadKind">The <see cref="ODataPayloadKind"/> for which to compute the encoding.</param>
@@ -594,11 +544,12 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Converts all occurrences of the 'application/json' media type to 'application/json;odata.metadata=minimal'.
-        /// This is necessary because for an accept header 'application/json 
+        /// This is necessary because for an accept header 'application/json
         /// we want the result to be 'application/json;odata.metadata=minimal'
         /// </summary>
         /// <param name="specifiedTypes">The parsed acceptable media types.</param>
-        private static void ConvertApplicationJsonInAcceptableMediaTypes(IList<KeyValuePair<ODataMediaType, string>> specifiedTypes)
+        /// <param name="version">The ODataVersion for which to convert the 'application/json' media type</param>
+        private static void ConvertApplicationJsonInAcceptableMediaTypes(IList<KeyValuePair<ODataMediaType, string>> specifiedTypes, ODataVersion version)
         {
             if (specifiedTypes == null)
             {
@@ -611,14 +562,15 @@ namespace Microsoft.OData.Core
                 if (HttpUtils.CompareMediaTypeNames(mediaType.SubType, MimeConstants.MimeJsonSubType) &&
                     HttpUtils.CompareMediaTypeNames(mediaType.Type, MimeConstants.MimeApplicationType))
                 {
-                    if (mediaType.Parameters == null ||
-                        !mediaType.Parameters.Any(p => HttpUtils.CompareMediaTypeParameterNames(p.Key, MimeConstants.MimeMetadataParameterName)))
+                    if (mediaType.Parameters == null || !mediaType.Parameters.Any(p => HttpUtils.IsMetadataParameter(p.Key)))
                     {
                         // application/json detected; convert it to Json Light
                         IList<KeyValuePair<string, string>> existingParams = mediaType.Parameters != null ? mediaType.Parameters.ToList() : null;
                         int newCount = existingParams == null ? 1 : existingParams.Count + 1;
                         List<KeyValuePair<string, string>> newParams = new List<KeyValuePair<string, string>>(newCount);
-                        newParams.Add(new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueMinimal));
+                        newParams.Add(new KeyValuePair<string, string>(
+                            version < ODataVersion.V401 ? MimeConstants.MimeMetadataParameterName : MimeConstants.MimeShortMetadataParameterName,
+                            MimeConstants.MimeMetadataParameterValueMinimal));
                         if (existingParams != null)
                         {
                             newParams.AddRange(existingParams);
@@ -927,8 +879,8 @@ namespace Microsoft.OData.Core
                     }
                 }
 
-                // if the source does not have parameters or it only has accept extensions 
-                // (parameters after the q value) or we match all the paramters we 
+                // if the source does not have parameters or it only has accept extensions
+                // (parameters after the q value) or we match all the parameters we
                 // have a perfect parameter match.
                 if (!sourceHasParams ||
                     this.SourceTypeParameterCountForMatching == 0 ||

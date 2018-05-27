@@ -16,11 +16,8 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -107,7 +104,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(model.FindType("Bunk.T2"), t2, "FoundSchemaElement");
             Assert.AreEqual(model.SchemaElements.Last(), t5, "LastModelElement");
             Assert.AreEqual(model.FindType("Bunk.T5"), t5, "FoundSchemaElement");
-            Assert.AreEqual(EdmTermKind.Type, t1.TermKind, "Entity has correct term kind.");
 
             model.RemoveElement(t5);
 
@@ -159,21 +155,6 @@ namespace EdmLibTests.FunctionalTests
             // Test adding something to the Documentation namespace that is not documentation.
 
             bool caught = false;
-            try
-            {
-                model.SetAnnotationValue(f11, "http://schemas.microsoft.com/ado/2011/04/edm/documentation", "Documentation", "Crud");
-            }
-            catch (InvalidOperationException e)
-            {
-                if (e.Message.Contains("IEdmDocumentation") && e.Message.Contains("String"))
-                {
-                    caught = true;
-                }
-            }
-
-            Assert.IsTrue(caught, "Documentation pun.");
-
-            caught = false;
             try
             {
                 model.GetAnnotationValue<Boxed<int>>(f11, "Grumble", "Tumble");
@@ -1036,7 +1017,7 @@ namespace EdmLibTests.FunctionalTests
             EdmOperationParameter wilma = new EdmOperationParameter(bazAction, "Wilma", m_coreModel.GetInt32(false));
             bazAction.AddParameter(wilma);
             model.AddElement(bazAction);
-            EdmActionImport baz = container.AddActionImport("baz", bazAction, new EdmEntitySetReferenceExpression(customers));
+            EdmActionImport baz = container.AddActionImport("baz", bazAction, new EdmPathExpression(customers.Name));
             Assert.AreEqual(container, baz.Container, "ActionImport with container has container.");
 
             this.CompareEdmModelToCsdl(
@@ -1133,15 +1114,15 @@ namespace EdmLibTests.FunctionalTests
         {
             EdmModel model = new EdmModel();
             EdmEnumType colors = new EdmEnumType("Foo", "Colors");
-            var red = new EdmEnumMember(colors, "Red", new EdmIntegerConstant(1));
+            var red = new EdmEnumMember(colors, "Red", new EdmEnumMemberValue(1));
             colors.AddMember(red);
-            colors.AddMember("Blue", new EdmIntegerConstant(2));
-            colors.AddMember("Green", new EdmIntegerConstant(3));
-            colors.AddMember("Orange", new EdmIntegerConstant(4));
+            colors.AddMember("Blue", new EdmEnumMemberValue(2));
+            colors.AddMember("Green", new EdmEnumMemberValue(3));
+            colors.AddMember("Orange", new EdmEnumMemberValue(4));
 
             EdmEnumType gender = new EdmEnumType("Foo", "Gender", EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), true);
-            gender.AddMember("Male", new EdmIntegerConstant(1));
-            gender.AddMember("Female", new EdmIntegerConstant(2));
+            gender.AddMember("Male", new EdmEnumMemberValue(1));
+            gender.AddMember("Female", new EdmEnumMemberValue(2));
 
             Assert.AreEqual(colors.Members.Count(), 4, "Correct number of members");
             Assert.AreEqual(gender.Members.Count(), 2, "Correct number of members");
@@ -1155,9 +1136,9 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(gender.IsFlags, true, "correct treat as bits");
 
             Assert.AreEqual(gender.Members.First().Name, "Male", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.First().Value).Value, 1, "Correct member value");
+            Assert.AreEqual((gender.Members.First().Value.Value), 1, "Correct member value");
             Assert.AreEqual(gender.Members.ElementAt(1).Name, "Female", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.ElementAt(1).Value).Value, 2, "Correct member value");
+            Assert.AreEqual((gender.Members.ElementAt(1).Value.Value), 2, "Correct member value");
 
             model.AddElement(colors);
             model.AddElement(gender);
@@ -1217,9 +1198,9 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(gender.IsFlags, true, "correct treat as bits");
 
             Assert.AreEqual(gender.Members.ElementAt(1).Name, "ÁËìôťŽš", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.ElementAt(1).Value).Value, 1, "Correct member value");
+            Assert.AreEqual((gender.Members.ElementAt(1).Value).Value, 1, "Correct member value");
             Assert.AreEqual(gender.Members.ElementAt(0).Name, "Female", "Correct member name");
-            Assert.AreEqual(((IEdmIntegerValue)gender.Members.ElementAt(0).Value).Value, 2, "Correct member value");
+            Assert.AreEqual((gender.Members.ElementAt(0).Value).Value, 2, "Correct member value");
 
             var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
             new ConstructiveApiCsdlXElementComparer().Compare(expectCsdls.ToList(), actualCsdls.ToList());
@@ -1252,7 +1233,7 @@ namespace EdmLibTests.FunctionalTests
             var fooFunction = new EdmFunction("Westwind", "Foo", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)), true /*isBound*/, null, true /*isComposable*/);
             model.AddElement(fooFunction);
             fooFunction.AddParameter("Fred", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)));
-            container.AddFunctionImport("Foo", fooFunction, new EdmEntitySetReferenceExpression(customers));
+            container.AddFunctionImport("Foo", fooFunction, new EdmPathExpression(customers.Name));
 
             this.CompareEdmModelToCsdl(
                 model,
@@ -1284,12 +1265,12 @@ namespace EdmLibTests.FunctionalTests
 
             var fooFunction1 = new EdmFunction("Eastwind", "Foo", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)), false, null, true);
             model.AddElement(fooFunction1);
-            container.AddFunctionImport("Foo", fooFunction1, new EdmEntitySetReferenceExpression(customers));
+            container.AddFunctionImport("Foo", fooFunction1, new EdmPathExpression(customers.Name));
 
             var foo2Action = new EdmAction("Eastwind", "Foo", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)), true /*isBound*/, null);
             foo2Action.AddParameter(new EdmOperationParameter(foo2Action, "Fred", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false))));
             model.AddElement(foo2Action);
-            var foo2 = new EdmActionImport(container, "Foo", foo2Action, new EdmEntitySetReferenceExpression(customers));
+            var foo2 = new EdmActionImport(container, "Foo", foo2Action, new EdmPathExpression(customers.Name));
             container.AddElement(foo2);
 
             this.CompareEdmModelToCsdl(
@@ -1399,12 +1380,12 @@ namespace EdmLibTests.FunctionalTests
         {
             Assert.AreEqual("Edm", EdmCoreModel.Namespace, "Correct Namespace");
 #if !(SILVERLIGHT || ORCAS)
-            Assert.AreEqual((Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Length) - 1, EdmCoreModel.Instance.SchemaElements.Count(), "Core model has one of every type except none.");
+            Assert.AreEqual(40, EdmCoreModel.Instance.SchemaElements.Count(), "Core model has one of every type except none.");
 #endif
             Assert.AreEqual(0, EdmCoreModel.Instance.VocabularyAnnotations.Count(), "Core model has no annotations.");
             Assert.AreEqual(0, EdmCoreModel.Instance.ReferencedModels.Count(), "Core model has no references.");
             Assert.IsNull(EdmCoreModel.Instance.EntityContainer, "Core model has no containers.");
-            Assert.IsNull(EdmCoreModel.Instance.FindValueTerm("Edm.Int32"), "Find value term returns null");
+            Assert.IsNull(EdmCoreModel.Instance.FindTerm("Edm.Int32"), "Find term returns null");
             Assert.AreEqual(0, EdmCoreModel.Instance.FindOperations("Edm.Int32").Count(), "Find functions returns empty enumerable");
             Assert.IsNull(EdmCoreModel.Instance.FindEntityContainer("Edm.Int32"), "Find entity container returns null");
             Assert.AreEqual(0, EdmCoreModel.Instance.FindVocabularyAnnotations(new EdmEntityType("Foo", "Bar")).Count(), "Find vocabulary annoatations returns empty enumerable");
@@ -1525,26 +1506,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void TestBadUnresolvedTypeUsingEnumValueModel()
-        {
-            var model = new EdmModel();
-
-            var enumType = new EdmEnumType("NS", "Enum");
-            var enumMember = new EdmEnumMember(enumType, "foo", new EdmIntegerConstant(2));
-            var enumTypeRef = new EdmEnumTypeReference(enumType, true);
-            enumType.AddMember(new EdmEnumMember(enumType, "bar", new EdmEnumValue(enumTypeRef, enumMember)));
-            var valueTerm = new EdmTerm("NS", "Note", enumTypeRef);
-            model.AddElement(valueTerm);
-
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.BadUnresolvedType }
-            };
-            this.VerifySemanticValidation(model, expectedErrors);
-            this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
-        }
-
-        [TestMethod]
         public void EntityTypeAddingDuplicateKey()
         {
             var model = new EdmModel();
@@ -1622,7 +1583,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "Parsing serialized model");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 

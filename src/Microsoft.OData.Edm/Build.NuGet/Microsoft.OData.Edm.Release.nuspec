@@ -7,64 +7,23 @@
     <version>$VersionNuGetSemantic$</version>
     <authors>Microsoft Corporation</authors>
     <owners>Microsoft Corporation</owners>
-    <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only.</summary>
-    <description>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only. Targets .NET Core 5, and .NET Portable Lib with support for .NET 4.0, SL 5.0, Win Phone 8, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
+    <description>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4 only. Targets .NET Platform Standard 1.1. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
-    <releaseNotes>http://odata.github.io/odata.net/#ODL-$VersionFullSemantic$</releaseNotes>
+    <releaseNotes>http://odata.github.io/odata.net/v7/#ODL-$VersionFullSemantic$</releaseNotes>
+    <copyright>© Microsoft Corporation.  All rights reserved.</copyright>
   </metadata>
   <files>
-    <file src="Net45\Microsoft.OData.Edm.dll" target="lib\dnx451" />
-    <file src="Net45\Microsoft.OData.Edm.pdb" target="lib\dnx451" />
-    <file src="Net45\Microsoft.OData.Edm.xml" target="lib\dnx451" />
-    <file src="Net45\2052\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\zh-Hans" />
-    <file src="Net45\1028\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\zh-Hant" />
-    <file src="Net45\1031\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\de" />
-    <file src="Net45\3082\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\es" />
-    <file src="Net45\1036\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\fr" />
-    <file src="Net45\1040\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\it" />
-    <file src="Net45\1041\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\ja" />
-    <file src="Net45\1042\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\ko" />
-    <file src="Net45\1049\Microsoft.OData.Edm.resources.dll" target="lib\dnx451\ru" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\Microsoft.OData.Edm.dll" target="lib\portable-net40+sl5+wp8+win8+wpa" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\Microsoft.OData.Edm.pdb" target="lib\portable-net40+sl5+wp8+win8+wpa" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\Microsoft.OData.Edm.xml" target="lib\portable-net40+sl5+wp8+win8+wpa" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\2052\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\zh-Hans" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1028\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\zh-Hant" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1031\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\de" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\3082\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\es" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1036\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\fr" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1040\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\it" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1041\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ja" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1042\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ko" />
-    <file src=".NETPortable\v4.0\Microsoft.OData.Edm\1049\Microsoft.OData.Edm.resources.dll" target="lib\portable-net40+sl5+wp8+win8+wpa\ru" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\Microsoft.OData.Edm.dll" target="lib\dnxcore50" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\Microsoft.OData.Edm.pdb" target="lib\dnxcore50" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\Microsoft.OData.Edm.xml" target="lib\dnxcore50" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\2052\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\zh-Hans" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1028\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\zh-Hant" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1031\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\de" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\3082\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\es" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1036\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\fr" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1040\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\it" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1041\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ja" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1042\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ko" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45\1049\Microsoft.OData.Edm.resources.dll" target="lib\dnxcore50\ru" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.dll" target="lib\portable-net45+win+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.pdb" target="lib\portable-net45+win+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\Microsoft.OData.Edm.xml" target="lib\portable-net45+win+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\2052\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\zh-Hans" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1028\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\zh-Hant" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1031\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\de" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\3082\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\es" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1036\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\fr" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1040\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\it" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1041\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\ja" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1042\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\ko" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Edm.Portable45.Profile111\1049\Microsoft.OData.Edm.resources.dll" target="lib\portable-net45+win+wpa81\ru" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.OData.Edm.dll" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.OData.Edm.pdb" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.OData.Edm.xml" target="lib\portable-net45+win8+wpa81" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.OData.Edm.dll" target="lib\netstandard1.1" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.OData.Edm.pdb" target="lib\netstandard1.1" />
+    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.OData.Edm.xml" target="lib\netstandard1.1" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />

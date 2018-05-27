@@ -4,16 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-    using ODataPlatformHelper = Microsoft.OData.Core.PlatformHelper;
+    using ODataErrorStrings = Microsoft.OData.Strings;
+    using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
     #endregion Namespaces
 
     /// <summary>
@@ -26,7 +25,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// a bit per property.
         /// </summary>
         /// <remarks>
-        /// We only use a single enumeration for both top-level as well as inner errors. 
+        /// We only use a single enumeration for both top-level as well as inner errors.
         /// This means that some bits are never set for top-level (or inner errors).
         /// </remarks>
         [Flags]
@@ -98,7 +97,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="converter">The payload value converter to convert this value.</param>
         /// <returns>Object which is in sync with the property type (modulo the V1 exception of converting numbers to non-compatible target types).</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static object ConvertValue(
             object value,
             IEdmPrimitiveTypeReference primitiveTypeReference,
@@ -112,12 +110,11 @@ namespace Microsoft.OData.Core.JsonLight
             if (value == null)
             {
                 // Only primitive type references are validated. Core model is sufficient.
-                ReaderValidationUtils.ValidateNullValue(
-                    EdmCoreModel.Instance,
+                messageReaderSettings.Validator.ValidateNullValue(
                     primitiveTypeReference,
-                    messageReaderSettings,
                     validateNullValue,
-                    propertyName);
+                    propertyName,
+                    null);
                 return null;
             }
 
@@ -195,25 +192,27 @@ namespace Microsoft.OData.Core.JsonLight
                 return null;
             }
 
-            TypeCode typeCode = ODataPlatformHelper.GetTypeCode(payloadItem.GetType());
-            switch (typeCode)
+            // In JSON only boolean, String, Int32 and Double are recognized as primitive types
+            // (without additional type conversion). So only check for those; if not one of these primitive
+            // types it must be a complex, entity or collection value.
+            if (payloadItem is Boolean)
             {
-                // In JSON only boolean, String, Int32 and Double are recognized as primitive types
-                // (without additional type conversion). So only check for those; if not one of these primitive
-                // types it must be a complex, entity or collection value.
-                case TypeCode.Boolean: return Metadata.EdmConstants.EdmBooleanTypeName;
-                case TypeCode.String: return Metadata.EdmConstants.EdmStringTypeName;
-                case TypeCode.Int32: return Metadata.EdmConstants.EdmInt32TypeName;
-                case TypeCode.Double: return Metadata.EdmConstants.EdmDoubleTypeName;
-                default:
-                    Debug.Assert(typeCode == TypeCode.Object, "If not one of the primitive types above, it must be an object in JSON.");
-                    break;
+                return Metadata.EdmConstants.EdmBooleanTypeName;
             }
 
-            ODataComplexValue complexValue = payloadItem as ODataComplexValue;
-            if (complexValue != null)
+            if (payloadItem is String)
             {
-                return complexValue.TypeName;
+                return Metadata.EdmConstants.EdmStringTypeName;
+            }
+
+            if (payloadItem is Int32)
+            {
+                return Metadata.EdmConstants.EdmInt32TypeName;
+            }
+
+            if (payloadItem is Double)
+            {
+                return Metadata.EdmConstants.EdmDoubleTypeName;
             }
 
             ODataCollectionValue collectionValue = payloadItem as ODataCollectionValue;
@@ -222,13 +221,13 @@ namespace Microsoft.OData.Core.JsonLight
                 return EdmLibraryExtensions.GetCollectionTypeFullName(collectionValue.TypeName);
             }
 
-            ODataEntry entry = payloadItem as ODataEntry;
-            if (entry != null)
+            ODataResourceBase resource = payloadItem as ODataResourceBase;
+            if (resource != null)
             {
-                return entry.TypeName;
+                return resource.TypeName;
             }
 
-            throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightReader_ReadEntryStart));
+            throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightReader_ReadResourceStart));
         }
     }
 }

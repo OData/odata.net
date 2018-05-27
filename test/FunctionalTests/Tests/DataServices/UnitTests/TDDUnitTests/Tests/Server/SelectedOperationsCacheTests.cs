@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ErrorStrings = Microsoft.OData.Service.Strings;
 

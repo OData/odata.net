@@ -12,8 +12,7 @@ namespace Microsoft.OData.Service.Parsing
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Service.Providers;
     using Enumerable = System.Linq.Enumerable;
     using OpenTypeMethods = Microsoft.OData.Service.Providers.OpenTypeMethods;

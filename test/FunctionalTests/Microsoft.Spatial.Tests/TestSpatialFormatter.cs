@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.Data.Spatial;
 
 namespace Microsoft.Spatial.Tests
 {

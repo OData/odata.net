@@ -4,18 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using System.Globalization;
+    using System.Linq;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.UriParser.Aggregation;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Main Public API to parse an ODataURI.
@@ -31,8 +28,8 @@ namespace Microsoft.OData.Core.UriParser
         /// </summary>
         private readonly Uri serviceRoot;
 
-        /// <summary>The full Uri to be parsed. </summary>
-        private readonly Uri fullUri;
+        /// <summary>The absolute or relative URI to be parsed. </summary>
+        private readonly Uri uri;
 
         /// <summary>Query option list</summary>
         private readonly List<CustomQueryOptionToken> queryOptions;
@@ -40,14 +37,11 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>Store query option dictionary.</summary>
         private IDictionary<string, string> queryOptionDic;
 
+        /// <summary>Store non-OData query options, duplicates are allowed.</summary>
+        private IList<KeyValuePair<string, string>> customQueryOptions;
+
         /// <summary>Parser for query option.</summary>
         private ODataQueryOptionParser queryOptionParser;
-
-        /// <summary>Target Edm type. </summary>
-        private IEdmType targetEdmType;
-
-        /// <summary>Target Edm navigation source. </summary>
-        private IEdmNavigationSource targetNavigationSource;
 
         /// <summary>OData Path.</summary>
         private ODataPath odataPath;
@@ -61,10 +55,23 @@ namespace Microsoft.OData.Core.UriParser
         /// </summary>
         /// <param name="model">Model to use for metadata binding.</param>
         /// <param name="serviceRoot">Absolute URI of the service root.</param>
-        /// <param name="fullUri">full Uri to be parsed</param>
-        public ODataUriParser(IEdmModel model, Uri serviceRoot, Uri fullUri)
+        /// <param name="uri">Absolute or relative URI to be parsed.</param>
+        public ODataUriParser(IEdmModel model, Uri serviceRoot, Uri uri)
+            : this(model, serviceRoot, uri, null)
         {
-            ExceptionUtils.CheckArgumentNotNull(fullUri, "fullUri");
+        }
+
+        /// <summary>
+        /// Build an ODataUriParser
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="serviceRoot">Absolute URI of the service root.</param>
+        /// <param name="uri">Absolute or relative URI to be parsed.</param>
+        /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
+        public ODataUriParser(IEdmModel model, Uri serviceRoot, Uri uri, IServiceProvider container)
+        {
+            ExceptionUtils.CheckArgumentNotNull(uri, "uri");
+
             if (serviceRoot == null)
             {
                 throw new ODataException(ODataErrorStrings.UriParser_NeedServiceRootForThisOverload);
@@ -75,29 +82,40 @@ namespace Microsoft.OData.Core.UriParser
                 throw new ODataException(ODataErrorStrings.UriParser_UriMustBeAbsolute(serviceRoot));
             }
 
-            this.configuration = new ODataUriParserConfiguration(model);
-            this.serviceRoot = Core.UriUtils.EnsureTaillingSlash(serviceRoot);
-            this.fullUri = fullUri.IsAbsoluteUri ? fullUri : Core.UriUtils.UriToAbsoluteUri(this.ServiceRoot, fullUri);
-            this.queryOptions = UriUtils.ParseQueryOptions(this.fullUri);
+            this.configuration = new ODataUriParserConfiguration(model, container);
+            this.serviceRoot = UriUtils.EnsureTaillingSlash(serviceRoot);
+            this.uri = uri.IsAbsoluteUri ? uri : UriUtils.UriToAbsoluteUri(this.ServiceRoot, uri);
+            this.queryOptions = QueryOptionUtils.ParseQueryOptions(this.uri);
         }
 
         /// <summary>
         /// Build an ODataUriParser
         /// </summary>
         /// <param name="model">Model to use for metadata binding.</param>
-        /// <param name="fullUri">full Uri to be parsed, it should be a relative Uri.</param>
-        public ODataUriParser(IEdmModel model, Uri fullUri)
+        /// <param name="relativeUri">Relative URI to be parsed.</param>
+        public ODataUriParser(IEdmModel model, Uri relativeUri)
+            : this(model, relativeUri, (IServiceProvider)null)
         {
-            ExceptionUtils.CheckArgumentNotNull(fullUri, "fullUri");
+        }
 
-            if (fullUri.IsAbsoluteUri)
+        /// <summary>
+        /// Build an ODataUriParser
+        /// </summary>
+        /// <param name="model">Model to use for metadata binding.</param>
+        /// <param name="relativeUri">Relative URI to be parsed.</param>
+        /// <param name="container">The optional dependency injection container to get related services for URI parsing.</param>
+        public ODataUriParser(IEdmModel model, Uri relativeUri, IServiceProvider container)
+        {
+            ExceptionUtils.CheckArgumentNotNull(relativeUri, "relativeUri");
+
+            if (relativeUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.UriParser_FullUriMustBeRelative);
+                throw new ODataException(Strings.UriParser_RelativeUriMustBeRelative);
             }
 
-            this.configuration = new ODataUriParserConfiguration(model);
-            this.fullUri = fullUri;
-            this.queryOptions = UriUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.fullUri));
+            this.configuration = new ODataUriParserConfiguration(model, container);
+            this.uri = relativeUri;
+            this.queryOptions = QueryOptionUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.uri));
         }
 
         /// <summary>
@@ -117,6 +135,14 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// The optional dependency injection container to get related services for URI parsing.
+        /// </summary>
+        public IServiceProvider Container
+        {
+            get { return this.configuration.Container; }
+        }
+
+        /// <summary>
         /// Gets the absolute URI of the service root.
         /// </summary>
         public Uri ServiceRoot
@@ -125,14 +151,14 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Gets or Sets the <see cref="ODataUrlConventions"/> to use while parsing, specifically
+        /// Gets or Sets the <see cref="ODataUrlKeyDelimiter"/> to use while parsing, specifically
         /// whether to recognize keys as segments or not.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Throws if the input value is null.</exception>
-        public ODataUrlConventions UrlConventions
+        public ODataUrlKeyDelimiter UrlKeyDelimiter
         {
-            get { return this.configuration.UrlConventions; }
-            set { this.configuration.UrlConventions = value; }
+            get { return this.configuration.UrlKeyDelimiter; }
+            set { this.configuration.UrlKeyDelimiter = value; }
         }
 
         /// <summary>
@@ -142,6 +168,17 @@ namespace Microsoft.OData.Core.UriParser
         {
             get { return this.configuration.BatchReferenceCallback; }
             set { this.configuration.BatchReferenceCallback = value; }
+        }
+
+        /// <summary>
+        /// Whether no dollar query options is enabled.
+        /// If it is enabled, the '$' prefix of system query options becomes optional.
+        /// For example, "select" and "$select" are equivalent in this case.
+        /// </summary>
+        public bool EnableNoDollarQueryOptions
+        {
+            get { return this.configuration.EnableNoDollarQueryOptions; }
+            set { this.configuration.EnableNoDollarQueryOptions = value; }
         }
 
         /// <summary>
@@ -164,6 +201,15 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
+        /// Gets or sets the function which can be used to parse an unknown path segment or an open property segment.
+        /// </summary>
+        public ParseDynamicPathSegment ParseDynamicPathSegmentFunc
+        {
+            get { return this.configuration.ParseDynamicPathSegmentFunc; }
+            set { this.configuration.ParseDynamicPathSegmentFunc = value; }
+        }
+
+        /// <summary>
         /// Get the parameter alias nodes info.
         /// </summary>
         public IDictionary<string, SingleValueNode> ParameterAliasNodes
@@ -176,6 +222,22 @@ namespace Microsoft.OData.Core.UriParser
                 }
 
                 return this.ParameterAliasValueAccessor.ParameterAliasValueNodesCached;
+            }
+        }
+
+        /// <summary>
+        /// Gets non-OData query options.
+        /// </summary>
+        public IList<KeyValuePair<string, string>> CustomQueryOptions
+        {
+            get
+            {
+                if (customQueryOptions == null)
+                {
+                    InitQueryOptionDic();
+                }
+
+                return customQueryOptions;
             }
         }
 
@@ -244,14 +306,12 @@ namespace Microsoft.OData.Core.UriParser
             InitQueryOptionDic();
             string idQuery = null;
 
-            if (!this.Resolver.EnableCaseInsensitive)
+            if (!this.queryOptionDic.TryGetValue(UriQueryConstants.IdQueryOption, out idQuery) && !this.Resolver.EnableCaseInsensitive)
             {
-                if (!this.queryOptionDic.TryGetValue(UriQueryConstants.IdQueryOption, out idQuery))
-                {
-                    return null;
-                }
+                return null;
             }
-            else
+
+            if (idQuery == null && this.Resolver.EnableCaseInsensitive)
             {
                 var list = this.queryOptionDic
                     .Where(pair => string.Equals(UriQueryConstants.IdQueryOption, pair.Key, StringComparison.OrdinalIgnoreCase))
@@ -275,15 +335,15 @@ namespace Microsoft.OData.Core.UriParser
 
             if (!idUri.IsAbsoluteUri)
             {
-                if (!this.fullUri.IsAbsoluteUri)
+                if (!this.uri.IsAbsoluteUri)
                 {
                     Uri baseUri = UriUtils.CreateMockAbsoluteUri();
-                    Uri c = new Uri(UriUtils.CreateMockAbsoluteUri(this.fullUri), idUri);
+                    Uri c = new Uri(UriUtils.CreateMockAbsoluteUri(this.uri), idUri);
                     idUri = baseUri.MakeRelativeUri(c);
                 }
                 else
                 {
-                    idUri = new Uri(this.fullUri, idUri);
+                    idUri = new Uri(this.uri, idUri);
                 }
             }
 
@@ -362,14 +422,24 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Parse a full Uri into its contingent parts with semantic meaning attached to each part. 
+        /// Parses the $compute.
+        /// </summary>
+        /// <returns>ComputeClause representing $compute.</returns>
+        public ComputeClause ParseCompute()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseCompute();
+        }
+
+        /// <summary>
+        /// Parse a full Uri into its contingent parts with semantic meaning attached to each part.
         /// See <see cref="ODataUri"/>.
         /// </summary>
         /// <returns>An <see cref="ODataUri"/> representing the full uri.</returns>
         public ODataUri ParseUri()
         {
             ExceptionUtils.CheckArgumentNotNull(this.configuration.Model, "model");
-            ExceptionUtils.CheckArgumentNotNull(this.fullUri, "fullUri");
+            ExceptionUtils.CheckArgumentNotNull(this.uri, "uri");
 
             ODataPath path = this.ParsePath();
             SelectExpandClause selectExpand = this.ParseSelectAndExpand();
@@ -377,6 +447,7 @@ namespace Microsoft.OData.Core.UriParser
             OrderByClause orderBy = this.ParseOrderBy();
             SearchClause search = this.ParseSearch();
             ApplyClause apply = this.ParseApply();
+            ComputeClause compute = this.ParseCompute();
             long? top = this.ParseTop();
             long? skip = this.ParseSkip();
             bool? count = this.ParseCount();
@@ -386,7 +457,7 @@ namespace Microsoft.OData.Core.UriParser
             // TODO:  check it shouldn't be empty
             List<QueryNode> boundQueryOptions = new List<QueryNode>();
 
-            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, count);
+            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, count, compute);
             odataUri.ServiceRoot = this.serviceRoot;
             odataUri.SkipToken = skipToken;
             odataUri.DeltaToken = deltaToken;
@@ -394,7 +465,7 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Parses a the fullUri into a semantic <see cref="ODataPath"/> object. 
+        /// Parses a the fullUri into a semantic <see cref="ODataPath"/> object.
         /// </summary>
         /// <remarks>
         /// This is designed to parse the Path of a URL. If it is used to parse paths that are contained
@@ -404,16 +475,25 @@ namespace Microsoft.OData.Core.UriParser
         /// <exception cref="ODataException">Throws if the input path is not an absolute uri.</exception>
         private ODataPath ParsePathImplementation()
         {
-            Uri pathUri = this.fullUri;
+            Uri pathUri = this.uri;
             ExceptionUtils.CheckArgumentNotNull(pathUri, "pathUri");
 
-            UriPathParser pathParser = new UriPathParser(this.Settings.PathLimit);
+            UriPathParser pathParser = null;
+            if (this.Container == null)
+            {
+                pathParser = new UriPathParser(this.Settings);
+            }
+            else
+            {
+                pathParser = this.Container.GetService<UriPathParser>();
+            }
+
             var rawSegments = pathParser.ParsePathIntoSegments(pathUri, this.ServiceRoot);
             return ODataPathFactory.BindPath(rawSegments, this.configuration);
         }
 
         /// <summary>
-        /// Initialize a UriParser. We have to initialize UriParser seperately for parsing path, because we may set BatchReferenceCallback before ParsePath.
+        /// Initialize a UriParser. We have to initialize UriParser separately for parsing path, because we may set BatchReferenceCallback before ParsePath.
         /// </summary>
         private void Initialize()
         {
@@ -429,41 +509,13 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             this.odataPath = this.ParsePathImplementation();
-            ODataPathSegment lastSegment = this.odataPath.LastSegment;
-            ODataPathSegment previous = null;
-            var segs = odataPath.GetEnumerator();
-            int count = 0;
-            while (++count < odataPath.Count && segs.MoveNext())
-            {
-            }
-
-            previous = segs.Current;
-            if (lastSegment != null)
-            {
-                // use previous segment if the last one is Key or Count Segment
-                if (lastSegment is KeySegment || lastSegment is CountSegment)
-                {
-                    lastSegment = previous;
-                }
-
-                this.targetNavigationSource = lastSegment.TargetEdmNavigationSource;
-                this.targetEdmType = lastSegment.TargetEdmType;
-                if (this.targetEdmType != null)
-                {
-                    IEdmCollectionType collectionType = this.targetEdmType as IEdmCollectionType;
-                    if (collectionType != null)
-                    {
-                        this.targetEdmType = collectionType.ElementType.Definition;
-                    }
-                }
-            }
 
             InitQueryOptionDic();
 
-            this.queryOptionParser = new ODataQueryOptionParser(this.Model, this.targetEdmType, this.targetNavigationSource, queryOptionDic)
-                                        {
-                                            Configuration = this.configuration
-                                        };
+            this.queryOptionParser = new ODataQueryOptionParser(this.Model, this.odataPath, queryOptionDic)
+            {
+                Configuration = this.configuration
+            };
         }
 
         /// <summary>
@@ -477,23 +529,69 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             queryOptionDic = new Dictionary<string, string>(StringComparer.Ordinal);
+            customQueryOptions = new List<KeyValuePair<string, string>>();
 
             if (queryOptions != null)
             {
                 foreach (var queryOption in queryOptions)
                 {
-                    if (queryOption.Name == null)
+                    string queryOptionName = queryOption.Name;
+                    if (queryOptionName == null)
                     {
                         continue;
                     }
 
-                    if (queryOptionDic.ContainsKey(queryOption.Name))
-                    {
-                        throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOption.Name));
-                    }
+                    // If EnableNoDollarQueryOptions is true, we will treat all reserved OData query options without "$" prefix as odata query options.
+                    // Or, they will be treated as custom query options which could be duplicated.
+                    bool shouldAddDollarPrefix = this.EnableNoDollarQueryOptions && !queryOption.Name.StartsWith("$", StringComparison.Ordinal);
+                    string fixedQueryOptionName = shouldAddDollarPrefix ? UriQueryConstants.DollarSign + queryOptionName : queryOptionName;
 
-                    queryOptionDic.Add(queryOption.Name, queryOption.Value);
+                    if (IsODataQueryOption(fixedQueryOptionName))
+                    {
+                        if (queryOptionDic.ContainsKey(fixedQueryOptionName))
+                        {
+                            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                                this.EnableNoDollarQueryOptions
+                                ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", fixedQueryOptionName.TrimStart('$'))
+                                : fixedQueryOptionName));
+                        }
+
+                        queryOptionDic.Add(fixedQueryOptionName, queryOption.Value);
+                    }
+                    else
+                    {
+                        customQueryOptions.Add(new KeyValuePair<string, string>(queryOptionName, queryOption.Value));
+                    }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Judge if optionName belongs to UriQueryConstants (Case ignored).
+        /// </summary>
+        /// <param name="optionName">The name of a query option.</param>
+        /// <returns>True if optionName is OData query option, vise versa.</returns>
+        private bool IsODataQueryOption(string optionName)
+        {
+            switch (this.Resolver.EnableCaseInsensitive ? optionName.ToLowerInvariant() : optionName)
+            {
+                case UriQueryConstants.FilterQueryOption:
+                case UriQueryConstants.ApplyQueryOption:
+                case UriQueryConstants.OrderByQueryOption:
+                case UriQueryConstants.SelectQueryOption:
+                case UriQueryConstants.ExpandQueryOption:
+                case UriQueryConstants.SkipQueryOption:
+                case UriQueryConstants.SkipTokenQueryOption:
+                case UriQueryConstants.DeltaTokenQueryOption:
+                case UriQueryConstants.IdQueryOption:
+                case UriQueryConstants.TopQueryOption:
+                case UriQueryConstants.CountQueryOption:
+                case UriQueryConstants.FormatQueryOption:
+                case UriQueryConstants.SearchQueryOption:
+                case UriQueryConstants.ComputeQueryOption:
+                    return true;
+                default:
+                    return false;
             }
         }
     }

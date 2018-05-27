@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     internal class BinaryFieldAsStringPrimitivePayloadValueConverter : ODataPayloadValueConverter
     {

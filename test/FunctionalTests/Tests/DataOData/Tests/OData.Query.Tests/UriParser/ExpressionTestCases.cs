@@ -9,12 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.UriParser
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.Spatial;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
     //// ToDo: When we start supporting spatial, uncomment these.

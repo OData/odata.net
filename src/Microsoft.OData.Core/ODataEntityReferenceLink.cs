@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+
     #endregion Namespaces
 
     /// <summary>
@@ -35,6 +35,6 @@ namespace Microsoft.OData.Core
         {
             get { return this.GetInstanceAnnotations(); }
             set { this.SetInstanceAnnotations(value); }
-        }        
+        }
     }
 }

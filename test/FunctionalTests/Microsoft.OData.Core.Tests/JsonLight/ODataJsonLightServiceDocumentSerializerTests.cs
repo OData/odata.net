@@ -9,12 +9,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightServiceDocumentSerializerTests
     {
@@ -114,16 +113,26 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             WriteServiceDocumentShouldError(serviceDocument).ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
 
-        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataUrlResolver urlResolver = null)
+        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataPayloadUriConverter urlResolver = null)
         {
             var model = new EdmModel();
             var messageWriterSettings = new ODataMessageWriterSettings();
-            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel(model);
-            var jsonLightOutputContext = new ODataJsonLightOutputContext(ODataFormat.Json, memoryStream, new ODataMediaType("application", "json") /*mediaType*/, Encoding.UTF8, messageWriterSettings, false /*WritingResponse*/, true /*sync*/, mainModel, urlResolver);
+            var mainModel = TestUtils.WrapReferencedModelsToMainModel(model);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = memoryStream,
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = false,
+                IsAsync = false,
+                Model = mainModel,
+                PayloadUriConverter = urlResolver
+            };
+            var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, messageWriterSettings);
             return new ODataJsonLightServiceDocumentSerializer(jsonLightOutputContext);
         }
 
-        private static Action WriteServiceDocumentShouldError(ODataServiceDocument serviceDocument, IODataUrlResolver urlResolver = null)
+        private static Action WriteServiceDocumentShouldError(ODataServiceDocument serviceDocument, IODataPayloadUriConverter urlResolver = null)
         {
             MemoryStream memoryStream = new MemoryStream();
             var serializer = CreateODataJsonLightServiceDocumentSerializer(memoryStream, urlResolver);

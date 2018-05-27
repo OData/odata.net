@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     internal class RemoveWildcardVisitor : IPathSegmentTokenVisitor
     {
         /// <summary>
-        /// The previous token, used as a cursor so that we can cut off the 
+        /// The previous token, used as a cursor so that we can cut off the
         /// next pointer of the previous token if we find a wildcard.
         /// </summary>
         private PathSegmentToken previous = null;

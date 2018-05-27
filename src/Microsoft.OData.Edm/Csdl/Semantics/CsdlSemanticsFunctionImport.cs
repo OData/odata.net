@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics

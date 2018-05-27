@@ -13,10 +13,10 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Linq;
     using System.Net;
-#if DNXCORE50
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Wrapper HttpWebRequest &amp; HttWebResponse
@@ -169,7 +169,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>start the asynchronous request</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void BeginExecuteQuery()
         {
             IAsyncResult asyncResult = null;
@@ -216,7 +215,6 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB
         /// <summary>Synchronous web request</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void ExecuteQuery()
         {
             try
@@ -365,7 +363,7 @@ namespace Microsoft.OData.Client
             var response = this.GetResponse<TElement>(materializeAtom);
 
             // When query feed, the instance annotation can be materialized only when enumerating the feed.
-            // So we register this action which will be called when enumerating the feed. 
+            // So we register this action which will be called when enumerating the feed.
             materializeAtom.SetInstanceAnnotations = (instanceAnnotations) =>
             {
                 if (!this.responseInfo.Context.InstanceAnnotations.ContainsKey(response)
@@ -506,7 +504,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle request.BeginGetResponse with request.EndGetResponse and then copy response stream</summary>
         /// <param name="asyncResult">async result</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected override void AsyncEndGetResponse(IAsyncResult asyncResult)
         {
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
@@ -616,7 +613,7 @@ namespace Microsoft.OData.Client
                 int bufferLength = buffer.Length;
 
                 this.usingBuffer = true;
-#if DNXCORE50
+#if PORTABLELIB
                 asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, buffer, bufferOffset, bufferLength, this.AsyncEndRead, asyncStateBag);
 #else
                 asyncResult = BaseAsyncResult.InvokeAsync(httpResponseStream.BeginRead, buffer, bufferOffset, bufferLength, this.AsyncEndRead, asyncStateBag);
@@ -629,7 +626,7 @@ namespace Microsoft.OData.Client
             Debug.Assert((!this.CompletedSynchronously && !pereq.RequestCompletedSynchronously) || this.IsCompletedInternally || pereq.RequestCompleted, "AsyncEndGetResponse !IsCompleted");
         }
 
-#if DNXCORE50
+#if PORTABLELIB
         /// <summary>Handle responseStream.BeginRead and complete the read operation.</summary>
         /// <param name="task">Task that has completed.</param>
         /// <param name="asyncState">State associated with the Task.</param>
@@ -639,15 +636,14 @@ namespace Microsoft.OData.Client
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndRead(IAsyncResult asyncResult)
 #endif
         {
-#if DNXCORE50
+#if PORTABLELIB
             IAsyncResult asyncResult = (IAsyncResult)task;
 #endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if DNXCORE50
+#if PORTABLELIB
             AsyncStateBag asyncStateBag = asyncState as AsyncStateBag;
 #else
             AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
@@ -666,7 +662,7 @@ namespace Microsoft.OData.Client
                 Stream outResponseStream = Util.NullCheck(this.outputResponseStream, InternalError.InvalidEndReadCopy);
 
                 byte[] buffer = Util.NullCheck(this.asyncStreamCopyBuffer, InternalError.InvalidEndReadBuffer);
-#if DNXCORE50
+#if PORTABLELIB
                 count = ((Task<int>)task).Result;
 #else
                 count = httpResponseStream.EndRead(asyncResult);

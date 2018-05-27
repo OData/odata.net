@@ -8,15 +8,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     public class JsonValueUtilsTests
     {
         private MemoryStream stream;
-        private IndentedTextWriter writer;
+        private NonIndentedTextWriter writer;
 
         private Dictionary<string, string> escapedCharMap = new Dictionary<string, string>()
         {
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Core.Tests.Json
             this.stream = new MemoryStream();
             StreamWriter innerWriter = new StreamWriter(this.stream);
             innerWriter.AutoFlush = true;
-            this.writer = new IndentedTextWriter(innerWriter);
+            this.writer = new NonIndentedTextWriter(innerWriter);
         }
 
         private string StreamToString()

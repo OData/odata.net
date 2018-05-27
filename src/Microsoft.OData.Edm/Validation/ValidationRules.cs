@@ -6,22 +6,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-using Microsoft.OData.Edm.Csdl.Serialization;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Validation.Internal;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Validation
 {
-    using System.Collections.ObjectModel;
-
     /// <summary>
     /// Built in Edm validation rules.
     /// </summary>
@@ -30,7 +23,7 @@ namespace Microsoft.OData.Edm.Validation
         #region IEdmElement
 
         /// <summary>
-        /// Validates that no direct value annotations share the same name and namespace.
+        /// Validates that no direct annotations share the same name and namespace.
         /// </summary>
         public static readonly ValidationRule<IEdmElement> ElementDirectValueAnnotationFullNameMustBeUnique =
             new ValidationRule<IEdmElement>(
@@ -299,6 +292,13 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmNavigationSource>(
                 (context, navigationSource) =>
                 {
+                    // Entity types used in Singletons don't require keys
+                    if (navigationSource.NavigationSourceKind() == EdmNavigationSourceKind.Singleton
+                        || navigationSource.NavigationSourceKind() == EdmNavigationSourceKind.None)
+                    {
+                        return;
+                    }
+
                     IEdmEntityType entityType = navigationSource.EntityType();
 
                     if (entityType == null)
@@ -320,6 +320,35 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
+        /// Validates that there is no entity set or singleton whose entity type has not property defined with Path type.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationSource> NavigationSourceDeclaringTypeCannotHavePathTypeProperty =
+            new ValidationRule<IEdmNavigationSource>(
+                (context, navigationSource) =>
+                {
+                    IEdmEntityType entityType = navigationSource.EntityType();
+
+                    if (entityType == null)
+                    {
+                        return;
+                    }
+
+                    IList<IEdmStructuredType> visited = new List<IEdmStructuredType>();
+                    if (HasPathTypeProperty(entityType, visited))
+                    {
+                        string name = navigationSource is IEdmSingleton ? "singleton" : "entity set";
+
+                        string errorMessage = Strings
+                            .EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty(entityType.FullName(), name, navigationSource.Name);
+
+                        context.AddError(
+                            navigationSource.Location(),
+                            EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                            errorMessage);
+                    }
+                });
+
+        /// <summary>
         /// Validates that the entity type of an entity set or singleton can be found from the model being validated.
         /// </summary>
         public static readonly ValidationRule<IEdmNavigationSource> NavigationSourceInaccessibleEntityType =
@@ -334,18 +363,18 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that no navigation property is mapped to two different entity sets or singletons.
+        /// Validates that no navigation property is mapped multiple times for a single path.
         /// </summary>
         public static readonly ValidationRule<IEdmNavigationSource> NavigationPropertyMappingsMustBeUnique =
             new ValidationRule<IEdmNavigationSource>(
                 (context, navigationSource) =>
                 {
-                    HashSetInternal<IEdmNavigationProperty> mappedPropertySet = new HashSetInternal<IEdmNavigationProperty>();
-
-                    foreach (IEdmNavigationPropertyBinding mapping in navigationSource.NavigationPropertyBindings)
+                    var set = new HashSetInternal<KeyValuePair<IEdmNavigationProperty, string>>();
+                    foreach (var mapping in navigationSource.NavigationPropertyBindings)
                     {
-                        if (!mappedPropertySet.Add(mapping.NavigationProperty))
+                        if (!set.Add(new KeyValuePair<IEdmNavigationProperty, string>(mapping.NavigationProperty, mapping.Path.Path)))
                         {
+                            // TODO: Update error message in V7.1 #644
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.DuplicateNavigationPropertyMapping,
@@ -386,12 +415,43 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that the binding path of navigation property must be resolved to a valid path, that is:
+        /// Each segments in path must be defined, and inner path segments can only be complex or containment, and last path segment must be the navigation property name.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationSource> NavigationPropertyBindingPathMustBeResolvable =
+            new ValidationRule<IEdmNavigationSource>(
+                (context, navigationSource) =>
+                {
+                    foreach (IEdmNavigationPropertyBinding mapping in navigationSource.NavigationPropertyBindings)
+                    {
+                        if (mapping.NavigationProperty.IsBad() || mapping.Target.IsBad())
+                        {
+                            continue;
+                        }
+
+                        if (!TryResolveNavigationPropertyBindingPath(context.Model, navigationSource, mapping))
+                        {
+                            // TODO: Update error message in V7.1 #644
+                            context.AddError(
+                                navigationSource.Location(),
+                                EdmErrorCode.UnresolvedNavigationPropertyBindingPath,
+                                string.Format(
+                                    CultureInfo.CurrentCulture,
+                                    "The binding path {0} for navigation property {1} under navigation source {2} is not valid.",
+                                    mapping.Path.Path,
+                                    mapping.NavigationProperty.Name,
+                                    navigationSource.Name));
+                        }
+                    }
+                });
+
         #endregion
 
         #region IEdmEntitySet
 
         /// <summary>
-        /// Validates that an entity set can only have a single navigation property targetting it that has Contains set to true.
+        /// Validates that an entity set can only have a single navigation property targeting it that has Contains set to true.
         /// </summary>
         public static readonly ValidationRule<IEdmEntitySet> EntitySetCanOnlyBeContainedByASingleNavigationProperty =
             new ValidationRule<IEdmEntitySet>(
@@ -435,7 +495,7 @@ namespace Microsoft.OData.Edm.Validation
                             continue;
                         }
 
-                        IEdmNavigationSource opposingNavigationSource = binding.Target.FindNavigationTarget(property.Partner);
+                        IEdmNavigationSource opposingNavigationSource = binding.Target.FindNavigationTarget(property.Partner, new EdmPathExpression(property.Partner.Name));
 
                         if (opposingNavigationSource == null || opposingNavigationSource is IEdmUnknownEntitySet || opposingNavigationSource is IEdmContainedEntitySet)
                         {
@@ -499,6 +559,21 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that the type of an entity set cannot be Edm.EntityType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmEntitySet> EntitySetTypeCannotBeEdmEntityType =
+            new ValidationRule<IEdmEntitySet>(
+                (context, entitySet) =>
+                {
+                    if (entitySet.Type.AsElementType() == EdmCoreModelEntityType.Instance)
+                    {
+                        context.AddError(
+                           entitySet.Location(),
+                           EdmErrorCode.EntityTypeOfEntitySetCannotBeEdmEntityType,
+                           Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet(entitySet.Name));
+                    }
+                });
         #endregion
 
         #region IEdmSingelton
@@ -512,7 +587,9 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (!(singleton.Type is IEdmEntityType))
                     {
-                        string errorMessage = Strings.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType(singleton.Type.FullTypeName(), singleton.Name);
+                        string errorMessage =
+                            Strings.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType(
+                                singleton.Type.FullTypeName(), singleton.Name);
 
                         context.AddError(
                             singleton.Location(),
@@ -521,6 +598,21 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that the type of singleton cannot be Edm.EntityType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmSingleton> SingletonTypeCannotBeEdmEntityType =
+            new ValidationRule<IEdmSingleton>(
+                (context, singleton) =>
+                {
+                    if (singleton.Type == EdmCoreModelEntityType.Instance)
+                    {
+                        context.AddError(
+                           singleton.Location(),
+                           EdmErrorCode.EntityTypeOfSingletonCannotBeEdmEntityType,
+                           Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton(singleton.Name));
+                    }
+                });
         #endregion
 
         #region IEdmStructuredType
@@ -600,6 +692,28 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
+        /// Validates that the base type of a structured type cannot be Edm.EntityType or Edm.ComplexType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmStructuredType> StructuredTypeBaseTypeCannotBeAbstractType =
+            new ValidationRule<IEdmStructuredType>(
+                (context, structuredType) =>
+                {
+                    if (structuredType.BaseType != null &&
+                        (structuredType.BaseType == EdmCoreModelComplexType.Instance || structuredType.BaseType == EdmCoreModelEntityType.Instance) &&
+                        !context.IsBad(structuredType.BaseType))
+                    {
+                        string typeKind = structuredType.TypeKind == EdmTypeKind.Entity ? "entity" : "complex";
+                        context.AddError(
+                            structuredType.Location(),
+                            (structuredType.TypeKind == EdmTypeKind.Entity)
+                                ? EdmErrorCode.EntityTypeBaseTypeCannotBeEdmEntityType
+                                : EdmErrorCode.ComplexTypeBaseTypeCannotBeEdmComplexType,
+                            Strings.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType(
+                                structuredType.BaseType.FullTypeName(), typeKind, structuredType.FullTypeName()));
+                    }
+                });
+
+        /// <summary>
         /// Validates that the base type of a structured type can be found from the model being validated.
         /// </summary>
         public static readonly ValidationRule<IEdmStructuredType> StructuredTypeInaccessibleBaseType =
@@ -634,22 +748,6 @@ namespace Microsoft.OData.Edm.Validation
                         }
                     }
                 });
-
-        /// <summary>
-        /// Open types are supported only on entity types.
-        /// </summary>
-        public static readonly ValidationRule<IEdmStructuredType> OnlyEntityTypesCanBeOpen =
-           new ValidationRule<IEdmStructuredType>(
-               (context, structuredType) =>
-               {
-                   if (structuredType.IsOpen && structuredType.TypeKind != EdmTypeKind.Entity)
-                   {
-                       context.AddError(
-                           structuredType.Location(),
-                           EdmErrorCode.OpenTypeNotSupported,
-                           Strings.EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly);
-                   }
-               });
 
         #endregion
 
@@ -695,6 +793,21 @@ namespace Microsoft.OData.Edm.Validation
                    }
                });
 
+        /// <summary>
+        /// Validates that the underlying type of a type definition cannot be Edm.PrimitiveType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmEnumType> EnumUnderlyingTypeCannotBeEdmPrimitiveType =
+            new ValidationRule<IEdmEnumType>(
+                (context, enumType) =>
+                {
+                    if (enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.PrimitiveType && !context.IsBad(enumType.UnderlyingType))
+                    {
+                        context.AddError(
+                            enumType.Location(),
+                            EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                            Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("enumeration", enumType.FullName()));
+                    }
+                });
         #endregion
 
         #region IEdmEnumMember
@@ -708,16 +821,39 @@ namespace Microsoft.OData.Edm.Validation
                {
                    IEnumerable<EdmError> discoveredErrors;
                    if (!context.IsBad(enumMember.DeclaringType) &&
-                       !context.IsBad(enumMember.DeclaringType.UnderlyingType) &&
-                       !enumMember.Value.TryCastPrimitiveAsType(enumMember.DeclaringType.UnderlyingType.GetPrimitiveTypeReference(false), out discoveredErrors))
+                       !context.IsBad(enumMember.DeclaringType.UnderlyingType))
                    {
-                       context.AddError(
+                       IEdmPrimitiveValue enumValue = new EdmIntegerConstant(enumMember.Value.Value);
+
+                       if (!enumValue.TryCastPrimitiveAsType(enumMember.DeclaringType.UnderlyingType.GetPrimitiveTypeReference(false), out discoveredErrors))
+                       {
+                           context.AddError(
                            enumMember.Location(),
-                           EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType,
-                           Strings.EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType(enumMember.Name));
+                           EdmErrorCode.EnumMemberValueOutOfRange,
+                           Strings.EdmModel_Validator_Semantic_EnumMemberValueOutOfRange(enumMember.Name));
+                       }
                    }
                });
 
+        #endregion
+
+        #region IEdmTypeDefintion
+
+        /// <summary>
+        /// Validates that the underlying type of a type definition cannot be Edm.PrimitiveType.
+        /// </summary>
+        public static readonly ValidationRule<IEdmTypeDefinition> TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType =
+            new ValidationRule<IEdmTypeDefinition>(
+                (context, typeDefinition) =>
+                {
+                    if (typeDefinition.UnderlyingType == EdmCoreModel.Instance.GetPrimitiveType() && !context.IsBad(typeDefinition.UnderlyingType))
+                    {
+                        context.AddError(
+                            typeDefinition.Location(),
+                            EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
+                            Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("type definition", typeDefinition.FullName()));
+                    }
+                });
         #endregion
 
         #region IEdmEntityType
@@ -852,6 +988,29 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that Edm.PrimitiveType cannot be used as the type of a key property of an entity type.
+        /// </summary>
+        public static readonly ValidationRule<IEdmEntityType> EntityTypeKeyTypeCannotBeEdmPrimitiveType =
+            new ValidationRule<IEdmEntityType>(
+                (context, entityType) =>
+                {
+                    if (entityType.DeclaredKey != null)
+                    {
+                        foreach (IEdmStructuralProperty key in entityType.DeclaredKey)
+                        {
+                            if (key.Type.Definition == EdmCoreModel.Instance.GetPrimitiveType())
+                            {
+                                context.AddError(
+                                    entityType.Location(),
+                                    EdmErrorCode.KeyPropertyTypeCannotBeEdmPrimitiveType,
+                                    Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey(
+                                        key.Name, entityType.FullName()));
+                            }
+                        }
+                    }
+                });
+
         #endregion
 
         #region IEdmEntityReferenceType
@@ -913,22 +1072,6 @@ namespace Microsoft.OData.Edm.Validation
         #region IEdmComplexType
 
         /// <summary>
-        /// Validates that a complex type is not abstract.
-        /// </summary>
-        public static readonly ValidationRule<IEdmComplexType> ComplexTypeInvalidAbstractComplexType =
-            new ValidationRule<IEdmComplexType>(
-                (context, complexType) =>
-                {
-                    if (complexType.IsAbstract)
-                    {
-                        context.AddError(
-                            complexType.Location(),
-                            EdmErrorCode.InvalidAbstractComplexType,
-                            Strings.EdmModel_Validator_Semantic_InvalidComplexTypeAbstract(complexType.FullName()));
-                    }
-                });
-
-        /// <summary>
         /// Validates that a open complex type can not have closed derived complex type.
         /// </summary>
         public static readonly ValidationRule<IEdmComplexType> OpenComplexTypeCannotHaveClosedDerivedComplexType =
@@ -941,39 +1084,6 @@ namespace Microsoft.OData.Edm.Validation
                             complexType.Location(),
                             EdmErrorCode.InvalidAbstractComplexType,
                             Strings.EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen(complexType.FullName()));
-                    }
-                });
-
-        /// <summary>
-        /// Validates that a complex type does not inherit.
-        /// Note: Because we support complex type inheritance now, this rule should be deprecated.
-        /// </summary>
-        public static readonly ValidationRule<IEdmComplexType> ComplexTypeInvalidPolymorphicComplexType =
-            new ValidationRule<IEdmComplexType>(
-                (context, edmComplexType) =>
-                {
-                    if (edmComplexType.BaseType != null)
-                    {
-                        context.AddError(
-                            edmComplexType.Location(),
-                            EdmErrorCode.InvalidPolymorphicComplexType,
-                            Strings.EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic(edmComplexType.FullName()));
-                    }
-                });
-
-        /// <summary>
-        /// Validates that a complex type contains at least one property.
-        /// </summary>
-        public static readonly ValidationRule<IEdmComplexType> ComplexTypeMustContainProperties =
-            new ValidationRule<IEdmComplexType>(
-                (context, complexType) =>
-                {
-                    if (!complexType.Properties().Any())
-                    {
-                        context.AddError(
-                            complexType.Location(),
-                            EdmErrorCode.ComplexTypeMustHaveProperties,
-                            Strings.EdmModel_Validator_Semantic_ComplexTypeMustHaveProperties(complexType.FullName()));
                     }
                 });
 
@@ -998,27 +1108,12 @@ namespace Microsoft.OData.Edm.Validation
                         validatedType = property.Type.Definition;
                     }
 
-                    if (validatedType.TypeKind != EdmTypeKind.Primitive && validatedType.TypeKind != EdmTypeKind.Enum && validatedType.TypeKind != EdmTypeKind.Complex && !context.IsBad(validatedType))
+                    if (validatedType.TypeKind != EdmTypeKind.Primitive && validatedType.TypeKind != EdmTypeKind.Enum
+                        && validatedType.TypeKind != EdmTypeKind.Untyped && validatedType.TypeKind != EdmTypeKind.Complex
+                        && validatedType.TypeKind != EdmTypeKind.Path
+                        && !context.IsBad(validatedType))
                     {
                         context.AddError(property.Location(), EdmErrorCode.InvalidPropertyType, Strings.EdmModel_Validator_Semantic_InvalidPropertyType(property.Type.TypeKind().ToString()));
-                    }
-                });
-
-        /// <summary>
-        /// Validates that if the concurrency mode of a property is fixed, the type is primitive.
-        /// </summary>
-        public static readonly ValidationRule<IEdmStructuralProperty> StructuralPropertyInvalidPropertyTypeConcurrencyMode =
-            new ValidationRule<IEdmStructuralProperty>(
-                (context, property) =>
-                {
-                    if (property.ConcurrencyMode == EdmConcurrencyMode.Fixed &&
-                        !property.Type.IsPrimitive() &&
-                        !context.IsBad(property.Type.Definition))
-                    {
-                        context.AddError(
-                        property.Location(),
-                        EdmErrorCode.InvalidPropertyType,
-                        Strings.EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode((property.Type.IsCollection() ? EdmConstants.Type_Collection : property.Type.TypeKind().ToString())));
                     }
                 });
 
@@ -1049,6 +1144,7 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmNavigationProperty>(
                 (context, property) =>
                 {
+                    // Validates that target must be an entity type.
                     if (property.ToEntityType() == null)
                     {
                         context.AddError(
@@ -1058,7 +1154,9 @@ namespace Microsoft.OData.Edm.Validation
                         return;
                     }
 
-                    if (property.Partner == null || property.Partner is BadNavigationProperty)
+                    if (property.Partner == null
+                        || property.Partner is BadNavigationProperty
+                        || property.Partner.DeclaringType is IEdmComplexType)
                     {
                         return;
                     }
@@ -1101,7 +1199,7 @@ namespace Microsoft.OData.Edm.Validation
 
         /// <summary>
         /// Validates multiplicity of the principal end:
-        /// 0..1 - if some dependent properties are nullable, 
+        /// 0..1 - if some dependent properties are nullable,
         ///    1 - if some dependent properties are not nullable.
         ///    * - not allowed.
         /// </summary>
@@ -1250,7 +1348,31 @@ namespace Microsoft.OData.Edm.Validation
                });
 
         /// <summary>
-        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as 
+        /// Validates that the navigation property partner path, if exists, should be resolvable to a navigation property.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationProperty> NavigationPropertyPartnerPathShouldBeResolvable =
+            new ValidationRule<IEdmNavigationProperty>(
+                (context, property) =>
+                {
+                    var path = property.GetPartnerPath();
+                    if (path != null
+                        && property.Type.Definition.AsElementType() is IEdmEntityType
+                        && CsdlSemanticsNavigationProperty.ResolvePartnerPath(
+                               (IEdmEntityType)property.Type.Definition.AsElementType(), path, context.Model)
+                           == null)
+                    {
+                        context.AddError(
+                        property.Location(),
+                        EdmErrorCode.UnresolvedNavigationPropertyPartnerPath,
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "Cannot resolve partner path for navigation property '{0}'.",
+                            property.Name));
+                    }
+                });
+
+        /// <summary>
+        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as
         /// the declaring type of the property, then the multiplicity of the target of navigation is 0..1 or Many.
         /// This depends on there being a targetting cycle. Because of the rule <see cref="NavigationMappingMustBeBidirectional" />, we know that either this is always true, or there will be an error
         /// </summary>
@@ -1270,7 +1392,7 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as 
+        /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as
         /// the declaring type of the property, then the multiplicity of the source of navigation is Zero-Or-One.
         /// This depends on there being a targetting cycle. Because of the rule <see cref="NavigationMappingMustBeBidirectional" />, we know that either this is always true, or there will be an error
         /// </summary>
@@ -1331,6 +1453,38 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
+        /// Validates that the type of the navigation property cannot have path type property defined.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationProperty> NavigationPropertyTypeCannotHavePathTypeProperty =
+            new ValidationRule<IEdmNavigationProperty>(
+                (context, property) =>
+                {
+                    IEdmTypeReference propertyType = property.Type;
+                    if (propertyType.IsCollection())
+                    {
+                        propertyType = propertyType.AsCollection().ElementType();
+                    }
+
+                    IEdmStructuredType structuredType = propertyType.ToStructuredType();
+                    if (structuredType == null)
+                    {
+                        return;
+                    }
+
+                    IList<IEdmStructuredType> visited = new List<IEdmStructuredType>();
+                    if (HasPathTypeProperty(structuredType, visited))
+                    {
+                        string errorMessage = Strings
+                            .EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty(property.Type.FullName(), property.Name, property.DeclaringType.FullTypeName());
+
+                        context.AddError(
+                            property.Location(),
+                            EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
+                            errorMessage);
+                    }
+                });
+
+        /// <summary>
         /// Validates that each pair of properties between the dependent properties and the principal properties are of the same type.
         /// </summary>
         public static readonly ValidationRule<IEdmNavigationProperty> NavigationPropertyTypeMismatchRelationshipConstraint =
@@ -1374,9 +1528,31 @@ namespace Microsoft.OData.Edm.Validation
                     if (property.PropertyKind == EdmPropertyKind.None && !context.IsBad(property))
                     {
                         context.AddError(
-                        property.Location(),
-                        EdmErrorCode.PropertyMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone(property.Name));
+                            property.Location(),
+                            EdmErrorCode.PropertyMustNotHaveKindOfNone,
+                            Strings.EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone(property.Name));
+                    }
+                });
+
+        /// <summary>
+        /// Collection(Edm.PrimitiveType) and Collection(Edm.ComplexType) cannot be used as the type of a property.
+        /// </summary>
+        public static readonly ValidationRule<IEdmProperty> PropertyTypeCannotBeCollectionOfAbstractType =
+            new ValidationRule<IEdmProperty>(
+                (context, property) =>
+                {
+                    if (property.Type.IsCollection())
+                    {
+                        IEdmTypeReference elementType = property.Type.AsCollection().ElementType();
+                        if (elementType.Definition == EdmCoreModelComplexType.Instance ||
+                            elementType.Definition == EdmCoreModel.Instance.GetPrimitiveType())
+                        {
+                            context.AddError(
+                                property.Location(),
+                                EdmErrorCode.PropertyTypeCannotBeCollectionOfAbstractType,
+                                Strings.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType(
+                                    property.Type.FullName(), property.Name));
+                        }
                     }
                 });
 
@@ -1409,8 +1585,7 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (operationImport.EntitySet != null)
                     {
-                        if (operationImport.EntitySet.ExpressionKind != Expressions.EdmExpressionKind.EntitySetReference &&
-                            operationImport.EntitySet.ExpressionKind != Expressions.EdmExpressionKind.Path)
+                        if (operationImport.EntitySet.ExpressionKind != EdmExpressionKind.Path)
                         {
                             context.AddError(
                                 operationImport.Location(),
@@ -1419,11 +1594,9 @@ namespace Microsoft.OData.Edm.Validation
                         }
                         else
                         {
-                            IEdmEntitySet entitySet;
-                            IEdmOperationParameter parameter;
-                            IEnumerable<IEdmNavigationProperty> path;
+                            IEdmEntitySetBase entitySet;
 
-                            if (!operationImport.TryGetStaticEntitySet(out entitySet))
+                            if (!operationImport.TryGetStaticEntitySet(context.Model, out entitySet))
                             {
                                 context.AddError(
                                     operationImport.Location(),
@@ -1446,15 +1619,6 @@ namespace Microsoft.OData.Edm.Validation
                                     }
                                 }
                             }
-
-                            IEnumerable<EdmError> errors;
-                            if (!operationImport.TryGetRelativeEntitySetPath(context.Model, out parameter, out path, out errors))
-                            {
-                                foreach (EdmError error in errors)
-                                {
-                                    context.AddError(error);
-                                }
-                            }
                         }
                     }
                 });
@@ -1473,11 +1637,11 @@ namespace Microsoft.OData.Edm.Validation
                         {
                             IEdmEntityType returnedEntityType = elementType.AsEntity().EntityDefinition();
 
-                            IEdmEntitySet entitySet;
+                            IEdmEntitySetBase entitySet;
                             IEdmOperationParameter parameter;
-                            IEnumerable<IEdmNavigationProperty> path;
+                            Dictionary<IEdmNavigationProperty, IEdmPathExpression> path;
                             IEnumerable<EdmError> errors;
-                            if (operationImport.TryGetStaticEntitySet(out entitySet))
+                            if (operationImport.TryGetStaticEntitySet(context.Model, out entitySet))
                             {
                                 IEdmEntityType entitySetElementType = entitySet.EntityType();
                                 if (!returnedEntityType.IsOrInheritsFrom(entitySetElementType) && !context.IsBad(returnedEntityType) && !context.IsBad(entitySet) && !context.IsBad(entitySetElementType))
@@ -1495,8 +1659,8 @@ namespace Microsoft.OData.Edm.Validation
                             }
                             else if (operationImport.TryGetRelativeEntitySetPath(context.Model, out parameter, out path, out errors))
                             {
-                                List<IEdmNavigationProperty> pathList = path.ToList();
-                                IEdmTypeReference relativePathType = pathList.Count == 0 ? parameter.Type : path.Last().Type;
+                                List<IEdmNavigationProperty> pathList = path.Select(s => s.Key).ToList();
+                                IEdmTypeReference relativePathType = pathList.Count == 0 ? parameter.Type : path.Last().Key.Type;
                                 IEdmTypeReference relativePathElementType = relativePathType.IsCollection() ? relativePathType.AsCollection().ElementType() : relativePathType;
                                 if (!returnedEntityType.IsOrInheritsFrom(relativePathElementType.Definition) && !context.IsBad(returnedEntityType) && !context.IsBad(relativePathElementType.Definition))
                                 {
@@ -1609,18 +1773,42 @@ namespace Microsoft.OData.Edm.Validation
                });
 
         /// <summary>
-        /// Validates that if an operation is bindable, it must have parameters.
+        /// Validates that if an operation is bindable, it must have non-optional parameters.
         /// </summary>
         public static readonly ValidationRule<IEdmOperation> BoundOperationMustHaveParameters =
            new ValidationRule<IEdmOperation>(
                (context, operation) =>
                {
-                   if (operation.IsBound && operation.Parameters.Count() == 0)
+                   if (operation.IsBound && !operation.Parameters.Any(p => !(p is IEdmOptionalParameter)))
                    {
                        context.AddError(
                            operation.Location(),
                            EdmErrorCode.BoundOperationMustHaveParameters,
                            Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(operation.Name));
+                   }
+               });
+
+        /// <summary>
+        /// Validates optional parameters must come before required parameters.
+        /// </summary>
+        public static readonly ValidationRule<IEdmOperation> OptionalParametersMustComeAfterRequiredParameters =
+           new ValidationRule<IEdmOperation>(
+               (context, operation) =>
+               {
+                   bool foundOptional = false;
+                   foreach (IEdmOperationParameter parameter in operation.Parameters)
+                   {
+                       if (parameter is IEdmOptionalParameter)
+                       {
+                           foundOptional = true;
+                       }
+                       else if (foundOptional)
+                       {
+                           context.AddError(
+                               operation.Location(),
+                               EdmErrorCode.RequiredParametersMustPrecedeOptional,
+                               Strings.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional(parameter.Name));
+                       }
                    }
                });
 
@@ -1631,7 +1819,7 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmOperation>((context, operation) =>
             {
                 IEdmOperationParameter bindingParameter = null;
-                IEnumerable<IEdmNavigationProperty> navProps = null;
+                Dictionary<IEdmNavigationProperty, IEdmPathExpression> navProps = null;
                 IEdmEntityType lastEntityType = null;
                 IEnumerable<EdmError> errors = null;
 
@@ -1650,7 +1838,7 @@ namespace Microsoft.OData.Edm.Validation
            new ValidationRule<IEdmOperation>((context, operation) =>
            {
                IEdmOperationParameter bindingParameter = null;
-               IEnumerable<IEdmNavigationProperty> navProps = null;
+               Dictionary<IEdmNavigationProperty, IEdmPathExpression> navProps = null;
                IEdmEntityType lastEntityType = null;
                IEnumerable<EdmError> errors = null;
 
@@ -1683,7 +1871,7 @@ namespace Microsoft.OData.Edm.Validation
                    IEdmNavigationProperty navProp = null;
                    if (navProps != null)
                    {
-                       navProp = navProps.LastOrDefault();
+                       navProp = navProps.LastOrDefault().Key;
                    }
 
                    if (navProp != null && navProp.TargetMultiplicity() == EdmMultiplicity.Many)
@@ -1709,6 +1897,26 @@ namespace Microsoft.OData.Edm.Validation
                }
            });
 
+
+        /// <summary>
+        /// Validates that the return type cannot be Collection(Edm.PrimitiveType) or Collection(Edm.ComplexType).
+        /// </summary>
+        public static readonly ValidationRule<IEdmOperation> OperationReturnTypeCannotBeCollectionOfAbstractType =
+            new ValidationRule<IEdmOperation>((context, operation) =>
+            {
+                if (operation.ReturnType != null && operation.ReturnType.IsCollection())
+                {
+                    IEdmTypeReference elementType = operation.ReturnType.AsCollection().ElementType();
+                    if (elementType.Definition == EdmCoreModelComplexType.Instance ||
+                        elementType.Definition == EdmCoreModel.Instance.GetPrimitiveType())
+                    {
+                        context.AddError(
+                            operation.Location(),
+                            EdmErrorCode.OperationWithCollectionOfAbstractReturnTypeInvalid,
+                            Strings.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType(operation.ReturnType.FullName(), operation.FullName()));
+                    }
+                }
+            });
 
         #endregion
 
@@ -2014,7 +2222,7 @@ namespace Microsoft.OData.Edm.Validation
         #region IEdmImmediateValueAnnotation
 
         /// <summary>
-        /// Validates that an immediate value annotation has a name and a namespace.
+        /// Validates that an immediate annotation has a name and a namespace.
         /// </summary>
         public static readonly ValidationRule<IEdmDirectValueAnnotation> ImmediateValueAnnotationElementAnnotationIsValid =
             new ValidationRule<IEdmDirectValueAnnotation>(
@@ -2037,7 +2245,7 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that an immediate value annotation that is flagged to be serialized as an element can be serialized safely.
+        /// Validates that an immediate annotation that is flagged to be serialized as an element can be serialized safely.
         /// </summary>
         public static readonly ValidationRule<IEdmDirectValueAnnotation> ImmediateValueAnnotationElementAnnotationHasNameAndNamespace =
             new ValidationRule<IEdmDirectValueAnnotation>(
@@ -2058,7 +2266,7 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that the name of a direct value annotation can safely be serialized as XML.
+        /// Validates that the name of a direct annotation can safely be serialized as XML.
         /// </summary>
         public static readonly ValidationRule<IEdmDirectValueAnnotation> DirectValueAnnotationHasXmlSerializableName =
             new ValidationRule<IEdmDirectValueAnnotation>(
@@ -2125,7 +2333,7 @@ namespace Microsoft.OData.Edm.Validation
                                 IEdmTerm term = target as IEdmTerm;
                                 if (term != null)
                                 {
-                                    foundTarget = (context.Model.FindValueTerm(term.FullName()) as IEdmTerm != null);
+                                    foundTarget = (context.Model.FindTerm(term.FullName()) != null);
                                 }
                                 else
                                 {
@@ -2212,19 +2420,16 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
-        #endregion
-
-        #region IEdmValueAnnotation
-
         /// <summary>
-        /// Validates that if a value annotation declares a type, the expression for that annotation has the correct type.
+        /// Validates that if a vocabulary annotation declares a type, the expression for that annotation has the correct type.
         /// </summary>
-        public static readonly ValidationRule<IEdmValueAnnotation> ValueAnnotationAssertCorrectExpressionType =
-            new ValidationRule<IEdmValueAnnotation>(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly ValidationRule<IEdmVocabularyAnnotation> VocabularyAnnotationAssertCorrectExpressionType =
+            new ValidationRule<IEdmVocabularyAnnotation>(
                 (context, annotation) =>
                 {
                     IEnumerable<EdmError> errors;
-                    if (!annotation.Value.TryCast(((IEdmValueTerm)annotation.Term).Type, out errors))
+                    if (!annotation.Value.TryCast(annotation.Term.Type, out errors))
                     {
                         foreach (EdmError error in errors)
                         {
@@ -2239,13 +2444,13 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Validates that a vocabulary annotations term can be found through the model containing the annotation.
         /// </summary>
-        public static readonly ValidationRule<IEdmValueAnnotation> AnnotationInaccessibleTerm =
-            new ValidationRule<IEdmValueAnnotation>(
+        public static readonly ValidationRule<IEdmVocabularyAnnotation> AnnotationInaccessibleTerm =
+            new ValidationRule<IEdmVocabularyAnnotation>(
                 (context, annotation) =>
                 {
                     // An unbound term is not treated as a semantic error, and looking up its name would fail.
                     IEdmTerm term = annotation.Term;
-                    if (!(term is Microsoft.OData.Edm.Csdl.CsdlSemantics.IUnresolvedElement) && context.Model.FindValueTerm(term.FullName()) == null)
+                    if (!(term is Microsoft.OData.Edm.Csdl.CsdlSemantics.IUnresolvedElement) && context.Model.FindTerm(term.FullName()) == null)
                     {
                         context.AddError(
                             annotation.Location(),
@@ -2274,26 +2479,6 @@ namespace Microsoft.OData.Edm.Validation
                         {
                             context.AddError(error);
                         }
-                    }
-                });
-
-        #endregion
-
-        #region IEdmTerm
-
-        /// <summary>
-        /// A term without other errors must not have kind of none.
-        /// </summary>
-        public static readonly ValidationRule<IEdmTerm> TermMustNotHaveKindOfNone =
-            new ValidationRule<IEdmTerm>(
-                (context, term) =>
-                {
-                    if (term.TermKind == EdmTermKind.None && !context.IsBad(term))
-                    {
-                        context.AddError(
-                        term.Location(),
-                        EdmErrorCode.TermMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone(term.FullName()));
                     }
                 });
 
@@ -2369,23 +2554,23 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Validates the types of a function application are correct.
         /// </summary>
-        public static readonly ValidationRule<IEdmApplyExpression> OperationApplicationExpressionParametersMatchAppliedOperation =
+        public static readonly ValidationRule<IEdmApplyExpression> FunctionApplicationExpressionParametersMatchAppliedFunction =
             new ValidationRule<IEdmApplyExpression>(
                 (context, expression) =>
                 {
-                    IEdmOperationReferenceExpression operationReference = expression.AppliedOperation as IEdmOperationReferenceExpression;
-                    if (operationReference.ReferencedOperation != null && !context.IsBad(operationReference.ReferencedOperation))
+                    IEdmFunction appliedFunction = expression.AppliedFunction;
+                    if (appliedFunction != null && !context.IsBad(appliedFunction))
                     {
-                        if (operationReference.ReferencedOperation.Parameters.Count() != expression.Arguments.Count())
+                        if (appliedFunction.Parameters.Count() != expression.Arguments.Count())
                         {
                             context.AddError(new EdmError(
                                     expression.Location(),
                                     EdmErrorCode.IncorrectNumberOfArguments,
-                                    Edm.Strings.EdmModel_Validator_Semantic_IncorrectNumberOfArguments(expression.Arguments.Count(), operationReference.ReferencedOperation.FullName(), operationReference.ReferencedOperation.Parameters.Count())));
+                                    Edm.Strings.EdmModel_Validator_Semantic_IncorrectNumberOfArguments(expression.Arguments.Count(), appliedFunction.FullName(), appliedFunction.Parameters.Count())));
                         }
 
                         IEnumerator<IEdmExpression> parameterExpressionEnumerator = expression.Arguments.GetEnumerator();
-                        foreach (IEdmOperationParameter parameter in operationReference.ReferencedOperation.Parameters)
+                        foreach (IEdmOperationParameter parameter in appliedFunction.Parameters)
                         {
                             parameterExpressionEnumerator.MoveNext();
                             IEnumerable<EdmError> recursiveErrors;
@@ -2412,7 +2597,7 @@ namespace Microsoft.OData.Edm.Validation
                 (context, annotatable) =>
                 {
                     HashSetInternal<string> annotationSet = new HashSetInternal<string>();
-                    foreach (IEdmVocabularyAnnotation annotation in annotatable.VocabularyAnnotations(context.Model))
+                    foreach (IEdmVocabularyAnnotation annotation in context.Model.FindDeclaredVocabularyAnnotations(annotatable))
                     {
                         if (!annotationSet.Add(annotation.Term.FullName() + ":" + annotation.Qualifier))
                         {
@@ -2466,6 +2651,92 @@ namespace Microsoft.OData.Edm.Validation
                     Strings.EdmModel_Validator_Semantic_InaccessibleType(type.FullName()));
             }
         }
+
+        private static bool TryResolveNavigationPropertyBindingPath(IEdmModel model, IEdmNavigationSource navigationSource, IEdmNavigationPropertyBinding binding)
+        {
+            var pathSegments = binding.Path.PathSegments.ToArray();
+            var definingType = navigationSource.EntityType() as IEdmStructuredType;
+            for (int index = 0; index < pathSegments.Length - 1; index++)
+            {
+                string segment = pathSegments[index];
+                if (segment.IndexOf('.') < 0)
+                {
+                    var property = definingType.FindProperty(segment);
+                    if (property == null)
+                    {
+                        return false;
+                    }
+
+                    var navProperty = property as IEdmNavigationProperty;
+                    if (navProperty != null && !navProperty.ContainsTarget)
+                    {
+                        return false;
+                    }
+
+                    definingType = property.Type.Definition.AsElementType() as IEdmStructuredType;
+                    if (definingType == null)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    var derivedType = model.FindType(segment) as IEdmStructuredType;
+                    if (derivedType == null || !derivedType.IsOrInheritsFrom(definingType))
+                    {
+                        return false;
+                    }
+
+                    definingType = derivedType;
+                }
+            }
+
+            var navigationProperty = definingType.FindProperty(pathSegments.Last()) as IEdmNavigationProperty;
+            return navigationProperty != null;
+        }
+
+        private static bool HasPathTypeProperty(IEdmStructuredType structuredType, IList<IEdmStructuredType> visited)
+        {
+            if (structuredType == null || visited == null || visited.Any(c => c == structuredType))
+            {
+                return false;
+            }
+
+            visited.Add(structuredType);
+
+            IEdmStructuredType baseType = structuredType.BaseType;
+            if (baseType != null)
+            {
+                if (HasPathTypeProperty(baseType, visited))
+                {
+                    return true;
+                }
+            }
+
+            foreach (var property in structuredType.DeclaredProperties)
+            {
+                IEdmTypeReference propertyType = property.Type;
+                if (propertyType.IsCollection())
+                {
+                    propertyType = propertyType.AsCollection().ElementType();
+                }
+
+                if (propertyType.IsStructured())
+                {
+                    if (HasPathTypeProperty(propertyType.AsStructured().StructuredDefinition(), visited))
+                    {
+                        return true;
+                    }
+                }
+                else if (propertyType.IsPath())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         internal class EdmTypeReferenceComparer : IEqualityComparer<IEdmTypeReference>
         {

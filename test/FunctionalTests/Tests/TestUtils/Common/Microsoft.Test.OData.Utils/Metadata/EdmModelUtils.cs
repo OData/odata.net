@@ -7,7 +7,6 @@
 namespace Microsoft.Test.OData.Utils.Metadata
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.Common;
 
     /// <summary>

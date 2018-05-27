@@ -32,6 +32,7 @@ namespace AstoriaUnitTests.Tests
     using provider = Microsoft.OData.Service.Providers;
     using Microsoft.OData.Client;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     /// <summary>This class contains inner classes that can run as LTM tests.</summary>
     [TestModule]
     public partial class UnitTestModule1 : AstoriaTestModule
@@ -42,8 +43,8 @@ namespace AstoriaUnitTests.Tests
         public class UpdateTests : AstoriaTestCase
         {
             #region Insert/Post Tests
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostError_SpecifyNullPayload()
             {
                 string jsonPayLoad = "{ }";
@@ -55,8 +56,8 @@ namespace AstoriaUnitTests.Tests
 
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "POST", 400);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeepPostWithInvalidLinkTypeValue()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -117,107 +118,6 @@ namespace AstoriaUnitTests.Tests
                     400);
             }
 
-            // Todo: Fix places where we've lost JsonVerbose coverage to add JsonLight
-            [Ignore]
-            [TestCategory("Partition1"), TestMethod, Variation]
-            public void UpdatePostLocalInsert()
-            {
-                CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("WebServerLocation", TestWebRequest.LocalWebServerLocationsWithArguments));
-                string payload =
-                    "{ @odata.type: \"" + typeof(Customer).FullName + "\", Name: \"New Customer\", ID: 2000 }";
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
-                {
-                    Trace.WriteLine("Running UpdatePostLocalInsert...");
-                    WebServerLocation location = (WebServerLocation)values["WebServerLocation"];
-                    using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
-                    {
-                        using (CustomDataContext.CreateChangeScope())
-                        {
-                            Trace.WriteLine("Adding new customer...");
-                            request.DataServiceType = typeof(CustomDataContext);
-                            request.HttpMethod = "POST";
-                            request.RequestContentType = SerializationFormatData.JsonLight.MimeTypes[0] + ";charset=iso-8859-1";
-                            request.RequestUriString = "/Customers";
-                            request.TestArguments = new Hashtable();
-                            request.TestArguments[CustomDataContext.PreserveChangesArgument] = true;
-                            request.RequestStream = IOUtil.CreateStream(payload, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                            request.SendRequest();
-                            Trace.WriteLine("Response from POST:");
-                            Trace.WriteLine(request.GetResponseStreamAsText());
-
-                            string baseUri = request.BaseUri.EndsWith("/") ? request.BaseUri : request.BaseUri + "/";
-                            Assert.AreEqual(baseUri + "Customers(2000)", request.ResponseLocation);
-
-                            request.HttpMethod = "GET";
-                            request.FullRequestUriString = baseUri + "Customers";
-                            request.RequestStream = null;
-                            Trace.WriteLine("Getting all customers <" + request.RequestUriString + ">...");
-                            request.SendRequest();
-                            Trace.WriteLine(request.GetResponseStreamAsText());
-
-                            request.HttpMethod = "GET";
-                            request.FullRequestUriString = baseUri + "Customers(2000)";
-                            request.RequestStream = null;
-                            Trace.WriteLine("Getting new customer <" + request.RequestUriString + ">...");
-                            request.SendRequest();
-                            string etag = request.ResponseETag;
-                            XmlDocument document = SerializationFormatData.Atom.LoadXmlDocumentFromStream(request.GetResponseStream());
-                            string responseBaseUri = UnitTestsUtil.GetBaseUri((XmlElement)document.ChildNodes[1]);
-                            Assert.AreEqual<string>(baseUri, responseBaseUri, "baseUri in request and response should be the same");
-                            UnitTestsUtil.VerifyXPaths(document, "/atom:entry[atom:id='" + baseUri + "Customers(2000)']", "/atom:entry/atom:content/adsm:properties/ads:Name");
-                            Assert.IsTrue(String.IsNullOrEmpty(request.ResponseLocation));
-
-                            Trace.WriteLine("Modifying existing customer...");
-                            string newPayload =
-                                "{ @odata.type: \"" + typeof(Customer).FullName + "\", " +
-                                "Name: \"New Customer1\"" +
-                                 "}";
-
-                            request.HttpMethod = "PATCH";
-                            request.RequestUriString = "/Customers(2000)";
-                            request.IfMatch = etag;
-                            request.RequestStream = IOUtil.CreateStream(newPayload, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                            request.SendRequest();
-                            Assert.IsTrue(String.IsNullOrEmpty(request.ResponseLocation));
-
-                            request.HttpMethod = "PATCH";
-                            request.RequestUriString = "/Customers(2000)";
-                            request.IfMatch = request.ResponseETag;
-                            request.RequestStream = IOUtil.CreateStream(newPayload, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                            request.SendRequest();
-                            Assert.IsTrue(String.IsNullOrEmpty(request.ResponseLocation));
-
-                            Trace.WriteLine("Getting new customer...");
-                            request.HttpMethod = "GET";
-                            request.RequestUriString = "/Customers(2000)";
-                            request.RequestStream = null;
-                            request.IfMatch = null;
-                            request.Accept = SerializationFormatData.JsonLight.MimeTypes[0];
-                            request.SendRequest();
-                            etag = request.ResponseETag;
-                            document = SerializationFormatData.JsonLight.LoadXmlDocumentFromStream(request.GetResponseStream());
-
-                            // verify that we are returning the full uri
-                            UnitTestsUtil.VerifyXPaths(document,
-                                String.Format("/{0}[odata.metadata='http://host/$metadata#Customers/$element'  and ID=2000 and Name='New Customer1']", JsonValidator.ObjectString));
-
-                            Trace.WriteLine("Deleting customer...");
-                            request.HttpMethod = "DELETE";
-                            request.IfMatch = etag;
-                            request.SendRequest();
-                            Assert.IsTrue(String.IsNullOrEmpty(request.ResponseLocation));
-
-                            Trace.WriteLine("Getting new customer back - exception expected...");
-                            request.HttpMethod = "GET";
-                            request.IfMatch = null;
-                            Exception exception = TestUtil.RunCatching(request.SendRequest);
-                            TestUtil.AssertExceptionExpected(exception, true);
-                        }
-                    }
-                });
-            }
-
             [Variation]
             public void UpdatePostInvalidSyntaxPayload()
             {
@@ -233,7 +133,7 @@ namespace AstoriaUnitTests.Tests
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("SerializationFormatKind", new object[] { SerializationFormatKind.JSON }),
                     new Dimension("RequestVerb", requestVerbs));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     SerializationFormatKind serializationFormatKind = (SerializationFormatKind)values["SerializationFormatKind"];
                     RequestVerb requestVerb = (RequestVerb)values["RequestVerb"];
@@ -247,7 +147,7 @@ namespace AstoriaUnitTests.Tests
                     foreach (ResourceContainer container in workspace.ServiceContainer.ResourceContainers)
                     {
                         ExpNode query = Query.From(Exp.Variable(container)).Select();
-                        
+
                         // Create a canonical payload for this resource.
                         ResourceBodyTree updateTreeNode = CanonicalResourcePayload(workspace, container);
 
@@ -278,11 +178,11 @@ namespace AstoriaUnitTests.Tests
             private ResourceBodyTree CanonicalResourcePayload(Workspace workspace, ResourceContainer resourceContainer)
             {
                 ResourceType type = resourceContainer.BaseType;
-                
+
                 // TODO: support PUT by adding key support.
 
                 ResourceInstanceProperty[] keyProperties = new ResourceInstanceProperty[0];
-                ResourceInstanceKey keyExpression = new ResourceInstanceKey(resourceContainer,type, keyProperties);
+                ResourceInstanceKey keyExpression = new ResourceInstanceKey(resourceContainer, type, keyProperties);
 
                 List<ResourceInstanceProperty> properties = new List<ResourceInstanceProperty>();
                 foreach (NodeProperty p in type.Properties)
@@ -303,8 +203,8 @@ namespace AstoriaUnitTests.Tests
                 KeyedResourceInstance instance = new KeyedResourceInstance(keyExpression, properties.ToArray());
                 return instance;
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostSimple()
             {
                 #region Payload
@@ -313,10 +213,10 @@ namespace AstoriaUnitTests.Tests
                     .AddProperty("ID", 125)
                     .AddProperty("Name", "Foo")
                     .AddProperty("Address", new PayloadBuilder()
-                        {
-                            TypeName = typeof(Address).FullName,
-                            IsComplex = true
-                        }
+                    {
+                        TypeName = typeof(Address).FullName,
+                        IsComplex = true
+                    }
                         .AddProperty("StreetAddress", "Street Number, Street Address")
                         .AddProperty("City", "Redmond")
                         .AddProperty("State", "WA")
@@ -324,7 +224,7 @@ namespace AstoriaUnitTests.Tests
 
                 #endregion Payload
 
-               string[] jsonLiteXPaths = new string[] {
+                string[] jsonLiteXPaths = new string[] {
                     String.Format("/{0}[ID=125 and Name='Foo' and Address/StreetAddress='Street Number, Street Address' and Address/City='Redmond' and Address/State='WA' and Address/PostalCode='98052']",
                                   JsonValidator.ObjectString)};
 
@@ -335,8 +235,8 @@ namespace AstoriaUnitTests.Tests
                 DoInsertsForVariousProviders("/Customers", UnitTestsUtil.AtomFormat, payloadGenerator, atomXPaths);
                 DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, jsonLiteXPaths);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostInsertAndBindReferenceResource()
             {
                 #region Payload
@@ -344,10 +244,10 @@ namespace AstoriaUnitTests.Tests
                     .AddProperty("Name", "Bar")
                     .AddProperty("ID", 125)
                     .AddProperty("BestFriend", new PayloadBuilder()
-                        {
-                            TypeName = typeof(CustomerWithBirthday).FullName,
-                            Uri = "/Customers(1)",
-                        });
+                    {
+                        TypeName = typeof(CustomerWithBirthday).FullName,
+                        Uri = "/Customers(1)",
+                    });
 
                 #endregion // Payload
 
@@ -364,18 +264,18 @@ namespace AstoriaUnitTests.Tests
                 #region JsonLite XPaths
                 var jsonLiteXPaths1 = new KeyValuePair<string, string[]>(
                     "/Customers",
-                    new string[] { String.Format("/{0}[ID=125 and Name='Bar']", JsonValidator.ObjectString)});
+                    new string[] { String.Format("/{0}[ID=125 and Name='Bar']", JsonValidator.ObjectString) });
 
                 var jsonLiteXPaths2 = new KeyValuePair<string, string[]>(
                     "/Customers(125)/BestFriend",
-                    new string[] { String.Format("/{0}[odata.type='#{1}' and ID=1]", JsonValidator.ObjectString, typeof(CustomerWithBirthday).FullName)});
+                    new string[] { String.Format("/{0}[odata.type='#{1}' and ID=1]", JsonValidator.ObjectString, typeof(CustomerWithBirthday).FullName) });
                 #endregion
 
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.AtomFormat, payloadGenerator, new KeyValuePair<string, string[]>[] { atomXPaths1, atomXPaths2 }, true/*verifyETag*/);
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2 }, true/*verifyETag*/);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostDeepInsert()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -386,10 +286,10 @@ namespace AstoriaUnitTests.Tests
                     .AddProperty("Name", "Foo")
                     .AddProperty("ID", 125)
                     .AddProperty("BestFriend", new PayloadBuilder()
-                        {
-                            TypeName = typeof(Customer).FullName,
-                            Uri = "/Customers(1)",
-                        }
+                    {
+                        TypeName = typeof(Customer).FullName,
+                        Uri = "/Customers(1)",
+                    }
                         .AddProperty("Name", "FooBestFriend")
                         .AddProperty("ID", 126)
                         .AddProperty("Orders", new PayloadBuilder[] {
@@ -490,8 +390,8 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.AtomFormat, payloadGenerator, new KeyValuePair<string, string[]>[] { atomXPaths1, atomXPaths2, atomXPaths3, atomXPaths4, atomXPaths5 }, true/*verifyETag*/);
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2, jsonLiteXPaths3, jsonLiteXPaths4, jsonLiteXPaths5 }, true/*verifyETag*/);
             }
-      
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostInsertResourceToCollection()
             {
                 #region Payload
@@ -522,11 +422,11 @@ namespace AstoriaUnitTests.Tests
                 #endregion //JsonXPaths
 
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders", UnitTestsUtil.AtomFormat, payloadBuilder, new KeyValuePair<string, string[]>[] { atomXPath1, atomXPath2 }, false/*verifyETag*/);
-                UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders", UnitTestsUtil.JsonLightMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteXPath1, jsonLiteXPath2}, false/*verifyETag*/);
+                UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders", UnitTestsUtil.JsonLightMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteXPath1, jsonLiteXPath2 }, false/*verifyETag*/);
             }
 
             [Ignore]
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void UpdatePostInsertResourceToCollectionRepeated()
             {
@@ -539,7 +439,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 };
                 orderType.KeyProperties = new List<AdHocProperty>() { orderType.Properties[0] };
-                
+
                 AdHocEntityType customerType = new AdHocEntityType()
                 {
                     Name = "CustomerType",
@@ -579,8 +479,8 @@ namespace AstoriaUnitTests.Tests
                     EntitySets = new List<AdHocEntitySet>() { customers, orders },
                     AssociationSets = new List<AdHocAssociationSet>()
                     {
-                        new AdHocAssociationSet() 
-                        { 
+                        new AdHocAssociationSet()
+                        {
                             Name = "PendingOrders",  Type = pendingOrdersType,
                             Ends = new List<AdHocAssociationSetEnd>()
                             {
@@ -588,8 +488,8 @@ namespace AstoriaUnitTests.Tests
                                 new AdHocAssociationSetEnd() { EntitySet = orders, EndType = pendingOrdersType.ManyEnd },
                             }
                         },
-                        new AdHocAssociationSet() 
-                        { 
+                        new AdHocAssociationSet()
+                        {
                             Name = "DeliveredOrders",  Type = deliveredOrdersType,
                             Ends = new List<AdHocAssociationSetEnd>()
                             {
@@ -599,7 +499,7 @@ namespace AstoriaUnitTests.Tests
                         },
                     }
                 };
-                
+
                 AdHocModel model = new AdHocModel(container) { ConceptualNs = XmlConstants.EdmOasisNamespace };
                 model.CreateDatabase();
 
@@ -655,19 +555,19 @@ namespace AstoriaUnitTests.Tests
             #endregion Insert/Post Tests
 
             #region Delete Tests
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateTopLevelDelete()
             {
                 PerformDeletesForVariousProvider("/Customers(1)",
                     new KeyValuePair<string, int>[] { new KeyValuePair<string, int>("/Customers", 1) }, true /*verifyETagScenarios*/);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeleteResourceFromCollection()
             {
                 string uri = "/Customers(1)/Orders(1)";
-                var verifyObjectCountForUris = new KeyValuePair<string,int>[]
+                var verifyObjectCountForUris = new KeyValuePair<string, int>[]
                     {
                         new KeyValuePair<string, int>("/Orders", 1),
                         new KeyValuePair<string, int>("/Customers(1)/Orders", 1)
@@ -675,8 +575,8 @@ namespace AstoriaUnitTests.Tests
 
                 PerformDeletesForVariousProvider(uri, verifyObjectCountForUris, false /*verifyETagScenarios*/);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeleteResourceFromReference()
             {
                 string uri = "/Customers(1)/BestFriend";
@@ -688,8 +588,8 @@ namespace AstoriaUnitTests.Tests
 
                 PerformDeletesForVariousProvider(uri, verifyObjectCountForUris, true /*verifyETagScenarios*/);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeepDelete()
             {
                 string uri = "/Customers(1)/BestFriend/Orders(0)";
@@ -704,18 +604,6 @@ namespace AstoriaUnitTests.Tests
             }
 
             [TestCategory("Partition1"), TestMethod, Variation]
-            public void UpdateDeletePropertyValue()
-            {
-                string uri = "/Customers(1)/Name/$value";
-                var jsonUriAndXPaths = new KeyValuePair<string, string[]>[]
-                {
-                    new KeyValuePair<string, string[]>("/Customers(1)/Name", new string[] { String.Format("/{0}[odata.null='true']", JsonValidator.ObjectString) })
-                };
-
-                DoUpdatesForVariousProviders("DELETE", uri, UnitTestsUtil.JsonLightMimeType, (string)null, jsonUriAndXPaths, true, verifyResponsePreference: false);
-            }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeleteSystem()
             {
                 string[] urls = new string[] { "/", "/$metadata", "/$batch" };
@@ -725,7 +613,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     request.DataServiceType = typeof(CustomDataContext);
                     request.HttpMethod = "DELETE";
-                    TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                    TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                     {
                         request.RequestUriString = (string)values["url"];
                         Exception exception = TestUtil.RunCatching(request.SendRequest);
@@ -752,13 +640,13 @@ namespace AstoriaUnitTests.Tests
             private static void DoDeleteWithETag(Type contextType, string uri, KeyValuePair<string, int>[] verifyObjectCountForUris, string responseFormat, bool verifyETagScenarios)
             {
                 string newUri = UnitTestsUtil.ConvertUri(contextType, uri);
-                
+
                 var newVerifyObjectCountForUris = new KeyValuePair<string, int>[verifyObjectCountForUris.Length];
                 for (int i = 0; i < newVerifyObjectCountForUris.Length; i++)
                 {
                     newVerifyObjectCountForUris[i] = new KeyValuePair<string, int>(UnitTestsUtil.ConvertUri(contextType, verifyObjectCountForUris[i].Key), verifyObjectCountForUris[i].Value);
                 }
-                            
+
                 if (verifyETagScenarios)
                 {
                     TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(responseFormat, newUri, contextType, null, "GET");
@@ -898,8 +786,8 @@ namespace AstoriaUnitTests.Tests
             #endregion Delete Tests
 
             #region Update/Put Tests
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutError_SpecifyNullPayloadInUpdate()
             {
                 string payLoad = "{" +
@@ -968,8 +856,8 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "PUT", 405);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutError_ErrorInEntityPayload()
             {
                 string jsonPayload = "{" +
@@ -1028,8 +916,8 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "PUT", 405);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutTopLevelResourceDirectly()
             {
                 PayloadBuilder payloadBuilder =
@@ -1043,16 +931,16 @@ namespace AstoriaUnitTests.Tests
                     "/atom:entry[atom:category/@term='#" + typeof(CustomerWithBirthday).FullName + "' and atom:id='http://host/Customers(1)' and atom:content/adsm:properties[ads:ID='1' and ads:Name='Foo']]" };
 
                 string[] jsonLiteXPath = new string[] {
-                    String.Format("/{0}[odata.type='#{1}' and ID=1 and Name='Foo']", 
-                                    JsonValidator.ObjectString, 
+                    String.Format("/{0}[odata.type='#{1}' and ID=1 and Name='Foo']",
+                                    JsonValidator.ObjectString,
                                     typeof(CustomerWithBirthday).FullName),
                              };
 
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)", UnitTestsUtil.AtomFormat, payloadBuilder, atomXPath, true/*verifyETag*/);
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, true/*verifyETag*/);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutTopLevelResourceDirectlyWithoutMetadataInformation()
             {
                 PayloadBuilder payloadBuilder =
@@ -1068,8 +956,8 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Orders(1)", UnitTestsUtil.AtomFormat, payloadBuilder, atomXPath, false);
                 DoUpdatesForVariousProviders("PATCH", "/Orders(1)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, false);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutDeepReferencePropertyUpdate()
             {
                 PayloadBuilder payloadBuilder =
@@ -1078,15 +966,15 @@ namespace AstoriaUnitTests.Tests
                         TypeName = typeof(CustomerWithBirthday).FullName
                     }
                    .AddProperty("BestFriend", new PayloadBuilder()
-                        {
-                            Uri = "/Customers(0)"
-                        }.AddProperty("Name", "Foo"));
+                   {
+                       Uri = "/Customers(0)"
+                   }.AddProperty("Name", "Foo"));
 
                 VerifyInvalidRequestForVariousProviders1(payloadBuilder, "/Customers(1)", UnitTestsUtil.AtomFormat, "PUT", 400);
                 VerifyInvalidRequestForVariousProviders1(payloadBuilder, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePut_ChangeReferenceRelationshipInPayload()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -1098,24 +986,25 @@ namespace AstoriaUnitTests.Tests
                     }
                    .AddProperty("BestFriend", new PayloadBuilder()
                    {
-                       TypeName = typeof(Customer).FullName, Uri = "/Customers(1)/BestFriend"
+                       TypeName = typeof(Customer).FullName,
+                       Uri = "/Customers(1)/BestFriend"
                    });
 
-                 var atomUriAndXPath1 = new KeyValuePair<string, string[]>[] {
+                var atomUriAndXPath1 = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>("/Customers(2)", new string[] { "/atom:entry[atom:category/@term='#" + typeof(Customer).FullName + "' and atom:id='http://host/Customers(2)']" }),
                     new KeyValuePair<string, string[]>("/Customers(2)/BestFriend",
                      new string[] { "/atom:entry[atom:category/@term='#" + customerFullName + "' and atom:id='http://host/Customers(0)' and atom:content/adsm:properties[ads:ID='0']]" })};
 
-                 var jsonLiteUriAndXPath1 = new KeyValuePair<string, string[]>[] {
+                var jsonLiteUriAndXPath1 = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>("/Customers(2)/BestFriend",
-                        new string[] { String.Format("/{0}[ID=0]", 
+                        new string[] { String.Format("/{0}[ID=0]",
                                     JsonValidator.ObjectString) })};
 
-                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPath1, true, true /*verifyUpdateResponse*/);
-                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
+                DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPath1, true, true /*verifyUpdateResponse*/);
+                DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePut_ChangeReferenceSetRelationshipInPayload()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder() { TypeName = typeof(Customer).FullName }
@@ -1134,11 +1023,11 @@ namespace AstoriaUnitTests.Tests
                     new KeyValuePair<string, string[]>("/Customers(2)/Orders",
                         new string[] {
                             String.Format(
-                                "//{0}/{1}[ID=0]", 
+                                "//{0}/{1}[ID=0]",
                                 JsonValidator.ArrayString,
                                 JsonValidator.ObjectString),
                             String.Format(
-                                "//{0}/{1}[ID=100]", 
+                                "//{0}/{1}[ID=100]",
                                 JsonValidator.ArrayString,
                                 JsonValidator.ObjectString)
                         }) };
@@ -1146,8 +1035,8 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPath1, true, true /*verifyUpdateResponse*/);
                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutDeepResourceSetPropertyUpdate()
             {
                 string jsonPayload = "{" +
@@ -1197,8 +1086,8 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)", UnitTestsUtil.AtomFormat, "PUT", 400);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutDeepResourceReferencePropertyToNull()
             {
                 var payloadBuilder = new PayloadBuilder() { TypeName = typeof(CustomerWithBirthday).FullName }
@@ -1214,7 +1103,7 @@ namespace AstoriaUnitTests.Tests
                 var jsonLiteUriAndXPath1 = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>("/Customers(1)?$expand=BestFriend",
                     new string[] { String.Format("/{0}[odata.type='#{1}' and ID=1 and BestFriend/@IsNull='true']",
-                                    JsonValidator.ObjectString, 
+                                    JsonValidator.ObjectString,
                                     typeof(CustomerWithBirthday).FullName),
                                 })};
 
@@ -1263,7 +1152,7 @@ namespace AstoriaUnitTests.Tests
 
                 internal static AddressableElementData ForKind(AddressableElementKind kind)
                 {
-                    return Values.Where((v)=>v.Kind == kind).Single();
+                    return Values.Where((v) => v.Kind == kind).Single();
                 }
 
                 internal static AddressableElementData[] Values
@@ -1323,17 +1212,17 @@ namespace AstoriaUnitTests.Tests
                 {
                     get
                     {
-                        return 
+                        return
                             this.Kind == AddressableElementKind.Metadata ||
                             this.Kind == AddressableElementKind.ServiceDocument;
                     }
                 }
 
                 internal Stream BuildRequestBody(
-                    string method, 
-                    SerializationFormatData format, 
-                    ServiceModelData model, 
-                    bool includeKeys, 
+                    string method,
+                    SerializationFormatData format,
+                    ServiceModelData model,
+                    bool includeKeys,
                     bool includeId)
                 {
                     if (method == "GET" || method == "DELETE")
@@ -1456,7 +1345,7 @@ namespace AstoriaUnitTests.Tests
                         case AddressableElementKind.EntityOpenCollectionReference:
                             return null;
                     }
-                    
+
                     return null;
                 }
 
@@ -1597,11 +1486,11 @@ namespace AstoriaUnitTests.Tests
                     base.SetValue(targetResource, propertyName, propertyValue);
                 }
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutContentTypeTest()
             {
-                var targets = new []
+                var targets = new[]
                 {
                     // Declared property
                     new PutContentTypeTarget
@@ -1647,14 +1536,14 @@ namespace AstoriaUnitTests.Tests
                     },
                 };
 
-                var payloads = new []
+                var payloads = new[]
                 {
                     new PutContentTypePayload
                     {
                         Description = "JSON Single property OrderName",
                         ContentTypes = new [] { UnitTestsUtil.JsonLightMimeType },
                         Payload = "{ value: 'Foo' }",
-                        ValidKinds = new [] { 
+                        ValidKinds = new [] {
                             AddressableElementKind.EntityPrimitiveOpenProperty,
                             AddressableElementKind.EntityPrimitiveProperty, 
                             // Note that in JSON there's no way to distiguish between the property and entry payloads - so this is a valid entry payload as well
@@ -1665,7 +1554,7 @@ namespace AstoriaUnitTests.Tests
                         Description = "XML Single property OrderName",
                         ContentTypes = new [] { UnitTestsUtil.MimeApplicationXml, UnitTestsUtil.MimeTextXml },
                         Payload = "<ads:OrderName xmlns:ads='http://docs.oasis-open.org/odata/ns/data'>Foo</ads:OrderName>",
-                        ValidKinds = new [] { 
+                        ValidKinds = new [] {
                             AddressableElementKind.EntityPrimitiveProperty, 
                             // Server ignores the property name for open properties - so this payload is valid for the open property as well.
                             AddressableElementKind.EntityPrimitiveOpenProperty }
@@ -1691,9 +1580,9 @@ namespace AstoriaUnitTests.Tests
                     new PutContentTypePayload
                     {
                         Description = "ATOM Entity instance with type",
-                        ContentTypes = new [] { 
+                        ContentTypes = new [] {
                             UnitTestsUtil.AtomFormat,
-                            "application/atom+xml;type=entry", 
+                            "application/atom+xml;type=entry",
                             "application/atom+xml;type=feed",
                             "application/atom+xml;type=test",
                             // Server treats */* as ATOM content type
@@ -1726,7 +1615,7 @@ namespace AstoriaUnitTests.Tests
                     new PutContentTypePayload
                     {
                         Description = "ATOM Entity instance without type",
-                        ContentTypes = new [] { 
+                        ContentTypes = new [] {
                             UnitTestsUtil.AtomFormat,
                             "application/atom+xml;type=entry",
                             "application/atom+xml;type=feed",
@@ -1915,8 +1804,8 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.JsonLightMimeType, "PUT", 405);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateMergeReferencePropertyUpdate()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder()
@@ -1943,8 +1832,8 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)/BestFriend", UnitTestsUtil.AtomFormat, payloadBuilder, new KeyValuePair<string, string[]>[] { atomUriAndXPath1, atomUriAndXPath2 }, true, true /*verifyUpdateResponse*/);
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)/BestFriend", UnitTestsUtil.JsonLightMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteUriAndXPath1, jsonLiteUriAndXPath2 }, true, true /*verifyUpdateResponse*/);
             }
-
-            [TestCategory("Partition1"), TestMethod]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod]
             public void UpdatRequiresNoTypeExplicitlyFromIDSP()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(CustomDataServiceProvider), "InvocationTraceCallback"))
@@ -1980,8 +1869,8 @@ namespace AstoriaUnitTests.Tests
                     TestUtil.AssertContainsFalse(callLog, "TryResolveResourceType");
                 }
             }
-
-            [TestCategory("Partition1"), TestMethod, Variation("setting a reference property to null via a uri that refers to null should work")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation("setting a reference property to null via a uri that refers to null should work")]
             public void UpdateSetReferencePropertyToNullViaAValidUri()
             {
                 string uri = "/Customers(1)";
@@ -2022,7 +1911,7 @@ namespace AstoriaUnitTests.Tests
                     payloadBuilder,
                     uriAndXPathsToVerify,
                     verifyETag,
-                    includeOpenTypesProvider:false,
+                    includeOpenTypesProvider: false,
                     verifyResponsePreference: verifyResponsePreference);
             }
 
@@ -2036,24 +1925,8 @@ namespace AstoriaUnitTests.Tests
                 bool includeOpenTypesProvider = true,
                 bool verifyResponsePreference = true)
             {
-                TestUtil.RunCombinations(
-                        UnitTestsUtil.ProviderTypes.Where(providerType => includeOpenTypesProvider || providerType != typeof(CustomRowBasedOpenTypesContext)),
-                        (providerType) =>
-                        {
-                            using (UnitTestsUtil.AppendTypesForOpenProperties(providerType, payloadBuilder, responseFormat))
-                            {
-                                DoUpdatesForVariousProviders(
-                                    providerType,
-                                    method,
-                                    uri,
-                                    responseFormat,
-                                    PayloadGenerator.Generate(payloadBuilder, responseFormat),
-                                    uriAndXPathsToVerify,
-                                    verifyETag,
-                                    includeOpenTypesProvider,
-                                    verifyResponsePreference);
-                            }
-                        });
+                var providerTypes = UnitTestsUtil.ProviderTypes.Where(providerType => includeOpenTypesProvider || providerType != typeof (CustomRowBasedOpenTypesContext));
+                DoUpdatesForVariousProviders(providerTypes, method, uri, responseFormat, payloadBuilder, uriAndXPathsToVerify, verifyETag, includeOpenTypesProvider, verifyResponsePreference);
             }
 
             internal static void DoUpdatesForVariousProviders(
@@ -2080,6 +1953,37 @@ namespace AstoriaUnitTests.Tests
                                 verifyETag,
                                 includeOpenTypesProvider,
                                 verifyResponsePreference);
+                        });
+            }
+
+            internal static void DoUpdatesForVariousProviders(
+                IEnumerable<Type> providerTypes,
+                string method,
+                string uri,
+                string responseFormat,
+                PayloadBuilder payloadBuilder,
+                KeyValuePair<string, string[]>[] uriAndXPathsToVerify,
+                bool verifyETag,
+                bool includeOpenTypesProvider = true,
+                bool verifyResponsePreference = true)
+            {
+                TestUtil.RunCombinations(
+                        providerTypes,
+                        (providerType) =>
+                        {
+                            using (UnitTestsUtil.AppendTypesForOpenProperties(providerType, payloadBuilder, responseFormat))
+                            {
+                                DoUpdatesForVariousProviders(
+                                    providerType,
+                                    method,
+                                    uri,
+                                    responseFormat,
+                                    PayloadGenerator.Generate(payloadBuilder, responseFormat),
+                                    uriAndXPathsToVerify,
+                                    verifyETag,
+                                    includeOpenTypesProvider,
+                                    verifyResponsePreference);
+                            }
                         });
             }
 
@@ -2217,7 +2121,7 @@ namespace AstoriaUnitTests.Tests
                      ((method == "PUT" || method == "PATCH") && responsePreference.HasValue && responsePreference.Value));
             }
 
-           internal static void DoPrimitiveValueUpdates(string payload, string uri, string[] xPaths, Type contextType, string contentType, int requestContentLength)
+            internal static void DoPrimitiveValueUpdates(string payload, string uri, string[] xPaths, Type contextType, string contentType, int requestContentLength)
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                 {
@@ -2239,8 +2143,8 @@ namespace AstoriaUnitTests.Tests
             #endregion Update/Put tests
 
             #region Update/Replace Tests
-
-            [TestCategory("Partition1"), TestMethod, Variation]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateReplaceTopLevelResourceDirectly()
             {
                 string uri = "/Customers(1)";
@@ -2258,15 +2162,15 @@ namespace AstoriaUnitTests.Tests
 
                 var jsonXPath = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>(uri,
-                        new string[] { String.Format("/{0}[odata.type='#{1}' and ID=1 and Name/@IsNull='true']", 
-                                        JsonValidator.ObjectString, 
+                        new string[] { String.Format("/{0}[odata.type='#{1}' and ID=1 and Name/@IsNull='true']",
+                                        JsonValidator.ObjectString,
                                         typeof(CustomerWithBirthday).FullName) })
                              };
 
                 var jsonOpenTypesXPath = new KeyValuePair<string, string[]>[] {
                     new KeyValuePair<string, string[]>(uri,
-                        new string[] { String.Format("/{0}[odata.type='#{1}' and ID=1]", 
-                                        JsonValidator.ObjectString, 
+                        new string[] { String.Format("/{0}[odata.type='#{1}' and ID=1]",
+                                        JsonValidator.ObjectString,
                                         typeof(CustomerWithBirthday).FullName),
                                        String.Format("count(/{0}/Name)=0", JsonValidator.ObjectString) })
                              };
@@ -2352,7 +2256,7 @@ namespace AstoriaUnitTests.Tests
 
                     // There must be etag attribute defined on the type whenever this method is called.
                     ETagAttribute etagAttribute = (ETagAttribute)resource.GetType().GetCustomAttributes(typeof(ETagAttribute), true).Single();
-                    foreach(var etag in etagValues)
+                    foreach (var etag in etagValues)
                     {
                         object propertyValue = resource.GetType().GetProperty(etag.Key, BindingFlags.Public | BindingFlags.Instance).GetValue(resource, null);
                         if (propertyValue == null && etag.Value == null)
@@ -2380,8 +2284,8 @@ namespace AstoriaUnitTests.Tests
                                     "}";
 
                 string[] jsonXPath = new string[] {
-                    String.Format("/{0}[odata.type='#{1}' and ID=1 and Name='Foo']", 
-                                    JsonValidator.ObjectString, 
+                    String.Format("/{0}[odata.type='#{1}' and ID=1 and Name='Foo']",
+                                    JsonValidator.ObjectString,
                                     typeof(CustomerWithBirthday).FullName),
                              };
 
@@ -2436,8 +2340,8 @@ namespace AstoriaUnitTests.Tests
                     base.SetValue(propertyName, value);
                 }
             }
-
-            [TestCategory("Partition1"), TestMethod()]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod()]
             public void PreferHeader_Server()
             {
                 DSPMetadata metadata = PreferHeader_CreateMetadata();
@@ -2557,8 +2461,8 @@ namespace AstoriaUnitTests.Tests
                     LastItemsUpdateOperation = operation;
                 }
             }
-
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header works as expected with ProcessingPipeline, Configuration, Interceptors and access rights.")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header works as expected with ProcessingPipeline, Configuration, Interceptors and access rights.")]
             public void PreferHeader_CrossFeature()
             {
                 DSPMetadata metadata = PreferHeader_CreateMetadata();
@@ -2600,7 +2504,7 @@ namespace AstoriaUnitTests.Tests
                     (includeRelationshipLinks, allowReadAccess) =>
                 {
                     service.DataServiceBehavior.IncludeRelationshipLinksInResponse = includeRelationshipLinks;
-                    service.EntitySetAccessRule = new Dictionary<string,EntitySetRights>() {
+                    service.EntitySetAccessRule = new Dictionary<string, EntitySetRights>() {
                         {"Items", EntitySetRights.AllWrite | (allowReadAccess ? EntitySetRights.AllRead : EntitySetRights.None)}
                     };
 
@@ -2682,8 +2586,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header has no effect on requests it should not have.")]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header has no effect on requests it should not have.")]
             public void PreferHeader_UnrelatedRequests()
             {
                 DSPMetadata metadata = PreferHeader_CreateMetadata();
@@ -3016,8 +2920,8 @@ namespace AstoriaUnitTests.Tests
             }
 
             #endregion Prefer header
-
-            [TestCategory("Partition1"), TestMethod()]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod()]
             public void AllTypesTest()
             {
                 Dictionary<Type, PropertyInfo> typeToPropertyMap = new Dictionary<Type, PropertyInfo>();
@@ -3072,11 +2976,12 @@ namespace AstoriaUnitTests.Tests
             }
 
             // ODataLib was fixed and reports missing type name as an annotation.
-            [TestCategory("Partition1"), TestMethod]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod]
             public void UpdateAtomCategoryTest()
             {
-                string[] schemes = new string[] 
-                { 
+                string[] schemes = new string[]
+                {
                     AtomUpdatePayloadBuilder.DataWebSchemeNamespace,
                     "foo",
                     null
@@ -3086,7 +2991,7 @@ namespace AstoriaUnitTests.Tests
                     new Dimension("scheme0", schemes),
                     new Dimension("scheme1", schemes),
                     new Dimension("orders", new int[] { 0, 1, 2 }));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     string scheme0 = (string)values["scheme0"];
                     string scheme1 = (string)values["scheme1"];
@@ -3139,8 +3044,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 });
             }
-
-            [TestCategory("Partition1"), TestMethod]
+            [Ignore] // Remove Atom
+            // [TestCategory("Partition1"), TestMethod]
             public void RoundTrippingTests()
             {
                 string atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
@@ -3180,11 +3085,11 @@ namespace AstoriaUnitTests.Tests
                         // Round-Tripping PUT and PATCH scenarios when ref property is non-null
                         // Update the entity with PATCH request
                         payload = payload.Replace("Foo", "FooMerge");
-                       
-                        var ifMatch = new KeyValuePair<string, string>[] 
-                        { 
+
+                        var ifMatch = new KeyValuePair<string, string>[]
+                        {
                             new KeyValuePair<string, string>("If-Match", request.ResponseETag),
-                            new KeyValuePair<string, string>("Prefer", "return=representation") 
+                            new KeyValuePair<string, string>("Prefer", "return=representation")
                         };
                         request = UnitTestsUtil.GetTestWebRequestInstance(responseFormat, UnitTestsUtil.ConvertUri(providerType, uri), providerType, ifMatch, mergeHttpVerb, UnitTestsUtil.ConvertPayload(providerType, payload));
                         UnitTestsUtil.VerifyResponseHeaders(request, new[] { new KeyValuePair<string, string>("Preference-Applied", "return=representation") });
@@ -3192,7 +3097,7 @@ namespace AstoriaUnitTests.Tests
 
                         // verify that the update actually happened.
                         payload = request.GetResponseStreamAsText();
-                     
+
                         Assert.IsTrue(payload.Contains("FooMerge"), "update happened successfully");
                     }
                 });
@@ -3205,7 +3110,7 @@ namespace AstoriaUnitTests.Tests
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                 new Dimension("ResponseFormat", UnitTestsUtil.ResponseFormats));
 
-                TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
+                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                 {
                     string responseFormat = (string)values["ResponseFormat"];
                     string payload = UnitTestsUtil.GetPayload(entityInstance, entityType, responseFormat);
@@ -3298,13 +3203,13 @@ namespace AstoriaUnitTests.Tests
             }
 
             internal static void CustomProviderRequest(
-                Type providerType, 
-                string uri, 
-                string responseFormat, 
-                string payload, 
-                KeyValuePair<string, string[]>[] uriAndXPathsToVerify, 
-                string httpMethodName, 
-                bool verifyETagReturned, 
+                Type providerType,
+                string uri,
+                string responseFormat,
+                string payload,
+                KeyValuePair<string, string[]>[] uriAndXPathsToVerify,
+                string httpMethodName,
+                bool verifyETagReturned,
                 IList<KeyValuePair<string, string>> requestHeaders = null,
                 IList<KeyValuePair<string, string>> responseHeaders = null,
                 UnitTestsUtil.SendRequestModifier sendRequestModifier = UnitTestsUtil.SendRequestModifier.None)

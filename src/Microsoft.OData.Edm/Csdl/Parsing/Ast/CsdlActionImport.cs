@@ -4,9 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     /// <summary>
@@ -18,9 +15,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             string name,
             string schemaOperationQualifiedTypeName,
             string entitySet,
-            CsdlDocumentation documentation,
             CsdlLocation location)
-            : base(name, schemaOperationQualifiedTypeName, entitySet, new CsdlOperationParameter[] { }, null /*returnType*/, documentation, location)
+            : base(name, schemaOperationQualifiedTypeName, entitySet, new CsdlOperationParameter[] { }, null /*returnType*/, location)
         {
         }
     }

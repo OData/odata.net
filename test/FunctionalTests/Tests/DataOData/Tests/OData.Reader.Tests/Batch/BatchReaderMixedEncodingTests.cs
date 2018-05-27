@@ -13,9 +13,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using System.Linq;
     using System.Net;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -52,90 +51,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
 
         [InjectDependency(IsRequired = true)]
         public IODataUriToStringConverter UriConverter { get; set; }
-
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Verify reading batch requests with mixed encodings within the payload.")]
-        public void BatchReaderMixedEncodingTest()
-        {
-            EdmModel model = new EdmModel();
-            EdmEntityType personType = model.EntityType("Person")
-                .KeyProperty("Id", EdmCoreModel.Instance.GetInt32(false) as EdmTypeReference)
-                .Property("Name", EdmPrimitiveTypeKind.String, isNullable: true);
-            model.Fixup();
-
-            EdmEntitySet personSet = model.EntitySet("Person", personType);
-
-            EntityInstance personInstance = PayloadBuilder.Entity("TestModel.Person")
-                .Property("Id", PayloadBuilder.PrimitiveValue(1))
-                .Property("Name", PayloadBuilder.PrimitiveValue("Mr Foo Baz"));
-
-            ODataUriSegment root = ODataUriBuilder.Root(new Uri("http://www.odata.org"));
-            ODataUri testUri = new ODataUri(root, ODataUriBuilder.EntitySet(personSet));
-
-
-            Encoding[] encodings = new Encoding[] 
-            { 
-                Encoding.UTF8, 
-                Encoding.BigEndianUnicode, 
-                Encoding.Unicode 
-            };
-
-            IEnumerable<BatchReaderMixedEncodingTestCase> testCases =
-                encodings.SelectMany(batchEncoding =>
-                    encodings.Select(changesetEncoding =>
-                        new BatchReaderMixedEncodingTestCase
-                        {
-                            BatchEncoding = batchEncoding,
-                            Changesets = new[]
-                            {
-                                new BatchReaderMixedEncodingChangeset
-                                {
-                                    ChangesetEncoding = changesetEncoding,
-                                    Operations = new[]
-                                    {
-                                       new BatchReaderMixedEncodingOperation
-                                       {
-                                           OperationEncoding = Encoding.Unicode,
-                                           PayloadFormat = ODataFormat.Atom,
-                                       },
-                                       new BatchReaderMixedEncodingOperation
-                                       {
-                                           // Uses changeset's encoding
-                                           PayloadFormat = ODataFormat.Atom,
-                                       },
-                                    },
-                                },
-                                new BatchReaderMixedEncodingChangeset
-                                {
-                                    Operations = new[]
-                                    {
-                                        new BatchReaderMixedEncodingOperation
-                                        {
-                                            // Uses batch's encoding
-                                            OperationEncoding = batchEncoding,
-                                            PayloadFormat = ODataFormat.Atom,
-                                        },
-                                    },
-                                },
-                            },
-                        }
-                    ));
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                testCases,
-                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations,
-                (testCase, testConfiguration) =>
-                {
-                    var testPayload = personInstance.DeepCopy();
-                    if (!testConfiguration.IsRequest)
-                    {
-                        testPayload.AddAnnotation(new PayloadFormatVersionAnnotation() { Response = true, ResponseWrapper = true });
-                    }
-
-                    var testDescriptor = this.CreateTestDescriptor(testCase, testPayload, testUri, testConfiguration.IsRequest);
-                    testDescriptor.PayloadEdmModel = model;
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
 
         /// <summary>
         /// Generates the raw test message with mixed encodings defined by the test case, as well as the expected ODataPayloadElement.
@@ -189,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
 
                 foreach (var operation in changeset.Operations)
                 {
-                    ExceptionUtilities.Assert(operation.PayloadFormat == ODataFormat.Atom || operation.PayloadFormat == ODataFormat.Json, "Payload format must be ATOM or JSON.");
+                    ExceptionUtilities.Assert(operation.PayloadFormat == ODataFormat.Json, "Payload format must be JSON.");
                     string formatType = MimeTypes.ApplicationAtomXml + ";type=entry";
                     Encoding payloadEncoding = operation.OperationEncoding ?? changesetEncoding;
                     string payloadContentType = HttpUtilities.BuildContentType(
@@ -216,10 +131,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                                 writer.WriteLine();
                             }));
 
-                    IPayloadSerializer payloadSerializer =
-                        operation.PayloadFormat == ODataFormat.Atom ?
-                        (IPayloadSerializer)new XmlPayloadSerializer(this.PayloadElementToXmlConverter) :
-                        (IPayloadSerializer)new JsonPayloadSerializer(this.PayloadElementToJsonConverter.ConvertToJson);
+                    IPayloadSerializer payloadSerializer = (IPayloadSerializer)new JsonPayloadSerializer(this.PayloadElementToJsonConverter.ConvertToJson);
 
                     byte[] payloadBytes = payloadSerializer.SerializeToBinary(payload, payloadEncoding.WebName);
                     rawMessage.AddRange(payloadBytes.Skip(payloadEncoding.GetPreamble().Length));

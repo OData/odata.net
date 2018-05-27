@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
-    using TreeNodeKinds;
-
     /// <summary>
     /// Base class for all transformation nodes.
     /// </summary>

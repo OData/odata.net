@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Extends <see cref="ODataFormat"/> to also carry a set of media type parameters.
@@ -42,9 +42,6 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(format != null, "format != null");
             this.Format = format;
-#pragma warning disable 618
-            this.IsAtom = this.Format == ODataFormat.Atom;
-#pragma warning restore 618
             this.IsJsonLight = this.Format == ODataFormat.Json;
         }
 
@@ -52,11 +49,6 @@ namespace Microsoft.OData.Service
         /// Gets the format this instance is extending.
         /// </summary>
         internal ODataFormat Format { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is the Atom format.
-        /// </summary>
-        internal bool IsAtom { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is the JsonLight format.

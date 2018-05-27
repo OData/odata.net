@@ -10,7 +10,7 @@ namespace Microsoft.OData.Service
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
 
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Service
             }
 
             CheckSingleResult(previous.SingleResult, previous.Identifier);
-            segmentInfo = CreateOpenPropertySegment(previous, ((OpenPropertySegment)segment).PropertyName);
+            segmentInfo = CreateOpenPropertySegment(previous, ((DynamicPathSegment)segment).Identifier);
             Debug.Assert(segmentInfo.TargetSource == RequestTargetSource.Property, "segment.TargetSource == RequestTargetSource.Property");
             return segmentInfo;
         }

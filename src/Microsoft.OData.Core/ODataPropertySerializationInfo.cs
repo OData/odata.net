@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// Class to provide additional serialization information to the <see cref="ODataWriter"/> for an <see cref="ODataProperty"/>.

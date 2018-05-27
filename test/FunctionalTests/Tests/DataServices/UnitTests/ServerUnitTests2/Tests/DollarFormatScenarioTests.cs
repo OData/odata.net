@@ -18,6 +18,7 @@ namespace AstoriaUnitTests.Tests
 
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/875
     /// <summary>
     /// This is a test class for $format and is intended to contain all $format scenario tests.
     /// </summary>
@@ -28,7 +29,8 @@ namespace AstoriaUnitTests.Tests
         private const string applicationAtomXml = "application/atom+xml;type=feed;charset=utf-8";
         private const string applicationJsonLight = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
 
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore]
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatSmokeTest()
         {
             const string expectedJsonLight = @"{""@odata.context"":""BASE_URI$metadata#Customers(1)/Address"",""StreetAddress"":""Line1"",""City"":""Redmond"",""State"":""WA"",""PostalCode"":""98052""}";
@@ -49,8 +51,8 @@ namespace AstoriaUnitTests.Tests
                 Assert.AreEqual(expectedJsonLight.Replace("BASE_URI", request.BaseUri), actualText);
             }
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatQueryTest()
         {
             var testCases = new List<DollarFormatTestCase>()
@@ -176,8 +178,8 @@ namespace AstoriaUnitTests.Tests
 
             this.RunQueryTest(testCases);
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatQueryErrorTest()
         {
             var testCases = new List<DollarFormatTestCase>()
@@ -264,7 +266,7 @@ namespace AstoriaUnitTests.Tests
             {
                 webRequest.HttpMethod = "GET";
                 webRequest.DataServiceType = typeof(DollarFormatTestService);
-                
+
                 foreach (var testCase in testCases)
                 {
                     webRequest.RequestUriString = testCase.UriString;
@@ -276,8 +278,8 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatMIMETypeTest()
         {
             var testCases = new List<DollarFormatTestCase>()
@@ -361,8 +363,8 @@ namespace AstoriaUnitTests.Tests
 
             this.RunQueryTest(testCases);
         }
-
-        [TestCategory("Partition2"), TestMethod]
+        [Ignore] // Remove Atom
+        // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatInvalidFormatTest()
         {
             // Get 415 responses for invalid requests with $format
@@ -433,7 +435,7 @@ namespace AstoriaUnitTests.Tests
                     ExpectedContentType = applicationXml,
                     ExpectedStatusCode = 415
                 },
-                
+
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=text/plain",
@@ -462,7 +464,7 @@ namespace AstoriaUnitTests.Tests
                 };
                 string option = string.Empty;
                 ctx.BuildingRequest += (sender, arg) => arg.RequestUri = new Uri(arg.RequestUri.AbsoluteUri + "?$format=" + option);
-                
+
                 foreach (string s in options)
                 {
                     try
@@ -470,7 +472,7 @@ namespace AstoriaUnitTests.Tests
                         option = s;
                         ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers"));
                         ctx.CreateQuery<Customer>("Customers");
-                      //  Assert.IsTrue(option == "json");
+                        //  Assert.IsTrue(option == "json");
                     }
                     catch (DataServiceQueryException e)
                     {
@@ -518,7 +520,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-        
+
         private void RunQueryTest(List<DollarFormatTestCase> testCases, string RequestMaxVersion = "4.0;")
         {
             using (TestWebRequest webRequest = TestWebRequest.CreateForInProcessWcf())

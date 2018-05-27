@@ -12,7 +12,7 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
@@ -30,81 +30,81 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SimpleValueAnnotation()
+        public void SimpleVocabularyAnnotation()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.SimpleValueAnnotationCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.SimpleVocabularyAnnotationCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueTerm_NameConflict()
+        public void Term_NameConflict()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {4, 4, EdmErrorCode.AlreadyDefined},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueTermNameConflictCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.TermNameConflictCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueTerm_NameConflict_WithOthers()
+        public void Term_NameConflict_WithOthers()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.AlreadyDefined},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueTermNameConflictWithOthersCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.TermNameConflictWithOthersCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueTerm_TypeNotResolvable()
+        public void Term_TypeNotResolvable()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.BadUnresolvedType},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueTermTypeNotResolvableCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.TermTypeNotResolvableCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TargetNotResolvable()
+        public void VocabularyAnnotation_TargetNotResolvable()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {8, 6, EdmErrorCode.BadUnresolvedType},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationTargetNotResolvableCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationTargetNotResolvableCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TermNotResolvable()
+        public void VocabularyAnnotation_TermNotResolvable()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
-                // Unresolved value terms are not reported as errors.
+                // Unresolved terms are not reported as errors.
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationTermNotResolvableCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationTermNotResolvableCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_RecordTypeNotResolvable()
+        public void VocabularyAnnotation_RecordTypeNotResolvable()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {9, 10, EdmErrorCode.BadUnresolvedType},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationRecordTypeNotResolvableCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationRecordTypeNotResolvableCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_Ambiguous_SameTermNoQualifer()
+        public void VocabularyAnnotation_Ambiguous_SameTermNoQualifer()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -112,11 +112,11 @@ namespace EdmLibTests.FunctionalTests
                 {10, 6, EdmErrorCode.DuplicateAnnotation},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationAmbiguousSameTermNoQualiferCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationAmbiguousSameTermNoQualiferCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_Ambiguous_SameTermSameQualifer()
+        public void VocabularyAnnotation_Ambiguous_SameTermSameQualifer()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -124,19 +124,19 @@ namespace EdmLibTests.FunctionalTests
                 {10, 6, EdmErrorCode.DuplicateAnnotation},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationAmbiguousSameTermSameQualiferCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationAmbiguousSameTermSameQualiferCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeExactMatch()
+        public void VocabularyAnnotation_TypeExactMatch()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationPropertyTypeExactMatchCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationPropertyTypeExactMatchCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeNotMatch()
+        public void VocabularyAnnotation_TypeNotMatch()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -145,49 +145,49 @@ namespace EdmLibTests.FunctionalTests
                 {12, 10, EdmErrorCode.RecordExpressionNotValidForNonStructuredType},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationTypeNotMatchCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationTypeNotMatchCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeStructure_PropertyNameNotMatch()
+        public void VocabularyAnnotation_TypeStructure_PropertyNameNotMatch()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {9, 10, EdmErrorCode.RecordExpressionHasExtraProperties }
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationPropertyNameNotMatchCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationPropertyNameNotMatchCsdl(), expectedErrors);
         }
 
-        //[TestMethod, Variation(Id = 46, SkipReason = @"[EdmLib] [Validator] Validation error is occuring for value term property that are nullable -- postponed")]
-        public void ValueAnnotation_TypeStructure_NullablePropertyUndeclared()
+        //[TestMethod, Variation(Id = 46, SkipReason = @"[EdmLib] [Validator] Validation error is occuring for term property that are nullable -- postponed")]
+        public void VocabularyAnnotation_TypeStructure_NullablePropertyUndeclared()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationNullablePropertyUndeclaredCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationNullablePropertyUndeclaredCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeStructure_PropertyTypeNotMatch()
+        public void VocabularyAnnotation_TypeStructure_PropertyTypeNotMatch()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {10, 12, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationPropertyTypeNotMatchCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationPropertyTypeNotMatchCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeStructure_Nested()
+        public void VocabularyAnnotation_TypeStructure_Nested()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationNestedCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationNestedCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeStructure_NestedPropertyNotMatch()
+        public void VocabularyAnnotation_TypeStructure_NestedPropertyNotMatch()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -196,19 +196,19 @@ namespace EdmLibTests.FunctionalTests
                 {19, 14, EdmErrorCode.RecordExpressionHasExtraProperties}
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationNestedPropertyNotMatchCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationNestedPropertyNotMatchCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeConvertible()
+        public void VocabularyAnnotation_TypeConvertible()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationTypeConvertibleCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationTypeConvertibleCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_ValueOutOfRange_BadFormat()
+        public void VocabularyAnnotation_ValueOutOfRange_BadFormat()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -220,46 +220,46 @@ namespace EdmLibTests.FunctionalTests
                 {14, 6, EdmErrorCode.IntegerConstantValueOutOfRange}
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationBadValueCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationBadValueCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_Path()
+        public void VocabularyAnnotation_Path()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationPathCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationPathCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_Path_NotValid()
+        public void VocabularyAnnotation_Path_NotValid()
         {
             var expectedErrors = new EdmLibTestErrors();
             // No error is expected, since this behaviour is by design
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationPathNotValidCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationPathNotValidCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_If()
+        public void VocabularyAnnotation_If()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationIfCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationIfCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_If_TypeNotMatch()
+        public void VocabularyAnnotation_If_TypeNotMatch()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {13, 10, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationIfTypeNotMatchCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationIfTypeNotMatchCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_IsType_TypeNotResolved()
+        public void VocabularyAnnotation_IsType_TypeNotResolved()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -267,60 +267,58 @@ namespace EdmLibTests.FunctionalTests
                 {15, 10, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationIfTypeNotResolvedCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationIfTypeNotResolvedCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_FunctionApplication()
+        public void VocabularyAnnotation_FunctionApplication()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationFunctionCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationFunctionCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValueAnnotation_FunctionApplication_TypeNotMatch()
+        public void VocabularyAnnotation_FunctionApplication_TypeNotMatch()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {16, 9, EdmErrorCode.BadUnresolvedOperation},
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationFunctionTypeNotMatchCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationFunctionTypeNotMatchCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void VocabularyValidationDuplicateError()
+        public void ValidateVocabularyWithIncorrectType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
-                { "(EdmLibTests.StubEdm.StubEdmEntityType)", EdmErrorCode.KeyMissingOnEntityType },
-                { "(EdmLibTests.StubEdm.StubEdmEntityType)", EdmErrorCode.KeyMissingOnEntityType },
-                { "(EdmLibTests.VocabularyStubs.StubTypeTerm)", EdmErrorCode.KeyMissingOnEntityType }
+                {null, null, EdmErrorCode.ExpressionNotValidForTheAssertedType }
             };
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.StructuredValueAnnotation(), this.EdmVersion, expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.StructuredVocabularyAnnotation(), this.EdmVersion, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueTermOnly()
+        public void ValidateTermOnly()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueTermOnlyCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.TermOnlyCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueTermWithAnnotationTarget()
+        public void ValidateTermWithAnnotationTarget()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueTermWithAnnotationTargetCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.TermWithAnnotationTargetCsdl(), EdmVersion.V40, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateSimpleValueAnnotation()
+        public void ValidateSimpleVocabularyAnnotation()
         {
-            EdmModel model = VocabularyTestModelBuilder.SimpleValueAnnotationModel();
+            EdmModel model = VocabularyTestModelBuilder.SimpleVocabularyAnnotationModel();
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
 
             IEnumerable<EdmError> actualErrors;
@@ -334,14 +332,14 @@ namespace EdmLibTests.FunctionalTests
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
 
-            var valueAnnotation = new MutableValueAnnotation();
-            this.VerifyThrowsException(typeof(InvalidOperationException), () => model.AddVocabularyAnnotation(valueAnnotation));
+            var annotation = new MutableVocabularyAnnotation();
+            this.VerifyThrowsException(typeof(InvalidOperationException), () => model.AddVocabularyAnnotation(annotation));
         }
 
         [TestMethod]
-        public void ValidateDefaultValueAnnotationWithTargetOnly()
+        public void ValidateDefaultVocabularyAnnotationWithTargetOnly()
         {
-            EdmModel model = VocabularyTestModelBuilder.DefaultValueAnnotationWithTargetOnlyModel();
+            EdmModel model = VocabularyTestModelBuilder.DefaultVocabularyAnnotationWithTargetOnlyModel();
 
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -418,11 +416,157 @@ namespace EdmLibTests.FunctionalTests
 
             Assert.AreEqual(7, modelWithAnnotations.VocabularyAnnotations.Count(), "Invalid count of annotation.");
 
-            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.Library.EdmConstants.EdmVersion4);
+            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
 
             IEnumerable<EdmError> actualErrors = null;
             var validationResult = modelWithAnnotations.Validate(ruleSet, out actualErrors);
             Assert.IsTrue(validationResult, "Expected no validation errors from annotation with targets in an external model.");
+        }
+
+        [TestMethod]
+        public void ValidateUnresolvedInlineAnnotationTargets()
+        {
+            // Test that unresolved annotation terms don't cause a validation failure
+            const string csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <Term Name=""CommonValueTerm"" Type=""Edm.String"" />
+  <EntityContainer Name=""SomeContainer"">
+    <EntitySet Name=""SomeEntitySet"" EntityType=""NS.SomeEntityType"">
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""NS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </EntitySet>
+    <ActionImport Name=""SomeFunctionImport"" Action=""NS.SomeFunction"" >
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </ActionImport>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"">
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </Annotation>
+    <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+  </EntityContainer>
+  <EntityType Name=""SomeEntityType"">
+    <Key>
+      <PropertyRef Name=""ID"" />
+    </Key>
+    <Property Name=""ID"" Type=""Edm.String"" Nullable=""false"">
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </Property>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+  </EntityType>
+  <Action Name=""SomeFunction"">
+    <ReturnType Type=""Edm.Int32""/>
+    <Parameter Name=""SomeFunctionImportParameter"" Type=""Edm.String"" >
+      <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+      <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+    </Parameter>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""AnnotationNS.UnknownValueTerm"" String=""Hello world!"" />
+    <Annotation Term=""RefNS.UnknownValueTerm"" String=""Hello world!""/>
+  </Action>
+</Schema>";
+
+            var model = this.GetParserResult(new List<string> { csdl });
+
+            // Note: we don't currently appear to support annotations on annotations, which is why the count
+            // is 21 when in fact there are 23 in the payload.
+            Assert.AreEqual(21, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
+
+            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
+
+            IEnumerable<EdmError> actualErrors = null;
+            var validationResult = model.Validate(ruleSet, out actualErrors);
+            Assert.IsTrue(validationResult, "Expected no validation errors from annotation with unresolved terms.");
+        }
+
+
+        [TestMethod]
+        public void ValidateUnresolvedInlineAnnotationTargetsWithUnresolvedTypes()
+        {
+            // Test that unresolved annotation term types load and raise appropriate validation failures
+            const string csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <Term Name=""CommonValueTerm"" Type=""Edm.String"" />
+  <EntityContainer Name=""SomeContainer"">
+    <EntitySet Name=""SomeEntitySet"" EntityType=""NS.SomeEntityType"">
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </EntitySet>
+    <ActionImport Name=""SomeFunctionImport"" Action=""NS.SomeFunction"" >
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </ActionImport>
+    <Annotation Term=""NS.CommonValueTerm"" String=""Hello world!"">
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </Annotation>
+    <Annotation Term=""RefNS.UnknownValueTerm"">
+      <Record Type=""RefNs.UnknownType"">
+        <PropertyValue Property=""Property"" String=""PropertyValue"" />
+      </Record>
+    </Annotation>
+  </EntityContainer>
+  <EntityType Name=""SomeEntityType"">
+    <Key>
+      <PropertyRef Name=""ID"" />
+    </Key>
+    <Property Name=""ID"" Type=""Edm.String"" Nullable=""false"">
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </Property>
+    <Annotation Term=""RefNS.UnknownValueTerm"">
+      <Record Type=""RefNs.UnknownType"">
+        <PropertyValue Property=""Property"" String=""PropertyValue"" />
+      </Record>
+    </Annotation>
+  </EntityType>
+  <Action Name=""SomeFunction""><ReturnType Type=""Edm.Int32""/>
+    <Parameter Name=""SomeFunctionImportParameter"" Type=""Edm.String"" >
+      <Annotation Term=""RefNS.UnknownValueTerm"">
+        <Record Type=""RefNs.UnknownType"">
+          <PropertyValue Property=""Property"" String=""PropertyValue"" />
+        </Record>
+      </Annotation>
+    </Parameter>
+    <Annotation Term=""RefNS.UnknownValueTerm"">
+      <Record Type=""RefNs.UnknownType"">
+        <PropertyValue Property=""Property"" String=""PropertyValue"" />
+      </Record>
+    </Annotation>
+  </Action>
+</Schema>";
+
+            var model = this.GetParserResult(new List<string> { csdl });
+
+            // Note: we don't currently appear to support annotations on annotations, which is why the count
+            // is 8 when in fact there are 9 in the payload.
+            Assert.AreEqual(8, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
+
+            var ruleSet = ValidationRuleSet.GetEdmModelRuleSet(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
+
+            IEnumerable<EdmError> actualErrors = null;
+            var validationResult = model.Validate(ruleSet, out actualErrors);
+            Assert.AreEqual(7, actualErrors.Count(), "Expected errors for unresolved types.");
         }
 
         [TestMethod]
@@ -433,19 +577,19 @@ namespace EdmLibTests.FunctionalTests
 
             var expectedErrors = new EdmLibTestErrors()
             {
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.BadUnresolvedTerm }
+                { "(Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation)", EdmErrorCode.BadUnresolvedTerm }
             };
 
             IEnumerable<EdmError> actualErrors = null;
-            var validationResult = model.Validate(Microsoft.OData.Edm.Library.EdmConstants.EdmVersionLatest, out actualErrors);
+            var validationResult = model.Validate(Microsoft.OData.Edm.EdmConstants.EdmVersionLatest, out actualErrors);
             Assert.IsTrue(actualErrors.Any() ? !validationResult : validationResult, "The return value of the Validate method does not match the reported validation errors.");
             this.CompareErrors(actualErrors, expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateDuplicateValueAnnotation()
+        public void ValidateDuplicateVocabularyAnnotation()
         {
-            EdmModel model = VocabularyTestModelBuilder.DuplicateValueAnnotationModel();
+            EdmModel model = VocabularyTestModelBuilder.DuplicateVocabularyAnnotationModel();
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
 
             var expectedErrors = new EdmLibTestErrors()
@@ -457,9 +601,9 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateDuplicateValueAnnotationWithQualifier()
+        public void ValidateDuplicateVocabularyAnnotationWithQualifier()
         {
-            EdmModel model = VocabularyTestModelBuilder.DuplicateValueAnnotationWithQualifierModel();
+            EdmModel model = VocabularyTestModelBuilder.DuplicateVocabularyAnnotationWithQualifierModel();
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
 
             var expectedErrors = new EdmLibTestErrors()
@@ -471,9 +615,9 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationWithQualifier()
+        public void ValidateVocabularyAnnotationWithQualifier()
         {
-            EdmModel model = VocabularyTestModelBuilder.ValueAnnotationWithQualifierModel();
+            EdmModel model = VocabularyTestModelBuilder.VocabularyAnnotationWithQualifierModel();
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid count of annotation.");
 
             var expectedErrors = new EdmLibTestErrors();
@@ -481,22 +625,22 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueAnnotation_TypeStructure_NullablePropertyWithNullExpression()
+        public void VocabularyAnnotation_TypeStructure_NullablePropertyWithNullExpression()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationNullablePropertyWithNullExpressionCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationNullablePropertyWithNullExpressionCsdl(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationPropertyWithNullExpression()
+        public void ValidateVocabularyAnnotationPropertyWithNullExpression()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.NullCannotBeAssertedToBeANonNullableType}
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationPropertyWithNullExpressionCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationPropertyWithNullExpressionCsdl(), expectedErrors);
         }
 
         [TestMethod]
@@ -526,11 +670,11 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateSimpleValueAnnotationWithComplexTypeModel()
+        public void ValidateSimpleVocabularyAnnotationWithComplexTypeModel()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.SimpleValueAnnotationWithComplexTypeModel(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.SimpleVocabularyAnnotationWithComplexTypeModel(), expectedErrors);
         }
 
         [TestMethod]
@@ -558,30 +702,30 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationComplexTypeWithNullValuesModel()
+        public void ValidateVocabularyAnnotationComplexTypeWithNullValuesModel()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithNullValuesModel(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithNullValuesModel(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationWithCollectionComplexTypeModel()
+        public void ValidateVocabularyAnnotationWithCollectionComplexTypeModel()
         {
             var expectedErrors = new EdmLibTestErrors();
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationWithCollectionComplexTypeModel(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationWithCollectionComplexTypeModel(), expectedErrors);
         }
 
         [TestMethod]
-        public void ValidateValueAnnotationNonNullablePropertyWithNullValueCsdl()
+        public void ValidateVocabularyAnnotationNonNullablePropertyWithNullValueCsdl()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.NullCannotBeAssertedToBeANonNullableType }
             };
 
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationNonNullablePropertyWithNullValueCsdl(), expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationNonNullablePropertyWithNullValueCsdl(), expectedErrors);
         }
 
         [TestMethod]

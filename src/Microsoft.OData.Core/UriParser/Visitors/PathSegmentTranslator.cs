@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// Translator interface for walking the Syntactic Tree.
@@ -76,6 +75,16 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
+        /// Translate an AnnotationSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(AnnotationSegment segment)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Translate a OperationImportSegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
@@ -100,7 +109,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// </summary>
         /// <param name="segment">the segment to Translate</param>
         /// <returns>Defined by the implementer.</returns>
-        public virtual T Translate(OpenPropertySegment segment)
+        public virtual T Translate(DynamicPathSegment segment)
         {
             throw new NotImplementedException();
         }
