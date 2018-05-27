@@ -21,6 +21,7 @@ namespace Microsoft.OData.Client
     using System.Linq.Expressions;
     using System.Net;
     using System.Reflection;
+    using System.Runtime.Serialization;
     using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Annotation;
@@ -2760,8 +2761,8 @@ namespace Microsoft.OData.Client
                     return this.GetType().GetAssembly().GetTypes().ToList().Where(t =>
                     {
                         string serverDefinedName = typeName.Substring(namespaceLength + 1);
-                        OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)t.GetCustomAttributes(typeof(OriginalNameAttribute), true).SingleOrDefault();
-                        return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName && t.Namespace == languageDependentNamespace;
+                        DataContractAttribute dataContractAttribute = (DataContractAttribute)t.GetCustomAttributes(typeof(DataContractAttribute), true).SingleOrDefault();
+                        return dataContractAttribute != null && dataContractAttribute.Name == serverDefinedName && t.Namespace == languageDependentNamespace;
                     }).SingleOrDefault();
                 }
                 else

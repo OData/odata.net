@@ -21,6 +21,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Primitives" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -204,7 +206,9 @@
     </Compile>
     <Compile Include="Annotation\AnnotationHelper.cs" />
     <Compile Include="Annotation\InstanceAnnotationDictWeakKeyComparer.cs" />
+    <Compile Include="Attribute\EntityTypeAttribute.cs" />
     <Compile Include="Attribute\IgnoreClientPropertyAttribute.cs" />
+    <Compile Include="Attribute\OriginalNameAttribute.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="DataServiceActionQueryOfT.cs" />
     <Compile Include="ActionDescriptor.cs" />
@@ -221,7 +225,6 @@
     <Compile Include="ALinq\NewTreeBuilder.cs" />
     <Compile Include="ALinq\RemoveWildcardVisitor.cs" />
     <Compile Include="ALinq\SelectExpandPathBuilder.cs" />
-    <Compile Include="Attribute\OriginalNameAttribute.cs" />
     <Compile Include="BaseEntityType.cs" />
     <Compile Include="BaseSaveResult.cs" />
     <Compile Include="BatchSaveResult.cs" />
@@ -380,7 +383,6 @@
     <Compile Include="Binding\DataServiceCollectionOfT.cs" />
     <Compile Include="Binding\LoadCompletedEventArgs.cs" />
     <Compile Include="Attribute\EntitySetAttribute.cs" />
-    <Compile Include="Attribute\EntityTypeAttribute.cs" />
     <Compile Include="Attribute\KeyAttribute.cs" />
     <Compile Include="ODataProtocolVersion.cs" />
     <Compile Include="Attribute\HasStreamAttribute.cs" />
