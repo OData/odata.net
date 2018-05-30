@@ -4,6 +4,7 @@ using Microsoft.OData.Edm;
 using Xunit;
 using FluentAssertions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -458,7 +459,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetDate(false));
                 CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignatureTwo);
 
-                // Validate that the two overloads as 
+                // Validate that the two overloads as
                 GetCustomFunctionSignaturesOrNull(customFunctionName).
                     All(funcSignature => funcSignature.Equals(existingCustomFunctionSignature) ||
                                             funcSignature.Equals(existingCustomFunctionSignatureTwo)).
@@ -510,6 +511,141 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseWithMixedCaseCustomUriFunction_EnableCaseInsensitive_ShouldWork()
+        {
+            try
+            {
+                FunctionSignatureWithReturnType myStringFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("myFirstMixedCasestringfunction", myStringFunction);
+
+                // Uri with mixed-case, should work for resolver with case insensitive enabled.
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mYFirstMixedCasesTrInGfUnCtIoN(Name, 'BlaBla')");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                parser.Resolver.EnableCaseInsensitive = true;
+
+                var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("myFirstMixedCasestringfunction")
+                    .And.Parameters.ToList();
+                startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("myFirstMixedCasestringfunction").Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithExactMatchCustomUriFunction_EnableCaseInsensitive_ShouldWorkForMultipleEquivalentArgumentsMatches()
+        {
+            string lowerCaseName = "myfunction";
+            string upperCaseName = lowerCaseName.ToUpper();
+
+            FunctionSignatureWithReturnType myStringFunction
+                = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+            // Add two customer uri functions with same argument types, with names different in cases.
+            CustomUriFunctions.AddCustomUriFunction(lowerCaseName, myStringFunction);
+            CustomUriFunctions.AddCustomUriFunction(upperCaseName, myStringFunction);
+            string rootUri = "http://www.odata.com/OData/";
+            string uriTemplate = rootUri + "People?$filter={0}(Name,'BlaBla')";
+
+            try
+            {
+                foreach (string functionName in new string[] { lowerCaseName, upperCaseName })
+                {
+                    // Uri with case-sensitive function names referring to equivalent-argument-typed functions,
+                    // should work for resolver with case insensitive enabled.
+                    var fullUri = new Uri(string.Format(uriTemplate, functionName));
+                    ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(rootUri), fullUri);
+                    parser.Resolver.EnableCaseInsensitive = true;
+
+                    var startsWithArgs = parser.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode(functionName)
+                        .And.Parameters.ToList();
+                    startsWithArgs[0].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                    startsWithArgs[1].ShouldBeConstantQueryNode("BlaBla");
+                }
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName).Should().BeTrue();
+                CustomUriFunctions.RemoveCustomUriFunction(upperCaseName).Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_EnableCaseInsensitive_ShouldThrowDueToAmbiguity()
+        {
+            string lowerCaseName = "myfunction";
+            string upperCaseName = lowerCaseName.ToUpper();
+
+            FunctionSignatureWithReturnType myStringFunction
+                = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+            // Add two customer uri functions with same argument types, with names different in cases.
+            CustomUriFunctions.AddCustomUriFunction(lowerCaseName, myStringFunction);
+            CustomUriFunctions.AddCustomUriFunction(upperCaseName, myStringFunction);
+            string rootUri = "http://www.odata.com/OData/";
+            string uriTemplate = rootUri + "People?$filter={0}(Name,'BlaBla')";
+
+            try
+            {
+                int strLen = lowerCaseName.Length;
+                string mixedCaseFunctionName = lowerCaseName.Substring(0, strLen/2).ToUpper() + lowerCaseName.Substring(strLen/2);
+                // Uri with mix-case function names referring to equivalent-argument-typed functions,
+                // should result in exception for resolver with case insensitive enabled due to ambiguity (multiple equivalent matches).
+                var fullUri = new Uri(string.Format(uriTemplate, mixedCaseFunctionName));
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(rootUri), fullUri);
+                parser.Resolver.EnableCaseInsensitive = true;
+
+                Action action = () => parser.ParseFilter();
+                action.ShouldThrow<ODataException>();
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName).Should().BeTrue();
+                CustomUriFunctions.RemoveCustomUriFunction(upperCaseName).Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void ParseWithMixedCaseCustomUriFunction_DisableCaseInsensitive_ShouldFailed()
+        {
+            bool exceptionThrown = false;
+            try
+            {
+                FunctionSignatureWithReturnType myStringFunction
+                    = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true),
+                        EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
+
+                // Add a custom uri function
+                CustomUriFunctions.AddCustomUriFunction("myMixedCasestringfunction", myStringFunction);
+
+                // Uri with mixed-case, should fail for default resolver with case-insensitive disabled.
+                var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mYMixedCasesTrInGfUnCtIoN(Name, 'BlaBla')");
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel,
+                    new Uri("http://www.odata.com/OData/"), fullUri);
+                parser.Resolver.EnableCaseInsensitive = false;
+
+                parser.ParseFilter();
+            }
+            catch (ODataException e)
+            {
+                Assert.True(e.Message.Equals("An unknown function with name 'mYMixedCasesTrInGfUnCtIoN' was found. " +
+                    "This may also be a function import or a key lookup on a navigation property, which is not allowed."));
+                exceptionThrown = true;
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction("myMixedCasestringfunction").Should().BeTrue();
+            }
+
+            Assert.True(exceptionThrown, "Exception should be thrown trying to parse mixed-case uri function when case-insensitive is disabled.");
+        }
+
+        [Fact]
         public void ParseWithCustomUriFunction_AddAsOverloadToBuiltIn()
         {
             FunctionSignatureWithReturnType customStartWithFunctionSignature =
@@ -540,12 +676,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         private FunctionSignatureWithReturnType[] GetCustomFunctionSignaturesOrNull(string customFunctionName)
         {
-            FunctionSignatureWithReturnType[] resultFunctionSignaturesWithReturnType = null;
+            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> resultFunctionSignaturesWithReturnType = null;
             CustomUriFunctions.TryGetCustomFunction(customFunctionName, out resultFunctionSignaturesWithReturnType);
 
-            return resultFunctionSignaturesWithReturnType as FunctionSignatureWithReturnType[];
+            return resultFunctionSignaturesWithReturnType?.Select( _ => _.Value).ToArray();
         }
-
         #endregion
     }
 }

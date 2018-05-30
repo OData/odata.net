@@ -56,7 +56,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Filter
         public void SpatialDistance()
         {
             this.ApprovalVerifyFilterParser(employeeBase, "geo.distance(Home, Office) lt 0.5");
-            
+
             this.TestAllInOneExtensionFilter(
                employeeBase,
                "GEO.distance(Home, Office) lt 0.5",
@@ -348,6 +348,17 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Filter
         public void ExceptionSholdThrowForFunctionImport()
         {
             Action action = () => this.ApprovalVerifyFilterParser(orderBase, "HasLotsOfOrders() eq 3");
+            action.ShouldThrow<ODataException>().WithMessage("An unknown function with name 'HasLotsOfOrders' was found. This may also be a function import or a key lookup on a navigation property, which is not allowed.");
+        }
+
+        [TestMethod]
+        [MethodImplAttribute(MethodImplOptions.NoOptimization)]
+        public void ExceptionSholdThrowForFunctionImport_EnableCaseInsensitive()
+        {
+            ODataUriParser parser = new ODataUriParser(this.model, this.serviceRoot, new Uri(orderBase, "?$filter=HasLotsOfOrders() eq 3"));
+            parser.Resolver = new ODataUriResolver { EnableCaseInsensitive = true };
+
+            Action action = () => parser.ParseFilter();
             action.ShouldThrow<ODataException>().WithMessage("An unknown function with name 'HasLotsOfOrders' was found. This may also be a function import or a key lookup on a navigation property, which is not allowed.");
         }
 
