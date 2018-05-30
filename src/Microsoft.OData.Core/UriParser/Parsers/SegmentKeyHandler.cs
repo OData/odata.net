@@ -153,7 +153,7 @@ namespace Microsoft.OData.UriParser
 
             Debug.Assert(targetEntityType != null, "targetEntityType != null");
 
-            // Make sure the keys specified in the uri matches with the number of keys in the metadata
+            // Adjust the keys for navigation segment.
             var keyProperties = targetEntityType.Key().ToList();
             if (keyProperties.Count != key.ValueCount)
             {
@@ -161,12 +161,6 @@ namespace Microsoft.OData.UriParser
                 if (currentNavPropSegment != null)
                 {
                     key = KeyFinder.FindAndUseKeysFromRelatedSegment(key, keyProperties, currentNavPropSegment.NavigationProperty, previousKeySegment);
-                }
-
-                // if we still didn't find any keys, then throw an error.
-                if (keyProperties.Count != key.ValueCount && resolver.GetType() == typeof(ODataUriResolver))
-                {
-                    throw ExceptionUtil.CreateBadRequestError(ErrorStrings.BadRequest_KeyCountMismatch(targetEntityType.FullName()));
                 }
             }
 

@@ -154,3 +154,7 @@ There are many ways for you to contribute to OData .NET. The easiest way is to p
 We’re using NDepend to analyze and increase code quality.
 
 [![NDepend](images/ndependlogo.png)](http://www.ndepend.com)
+
+### Code of Conduct
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.

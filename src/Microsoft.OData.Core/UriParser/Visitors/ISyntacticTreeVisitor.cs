@@ -166,6 +166,13 @@ namespace Microsoft.OData.UriParser
         T Visit(AggregateExpressionToken tokenIn);
 
         /// <summary>
+        /// Visits a EntitySetAggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The EntitySetAggregateToken to bind</param>
+        /// <returns>A T node bound to this EntitySetAggregateToken</returns>
+        T Visit(EntitySetAggregateToken tokenIn);
+
+        /// <summary>
         /// Visits a GroupByToken
         /// </summary>
         /// <param name="tokenIn">The GroupByToken to bind</param>

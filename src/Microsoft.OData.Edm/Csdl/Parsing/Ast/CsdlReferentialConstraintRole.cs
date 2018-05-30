@@ -11,13 +11,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Represents a CSDL referential constraint role.
     /// </summary>
-    internal class CsdlReferentialConstraintRole : CsdlElementWithDocumentation
+    internal class CsdlReferentialConstraintRole : CsdlElement
     {
         private readonly string role;
         private readonly List<CsdlPropertyReference> properties;
 
-        public CsdlReferentialConstraintRole(string role, IEnumerable<CsdlPropertyReference> properties, CsdlDocumentation documentation, CsdlLocation location)
-            : base(documentation, location)
+        public CsdlReferentialConstraintRole(string role, IEnumerable<CsdlPropertyReference> properties, CsdlLocation location)
+            : base(location)
         {
             this.role = role;
             this.properties = new List<CsdlPropertyReference>(properties);

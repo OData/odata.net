@@ -239,8 +239,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         public void JsonConversionForDateTimeShouldThrow()
         {
             Type dateTimeType = typeof(DateTime);
-            Action test = () => this.jsonConverter.ConvertPrimitiveValue(DateTimeOffset.UtcNow, dateTimeType);
-            test.ShouldThrow<InvalidOperationException>(Microsoft.OData.Client.Strings.ClientType_UnsupportedType(dateTimeType.FullName));
+            var dateTime = DateTime.Now;
+            var dateTimeOffset = (DateTimeOffset)dateTime;
+            var result = this.jsonConverter.ConvertPrimitiveValue(dateTimeOffset, dateTimeType);
+
+            // returned DateTime should be the DateTime UTC
+            Assert.IsTrue(result is DateTime);
+            Assert.AreEqual(result, dateTime.ToUniversalTime());
         }
     }
 }

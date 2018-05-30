@@ -1575,7 +1575,7 @@ namespace Microsoft.OData.JsonLight
             // Try to read a null value
             if (ODataJsonReaderCoreUtils.TryReadNullValue(this.JsonReader, this.JsonLightInputContext, targetTypeReference, validateNullValue, propertyName, isDynamicProperty))
             {
-                if (validateNullValue && (targetTypeReference != null) && (!targetTypeReference.IsNullable))
+                if (this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata && validateNullValue && targetTypeReference != null && !targetTypeReference.IsNullable)
                 {
                     // For dynamic collection property, we should allow null value to be assigned to it.
                     if (targetTypeKind != EdmTypeKind.Collection || isDynamicProperty != true)

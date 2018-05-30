@@ -733,10 +733,13 @@ MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to th
 
 ApplyBinder_AggregateExpressionIncompatibleTypeForMethod=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
 ApplyBinder_UnsupportedAggregateMethod=$apply/aggregate does not support method '{0}'.
+ApplyBinder_UnsupportedAggregateKind=$apply/aggregate expression token kind '{0}' not supported.
 ApplyBinder_AggregateExpressionNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
 ApplyBinder_GroupByPropertyNotPropertyAccessValue=$apply/groupby grouping expression '{0}' must evaluate to a property access value.
 ApplyBinder_UnsupportedType=$apply clause does not support type '{0}'.
 ApplyBinder_UnsupportedGroupByChild=$apply/groupby not support '{0}' as child transformation
+
+AggregateTransformationNode_UnsupportedAggregateExpressions=There are unsupported aggregation expressions in the transformation node.
 
 FunctionCallBinder_CannotFindASuitableOverload=Cannot find a suitable overload for function '{0}' that takes '{1}' arguments.
 FunctionCallBinder_UriFunctionMustHaveHaveNullParent=Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens.

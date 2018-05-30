@@ -312,6 +312,38 @@ namespace Microsoft.OData.Edm
             return dateTimeOffset;
         }
 
+#if ODATA_CLIENT
+        /// <summary>
+        /// Converts a string to a DateTime. This is only built in client library
+        /// </summary>
+        /// <param name="text">A DateTime value to be converted.</param>
+        /// <returns>See documentation for method being accessed in the body of the method.</returns>
+        internal static DateTime ConvertStringToDateTime(string text)
+        {
+            var offset = ConvertStringToDateTimeOffset(text);
+            return offset.UtcDateTime;
+        }
+
+        /// <summary>
+        /// Convert the given DateTime instance to corresponding DateTimeOffset instance. 
+        /// The conversion rules for a DateTime kind to DateTimeOffset are:
+        /// a) Unspecified -> UTC
+        /// b) Local -> Local
+        /// c) UTC -> UTC
+        /// </summary>
+        /// <param name="dt">Given DateTime value.</param>
+        /// <returns>DateTimeOffset corresponding to given DateTime value.</returns>
+        internal static DateTimeOffset ConvertDateTimeToDateTimeOffset(DateTime dt)
+        {
+            if (dt.Kind == DateTimeKind.Unspecified)
+            {
+                return new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
+            }
+
+            return new DateTimeOffset(dt);
+        }
+#endif
+
         /// <summary>
         /// Validates that the DateTimeOffset string contains the time zone information.
         /// </summary>

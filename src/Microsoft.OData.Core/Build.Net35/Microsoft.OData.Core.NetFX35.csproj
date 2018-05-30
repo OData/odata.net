@@ -1503,14 +1503,8 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\TransformationNode.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\TransformationNode.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateExpressionToken.cs">
-      <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateExpressionToken.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateToken.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateToken.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\ApplyTransformationToken.cs">
-      <Link>Microsoft\OData\Core\UriParser\Aggregation\ApplyTransformationToken.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\GroupByToken.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\GroupByToken.cs</Link>
@@ -1520,6 +1514,27 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\TransformationNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\TransformationNodeKind.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\ApplyTransformationToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\ApplyTransformationToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\EntitySetAggregateExpression.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\EntitySetAggregateExpression.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\EntitySetAggregateToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\EntitySetAggregateToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateExpressionBase.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateExpressionBase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateTokenBase.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateTokenBase.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\AggregateExpressionToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\Aggregation\AggregateExpressionToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs</Link>
     </Compile>
     <Compile Include="..\BindingPathHelper.cs">
       <Link>Microsoft\OData\Core\BindingPathHelper.cs</Link>

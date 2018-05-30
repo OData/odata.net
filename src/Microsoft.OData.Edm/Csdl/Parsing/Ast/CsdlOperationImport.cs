@@ -21,9 +21,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             string entitySet,
             IEnumerable<CsdlOperationParameter> parameters,
             CsdlTypeReference returnType,
-            CsdlDocumentation documentation,
             CsdlLocation location)
-            : base(name, parameters, returnType, documentation, location)
+            : base(name, parameters, returnType, location)
         {
             this.entitySet = entitySet;
             this.SchemaOperationQualifiedTypeName = schemaOperationQualifiedTypeName;

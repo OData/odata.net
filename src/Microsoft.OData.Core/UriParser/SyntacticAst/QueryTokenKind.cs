@@ -122,7 +122,7 @@ namespace Microsoft.OData.UriParser
         Aggregate = 24,
 
         /// <summary>
-        /// $apply aggregate statement token
+        /// $apply aggregate statement to a property token
         /// </summary>
         AggregateExpression = 25,
 
@@ -142,8 +142,13 @@ namespace Microsoft.OData.UriParser
         ComputeExpression = 28,
 
         /// <summary>
+        /// $apply aggregate statement to a entity set token
+        /// </summary>
+        EntitySetAggregateExpression = 29,
+
+        /// <summary>
         /// In operator.
         /// </summary>
-        In = 29
+        In = 30,
     }
 }

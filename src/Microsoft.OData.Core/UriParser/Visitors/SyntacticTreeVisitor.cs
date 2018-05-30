@@ -140,6 +140,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Visits an EntitySetAggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The EntitySetAggregateToken to visit</param>
+        /// <returns>A T bound to this EntitySetAggregateToken</returns>
+        public virtual T Visit(EntitySetAggregateToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visits a LambdaToken
         /// </summary>
         /// <param name="tokenIn">The LambdaToken to visit</param>

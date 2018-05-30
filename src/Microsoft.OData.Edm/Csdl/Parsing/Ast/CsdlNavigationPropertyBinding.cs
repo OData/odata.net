@@ -9,13 +9,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Represents a CSDL Navigation Property Binding.
     /// </summary>
-    internal class CsdlNavigationPropertyBinding : CsdlElementWithDocumentation
+    internal class CsdlNavigationPropertyBinding : CsdlElement
     {
         private readonly string path;
         private readonly string target;
 
-        public CsdlNavigationPropertyBinding(string path, string target, CsdlDocumentation documentation, CsdlLocation location)
-            : base(documentation, location)
+        public CsdlNavigationPropertyBinding(string path, string target, CsdlLocation location)
+            : base(location)
         {
             this.path = path;
             this.target = target;

@@ -16,9 +16,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             string schemaOperationQualifiedTypeName,
             string entitySet,
             bool includeInServiceDocument,
-            CsdlDocumentation documentation,
             CsdlLocation location)
-            : base(name, schemaOperationQualifiedTypeName, entitySet, new CsdlOperationParameter[] { }, null /*returnType*/, documentation, location)
+            : base(name, schemaOperationQualifiedTypeName, entitySet, new CsdlOperationParameter[] { }, null /*returnType*/, location)
         {
             this.IncludeInServiceDocument = includeInServiceDocument;
         }

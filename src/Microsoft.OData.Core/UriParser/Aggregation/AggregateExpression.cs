@@ -7,12 +7,11 @@
 namespace Microsoft.OData.UriParser.Aggregation
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.UriParser;
 
     /// <summary>
-    /// A aggregate expression representing a aggregation transformation.
+    /// Represents an aggregate expression that aggregates a single value entity.
     /// </summary>
-    public sealed class AggregateExpression
+    public sealed class AggregateExpression : AggregateExpressionBase
     {
         private readonly AggregationMethod method;
 
@@ -20,25 +19,24 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private readonly SingleValueNode expression;
 
-        private readonly string alias;
-
         private readonly IEdmTypeReference typeReference;
 
         /// <summary>
-        /// Create a AggregateExpression.
+        /// Create a PropertyAggregateExpression.
         /// </summary>
         /// <param name="expression">The aggregation expression.</param>
         /// <param name="method">The <see cref="AggregationMethod"/>.</param>
         /// <param name="alias">The aggregation alias.</param>
         /// <param name="typeReference">The <see cref="IEdmTypeReference"/> of this aggregate expression.</param>
         public AggregateExpression(SingleValueNode expression, AggregationMethod method, string alias, IEdmTypeReference typeReference)
+            : base(AggregateExpressionKind.PropertyAggregate, alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
 
             this.expression = expression;
             this.method = method;
-            this.alias = alias;
+
             //// TypeRefrence is null for dynamic properties
             this.typeReference = typeReference;
         }
@@ -86,17 +84,6 @@ namespace Microsoft.OData.UriParser.Aggregation
             get
             {
                 return methodDefinition;
-            }
-        }
-
-        /// <summary>
-        /// Gets the aggregation alias.
-        /// </summary>
-        public string Alias
-        {
-            get
-            {
-                return alias;
             }
         }
 
