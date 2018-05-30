@@ -10,6 +10,8 @@ using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
 {
+    using System.Globalization;
+
     /// <summary>
     /// Manage PropertyCache for ODataResourceSet in serialization.
     /// One ODataResourceSet has one PropertyCache.
@@ -35,8 +37,8 @@ namespace Microsoft.OData
         {
             int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
             string uniqueName = owningType != null 
-                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, name, depth.ToString()) 
-                : string.Concat(name, depth.ToString());
+                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, name, depth.ToString(CultureInfo.InvariantCulture)) 
+                : string.Concat(name, depth.ToString(CultureInfo.InvariantCulture));
 
             return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
         }
