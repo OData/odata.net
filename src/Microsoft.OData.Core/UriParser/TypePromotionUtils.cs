@@ -449,30 +449,25 @@ namespace Microsoft.OData.UriParser
                     }
                 }
 
-                KeyValuePair<string, FunctionSignatureWithReturnType> result;
-                if (equallyArgumentsMatchingNameFunctions.Count == 0)
-                {
-                    // Best match count = 0.
-                    result = NotFoundKeyValuePair;
-                }
-                else if (equallyArgumentsMatchingNameFunctions.Count == 1)
+                KeyValuePair<string, FunctionSignatureWithReturnType> result = NotFoundKeyValuePair;
+                if (equallyArgumentsMatchingNameFunctions.Count == 1)
                 {
                     // Best match count = 1.
                     result = equallyArgumentsMatchingNameFunctions[0];
                 }
                 else
                 {
-                    // For multiple best matches based on argument types
-                    if (equallyArgumentsMatchingNameFunctions.Count(
-                            f => f.Key.Equals(functionCallToken, StringComparison.Ordinal)) == 1)
+                    // For multiple best matches based on argument types, should return as ambiguous result
+                    // if no exact match is found.
+                    foreach (KeyValuePair<string, FunctionSignatureWithReturnType> candidate in equallyArgumentsMatchingNameFunctions)
                     {
-                        // There is only one case-sensitive function name match among the equally argument-types matching functions.
-                        result = equallyArgumentsMatchingNameFunctions.First(_ => _.Key.Equals(functionCallToken, StringComparison.Ordinal));
-                    }
-                    else
-                    {
-                        // Ambiguous cases of zero or multiple case-sensitive function name matches.
-                        result = NotFoundKeyValuePair;
+                        if (candidate.Key.Equals(functionCallToken, StringComparison.Ordinal))
+                        {
+                            // Registered function name keys are guaranteed to be case-sensitively unique
+                            // If one is found, it should be what we are looking for.
+                            result = candidate;
+                            break;
+                        }
                     }
                 }
 
