@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
@@ -18,6 +17,8 @@ namespace Microsoft.OData
     /// </summary>
     internal class PropertyCacheHandler
     {
+        private const string PropertyTypeDelimiter = "-";
+
         private readonly Stack<PropertyCache> cacheStack = new Stack<PropertyCache>();
 
         private readonly Stack<int> scopeLevelStack = new Stack<int>();
@@ -32,21 +33,12 @@ namespace Microsoft.OData
 
         public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
         {
-            StringBuilder uniqueName = new StringBuilder();
-            if (owningType != null)
-            {
-                uniqueName.Append(owningType.FullTypeName());
-                uniqueName.Append("-");
-            }
+            int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
+            string uniqueName = owningType != null 
+                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, name, depth.ToString()) 
+                : string.Concat(name, depth.ToString());
 
-            uniqueName.Append(name);
-            if (this.currentResourceScopeLevel != this.resourceSetScopeLevel + 1)
-            {
-                // To avoid the property name conflicts of single navigation property and navigation source
-                uniqueName.Append(this.currentResourceScopeLevel - this.resourceSetScopeLevel);
-            }
-
-            return this.currentPropertyCache.GetProperty(name, uniqueName.ToString(), owningType);
+            return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
         }
 
         public void SetCurrentResourceScopeLevel(int level)
