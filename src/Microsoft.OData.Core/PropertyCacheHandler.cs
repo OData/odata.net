@@ -42,8 +42,8 @@ namespace Microsoft.OData
             string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
 
             string uniqueName = owningType != null
-                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name)
-                : string.Concat(depthStr, name);
+                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, name, depth.ToString()) 
+                : string.Concat(name, depth.ToString());
 
             return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
         }
