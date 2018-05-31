@@ -5422,7 +5422,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	Any = 9
 	BinaryOperator = 4
 	CollectionComplexNode = 26
-	CollectionConstant = 31
+	CollectionConstant = 33
 	CollectionFunctionCall = 18
 	CollectionNavigationNode = 10
 	CollectionOpenPropertyAccess = 25
@@ -5434,7 +5434,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	Convert = 2
 	Count = 28
 	EntitySet = 22
-	In = 30
+	In = 32
 	KeyLookup = 23
 	NamedFunctionParameter = 20
 	None = 0
@@ -5471,7 +5471,7 @@ public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	FunctionCall = 6
 	FunctionParameter = 21
 	FunctionParameterAlias = 22
-	In = 29
+	In = 30
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
@@ -7950,7 +7950,7 @@ public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	FunctionCall = 6
 	FunctionParameter = 21
 	FunctionParameterAlias = 22
-	In = 29
+	In = 30
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8

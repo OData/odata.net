@@ -349,7 +349,7 @@ namespace Microsoft.OData.UriParser
         /// Node represents a property of a aggregated collection.
         /// </summary>
         AggregatedCollectionPropertyNode = 31,
-        
+
         /// <summary>
         /// In operator node.
         /// </summary>
