@@ -2304,11 +2304,11 @@ namespace Microsoft.OData.JsonLight
                         {
                             Debug.Assert(currentProperty.Type != null, "currentProperty.Type != null");
 
-                            // 1. Skip declared properties that are not null-able types.
-                            // 2. Don't need to restored null value for resources or nested resources omitted on the wire, since
-                            // reader just don't report them anyway.
-                            // 3. Skip properties (including navigation properties) that have been read.
-                            if (!IsNullableProperty(currentProperty)
+                            // Skip declared properties that are not null-able types.
+                            // Skip navigation properties (no navigation link means link value is null)
+                            // Skip properties that have been read (primitive or structural).
+                            if (!currentProperty.Type.IsNullable
+                                || currentProperty.PropertyKind == EdmPropertyKind.Navigation
                                 || resource.Properties.Any(p => p.Name.Equals(currentProperty.Name, StringComparison.Ordinal))
                                 || resourceState.NavigationPropertiesRead.Contains(currentProperty.Name))
                             {
@@ -2320,40 +2320,6 @@ namespace Microsoft.OData.JsonLight
                     }
                 }
             }
-        }
-
-        private static bool IsNullableProperty(IEdmProperty property)
-        {
-            bool isNullableProperty = true;
-
-            if (!property.Type.IsNullable)
-            {
-                // From customized model whether it is null-able
-                isNullableProperty = false;
-            }
-            else
-            {
-                // From definition type kind.
-                switch (property.Type.Definition.TypeKind)
-                {
-                    case EdmTypeKind.Complex:            // complex types
-                    case EdmTypeKind.Entity:
-                    case EdmTypeKind.EntityReference:
-                    case EdmTypeKind.Path:
-                        isNullableProperty = false;
-                        break;
-
-                    case EdmTypeKind.Collection:
-                        IEdmCollectionType collectionType = property.Type.Definition as EdmCollectionType;
-                        isNullableProperty = collectionType.ElementType.IsNullable;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            return isNullableProperty;
         }
 
         /// <summary>

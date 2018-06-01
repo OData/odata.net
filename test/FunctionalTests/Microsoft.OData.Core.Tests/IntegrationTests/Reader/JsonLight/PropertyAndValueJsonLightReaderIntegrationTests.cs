@@ -384,21 +384,31 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 ""@odata.id"":""http://mytest"",
                 ""Id"":0,
                 ""Weight"":60.5,
-                ""Address"":{""CountryRegion"":""US"", ""City"":""Redmond""}
+                ""Address"":{""CountryRegion"":""US"", ""City"":""Redmond""},
+                ""Education"":null
             }";
 
             List<ODataResource> entries = new List<ODataResource>();
             List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+            string reading = "init";
             this.ReadEntryPayload(model, payload, entitySet, entityType,
                 reader =>
                 {
                     switch (reader.State)
                     {
                         case ODataReaderState.ResourceStart:
-                            entries.Add(reader.Item as ODataResource);
+                            if (reading.Equals("Education", StringComparison.Ordinal))
+                            {
+                                reader.Item.Should().BeNull();
+                            }
+                            else
+                            {
+                                entries.Add(reader.Item as ODataResource);
+                            }
                             break;
                         case ODataReaderState.NestedResourceInfoStart:
                             nestedResourceInfos.Add((ODataNestedResourceInfo)reader.Item);
+                            reading = (reader.Item as ODataNestedResourceInfo).Name;
                             break;
                         default:
                             break;
@@ -413,8 +423,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 .Value.Should().Be(0);
             person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Weight", StringComparison.Ordinal))
                 .Value.Should().Be(60.5);
-
-            person.Properties.Any(s => string.Equals(s.Name, "Education",StringComparison.Ordinal)).Should().BeFalse();
 
             ODataResource address = entries[1];
             address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.Ordinal))
@@ -433,10 +441,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 address.Properties.Any(s => string.Equals(s.Name, "ZipCode", StringComparison.Ordinal)).Should().BeFalse();
             }
 
-            nestedResourceInfos.Count().Should().Be(2);
-            nestedResourceInfos[0].Name.Should().Be("Address");
-            // Navigation link missing from payload.
-            nestedResourceInfos[1].Name.Should().Be("Company");
+            nestedResourceInfos.Count().Should().Be(3);
+            nestedResourceInfos.Any(info => info.Name.Equals("Address")).Should().BeTrue();
+            nestedResourceInfos.Any(info => info.Name.Equals("Education")).Should().BeTrue();
+            nestedResourceInfos.Any(info => info.Name.Equals("Company")).Should().BeTrue();
         }
 
         [Fact]
@@ -950,29 +958,40 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,UnknownPropX,Education,Address)/$entity"",
                     ""@odata.id"":""http://mytest"",
                     ""Id"":0,
-                    ""Education"":{""Id"":1}
+                    ""Education"":{""Id"":1},
+                    ""Address"":null
                 }";
             const string payloadWithWildcardInQueryOption = @"{
                     ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,UnknownPropX,Education/*,Address)/$entity"",
                     ""@odata.id"":""http://mytest"",
                     ""Id"":0,
-                    ""Education"":{""Id"":1}
+                    ""Education"":{""Id"":1},
+                    ""Address"":null
                 }";
 
             foreach (string payload in new string[] {payloadWithQueryOption, payloadWithWildcardInQueryOption})
             {
                 List<ODataResource> entries = new List<ODataResource>();
                 List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+                string reading = "init";
                 this.ReadEntryPayload(model, payload, entitySet, entityType,
                     reader =>
                     {
                         switch (reader.State)
                         {
                             case ODataReaderState.ResourceStart:
-                                entries.Add(reader.Item as ODataResource);
+                                if (reading.Equals("Address", StringComparison.Ordinal))
+                                {
+                                    reader.Item.Should().BeNull();
+                                }
+                                else
+                                {
+                                    entries.Add(reader.Item as ODataResource);
+                                }
                                 break;
                             case ODataReaderState.NestedResourceInfoStart:
                                 nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
+                                reading = (reader.Item as ODataNestedResourceInfo).Name;
                                 break;
                             default:
                                 break;
@@ -981,8 +1000,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     nullValuesOmitted: bNullValuesOmitted);
 
                 entries.Count.Should().Be(2);
-                nestedResourceInfos.Count.Should().Be(1);
+                nestedResourceInfos.Count.Should().Be(2);
                 nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Education", StringComparison.Ordinal))
+                    .Should().NotBeNull();
+                nestedResourceInfos.FirstOrDefault(s => string.Equals(s.Name, "Address", StringComparison.Ordinal))
                     .Should().NotBeNull();
 
                 // Education
@@ -1016,9 +1037,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
                 person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
                     .Value.Should().Be(0);
-
-                // Complex type as nested resource is not restored as null property.
-                person.Properties.Any(s => string.Equals(s.Name, "Address", StringComparison.Ordinal)).Should().BeFalse();
 
                 // null-able but not selected properties and not-null-able properties should not be restored.
                 person.Properties.Any(s => string.Equals(s.Name, "Height", StringComparison.Ordinal)).Should().BeFalse();

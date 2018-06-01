@@ -220,12 +220,26 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             expectedNulls = Regex.Replace(expectedNulls, @"\s*", string.Empty, RegexOptions.Multiline);
             Assert.IsTrue(expectedNulls.Contains(serviceUri.ToString()));
 
+            // Requirement A: Omit null value for nested resource if omit-values=nulls is specified.
             //            string expectedNoNulls = "{\"@odata.context\":\"" + serviceUri + "$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity\",\"Name\":\"Fred\",\"Title@test.annotation\":\"annotationValue\",\"DynamicAnnotated@test.annotation\":\"annotationValue\"}";
+            /*
             string expectedNoNulls = @"{
                 ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity"",
                 ""Name"":""Fred"",
                 ""Title@test.annotation"":""annotationValue"",
                 ""DynamicAnnotated@test.annotation"":""annotationValue""
+            }";
+            */
+
+
+            // Requirement B: NEVER omit null value for nested resource regardless of omit-values=nulls header
+            //            string expectedNoNulls = "{\"@odata.context\":\"" + serviceUri + "$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity\",\"Name\":\"Fred\",\"Title@test.annotation\":\"annotationValue\",\"DynamicAnnotated@test.annotation\":\"annotationValue\",\"Address\":null,\"Manager\":null}";
+            string expectedNoNulls = @"{
+                ""@odata.context"":""http://test/$metadata#employees(Name,Title,Dynamic,Address,Manager)/$entity"",
+                ""Name"":""Fred"",
+                ""Title@test.annotation"":""annotationValue"",
+                ""DynamicAnnotated@test.annotation"":""annotationValue"",
+                ""Address"":null,""Manager"":null
             }";
             expectedNoNulls = Regex.Replace(expectedNoNulls, @"\s*", string.Empty, RegexOptions.Multiline);
             Assert.IsTrue(expectedNoNulls.Contains(serviceUri.ToString()));
@@ -233,7 +247,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var writeSettings = new ODataMessageWriterSettings() { BaseUri = serviceUri };
             writeSettings.ODataUri = new ODataUriParser(model, serviceUri, new Uri("employees?$select=Name,Title,Dynamic,Address&$expand=Manager", UriKind.Relative)).ParseUri();
 
-            foreach (bool omitNulls in new bool[] { false, true })
+            foreach (bool omitNulls in new bool[] { /*false,*/ true })
             {
                 // validate writing a null navigation property value
                 var stream = new MemoryStream();
@@ -335,16 +349,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 }
 
-                if (!omitNulls)
-                {
-                    Assert.IsTrue(managerReturned, "Manager not returned when {0}omitting nulls", omitNulls ? "" : "not ");
-                }
+                Assert.IsTrue(managerReturned, "Manager not returned when {0}omitting nulls", omitNulls ? "" : "not ");
                 Assert.IsNull(managerResource, "Manager resource not null when {0}omitting nulls", omitNulls ? "" : "not ");
 
-                if (!omitNulls)
-                {
-                    Assert.IsTrue(addressReturned, "Address not returned when {0}omitting nulls", omitNulls ? "" : "not ");
-                }
+                Assert.IsTrue(addressReturned, "Address not returned when {0}omitting nulls", omitNulls ? "" : "not ");
                 Assert.IsNull(addressResource, "Address resource not null when {0}omitting nulls", omitNulls ? "" : "not ");
 
                 Assert.IsNotNull(employeeResource, "Employee should not be null");
