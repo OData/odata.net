@@ -65,7 +65,7 @@ $(document).ready(function(){
       <ul class="nav nav-pills nav-stacked">
         {% assign sortedCategories = site.categories | sort %}
         {% for category in sortedCategories %}
-        {% if category contains "1. Core" or category contains "2. EdmLib" or category contains "3. Spatial" or category contains "4. Release Notes" or category contains "5. OData Features" %}
+        {% if category contains "1. Core" or category contains "2. EdmLib" or category contains "3. Spatial" or category contains "4. Release Notes" or category contains "5. OData Features" or category contains "6. Design" %}
         <li class="panel panel-default">
           <a class="panel-heading">
             <small>{{ category[0] | upcase }}</small>
@@ -101,7 +101,7 @@ $(document).ready(function(){
       </div>
       {% assign sortedCategories = site.categories | sort %}
       {% for category in sortedCategories %}
-      {% if category contains "1. Core" or category contains "2. EdmLib" or category contains "3. Spatial" or category contains "4. Release Notes" or category contains "5. OData Features" %}
+      {% if category contains "1. Core" or category contains "2. EdmLib" or category contains "3. Spatial" or category contains "4. Release Notes" or category contains "5. OData Features" or category contains "6. Design" %}
       <h1 class="post-title" id="{{ category[0] | replace:' ','-' | replace:'.','' }}">{{ category[0] | join: "/" | upcase }}</h1>
       <ul class="post-list">
         {% for posts in category %}
