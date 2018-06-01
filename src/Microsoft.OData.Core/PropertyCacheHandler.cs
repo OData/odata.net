@@ -36,9 +36,11 @@ namespace Microsoft.OData
         public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
         {
             int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
+            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture); 
+
             string uniqueName = owningType != null 
-                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, name, depth.ToString(CultureInfo.InvariantCulture)) 
-                : string.Concat(name, depth.ToString(CultureInfo.InvariantCulture));
+                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name) 
+                : string.Concat(depthStr, name);
 
             return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
         }
