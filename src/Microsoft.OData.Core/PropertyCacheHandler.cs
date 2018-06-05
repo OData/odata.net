@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
@@ -36,10 +37,12 @@ namespace Microsoft.OData
         public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
         {
             int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
-            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture); 
 
-            string uniqueName = owningType != null 
-                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name) 
+            Debug.Assert(depth >= 1, $"{nameof(depth)} should always be greater than 1");
+            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
+
+            string uniqueName = owningType != null
+                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name)
                 : string.Concat(depthStr, name);
 
             return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
