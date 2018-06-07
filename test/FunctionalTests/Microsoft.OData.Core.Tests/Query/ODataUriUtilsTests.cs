@@ -240,7 +240,7 @@ namespace Microsoft.OData.Tests.Query
         }
 
         [Fact]
-        public void TesTimeOfDayConvertFromUriLiteral()
+        public void TestTimeOfDayConvertFromUriLiteral()
         {
             TimeOfDay timeValue1 = (TimeOfDay)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetTimeOfDay(false));
             timeValue1.Should().Be(new TimeOfDay(12, 13, 14, 15));
@@ -255,6 +255,13 @@ namespace Microsoft.OData.Tests.Query
             object collection = ODataUriUtils.ConvertFromUriLiteral("[1,2,3]", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
             IEnumerable items = collection.As<Microsoft.OData.ODataCollectionValue>().Items;
             items.Should().Equal(new int[] { 1, 2, 3 });
+        }
+
+        [Fact]
+        public void TestCollectionConvertWithMismatchedBracket()
+        {
+            Action parse = () => ODataUriUtils.ConvertFromUriLiteral("[1,2,3)", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
+            parse.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Strings.ExpressionLexer_UnbalancedBracketExpression);
         }
         #endregion
     }

@@ -50,7 +50,8 @@ namespace Microsoft.OData.UriParser
             this.left = left;
             this.right = right;
 
-            if (this.left.GetEdmTypeReference().Definition != this.right.ItemType.Definition)
+            if (!this.left.GetEdmTypeReference().IsAssignableFrom(this.right.ItemType) &&
+                !this.right.ItemType.IsAssignableFrom(this.left.GetEdmTypeReference()))
             {
                 throw new ArgumentException(ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType(
                     this.right.ItemType.FullName(), this.left.GetEdmTypeReference().FullName()));

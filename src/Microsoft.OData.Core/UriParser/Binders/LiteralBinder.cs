@@ -38,10 +38,6 @@ namespace Microsoft.OData.UriParser
                         {
                             return new CollectionConstantNode(collectionValue.Items, literalToken.OriginalText, collectionReference);
                         }
-                        else
-                        {
-                            return new CollectionConstantNode(literalToken.Value as IEnumerable<object>, literalToken.OriginalText, collectionReference);
-                        }
                     }
 
                     return new ConstantNode(literalToken.Value, literalToken.OriginalText, literalToken.ExpectedEdmTypeReference);

@@ -783,7 +783,7 @@ Nodes_NonStaticEntitySetExpressionsAreNotSupportedInThisRelease=Only static Enti
 Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An instance of CollectionFunctionCallNode can only be created with a primitive, complex or enum collection type. For functions returning a collection of entities, use EntityCollectionFunctionCallNode instead.
 Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity=An instance of EntityCollectionFunctionCallNode can only be created with an entity collection type. For functions returning a collection of primitive or complex values, use CollectionFunctionCallNode instead.
 Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum=An instance of SingleValueFunctionCallNode can only be created with a primitive, complex or enum type. For functions returning a single entity, use SingleEntityFunctionCallNode instead.
-Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType=An instance of InNode can only be created where the item type of the right operand collection '{0}' is equal to that of the left operand single value '{1}'.
+Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType=An instance of InNode can only be created where the item types of the right operand '{0}' and the left operand '{1}' can be compared.
 
 ExpandTreeNormalizer_NonPathInPropertyChain=Found a segment that isn't a path while parsing the path within a select or expand query option.
 
