@@ -19,9 +19,8 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Start the stream property valuescope.
         /// </summary>
-        /// <param name="base64UrlEncode">True if the stream should be base64UrlEncoded upon writing.</param>
         /// <returns>The stream to write the property value to</returns>
-        Stream StartStreamValueScope(bool base64UrlEncode);
+        Stream StartStreamValueScope(bool isUrlEncoded);
 
         /// <summary>
         /// End the current stream property value scope.

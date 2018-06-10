@@ -336,17 +336,22 @@ namespace Microsoft.OData
             throw new NotImplementedException();
         }
 
+// mikep todo: provide an implementation for NET35
+#if PORTABLELIB
+
         /// <summary>Creates a stream for writing a binary value.</summary>
         /// <param name="stream">The stream to write.</param>
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
-        public ODataWriter WriteStream(Stream stream)
+        public ODataWriter WriteStream(ODataBinaryStreamValue stream)
         {
             Stream writeStream = this.CreateBinaryWriteStream();
-            stream.CopyTo(writeStream);
+            stream.Stream.CopyTo(writeStream);
             writeStream.Flush();
             writeStream.Dispose();
             return this;
         }
+
+#endif
 
 #if PORTABLELIB
         /// <summary>Asynchronously creates a stream for writing a binary value.</summary>

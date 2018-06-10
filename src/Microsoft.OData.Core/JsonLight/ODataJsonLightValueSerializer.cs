@@ -11,11 +11,11 @@ namespace Microsoft.OData.JsonLight
     using System.Collections;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
-    using System.IO;
 
     #endregion Namespaces
 
@@ -261,9 +261,8 @@ namespace Microsoft.OData.JsonLight
             this.JsonWriter.WriteRawValue(value.RawValue);
         }
 
-        public virtual void WriteStreamValue(ODataStreamValue value)
+        public virtual void WriteStreamValue(ODataBinaryStreamValue streamValue)
         {
-            ODataStreamValue streamValue = value as ODataStreamValue;
             IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
             if (streamWriter == null)
             {
@@ -272,13 +271,25 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                Stream stream = streamWriter.StartStreamValueScope(streamValue.IsBinaryValue);
+                Stream stream = streamWriter.StartStreamValueScope(false);
+#if PORTABLELIB
                 streamValue.Stream.CopyTo(stream);
+#else
+                // mikep todo: move this to separate method (extension method?)
+                int BUFFER_SIZE = 81920;
+                byte[] buffer = new byte[BUFFER_SIZE];
+                int bytesRead;
+                while ((bytesRead = streamValue.Stream.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    stream.Write(buffer, 0, bytesRead);
+                }
+#endif
                 stream.Flush();
                 stream.Dispose();
                 streamWriter.EndStreamValueScope();
             }
         }
+
         /// <summary>
         /// Asserts that the current recursion depth of values is zero. This should be true on all calls into this class from outside of this class.
         /// </summary>

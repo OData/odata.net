@@ -11,6 +11,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.IO;
     using Microsoft.OData.Edm;
+    using System.Text;
     #endregion Namespaces
 
     // todo (mikep): move to own filie
@@ -44,11 +45,6 @@ namespace Microsoft.OData.JsonLight
 
     internal sealed class ODataJsonLightReaderNestedStreamInfo : ODataJsonLightReaderNestedInfo
     {
-        ///// <summary>
-        ///// The Stream associated with the nested info.
-        ///// </summary>
-        //private readonly Stream nestedStream;
-
         /// <summary>
         /// The Stream associated with the nested info.
         /// </summary>
@@ -59,12 +55,10 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="nestedProperty">The nested property for which the nested resource info will be reported.</param>
         /// <param name="streamReference">The ODataStreamReferenceValue representing the stream reference.</param>
-        /// <param name="nestedStream">The Stream used to read the nested info.</param>
         internal ODataJsonLightReaderNestedStreamInfo(IEdmProperty nestedProperty, ODataStreamReferenceValue streamReference)
             : base(nestedProperty)
         {
             this.nestedStreamReference = streamReference;
-            //this.nestedStream = nestedStream;
         }
 
         /// <summary>
@@ -78,16 +72,10 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-        ///// <summary>
-        ///// The stream for reading the nested stream value.
-        ///// </summary>
-        //internal Stream Stream
-        //{
-        //    get
-        //    {
-        //        return this.nestedStream;
-        //    }
-        //}
+        /// <summary>
+        /// Encoding for text streams (null for binary streams).
+        /// </summary>
+        internal Encoding Encoding;
 
     }
 
@@ -224,7 +212,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.nestedResourceType == null && this.NestedProperty != null)
                 {
-                    this.nestedResourceType = this.NestedProperty.Type.Definition;
+                    this.nestedResourceType = this.NestedProperty.Type.Definition.AsElementType();
                 }
 
                 return this.nestedResourceType;

@@ -16,24 +16,29 @@ namespace Microsoft.OData
     // todo (mikep): move to its own file
 
     /// <summary>
-    /// Represents a stream value.
+    /// A class to represent a binary stream value
     /// </summary>
-    public class ODataStreamValue : ODataValue
+    public class ODataBinaryStreamValue : ODataValue
     {
-        public ODataStreamValue(Stream stream, bool isBinaryValue)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="stream">Input stream</param>
+        public ODataBinaryStreamValue(Stream stream)
         {
             this.Stream = stream;
-            this.IsBinaryValue = isBinaryValue;
         }
 
+        /// <summary>
+        /// The Stream wrapped by the ODataStreamValue
+        /// </summary>
         public Stream Stream { get; private set; }
-        public bool IsBinaryValue { get; private set; }
     }
 
     /// <summary>
     /// Represents a media resource.
     /// </summary>
-    public class ODataStreamReferenceValue : ODataValue
+    public sealed class ODataStreamReferenceValue : ODataValue
     {
         /// <summary>the metadata builder for this OData resource.</summary>
         private ODataResourceMetadataBuilder metadataBuilder;
@@ -52,6 +57,23 @@ namespace Microsoft.OData
 
         /// <summary>Read link for media resource.</summary>
         private Uri computedReadLink;
+
+        /// <summary>
+        /// Gets the name of the property for this string reference value.
+        /// </summary>
+        /// <returns>The name of the property for the string reference value, or null for the default media resource.</returns>
+        public string PropertyName
+        {
+            get
+            {
+                return this.edmPropertyName;
+            }
+
+            internal set
+            {
+                this.edmPropertyName = value;
+            }
+        }
 
         /// <summary>Gets or sets the edit link for media resource.</summary>
         /// <returns>The edit link for media resource.</returns>

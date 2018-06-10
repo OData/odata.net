@@ -988,22 +988,6 @@ namespace Microsoft.OData
                     this.resourceTypeValidator = value;
                 }
             }
-
-            /// <summary>
-            /// Validator for resource type.
-            /// </summary>
-            internal ResourceSetWithoutExpectedTypeValidator ResourceTypeValidator
-            {
-                get
-                {
-                    return this.resourceTypeValidator;
-                }
-
-                set
-                {
-                    this.resourceTypeValidator = value;
-                }
-            }
         }
     }
 }

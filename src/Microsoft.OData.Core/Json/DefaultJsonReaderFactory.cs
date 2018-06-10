@@ -8,8 +8,17 @@ using System.IO;
 
 namespace Microsoft.OData.Json
 {
-    public sealed class DefaultJsonReaderFactory : IJsonReaderFactory
+    /// <summary>
+    /// Default factory for creating a JsonReader
+    /// </summary>
+    internal sealed class DefaultJsonReaderFactory : IJsonReaderFactory
     {
+        /// <summary>
+        /// Method to create a JSON Reader
+        /// </summary>
+        /// <param name="textReader">The underlying text reader</param>
+        /// <param name="isIeee754Compatible">Whether the reader returns large integers as strings</param>
+        /// <returns>A new IJsonReader</returns>
         public IJsonReader CreateJsonReader(TextReader textReader, bool isIeee754Compatible)
         {
             return new JsonReader(textReader, isIeee754Compatible);

@@ -488,6 +488,23 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns true if this definition refers to a binary type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a binary type.</returns>
+        public static bool IsBinary(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Binary;
+        }
+
+        /// <summary>
         /// Returns true if this reference refers to a stream type.
         /// </summary>
         /// <param name="type">Type reference.</param>

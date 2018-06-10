@@ -768,6 +768,7 @@ namespace Microsoft.OData
         {
         }
 
+#if PORTABLELIB
         /// <summary>
         /// This method is called when an async stream is requested. It is a no-op.
         /// </summary>
@@ -776,6 +777,7 @@ namespace Microsoft.OData
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataBatchOperationListener)this).BatchOperationContentStreamRequested());
         }
+#endif
 
         /// <summary>
         /// This method is called when a stream is disposed.
@@ -1017,22 +1019,6 @@ namespace Microsoft.OData
         /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
         protected abstract ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared);
-
-        /// <summary>
-        /// Create a new delta resource set scope.
-        /// </summary>
-        /// <param name="deltaResourceSet">The delta resource set for the new scope.</param>
-        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
-        /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
-        /// <param name="selectedProperties">The selected properties of this scope.</param>
-        /// <param name="odataUri">The ODataUri info of this scope.</param>
-        /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
-        /// <returns>The newly create scope.</returns>
-        protected virtual DeltaResourceSetScope CreateDeltaResourceSetScope(ODataDeltaResourceSet deltaResourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Create a new delta resource set scope.
@@ -1546,6 +1532,7 @@ namespace Microsoft.OData
                     IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
                     this.CurrentResourceSetValidator.ValidateResource(itemType);
                 }
+
                 this.WritePrimitiveValue(primitiveValue);
                 this.WriteEnd();
             });
@@ -2784,7 +2771,7 @@ namespace Microsoft.OData
             /// <param name="state">The writer state of this scope.</param>
             /// <param name="item">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-            /// <param name="resourceType">The type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+            /// <param name="itemType">The type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of this scope should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>

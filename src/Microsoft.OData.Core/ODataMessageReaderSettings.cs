@@ -70,10 +70,6 @@ namespace Microsoft.OData
         /// </summary>
         public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 
-        /// <summary>Gets or sets the OData protocol version to be used for reading payloads. </summary>
-        /// <returns>The OData protocol version to be used for reading payloads.</returns>
-        public ODataVersion? Version { get; set; }
-
         /// <summary>
         /// Gets or sets validation settings.
         /// </summary>
@@ -181,6 +177,12 @@ namespace Microsoft.OData
         public bool ReadUntypedAsString { get; set; }
 
         /// <summary>
+        /// Func to evaluate whether a property should be read as a stream.  Note that IEdmProperty may be null when reading
+        /// within a collection
+        /// </summary>
+        public Func<IEdmProperty, bool> ReadAsStream { get; set; }
+
+        /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
         /// be read and false if the annotation should be skipped. A null value indicates that all annotations should be skipped.
         /// </summary>
@@ -269,6 +271,7 @@ namespace Microsoft.OData
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
+            this.ReadAsStream = other.ReadAsStream;
         }
     }
 }

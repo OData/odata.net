@@ -145,30 +145,6 @@ namespace Microsoft.OData.Json
             }
         }
 
-        public Stream CreateReadStream(Encoding encoding)
-        {
-            if (this.NodeType != JsonNodeType.Property && this.NodeType != JsonNodeType.StartArray)
-            {
-                throw new Exception("must only call readstream when positioned on a property or start array");
-            }
-            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
-            if (!this.isBuffering && streamReader != null)
-            {
-                return streamReader.CreateReadStream(encoding);
-            }
-
-            this.innerReader.Read();
-
-            if (encoding == null)
-            {
-                return new MemoryStream(
-                    Convert.FromBase64String(((string)this.Value).Replace('_', '/').Replace('-', '+')));
-            }
-
-            return new MemoryStream(
-                encoding.GetBytes(((string)this.Value).Replace('_', '/').Replace('-', '+')));
-        }
-
         /// <summary>
         /// true if the parser should check for in-stream errors whenever a start-object node is encountered; otherwise false.
         /// This is set to false for parsing of top-level errors where we don't want the in-stream error detection code to kick in.
@@ -195,6 +171,31 @@ namespace Microsoft.OData.Json
             {
                 return this.isBuffering;
             }
+        }
+
+        /// <summary>
+        /// Creates a stream for reading a stream value
+        /// </summary>
+        /// <param name="encoding">Text encoding for reading a text stream</param>
+        /// <returns>A Stream used to read a stream value</returns>
+        public Stream CreateReadStream(Encoding encoding)
+        {
+            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
+            if (!this.isBuffering && streamReader != null)
+            {
+                return streamReader.CreateReadStream(encoding);
+            }
+
+            this.innerReader.Read();
+
+            if (encoding == null)
+            {
+                return new MemoryStream(
+                    Convert.FromBase64String(((string)this.Value).Replace('_', '/').Replace('-', '+')));
+            }
+
+            return new MemoryStream(
+                encoding.GetBytes(((string)this.Value) /*.Replace('_', '/').Replace('-', '+')*/));
         }
 
         /// <summary>

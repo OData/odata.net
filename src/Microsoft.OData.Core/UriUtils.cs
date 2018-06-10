@@ -98,10 +98,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-                 /// Ensure the last character of Uri is a "/".
-                 /// </summary>
-                 /// <param name="uri">The Uri to deal with.</param>
-                 /// <returns>The uri with tailling "/".</returns>
+        /// Ensure the last character of Uri is a "/".
+        /// </summary>
+        /// <param name="uri">The Uri to deal with.</param>
+        /// <returns>The uri with tailling "/".</returns>
         internal static Uri EnsureTaillingSlash(Uri uri)
         {
             if (uri == null)

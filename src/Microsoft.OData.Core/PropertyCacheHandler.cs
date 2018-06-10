@@ -34,6 +34,7 @@ namespace Microsoft.OData
 
         private int currentResourceScopeLevel;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])")]
         public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
         {
             int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;

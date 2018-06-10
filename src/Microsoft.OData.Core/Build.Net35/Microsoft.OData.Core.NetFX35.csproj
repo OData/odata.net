@@ -535,6 +535,12 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriter.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriter.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBinaryStreamWriter.cs">
+      <Link>Microsoft\OData\Core\ODataBinaryStreamWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBinaryStreamReader.cs">
+      <Link>Microsoft\OData\Core\ODataBinaryStreamReader.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionReader.cs">
       <Link>Microsoft\OData\Core\ODataCollectionReader.cs</Link>
     </Compile>

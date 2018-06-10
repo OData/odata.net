@@ -596,6 +596,7 @@ namespace Microsoft.OData.Metadata
                 case EdmTypeKind.Primitive:
                     return ((IEdmPrimitiveType)baseType).IsAssignableFrom((IEdmPrimitiveType)subtype);
 
+                case EdmTypeKind.Untyped:   // fall through
                 case EdmTypeKind.Entity:    // fall through
                 case EdmTypeKind.Complex:
                     return ((IEdmStructuredType)baseType).IsAssignableFrom((IEdmStructuredType)subtype);

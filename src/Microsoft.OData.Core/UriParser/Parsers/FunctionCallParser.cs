@@ -113,6 +113,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Parses argument lists or entity key value list.
         /// </summary>
+        /// <param name="restoreAction">Action to take to restore.</param>
         /// <returns>The lexical tokens representing the arguments.</returns>
         public FunctionParameterToken[] ParseArgumentListOrEntityKeyList(Action restoreAction = null)
         {
@@ -123,6 +124,7 @@ namespace Microsoft.OData.UriParser
                     restoreAction();
                     return null;
                 }
+
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
@@ -144,6 +146,7 @@ namespace Microsoft.OData.UriParser
                     restoreAction();
                     return null;
                 }
+
                 throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 

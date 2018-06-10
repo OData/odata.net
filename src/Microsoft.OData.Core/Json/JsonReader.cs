@@ -71,11 +71,23 @@ namespace Microsoft.OData.Json
         private bool endOfInputReached;
 
         /// <summary>
+        /// Whether the reader is positioned on a string property.
+        /// </summary>
+        /// <remarks>When positioned on a string we don't read the value until it is accessed or until
+        /// CreateReadStream is called.</remarks>
+        private bool parsingString = false;
+
+        /// <summary>
         /// Whether the user is currently reading a string property as a stream.
         /// </summary>
         /// <remarks>This is used to avoid calling Read on the text reader multiple times
         /// even though it already reported the end of input.</remarks>
         private bool readingStream = false;
+
+        /// <summary>
+        /// The opening character read when reading a stream value.
+        /// </summary>
+        private char streamOpeningQuoteCharacter = '"';
 
         /// <summary>
         /// Buffer of characters from the input.
@@ -189,6 +201,19 @@ namespace Microsoft.OData.Json
         {
             get
             {
+                if (this.readingStream)
+                {
+                    //mikep: make this a real exception
+                    throw new Exception("Can't access Value when reading primitive as stream.");
+                }
+
+                if (this.parsingString)
+                {
+                    this.parsingString = false;
+                    bool hasLeadingBackslash;
+                    this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                }
+
                 return this.nodeValue;
             }
         }
@@ -226,6 +251,13 @@ namespace Microsoft.OData.Json
             {
                 // todo (mikep): create a proper error for this
                 throw new Exception("Must read to end of stream before calling Read()");
+            }
+
+            if (this.parsingString)
+            {
+                // caller is positioned on a string value that they haven't read, so skip it
+                this.parsingString = false;
+                this.ParseStringPrimitiveValue();
             }
 
             // Reset the node value.
@@ -379,12 +411,9 @@ namespace Microsoft.OData.Json
         /// <returns>A stream for reading a base64 URL encoded binary value.</returns>
         public Stream CreateReadStream(Encoding encoding)
         {
-            // todo (mikep): read the quote character and determine type
-            this.tokenStartIndex++;
-            readingStream = true;
-            // if reading a property, pop property scope. Otherwise do nothing.
-            this.TryPopPropertyScope();
-            this.nodeType = JsonNodeType.PrimitiveValue;
+            this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex++];
+            this.readingStream = true;
+            this.parsingString = false;
             return new ODataBinaryStreamReader(this.ReadChars, encoding);
         }
 
@@ -442,8 +471,8 @@ namespace Microsoft.OData.Json
                 case '"':
                 case '\'':
                     // String primitive value
-                    bool hasLeadingBackslash;
-                    this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                    // Don't parse yet, as it may be a stream. Defer parsing until .Value is called.
+                    this.parsingString = true;
                     break;
 
                 case 'n':
@@ -839,18 +868,16 @@ namespace Microsoft.OData.Json
 
             int charsRead = 0;
 
-            // todo (mikep): handle single or double quote characters, depending on what was first read
-            char openingQuoteCharacter = '"';
-
             while (charsRead < maxLength && (this.tokenStartIndex < this.storedCharacterCount || this.ReadInput()))
             {
                 char character = this.characterBuffer[this.tokenStartIndex];
 
-                if (character == openingQuoteCharacter)
+                if (character == this.streamOpeningQuoteCharacter)
                 {
                     // Consume the quote character.
                     this.tokenStartIndex++;
                     readingStream = false;
+                    this.scopes.Peek().ValueCount++;
                     // move to next node
                     this.Read();
                     return charsRead;

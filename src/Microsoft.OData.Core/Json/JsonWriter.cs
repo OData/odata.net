@@ -379,17 +379,20 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Start the stream property valuescope.
         /// </summary>
+        /// <param name="urlEncode">Whether to UrlEncode the stream</param>
         /// <returns>The stream to write the property value to</returns>
-        public Stream StartStreamValueScope(bool base64UrlEncode)
+        public Stream StartStreamValueScope(bool urlEncode)
         {
             this.WriteValueSeparator();
-            TextWriter.Write(JsonConstants.QuoteCharacter);
-            TextWriter.Flush();
+            this.TextWriter.Write(JsonConstants.QuoteCharacter);
+            this.TextWriter.Flush();
 
             // Wrap the stream so that it doesn't get disposed.
             // Todo (mikep): should we listen for dispose?
-            binaryValueStream = new ODataBinaryStreamWriter(TextWriter, base64UrlEncode);
-            return binaryValueStream;
+            this.binaryValueStream = new ODataBinaryStreamWriter(TextWriter, urlEncode);
+
+            // mikep: todo rename to stream
+            return this.binaryValueStream;
         }
 
         /// <summary>
@@ -397,23 +400,24 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void EndStreamValueScope()
         {
-            binaryValueStream.Flush();
-            TextWriter.Write(JsonConstants.QuoteCharacter);
-            binaryValueStream.Dispose();
-            binaryValueStream = null;
+            this.binaryValueStream.Flush();
+            this.binaryValueStream.Dispose();
+            this.binaryValueStream = null;
+            this.TextWriter.Flush();
+            this.TextWriter.Write(JsonConstants.QuoteCharacter);
         }
 
         void IDisposable.Dispose()
         {
-            if (binaryValueStream != null)
+            if (this.binaryValueStream != null)
             {
                 try
                 {
-                    binaryValueStream.Dispose();
+                    this.binaryValueStream.Dispose();
                 }
                 finally
                 {
-                    binaryValueStream = null;
+                    this.binaryValueStream = null;
                 }
             }
         }

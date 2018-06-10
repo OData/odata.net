@@ -223,7 +223,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            ODataStreamValue streamValue = value as ODataStreamValue;
+            ODataBinaryStreamValue streamValue = value as ODataBinaryStreamValue;
             if (streamValue != null)
             {
                 this.WriteStreamProperty(streamValue, isOpenPropertyType);
@@ -493,11 +493,11 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Writes a primitive property.
+        /// Writes a stream property.
         /// </summary>
-        /// <param name="primitiveValue">The primitive value to be written</param>
+        /// <param name="streamValue">The stream value to be written</param>
         /// <param name="isOpenPropertyType">If the property is open.</param>
-        private void WriteStreamProperty(ODataStreamValue streamValue, bool isOpenPropertyType)
+        private void WriteStreamProperty(ODataBinaryStreamValue streamValue, bool isOpenPropertyType)
         {
             // todo (mikep): take type from streamvalue and write if not (possibly simplified) Metadata.EdmConstants.EdmStringTypeName?
             // this.WritePropertyTypeName();

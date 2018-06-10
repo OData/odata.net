@@ -42,6 +42,7 @@ namespace Microsoft.OData.Tests
 
             // Create a property handler and enter a resource set scope.
             PropertyCacheHandler handler = new PropertyCacheHandler();
+            handler.SetCurrentResourceScopeLevel(1);
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
@@ -69,6 +70,7 @@ namespace Microsoft.OData.Tests
 
             // Create a property handler and enter a resource set scope.
             PropertyCacheHandler handler = new PropertyCacheHandler();
+            handler.SetCurrentResourceScopeLevel(1);
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
@@ -107,6 +109,7 @@ namespace Microsoft.OData.Tests
 
             // Create a property handler and enter a resource set scope.
             PropertyCacheHandler handler = new PropertyCacheHandler();
+            handler.SetCurrentResourceScopeLevel(1);
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp1.Prop1

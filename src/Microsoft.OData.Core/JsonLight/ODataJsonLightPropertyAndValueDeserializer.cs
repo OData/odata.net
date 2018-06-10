@@ -509,7 +509,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="collectionProperty">The collection of complex property for which to read the nested resource info. null for undeclared property.</param>
         /// <param name="nestedResourceType">The item type of the resource set, which should be provided when the collectionProperty is undeclared.</param>
-        /// <param name="propertyName">The propert name.</param>
+        /// <param name="propertyName">The property name.</param>
         /// <returns>The nested resource info for the expanded link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
@@ -537,7 +537,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="complexProperty">The complex property for which to read the nested resource info. null for undeclared property.</param>
         /// <param name="nestedResourceType">The nested resource type which should be provided for undeclared property.</param>
-        /// <param name="propertyName">The propert name.</param>
+        /// <param name="propertyName">The property name.</param>
         /// <returns>The nested resource info for the complex property to read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
@@ -630,7 +630,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationProperty">The navigation property for which to read the expanded link. null for undeclared property.</param>
         /// <param name="propertyType">The type of the collection.</param>
-        /// <param name="propertyName">The propert name.</param>
+        /// <param name="propertyName">The property name.</param>
         /// <param name="isDeltaResourceSet">The property being read represents a nested delta resource set.</param>
         /// <returns>The nested resource info for the expanded link read.</returns>
         /// <remarks>
@@ -701,13 +701,42 @@ namespace Microsoft.OData.JsonLight
             return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, navigationProperty, propertyType, expandedResourceSet);
         }
 
+/*
+        /// <summary>
+        /// Reads a nested stream
+        /// </summary>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
+        /// <param name="property">The property for which to read the nested resource info. null for undeclared property.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The nested resource info for the stream collection.</returns>
+        /// <remarks>
+        /// This method doesn't move the reader.
+        /// </remarks>
+        protected static ODataJsonLightReaderNestedInfo ReadStreamNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty property, string propertyName)
+        {
+            Debug.Assert(resourceState != null, "resourceState != null");
+            Debug.Assert((propertyName != null) || (property != null),
+                "The collection property and property name shouldn't both be null");
+            Debug.Assert(property == null || property.Type.Definition.IsStream(),
+                "The type of the property, if specified, must be Edm.Stream");
+
+            ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
+            {
+                Name = propertyName,
+                IsCollection = false,
+                IsComplex = false
+            };
+
+            return ODataJsonLightReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, property, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream));
+        }
+*/
 
         /// <summary>
         /// Reads a nested stream collection as a resource set.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
-        /// <param name="collectionProperty">The collection of complex property for which to read the nested resource info. null for undeclared property.</param>
-        /// <param name="propertyName">The propert name.</param>
+        /// <param name="collectionProperty">The collection of stream property for which to read the nested resource info. null for undeclared property.</param>
+        /// <param name="propertyName">The property name.</param>
         /// <returns>The nested resource info for the stream collection.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
@@ -797,7 +826,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationProperty">The navigation property for which to read the entity reference links. null for undeclared property.</param>
-        /// <param name="propertyName">The propert name.</param>
+        /// <param name="propertyName">The property name.</param>
         /// <param name="isExpanded">true if the navigation link is expanded.</param>
         /// <returns>The navigation link info for the entity reference links read.</returns>
         /// <remarks>
@@ -1049,7 +1078,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceState">The current resource state</param>
         /// <param name="propertyName">The name of the collection property being read</param>
-        /// <returns></returns>
+        /// <returns>An ODataResourceSet with properties set from any instance annotations</returns>
         private static ODataResourceSet CreateCollectionResourceSet(IODataJsonLightReaderResourceState resourceState, string propertyName)
         {
             ODataResourceSet collectionResourceSet = new ODataResourceSet();

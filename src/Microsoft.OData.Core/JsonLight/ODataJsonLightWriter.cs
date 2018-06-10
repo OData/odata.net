@@ -826,7 +826,8 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                stream = this.jsonStreamWriter.StartStreamValueScope(/*base64UrlEncode*/true);
+                bool urlEncode = this.ParentScope.ItemType == null || !this.ParentScope.ItemType.IsBinary();
+                stream = this.jsonStreamWriter.StartStreamValueScope(urlEncode);
             }
 
             return stream;
@@ -984,29 +985,6 @@ namespace Microsoft.OData.JsonLight
             bool isUndeclared)
         {
             return new JsonLightResourceSetScope(resourceSet, navigationSource, itemType, skipWriting, selectedProperties, odataUri, isUndeclared);
-        }
-
-        /// <summary>
-        /// Create a new delta resource set scope.
-        /// </summary>
-        /// <param name="deltaResourceSet">The delta resource set for the new scope.</param>
-        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
-        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
-        /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
-        /// <param name="selectedProperties">The selected properties of this scope.</param>
-        /// <param name="odataUri">The ODataUri info of this scope.</param>
-        /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
-        /// <returns>The newly create scope.</returns>
-        protected override DeltaResourceSetScope CreateDeltaResourceSetScope(
-            ODataDeltaResourceSet deltaResourceSet,
-            IEdmNavigationSource navigationSource,
-            IEdmStructuredType resourceType,
-            bool skipWriting,
-            SelectedPropertiesNode selectedProperties,
-            ODataUri odataUri,
-            bool isUndeclared)
-        {
-            return new JsonLightDeltaResourceSetScope(deltaResourceSet, navigationSource, resourceType, selectedProperties, odataUri);
         }
 
         /// <summary>
