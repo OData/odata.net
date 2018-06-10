@@ -231,7 +231,11 @@ namespace Microsoft.OData.Edm
             foreach (IEdmOperationParameter parameter in operation.Parameters)
             {
                 string typeName = "";
-                if (parameter.Type.IsCollection())
+                if (parameter.Type == null)
+                {
+                    typeName = CsdlConstants.TypeName_Untyped;
+                }
+                else if (parameter.Type.IsCollection())
                 {
                     typeName = CsdlConstants.Value_Collection + "(" + parameter.Type.AsCollection().ElementType().FullName() + ")";
                 }
@@ -448,6 +452,30 @@ namespace Microsoft.OData.Edm
                     val = computedValue;
                     dictionary.Add(key, computedValue);
                 }
+            }
+
+            return val;
+        }
+
+        /// <summary>
+        /// Query dictionary for certain key, return default if not present
+        /// </summary>
+        /// <typeparam name="TKey">Key type for dictionary</typeparam>
+        /// <typeparam name="TValue">Value type for dictionary</typeparam>
+        /// <param name="dictionary">The dictionary to look up</param>
+        /// <param name="key">The key property</param>
+        /// <returns>The value for the key, or default if the value does not exist</returns>
+        internal static TValue DictionarySafeGet<TKey, TValue>(
+            IDictionary<TKey, TValue> dictionary,
+            TKey key)
+        {
+            CheckArgumentNull(dictionary, "dictionary");
+
+            TValue val;
+
+            lock (dictionary)
+            {
+                dictionary.TryGetValue(key, out val);
             }
 
             return val;

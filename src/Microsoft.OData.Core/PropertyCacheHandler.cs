@@ -6,11 +6,13 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
+
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
 {
+    using System.Globalization;
+
     /// <summary>
     /// Manage PropertyCache for ODataResourceSet in serialization.
     /// One ODataResourceSet has one PropertyCache.
@@ -18,6 +20,8 @@ namespace Microsoft.OData
     /// </summary>
     internal class PropertyCacheHandler
     {
+        private const string PropertyTypeDelimiter = "-";
+
         private readonly Stack<PropertyCache> cacheStack = new Stack<PropertyCache>();
 
         private readonly Stack<int> scopeLevelStack = new Stack<int>();
@@ -32,21 +36,16 @@ namespace Microsoft.OData
 
         public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
         {
-            StringBuilder uniqueName = new StringBuilder();
-            if (owningType != null)
-            {
-                uniqueName.Append(owningType.FullTypeName());
-                uniqueName.Append("-");
-            }
+            int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
 
-            uniqueName.Append(name);
-            if (this.currentResourceScopeLevel != this.resourceSetScopeLevel + 1)
-            {
-                // To avoid the property name conflicts of single navigation property and navigation source
-                uniqueName.Append(this.currentResourceScopeLevel - this.resourceSetScopeLevel);
-            }
+            Debug.Assert(depth >= 1, $"{nameof(depth)} should always be greater than 1");
+            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
 
-            return this.currentPropertyCache.GetProperty(name, uniqueName.ToString(), owningType);
+            string uniqueName = owningType != null
+                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name)
+                : string.Concat(depthStr, name);
+
+            return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
         }
 
         public void SetCurrentResourceScopeLevel(int level)

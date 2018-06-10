@@ -60,7 +60,7 @@ namespace Microsoft.OData
             this.typeNameOracle = typeNameOracle;
             this.jsonWriter = this.valueSerializer.JsonWriter;
             this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
-                valueSerializer.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
+                valueSerializer.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix, this.valueSerializer.MessageWriterSettings.Version);
             this.writerValidator = this.valueSerializer.MessageWriterSettings.Validator;
         }
 

@@ -250,7 +250,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private IEnumerable<EdmError> ValidateStructure(object item)
         {
-            if (item is IEdmValidCoreModelElement || this.visited.Contains(item) || (this.skipVisitation != null && this.skipVisitation.Contains(item)))
+            if (item is IEdmCoreModelElement || this.visited.Contains(item) || (this.skipVisitation != null && this.skipVisitation.Contains(item)))
             {
                 // If we already visited this object, then errors (if any) have already been reported.
                 return Enumerable.Empty<EdmError>();
@@ -314,6 +314,22 @@ namespace Microsoft.OData.Edm.Validation
                 }
             }
 
+            // Out-of-line annotations are found through the model visitor, but inline annotations
+            // are not found through normal traversal, so add in-line annotations here.
+            IEdmVocabularyAnnotatable annotatable = item as IEdmVocabularyAnnotatable;
+            if (this.model != null && annotatable != null)
+            {
+                foreach (IEdmVocabularyAnnotation annotation in annotatable.VocabularyAnnotations(this.model))
+                {
+                    // Inline annotations have a null target.
+                    if (annotation.Target == null)
+                    {
+                        // Target must be set for validation, so create a new EdmVocabularyAnnotation with the target set
+                        followupErrors.AddRange(this.ValidateStructure(new EdmVocabularyAnnotation(annotatable, annotation.Term, annotation.Qualifier, annotation.Value)));
+                    }
+                }
+            }
+
             foreach (object followupItem in followup)
             {
                 followupErrors.AddRange(this.ValidateStructure(followupItem));
@@ -329,7 +345,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private void CollectReference(object reference)
         {
-            if (!(reference is IEdmValidCoreModelElement) &&
+            if (!(reference is IEdmCoreModelElement) &&
                 !this.visited.Contains(reference) &&
                 (this.skipVisitation == null || !this.skipVisitation.Contains(reference)))
             {
@@ -734,6 +750,14 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
+        private sealed class VisitorOfIEdmPathType : VisitorOfT<IEdmPathType>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmPathType type, List<object> followup, List<object> references)
+            {
+                return null;
+            }
+        }
+
         private sealed class VisitorOfIEdmEnumType : VisitorOfT<IEdmEnumType>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmEnumType type, List<object> followup, List<object> references)
@@ -1110,6 +1134,18 @@ namespace Microsoft.OData.Edm.Validation
             protected override IEnumerable<EdmError> VisitT(IEdmUntypedTypeReference typeRef, List<object> followup, List<object> references)
             {
                 return (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Untyped)
+                    ?
+                    new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) }
+                    :
+                    null;
+            }
+        }
+
+        private sealed class VisitorOfIEdmPathTypeReference : VisitorOfT<IEdmPathTypeReference>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmPathTypeReference typeRef, List<object> followup, List<object> references)
+            {
+                return (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Path)
                     ?
                     new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) }
                     :

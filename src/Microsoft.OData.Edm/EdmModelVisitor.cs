@@ -257,6 +257,9 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.None:
                     this.ProcessTypeReference(reference);
                     break;
+                case EdmTypeKind.Path:
+                    this.ProcessPathTypeReference(reference.AsPath());
+                    break;
                 default:
                     throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(reference.TypeKind().ToString()));
             }
@@ -309,6 +312,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
                 case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.PrimitiveType:
                 case EdmPrimitiveTypeKind.None:
                     this.ProcessPrimitiveTypeReference(reference);
                     break;
@@ -506,6 +510,11 @@ namespace Microsoft.OData.Edm
         protected virtual void ProcessTypeReference(IEdmTypeReference element)
         {
             this.ProcessElement(element);
+        }
+
+        protected virtual void ProcessPathTypeReference(IEdmPathTypeReference reference)
+        {
+            this.ProcessTypeReference(reference);
         }
 
         #endregion

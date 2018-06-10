@@ -6,20 +6,23 @@
 
 namespace Microsoft.OData.UriParser.Aggregation
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Node representing a aggregate transformation.
     /// </summary>
     public sealed class AggregateTransformationNode : TransformationNode
     {
-        private readonly IEnumerable<AggregateExpression> expressions;
+        private readonly IEnumerable<AggregateExpressionBase> expressions;
 
         /// <summary>
         /// Create a AggregateTransformationNode.
         /// </summary>
-        /// <param name="expressions">A list of <see cref="AggregateExpression"/>.</param>
-        public AggregateTransformationNode(IEnumerable<AggregateExpression> expressions)
+        /// <param name="expressions">A list of <see cref="AggregateExpressionBase"/>.</param>
+        public AggregateTransformationNode(IEnumerable<AggregateExpressionBase> expressions)
         {
             ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
 
@@ -27,9 +30,21 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Gets the list of <see cref="AggregateExpression"/>.
+        /// Property that only return <see cref="AggregateExpression"/>s.
         /// </summary>
+        [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
         public IEnumerable<AggregateExpression> Expressions
+        {
+            get
+            {
+                return expressions.OfType<AggregateExpression>();
+            }
+        }
+
+        /// <summary>
+        /// Property that returns a list of all <see cref="AggregateExpressionBase"/>s of this transformation node.
+        /// </summary>
+        public IEnumerable<AggregateExpressionBase> AggregateExpressions
         {
             get
             {

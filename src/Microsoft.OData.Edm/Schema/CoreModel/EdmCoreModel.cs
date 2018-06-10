@@ -7,123 +7,119 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
     /// <summary>
-    /// This is a marker interface for core model elements that do not require validation.
-    /// </summary>
-    internal interface IEdmValidCoreModelElement
-    {
-    }
-
-    /// <summary>
     /// Provides predefined declarations relevant to EDM semantics.
     /// </summary>
-    public class EdmCoreModel : EdmElement, IEdmModel, IEdmValidCoreModelElement
+    public class EdmCoreModel : EdmElement, IEdmModel, IEdmCoreModelElement
     {
         /// <summary>
         /// The default core EDM model.
         /// </summary>
         public static readonly EdmCoreModel Instance = new EdmCoreModel();
 
-        private readonly EdmValidCoreModelPrimitiveType[] primitiveTypes;
-        private const string EdmNamespace = "Edm";
+        private readonly IDictionary<string, EdmPrimitiveTypeKind> primitiveTypeKinds = new Dictionary<string, EdmPrimitiveTypeKind>();
+        private readonly IDictionary<EdmPrimitiveTypeKind, EdmCoreModelPrimitiveType> primitiveTypesByKind = new Dictionary<EdmPrimitiveTypeKind, EdmCoreModelPrimitiveType>();
 
-        private readonly Dictionary<string, EdmPrimitiveTypeKind> primitiveTypeKinds = new Dictionary<string, EdmPrimitiveTypeKind>();
-        private readonly Dictionary<EdmPrimitiveTypeKind, EdmValidCoreModelPrimitiveType> primitiveTypesByKind = new Dictionary<EdmPrimitiveTypeKind, EdmValidCoreModelPrimitiveType>();
-        private readonly Dictionary<string, EdmValidCoreModelPrimitiveType> primitiveTypeByName = new Dictionary<string, EdmValidCoreModelPrimitiveType>();
-        private readonly EdmValidCoreModelUntypedType untypedType = new EdmValidCoreModelUntypedType();
+        private readonly IDictionary<string, EdmPathTypeKind> pathTypeKinds = new Dictionary<string, EdmPathTypeKind>();
+        private readonly IDictionary<EdmPathTypeKind, EdmCoreModelPathType> pathTypesByKind = new Dictionary<EdmPathTypeKind, EdmCoreModelPathType>();
+
         private readonly IEdmDirectValueAnnotationsManager annotationsManager = new EdmDirectValueAnnotationsManager();
+
+        private readonly IList<IEdmSchemaElement> coreSchemaElements = new List<IEdmSchemaElement>();
+
+        private readonly IDictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
+
+        private readonly EdmCoreModelComplexType complexType = EdmCoreModelComplexType.Instance;
+        private readonly EdmCoreModelEntityType entityType = EdmCoreModelEntityType.Instance;
+        private readonly EdmCoreModelUntypedType untypedType = EdmCoreModelUntypedType.Instance;
+        private readonly EdmCoreModelPrimitiveType primitiveType = new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.PrimitiveType);
 
         private EdmCoreModel()
         {
-            var primitiveDouble = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Double", EdmPrimitiveTypeKind.Double);
-            var primitiveSingle = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Single", EdmPrimitiveTypeKind.Single);
-
-            var primitiveInt64 = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Int64", EdmPrimitiveTypeKind.Int64);
-            var primitiveInt32 = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Int32", EdmPrimitiveTypeKind.Int32);
-            var primitiveInt16 = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Int16", EdmPrimitiveTypeKind.Int16);
-            var primitiveSByte = new EdmValidCoreModelPrimitiveType(EdmNamespace, "SByte", EdmPrimitiveTypeKind.SByte);
-            var primitiveByte = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Byte", EdmPrimitiveTypeKind.Byte);
-
-            var primitiveBoolean = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Boolean", EdmPrimitiveTypeKind.Boolean);
-            var primitiveGuid = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Guid", EdmPrimitiveTypeKind.Guid);
-
-            var primitiveTime = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Duration", EdmPrimitiveTypeKind.Duration);
-            var primitiveTimeOfDay = new EdmValidCoreModelPrimitiveType(EdmNamespace, "TimeOfDay", EdmPrimitiveTypeKind.TimeOfDay);
-            var primitiveDateTimeOffset = new EdmValidCoreModelPrimitiveType(EdmNamespace, "DateTimeOffset", EdmPrimitiveTypeKind.DateTimeOffset);
-            var primitiveDate = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Date", EdmPrimitiveTypeKind.Date);
-
-            var primitiveDecimal = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Decimal", EdmPrimitiveTypeKind.Decimal);
-
-            var primitiveBinary = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Binary", EdmPrimitiveTypeKind.Binary);
-            var primitiveString = new EdmValidCoreModelPrimitiveType(EdmNamespace, "String", EdmPrimitiveTypeKind.String);
-            var primitiveStream = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Stream", EdmPrimitiveTypeKind.Stream);
-
-            var primitiveGeography = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Geography", EdmPrimitiveTypeKind.Geography);
-            var primitiveGeographyPoint = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeographyPoint", EdmPrimitiveTypeKind.GeographyPoint);
-            var primitiveGeographyLineString = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeographyLineString", EdmPrimitiveTypeKind.GeographyLineString);
-            var primitiveGeographyPolygon = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeographyPolygon", EdmPrimitiveTypeKind.GeographyPolygon);
-            var primitiveGeographyCollection = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeographyCollection", EdmPrimitiveTypeKind.GeographyCollection);
-            var primitiveGeographyMultiPolygon = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeographyMultiPolygon", EdmPrimitiveTypeKind.GeographyMultiPolygon);
-            var primitiveGeographyMultiLineString = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeographyMultiLineString", EdmPrimitiveTypeKind.GeographyMultiLineString);
-            var primitiveGeographyMultiPoint = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeographyMultiPoint", EdmPrimitiveTypeKind.GeographyMultiPoint);
-            var primitiveGeometry = new EdmValidCoreModelPrimitiveType(EdmNamespace, "Geometry", EdmPrimitiveTypeKind.Geometry);
-            var primitiveGeometryPoint = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeometryPoint", EdmPrimitiveTypeKind.GeometryPoint);
-            var primitiveGeometryLineString = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeometryLineString", EdmPrimitiveTypeKind.GeometryLineString);
-            var primitiveGeometryPolygon = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeometryPolygon", EdmPrimitiveTypeKind.GeometryPolygon);
-            var primitiveGeometryCollection = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeometryCollection", EdmPrimitiveTypeKind.GeometryCollection);
-            var primitiveGeometryMultiPolygon = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeometryMultiPolygon", EdmPrimitiveTypeKind.GeometryMultiPolygon);
-            var primitiveGeometryMultiLineString = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeometryMultiLineString", EdmPrimitiveTypeKind.GeometryMultiLineString);
-            var primitiveGeometryMultiPoint = new EdmValidCoreModelPrimitiveType(EdmNamespace, "GeometryMultiPoint", EdmPrimitiveTypeKind.GeometryMultiPoint);
-
-            this.primitiveTypes = new EdmValidCoreModelPrimitiveType[]
+            IList<EdmCoreModelPrimitiveType> primitiveTypes = new List<EdmCoreModelPrimitiveType>
             {
-                primitiveBinary,
-                primitiveBoolean,
-                primitiveByte,
-                primitiveDate,
-                primitiveDateTimeOffset,
-                primitiveDecimal,
-                primitiveDouble,
-                primitiveGuid,
-                primitiveInt16,
-                primitiveInt32,
-                primitiveInt64,
-                primitiveSByte,
-                primitiveSingle,
-                primitiveStream,
-                primitiveString,
-                primitiveTime,
-                primitiveTimeOfDay,
-                primitiveGeography,
-                primitiveGeographyPoint,
-                primitiveGeographyLineString,
-                primitiveGeographyPolygon,
-                primitiveGeographyCollection,
-                primitiveGeographyMultiPolygon,
-                primitiveGeographyMultiLineString,
-                primitiveGeographyMultiPoint,
-                primitiveGeometry,
-                primitiveGeometryPoint,
-                primitiveGeometryLineString,
-                primitiveGeometryPolygon,
-                primitiveGeometryCollection,
-                primitiveGeometryMultiPolygon,
-                primitiveGeometryMultiLineString,
-                primitiveGeometryMultiPoint
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Double),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Single),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Int64),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Int32),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Int16),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.SByte),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Byte),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Boolean),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Guid),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Duration),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Date),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Decimal),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Binary),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.String),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Stream),
+
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Geography),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Geometry),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryCollection),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPolygon),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiLineString),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPoint),
+                primitiveType, // Edm.PrimitiveType
             };
 
-            foreach (var primitive in this.primitiveTypes)
+            foreach (var primitive in primitiveTypes)
             {
-                this.primitiveTypeKinds[primitive.Name] = primitive.PrimitiveKind;
-                this.primitiveTypeKinds[primitive.Namespace + '.' + primitive.Name] = primitive.PrimitiveKind;
-                this.primitiveTypesByKind[primitive.PrimitiveKind] = primitive;
-                this.primitiveTypeByName[primitive.Namespace + '.' + primitive.Name] = primitive;
-                this.primitiveTypeByName[primitive.Name] = primitive;
+                primitiveTypeKinds[primitive.Name] = primitive.PrimitiveKind;
+                primitiveTypeKinds[primitive.Namespace + '.' + primitive.Name] = primitive.PrimitiveKind;
+                primitiveTypesByKind[primitive.PrimitiveKind] = primitive;
+
+                coreSchemaTypes[primitive.Namespace + '.' + primitive.Name] = primitive;
+                coreSchemaTypes[primitive.Name] = primitive;
+
+                coreSchemaElements.Add(primitive);
+            }
+
+            coreSchemaElements.Add(complexType); // Edm.ComplexType
+            coreSchemaTypes[complexType.Namespace + '.' + complexType.Name] = complexType;
+            coreSchemaTypes[complexType.Name] = complexType;
+
+            coreSchemaElements.Add(entityType); // Edm.EntityType
+            coreSchemaTypes[entityType.Namespace + '.' + entityType.Name] = entityType;
+            coreSchemaTypes[entityType.Name] = entityType;
+
+            coreSchemaElements.Add(untypedType); // Edm.Untyped
+            coreSchemaTypes[untypedType.Namespace + '.' + untypedType.Name] = untypedType;
+            coreSchemaTypes[untypedType.Name] = untypedType;
+
+            EdmCoreModelPathType[] pathTypes =
+            {
+                new EdmCoreModelPathType(EdmPathTypeKind.AnnotationPath),  // Edm.AnotationPath
+                new EdmCoreModelPathType(EdmPathTypeKind.PropertyPath), // Edm.PropertyPath
+                new EdmCoreModelPathType(EdmPathTypeKind.NavigationPropertyPath), // Edm.NavigationPropertyPath
+            };
+
+            foreach (var pathType in pathTypes)
+            {
+                pathTypeKinds[pathType.Name] = pathType.PathKind;
+                pathTypeKinds[pathType.Namespace + '.' + pathType.Name] = pathType.PathKind;
+                pathTypesByKind[pathType.PathKind] = pathType;
+
+                coreSchemaTypes[pathType.Namespace + '.' + pathType.Name] = pathType;
+                coreSchemaTypes[pathType.Name] = pathType;
+
+                coreSchemaElements.Add(pathType);
             }
         }
 
@@ -132,7 +128,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public static string Namespace
         {
-            get { return "Edm"; }
+            get { return EdmConstants.EdmNamespace; }
         }
 
         /// <summary>
@@ -140,7 +136,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public IEnumerable<IEdmSchemaElement> SchemaElements
         {
-            get { return this.primitiveTypes; }
+            get { return coreSchemaElements; }
         }
 
         /// <summary>
@@ -200,15 +196,10 @@ namespace Microsoft.OData.Edm
         /// <returns>The requested type, or null if no such type exists.</returns>
         public IEdmSchemaType FindDeclaredType(string qualifiedName)
         {
-            EdmValidCoreModelPrimitiveType element;
-            if (this.primitiveTypeByName.TryGetValue(qualifiedName, out element))
+            IEdmSchemaType element;
+            if (coreSchemaTypes.TryGetValue(qualifiedName, out element))
             {
                 return element;
-            }
-            else if (string.Equals(qualifiedName, CsdlConstants.TypeName_Untyped, StringComparison.Ordinal)
-                || string.Equals(qualifiedName, CsdlConstants.TypeName_Untyped_Short, StringComparison.Ordinal))
-            {
-                return untypedType;
             }
 
             return null;
@@ -279,12 +270,50 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets Edm.PrimitiveType type.
+        /// </summary>
+        /// <returns>IEdmPrimitiveType type definition.</returns>
+        public IEdmPrimitiveType GetPrimitiveType()
+        {
+            return this.primitiveType;
+        }
+
+        /// <summary>
+        /// Gets Edm.ComplexType type.
+        /// </summary>
+        /// <returns>IEdmComplexType type definition.</returns>
+        public IEdmComplexType GetComplexType()
+        {
+            return this.complexType;
+        }
+
+        /// <summary>
+        /// Gets Edm.EntityType type.
+        /// </summary>
+        /// <returns>IEdmEntityType type definition.</returns>
+        public IEdmEntityType GetEntityType()
+        {
+            return this.entityType;
+        }
+
+        /// <summary>
         /// Gets Edm.Untyped type.
         /// </summary>
         /// <returns>IEdmUntypedType type definition.</returns>
         public IEdmUntypedType GetUntypedType()
         {
-            return untypedType;
+            return this.untypedType;
+        }
+
+        /// <summary>
+        /// Gets path type by kind.
+        /// </summary>
+        /// <param name="kind">Kind of the path type.</param>
+        /// <returns>Path type definition.</returns>
+        public IEdmPathType GetPathType(EdmPathTypeKind kind)
+        {
+            EdmCoreModelPathType definition;
+            return pathTypesByKind.TryGetValue(kind, out definition) ? definition : null;
         }
 
         /// <summary>
@@ -295,7 +324,7 @@ namespace Microsoft.OData.Edm
         public EdmPrimitiveTypeKind GetPrimitiveTypeKind(string typeName)
         {
             EdmPrimitiveTypeKind kind;
-            return this.primitiveTypeKinds.TryGetValue(typeName, out kind) ? kind : EdmPrimitiveTypeKind.None;
+            return primitiveTypeKinds.TryGetValue(typeName, out kind) ? kind : EdmPrimitiveTypeKind.None;
         }
 
         /// <summary>
@@ -315,6 +344,96 @@ namespace Microsoft.OData.Edm
             {
                 throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
             }
+        }
+
+        /// <summary>
+        /// Gets the EdmPathTypeKind by the type name.
+        /// </summary>
+        /// <param name="typeName">Name of the type to look up.</param>
+        /// <returns>EdmPrimitiveTypeKind of the type.</returns>
+        public EdmPathTypeKind GetPathTypeKind(string typeName)
+        {
+            EdmPathTypeKind kind;
+            return pathTypeKinds.TryGetValue(typeName, out kind) ? kind : EdmPathTypeKind.None;
+        }
+
+        /// <summary>
+        /// Gets a reference to a path type of the specified kind.
+        /// </summary>
+        /// <param name="kind">Primitive kind of the type reference being created.</param>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new primitive type reference.</returns>
+        public IEdmPathTypeReference GetPathType(EdmPathTypeKind kind, bool isNullable)
+        {
+            IEdmPathType pathDefinition = this.GetPathType(kind);
+            if (pathDefinition != null)
+            {
+                return new EdmPathTypeReference(pathDefinition, isNullable);
+            }
+            else
+            {
+                throw new InvalidOperationException(Edm.Strings.EdmPath_UnexpectedKind);
+            }
+        }
+
+        /// <summary>
+        /// Gets a reference to the Edm.AnnotationPath type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.AnnotationPath type reference.</returns>
+        public IEdmPathTypeReference GetAnnotationPath(bool isNullable)
+        {
+            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.AnnotationPath), isNullable);
+        }
+
+        /// <summary>
+        /// Gets a reference to the Edm.PropertyPath type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.PropertyPath type reference.</returns>
+        public IEdmPathTypeReference GetPropertyPath(bool isNullable)
+        {
+            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.PropertyPath), isNullable);
+        }
+
+        /// <summary>
+        /// Gets a reference to the Edm.NavigationPropertyPath type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.NavigationPropertyPath type reference.</returns>
+        public IEdmPathTypeReference GetNavigationPropertyPath(bool isNullable)
+        {
+            return new EdmPathTypeReference(this.GetPathType(EdmPathTypeKind.NavigationPropertyPath), isNullable);
+        }
+
+        /// <summary>
+        /// Gets a reference to the Edm.EntityType type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.EntityType type reference.</returns>
+        public IEdmEntityTypeReference GetEntityType(bool isNullable)
+        {
+            return new EdmEntityTypeReference(this.entityType, isNullable);
+        }
+
+        /// <summary>
+        /// Gets a reference to the Edm.ComplexType type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.ComplexType type reference.</returns>
+        public IEdmComplexTypeReference GetComplexType(bool isNullable)
+        {
+            return new EdmComplexTypeReference(this.complexType, isNullable);
+        }
+
+        /// <summary>
+        /// Gets a reference to the Edm.PrimitiveType type definition.
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.PrimitiveType type reference.</returns>
+        public IEdmPrimitiveTypeReference GetPrimitiveType(bool isNullable)
+        {
+            return new EdmPrimitiveTypeReference(this.primitiveType, isNullable);
         }
 
         /// <summary>
@@ -665,84 +784,10 @@ namespace Microsoft.OData.Edm
             return Enumerable.Empty<IEdmStructuredType>();
         }
 
-        private EdmValidCoreModelPrimitiveType GetCoreModelPrimitiveType(EdmPrimitiveTypeKind kind)
+        private EdmCoreModelPrimitiveType GetCoreModelPrimitiveType(EdmPrimitiveTypeKind kind)
         {
-            EdmValidCoreModelPrimitiveType definition;
-            return this.primitiveTypesByKind.TryGetValue(kind, out definition) ? definition : null;
+            EdmCoreModelPrimitiveType definition;
+            return primitiveTypesByKind.TryGetValue(kind, out definition) ? definition : null;
         }
-
-        #region Core model types and type references
-        internal sealed class EdmValidCoreModelUntypedType : EdmType, IEdmUntypedType, IEdmValidCoreModelElement
-        {
-            public override EdmTypeKind TypeKind
-            {
-                get { return EdmTypeKind.Untyped; }
-            }
-
-            public EdmSchemaElementKind SchemaElementKind
-            {
-                get { return EdmSchemaElementKind.TypeDefinition; }
-            }
-
-            public string Name
-            {
-                get { return "Untyped"; }
-            }
-
-            public string Namespace
-            {
-                get { return EdmNamespace; }
-            }
-        }
-
-        internal sealed class EdmValidCoreModelPrimitiveType : EdmType, IEdmPrimitiveType, IEdmValidCoreModelElement
-        {
-            private readonly string namespaceName;
-            private readonly string name;
-            private readonly EdmPrimitiveTypeKind primitiveKind;
-            private readonly string fullName;
-
-            public EdmValidCoreModelPrimitiveType(string namespaceName, string name, EdmPrimitiveTypeKind primitiveKind)
-            {
-                this.namespaceName = namespaceName ?? string.Empty;
-                this.name = name ?? string.Empty;
-                this.primitiveKind = primitiveKind;
-                this.fullName = this.namespaceName + "." + this.name;
-            }
-
-            public string Name
-            {
-                get { return this.name; }
-            }
-
-            public string Namespace
-            {
-                get { return this.namespaceName; }
-            }
-
-            /// <summary>
-            /// Gets the kind of this type.
-            /// </summary>
-            public override EdmTypeKind TypeKind
-            {
-                get { return EdmTypeKind.Primitive; }
-            }
-
-            public EdmPrimitiveTypeKind PrimitiveKind
-            {
-                get { return this.primitiveKind; }
-            }
-
-            public EdmSchemaElementKind SchemaElementKind
-            {
-                get { return EdmSchemaElementKind.TypeDefinition; }
-            }
-
-            public string FullName
-            {
-                get { return this.fullName; }
-            }
-        }
-        #endregion
     }
 }

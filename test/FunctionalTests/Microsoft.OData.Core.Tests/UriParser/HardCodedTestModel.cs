@@ -15,6 +15,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -371,6 +372,15 @@ namespace Microsoft.OData.Tests.UriParser
             fullyQualifiedNamespaceShape.AddKeys(fullyQualifiedNamespaceShape.AddStructuralProperty("Color", colorTypeReference));
             #endregion
 
+            #region Annotation Terms
+            var fullyQualifiedAnnotationTerm = new EdmTerm("Fully.Qualified.Namespace", "PrimitiveTerm", EdmPrimitiveTypeKind.String);
+            model.AddElement(fullyQualifiedAnnotationTerm);
+
+            var fullyQualifiedStructuredAnnotationTerm = new EdmTerm("Fully.Qualified.Namespace", "ComplexTerm", new EdmComplexTypeReference(FullyQualifiedNamespaceAddress, false));
+            model.AddElement(fullyQualifiedStructuredAnnotationTerm);
+            
+            #endregion
+
             #region Operations
 
             var FullyQualifiedNamespaceGetPersonByDTOFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonByDTO", FullyQualifiedNamespacePersonTypeReference, false, null, true);
@@ -592,6 +602,10 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespaceGetSomeAddressAction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeAddress", FullyQualifiedNamespaceAddressTypeReference, false, null, true /*isComposable*/);
             model.AddElement(FullyQualifiedNamespaceGetSomeAddressAction);
 
+            var FullyQualifiedNamespaceGetSomeAddressFromPersonFunction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeAddressFromPerson", FullyQualifiedNamespaceAddressTypeReference, true, null, true /*isComposable*/);
+            FullyQualifiedNamespaceGetSomeAddressFromPersonFunction.AddParameter("person", FullyQualifiedNamespacePersonTypeReference);
+            model.AddElement(FullyQualifiedNamespaceGetSomeAddressFromPersonFunction);
+
             var FullyQualifiedNamespaceGetSomeNumbersAction = new EdmFunction("Fully.Qualified.Namespace", "GetSomeNumbers", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(true))), false, null, true /*isComposable*/);
             model.AddElement(FullyQualifiedNamespaceGetSomeNumbersAction);
 
@@ -755,19 +769,19 @@ namespace Microsoft.OData.Tests.UriParser
                 IEdmModel parsedModel;
                 if (CsdlReader.TryParse(XmlReader.Create(new StringReader(HardCodedTestModelXml.MainModelXml)), (Uri uri) =>
                 {
-                    if (string.Equals(uri.AbsoluteUri, "http://submodel1/"))
+                    if (string.Equals(uri.AbsoluteUri, "http://submodel1/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml1));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel2/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel2/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml2));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel3/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel3/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml3));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel4/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel4/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml4));
                     }
@@ -1170,6 +1184,8 @@ namespace Microsoft.OData.Tests.UriParser
         <Parameter Name=""id"" Type=""Fully.Qualified.Namespace.IdType"" Nullable=""false"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Pet6"" />
       </Function>
+      <Term Name=""PrimitiveTerm"" Type=""Edm.String""/>
+      <Term Name=""ComplexTerm"" Type=""Fully.Qualified.Namespace.Address""/>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
@@ -1379,6 +1395,10 @@ namespace Microsoft.OData.Tests.UriParser
         <ReturnType Type=""Edm.Int32"" />
       </Function>
       <Function Name=""GetSomeAddress"" IsComposable=""true"">
+        <ReturnType Type=""Fully.Qualified.Namespace.Address"" />
+      </Function>
+      <Function Name=""GetSomeAddressFromPerson"" IsBound=""true"" IsComposable=""true"">
+        <Parameter Name=""person"" Type=""Fully.Qualified.Namespace.Person"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Address"" />
       </Function>
       <Function Name=""GetSomeNumbers"" IsComposable=""true"">
@@ -2340,5 +2360,14 @@ namespace Microsoft.OData.Tests.UriParser
             return TestModel.FindType("Fully.Qualified.Namespace.Heartbeat") as IEdmComplexType;
         }
 
+        public static IEdmTerm GetPrimitiveAnnotationTerm()
+        {
+            return TestModel.FindTerm("Fully.Qualified.Namespace.PrimitiveTerm") as IEdmTerm;
+        }
+
+        public static IEdmTerm GetComplexAnnotationTerm()
+        {
+            return TestModel.FindTerm("Fully.Qualified.Namespace.ComplexTerm") as IEdmTerm;
+        }
     }
 }

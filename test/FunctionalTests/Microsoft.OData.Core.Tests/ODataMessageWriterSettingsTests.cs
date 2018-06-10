@@ -88,8 +88,11 @@ namespace Microsoft.OData.Tests
             setting.ODataUri = new ODataUri() { SelectAndExpand = result };
             setting.MetadataDocumentUri.Should().Equals(ServiceDocumentUri + "/$metadata");
             string select, expand;
-            setting.SelectExpandClause.GetSelectExpandPaths(out select, out expand);
-            select.Should().Be("*");
+            foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+            {
+                setting.SelectExpandClause.GetSelectExpandPaths(version, out select, out expand);
+                select.Should().Be("*");
+            }
         }
         #endregion metadata document uri tests
 
@@ -116,6 +119,12 @@ namespace Microsoft.OData.Tests
         public void JsonPCallbackShouldBeNullByDefault()
         {
             this.settings.JsonPCallback.Should().BeNull();
+        }
+
+        [Fact]
+        public void LibraryCompatibilityShouldBeLatestByDefault()
+        {
+            this.settings.LibraryCompatibility.Should().Be(ODataLibraryCompatibility.Latest);
         }
 
         [Fact]
@@ -233,6 +242,13 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void CopyConstructorShouldCopyLibraryCompatibility()
+        {
+            this.settings.LibraryCompatibility = ODataLibraryCompatibility.Version6;
+            this.settings.Clone().LibraryCompatibility.Should().Be(ODataLibraryCompatibility.Version6);
+        }
+
+        [Fact]
         public void CopyConstructorShouldCopyAnnotationFilter()
         {
             Func<string, bool> filter = name => true;
@@ -301,8 +317,11 @@ namespace Microsoft.OData.Tests
             newSetting.IsIndividualProperty.Should().BeTrue();
 
             string select, expand;
-            newSetting.SelectExpandClause.GetSelectExpandPaths(out select, out expand);
-            select.Should().Be("*");
+            foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
+            {
+                newSetting.SelectExpandClause.GetSelectExpandPaths(version, out select, out expand);
+                select.Should().Be("*");
+            }
         }
         #endregion Copy constructor tests
 
@@ -315,6 +334,7 @@ namespace Microsoft.OData.Tests
             const int maxOperationsPerChangeset = 43;
             const int maxNestingDepth = 44;
             const ODataVersion version = ODataVersion.V4;
+            const ODataLibraryCompatibility library = ODataLibraryCompatibility.Version6;
 
             this.settings = new ODataMessageWriterSettings()
             {
@@ -329,6 +349,7 @@ namespace Microsoft.OData.Tests
                     MaxNestingDepth = maxNestingDepth,
                 },
                 Version = version,
+                LibraryCompatibility = library,
             };
 
             this.settings.ThrowOnDuplicatePropertyNames.Should().BeFalse();
@@ -339,6 +360,7 @@ namespace Microsoft.OData.Tests
             this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(maxOperationsPerChangeset);
             this.settings.MessageQuotas.MaxNestingDepth.Should().Be(maxNestingDepth);
             this.settings.Version.Should().Be(version);
+            this.settings.LibraryCompatibility.Should().Be(library);
         }
 
         [Fact]

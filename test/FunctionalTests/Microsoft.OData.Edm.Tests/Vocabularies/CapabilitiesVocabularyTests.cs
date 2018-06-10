@@ -12,7 +12,6 @@ using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
@@ -212,6 +211,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""IndexableByKey"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntitySet"">
     <Annotation Term=""Core.Description"" String=""Supports key values according to OData URL conventions"" />
   </Term>
+  <Term Name=""KeyAsSegmentSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"">
+    <Annotation Term=""Core.Description"" String=""Supports key as segment"" />
+  </Term>
   <Term Name=""TopSupported"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntitySet"">
     <Annotation Term=""Core.Description"" String=""Supports $top"" />
   </Term>
@@ -358,6 +360,12 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             p = complexType.FindProperty("NonCountableProperties");
             Assert.NotNull(p);
             Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
+            Assert.Equal(EdmTypeKind.Path, p.Type.AsCollection().ElementType().TypeKind());
+            IEdmPathType pathType = p.Type.AsCollection().ElementType().AsPath().Definition as IEdmPathType;
+            Assert.NotNull(pathType);
+            Assert.Equal("PropertyPath", pathType.Name);
+            Assert.Equal("Edm", pathType.Namespace);
+            Assert.Equal("Edm.PropertyPath", pathType.FullName());
 
             p = complexType.FindProperty("NonCountableNavigationProperties");
             Assert.NotNull(p);
@@ -488,6 +496,13 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             p = complexType.FindProperty("NonExpandableProperties");
             Assert.NotNull(p);
             Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
+
+            Assert.Equal(EdmTypeKind.Path, p.Type.AsCollection().ElementType().TypeKind());
+            IEdmPathType pathType = p.Type.AsCollection().ElementType().AsPath().Definition as IEdmPathType;
+            Assert.NotNull(pathType);
+            Assert.Equal("NavigationPropertyPath", pathType.Name);
+            Assert.Equal("Edm", pathType.Namespace);
+            Assert.Equal("Edm.NavigationPropertyPath", pathType.FullName());
         }
 
         [Fact]
@@ -518,6 +533,34 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             var type = supportedFormats.Type;
             Assert.Equal("Collection(Edm.String)", type.FullName());
+        }
+
+        [Theory]
+        [InlineData("AsynchronousRequestsSupported", "EntityContainer")]
+        [InlineData("BatchContinueOnErrorSupported", "EntityContainer")]
+        [InlineData("CrossJoinSupported", "EntityContainer")]
+        [InlineData("TopSupported", "EntitySet")]
+        [InlineData("SkipSupported", "EntitySet")]
+        [InlineData("IndexableByKey", "EntitySet")]
+        [InlineData("BatchSupported", "EntityContainer")]
+        [InlineData("KeyAsSegmentSupported", "EntityContainer")]
+        public void TestCapabilitiesVocabularySupportedTerm(string name, string appliesTo)
+        {
+            string qualifiedName = "Org.OData.Capabilities.V1." + name;
+            var supported = this.capVocModel.FindDeclaredTerm(qualifiedName);
+            Assert.NotNull(supported);
+            Assert.Equal("Org.OData.Capabilities.V1", supported.Namespace);
+            Assert.Equal(name, supported.Name);
+
+            Assert.Equal(appliesTo, supported.AppliesTo);
+            var type = supported.Type;
+            Assert.Equal("Org.OData.Core.V1.Tag", type.FullName());
+
+            Assert.Equal(EdmTypeKind.TypeDefinition, type.TypeKind());
+            IEdmTypeDefinitionReference typeDefinitionReference = type.AsTypeDefinition();
+            Assert.NotNull(typeDefinitionReference);
+
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, typeDefinitionReference.TypeDefinition().UnderlyingType.PrimitiveKind);
         }
     }
 }

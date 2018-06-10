@@ -32,18 +32,18 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         public CsdlSemanticsEntitySetTests()
         {
             var referentialConstraints = new List<CsdlReferentialConstraint>();
-            var csdlNavigation = new CsdlNavigationProperty("Navigation", null, null, null, false, null, referentialConstraints, null, null);
-            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), new[] { csdlNavigation }, null, null);
-            var goodBinding = new CsdlNavigationPropertyBinding("Navigation", "EntitySet", null, new CsdlLocation(1, 1));
-            this.csdlEntitySet = new CsdlEntitySet("EntitySet", "FQ.NS.EntityType", new[] { goodBinding }, null, null);
-            this.csdlContainer = new CsdlEntityContainer("Container", null, new[] { this.csdlEntitySet }, Enumerable.Empty<CsdlSingleton>(), Enumerable.Empty<CsdlOperationImport>(), null, null);
+            var csdlNavigation = new CsdlNavigationProperty("Navigation", null, null, null, false, null, referentialConstraints, null);
+            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), new[] { csdlNavigation }, null);
+            var goodBinding = new CsdlNavigationPropertyBinding("Navigation", "EntitySet", new CsdlLocation(1, 1));
+            this.csdlEntitySet = new CsdlEntitySet("EntitySet", "FQ.NS.EntityType", new[] { goodBinding }, null);
+            this.csdlContainer = new CsdlEntityContainer("Container", null, new[] { this.csdlEntitySet }, Enumerable.Empty<CsdlSingleton>(), Enumerable.Empty<CsdlOperationImport>(), null);
 
-            var derivedCsdlNavigation = new CsdlNavigationProperty("DerivedNavigation", null, null, null, false, null, referentialConstraints, null, null);
-            var derivedCsdlEntityType = new CsdlEntityType("DerivedEntityType", "FQ.NS.EntityType", false, false, false, null, Enumerable.Empty<CsdlProperty>(), new[] { derivedCsdlNavigation }, null, null);
+            var derivedCsdlNavigation = new CsdlNavigationProperty("DerivedNavigation", null, null, null, false, null, referentialConstraints, null);
+            var derivedCsdlEntityType = new CsdlEntityType("DerivedEntityType", "FQ.NS.EntityType", false, false, false, null, Enumerable.Empty<CsdlProperty>(), new[] { derivedCsdlNavigation }, null);
 
-            var unrelatedCsdlEntityType = new CsdlEntityType("UnrelatedEntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null, null);
+            var unrelatedCsdlEntityType = new CsdlEntityType("UnrelatedEntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null);
 
-            var csdlSchema = new CsdlSchema("FQ.NS", null, null, new[] { this.csdlEntityType, derivedCsdlEntityType, unrelatedCsdlEntityType }, Enumerable.Empty<CsdlEnumType>(), Enumerable.Empty<CsdlOperation>(),Enumerable.Empty<CsdlTerm>(),Enumerable.Empty<CsdlEntityContainer>(),Enumerable.Empty<CsdlAnnotations>(), Enumerable.Empty<CsdlTypeDefinition>(), null, null);
+            var csdlSchema = new CsdlSchema("FQ.NS", null, null, new[] { this.csdlEntityType, derivedCsdlEntityType, unrelatedCsdlEntityType }, Enumerable.Empty<CsdlEnumType>(), Enumerable.Empty<CsdlOperation>(),Enumerable.Empty<CsdlTerm>(),Enumerable.Empty<CsdlEntityContainer>(),Enumerable.Empty<CsdlAnnotations>(), Enumerable.Empty<CsdlTypeDefinition>(), null);
             var csdlModel = new CsdlModel();
             csdlModel.AddSchema(csdlSchema);
             var semanticModel = new CsdlSemanticsModel(csdlModel, new EdmDirectValueAnnotationsManager(), Enumerable.Empty<IEdmModel>());
@@ -59,8 +59,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         [Fact]
         public void FindNavigationTargetShouldReturnUnresolvedEntitySetIfEntitySetIsNotFound()
         {
-            var nonExistentBinding = new CsdlNavigationPropertyBinding("Navigation", "NonExistent", null, new CsdlLocation(1, 1));
-            var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, new CsdlEntitySet("Fake", "FQ.NS.EntityType", new[] { nonExistentBinding }, null, null));
+            var nonExistentBinding = new CsdlNavigationPropertyBinding("Navigation", "NonExistent", new CsdlLocation(1, 1));
+            var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, new CsdlEntitySet("Fake", "FQ.NS.EntityType", new[] { nonExistentBinding }, null));
             var result = testSubject.FindNavigationTarget(this.navigationProperty);
             result.Should().BeAssignableTo<UnresolvedEntitySet>();
             result.As<UnresolvedEntitySet>().Name.Should().Be("NonExistent");
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         public void FindNavigationTargetShouldReturnNullIfNavigationPropertyHasNoBinding()
         {
             var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, this.csdlEntitySet);
-            Assert.True(testSubject.FindNavigationTarget(new CsdlSemanticsNavigationProperty(this.semanticEntityType, new CsdlNavigationProperty("Fake", "FQ.NS.EntityType", null, null, false, null, Enumerable.Empty<CsdlReferentialConstraint>(), null, null))) is IEdmUnknownEntitySet);
+            Assert.True(testSubject.FindNavigationTarget(new CsdlSemanticsNavigationProperty(this.semanticEntityType, new CsdlNavigationProperty("Fake", "FQ.NS.EntityType", null, null, false, null, Enumerable.Empty<CsdlReferentialConstraint>(), null))) is IEdmUnknownEntitySet);
         }
 
         [Fact]
@@ -193,8 +193,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
         private IEdmNavigationPropertyBinding ParseSingleBinding(string path, string target, CsdlLocation location = null)
         {
-            var binding = new CsdlNavigationPropertyBinding(path, target, null, location);
-            var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, new CsdlEntitySet("Fake", "FQ.NS.EntityType", new[] { binding }, null, null));
+            var binding = new CsdlNavigationPropertyBinding(path, target, location);
+            var testSubject = new CsdlSemanticsEntitySet(this.semanticContainer, new CsdlEntitySet("Fake", "FQ.NS.EntityType", new[] { binding }, null));
 
             testSubject.NavigationPropertyBindings.Should().HaveCount(1);
             var result = testSubject.NavigationPropertyBindings.Single();

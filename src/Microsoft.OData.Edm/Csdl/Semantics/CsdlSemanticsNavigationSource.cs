@@ -147,7 +147,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             IEdmNavigationProperty navigationProperty = this.ResolveNavigationPropertyPathForBinding(binding);
 
-            IEdmNavigationSource targetNavigationSource = this.Container.FindEntitySetExtended(binding.Target);
+            IEdmNavigationSource targetNavigationSource = this.Container.FindNavigationSourceExtended(binding.Target);
             if (targetNavigationSource == null)
             {
                 targetNavigationSource = this.Container.FindSingletonExtended(binding.Target);

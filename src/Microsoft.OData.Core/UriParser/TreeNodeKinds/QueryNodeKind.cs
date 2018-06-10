@@ -163,6 +163,16 @@ namespace Microsoft.OData.UriParser
         /// Cast on a single value.
         /// </summary>
         SingleValueCast = InternalQueryNodeKind.SingleValueCast,
+
+        /// <summary>
+        /// Node represents a property of a collection.
+        /// </summary>
+        CollectionPropertyNode = InternalQueryNodeKind.CollectionPropertyNode,
+
+        /// <summary>
+        /// Node represents a property of a aggregated collection.
+        /// </summary>
+        AggregatedCollectionPropertyNode = InternalQueryNodeKind.AggregatedCollectionPropertyNode,
     }
 
     /// <summary>
@@ -319,5 +329,15 @@ namespace Microsoft.OData.UriParser
         /// Cast on a single value.
         /// </summary>
         SingleValueCast = 29,
+
+        /// <summary>
+        /// Node represents a property of a collection.
+        /// </summary>
+        CollectionPropertyNode = 30,
+
+        /// <summary>
+        /// Node represents a property of a aggregated collection.
+        /// </summary>
+        AggregatedCollectionPropertyNode = 31,
     }
 }

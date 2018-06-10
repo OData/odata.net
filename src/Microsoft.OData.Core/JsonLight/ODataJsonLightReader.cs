@@ -1571,6 +1571,60 @@ namespace Microsoft.OData.JsonLight
         #region ResourceSet
 
         /// <summary>
+        /// Reads the next entity or complex value (or primitive or collection value for an untyped collection) in a resource set.
+        /// </summary>
+        private void ReadNextResourceSetItem()
+        {
+            Debug.Assert(this.State == ODataReaderState.ResourceSetStart ||
+                this.State == ODataReaderState.DeltaResourceSetStart,
+                "Reading a resource set item while not in a ResourceSetStart or DeltaResourceSetStart state.");
+            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.PrimitiveValue,
+                JsonNodeType.StartObject, JsonNodeType.StartArray);
+
+            // End of item in a resource set
+            switch (this.jsonLightResourceDeserializer.JsonReader.NodeType)
+            {
+                case JsonNodeType.StartObject:
+                    // another resource in a resource set
+                    this.ReadResourceSetItemStart( /*propertyAndAnnotationCollector*/
+                        null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
+                    break;
+                case JsonNodeType.StartArray:
+                    // we are at the start of a nested resource set
+                    this.ReadResourceSetStart(new ODataResourceSet(), SelectedPropertiesNode.EntireSubtree);
+                    break;
+                case JsonNodeType.EndArray:
+                    // we are at the end of a resource set
+                    this.ReadResourceSetEnd();
+                    break;
+                case JsonNodeType.PrimitiveValue:
+                    // we are at a null value, or a non-null primitive value within an untyped collection
+                    object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
+                    if (primitiveValue != null && this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped)
+                    {
+                        this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
+                            this.CurrentNavigationSource, this.CurrentResourceType, this.CurrentScope.ODataUri));
+                    }
+                    else
+                    {
+                        // null resource (ReadResourceStart will raise the appropriate error for a non-null primitive value)
+                        this.ReadResourceSetItemStart( /*propertyAndAnnotationCollector*/
+                            null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
+                    }
+
+                    break;
+                default:
+                    throw new ODataException(
+                        ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
+                            this.jsonLightResourceDeserializer.JsonReader.NodeType));
+            }
+        }
+
+        #region Read<> methods
+
+        #region ResourceSet
+
+        /// <summary>
         /// Reads the start of the JSON array for the content of the resource set and sets up the reader state correctly.
         /// </summary>
         /// <param name="resourceSet">The resource set to read the contents for.</param>

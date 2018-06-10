@@ -4,12 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Metadata;
-using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
-
 namespace Microsoft.OData.UriParser
 {
+    using System.Linq;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
+
     /// <summary>
     /// Class that knows how to bind an end path token, which could be several things.
     /// </summary>
@@ -67,7 +68,7 @@ namespace Microsoft.OData.UriParser
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 // These are error cases in practice, but we let ourselves throw later for better context-sensitive error messages
-                var edmNavigationProperty = (IEdmNavigationProperty)property;
+                IEdmNavigationProperty edmNavigationProperty = (IEdmNavigationProperty)property;
                 if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
                     return new CollectionNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
@@ -125,7 +126,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Binds a an end path token into a PropertyAccessToken, OpenPropertyToken, or FunctionCallToken.
+        /// Binds an end path token into a PropertyAccessToken, OpenPropertyToken, or FunctionCallToken.
         /// </summary>
         /// <param name="endPathToken">The property access token to bind.</param>
         /// <returns>A Query node representing this endpath token, bound to metadata.</returns>
@@ -140,49 +141,63 @@ namespace Microsoft.OData.UriParser
             QueryNode boundFunction;
 
             SingleValueNode singleValueParent = parent as SingleValueNode;
-            if (singleValueParent == null)
+            if (singleValueParent != null)
             {
-                if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
+                // Now that we have the parent type, can find its corresponding EDM type
+                IEdmStructuredTypeReference structuredParentType =
+                    singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
+
+                IEdmProperty property =
+                    structuredParentType == null ? null : this.Resolver.ResolveProperty(structuredParentType.StructuredDefinition(), endPathToken.Identifier);
+
+                if (property != null)
+                {
+                    return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
+                }
+
+                if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
                 {
                     return boundFunction;
                 }
 
-                // Collection with any or all expression is already supported and handled separately.
-                // Add support of collection with $count segment.
-                CollectionNode colNode = parent as CollectionNode;
-                if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
+                if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
                 {
-                    // create a collection count node for collection node property.
-                    return new CountNode(colNode);
+                    return new CountVirtualPropertyNode();
                 }
 
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
+                return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);
             }
 
-
-            // Now that we have the parent type, can find its corresponding EDM type
-            IEdmStructuredTypeReference structuredParentType =
-                singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
-
-            IEdmProperty property =
-                structuredParentType == null ? null : this.Resolver.ResolveProperty(structuredParentType.StructuredDefinition(), endPathToken.Identifier);
-
-            if (property != null)
+            // Collection with any or all expression is already supported and handled separately.
+            // Add support of collection with $count segment.
+            CollectionNode colNode = parent as CollectionNode;
+            if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
             {
-                return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
+                // create a collection count node for collection node property.
+                return new CountNode(colNode);
             }
 
-            if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
+            CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
+            if (collectionParent != null)
             {
-                return new CountVirtualPropertyNode();
+                IEdmEntityTypeReference parentType = collectionParent.EntityItemType;
+                IEdmProperty property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
+
+                if (property.PropertyKind == EdmPropertyKind.Structural
+                    && !property.Type.IsCollection()
+                    && this.state.AggregatedPropertyNames != null
+                    && this.state.AggregatedPropertyNames.Any(p => p == collectionParent.NavigationProperty.Name))
+                {
+                    return new AggregatedCollectionPropertyNode(collectionParent, property);
+                }
             }
 
-            if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
+            if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
             {
                 return boundFunction;
             }
 
-            return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);
+            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
         }
 
         /// <summary>

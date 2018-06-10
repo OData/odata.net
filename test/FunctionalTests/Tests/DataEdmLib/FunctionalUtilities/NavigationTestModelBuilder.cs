@@ -1022,7 +1022,7 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
 
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
-            personSet.AddNavigationTarget(personToPet, petSet);
+            petSet.AddNavigationTarget(homeToPet.Partner, homeSet);
 
             model.AddElement(container);
 
@@ -1056,11 +1056,10 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToPet"" Type=""NS.Pet"" Nullable=""false"" Partner=""ToHome""  ContainsTarget=""true"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
+      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"" />
   </EntityContainer>
@@ -1107,9 +1106,6 @@ namespace EdmLibTests.FunctionalUtilities
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
             petSet.AddNavigationTarget(homeToPet.Partner, homeSet);
 
-            personSet.AddNavigationTarget(personToPet, petSet);
-            homeSet.AddNavigationTarget(homeToPet, petSet);
-
             model.AddElement(container);
 
             return model;
@@ -1142,16 +1138,12 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToPet"" Type=""NS.Pet"" Nullable=""false"" Partner=""ToHome"" ContainsTarget=""true"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
       <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
-    <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-    </EntitySet>
+    <EntitySet Name=""HomeSet"" EntityType=""NS.Home""/>
   </EntityContainer>
 </Schema>");
         }
@@ -1195,8 +1187,6 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
 
             // [EdmLib] EntitySet.AddNavigationTarget() ordering matters and results into some validation not appearing
-            personSet.AddNavigationTarget(personToPet, petSet);
-            homeSet.AddNavigationTarget(homeToPet, petSet);
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
             petSet.AddNavigationTarget(homeToPet.Partner, homeSet);
 
@@ -1242,9 +1232,6 @@ namespace EdmLibTests.FunctionalUtilities
             var petSet = container.AddEntitySet("PetSet", pet);
             var homeSet = container.AddEntitySet("HomeSet", home);
 
-            personSet.AddNavigationTarget(petToPerson.Partner, petSet);
-            personSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
-
             petSet.AddNavigationTarget(petToPerson, personSet);
             homeSet.AddNavigationTarget(homeToPerson, personSet);
             model.AddElement(container);
@@ -1279,10 +1266,7 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToPerson"" Type=""NS.Person"" Nullable=""false"" Partner=""ToHome"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
@@ -1412,9 +1396,9 @@ namespace EdmLibTests.FunctionalUtilities
 
             personSet.AddNavigationTarget(personToPet, petSet);
             petSet.AddNavigationTarget(personToPet.Partner, personSet);
-            petSet.AddNavigationTarget(petToHome, homeSet);
+//            petSet.AddNavigationTarget(petToHome, homeSet);
             homeSet.AddNavigationTarget(petToHome.Partner, petSet);
-            homeSet.AddNavigationTarget(homeToPerson, personSet);
+//            homeSet.AddNavigationTarget(homeToPerson, personSet);
             personSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
 
             return model;
@@ -1450,16 +1434,13 @@ namespace EdmLibTests.FunctionalUtilities
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
       <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
     <EntitySet Name=""PetSet"" EntityType=""NS.Pet"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
-      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
     </EntitySet>
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
       <NavigationPropertyBinding Path=""ToPet"" Target=""PetSet"" />
-      <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
   </EntityContainer>
 </Schema>");
@@ -1483,7 +1464,7 @@ namespace EdmLibTests.FunctionalUtilities
             var container = new EdmEntityContainer("NS", "Container");
             model.AddElement(container);
             var personSet = container.AddEntitySet("PersonSet", person);
-            personSet.AddNavigationTarget(personToFriends, personSet);
+            // personSet.AddNavigationTarget(personToFriends, personSet);
             personSet.AddNavigationTarget(personToFriends.Partner, personSet);
 
             return model;
@@ -1531,7 +1512,6 @@ namespace EdmLibTests.FunctionalUtilities
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToFriend"" Target=""PersonSet"" />
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
   </EntityContainer>
@@ -1579,9 +1559,7 @@ namespace EdmLibTests.FunctionalUtilities
     <EntitySet Name=""FriendSet"" EntityType=""NS.Person"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""ToFriend"" Target=""FriendSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
   </EntityContainer>
 </Schema>");
         }
@@ -1626,8 +1604,8 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
             var officeSet = container.AddEntitySet("OfficeSet", office);
 
-            homeSet.AddNavigationTarget(officeToEmployee, personSet);
-            personSet.AddNavigationTarget(officeToEmployee.Partner, homeSet);
+            officeSet.AddNavigationTarget(officeToEmployee, personSet);
+            homeSet.AddNavigationTarget(homeToPerson, personSet);
 
             return model;
         }
@@ -1657,14 +1635,14 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToEmployee"" Type=""NS.Employee"" Nullable=""false"" Partner=""ToOffice""  />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""NS.Employee/ToOffice"" Target=""HomeSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person""/>
     <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"" />
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
-      <NavigationPropertyBinding Path=""NS.Office/ToEmployee"" Target=""PersonSet"" />
+      <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
-    <EntitySet Name=""OfficeSet"" EntityType=""NS.Office"" />
+    <EntitySet Name=""OfficeSet"" EntityType=""NS.Office"">
+      <NavigationPropertyBinding Path=""ToEmployee"" Target=""PersonSet"" />
+    </EntitySet>
   </EntityContainer>
 </Schema>");
         }
@@ -1710,7 +1688,7 @@ namespace EdmLibTests.FunctionalUtilities
             var officeSet = container.AddEntitySet("OfficeSet", office);
 
             officeSet.AddNavigationTarget(homeToPerson, employeeSet);
-            employeeSet.AddNavigationTarget(homeToPerson.Partner, officeSet);
+            homeSet.AddNavigationTarget(homeToPerson, personSet);
 
             return model;
         }
@@ -1741,10 +1719,10 @@ namespace EdmLibTests.FunctionalUtilities
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""PersonSet"" EntityType=""NS.Person"" />
-    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"">
-      <NavigationPropertyBinding Path=""ToHome"" Target=""OfficeSet"" />
+    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee""/>
+    <EntitySet Name=""HomeSet"" EntityType=""NS.Home"" >
+      <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
     </EntitySet>
-    <EntitySet Name=""HomeSet"" EntityType=""NS.Home"" />
     <EntitySet Name=""OfficeSet"" EntityType=""NS.Office"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""EmployeeSet"" />
     </EntitySet>
@@ -1793,9 +1771,9 @@ namespace EdmLibTests.FunctionalUtilities
             var officeSet = container.AddEntitySet("OfficeSet", office);
 
             officeSet.AddNavigationTarget(officeToEmployee, personSet);
-            personSet.AddNavigationTarget(officeToEmployee.Partner, officeSet);
+//            personSet.AddNavigationTarget(officeToEmployee.Partner, officeSet);
             homeSet.AddNavigationTarget(homeToPerson, employeeSet);
-            employeeSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
+//            employeeSet.AddNavigationTarget(homeToPerson.Partner, homeSet);
 
             return model;
         }
@@ -1825,12 +1803,8 @@ namespace EdmLibTests.FunctionalUtilities
     <NavigationProperty Name=""ToEmployee"" Type=""NS.Employee"" Nullable=""false"" Partner=""ToOffice"" />
   </EntityType>
   <EntityContainer Name=""Container"">
-    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"">
-      <NavigationPropertyBinding Path=""NS.Employee/ToOffice"" Target=""OfficeSet"" />
-    </EntitySet>
-    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"">
-      <NavigationPropertyBinding Path=""ToHome"" Target=""HomeSet"" />
-    </EntitySet>
+    <EntitySet Name=""PersonSet"" EntityType=""NS.Person"" />
+    <EntitySet Name=""EmployeeSet"" EntityType=""NS.Employee"" />
     <EntitySet Name=""HomeSet"" EntityType=""NS.Home"">
       <NavigationPropertyBinding Path=""ToPerson"" Target=""EmployeeSet"" />
     </EntitySet>
@@ -1968,7 +1942,7 @@ namespace EdmLibTests.FunctionalUtilities
             var homeSet = container.AddEntitySet("HomeSet", home);
 
             homeSet.AddNavigationTarget(officeToEmployee, personSet);
-            personSet.AddNavigationTarget(officeToEmployee.Partner, homeSet);
+//            personSet.AddNavigationTarget(officeToEmployee.Partner, homeSet);
 
             return model;
         }

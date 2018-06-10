@@ -710,6 +710,8 @@ namespace Microsoft.OData.JsonLight
                 // reading a nested delta resource set
                 if (isPropertyAnnotation && String.CompareOrdinal(this.CompleteSimplifiedODataAnnotation(annotationNameFromReader), ODataAnnotationNames.ODataDelta) == 0)
                 {
+                    // Read over the property name.
+                    this.JsonReader.Read();
                     parsedPropertyName = propertyNameFromReader;
                     return PropertyParsingResult.NestedDeltaResourceSet;
                 }

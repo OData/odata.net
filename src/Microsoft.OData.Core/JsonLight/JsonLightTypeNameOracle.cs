@@ -22,7 +22,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceSet">The ODataResourceSet whose type is to be written.</param>
         /// <param name="isUndeclared">true if the resource set is for some undeclared property.</param>
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
-        internal abstract string GetResourceSetTypeNameForForWriting(string expectedResourceTypeName, ODataResourceSet resourceSet, bool isUndeclared);
+        internal abstract string GetResourceSetTypeNameForWriting(string expectedResourceTypeName, ODataResourceSet resourceSet, bool isUndeclared);
 
         /// <summary>
         /// Determines the entity type name to write to the payload.

@@ -10,21 +10,22 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.UriParser.Aggregation
 #endif
 {
+    using System;
     using System.Collections.Generic;
-    using Microsoft.OData.UriParser;
+    using System.Linq;
 
     /// <summary>
     /// Query token representing an Aggregate token.
     /// </summary>
     public sealed class AggregateToken : ApplyTransformationToken
     {
-        private readonly IEnumerable<AggregateExpressionToken> expressions;
+        private readonly IEnumerable<AggregateTokenBase> expressions;
 
         /// <summary>
-        /// Create an AggregateToken.
+        /// Create an AggregateTransformationToken.
         /// </summary>
-        /// <param name="expressions">The list of AggregateExpressionToken.</param>
-        public AggregateToken(IEnumerable<AggregateExpressionToken> expressions)
+        /// <param name="expressions">The aggregate expressions.</param>
+        public AggregateToken(IEnumerable<AggregateTokenBase> expressions)
         {
             ExceptionUtils.CheckArgumentNotNull(expressions, "expressions");
             this.expressions = expressions;
@@ -39,9 +40,19 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Gets the list of AggregateExpressionToken.
+        /// Create an AggregateToken.
         /// </summary>
+        /// <param name="expressions">The list of AggregateExpressionToken.</param>
+        [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
         public IEnumerable<AggregateExpressionToken> Expressions
+        {
+            get
+            {
+                return expressions.OfType<AggregateExpressionToken>();
+            }
+        }
+
+        public IEnumerable<AggregateTokenBase> AggregateExpressions
         {
             get
             {

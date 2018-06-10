@@ -339,7 +339,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             catch (ODataException e)
             {
                 if (!String.Equals(e.Message, Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(
-                    CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX)))
+                    CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX), StringComparison.Ordinal))
                 {
                     // unexpected exception, re-throw.
                     throw;

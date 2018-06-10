@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         [Fact]
         public void DefaultEnableCaseInsensitiveShouldbeFalse()
         {
-            ODataQueryOptionParser parser2 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>());
+            ODataQueryOptionParser parser2 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>()) { Resolver = new ODataUriResolver() };
             parser2.Resolver.EnableCaseInsensitive.Should().BeFalse();
         }
 

@@ -121,14 +121,8 @@
     <Compile Include="..\Csdl\Parsing\Ast\CsdlDirectValueAnnotation.cs">
       <Link>Csdl\Parsing\Ast\CsdlDirectValueAnnotation.cs</Link>
     </Compile>
-    <Compile Include="..\Csdl\Parsing\Ast\CsdlDocumentation.cs">
-      <Link>Csdl\Parsing\Ast\CsdlDocumentation.cs</Link>
-    </Compile>
     <Compile Include="..\Csdl\Parsing\Ast\CsdlElement.cs">
       <Link>Csdl\Parsing\Ast\CsdlElement.cs</Link>
-    </Compile>
-    <Compile Include="..\Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs">
-      <Link>Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Parsing\Ast\CsdlEntityContainer.cs">
       <Link>Csdl\Parsing\Ast\CsdlEntityContainer.cs</Link>
@@ -409,9 +403,6 @@
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs">
       <Link>Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs</Link>
-    </Compile>
-    <Compile Include="..\Csdl\Semantics\CsdlSemanticsDocumentation.cs">
-      <Link>Csdl\Semantics\CsdlSemanticsDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs">
       <Link>Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs</Link>
@@ -705,6 +696,12 @@
     <Compile Include="..\Schema\BadNavigationProperty.cs">
       <Link>Schema\BadNavigationProperty.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\BadPathType.cs">
+      <Link>Schema\BadPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadPathTypeReference.cs">
+      <Link>Schema\BadPathTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\BadPrimitiveType.cs">
       <Link>Schema\BadPrimitiveType.cs</Link>
     </Compile>
@@ -774,14 +771,8 @@
     <Compile Include="..\Schema\EdmContainedEntitySet.cs">
       <Link>Schema\EdmContainedEntitySet.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\EdmCoreModel.cs">
-      <Link>Schema\EdmCoreModel.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\EdmDecimalTypeReference.cs">
       <Link>Schema\EdmDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\EdmDocumentation.cs">
-      <Link>Schema\EdmDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Schema\EdmElement.cs">
       <Link>Schema\EdmElement.cs</Link>
@@ -918,6 +909,9 @@
     <Compile Include="..\Schema\EdmUntypedStructuredTypeReference.cs">
       <Link>Schema\EdmUntypedStructuredTypeReference.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmPathTypeReference.cs">
+      <Link>\Schema\EdmPathTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
       <Link>Schema\EdmUntypedTypeReference.cs</Link>
     </Compile>
@@ -928,6 +922,27 @@
       <Link>Schema\IEdmRowType.cs</Link>
     </Compile>
     <Compile Include="..\Memoizer.cs" />
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelComplexType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPrimitiveType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
+      <Link>Schema\CoreModel\IEdmCoreModelElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelEntityType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPathType.cs">
+      <Link>Schema\CoreModel\EdmCoreModelPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModel.cs">
+      <Link>Schema\CoreModel\EdmCoreModel.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmAction.cs">
       <Link>Schema\Interfaces\IEdmAction.cs</Link>
     </Compile>
@@ -957,9 +972,6 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmDecimalTypeReference.cs">
       <Link>Schema\Interfaces\IEdmDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmDocumentation.cs">
-      <Link>Schema\Interfaces\IEdmDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmElement.cs">
       <Link>Schema\Interfaces\IEdmElement.cs</Link>
@@ -1047,6 +1059,12 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPathExpression.cs">
       <Link>Schema\Interfaces\IEdmPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathType.cs">
+      <Link>Schema\Interfaces\IEdmPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathTypeReference.cs">
+      <Link>Schema\Interfaces\IEdmPathTypeReference.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPrimitiveType.cs">
       <Link>Schema\Interfaces\IEdmPrimitiveType.cs</Link>
@@ -1170,6 +1188,9 @@
     </Compile>
     <Compile Include="..\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Vocabularies\AlternateKeysVocabularyModel.cs</Link>
+    </Compile>
+    <Compile Include="..\Vocabularies\AuthorizationVocabularyModel.cs">
+      <Link>Vocabularies\AuthorizationVocabularyModel.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\Annotations\EdmDirectValueAnnotation.cs">
       <Link>Vocabularies\Annotations\EdmDirectValueAnnotation.cs</Link>
@@ -1500,6 +1521,9 @@
   <ItemGroup>
     <EmbeddedResource Include="..\Vocabularies\AlternateKeysVocabularies.xml">
       <Link>Vocabularies\AlternateKeysVocabularies.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Vocabularies\AuthorizationVocabularies.xml">
+      <Link>Vocabularies\AuthorizationVocabularies.xml</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\Vocabularies\CapabilitiesVocabularies.xml">
       <Link>Vocabularies\CapabilitiesVocabularies.xml</Link>

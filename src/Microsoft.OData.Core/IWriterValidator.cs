@@ -96,9 +96,10 @@ namespace Microsoft.OData
         /// <param name="expectedPropertyTypeReference">The expected property type or null if we
         /// don't have any.</param>
         /// <param name="propertyName">The name of the property.</param>
+        /// <param name="isTopLevel">true if the property is top-level.</param>
         /// <param name="model">The model used to get the OData version.</param>
         void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference,
-                                       string propertyName, IEdmModel model);
+                                       string propertyName, bool isTopLevel, IEdmModel model);
 
         /// <summary>
         /// Validates a null collection item against the expected type.

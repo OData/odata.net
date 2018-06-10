@@ -7,14 +7,12 @@
 namespace System.Data.Test.Astoria
 {
     #region Namespaces
-    
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-    
     #endregion Namespaces
 
     /// <summary>This class provides utility methods for database tasks.</summary>
@@ -40,7 +38,7 @@ namespace System.Data.Test.Astoria
             [DebuggerStepThrough]
             get { return "System.Data.SqlClient"; }
         }
-        
+
         /// <summary>Builds a connection using integrated security.</summary>
         /// <param name="dataSource">Name of data source ('.' if null).</param>
         /// <param name="path">Path to data file.</param>

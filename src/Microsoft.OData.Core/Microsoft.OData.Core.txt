@@ -33,6 +33,7 @@ ODataWriterCore_InvalidStateTransition=An invalid state transition has been dete
 ODataWriterCore_InvalidTransitionFromStart=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set.
 ODataWriterCore_InvalidTransitionFromResource=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a property or a nested resource.
 ODataWriterCore_InvalidTransitionFrom40DeletedResource=Cannot transition from state '{0}' to state '{1}' when writing an OData 4.0 payload. To write content to a deleted resource, please specify ODataVersion 4.01 or greater in MessageWriterSettings.
+ODataWriterCore_InvalidTransitionFrom40DeletedResource=Cannot transition from state '{0}' to state '{1}' when writing an OData 4.0 payload. To write content to a deleted resource, please specify ODataVersion 4.01 or greater in MessageWriterSettings.
 ODataWriterCore_InvalidTransitionFromNullResource=Cannot transition from state '{0}' to state '{1}'. You must first call ODataWriter.WriteEnd to finish writing a null ODataResource.
 ODataWriterCore_InvalidTransitionFromResourceSet=Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a resource.
 ODataWriterCore_InvalidTransitionFromExpandedLink=Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set.
@@ -79,6 +80,7 @@ ODataMessageWriter_ServiceDocumentInRequest=A service document cannot be written
 ODataMessageWriter_MetadataDocumentInRequest=A metadata document cannot be written to request payloads. Metadata documents are only supported in responses.
 ODataMessageWriter_DeltaInRequest=Cannot write delta in request payload.
 ODataMessageWriter_AsyncInRequest=Cannot write async in request payload.
+ODataMessageWriter_CannotWriteTopLevelNull=Cannot write the value 'null' in top level property; return 204 instead.
 ODataMessageWriter_CannotWriteNullInRawFormat=Cannot write the value 'null' in raw format.
 ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind=Cannot set message headers for the invalid payload kind '{0}'.
 ODataMessageWriter_IncompatiblePayloadKinds=The payload kind '{0}' used in the last call to ODataUtils.SetHeadersForPayload is incompatible with the payload being written, which is of kind '{1}'.
@@ -141,7 +143,7 @@ ODataBatchWriter_MaxBatchSizeExceeded=The current batch message contains too man
 ODataBatchWriter_MaxChangeSetSizeExceeded=The current change set contains too many operations. Only change sets with a maximum number of '{0}' operations are allowed.
 ODataBatchWriter_SyncCallOnAsyncWriter=A synchronous operation was called on an asynchronous batch writer. Calls on a batch writer instance must be either all synchronous or all asynchronous.
 ODataBatchWriter_AsyncCallOnSyncWriter=An asynchronous operation was called on a synchronous batch writer. Calls on a batch writer instance must be either all synchronous or all asynchronous.
-ODataBatchWriter_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set.
+ODataBatchWriter_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01.
 ODataBatchWriter_CannotWriteInStreamErrorForBatch=The WriteError and WriteErrorAsync methods on ODataMessageWriter cannot be called when a batch is being written by using ODataBatchWriter. In OData, writing an in-stream error for a batch payload is not supported.
 
 ODataBatchUtils_RelativeUriUsedWithoutBaseUriSpecified=The relative URI '{0}' was specified in a batch operation, but a base URI was not specified for the batch writer or batch reader.
@@ -164,7 +166,20 @@ ODataBatchReader_ReadOrReadAsyncCalledInInvalidState=ODataBatchReader.ReadAsync 
 ODataBatchReader_MaxBatchSizeExceeded=The current batch message contains too many parts. A maximum number of '{0}' query operations and change sets are allowed in a batch message.
 ODataBatchReader_MaxChangeSetSizeExceeded=The current change set contains too many operations. A maximum number of '{0}' operations are allowed in a change set.
 ODataBatchReader_NoMessageWasCreatedForOperation=An operation was detected, but no message was created for it. You must create a message for every operation found in a batch or change set.
-ODataBatchReader_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set. Content IDs have to be unique across all operations of a change set.
+ODataBatchReader_ReaderModeNotInitilized=Reader mode is not setup correctly.
+ODataBatchReader_JsonBatchTopLevelPropertyMissing=JsonLight batch format requires top level property name 'requests' or 'response' but it is missing.
+ODataBatchReader_DuplicateContentIDsNotAllowed=The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01.
+ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed=The atomicityGroup ID [{0}] was found duplicated in the batch request. AtomicityGroup IDs have to be adjacent, otherwise would be detected as duplicated.
+ODataBatchReader_RequestPropertyMissing=Request property [{0}] is required but is missing.
+ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed=The dependsOn request Id [{0}] is same as atomicityGroup property value [{1}], and is not allowed.
+ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed=The dependsOn request Id [{0}] is same as id property value [{1}], and it is not allowed.
+ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed=The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore dependsOn property should refer to atomic group Id [{1}] instead.
+ODataBatchReader_DependsOnIdNotFound=The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed.
+ODataBatchReader_AbsoluteURINotMatchingBaseUri=Absolute URI {0} is not start with the base URI [{1}] specified by the operation message.
+ODataBatchReader_ReferenceIdNotIncludedInDependsOn=Request Id reference [{0}] in Uri [{1}] is not found in effective depends-on-Ids [{2}] of the request.
+ODataBatch_GroupIdOrChangeSetIdCannotBeNull=Group id or changeset GUID cannot be null.
+ODataBatchReader_MessageIdPositionedIncorrectly=Message with id [{0}] is positioned incorrectly: all messages of same groupId [{1}] must be adjacent.
+ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull=Changeset boundary must have been set by now.
 
 ODataBatchReaderStream_InvalidHeaderSpecified=The message header '{0}' is invalid. The header value must be of the format '<header name>: <header value>'.
 ODataBatchReaderStream_InvalidRequestLine=The request line '{0}' is invalid. The request line at the start of each operation must be of the format 'HttpMethod RequestUrl HttpVersion'.
@@ -461,7 +476,7 @@ ODataMetadataBuilder_MissingEntitySetUri=The entity set '{0}' doesn't have the '
 ODataMetadataBuilder_MissingSegmentForEntitySetUriSuffix=The entity set '{0}' has a URI '{1}' which has no path segments. An entity set URI suffix cannot be appended to a URI without path segments.
 ODataMetadataBuilder_MissingEntityInstanceUri=Neither the 'OData.EntityInstanceUri' nor the 'OData.EntitySetUriSuffix' annotation was found for entity set '{0}'. One of these annotations is required.
 ODataMetadataBuilder_MissingParentIdOrContextUrl=Parent id or contained context url is missing which is required to compute id for contained instance. Specify ODataUri in the ODataMessageWriterSettings or return parent id or context url in the payload.
-ODataMetadataBuilder_UnknownEntitySet=The Id cannot be computed, since the navigation source '{0}' cannot be resolved to a known entity set from model. 
+ODataMetadataBuilder_UnknownEntitySet=The Id cannot be computed, since the navigation source '{0}' cannot be resolved to a known entity set from model.
 
 ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType=The entity type '{0}' is not compatible with the base type '{1}' of the provided entity set '{2}'. When an entity type is specified for an OData resource set or resource reader, it has to be the same or a subtype of the base type of the specified entity set.
 ODataJsonLightInputContext_PayloadKindDetectionForRequest=ODataMessageReader.DetectPayloadKind was called for a request payload. Payload kind detection is only supported for responses in JSON Light.
@@ -588,7 +603,7 @@ ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityR
 ODataJsonLightEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound=Did not find the required '{0}' property for an entity reference links payload.
 
 ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull=The '{0}' property of an operation '{1}' in '{2}' cannot have a null value.
-ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue=Found a node of type '{1}' when starting to read the '{0}' operations value, however a node of type 'StartObject' was expected. The '{0}' operations value must have an object value. 
+ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue=Found a node of type '{1}' when starting to read the '{0}' operations value, however a node of type 'StartObject' was expected. The '{0}' operations value must have an object value.
 
 ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument=Multiple '{0}' properties were found in a service document. In OData, a service document must have exactly one '{0}' property.
 ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement=Multiple '{0}' properties were found in a service document element. In OData, a service document element must have exactly one '{0}' property.
@@ -713,17 +728,20 @@ MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument=Cast or IsOf Function must
 MetadataBinder_CastOrIsOfCollectionsNotSupported=The Cast and IsOf functions do not support collection arguments or types.
 MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease=Collection open properties are not supported in this release.
 MetadataBinder_IllegalSegmentType=Can only bind segments that are Navigation, Structural, Complex, or Collections. We found a segment '{0}' that isn't any of those. Please revise the query.
-MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities. 
+MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities.
 
 ApplyBinder_AggregateExpressionIncompatibleTypeForMethod=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
 ApplyBinder_UnsupportedAggregateMethod=$apply/aggregate does not support method '{0}'.
+ApplyBinder_UnsupportedAggregateKind=$apply/aggregate expression token kind '{0}' not supported.
 ApplyBinder_AggregateExpressionNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
 ApplyBinder_GroupByPropertyNotPropertyAccessValue=$apply/groupby grouping expression '{0}' must evaluate to a property access value.
 ApplyBinder_UnsupportedType=$apply clause does not support type '{0}'.
 ApplyBinder_UnsupportedGroupByChild=$apply/groupby not support '{0}' as child transformation
 
+AggregateTransformationNode_UnsupportedAggregateExpressions=There are unsupported aggregation expressions in the transformation node.
+
 FunctionCallBinder_CannotFindASuitableOverload=Cannot find a suitable overload for function '{0}' that takes '{1}' arguments.
-FunctionCallBinder_UriFunctionMustHaveHaveNullParent=Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens. 
+FunctionCallBinder_UriFunctionMustHaveHaveNullParent=Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens.
 FunctionCallBinder_CallingFunctionOnOpenProperty=Found a function '{0}' on an open property. Functions on open properties are not supported.
 FunctionCallParser_DuplicateParameterOrEntityKeyName=Parameter or entity key names must be unique. There is most likely an error in the model.
 
@@ -841,7 +859,7 @@ RequestUriProcessor_SegmentDoesNotSupportKeyPredicates=The request URI is not va
 RequestUriProcessor_ValueSegmentAfterScalarPropertySegment=The segment '{1}' in the request URI is not valid. The segment '{0}' refers to a primitive property, function, or service operation, so the only supported value from the next segment is '$value'.
 RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType=The type '{0}' specified in the URI is neither a base type nor a sub-type of the previously-specified type '{1}'.
 OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are not supported on OpenTypes. Property name: '{0}'.
-BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations. 
+BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations.
 DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.
 BadRequest_KeyCountMismatch=The number of keys specified in the URI does not match number of key properties for the resource '{0}'.
 RequestUriProcessor_KeysMustBeNamed=Segments with multiple key values must specify them in 'name=value' form.

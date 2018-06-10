@@ -9,12 +9,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Represents a CSDL "on delete" action.
     /// </summary>
-    internal class CsdlOnDelete : CsdlElementWithDocumentation
+    internal class CsdlOnDelete : CsdlElement
     {
         private readonly EdmOnDeleteAction action;
 
-        public CsdlOnDelete(EdmOnDeleteAction action, CsdlDocumentation documentation, CsdlLocation location)
-            : base(documentation, location)
+        public CsdlOnDelete(EdmOnDeleteAction action, CsdlLocation location)
+            : base(location)
         {
             this.action = action;
         }

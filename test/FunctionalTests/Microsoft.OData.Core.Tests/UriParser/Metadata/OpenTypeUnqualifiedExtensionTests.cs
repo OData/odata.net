@@ -187,7 +187,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             Action<TResult> verify,
             string errorMessage)
         {
-            this.TestUriParserExtension(originalStr, caseInsensitiveStr, parse, verify, errorMessage, Model, parser => parser.Resolver = new UnqualifiedODataUriResolver());
+            this.TestUriParserExtension(originalStr, caseInsensitiveStr, parse, verify, errorMessage, Model, parser => parser.Resolver = new UnqualifiedODataUriResolver() { EnableCaseInsensitive = true });
         }
 
         private void TestCaseUnqualifiedConflict<TResult>(string originalStr, Func<ODataUriParser, TResult> parse, string conflictMessage)

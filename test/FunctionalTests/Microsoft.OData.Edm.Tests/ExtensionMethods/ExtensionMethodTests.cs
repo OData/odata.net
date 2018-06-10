@@ -382,7 +382,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         [Fact]
         public void TryGetEntitySetWithBoundCsdlSemanticOperationParameterShouldReturnTrueAndHaveNoErrors()
         {
-            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null, null);
+            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null);
             var csdlSchema = CsdlBuilder.Schema("FQ.NS", csdlStructuredTypes: new[] { csdlEntityType });
 
             var csdlModel = new CsdlModel();
@@ -393,11 +393,10 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             var action = new CsdlAction(
                 "Checkout",
-                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), null, testLocation) },
+                new CsdlOperationParameter[] { new CsdlOperationParameter("entity", new CsdlNamedTypeReference("FQ.NS.EntityType", false, testLocation), testLocation) },
                 new CsdlNamedTypeReference("Edm.String", false, testLocation),
                 true /*isBound*/,
                 "entity",
-                null /*documentation*/,
                 testLocation);
 
             var semanticAction = new CsdlSemanticsAction(semanticSchema, action);

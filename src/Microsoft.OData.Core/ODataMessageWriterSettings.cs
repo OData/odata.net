@@ -73,7 +73,13 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = false;
             this.Validations = ValidationKinds.All;
             this.Validator = new WriterValidator(this);
+            this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
         }
+
+        /// <summary>
+        /// Gets or sets library compatibility version. Default value is <see cref="T:ODataLibraryCompatibilityLevel.Latest"/>,
+        /// </summary>
+        public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 
         /// <summary>
         /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.Validations.FullValidation"/>,
@@ -277,7 +283,7 @@ namespace Microsoft.OData
             get
             {
                 return this.SelectExpandClause != null
-                    ? SelectedPropertiesNode.Create(this.SelectExpandClause)
+                    ? SelectedPropertiesNode.Create(this.SelectExpandClause, this.Version ?? ODataVersion.V4)
                     : SelectedPropertiesNode.EntireSubtree;
             }
         }
@@ -398,6 +404,7 @@ namespace Microsoft.OData
             this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
+            this.LibraryCompatibility = other.LibraryCompatibility;
 
             this.validations = other.validations;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;

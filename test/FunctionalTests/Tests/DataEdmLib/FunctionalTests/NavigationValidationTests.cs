@@ -291,33 +291,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateIndirectRecursiveContainment()
-        {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { 8, 10, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself },
-                { 19, 10, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself },
-            };
-
-            var model = NavigationTestModelBuilder.NonDirectRecursiveContainment();
-
-            this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
-        }
-
-        [TestMethod]
-        public void ValidateNavigationWithBothContainmentEnds()
-        {
-
-            var model = NavigationTestModelBuilder.NavigationWithBothContainmentEnds();
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself },
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself }
-            };
-            this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
-        }
-
-        [TestMethod]
         public void ValidateNavigationWithOneMultiplicityContainmentEnd()
         {
             var model = NavigationTestModelBuilder.NavigationWithOneMultiplicityContainmentEnd();
@@ -413,10 +386,10 @@ namespace EdmLibTests.FunctionalTests
         {
             var model = NavigationTestModelBuilder.TwoContainmentNavigationWithSameEnd();
 
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
+            //};
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
@@ -424,10 +397,10 @@ namespace EdmLibTests.FunctionalTests
         public void ValidateTwoContainmentNavigationWithSameEndAddedDifferently()
         {
             var model = NavigationTestModelBuilder.TwoContainmentNavigationWithSameEndAddedDifferently();
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty }
+            //};
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
@@ -436,32 +409,6 @@ namespace EdmLibTests.FunctionalTests
         {
             var model = NavigationTestModelBuilder.ContainmentNavigationWithDifferentEnds();
             var expectedErrors = new EdmLibTestErrors();
-            this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
-        }
-
-        [TestMethod]
-        public void ValidateRecursiveThreeContainmentNavigations()
-        {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself },
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself },
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself }
-            };
-            var model = NavigationTestModelBuilder.RecursiveThreeContainmentNavigations();
-            this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
-        }
-
-        [TestMethod]
-        public void ValidateRecursiveThreeContainmentNavigationsWithEntitySet()
-        {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself },
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself },
-                { null, null, EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself }
-            };
-            var model = NavigationTestModelBuilder.RecursiveThreeContainmentNavigationsWithEntitySet();
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
@@ -476,10 +423,10 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateRecursiveOneContainmentNavigationInheritedSelfPointingEntitySet()
         {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
+            //};
             var model = NavigationTestModelBuilder.RecursiveOneContainmentNavigationInheritedSelfPointingEntitySet();
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
@@ -487,10 +434,10 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateRecursiveOneContainmentNavigationWithTwoEntitySet()
         {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
+            //{
+            //    { null, null, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet }
+            //};
 
             var model = NavigationTestModelBuilder.RecursiveOneContainmentNavigationWithTwoEntitySet();
 
@@ -557,10 +504,8 @@ namespace EdmLibTests.FunctionalTests
 
             var expectedErrors = new EdmLibTestErrors()
             {
-                { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
                 { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
                 { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
-                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
             };
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }

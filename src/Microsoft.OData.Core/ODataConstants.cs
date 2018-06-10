@@ -144,6 +144,9 @@ namespace Microsoft.OData
         /// <summary>A segment name in a URI that indicates metadata is being requested.</summary>
         internal const string UriMetadataSegment = "$metadata";
 
+        /// <summary>The OData prefix</summary>
+        internal const string ODataPrefix = "odata";
+
         #region Context URL
 
         /// <summary>
@@ -172,6 +175,9 @@ namespace Microsoft.OData
 
         /// <summary>The "," used to split properties of Select and Expand fragment a context URI.</summary>
         internal const string ContextUriProjectionPropertySeparator = ",";
+
+        /// <summary>The token that indicates the payload is a property with null value.</summary>
+        internal const string ContextUriFragmentNull = "Edm.Null";
 
         /// <summary>The token that indicates the payload is a property with an untyped value.</summary>
         internal const string ContextUriFragmentUntyped = "Edm.Untyped";

@@ -157,21 +157,6 @@ namespace EdmLibTests.FunctionalTests
             bool caught = false;
             try
             {
-                model.SetAnnotationValue(f11, "http://schemas.microsoft.com/ado/2011/04/edm/documentation", "Documentation", "Crud");
-            }
-            catch (InvalidOperationException e)
-            {
-                if (e.Message.Contains("IEdmDocumentation") && e.Message.Contains("String"))
-                {
-                    caught = true;
-                }
-            }
-
-            Assert.IsTrue(caught, "Documentation pun.");
-
-            caught = false;
-            try
-            {
                 model.GetAnnotationValue<Boxed<int>>(f11, "Grumble", "Tumble");
             }
             catch (InvalidOperationException e)
@@ -1395,7 +1380,7 @@ namespace EdmLibTests.FunctionalTests
         {
             Assert.AreEqual("Edm", EdmCoreModel.Namespace, "Correct Namespace");
 #if !(SILVERLIGHT || ORCAS)
-            Assert.AreEqual((Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Length) - 1, EdmCoreModel.Instance.SchemaElements.Count(), "Core model has one of every type except none.");
+            Assert.AreEqual(40, EdmCoreModel.Instance.SchemaElements.Count(), "Core model has one of every type except none.");
 #endif
             Assert.AreEqual(0, EdmCoreModel.Instance.VocabularyAnnotations.Count(), "Core model has no annotations.");
             Assert.AreEqual(0, EdmCoreModel.Instance.ReferencedModels.Count(), "Core model has no references.");

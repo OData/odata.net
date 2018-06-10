@@ -1,43 +1,46 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataBatchWriterUtils.cs" company="Microsoft">
+// <copyright file="ODataMultipartMixedBatchWriterUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData
+namespace Microsoft.OData.MultipartMixed
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     #endregion Namespaces
 
     /// <summary>
     /// Helper methods used by the ODataBatchWriter.
     /// </summary>
-    internal static class ODataBatchWriterUtils
+    internal static class ODataMultipartMixedBatchWriterUtils
     {
         /// <summary>
         /// Creates a new batch boundary string based on a randomly created GUID.
         /// </summary>
-        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a resonse.</param>
+        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a response.</param>
         /// <returns>The newly created batch boundary as string.</returns>
         internal static string CreateBatchBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.BatchResponseBoundaryTemplate : ODataConstants.BatchRequestBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid());
         }
 
         /// <summary>
-        /// Creates a new changeset boundary string based on a randomly created GUID.
+        /// Creates a new changeset boundary string based on an id.
         /// </summary>
-        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a resonse.</param>
+        /// <param name="isResponse">A flag indicating whether the boundary should be created for a request or a response.</param>
+        /// <param name="changesetId">The value for construction of changeset boundary for multipart batch.</param>
         /// <returns>The newly created changeset boundary as string.</returns>
-        internal static string CreateChangeSetBoundary(bool isResponse)
+        internal static string CreateChangeSetBoundary(bool isResponse, string changesetId)
         {
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return string.Format(CultureInfo.InvariantCulture, template, changesetId);
         }
 
         /// <summary>
@@ -53,6 +56,41 @@ namespace Microsoft.OData
                 MimeConstants.MimeMultipartMixed,
                 ODataConstants.HttpMultipartBoundary,
                 boundary);
+        }
+
+        /// <summary>
+        /// Gets the boundary from a multipart/mixed batch media type.
+        /// </summary>
+        /// <param name="mediaType">The multipart/mixed batch media type with a boundary type parameter.</param>
+        /// <returns>The boundary for the media type.</returns>
+        internal static string GetBatchBoundaryFromMediaType(ODataMediaType mediaType)
+        {
+            string batchBoundary;
+            KeyValuePair<string, string> boundaryPair = default(KeyValuePair<string, string>);
+            IEnumerable<KeyValuePair<string, string>> parameters = mediaType.Parameters;
+            if (parameters != null)
+            {
+                bool boundaryPairFound = false;
+                foreach (KeyValuePair<string, string> pair in parameters.Where(p => HttpUtils.CompareMediaTypeParameterNames(ODataConstants.HttpMultipartBoundary, p.Key)))
+                {
+                    if (boundaryPairFound)
+                    {
+                        throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
+                    }
+
+                    boundaryPair = pair;
+                    boundaryPairFound = true;
+                }
+            }
+
+            if (boundaryPair.Key == null)
+            {
+                throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
+            }
+
+            batchBoundary = boundaryPair.Value;
+            ValidationUtils.ValidateBoundaryString(batchBoundary);
+            return batchBoundary;
         }
 
         /// <summary>
@@ -89,7 +127,7 @@ namespace Microsoft.OData
             Debug.Assert(boundary != null, "boundary != null");
 
             // write the CRLF that belongs to the boundary (see RFC 2046, Section 5.1.1)
-            // but only if it's not the only boundary, the new line is not required by the fisrt boundary
+            // but only if it's not the only boundary, the new line is not required by the first boundary
             // and we don't want to write it unless necessary.
             if (!missingStartBoundary)
             {

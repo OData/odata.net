@@ -307,12 +307,9 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateKeyMissingOnEntityType()
+        public void ValidateKeyMissingOnEntityTypeShoudlSucceed()
         {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                {3, 4, EdmErrorCode.KeyMissingOnEntityType},
-            };
+            var expectedErrors = new EdmLibTestErrors() { };
             this.VerifySemanticValidation(ValidationTestModelBuilder.KeyMissingOnEntityType(this.EdmVersion), expectedErrors);
         }
 
@@ -1127,10 +1124,13 @@ namespace EdmLibTests.FunctionalTests
   <EntityType Name=""Person"">
     <Property Name=""Id"" Type=""Int32"" Nullable=""false""/>
   </EntityType>
+  <EntityContainer Name=""DefaultContainer"">
+    <EntitySet Name=""People"" EntityType=""Fuzz.Person""/>
+  </EntityContainer>
 </Schema>";
             var expectedErrors = new EdmLibTestErrors()
             {
-                { null, null, EdmErrorCode.KeyMissingOnEntityType }
+                { null, null, EdmErrorCode.NavigationSourceTypeHasNoKeys }
             };
             this.VerifySemanticValidation(new XElement[] { XElement.Parse(csdl) }, expectedErrors);
         }
@@ -1634,17 +1634,6 @@ namespace EdmLibTests.FunctionalTests
                 {20, 10, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet},
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.ModelWithNavigationPropertyWithRecursiveContainsNonSameEntitySet(), expectedErrors);
-        }
-
-        [TestMethod]
-        public void TestBidirectionalContainment()
-        {
-            var expectedErrors = new EdmLibTestErrors()
-            {
-                {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
-                {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
-            };
-            this.VerifySemanticValidation(ValidationTestModelBuilder.BidirectionalContainmentModel(), expectedErrors);
         }
 
         [TestMethod]

@@ -77,7 +77,7 @@ namespace Microsoft.OData.UriParser
                 IEdmOperationParameter functionParameter = null;
                 if (EnableCaseInsensitive)
                 {
-                    functionParameter = ODataUriResolver.ResolveOpearationParameterNameCaseInsensitive(operation, item.Key);
+                    functionParameter = ODataUriResolver.ResolveOperationParameterNameCaseInsensitive(operation, item.Key);
                 }
                 else
                 {

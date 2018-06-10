@@ -119,7 +119,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             complex1.InstanceAnnotations.Count().Should().Be(1);
 
             complex1.TypeName.Should().Be("Server.NS.Address");
-            ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
+            ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Prop.TypeAnnotation.TypeName.Should().Be("Server.NS.UnknownType1");
             undeclaredComplex1Prop.InstanceAnnotations.Count().Should().Be(3);
@@ -186,7 +186,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             complex1.InstanceAnnotations.Count().Should().Be(1);
 
             complex1.TypeName.Should().Be("Server.NS.Address");
-            ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
+            ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Prop.TypeAnnotation.TypeName.Should().Be("Server.NS.UnknownType1");
             undeclaredComplex1Prop.InstanceAnnotations.Count().Should().Be(3);
@@ -276,7 +276,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             entry.Properties.Count().Should().Be(2);
             complex1.Properties.Count().Should().Be(2);
             ODataProperty val = complex1.Properties
-                .First(s => string.Equals("UndeclaredBool", s.Name));
+                .First(s => string.Equals("UndeclaredBool", s.Name, StringComparison.Ordinal));
             val.ODataValue.FromODataValue().Should().Be(false);
 
             val.InstanceAnnotations.Count().Should().Be(2);
@@ -320,7 +320,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             entry.Properties.Count().Should().Be(2);
             complex1.Properties.Count().Should().Be(2);
             ODataProperty val = complex1.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name));
+                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal));
             val.ODataValue.FromODataValue().Should().Be("No.10000000999,Zixing Rd Minhang");
 
             val.InstanceAnnotations.Count().Should().Be(2);
@@ -365,7 +365,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             entry.Properties.Count().Should().Be(2);
             complex1.Properties.Count().Should().Be(2);
             ODataProperty val = complex1.Properties
-                .First(s => string.Equals("UndeclaredStreetNo", s.Name));
+                .First(s => string.Equals("UndeclaredStreetNo", s.Name, StringComparison.Ordinal));
             val.ODataValue.FromODataValue().Should().Be(12d);
 
             val.InstanceAnnotations.Count().Should().Be(2);
@@ -411,7 +411,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             complex1.TypeName.Should().Be("Server.NS.Address");
             complex1.Properties.Count().Should().Be(2);
             complex1.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>()
+                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
             complex1.InstanceAnnotations.Count().Should().Be(0);
 
@@ -454,7 +454,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            ODataProperty val = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1"));
+            ODataProperty val = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal));
             val.ODataValue.As<ODataCollectionValue>().Items.Cast<string>().Count().Should().Be(3);
 
             val.InstanceAnnotations.Count().Should().Be(2);
@@ -543,10 +543,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(2);
-            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name)).Value.As<ODataUntypedValue>().RawValue.Should().Be("12.3"); // numeric
+            entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)).Value.As<ODataUntypedValue>().RawValue.Should().Be("12.3"); // numeric
             complex1.Properties.Count().Should().Be(2);
             complex1.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>() // string
+                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value.As<ODataUntypedValue>() // string
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
         }
 
@@ -629,7 +629,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>().RawValue
               .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
             complex1.Properties.Count().Should().Be(2);
         }
@@ -661,7 +661,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            Assert.Equal("null", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1")).ODataValue.As<ODataUntypedValue>().RawValue);
+            Assert.Equal("null", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1", StringComparison.Ordinal)).ODataValue.As<ODataUntypedValue>().RawValue);
         }
 
         [Fact]
@@ -738,7 +738,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).ODataValue.As<ODataCollectionValue>().Items
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).ODataValue.As<ODataCollectionValue>().Items
                 .Cast<string>().Count().Should().Be(3);
             complex1.Properties.Count().Should().Be(2);
         }
@@ -770,7 +770,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            ODataProperty val = entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
+            ODataProperty val = entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal));
             val.Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
             val.InstanceAnnotations.Count().Should().Be(2);
             val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown odata.xxx value1");
@@ -839,7 +839,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1")).Value.As<ODataUntypedValue>()
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be(@"{}");
         }
 
@@ -866,7 +866,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>().RawValue
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>().RawValue
                 .Should().Be(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]");
             complex1.Properties.Count().Should().Be(2);
         }
@@ -894,9 +894,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataUntypedValue>()
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be(@"[]");
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet"))
+            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
         }
 
@@ -931,7 +931,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
             complex1.Properties.Count().Should().Be(2);
         }
@@ -968,11 +968,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1", StringComparison.Ordinal))
                 .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataPrimitiveValue>()
                 .Value.Should().Be(1908);
 
@@ -1011,11 +1011,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2"))
+            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2"))
+            entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2", StringComparison.Ordinal))
                 .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataPrimitiveValue>()
                 .Value.Should().Be(1908);
 
@@ -1063,13 +1063,13 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet"))
+            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
-            complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3"))
+            complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3", StringComparison.Ordinal))
                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3"))
+            complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3", StringComparison.Ordinal))
                 .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataPrimitiveValue>()
                 .Value.Should().Be(1908);
 
@@ -1111,14 +1111,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal))
                 .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataPrimitiveValue>()
                 .Value.Should().Be(true);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1")).TypeAnnotation.TypeName.Should().Be("Edm.Untyped");
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).TypeAnnotation.TypeName.Should().Be("Edm.Untyped");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1165,14 +1165,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             );
 
             entry.Properties.Count().Should().Be(4);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal))
                 .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataPrimitiveValue>()
                 .Value.Should().Be(true);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
+            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal))
                 .TypeAnnotation.TypeName.Should().Be("Edm.Untyped");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -1219,14 +1219,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
+            entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
+            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
+            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal))
                 .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataPrimitiveValue>()
                 .Value.Should().Be(true);
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
+            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal))
                 .TypeAnnotation.TypeName.Should().Be("Edm.Untyped");
             complex2.Should().BeNull();
 

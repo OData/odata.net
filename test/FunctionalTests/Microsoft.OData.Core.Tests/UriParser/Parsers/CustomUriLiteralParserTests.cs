@@ -885,7 +885,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, CustomUriLiteralParserUnitTests.CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                     .And.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetBoolean(true)).And.Source.ShouldBeConstantQueryNode(true);

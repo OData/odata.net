@@ -1035,6 +1035,22 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Create a new delta resource set scope.
+        /// </summary>
+        /// <param name="deltaResourceSet">The delta resource set for the new scope.</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
+        /// <returns>The newly create scope.</returns>
+        protected virtual DeltaResourceSetScope CreateDeltaResourceSetScope(ODataDeltaResourceSet deltaResourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Create a new resource scope.
         /// </summary>
         /// <param name="resource">The resource for the new scope.</param>
@@ -1317,7 +1333,7 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">Resource Set/collection to write.</param>
         private void VerifyCanWriteStartDeltaResourceSet(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
         {
-            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "resourceSet");
+            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
 
             this.VerifyWritingDelta();
             this.VerifyNotDisposed();
@@ -1370,6 +1386,8 @@ namespace Microsoft.OData
         /// <param name="resource">Resource/item to write.</param>
         private void VerifyCanWriteStartDeletedResource(bool synchronousCall, ODataDeletedResource resource)
         {
+            ExceptionUtils.CheckArgumentNotNull(resource, "resource");
+
             this.VerifyWritingDelta();
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
@@ -2212,6 +2230,11 @@ namespace Microsoft.OData
                                     nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
                                 }
 
+                                if (!nestedResourceInfo.IsCollection.HasValue)
+                                {
+                                    nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
+                                }
+
                                 IEdmNavigationSource currentNavigationSource = currentScope.NavigationSource;
                                 IEdmPathExpression bindingPath;
 
@@ -2452,7 +2475,9 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.DeltaResourceSet:
-                    if (newState != WriterState.Resource && newState != WriterState.DeletedResource && !(this.ScopeLevel < 3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
+                    if (newState != WriterState.Resource &&
+                        newState != WriterState.DeletedResource &&
+                        !(this.ScopeLevel < 3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
@@ -2556,6 +2581,12 @@ namespace Microsoft.OData
                     {
                         Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
                         ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(itemType);
+                    }
+
+                    if (this.outputContext.Model.IsUserModel())
+                    {
+                        Debug.Assert(scope is ResourceSetBaseScope, "Create a scope for a delta resource set that is not a ResourceSetBaseScope");
+                        ((ResourceSetBaseScope)scope).ResourceTypeValidator = new ResourceSetWithoutExpectedTypeValidator(resourceType);
                     }
 
                     break;

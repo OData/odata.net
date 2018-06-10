@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// <summary>
     /// Represents a CSDL schema.
     /// </summary>
-    internal class CsdlSchema : CsdlElementWithDocumentation
+    internal class CsdlSchema : CsdlElement
     {
         private readonly List<CsdlStructuredType> structuredTypes;
         private readonly List<CsdlEnumType> enumTypes;
@@ -37,9 +37,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             IEnumerable<CsdlEntityContainer> entityContainers,
             IEnumerable<CsdlAnnotations> outOfLineAnnotations,
             IEnumerable<CsdlTypeDefinition> typeDefinitions,
-            CsdlDocumentation documentation,
             CsdlLocation location)
-            : base(documentation, location)
+            : base(location)
         {
             this.alias = alias;
             this.namespaceName = namespaceName;

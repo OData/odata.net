@@ -451,6 +451,10 @@ namespace Microsoft.OData.Client
             {
                 return primitiveType.TypeConverter.ToString(propertyValue);
             }
+            else if (propertyType == typeof(DateTime))
+            {
+                return PlatformHelper.ConvertDateTimeToDateTimeOffset((DateTime)propertyValue);
+            }
 #if !PORTABLELIB
             else if (propertyType.FullName == "System.Data.Linq.Binary")
             {

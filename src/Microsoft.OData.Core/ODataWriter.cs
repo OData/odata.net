@@ -89,7 +89,7 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(deltaResourceSet));
+            throw new NotImplementedException();
         }
 #endif
 

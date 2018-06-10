@@ -28,19 +28,47 @@ namespace Microsoft.OData
         private ValidationKinds validations;
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
-        /// with default values.</summary>
-        public ODataMessageReaderSettings()
+        /// with default values for OData 4.0.</summary>
+        public ODataMessageReaderSettings() : this(ODataConstants.ODataDefaultProtocolVersion)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
+        /// with default values for the specified OData version.</summary>
+        /// <param name="odataVersion">OData Version for which to create default settings.</param>
+        public ODataMessageReaderSettings(ODataVersion odataVersion)
         {
             this.ClientCustomTypeResolver = null;
             this.PrimitiveTypeResolver = null;
             this.EnablePrimitiveTypeConversion = true;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
-            this.ReadUntypedAsString = true;
-            this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
-            Validations = ValidationKinds.All;
+            this.Version = odataVersion;
+            this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
+
             Validator = new ReaderValidator(this);
+            if (odataVersion < ODataVersion.V401)
+            {
+                Validations = ValidationKinds.All;
+                this.ReadUntypedAsString = true;
+                this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
+            }
+            else
+            {
+                Validations = ValidationKinds.All & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+                this.ReadUntypedAsString = false;
+                this.MaxProtocolVersion = odataVersion;
+            }
         }
+
+        /// <summary>Gets or sets the OData protocol version to be used for reading payloads. </summary>
+        /// <returns>The OData protocol version to be used for reading payloads.</returns>
+        public ODataVersion? Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets library compatibility version. Default value is <see cref="T:ODataLibraryCompatibilityLevel.Latest"/>,
+        /// </summary>
+        public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 
         /// <summary>Gets or sets the OData protocol version to be used for reading payloads. </summary>
         /// <returns>The OData protocol version to be used for reading payloads.</returns>
@@ -239,6 +267,7 @@ namespace Microsoft.OData
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
         }
     }

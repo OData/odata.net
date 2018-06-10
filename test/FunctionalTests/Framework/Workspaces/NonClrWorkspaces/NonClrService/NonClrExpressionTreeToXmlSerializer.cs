@@ -69,7 +69,7 @@ namespace System.Data.Test.Astoria.NonClr
         public static String Serialize(Expression exp)
         {
             outputText = new StringBuilder();
-            writer = XmlTextWriter.Create(outputText);
+            writer = XmlWriter.Create(outputText);
             new ExpressionTreeToXmlSerializer().Visit(exp);
             writer.Flush();
             return outputText.ToString();

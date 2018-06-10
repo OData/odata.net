@@ -349,6 +349,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyModel.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\AuthorizationVocabularyModel.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Validation\DuplicateOperationValidator.cs">
       <Link>Microsoft\OData\Edm\Validation\DuplicateOperationValidator.cs</Link>
     </Compile>
@@ -385,14 +388,8 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlDocumentation.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlElement.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlElement.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEntityContainer.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEntityContainer.cs</Link>
@@ -505,9 +502,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDocumentation.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntityContainer.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityContainer.cs</Link>
@@ -779,6 +773,12 @@
     <Compile Include="..\Schema\BadNavigationProperty.cs">
       <Link>Microsoft\OData\Edm\Schema\BadNavigationProperty.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\BadPathType.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\BadPathTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\BadPathTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\BadPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Schema\BadPrimitiveType.cs</Link>
     </Compile>
@@ -848,14 +848,8 @@
     <Compile Include="..\Schema\EdmContainedEntitySet.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmContainedEntitySet.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\EdmCoreModel.cs">
-      <Link>Microsoft\OData\Edm\Schema\EdmCoreModel.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\EdmDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\EdmDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Schema\EdmDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Schema\EdmElement.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmElement.cs</Link>
@@ -992,6 +986,9 @@
     <Compile Include="..\Schema\EdmUntypedStructuredTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUntypedStructuredTypeReference.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmPathTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\EdmPathTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmUntypedTypeReference.cs</Link>
     </Compile>
@@ -1000,6 +997,27 @@
     </Compile>
     <Compile Include="..\Schema\IEdmRowType.cs">
       <Link>Microsoft\OData\Edm\Schema\IEdmRowType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelComplexType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelComplexType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPrimitiveType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelPrimitiveType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelUntypeType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelUntypeType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\IEdmCoreModelElement.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\IEdmCoreModelElement.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelEntityType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelEntityType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModelPathType.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModelPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\CoreModel\EdmCoreModel.cs">
+      <Link>Microsoft\OData\Edm\Schema\CoreModel\EdmCoreModel.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmAction.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmAction.cs</Link>
@@ -1030,9 +1048,6 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmElement.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmElement.cs</Link>
@@ -1120,6 +1135,12 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPathExpression.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathType.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmPathTypeReference.cs">
+      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPathTypeReference.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmPrimitiveType.cs</Link>
@@ -1472,6 +1493,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularies.xml">
       <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularies.xml">
+      <LogicalName>AuthorizationVocabularies.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

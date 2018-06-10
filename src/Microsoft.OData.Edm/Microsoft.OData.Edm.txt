@@ -4,7 +4,7 @@
 
 ; EDM Model messages
 EdmPrimitive_UnexpectedKind=Unexpected primitive type kind.
-Annotations_DocumentationPun=Annotations in the 'Documentation' namespace must implement 'IEdmDocumentation', but '{0}' does not.
+EdmPath_UnexpectedKind=Unexpected path type kind.
 Annotations_TypeMismatch=Annotation of type '{0}' cannot be interpreted as '{1}'.
 Constructable_VocabularyAnnotationMustHaveTarget=The annotation must have non-null target.
 Constructable_EntityTypeOrCollectionOfEntityTypeExpected=An entity type or a collection of an entity type is expected.
@@ -91,6 +91,8 @@ EdmModel_Validator_Semantic_PropertyNameAlreadyDefined=Each property name in a t
 EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind=The base type kind of a structured type must be the same as its derived type.
 EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen=The base type of open type '{0}' is not open type.
 EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity=The key property '{0}' must belong to the entity '{1}'.
+EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey=The 'Edm.PrimitiveType' cannot be used as the type of a key property '{0}' of an entity type '{1}'.
+EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType=The 'Edm.PrimitiveType' cannot be used as the underlying type of '{0}' type '{1}'.
 EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity=The dependent property '{0}' must belong to the dependent entity '{1}'.
 EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect=The property '{0}' cannot belong to a type other than its declaring type. 
 EdmModel_Validator_Semantic_InaccessibleType=The named type '{0}' could not be found from the model being validated.
@@ -126,6 +128,7 @@ EdmModel_Validator_Semantic_DuplicateAnnotation=The annotated element '{0}' has 
 EdmModel_Validator_Semantic_IncorrectNumberOfArguments=The function application provides '{0}' arguments, but the function '{1}' expects '{2}' arguments.
 EdmModel_Validator_Semantic_DuplicateEntityContainerName=Each entity container name in a function must be unique. The name '{0}' is already defined.
 EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType=The primitive expression is not compatible with the asserted type.
+EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType=The enum expression is not compatible with the asserted type.
 EdmModel_Validator_Semantic_IntegerConstantValueOutOfRange=The value of the integer constant is out of range for the asserted type.
 EdmModel_Validator_Semantic_StringConstantLengthOutOfRange=The value of the string constant is '{0}' characters long, but the max length of its type is '{1}'.
 EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange=The value of the binary constant is '{0}' characters long, but the max length of its type is '{1}'.
@@ -159,6 +162,13 @@ EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType=The bou
 EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType=The type '{0}' of the entity set '{1}' is not valid, it must be collection of entity type.
 EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType=The type '{0}' of the singleton '{1}' is not valid, it must be entity type.
 EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton=The navigation property mapping '{0}' is invalid because its type is collection but target to a singleton '{1}'.
+EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType=The type '{0}' cannot be the base type of an '{1}' type '{2}'.
+EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType=The type '{0}' cannot be used as the type of a property '{1}'.
+EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType=The type '{0}' cannot be used as the return type of a function '{1}'.
+EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton=The type 'Edm.EntityType' cannot be used as the type of a singleton '{0}' in an entity container.
+EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet=The type 'Edm.EntityType' cannot be used as the type of an entity set '{0}' in an entity container.
+EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty=The declaring type '{0}' of {1} '{2}' cannot include path type property.
+EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty=The type '{0}' of navigation property '{1}' on declaring type '{2}' cannot include path type property.
 
 ;Error message for Syntactic validation rules
 EdmModel_Validator_Syntactic_MissingName=The name is missing or not valid.
@@ -255,7 +265,7 @@ UnknownEnumVal_SchemaElementKind=Invalid schema element kind: '{0}'
 UnknownEnumVal_TypeKind=Invalid type kind: '{0}'
 UnknownEnumVal_PrimitiveKind=Invalid primitive kind: '{0}'
 UnknownEnumVal_ContainerElementKind=Invalid container element kind: '{0}'
-UnknownEnumVal_EdmxTarget=Invalid edmx target: '{0}'
+UnknownEnumVal_CsdlTarget=Invalid CSDL target: '{0}'
 UnknownEnumVal_PropertyKind=Invalid property kind: '{0}'
 UnknownEnumVal_ExpressionKind=Invalid expression kind: '{0}'
 

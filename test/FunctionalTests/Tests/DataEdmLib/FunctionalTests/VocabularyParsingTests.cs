@@ -1537,6 +1537,226 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
+        public void TestAuthorizationAnnotationInlineAndOutLineAnnotationOnEntitySetAndSingleton()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entity = new EdmEntityType("NS", "Entity");
+            EdmStructuralProperty deptId = entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            entity.AddKeys(deptId);
+            model.AddElement(entity);
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("Entities", entity);
+            var singleton = container.AddSingleton("Me", entity);
+            model.AddElement(container);
+
+            IEdmTerm term = model.FindTerm("Org.OData.Authorization.V1.Authorizations");
+            Assert.IsNotNull(term);
+
+            // OpenIDConnect
+            IEdmComplexType complexType = model.FindType("Org.OData.Authorization.V1.OpenIDConnect") as IEdmComplexType;
+            Assert.IsNotNull(complexType);
+            IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>();
+            properties.Add(new EdmPropertyConstructor("IssuerUrl", new EdmStringConstant("http://any")));
+            properties.Add(new EdmPropertyConstructor("Name", new EdmStringConstant("OpenIDConnect Name")));
+            properties.Add(new EdmPropertyConstructor("Description", new EdmStringConstant("OpenIDConnect Description")));
+            EdmRecordExpression record1 = new EdmRecordExpression(new EdmComplexTypeReference(complexType, true), properties);
+
+            complexType = model.FindType("Org.OData.Authorization.V1.Http") as IEdmComplexType;
+            Assert.IsNotNull(complexType);
+            properties = new List<IEdmPropertyConstructor>();
+            properties.Add(new EdmPropertyConstructor("BearerFormat", new EdmStringConstant("Http BearerFormat")));
+            properties.Add(new EdmPropertyConstructor("Scheme", new EdmStringConstant("Http Scheme")));
+            properties.Add(new EdmPropertyConstructor("Name", new EdmStringConstant("Http Name")));
+            properties.Add(new EdmPropertyConstructor("Description", new EdmStringConstant("Http Description")));
+            EdmRecordExpression record2 = new EdmRecordExpression(new EdmComplexTypeReference(complexType, true), properties);
+
+            EdmCollectionExpression collection = new EdmCollectionExpression(record1, record2);
+
+            // for entity set
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(entitySet, term, collection);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            // for singleton
+            annotation = new EdmVocabularyAnnotation(singleton, term, collection);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
+            IEnumerable<EdmError> errors;
+            StringWriter sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.Encoding = System.Text.Encoding.UTF8;
+            XmlWriter xw = XmlWriter.Create(sw, settings);
+            model.TryWriteSchema(xw, out errors);
+            xw.Flush();
+            xw.Close();
+            var actual = sw.ToString();
+
+            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Entity"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Entities"" EntityType=""NS.Entity"">
+      <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+        <Collection>
+          <Record Type=""Org.OData.Authorization.V1.OpenIDConnect"">
+            <PropertyValue Property=""IssuerUrl"" String=""http://any"" />
+            <PropertyValue Property=""Name"" String=""OpenIDConnect Name"" />
+            <PropertyValue Property=""Description"" String=""OpenIDConnect Description"" />
+          </Record>
+          <Record Type=""Org.OData.Authorization.V1.Http"">
+            <PropertyValue Property=""BearerFormat"" String=""Http BearerFormat"" />
+            <PropertyValue Property=""Scheme"" String=""Http Scheme"" />
+            <PropertyValue Property=""Name"" String=""Http Name"" />
+            <PropertyValue Property=""Description"" String=""Http Description"" />
+          </Record>
+        </Collection>
+      </Annotation>
+    </EntitySet>
+    <Singleton Name=""Me"" Type=""NS.Entity"" />
+  </EntityContainer>
+  <Annotations Target=""NS.Container/Me"">
+    <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+      <Collection>
+        <Record Type=""Org.OData.Authorization.V1.OpenIDConnect"">
+          <PropertyValue Property=""IssuerUrl"" String=""http://any"" />
+          <PropertyValue Property=""Name"" String=""OpenIDConnect Name"" />
+          <PropertyValue Property=""Description"" String=""OpenIDConnect Description"" />
+        </Record>
+        <Record Type=""Org.OData.Authorization.V1.Http"">
+          <PropertyValue Property=""BearerFormat"" String=""Http BearerFormat"" />
+          <PropertyValue Property=""Scheme"" String=""Http Scheme"" />
+          <PropertyValue Property=""Name"" String=""Http Name"" />
+          <PropertyValue Property=""Description"" String=""Http Description"" />
+        </Record>
+      </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ParsingAuthorizationAnnotationInlineAndOutLineAnnotationOnEntityContainerAndEntitySet()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Entity"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""Entities"" EntityType=""NS.Entity"">
+      <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+        <Collection>
+          <Record Type=""Org.OData.Authorization.V1.OpenIDConnect"">
+            <PropertyValue Property=""IssuerUrl"" String=""http://any"" />
+            <PropertyValue Property=""Name"" String=""OpenIDConnect Name"" />
+            <PropertyValue Property=""Description"" String=""OpenIDConnect Description"" />
+          </Record>
+        </Collection>
+      </Annotation>
+    </EntitySet>
+    <Singleton Name=""Me"" Type=""NS.Entity"" />
+  </EntityContainer>
+  <Annotations Target=""NS.Container"">
+    <Annotation Term=""Org.OData.Authorization.V1.Authorizations"">
+      <Collection>
+        <Record Type=""Org.OData.Authorization.V1.OAuth2ClientCredentials"">
+          <PropertyValue Property=""TokenUrl"" String=""http://TokenUrl"" />
+          <PropertyValue Property=""RefreshUrl"" String=""http://RefreshUrl"" />
+          <PropertyValue Property=""Name"" String=""OAuth2ClientCredentials Name"" />
+          <PropertyValue Property=""Description"" String=""OAuth2ClientCredentials Description"" />
+          <PropertyValue Property=""Scopes"">
+            <Collection>
+              <Record>
+                 <PropertyValue Property=""Scope"" String=""Scope1"" />
+                 <PropertyValue Property=""Description"" String=""Description 1"" />
+              </Record>
+            </Collection>
+          </PropertyValue>
+        </Record>
+        <Record Type=""Org.OData.Authorization.V1.Http"">
+          <PropertyValue Property=""BearerFormat"" String=""Http BearerFormat"" />
+          <PropertyValue Property=""Scheme"" String=""Http Scheme"" />
+          <PropertyValue Property=""Name"" String=""Http Name"" />
+          <PropertyValue Property=""Description"" String=""Http Description"" />
+        </Record>
+      </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+            IEdmModel parsedModel;
+            IEnumerable<EdmError> errors;
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            Assert.IsTrue(parsed, "parsed");
+            Assert.IsTrue(!errors.Any(), "No errors");
+
+            IEdmTerm term = parsedModel.FindTerm("Org.OData.Authorization.V1.Authorizations");
+            Assert.IsNotNull(term);
+
+            var container = parsedModel.EntityContainer;
+            Assert.IsNotNull(container);
+
+            // entity container
+            IEdmVocabularyAnnotation annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(container, term).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+
+            IEdmCollectionExpression collection = annotation.Value as IEdmCollectionExpression;
+            Assert.IsNotNull(collection);
+            Assert.AreEqual(2, collection.Elements.Count());
+
+            // First one on container
+            IEdmRecordExpression record = collection.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            Assert.AreEqual("Org.OData.Authorization.V1.OAuth2ClientCredentials", record.DeclaredType.FullName());
+
+            IEdmStringConstantExpression description = record.FindProperty("Description").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(description);
+            Assert.AreEqual("OAuth2ClientCredentials Description", description.Value);
+
+            // second one on container
+            record = collection.Elements.Last() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            Assert.AreEqual("Org.OData.Authorization.V1.Http", record.DeclaredType.FullName());
+
+            description = record.FindProperty("Description").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(description);
+            Assert.AreEqual("Http Description", description.Value);
+
+            // entity set
+            IEdmEntitySet entitySet = container.FindEntitySet("Entities");
+            Assert.IsNotNull(entitySet);
+
+            annotation = parsedModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(entitySet, term).FirstOrDefault();
+            Assert.IsNotNull(annotation);
+
+            collection = annotation.Value as IEdmCollectionExpression;
+            Assert.IsNotNull(collection);
+            Assert.AreEqual(1, collection.Elements.Count());
+
+            record = collection.Elements.First() as IEdmRecordExpression;
+            Assert.IsNotNull(record);
+            Assert.AreEqual("Org.OData.Authorization.V1.OpenIDConnect", record.DeclaredType.FullName());
+
+            description = record.FindProperty("Description").Value as IEdmStringConstantExpression;
+            Assert.IsNotNull(description);
+            Assert.AreEqual("OpenIDConnect Description", description.Value);
+        }
+
+        [TestMethod]
         public void TestCommunityAlternateKeysInlineAnnotationOnEntityType()
         {
             EdmModel model = new EdmModel();
@@ -2824,7 +3044,7 @@ namespace EdmLibTests.FunctionalTests
             edmModel.SetVocabularyAnnotation(annotation);
             var stream = new MemoryStream();
 
-            Assert.IsFalse(edmModel.Validate(out errors));
+            Assert.IsTrue(edmModel.Validate(out errors));
 
             using (var xw = XmlWriter.Create(stream, new XmlWriterSettings() { Indent = true }))
             {
@@ -2840,7 +3060,7 @@ namespace EdmLibTests.FunctionalTests
 
 
             Assert.IsTrue(CsdlReader.TryParse(XmlReader.Create(new StringReader(csdl)), out model, out errors), "parsed");
-            Assert.IsFalse(model.Validate(out validationErrors));
+            Assert.IsTrue(model.Validate(out validationErrors));
 
             TestEnumMember(model);
         }
@@ -2893,7 +3113,7 @@ namespace EdmLibTests.FunctionalTests
                     out model,
                     out errors),
                 "parsed");
-            Assert.IsFalse(model.Validate(out validationErrors));
+            Assert.IsTrue(model.Validate(out validationErrors));
 
             TestEnumMember(model);
         }
