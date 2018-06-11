@@ -36,7 +36,8 @@ namespace Microsoft.OData
         {
             int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
 
-
+            Debug.Assert(depth >= 1, "'depth' should always be greater than or equal to 1");
+			
             // In production, depthStr == 1 in most cases. So we optimize string allocation for this case.
             string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
 
