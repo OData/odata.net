@@ -38,8 +38,8 @@ namespace Microsoft.OData
         {
             int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
 
-            Debug.Assert(depth >= 1, $"{nameof(depth)} should always be greater than 1");
-            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
+            Debug.Assert(depth >= 0, "'depth' should always be greater than or equal to 0");
+            string depthStr = depth == 0 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
 
             string uniqueName = owningType != null
                 ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name)
