@@ -7,6 +7,8 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Diagnostics;
+    using System.Text;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -75,9 +77,25 @@ namespace Microsoft.OData.UriParser
             LiteralToken literalToken = queryToken as LiteralToken;
             if (literalToken != null)
             {
-                string literalText = literalToken.OriginalText;
-                object collection = ODataUriConversionUtils.ConvertFromCollectionValue(literalText, model, expectedType);
-                LiteralToken collectionLiteralToken = new LiteralToken(collection, literalText, expectedType);
+                string originalLiteralText = literalToken.OriginalText;
+
+                // Parentheses-based collections are not standard JSON but bracket-based ones are.
+                // Temporarily switch our collection to bracket-based so that the JSON reader will
+                // correctly parse the collection. Then pass the original literal text to the token.
+                string bracketLiteralText = originalLiteralText;
+                if (bracketLiteralText[0] == '(')
+                {
+                    Debug.Assert(bracketLiteralText[bracketLiteralText.Length - 1] == ')',
+                        "Collection with opening '(' should have corresponding ')'");
+
+                    StringBuilder replacedText = new StringBuilder(bracketLiteralText);
+                    replacedText[0] = '[';
+                    replacedText[replacedText.Length - 1] = ']';
+                    bracketLiteralText = replacedText.ToString();
+                }
+
+                object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
+                LiteralToken collectionLiteralToken = new LiteralToken(collection, originalLiteralText, expectedType);
                 operand = this.bindMethod(collectionLiteralToken) as CollectionConstantNode;
             }
             else

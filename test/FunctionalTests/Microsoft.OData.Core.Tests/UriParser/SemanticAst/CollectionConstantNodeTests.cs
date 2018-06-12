@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "('abc','def','ghi')";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("['abc','def','ghi']", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             Action target = () => new CollectionConstantNode(null, text, expectedType);
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             Action target = () => new CollectionConstantNode((literalToken.Value as ODataCollectionValue)?.Items, null, expectedType);
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             const string text = "(1,2,3)";
             var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
-            object collection = ODataUriConversionUtils.ConvertFromCollectionValue(text, HardCodedTestModel.TestModel, expectedType);
+            object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             Action target = () => new CollectionConstantNode((literalToken.Value as ODataCollectionValue)?.Items, text, null);

@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using System.Collections.Generic;
+    using System.Diagnostics;
 
     /// <summary>
     /// Class that knows how to bind literal values.
@@ -38,6 +38,9 @@ namespace Microsoft.OData.UriParser
                         {
                             return new CollectionConstantNode(collectionValue.Items, literalToken.OriginalText, collectionReference);
                         }
+
+                        Debug.Assert(collectionValue != null,
+                            "Literal token creates ODataCollectionValue. If this is not the case anymore, update the code path.");
                     }
 
                     return new ConstantNode(literalToken.Value, literalToken.OriginalText, literalToken.ExpectedEdmTypeReference);
