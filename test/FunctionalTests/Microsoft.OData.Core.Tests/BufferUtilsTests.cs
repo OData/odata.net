@@ -4,13 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
 namespace Microsoft.OData.Tests
 {
     using FluentAssertions;
-
     using Microsoft.OData.Buffers;
-
     using Xunit;
 
     public class BufferUtilsTests

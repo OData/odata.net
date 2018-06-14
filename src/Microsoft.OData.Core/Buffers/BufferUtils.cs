@@ -1,11 +1,13 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IBufferPool.cs" company="Microsoft">
+// <copyright file="BufferUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 namespace Microsoft.OData.Buffers
 {
+    using System;
+
     /// <summary>
     /// Helpers to deal with buffers
     /// </summary>

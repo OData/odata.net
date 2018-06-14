@@ -14,7 +14,6 @@ namespace Microsoft.OData.Json
     using System.IO;
     using System.Text;
     using System.Xml;
-
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     #endregion Namespaces
