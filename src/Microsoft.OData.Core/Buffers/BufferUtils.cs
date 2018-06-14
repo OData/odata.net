@@ -12,7 +12,7 @@ namespace Microsoft.OData.Buffers
     /// Helpers to deal with buffers
     /// </summary>
 
-    public static class BufferUtils
+    internal static class BufferUtils
     {
         /// <summary>
         /// Buffer length
