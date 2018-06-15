@@ -40,8 +40,9 @@ namespace Microsoft.OData.Tests
             singleComplexPropertyEntityType.AddStructuralProperty("ComplexProp", new EdmComplexTypeReference(complexType, isNullable: true));
             model.AddElement(singleComplexPropertyEntityType);
 
-            // Create a property handler and enter a resource set scope.
+            // Create a property handler, enter a resource set scope and update resource scope.
             PropertyCacheHandler handler = new PropertyCacheHandler();
+            handler.SetCurrentResourceScopeLevel(1);
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
@@ -67,8 +68,9 @@ namespace Microsoft.OData.Tests
             singleComplexPropertyEntityType.AddKeys(singleComplexPropertyEntityType.AddStructuralProperty("ID", int32TypeRef));
             model.AddElement(singleComplexPropertyEntityType);
 
-            // Create a property handler and enter a resource set scope.
+            // Create a property handler, enter a resource set scope and update resource scope.
             PropertyCacheHandler handler = new PropertyCacheHandler();
+            handler.SetCurrentResourceScopeLevel(1);
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp.IntProp
@@ -105,8 +107,9 @@ namespace Microsoft.OData.Tests
             singleComplexPropertyEntityType.AddStructuralProperty("ComplexProp2", new EdmComplexTypeReference(complexType2, isNullable: true));
             model.AddElement(singleComplexPropertyEntityType);
 
-            // Create a property handler and enter a resource set scope.
+            // Create a property handler, enter a resource set scope and update resource scope.
             PropertyCacheHandler handler = new PropertyCacheHandler();
+            handler.SetCurrentResourceScopeLevel(1);
             handler.EnterResourceSetScope(singleComplexPropertyEntityType, 0);
 
             // Create a PropertySerializationInfo for ComplexProp1.Prop1
