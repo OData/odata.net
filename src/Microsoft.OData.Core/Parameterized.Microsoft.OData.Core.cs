@@ -270,7 +270,7 @@ namespace Microsoft.OData {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter);
             }
         }
-        
+
         /// <summary>
         /// A string like "Cannot write a top-level resource with a writer that was created to write a top-level resource set."
         /// </summary>
@@ -1191,14 +1191,6 @@ namespace Microsoft.OData {
         internal static string ODataBatchReader_DependsOnIdNotFound(object p0, object p1)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_DependsOnIdNotFound, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "Absolute URI {0} is not start with the base URI [{1}] specified by the operation message."
-        /// </summary>
-        internal static string ODataBatchReader_AbsoluteURINotMatchingBaseUri(object p0, object p1)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_AbsoluteURINotMatchingBaseUri, p0, p1);
         }
 
         /// <summary>

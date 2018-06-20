@@ -179,8 +179,8 @@ namespace Microsoft.OData
                 string baseUriString = UriUtils.UriToString(baseUri);
                 if (!uri.AbsoluteUri.StartsWith(baseUriString, StringComparison.Ordinal))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_AbsoluteURINotMatchingBaseUri(
-                        uri.AbsoluteUri, baseUriString));
+                    // Skip validation if uri doesn't start with the baseUri.
+                    return;
                 }
 
                 relativePath = uri.AbsoluteUri.Substring(baseUriString.Length);
