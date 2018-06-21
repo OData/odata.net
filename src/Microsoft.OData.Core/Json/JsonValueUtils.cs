@@ -14,7 +14,6 @@ namespace Microsoft.OData.Json
     using System.IO;
     using System.Text;
     using System.Xml;
-
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -405,7 +404,7 @@ namespace Microsoft.OData.Json
                         // and continue.
                         int escapedStringLength = escapedString.Length;
                         Debug.Assert(escapedStringLength <= bufferLength, "Buffer should be larger than the escaped string");
-                if (subStrLength > 0)
+
                         if ((bufferIndex + escapedStringLength) > bufferLength)
                         {
                             writer.Write(buffer, 0, bufferIndex);
@@ -492,6 +491,8 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Checks if the string contains special char and returns the first index 
+        /// of special char if present.
         /// </summary>
         /// <param name="inputString">string that might contain special characters.</param>
         /// <param name="firstIndex">first index of the special char</param>
@@ -515,7 +516,6 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            firstIndex = inputStringLength;
             return false;
         }
 
