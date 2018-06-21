@@ -50,3 +50,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Scope = "member", Target = "Microsoft.OData.ContainerBuilderExtensions.#AddService`2(Microsoft.OData.IContainerBuilder,Microsoft.OData.ServiceLifetime,System.Func`2<System.IServiceProvider,!!1>)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.ODataUriParser.#IsODataQueryOption(System.String)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.UriParser.InnerPathTokenBinder.#BindInnerPathSegment(Microsoft.OData.UriParser.InnerPathToken)")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])", Scope = "member", Target = "Microsoft.OData.PropertyCacheHandler.#GetProperty(System.String,Microsoft.OData.Edm.IEdmStructuredType)")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Utils", Scope = "type", Target = "Microsoft.OData.Buffers.BufferUtils")]
+
