@@ -80,6 +80,9 @@
     <Compile Include="..\BufferingReadStream.cs">
       <Link>BufferingReadStream.cs</Link>
     </Compile>
+    <Compile Include="..\Buffers\BufferUtils.cs">
+      <Link>Buffers\BufferUtils.cs</Link>
+    </Compile>
     <Compile Include="..\CollectionWithoutExpectedTypeValidator.cs">
       <Link>CollectionWithoutExpectedTypeValidator.cs</Link>
     </Compile>
@@ -1028,26 +1031,26 @@
     <Compile Include="..\UriParser\Aggregation\TransformationNodeKind.cs">
       <Link>UriParser\Aggregation\TransformationNodeKind.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateExpression.cs"> 
-      <Link>UriParser\Aggregation\EntitySetAggregateExpression.cs</Link> 
-    </Compile> 
-    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateToken.cs"> 
-      <Link>UriParser\Aggregation\EntitySetAggregateToken.cs</Link> 
-    </Compile> 
-    <Compile Include="..\UriParser\Aggregation\AggregateExpressionBase.cs"> 
-      <Link>UriParser\Aggregation\AggregateExpressionBase.cs</Link> 
-    </Compile> 
-    <Compile Include="..\UriParser\Aggregation\AggregateTokenBase.cs"> 
-      <Link>UriParser\Aggregation\AggregateTokenBase.cs</Link> 
-    </Compile> 
-    <Compile Include="..\UriParser\Aggregation\AggregateExpressionToken.cs"> 
-      <Link>UriParser\Aggregation\AggregateExpressionToken.cs</Link> 
-    </Compile> 
+    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateExpression.cs">
+      <Link>UriParser\Aggregation\EntitySetAggregateExpression.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\EntitySetAggregateToken.cs">
+      <Link>UriParser\Aggregation\EntitySetAggregateToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\AggregateExpressionBase.cs">
+      <Link>UriParser\Aggregation\AggregateExpressionBase.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\AggregateTokenBase.cs">
+      <Link>UriParser\Aggregation\AggregateTokenBase.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\Aggregation\AggregateExpressionToken.cs">
+      <Link>UriParser\Aggregation\AggregateExpressionToken.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\Aggregation\AggregateTransformationNode.cs">
       <Link>UriParser\Aggregation\AggregateTransformationNode.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs"> 
-      <Link>UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs</Link> 
+    <Compile Include="..\UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs">
+      <Link>UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\Binders\BinaryOperatorBinder.cs">
       <Link>UriParser\Binders\BinaryOperatorBinder.cs</Link>

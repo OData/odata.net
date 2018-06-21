@@ -305,7 +305,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit a SingleValueCastNode
+        /// Visit an InNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>

@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
+using System.Globalization;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
@@ -18,6 +18,8 @@ namespace Microsoft.OData
     /// </summary>
     internal class PropertyCacheHandler
     {
+        private const string PropertyTypeDelimiter = "-";
+
         private readonly Stack<PropertyCache> cacheStack = new Stack<PropertyCache>();
 
         private readonly Stack<int> scopeLevelStack = new Stack<int>();
@@ -32,21 +34,18 @@ namespace Microsoft.OData
 
         public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
         {
-            StringBuilder uniqueName = new StringBuilder();
-            if (owningType != null)
-            {
-                uniqueName.Append(owningType.FullTypeName());
-                uniqueName.Append("-");
-            }
+            int depth = this.currentResourceScopeLevel - this.resourceSetScopeLevel;
 
-            uniqueName.Append(name);
-            if (this.currentResourceScopeLevel != this.resourceSetScopeLevel + 1)
-            {
-                // To avoid the property name conflicts of single navigation property and navigation source
-                uniqueName.Append(this.currentResourceScopeLevel - this.resourceSetScopeLevel);
-            }
+            Debug.Assert(depth >= 1, "'depth' should always be greater than or equal to 1");
 
-            return this.currentPropertyCache.GetProperty(name, uniqueName.ToString(), owningType);
+            // In production, depthStr == 1 in most cases. So we optimize string allocation for this case.
+            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
+
+            string uniqueName = owningType != null
+                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name)
+                : string.Concat(depthStr, name);
+
+            return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
         }
 
         public void SetCurrentResourceScopeLevel(int level)

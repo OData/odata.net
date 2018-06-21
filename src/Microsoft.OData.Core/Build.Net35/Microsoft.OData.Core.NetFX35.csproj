@@ -1539,6 +1539,9 @@
     <Compile Include="..\BindingPathHelper.cs">
       <Link>Microsoft\OData\Core\BindingPathHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Buffers\BufferUtils.cs">
+      <Link>Microsoft\OData\Core\Buffers\BufferUtils.cs</Link>
+    </Compile>
     <Compile Include="..\DuplicatePropertyNameChecker.cs">
       <Link>Microsoft\OData\Core\DuplicatePropertyNameChecker.cs</Link>
     </Compile>

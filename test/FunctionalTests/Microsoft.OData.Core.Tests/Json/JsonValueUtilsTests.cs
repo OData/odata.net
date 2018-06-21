@@ -17,7 +17,7 @@ namespace Microsoft.OData.Tests.Json
     {
         private MemoryStream stream;
         private NonIndentedTextWriter writer;
-
+        private char[] buffer;
         private Dictionary<string, string> escapedCharMap = new Dictionary<string, string>()
         {
             {"\r\n","\\r\\n"},
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteEmptyStringShouldWork()
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty, ref this.buffer);
             this.StreamToString().Should().Be("\"\"");
         }
 
@@ -44,17 +44,17 @@ namespace Microsoft.OData.Tests.Json
         public void WriteNonSpecialCharactersShouldWork()
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123");
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123", ref this.buffer);
             this.StreamToString().Should().Be("\"abcdefg123\"");
         }
-        
+
         [Fact]
         public void WriteSpecialCharactersShouldWork()
         {
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar));
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar), ref this.buffer);
                 this.StreamToString().Should().Be(string.Format("\"{0}\"", this.escapedCharMap[specialChar]));
             }
         }
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}MiddleEnd", specialChar));
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}MiddleEnd", specialChar), ref this.buffer);
                 this.StreamToString().Should().Be(string.Format("\"{0}MiddleEnd\"", this.escapedCharMap[specialChar]));
             }
         }
@@ -76,18 +76,18 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}End", specialChar));
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}End", specialChar), ref this.buffer);
                 this.StreamToString().Should().Be(string.Format("\"Start{0}End\"", this.escapedCharMap[specialChar]));
             }
         }
-        
+
         [Fact]
         public void WriteSpecialCharactersAtEndOfStringShouldWork()
         {
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("StartMiddle{0}", specialChar));
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("StartMiddle{0}", specialChar), ref this.buffer);
                 this.StreamToString().Should().Be(string.Format("\"StartMiddle{0}\"", this.escapedCharMap[specialChar]));
             }
         }
@@ -98,9 +98,69 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}Start{0}Middle{0}End", specialChar));
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}Start{0}Middle{0}End", specialChar), ref this.buffer);
                 this.StreamToString().Should().Be(string.Format("\"{0}Start{0}Middle{0}End\"", this.escapedCharMap[specialChar]));
             }
+        }
+
+        [Fact]
+        public void WriteSpecialCharactersAtStartOfBufferLengthShouldWork()
+        {
+            foreach (string specialChar in this.escapedCharMap.Keys)
+            {
+                this.TestInit();
+                char[] charBuffer = new char[10];
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("StartMiddle{0}End", specialChar), ref charBuffer);
+                this.StreamToString().Should().Be(string.Format("\"StartMiddle{0}End\"", this.escapedCharMap[specialChar]));
+            }
+        }
+
+        [Fact]
+        public void WriteMultipleSpecialCharactersAtEndOfBufferLengthShouldWork()
+        {
+            foreach (string specialChar in this.escapedCharMap.Keys)
+            {
+                this.TestInit();
+                char[] charBuffer = new char[6];
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}Middle{0}End{0}", specialChar), ref charBuffer);
+                this.StreamToString().Should().Be(string.Format("\"Start{0}Middle{0}End{0}\"", this.escapedCharMap[specialChar]));
+            }
+        }
+
+        [Fact]
+        public void WriteSpecialCharactersAtEndOfBufferLengthShouldWork()
+        {
+            foreach (string specialChar in this.escapedCharMap.Keys)
+            {
+                this.TestInit();
+                char[] charBuffer = new char[6];
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}", specialChar), ref charBuffer);
+                this.StreamToString().Should().Be(string.Format("\"Start{0}\"", this.escapedCharMap[specialChar]));
+            }
+        }
+
+        [Fact]
+        public void WriteStringWithNoSpecialCharShouldLeaveBufferUntouched()
+        {
+            this.TestInit();
+            char[] charBuffer = null;
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "StartMiddleEnd", ref charBuffer);
+            this.StreamToString().Should().Be("\"StartMiddleEnd\"");
+            charBuffer.Should().BeNull("Char Buffer for cases with zero special characters should need to use buffer");
+        }
+
+        [Fact]
+        public void WriteStringShouldIgnoreExistingContentsOfTheBuffer()
+        {
+            this.TestInit();
+            char[] charBuffer = new char[128];
+            for (int index = 0; index < 128; index++)
+            {
+                charBuffer[index] = (char)index;
+            }
+
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "StartVeryVeryLongMiddleEnd", ref charBuffer);
+            this.StreamToString().Should().Be("\"StartVeryVeryLongMiddleEnd\"");
         }
 
         [Fact]
@@ -116,7 +176,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteEmptyByteShouldWork()
         {
             this.TestInit();
-            var byteArray = new byte[]{};
+            var byteArray = new byte[] { };
             JsonValueUtils.WriteValue(this.writer, byteArray);
             this.StreamToString().Should().Be("\"\"");
         }
