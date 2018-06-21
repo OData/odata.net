@@ -39,6 +39,11 @@ namespace Microsoft.OData.Edm
         public string Namespace => EdmConstants.EdmNamespace;
 
         /// <summary>
+        /// Gets the full name of this type.
+        /// </summary>
+        public string FullName => CsdlConstants.TypeName_Untyped;
+
+        /// <summary>
         /// Private constructor.
         /// </summary>
         private EdmCoreModelUntypedType()

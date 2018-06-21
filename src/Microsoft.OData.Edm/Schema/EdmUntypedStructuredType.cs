@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using Microsoft.OData.Edm.Csdl;
 
 namespace Microsoft.OData.Edm
@@ -17,6 +15,7 @@ namespace Microsoft.OData.Edm
     {
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmStructuredType"/> class.
@@ -31,6 +30,7 @@ namespace Microsoft.OData.Edm
 
             this.namespaceName = namespaceName;
             this.name = name;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.namespaceName, this.name);
         }
 
         /// <summary>
@@ -47,6 +47,14 @@ namespace Microsoft.OData.Edm
         public string Namespace
         {
             get { return this.namespaceName; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         /// <summary>

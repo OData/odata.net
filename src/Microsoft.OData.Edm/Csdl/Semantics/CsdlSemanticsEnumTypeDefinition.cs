@@ -16,6 +16,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsEnumTypeDefinition : CsdlSemanticsTypeDefinition, IEdmEnumType
     {
+        private readonly string fullName;
         private readonly CsdlEnumType enumeration;
 
         private readonly Cache<CsdlSemanticsEnumTypeDefinition, IEdmPrimitiveType> underlyingTypeCache = new Cache<CsdlSemanticsEnumTypeDefinition, IEdmPrimitiveType>();
@@ -29,6 +30,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             this.Context = context;
             this.enumeration = enumeration;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.Context?.Namespace, this.enumeration?.Name);
         }
 
         IEdmPrimitiveType IEdmEnumType.UnderlyingType
@@ -54,6 +56,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Namespace
         {
             get { return this.Context.Namespace; }
+        }
+
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         string IEdmNamedElement.Name

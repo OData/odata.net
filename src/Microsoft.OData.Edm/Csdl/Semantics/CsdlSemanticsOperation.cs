@@ -17,6 +17,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal abstract class CsdlSemanticsOperation : CsdlSemanticsElement, IEdmOperation
     {
+        private readonly string fullName;
         private readonly CsdlOperation operation;
         private readonly Cache<CsdlSemanticsOperation, IEdmPathExpression> entitySetPathCache = new Cache<CsdlSemanticsOperation, IEdmPathExpression>();
         private static readonly Func<CsdlSemanticsOperation, IEdmPathExpression> ComputeEntitySetPathFunc = (me) => me.ComputeEntitySetPath();
@@ -32,6 +33,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             this.Context = context;
             this.operation = operation;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.Context?.Namespace, this.operation?.Name);
         }
 
         public abstract EdmSchemaElementKind SchemaElementKind { get; }
@@ -44,6 +46,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Name
         {
             get { return this.operation.Name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public override CsdlElement Element

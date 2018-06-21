@@ -260,12 +260,14 @@ namespace Microsoft.OData.Edm
             return sb.ToString();
         }
 
-        internal static bool TryGetNamespaceNameFromQualifiedName(string qualifiedName, out string namespaceName, out string name)
+        internal static bool TryGetNamespaceNameFromQualifiedName(string qualifiedName, out string namespaceName, out string name, out string fullName)
         {
             // Qualified name can be a operation import name which is separated by '/'
             int lastSlash = qualifiedName.LastIndexOf('/');
             if (lastSlash < 0)
             {
+                fullName = qualifiedName;
+
                 // Not a OperationImport
                 int lastDot = qualifiedName.LastIndexOf('.');
                 if (lastDot < 0)
@@ -282,6 +284,7 @@ namespace Microsoft.OData.Edm
 
             namespaceName = qualifiedName.Substring(0, lastSlash);
             name = qualifiedName.Substring(lastSlash + 1);
+            fullName = EdmUtil.GetFullNameForSchemaElement(namespaceName, name);
             return true;
         }
 
@@ -479,6 +482,24 @@ namespace Microsoft.OData.Edm
             }
 
             return val;
+        }
+
+        /// <summary>
+        /// Gets full name for the schema element with the provided namespace and name
+        /// </summary>
+        internal static string GetFullNameForSchemaElement(string elementNamespace, string elementName)
+        {
+            if (elementName == null)
+            {
+                return string.Empty;
+            }
+
+            if (elementNamespace == null)
+            {
+                return elementName;
+            }
+
+            return elementNamespace + "." + elementName;
         }
 
         /// <summary>

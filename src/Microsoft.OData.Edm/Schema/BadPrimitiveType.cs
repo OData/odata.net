@@ -17,13 +17,14 @@ namespace Microsoft.OData.Edm
         private readonly EdmPrimitiveTypeKind primitiveKind;
         private readonly string name;
         private readonly string namespaceName;
+        private readonly string fullName;
 
         public BadPrimitiveType(string qualifiedName, EdmPrimitiveTypeKind primitiveKind, IEnumerable<EdmError> errors)
             : base(errors)
         {
             this.primitiveKind = primitiveKind;
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
         }
 
         public EdmPrimitiveTypeKind PrimitiveKind
@@ -39,6 +40,14 @@ namespace Microsoft.OData.Edm
         public string Name
         {
             get { return this.name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public override EdmTypeKind TypeKind

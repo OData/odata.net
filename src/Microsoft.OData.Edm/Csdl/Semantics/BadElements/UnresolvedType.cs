@@ -15,12 +15,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
 
         public UnresolvedType(string qualifiedName, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedType, Edm.Strings.Bad_UnresolvedType(qualifiedName)) })
         {
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
         }
 
         public EdmSchemaElementKind SchemaElementKind
@@ -36,6 +37,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Name
         {
             get { return this.name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
     }
 }

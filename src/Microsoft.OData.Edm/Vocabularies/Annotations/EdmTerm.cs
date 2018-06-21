@@ -12,6 +12,7 @@ namespace Microsoft.OData.Edm.Vocabularies
     public class EdmTerm : EdmNamedElement, IEdmTerm
     {
         private readonly string namespaceName;
+        private readonly string fullName;
         private readonly IEdmTypeReference type;
         private readonly string appliesTo;
         private readonly string defaultValue;
@@ -82,6 +83,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             this.type = type;
             this.appliesTo = appliesTo;
             this.defaultValue = defaultValue;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.namespaceName, this.Name);
         }
 
         /// <summary>
@@ -90,6 +92,14 @@ namespace Microsoft.OData.Edm.Vocabularies
         public string Namespace
         {
             get { return this.namespaceName; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         /// <summary>

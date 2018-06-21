@@ -36,6 +36,14 @@ namespace Microsoft.OData.Edm
             }
         }
 
+        public string FullName
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public EdmPathTypeKind PathKind
         {
             get

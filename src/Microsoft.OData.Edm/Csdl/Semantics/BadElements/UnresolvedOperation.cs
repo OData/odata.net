@@ -17,13 +17,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
         private readonly IEdmTypeReference returnType;
 
         public UnresolvedOperation(string qualifiedName, string errorMessage, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedOperation, errorMessage) })
         {
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
             this.returnType = new BadTypeReference(new BadType(this.Errors), true);
         }
 
@@ -35,6 +36,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Name
         {
             get { return this.name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public IEdmTypeReference ReturnType

@@ -540,10 +540,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 {
                     string baseTypeNamespace;
                     string baseTypeName;
+                    string fullName;
                     string baseTypeFullName = ((CsdlNamedStructuredType)structuredType.Element).BaseTypeName;
                     if (baseTypeFullName != null)
                     {
-                        EdmUtil.TryGetNamespaceNameFromQualifiedName(baseTypeFullName, out baseTypeNamespace, out baseTypeName);
+                        EdmUtil.TryGetNamespaceNameFromQualifiedName(baseTypeFullName, out baseTypeNamespace, out baseTypeName, out fullName);
                         if (baseTypeName != null)
                         {
                             List<IEdmStructuredType> derivedTypes;

@@ -19,6 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsEntityContainer : CsdlSemanticsElement, IEdmEntityContainer, IEdmCheckable
     {
+        private readonly string fullName;
         private readonly CsdlEntityContainer entityContainer;
         private readonly CsdlSemanticsSchema context;
 
@@ -46,6 +47,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             this.context = context;
             this.entityContainer = entityContainer;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.context?.Namespace, this.entityContainer?.Name);
         }
 
         public EdmSchemaElementKind SchemaElementKind
@@ -71,6 +73,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Name
         {
             get { return this.entityContainer.Name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public IEnumerable<EdmError> Errors

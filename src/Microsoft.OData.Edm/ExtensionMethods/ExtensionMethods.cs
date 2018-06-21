@@ -18,7 +18,6 @@ using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm
 {
@@ -324,8 +323,9 @@ namespace Microsoft.OData.Edm
             // Look up annotations on the element by name. There's no particular advantage in searching for a term first.
             string name;
             string namespaceName;
+            string fullName;
 
-            if (EdmUtil.TryGetNamespaceNameFromQualifiedName(termName, out namespaceName, out name))
+            if (EdmUtil.TryGetNamespaceNameFromQualifiedName(termName, out namespaceName, out name, out fullName))
             {
                 foreach (T annotation in model.FindVocabularyAnnotations(element).OfType<T>())
                 {
@@ -1383,18 +1383,7 @@ namespace Microsoft.OData.Edm
         public static string FullName(this IEdmSchemaElement element)
         {
             EdmUtil.CheckArgumentNull(element, "element");
-            if (element.Name == null)
-            {
-                return string.Empty;
-            }
-            else if (element.Namespace == null)
-            {
-                return element.Name;
-            }
-            else
-            {
-                return element.Namespace + "." + element.Name;
-            }
+            return element.FullName;
         }
 
         /// <summary>

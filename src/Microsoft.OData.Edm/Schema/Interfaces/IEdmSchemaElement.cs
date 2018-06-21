@@ -59,5 +59,10 @@ namespace Microsoft.OData.Edm
         /// Gets the namespace this schema element belongs to.
         /// </summary>
         string Namespace { get; }
+
+        /// <summary>
+        /// Gets the full name of the schema element
+        /// </summary>
+        string FullName { get; }
     }
 }

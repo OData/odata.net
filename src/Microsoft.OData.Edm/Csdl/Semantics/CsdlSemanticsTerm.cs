@@ -18,6 +18,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsTerm : CsdlSemanticsElement, IEdmTerm
     {
         protected readonly CsdlSemanticsSchema Context;
+        private readonly string fullName;
         protected CsdlTerm term;
 
         private readonly Cache<CsdlSemanticsTerm, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsTerm, IEdmTypeReference>();
@@ -28,6 +29,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             this.Context = context;
             this.term = valueTerm;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.Context?.Namespace, this.term?.Name);
         }
 
         public string Name
@@ -38,6 +40,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Namespace
         {
             get { return this.Context.Namespace; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public EdmSchemaElementKind SchemaElementKind

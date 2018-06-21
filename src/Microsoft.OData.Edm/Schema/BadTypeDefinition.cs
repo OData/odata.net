@@ -16,12 +16,13 @@ namespace Microsoft.OData.Edm
     {
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
 
         public BadTypeDefinition(string qualifiedName, IEnumerable<EdmError> errors)
             : base(errors)
         {
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
         }
 
         public override EdmTypeKind TypeKind
@@ -47,6 +48,14 @@ namespace Microsoft.OData.Edm
         public string Name
         {
             get { return this.name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
     }
 }

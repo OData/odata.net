@@ -461,6 +461,11 @@ namespace Microsoft.OData.Client
             private readonly string name;
 
             /// <summary>
+            /// Full name of the type;
+            /// </summary>
+            private readonly string fullName;
+
+            /// <summary>
             /// The kind of primitive.
             /// </summary>
             private readonly EdmPrimitiveTypeKind primitiveKind;
@@ -476,6 +481,7 @@ namespace Microsoft.OData.Client
                 this.namespaceName = namespaceName;
                 this.name = name;
                 this.primitiveKind = primitiveKind;
+                this.fullName = this.namespaceName + "." + this.name;
             }
 
             /// <summary>
@@ -492,6 +498,14 @@ namespace Microsoft.OData.Client
             public string Namespace
             {
                 get { return this.namespaceName; }
+            }
+
+            /// <summary>
+            /// Full name of the type
+            /// </summary>
+            public string FullName
+            {
+                get { return this.fullName; }
             }
 
             /// <summary>
