@@ -722,6 +722,14 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void ExpressionLexerShouldParseValidAnnotationCorrectly()
+        {
+            string exprAnnotation = "@NS.myAnnotation1";
+            ValidateTokenSequence(exprAnnotation, true /*parsingFunctionParameters*/,
+                IdentifierToken("@NS.myAnnotation1"));
+        }
+
+        [Fact]
         public void ExpressionLexerShouldGrabEntireIdentifierForAliasUntilANonIdentifierCharacter()
         {
             ValidateTokenSequence(
