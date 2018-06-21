@@ -17,7 +17,7 @@ namespace Microsoft.OData.Tests.Json
     {
         private MemoryStream stream;
         private TextWriterWrapper writer;
-
+        private char[] buffer;
         private Dictionary<string, string> escapedCharMap = new Dictionary<string, string>()
         {
             {"\r\n", "\\r\\n"}, 
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteEmptyStringShouldWork()
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty, ref this.buffer);
             this.StreamToString().Should().Be("\"\"");
         }
 
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteNonSpecialCharactersShouldWork()
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123");
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123", ref this.buffer);
             this.StreamToString().Should().Be("\"abcdefg123\"");
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar));
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar), ref this.buffer);
                 this.StreamToString().Should().Be(string.Format("\"{0}\"", this.escapedCharMap[specialChar]));
             }
         }
