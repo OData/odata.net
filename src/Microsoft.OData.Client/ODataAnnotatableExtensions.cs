@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Diagnostics;
 
 namespace Microsoft.OData.Client
@@ -30,12 +30,12 @@ namespace Microsoft.OData.Client
 
         private static class InternalDictionary<T> where T : class
         {
-            private static readonly ConcurrentDictionary<ODataAnnotatable, T> Dictionary =
-                new ConcurrentDictionary<ODataAnnotatable, T>();
+            private static readonly ConditionalWeakTable<ODataAnnotatable, T> Dictionary =
+                new ConditionalWeakTable<ODataAnnotatable, T>();
 
             public static void SetAnnotation(ODataAnnotatable annotatable, T annotation)
             {
-                Dictionary[annotatable] = annotation;
+                Dictionary.Add(annotatable,annotation); 
             }
 
             public static T GetAnnotation(ODataAnnotatable annotatable)
