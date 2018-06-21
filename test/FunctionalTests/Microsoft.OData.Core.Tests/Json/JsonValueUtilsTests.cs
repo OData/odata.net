@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void WriteMultipleSpecialCharactersAtStartOfBufferLengthShouldWork()
+        public void WriteSpecialCharactersAtStartOfBufferLengthShouldWork()
         {
             foreach (string specialChar in this.escapedCharMap.Keys)
             {

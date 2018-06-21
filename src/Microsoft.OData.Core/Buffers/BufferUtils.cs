@@ -11,7 +11,6 @@ namespace Microsoft.OData.Buffers
     /// <summary>
     /// Helpers to deal with buffers
     /// </summary>
-
     internal static class BufferUtils
     {
         /// <summary>

@@ -403,6 +403,8 @@ namespace Microsoft.OData.Json
                         // flush the current buffer and reset. Add the escaped string to the buffer
                         // and continue.
                         int escapedStringLength = escapedString.Length;
+                        Debug.Assert(escapedStringLength <= bufferLength, "Buffer should be larger than the escaped string");
+
                         if ((bufferIndex + escapedStringLength) > bufferLength)
                         {
                             writer.Write(buffer, 0, bufferIndex);
@@ -489,8 +491,8 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Checks if the string contains special char and returns the find the first 
-        /// index of special char if present.
+        /// Checks if the string contains special char and returns the first index 
+        /// of special char if present.
         /// </summary>
         /// <param name="inputString">string that might contain special characters.</param>
         /// <param name="firstIndex">first index of the special char</param>
@@ -499,6 +501,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(inputString != null, "The string value must not be null.");
 
+            firstIndex = -1;
             int inputStringLength = inputString.Length;
             for (int currentIndex = 0; currentIndex < inputStringLength; currentIndex++)
             {
@@ -513,7 +516,6 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            firstIndex = inputStringLength;
             return false;
         }
 
