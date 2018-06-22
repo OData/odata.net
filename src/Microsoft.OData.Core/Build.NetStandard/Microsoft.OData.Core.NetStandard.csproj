@@ -1064,6 +1064,9 @@
     <Compile Include="..\UriParser\Binders\ComputeBinder.cs">
       <Link>UriParser\Binders\ComputeBinder.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\Binders\InBinder.cs">
+      <Link>UriParser\Binders\InBinder.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\Binders\DottedIdentifierBinder.cs">
       <Link>UriParser\Binders\DottedIdentifierBinder.cs</Link>
     </Compile>
@@ -1334,6 +1337,9 @@
     <Compile Include="..\UriParser\SemanticAst\CollectionComplexNode.cs">
       <Link>UriParser\SemanticAst\CollectionComplexNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionConstantNode.cs">
+      <Link>UriParser\SemanticAst\CollectionConstantNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionFunctionCallNode.cs">
       <Link>UriParser\SemanticAst\CollectionFunctionCallNode.cs</Link>
     </Compile>
@@ -1414,6 +1420,9 @@
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\AnnotationSegment.cs">
       <Link>UriParser\SemanticAst\AnnotationSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\InNode.cs">
+      <Link>UriParser\SemanticAst\InNode.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\MetadataSegment.cs">
       <Link>UriParser\SemanticAst\MetadataSegment.cs</Link>
@@ -1576,6 +1585,9 @@
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\ComputeExpressionToken.cs">
       <Link>UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\InToken.cs">
+      <Link>UriParser\SyntacticAst\InToken.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
       <Link>UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>

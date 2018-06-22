@@ -118,6 +118,9 @@ namespace Microsoft.OData.UriParser
         TimeOfDayLiteral = 35,
 
         /// <summary>CustomType Literal.</summary>
-        CustomTypeLiteral = 36
+        CustomTypeLiteral = 36,
+
+        /// <summary>A ParenthesesExpression is an expression within parentheses. It contains a list of objects.</summary>
+        ParenthesesExpression = 37,
     }
 }

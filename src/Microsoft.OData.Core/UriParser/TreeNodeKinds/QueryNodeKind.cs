@@ -173,6 +173,16 @@ namespace Microsoft.OData.UriParser
         /// Node represents a property of a aggregated collection.
         /// </summary>
         AggregatedCollectionPropertyNode = InternalQueryNodeKind.AggregatedCollectionPropertyNode,
+
+        /// <summary>
+        /// In operator node.
+        /// </summary>
+        In = InternalQueryNodeKind.In,
+
+        /// <summary>
+        /// Node that represents a collection of constants.
+        /// </summary>
+        CollectionConstant = InternalQueryNodeKind.CollectionConstant,
     }
 
     /// <summary>
@@ -339,5 +349,15 @@ namespace Microsoft.OData.UriParser
         /// Node represents a property of a aggregated collection.
         /// </summary>
         AggregatedCollectionPropertyNode = 31,
+
+        /// <summary>
+        /// In operator node.
+        /// </summary>
+        In = 32,
+
+        /// <summary>
+        /// Node that represents a collection of constants.
+        /// </summary>
+        CollectionConstant = 33,
     }
 }
