@@ -111,6 +111,9 @@ namespace Microsoft.OData
         /// <summary>"max" keyword for expressions.</summary>
         internal const string KeywordMax = "max";
 
+        /// <summary>"in" keyword for expressions.</summary>
+        internal const string KeywordIn = "in";
+
         /// <summary> "cast" function </summary>
         internal const string UnboundFunctionCast = "cast";
 

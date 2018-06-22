@@ -52,6 +52,9 @@ namespace Microsoft.OData.UriParser.Aggregation
             }
         }
 
+        /// <summary>
+        /// Gets the expressions of this token.
+        /// </summary>
         public IEnumerable<AggregateTokenBase> AggregateExpressions
         {
             get

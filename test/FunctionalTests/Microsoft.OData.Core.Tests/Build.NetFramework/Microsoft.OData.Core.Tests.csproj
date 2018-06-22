@@ -361,6 +361,7 @@
     <Compile Include="..\UriParser\SemanticAst\BatchReferenceSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\BatchSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\BinaryOperatorNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\CollectionConstantNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionFunctionCallNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionNavigationNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionPropertyAccessNodeTests.cs" />
@@ -369,6 +370,7 @@
     <Compile Include="..\UriParser\SemanticAst\CountSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\InNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\EntitySetNodeTests.cs" />

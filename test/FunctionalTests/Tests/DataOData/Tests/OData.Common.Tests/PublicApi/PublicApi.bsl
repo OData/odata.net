@@ -5422,6 +5422,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	Any = 9
 	BinaryOperator = 4
 	CollectionComplexNode = 26
+	CollectionConstant = 33
 	CollectionFunctionCall = 18
 	CollectionNavigationNode = 10
 	CollectionOpenPropertyAccess = 25
@@ -5433,6 +5434,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	Convert = 2
 	Count = 28
 	EntitySet = 22
+	In = 32
 	KeyLookup = 23
 	NamedFunctionParameter = 20
 	None = 0
@@ -5469,6 +5471,7 @@ public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	FunctionCall = 6
 	FunctionParameter = 21
 	FunctionParameterAlias = 22
+	In = 30
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
@@ -5511,6 +5514,7 @@ public interface Microsoft.OData.UriParser.ISyntacticTreeVisitor`1 {
 	T Visit (Microsoft.OData.UriParser.FunctionCallToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.FunctionParameterToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.InnerPathToken tokenIn)
+	T Visit (Microsoft.OData.UriParser.InToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.LambdaToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.LiteralToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.OrderByToken tokenIn)
@@ -5650,6 +5654,7 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	public virtual T Visit (Microsoft.OData.UriParser.AnyNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.BinaryOperatorNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionComplexNode nodeIn)
+	public virtual T Visit (Microsoft.OData.UriParser.CollectionConstantNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionFunctionCallNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionNavigationNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionOpenPropertyAccessNode nodeIn)
@@ -5659,6 +5664,7 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	public virtual T Visit (Microsoft.OData.UriParser.ConstantNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.ConvertNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CountNode nodeIn)
+	public virtual T Visit (Microsoft.OData.UriParser.InNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.NamedFunctionParameterNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.ParameterAliasNode nodeIn)
@@ -6017,6 +6023,17 @@ public sealed class Microsoft.OData.UriParser.BinaryOperatorToken : Microsoft.OD
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
 
+public sealed class Microsoft.OData.UriParser.CollectionConstantNode : Microsoft.OData.UriParser.CollectionNode {
+	public CollectionConstantNode (System.Collections.Generic.IEnumerable`1[[System.Object]] objectCollection, string literalText, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType)
+
+	System.Collections.Generic.IList`1[[Microsoft.OData.UriParser.ConstantNode]] Collection  { public get; }
+	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
+	string LiteralText  { public get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
 public sealed class Microsoft.OData.UriParser.CollectionFunctionCallNode : Microsoft.OData.UriParser.CollectionNode {
 	public CollectionFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmCollectionTypeReference returnedCollectionType, Microsoft.OData.UriParser.QueryNode source)
 
@@ -6324,6 +6341,26 @@ public sealed class Microsoft.OData.UriParser.InnerPathToken : Microsoft.OData.U
 	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.NamedValue]] NamedValues  { public get; }
 	Microsoft.OData.UriParser.QueryToken NextToken  { public virtual get; public virtual set; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.UriParser.InNode : Microsoft.OData.UriParser.SingleValueNode {
+	public InNode (Microsoft.OData.UriParser.SingleValueNode left, Microsoft.OData.UriParser.CollectionNode right)
+
+	Microsoft.OData.UriParser.SingleValueNode Left  { public get; }
+	Microsoft.OData.UriParser.CollectionNode Right  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.UriParser.InToken : Microsoft.OData.UriParser.QueryToken {
+	public InToken (Microsoft.OData.UriParser.QueryToken left, Microsoft.OData.UriParser.QueryToken right)
+
+	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
+	Microsoft.OData.UriParser.QueryToken Left  { public get; }
+	Microsoft.OData.UriParser.QueryToken Right  { public get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
@@ -7913,6 +7950,7 @@ public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	FunctionCall = 6
 	FunctionParameter = 21
 	FunctionParameterAlias = 22
+	In = 30
 	InnerPath = 16
 	Literal = 5
 	OrderBy = 8
@@ -7950,6 +7988,7 @@ public interface Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor`1 
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.GroupByToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.InnerPathToken tokenIn)
+	T Visit (Microsoft.OData.Client.ALinq.UriParser.InToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.LambdaToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.LiteralToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.OrderByToken tokenIn)
@@ -8193,6 +8232,16 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.InnerPathToken : Micr
 	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.NamedValue]] NamedValues  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public virtual get; public virtual set; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.InToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+	public InToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken left, Microsoft.OData.Client.ALinq.UriParser.QueryToken right)
+
+	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+	Microsoft.OData.Client.ALinq.UriParser.QueryToken Left  { public get; }
+	Microsoft.OData.Client.ALinq.UriParser.QueryToken Right  { public get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
