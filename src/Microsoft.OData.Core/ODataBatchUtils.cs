@@ -170,7 +170,7 @@ namespace Microsoft.OData
             {
                 if (baseUri == null)
                 {
-                    // The absolution Uri can contain $ character followed by name of system resource
+                    // The absolute Uri can contain $ character followed by name of system resource
                     // such as $all, $metadata, etc, along with an unspecified baseUri. In such cases there are
                     // not reference Uri to validate.
                     return;
