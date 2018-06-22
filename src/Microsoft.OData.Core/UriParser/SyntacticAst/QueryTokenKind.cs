@@ -145,5 +145,10 @@ namespace Microsoft.OData.UriParser
         /// $apply aggregate statement to a entity set token
         /// </summary>
         EntitySetAggregateExpression = 29,
+
+        /// <summary>
+        /// In operator.
+        /// </summary>
+        In = 30,
     }
 }

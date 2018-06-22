@@ -652,6 +652,8 @@ namespace Microsoft.OData {
         internal const string MetadataBinder_PropertyAccessWithoutParentParameter = "MetadataBinder_PropertyAccessWithoutParentParameter";
         internal const string MetadataBinder_BinaryOperatorOperandNotSingleValue = "MetadataBinder_BinaryOperatorOperandNotSingleValue";
         internal const string MetadataBinder_UnaryOperatorOperandNotSingleValue = "MetadataBinder_UnaryOperatorOperandNotSingleValue";
+        internal const string MetadataBinder_LeftOperandNotSingleValue = "MetadataBinder_LeftOperandNotSingleValue";
+        internal const string MetadataBinder_RightOperandNotCollectionValue = "MetadataBinder_RightOperandNotCollectionValue";
         internal const string MetadataBinder_PropertyAccessSourceNotSingleValue = "MetadataBinder_PropertyAccessSourceNotSingleValue";
         internal const string MetadataBinder_IncompatibleOperandsError = "MetadataBinder_IncompatibleOperandsError";
         internal const string MetadataBinder_IncompatibleOperandError = "MetadataBinder_IncompatibleOperandError";
@@ -715,6 +717,7 @@ namespace Microsoft.OData {
         internal const string Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
         internal const string Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity = "Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity";
         internal const string Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
+        internal const string Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType = "Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType";
         internal const string ExpandTreeNormalizer_NonPathInPropertyChain = "ExpandTreeNormalizer_NonPathInPropertyChain";
         internal const string UriExpandParser_TermIsNotValidForStar = "UriExpandParser_TermIsNotValidForStar";
         internal const string UriExpandParser_TermIsNotValidForStarRef = "UriExpandParser_TermIsNotValidForStarRef";
@@ -815,6 +818,7 @@ namespace Microsoft.OData {
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
         internal const string JsonReader_UnexpectedComma = "JsonReader_UnexpectedComma";
+        internal const string JsonReader_ArrayClosureMismatch = "JsonReader_ArrayClosureMismatch";
         internal const string JsonReader_MultipleTopLevelValues = "JsonReader_MultipleTopLevelValues";
         internal const string JsonReader_EndOfInputWithOpenScope = "JsonReader_EndOfInputWithOpenScope";
         internal const string JsonReader_UnexpectedToken = "JsonReader_UnexpectedToken";

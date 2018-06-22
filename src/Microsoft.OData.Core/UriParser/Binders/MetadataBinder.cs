@@ -194,6 +194,9 @@ namespace Microsoft.OData.UriParser
                 case QueryTokenKind.FunctionParameter:
                     result = this.BindFunctionParameter((FunctionParameterToken)token);
                     break;
+                case QueryTokenKind.In:
+                    result = this.BindIn((InToken)token);
+                    break;
                 default:
                     throw new ODataException(ODataErrorStrings.MetadataBinder_UnsupportedQueryTokenKind(token.Kind));
             }
@@ -342,6 +345,17 @@ namespace Microsoft.OData.UriParser
         protected virtual QueryNode BindStringLiteral(StringLiteralToken stringLiteralToken)
         {
             return new SearchTermNode(stringLiteralToken.Text);
+        }
+
+        /// <summary>
+        /// Binds an In token.
+        /// </summary>
+        /// <param name="inToken">The In token to bind.</param>
+        /// <returns>The bound In token.</returns>
+        protected virtual QueryNode BindIn(InToken inToken)
+        {
+            InBinder inBinder = new InBinder(this.Bind);
+            return inBinder.BindInOperator(inToken, this.BindingState);
         }
     }
 }

@@ -124,10 +124,10 @@ namespace Microsoft.OData
                         query.Append(aggExpression.Alias);
                         break;
                     case AggregateExpressionKind.EntitySetAggregate:
-                        EntitySetAggregateExpression esExpression = expression as EntitySetAggregateExpression;
-                        query.Append(esExpression.Alias);
+                        EntitySetAggregateExpression entitySetExpression = expression as EntitySetAggregateExpression;
+                        query.Append(entitySetExpression.Alias);
                         query.Append(ExpressionConstants.SymbolOpenParen);
-                        Translate(esExpression.Children);
+                        Translate(entitySetExpression.Children);
                         query.Append(ExpressionConstants.SymbolClosedParen);
                         break;
                 }

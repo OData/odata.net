@@ -4504,6 +4504,26 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The left operand for the IN operation is not a single value. IN operations require the left operand to be a single value and the right operand to be a collection value."
+        /// </summary>
+        internal static string MetadataBinder_LeftOperandNotSingleValue
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_LeftOperandNotSingleValue);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The right operand for the IN operation is not a collection value. IN operations require the left operand to be a single value and the right operand to be a collection value."
+        /// </summary>
+        internal static string MetadataBinder_RightOperandNotCollectionValue
+        {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_RightOperandNotCollectionValue);
+            }
+        }
+
+        /// <summary>
         /// A string like "The parent value for a property access of a property '{0}' is not a single value. Property access can only be applied to a single value."
         /// </summary>
         internal static string MetadataBinder_PropertyAccessSourceNotSingleValue(object p0) {
@@ -4990,6 +5010,14 @@ namespace Microsoft.OData {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
             }
+        }
+
+        /// <summary>
+        /// A string like "An instance of InNode can only be created where the item type of the right operand collection '{0}' is equal to that of the left operand single value '{0}'."
+        /// </summary>
+        internal static string Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType, p0, p1);
         }
 
         /// <summary>
@@ -5742,6 +5770,14 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string JsonReader_UnexpectedComma(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_UnexpectedComma, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid JSON. A array closure mismatch occurred. A '{0}' was expected to match '{1}', but instead '{2}' was found."
+        /// </summary>
+        internal static string JsonReader_ArrayClosureMismatch(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_ArrayClosureMismatch, p0, p1, p2);
         }
 
         /// <summary>

@@ -169,6 +169,7 @@ namespace Microsoft.OData.UriParser
 
                 case ExpressionTokenKind.BracedExpression:
                 case ExpressionTokenKind.BracketedExpression:
+                case ExpressionTokenKind.ParenthesesExpression:
                     {
                         LiteralToken result = new LiteralToken(lexer.CurrentToken.Text, lexer.CurrentToken.Text);
                         lexer.NextToken();
@@ -617,7 +618,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
         private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression)
         {
-            return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/, true /*parsingFunctionParameters*/);
+            return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
         }
 
         /// <summary>Creates an exception for a parse error.</summary>
@@ -752,7 +753,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses the eq, ne, lt, gt, le, ge operators.
+        /// Parses the eq, ne, lt, gt, le, ge, has, and in operators.
         /// </summary>
         /// <returns>The lexical token representing the expression.</returns>
         private QueryToken ParseComparison()
@@ -761,43 +762,52 @@ namespace Microsoft.OData.UriParser
             QueryToken left = this.ParseAdditive();
             while (true)
             {
-                BinaryOperatorKind binaryOperatorKind;
-                if (this.TokenIdentifierIs(ExpressionConstants.KeywordEqual))
+                if (this.TokenIdentifierIs(ExpressionConstants.KeywordIn))
                 {
-                    binaryOperatorKind = BinaryOperatorKind.Equal;
-                }
-                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordNotEqual))
-                {
-                    binaryOperatorKind = BinaryOperatorKind.NotEqual;
-                }
-                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThan))
-                {
-                    binaryOperatorKind = BinaryOperatorKind.GreaterThan;
-                }
-                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThanOrEqual))
-                {
-                    binaryOperatorKind = BinaryOperatorKind.GreaterThanOrEqual;
-                }
-                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThan))
-                {
-                    binaryOperatorKind = BinaryOperatorKind.LessThan;
-                }
-                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThanOrEqual))
-                {
-                    binaryOperatorKind = BinaryOperatorKind.LessThanOrEqual;
-                }
-                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordHas))
-                {
-                    binaryOperatorKind = BinaryOperatorKind.Has;
+                    this.lexer.NextToken();
+                    QueryToken right = this.ParseAdditive();
+                    left = new InToken(left, right);
                 }
                 else
                 {
-                    break;
-                }
+                    BinaryOperatorKind binaryOperatorKind;
+                    if (this.TokenIdentifierIs(ExpressionConstants.KeywordEqual))
+                    {
+                        binaryOperatorKind = BinaryOperatorKind.Equal;
+                    }
+                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordNotEqual))
+                    {
+                        binaryOperatorKind = BinaryOperatorKind.NotEqual;
+                    }
+                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThan))
+                    {
+                        binaryOperatorKind = BinaryOperatorKind.GreaterThan;
+                    }
+                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThanOrEqual))
+                    {
+                        binaryOperatorKind = BinaryOperatorKind.GreaterThanOrEqual;
+                    }
+                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThan))
+                    {
+                        binaryOperatorKind = BinaryOperatorKind.LessThan;
+                    }
+                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThanOrEqual))
+                    {
+                        binaryOperatorKind = BinaryOperatorKind.LessThanOrEqual;
+                    }
+                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordHas))
+                    {
+                        binaryOperatorKind = BinaryOperatorKind.Has;
+                    }
+                    else
+                    {
+                        break;
+                    }
 
-                this.lexer.NextToken();
-                QueryToken right = this.ParseAdditive();
-                left = new BinaryOperatorToken(binaryOperatorKind, left, right);
+                    this.lexer.NextToken();
+                    QueryToken right = this.ParseAdditive();
+                    left = new BinaryOperatorToken(binaryOperatorKind, left, right);
+                }
             }
 
             this.RecurseLeave();

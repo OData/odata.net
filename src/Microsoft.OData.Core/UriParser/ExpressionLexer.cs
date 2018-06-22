@@ -78,7 +78,7 @@ namespace Microsoft.OData.UriParser
         };
 
         /// <summary> flag to indicate whether to delimit on a semicolon. </summary>
-        private readonly bool useSemicolonDelimeter;
+        private readonly bool useSemicolonDelimiter;
 
         /// <summary>Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</summary>
         private readonly bool parsingFunctionParameters;
@@ -93,25 +93,25 @@ namespace Microsoft.OData.UriParser
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
         /// <param name="expression">Expression to parse.</param>
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
-        /// <param name="useSemicolonDelimeter">If true, the lexer will tokenize based on semicolons as well.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimeter)
-            : this(expression, moveToFirstToken, useSemicolonDelimeter, false /*parsingFunctionParameters*/)
+        /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
+        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter)
+            : this(expression, moveToFirstToken, useSemicolonDelimiter, false /*parsingFunctionParameters*/)
         {
         }
 
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
         /// <param name="expression">Expression to parse.</param>
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
-        /// <param name="useSemicolonDelimeter">If true, the lexer will tokenize based on semicolons as well.</param>
+        /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimeter, bool parsingFunctionParameters)
+        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
         {
             Debug.Assert(expression != null, "expression != null");
 
             this.ignoreWhitespace = true;
             this.Text = expression;
             this.TextLen = this.Text.Length;
-            this.useSemicolonDelimeter = useSemicolonDelimeter;
+            this.useSemicolonDelimiter = useSemicolonDelimiter;
             this.parsingFunctionParameters = parsingFunctionParameters;
 
             this.SetTextPos(0);
@@ -549,8 +549,18 @@ namespace Microsoft.OData.UriParser
             switch (this.ch)
             {
                 case '(':
-                    this.NextChar();
-                    t = ExpressionTokenKind.OpenParen;
+                    if (this.CurrentToken.Text == ExpressionConstants.KeywordIn)
+                    {
+                        this.NextChar();
+                        this.AdvanceThroughBalancedExpression('(', ')');
+                        t = ExpressionTokenKind.ParenthesesExpression;
+                    }
+                    else
+                    {
+                        this.NextChar();
+                        t = ExpressionTokenKind.OpenParen;
+                    }
+
                     break;
                 case ')':
                     this.NextChar();
@@ -687,7 +697,7 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
-                    if (this.useSemicolonDelimeter && this.ch == ';')
+                    if (this.useSemicolonDelimiter && this.ch == ';')
                     {
                         this.NextChar();
                         t = ExpressionTokenKind.SemiColon;

@@ -58,7 +58,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>Initializes a new <see cref="SearchLexer"/>.</summary>
         /// <param name="expression">Expression to parse.</param>
         internal SearchLexer(string expression)
-            : base(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimeter*/)
+            : base(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/)
         {
         }
 
