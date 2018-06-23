@@ -3855,8 +3855,12 @@ this.Write(@""")]
                     this.Write(this.context.IgnoreUnexpectedElementsAndAttributes.ToString().ToLower());
                     this.Write(@", out edmModel, out errors))
                     {
-                        global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError> errorMessages = new global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError>(errors);
-                        throw new global::System.InvalidOperationException(string.Join("";"", errorMessages.ConvertAll(e => e.ErrorMessage).ToArray()));
+                        string errorMessage = string.Empty;
+                        foreach (var error in errors)
+                        {
+                            errorMessage = error.ErrorMessage + ""; "";
+                        }
+                        throw new global::System.InvalidOperationException(errorMessage);
                     }
 
                     return edmModel;

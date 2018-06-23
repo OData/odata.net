@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 4/10/2018 6:37:19 PM
+// Generation date: 6/23/2018 3:17:07 PM
 namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference
 {
     /// <summary>
@@ -1171,18 +1171,17 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings edmxReaderSettings = new global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings()
-                    {
-                        IgnoreUnexpectedAttributesAndElements = false
-                    };
-                    
                     global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
-                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.IEdmModel> references = global::System.Linq.Enumerable.Empty<global::Microsoft.OData.Edm.IEdmModel>();
                     global::Microsoft.OData.Edm.IEdmModel edmModel;
                     
-                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, references, edmxReaderSettings, out edmModel, out errors))
+                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
                     {
-                        throw new global::System.InvalidOperationException("Error while parsing CSDL.");
+                        string errorMessage = string.Empty;
+                        foreach (var error in errors)
+                        {
+                            errorMessage = error.ErrorMessage + "; ";
+                        }
+                        throw new global::System.InvalidOperationException(errorMessage);
                     }
 
                     return edmModel;

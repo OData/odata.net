@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 6/22/2018 7:09:12 PM
+// Generation date: 6/23/2018 3:22:30 PM
 namespace Namespace1.DSC
 {
     /// <summary>
@@ -104,8 +104,12 @@ namespace Namespace1.DSC
                     
                     if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
                     {
-                        global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError> errorMessages = new global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError>(errors);
-                        throw new global::System.InvalidOperationException(string.Join(";", errorMessages.ConvertAll(e => e.ErrorMessage).ToArray()));
+                        string errorMessage = string.Empty;
+                        foreach (var error in errors)
+                        {
+                            errorMessage = error.ErrorMessage + "; ";
+                        }
+                        throw new global::System.InvalidOperationException(errorMessage);
                     }
 
                     return edmModel;
