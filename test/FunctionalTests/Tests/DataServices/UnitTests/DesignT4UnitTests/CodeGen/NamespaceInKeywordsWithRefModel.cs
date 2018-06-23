@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 6/22/2018 7:09:16 PM
+// Generation date: 6/22/2018 7:27:37 PM
 namespace Event.String.Int
 {
     /// <summary>
@@ -364,16 +364,7 @@ namespace Simple.Double
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
-                    global::Microsoft.OData.Edm.IEdmModel edmModel;
-                    
-                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
-                    {
-                        global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError> errorMessages = new global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError>(errors);
-                        throw new global::System.InvalidOperationException(string.Join(";", errorMessages.ConvertAll(e => e.ErrorMessage).ToArray()));
-                    }
-
-                    return edmModel;
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, getReferencedModelFromMap);
                 }
                 finally
                 {

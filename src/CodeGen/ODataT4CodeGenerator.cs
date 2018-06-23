@@ -3825,18 +3825,7 @@ this.Write(@""")]
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
-                    global::Microsoft.OData.Edm.IEdmModel edmModel;
-                    
-                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, ");
-                    this.Write(this.context.IgnoreUnexpectedElementsAndAttributes.ToString().ToLower());
-                    this.Write(@", out edmModel, out errors))
-                    {
-                        global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError> errorMessages = new global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError>(errors);
-                        throw new global::System.InvalidOperationException(string.Join("";"", errorMessages.ConvertAll(e => e.ErrorMessage).ToArray()));
-                    }
-
-                    return edmModel;
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, getReferencedModelFromMap);
                 }
                 finally
                 {
