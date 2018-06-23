@@ -3855,12 +3855,13 @@ this.Write(@""")]
                     this.Write(this.context.IgnoreUnexpectedElementsAndAttributes.ToString().ToLower());
                     this.Write(@", out edmModel, out errors))
                     {
-                        string errorMessage = string.Empty;
+                        global::System.Text.StringBuilder errorMessages = new System.Text.StringBuilder();
                         foreach (var error in errors)
                         {
-                            errorMessage = error.ErrorMessage + ""; "";
+                            errorMessages.Append(error.ErrorMessage);
+                            errorMessages.Append(""; "");
                         }
-                        throw new global::System.InvalidOperationException(errorMessage);
+                        throw new global::System.InvalidOperationException(errorMessages.ToString());
                     }
 
                     return edmModel;

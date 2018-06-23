@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 6/23/2018 3:22:32 PM
+// Generation date: 6/23/2018 3:55:02 PM
 namespace Foo
 {
     /// <summary>
@@ -124,12 +124,13 @@ namespace Foo
                     
                     if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
                     {
-                        string errorMessage = string.Empty;
+                        global::System.Text.StringBuilder errorMessages = new System.Text.StringBuilder();
                         foreach (var error in errors)
                         {
-                            errorMessage = error.ErrorMessage + "; ";
+                            errorMessages.Append(error.ErrorMessage);
+                            errorMessages.Append("; ");
                         }
-                        throw new global::System.InvalidOperationException(errorMessage);
+                        throw new global::System.InvalidOperationException(errorMessages.ToString());
                     }
 
                     return edmModel;

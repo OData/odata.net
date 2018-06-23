@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 6/23/2018 3:29:58 PM
+// Generation date: 6/23/2018 3:58:44 PM
 namespace MergedFunctionalTest.DSC
 {
     /// <summary>
@@ -1037,12 +1037,13 @@ namespace MergedFunctionalTest.DSC
                     
                     if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
                     {
-                        string errorMessage = string.Empty;
+                        global::System.Text.StringBuilder errorMessages = new System.Text.StringBuilder();
                         foreach (var error in errors)
                         {
-                            errorMessage = error.ErrorMessage + "; ";
+                            errorMessages.Append(error.ErrorMessage);
+                            errorMessages.Append("; ");
                         }
-                        throw new global::System.InvalidOperationException(errorMessage);
+                        throw new global::System.InvalidOperationException(errorMessages.ToString());
                     }
 
                     return edmModel;
