@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 4/10/2018 4:36:18 PM
+// Generation date: 6/22/2018 7:09:12 PM
 namespace Namespace1.DSC
 {
     /// <summary>
@@ -99,18 +99,13 @@ namespace Namespace1.DSC
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings edmxReaderSettings = new global::Microsoft.OData.Edm.Csdl.CsdlReaderSettings()
-                    {
-                        IgnoreUnexpectedAttributesAndElements = false
-                    };
-                    
                     global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
-                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.IEdmModel> references = global::System.Linq.Enumerable.Empty<global::Microsoft.OData.Edm.IEdmModel>();
                     global::Microsoft.OData.Edm.IEdmModel edmModel;
                     
-                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, references, edmxReaderSettings, out edmModel, out errors))
+                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
                     {
-                        throw new global::System.InvalidOperationException("Error while parsing CSDL.");
+                        global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError> errorMessages = new global::System.Collections.Generic.List<Microsoft.OData.Edm.Validation.EdmError>(errors);
+                        throw new global::System.InvalidOperationException(string.Join(";", errorMessages.ConvertAll(e => e.ErrorMessage).ToArray()));
                     }
 
                     return edmModel;
