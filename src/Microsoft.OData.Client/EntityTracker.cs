@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client
     #region Namespaces
     using System;
     using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -26,14 +27,28 @@ namespace Microsoft.OData.Client
 
         #region Resource state management
 
+    #if PORTABLELIB && WINDOWSPHONE
         /// <summary>Set of tracked resources</summary>
         private Dictionary<object, EntityDescriptor> entityDescriptors = new Dictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
-
+    #else
+        /// <summary>Set of tracked resources</summary>
+        private ConcurrentDictionary<object, EntityDescriptor> entityDescriptors = new ConcurrentDictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
+    #endif
+    #if PORTABLELIB && WINDOWSPHONE
         /// <summary>Set of tracked resources by Identity</summary>
         private Dictionary<Uri, EntityDescriptor> identityToDescriptor;
+    #else
+        /// <summary>Set of tracked resources by Identity</summary>
+        private ConcurrentDictionary<Uri, EntityDescriptor> identityToDescriptor;
+    #endif
 
+    #if PORTABLELIB && WINDOWSPHONE
         /// <summary>Set of tracked bindings</summary>
         private Dictionary<LinkDescriptor, LinkDescriptor> bindings;
+    #else
+        /// <summary>Set of tracked bindings</summary>
+        private ConcurrentDictionary<LinkDescriptor, LinkDescriptor> bindings;
+    #endif
 
         /// <summary>change order</summary>
         private uint nextChange;
@@ -525,16 +540,24 @@ namespace Microsoft.OData.Client
         {
             if (null == this.identityToDescriptor)
             {
+            #if PORTABLELIB && WINDOWSPHONE
                 System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new Dictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
-            }
-        }
+            #else
+                System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new ConcurrentDictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
+            #endif
+			}
+		}
 
         /// <summary>create this.bindings when necessary</summary>
         private void EnsureLinkBindings()
         {
             if (null == this.bindings)
             {
+            #if PORTABLELIB && WINDOWSPHONE
                 System.Threading.Interlocked.CompareExchange(ref this.bindings, new Dictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
+            #else
+                System.Threading.Interlocked.CompareExchange(ref this.bindings, new ConcurrentDictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
+            #endif
             }
         }
 
