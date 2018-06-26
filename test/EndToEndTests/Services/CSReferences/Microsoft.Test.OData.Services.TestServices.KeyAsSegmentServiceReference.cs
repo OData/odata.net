@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 7/11/2016 5:21:56 PM
+// Generation date: 6/23/2018 3:49:35 PM
 namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference
 {
     /// <summary>
@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// Initialize a new DefaultContainer object.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public DefaultContainer(global::System.Uri serviceRoot) : 
                 base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
         {
@@ -35,7 +35,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
             global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.Test.OData.Services.AstoriaDefaultService", "Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference");
@@ -50,7 +50,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// in Visual Studio is different from the one indicated in the
         /// server schema, use type-mappers to map between the two.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             if (clientType.Namespace.Equals("Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference", global::System.StringComparison.Ordinal))
@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for AllGeoTypesSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<AllSpatialTypes> AllGeoTypesSet
         {
             get
@@ -74,12 +74,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._AllGeoTypesSet;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<AllSpatialTypes> _AllGeoTypesSet;
         /// <summary>
         /// There are no comments for AllGeoCollectionTypesSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<AllSpatialCollectionTypes> AllGeoCollectionTypesSet
         {
             get
@@ -91,12 +91,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._AllGeoCollectionTypesSet;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<AllSpatialCollectionTypes> _AllGeoCollectionTypesSet;
         /// <summary>
         /// There are no comments for Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Customer> Customer
         {
             get
@@ -108,12 +108,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Customer;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Customer> _Customer;
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Login> Login
         {
             get
@@ -125,12 +125,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Login;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Login> _Login;
         /// <summary>
         /// There are no comments for RSAToken in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<RSAToken> RSAToken
         {
             get
@@ -142,12 +142,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._RSAToken;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<RSAToken> _RSAToken;
         /// <summary>
         /// There are no comments for PageView in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<PageView> PageView
         {
             get
@@ -159,12 +159,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._PageView;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<PageView> _PageView;
         /// <summary>
         /// There are no comments for LastLogin in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<LastLogin> LastLogin
         {
             get
@@ -176,12 +176,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._LastLogin;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<LastLogin> _LastLogin;
         /// <summary>
         /// There are no comments for Message in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Message> Message
         {
             get
@@ -193,12 +193,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Message;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Message> _Message;
         /// <summary>
         /// There are no comments for MessageAttachment in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<MessageAttachment> MessageAttachment
         {
             get
@@ -210,12 +210,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._MessageAttachment;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<MessageAttachment> _MessageAttachment;
         /// <summary>
         /// There are no comments for Order in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Order> Order
         {
             get
@@ -227,12 +227,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Order;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Order> _Order;
         /// <summary>
         /// There are no comments for OrderLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<OrderLine> OrderLine
         {
             get
@@ -244,12 +244,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._OrderLine;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<OrderLine> _OrderLine;
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Product> Product
         {
             get
@@ -261,12 +261,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Product;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Product> _Product;
         /// <summary>
         /// There are no comments for ProductDetail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<ProductDetail> ProductDetail
         {
             get
@@ -278,12 +278,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._ProductDetail;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<ProductDetail> _ProductDetail;
         /// <summary>
         /// There are no comments for ProductReview in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<ProductReview> ProductReview
         {
             get
@@ -295,12 +295,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._ProductReview;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<ProductReview> _ProductReview;
         /// <summary>
         /// There are no comments for ProductPhoto in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<ProductPhoto> ProductPhoto
         {
             get
@@ -312,12 +312,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._ProductPhoto;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<ProductPhoto> _ProductPhoto;
         /// <summary>
         /// There are no comments for CustomerInfo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<CustomerInfo> CustomerInfo
         {
             get
@@ -329,12 +329,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._CustomerInfo;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<CustomerInfo> _CustomerInfo;
         /// <summary>
         /// There are no comments for Computer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Computer> Computer
         {
             get
@@ -346,12 +346,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Computer;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Computer> _Computer;
         /// <summary>
         /// There are no comments for ComputerDetail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<ComputerDetail> ComputerDetail
         {
             get
@@ -363,12 +363,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._ComputerDetail;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<ComputerDetail> _ComputerDetail;
         /// <summary>
         /// There are no comments for Driver in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Driver> Driver
         {
             get
@@ -380,12 +380,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Driver;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Driver> _Driver;
         /// <summary>
         /// There are no comments for License in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<License> License
         {
             get
@@ -397,12 +397,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._License;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<License> _License;
         /// <summary>
         /// There are no comments for MappedEntityType in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<MappedEntityType> MappedEntityType
         {
             get
@@ -414,12 +414,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._MappedEntityType;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<MappedEntityType> _MappedEntityType;
         /// <summary>
         /// There are no comments for Car in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Car> Car
         {
             get
@@ -431,12 +431,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Car;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Car> _Car;
         /// <summary>
         /// There are no comments for Person in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<Person> Person
         {
             get
@@ -448,12 +448,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Person;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<Person> _Person;
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<PersonMetadata> PersonMetadata
         {
             get
@@ -465,12 +465,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._PersonMetadata;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<PersonMetadata> _PersonMetadata;
         /// <summary>
         /// There are no comments for AllGeoTypesSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToAllGeoTypesSet(AllSpatialTypes allSpatialTypes)
         {
             base.AddObject("AllGeoTypesSet", allSpatialTypes);
@@ -478,7 +478,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for AllGeoCollectionTypesSet in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToAllGeoCollectionTypesSet(AllSpatialCollectionTypes allSpatialCollectionTypes)
         {
             base.AddObject("AllGeoCollectionTypesSet", allSpatialCollectionTypes);
@@ -486,7 +486,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToCustomer(Customer customer)
         {
             base.AddObject("Customer", customer);
@@ -494,7 +494,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToLogin(Login login)
         {
             base.AddObject("Login", login);
@@ -502,7 +502,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for RSAToken in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToRSAToken(RSAToken rSAToken)
         {
             base.AddObject("RSAToken", rSAToken);
@@ -510,7 +510,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for PageView in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToPageView(PageView pageView)
         {
             base.AddObject("PageView", pageView);
@@ -518,7 +518,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for LastLogin in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToLastLogin(LastLogin lastLogin)
         {
             base.AddObject("LastLogin", lastLogin);
@@ -526,7 +526,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Message in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToMessage(Message message)
         {
             base.AddObject("Message", message);
@@ -534,7 +534,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for MessageAttachment in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToMessageAttachment(MessageAttachment messageAttachment)
         {
             base.AddObject("MessageAttachment", messageAttachment);
@@ -542,7 +542,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Order in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToOrder(Order order)
         {
             base.AddObject("Order", order);
@@ -550,7 +550,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for OrderLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToOrderLine(OrderLine orderLine)
         {
             base.AddObject("OrderLine", orderLine);
@@ -558,7 +558,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToProduct(Product product)
         {
             base.AddObject("Product", product);
@@ -566,7 +566,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for ProductDetail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToProductDetail(ProductDetail productDetail)
         {
             base.AddObject("ProductDetail", productDetail);
@@ -574,7 +574,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for ProductReview in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToProductReview(ProductReview productReview)
         {
             base.AddObject("ProductReview", productReview);
@@ -582,7 +582,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for ProductPhoto in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToProductPhoto(ProductPhoto productPhoto)
         {
             base.AddObject("ProductPhoto", productPhoto);
@@ -590,7 +590,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for CustomerInfo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToCustomerInfo(CustomerInfo customerInfo)
         {
             base.AddObject("CustomerInfo", customerInfo);
@@ -598,7 +598,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Computer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToComputer(Computer computer)
         {
             base.AddObject("Computer", computer);
@@ -606,7 +606,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for ComputerDetail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToComputerDetail(ComputerDetail computerDetail)
         {
             base.AddObject("ComputerDetail", computerDetail);
@@ -614,7 +614,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Driver in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToDriver(Driver driver)
         {
             base.AddObject("Driver", driver);
@@ -622,7 +622,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for License in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToLicense(License license)
         {
             base.AddObject("License", license);
@@ -630,7 +630,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for MappedEntityType in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToMappedEntityType(MappedEntityType mappedEntityType)
         {
             base.AddObject("MappedEntityType", mappedEntityType);
@@ -638,7 +638,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Car in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToCar(Car car)
         {
             base.AddObject("Car", car);
@@ -646,7 +646,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Person in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToPerson(Person person)
         {
             base.AddObject("Person", person);
@@ -654,17 +654,17 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public void AddToPersonMetadata(PersonMetadata personMetadata)
         {
             base.AddObject("PersonMetadata", personMetadata);
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private abstract class GeneratedEdmModel
         {
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Microsoft.Test.OData.Services.AstoriaDefaultService"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1160,25 +1160,39 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             public static global::Microsoft.OData.Edm.IEdmModel GetInstance()
             {
                 return ParsedModel;
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
+                    global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
+                    global::Microsoft.OData.Edm.IEdmModel edmModel;
+                    
+                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
+                    {
+                        global::System.Text.StringBuilder errorMessages = new System.Text.StringBuilder();
+                        foreach (var error in errors)
+                        {
+                            errorMessages.Append(error.ErrorMessage);
+                            errorMessages.Append("; ");
+                        }
+                        throw new global::System.InvalidOperationException(errorMessages.ToString());
+                    }
+
+                    return edmModel;
                 }
                 finally
                 {
                     ((global::System.IDisposable)(reader)).Dispose();
                 }
             }
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             private static global::System.Xml.XmlReader CreateXmlReader(string edmxToParse)
             {
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
@@ -1271,7 +1285,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new AllSpatialTypes object.
         /// </summary>
         /// <param name="ID">Initial value of Id.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static AllSpatialTypes CreateAllSpatialTypes(int ID)
         {
             AllSpatialTypes allSpatialTypes = new AllSpatialTypes();
@@ -1281,7 +1295,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Id
         {
             get
@@ -1295,14 +1309,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Id;
         partial void OnIdChanging(int value);
         partial void OnIdChanged();
         /// <summary>
         /// There are no comments for Property Geog in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.Geography Geog
         {
             get
@@ -1316,14 +1330,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.Geography _Geog;
         partial void OnGeogChanging(global::Microsoft.Spatial.Geography value);
         partial void OnGeogChanged();
         /// <summary>
         /// There are no comments for Property GeogPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyPoint GeogPoint
         {
             get
@@ -1337,14 +1351,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyPoint _GeogPoint;
         partial void OnGeogPointChanging(global::Microsoft.Spatial.GeographyPoint value);
         partial void OnGeogPointChanged();
         /// <summary>
         /// There are no comments for Property GeogLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyLineString GeogLine
         {
             get
@@ -1358,14 +1372,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogLineChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyLineString _GeogLine;
         partial void OnGeogLineChanging(global::Microsoft.Spatial.GeographyLineString value);
         partial void OnGeogLineChanged();
         /// <summary>
         /// There are no comments for Property GeogPolygon in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyPolygon GeogPolygon
         {
             get
@@ -1379,14 +1393,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogPolygonChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyPolygon _GeogPolygon;
         partial void OnGeogPolygonChanging(global::Microsoft.Spatial.GeographyPolygon value);
         partial void OnGeogPolygonChanged();
         /// <summary>
         /// There are no comments for Property GeogCollection in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyCollection GeogCollection
         {
             get
@@ -1400,14 +1414,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogCollectionChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyCollection _GeogCollection;
         partial void OnGeogCollectionChanging(global::Microsoft.Spatial.GeographyCollection value);
         partial void OnGeogCollectionChanged();
         /// <summary>
         /// There are no comments for Property GeogMultiPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyMultiPoint GeogMultiPoint
         {
             get
@@ -1421,14 +1435,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogMultiPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyMultiPoint _GeogMultiPoint;
         partial void OnGeogMultiPointChanging(global::Microsoft.Spatial.GeographyMultiPoint value);
         partial void OnGeogMultiPointChanged();
         /// <summary>
         /// There are no comments for Property GeogMultiLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyMultiLineString GeogMultiLine
         {
             get
@@ -1442,14 +1456,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogMultiLineChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyMultiLineString _GeogMultiLine;
         partial void OnGeogMultiLineChanging(global::Microsoft.Spatial.GeographyMultiLineString value);
         partial void OnGeogMultiLineChanged();
         /// <summary>
         /// There are no comments for Property GeogMultiPolygon in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyMultiPolygon GeogMultiPolygon
         {
             get
@@ -1463,14 +1477,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeogMultiPolygonChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyMultiPolygon _GeogMultiPolygon;
         partial void OnGeogMultiPolygonChanging(global::Microsoft.Spatial.GeographyMultiPolygon value);
         partial void OnGeogMultiPolygonChanged();
         /// <summary>
         /// There are no comments for Property Geom in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.Geometry Geom
         {
             get
@@ -1484,14 +1498,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.Geometry _Geom;
         partial void OnGeomChanging(global::Microsoft.Spatial.Geometry value);
         partial void OnGeomChanged();
         /// <summary>
         /// There are no comments for Property GeomPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryPoint GeomPoint
         {
             get
@@ -1505,14 +1519,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryPoint _GeomPoint;
         partial void OnGeomPointChanging(global::Microsoft.Spatial.GeometryPoint value);
         partial void OnGeomPointChanged();
         /// <summary>
         /// There are no comments for Property GeomLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryLineString GeomLine
         {
             get
@@ -1526,14 +1540,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomLineChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryLineString _GeomLine;
         partial void OnGeomLineChanging(global::Microsoft.Spatial.GeometryLineString value);
         partial void OnGeomLineChanged();
         /// <summary>
         /// There are no comments for Property GeomPolygon in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryPolygon GeomPolygon
         {
             get
@@ -1547,14 +1561,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomPolygonChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryPolygon _GeomPolygon;
         partial void OnGeomPolygonChanging(global::Microsoft.Spatial.GeometryPolygon value);
         partial void OnGeomPolygonChanged();
         /// <summary>
         /// There are no comments for Property GeomCollection in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryCollection GeomCollection
         {
             get
@@ -1568,14 +1582,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomCollectionChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryCollection _GeomCollection;
         partial void OnGeomCollectionChanging(global::Microsoft.Spatial.GeometryCollection value);
         partial void OnGeomCollectionChanged();
         /// <summary>
         /// There are no comments for Property GeomMultiPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryMultiPoint GeomMultiPoint
         {
             get
@@ -1589,14 +1603,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomMultiPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryMultiPoint _GeomMultiPoint;
         partial void OnGeomMultiPointChanging(global::Microsoft.Spatial.GeometryMultiPoint value);
         partial void OnGeomMultiPointChanged();
         /// <summary>
         /// There are no comments for Property GeomMultiLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryMultiLineString GeomMultiLine
         {
             get
@@ -1610,14 +1624,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomMultiLineChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryMultiLineString _GeomMultiLine;
         partial void OnGeomMultiLineChanging(global::Microsoft.Spatial.GeometryMultiLineString value);
         partial void OnGeomMultiLineChanged();
         /// <summary>
         /// There are no comments for Property GeomMultiPolygon in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryMultiPolygon GeomMultiPolygon
         {
             get
@@ -1631,7 +1645,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeomMultiPolygonChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryMultiPolygon _GeomMultiPolygon;
         partial void OnGeomMultiPolygonChanging(global::Microsoft.Spatial.GeometryMultiPolygon value);
         partial void OnGeomMultiPolygonChanged();
@@ -1672,7 +1686,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Id
         {
             get
@@ -1686,7 +1700,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Id;
         partial void OnIdChanging(int value);
         partial void OnIdChanged();
@@ -1717,7 +1731,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> Orders
         {
             get
@@ -1733,12 +1747,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Orders;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> _Orders;
         /// <summary>
         /// There are no comments for Logins in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login> Logins
         {
             get
@@ -1754,12 +1768,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Logins;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login> _Logins;
         /// <summary>
         /// There are no comments for Husband in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle Husband
         {
             get
@@ -1775,12 +1789,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Husband;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle _Husband;
         /// <summary>
         /// There are no comments for Wife in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle Wife
         {
             get
@@ -1796,12 +1810,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Wife;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle _Wife;
         /// <summary>
         /// There are no comments for Info in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerInfoSingle Info
         {
             get
@@ -1817,7 +1831,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Info;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerInfoSingle _Info;
     }
     /// <summary>
@@ -1835,7 +1849,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="thumbnail">Initial value of Thumbnail.</param>
         /// <param name="video">Initial value of Video.</param>
         /// <param name="customerId">Initial value of CustomerId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Customer CreateCustomer(global::Microsoft.OData.Client.DataServiceStreamLink thumbnail, global::Microsoft.OData.Client.DataServiceStreamLink video, int customerId)
         {
             Customer customer = new Customer();
@@ -1847,7 +1861,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Thumbnail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceStreamLink Thumbnail
         {
             get
@@ -1861,14 +1875,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnThumbnailChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceStreamLink _Thumbnail;
         partial void OnThumbnailChanging(global::Microsoft.OData.Client.DataServiceStreamLink value);
         partial void OnThumbnailChanged();
         /// <summary>
         /// There are no comments for Property Video in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceStreamLink Video
         {
             get
@@ -1882,14 +1896,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnVideoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceStreamLink _Video;
         partial void OnVideoChanging(global::Microsoft.OData.Client.DataServiceStreamLink value);
         partial void OnVideoChanged();
         /// <summary>
         /// There are no comments for Property CustomerId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int CustomerId
         {
             get
@@ -1903,14 +1917,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCustomerIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _CustomerId;
         partial void OnCustomerIdChanging(int value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Name in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Name
         {
             get
@@ -1924,14 +1938,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnNameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Name;
         partial void OnNameChanging(string value);
         partial void OnNameChanged();
         /// <summary>
         /// There are no comments for Property PrimaryContactInfo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails PrimaryContactInfo
         {
             get
@@ -1945,14 +1959,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPrimaryContactInfoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails _PrimaryContactInfo;
         partial void OnPrimaryContactInfoChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails value);
         partial void OnPrimaryContactInfoChanged();
         /// <summary>
         /// There are no comments for Property BackupContactInfo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails> BackupContactInfo
         {
             get
@@ -1966,14 +1980,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBackupContactInfoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails> _BackupContactInfo = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails>();
         partial void OnBackupContactInfoChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails> value);
         partial void OnBackupContactInfoChanged();
         /// <summary>
         /// There are no comments for Property Auditing in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.AuditInfo Auditing
         {
             get
@@ -1987,14 +2001,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnAuditingChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.AuditInfo _Auditing;
         partial void OnAuditingChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.AuditInfo value);
         partial void OnAuditingChanged();
         /// <summary>
         /// There are no comments for Property Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> Orders
         {
             get
@@ -2008,14 +2022,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnOrdersChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> _Orders = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order>();
         partial void OnOrdersChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> value);
         partial void OnOrdersChanged();
         /// <summary>
         /// There are no comments for Property Logins in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login> Logins
         {
             get
@@ -2029,14 +2043,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLoginsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login> _Logins = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login>();
         partial void OnLoginsChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login> value);
         partial void OnLoginsChanged();
         /// <summary>
         /// There are no comments for Property Husband in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer Husband
         {
             get
@@ -2050,14 +2064,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnHusbandChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer _Husband;
         partial void OnHusbandChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer value);
         partial void OnHusbandChanged();
         /// <summary>
         /// There are no comments for Property Wife in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer Wife
         {
             get
@@ -2071,14 +2085,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnWifeChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer _Wife;
         partial void OnWifeChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer value);
         partial void OnWifeChanged();
         /// <summary>
         /// There are no comments for Property Info in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerInfo Info
         {
             get
@@ -2092,7 +2106,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnInfoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerInfo _Info;
         partial void OnInfoChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerInfo value);
         partial void OnInfoChanged();
@@ -2136,7 +2150,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle Customer
         {
             get
@@ -2152,12 +2166,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Customer;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle _Customer;
         /// <summary>
         /// There are no comments for LastLogin in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LastLoginSingle LastLogin
         {
             get
@@ -2173,12 +2187,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._LastLogin;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LastLoginSingle _LastLogin;
         /// <summary>
         /// There are no comments for SentMessages in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> SentMessages
         {
             get
@@ -2194,12 +2208,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._SentMessages;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> _SentMessages;
         /// <summary>
         /// There are no comments for ReceivedMessages in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> ReceivedMessages
         {
             get
@@ -2215,12 +2229,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._ReceivedMessages;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> _ReceivedMessages;
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> Orders
         {
             get
@@ -2236,7 +2250,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Orders;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> _Orders;
     }
     /// <summary>
@@ -2253,7 +2267,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="username">Initial value of Username.</param>
         /// <param name="customerId">Initial value of CustomerId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Login CreateLogin(string username, int customerId)
         {
             Login login = new Login();
@@ -2264,7 +2278,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Username in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Username
         {
             get
@@ -2278,14 +2292,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnUsernameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Username;
         partial void OnUsernameChanging(string value);
         partial void OnUsernameChanged();
         /// <summary>
         /// There are no comments for Property CustomerId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int CustomerId
         {
             get
@@ -2299,14 +2313,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCustomerIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _CustomerId;
         partial void OnCustomerIdChanging(int value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer Customer
         {
             get
@@ -2320,14 +2334,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCustomerChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer _Customer;
         partial void OnCustomerChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer value);
         partial void OnCustomerChanged();
         /// <summary>
         /// There are no comments for Property LastLogin in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LastLogin LastLogin
         {
             get
@@ -2341,14 +2355,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLastLoginChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LastLogin _LastLogin;
         partial void OnLastLoginChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LastLogin value);
         partial void OnLastLoginChanged();
         /// <summary>
         /// There are no comments for Property SentMessages in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> SentMessages
         {
             get
@@ -2362,14 +2376,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSentMessagesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> _SentMessages = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message>();
         partial void OnSentMessagesChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> value);
         partial void OnSentMessagesChanged();
         /// <summary>
         /// There are no comments for Property ReceivedMessages in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> ReceivedMessages
         {
             get
@@ -2383,14 +2397,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnReceivedMessagesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> _ReceivedMessages = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message>();
         partial void OnReceivedMessagesChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Message> value);
         partial void OnReceivedMessagesChanged();
         /// <summary>
         /// There are no comments for Property Orders in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> Orders
         {
             get
@@ -2404,7 +2418,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnOrdersChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> _Orders = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order>();
         partial void OnOrdersChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order> value);
         partial void OnOrdersChanged();
@@ -2435,7 +2449,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle Login
         {
             get
@@ -2451,7 +2465,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Login;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle _Login;
     }
     /// <summary>
@@ -2468,7 +2482,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="serial">Initial value of Serial.</param>
         /// <param name="issued">Initial value of Issued.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static RSAToken CreateRSAToken(string serial, global::System.DateTimeOffset issued)
         {
             RSAToken rSAToken = new RSAToken();
@@ -2479,7 +2493,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Serial in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Serial
         {
             get
@@ -2493,14 +2507,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSerialChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Serial;
         partial void OnSerialChanging(string value);
         partial void OnSerialChanged();
         /// <summary>
         /// There are no comments for Property Issued in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset Issued
         {
             get
@@ -2514,14 +2528,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnIssuedChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _Issued;
         partial void OnIssuedChanging(global::System.DateTimeOffset value);
         partial void OnIssuedChanged();
         /// <summary>
         /// There are no comments for Property Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login Login
         {
             get
@@ -2535,7 +2549,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLoginChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login _Login;
         partial void OnLoginChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login value);
         partial void OnLoginChanged();
@@ -2566,7 +2580,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle Login
         {
             get
@@ -2582,7 +2596,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Login;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle _Login;
     }
     /// <summary>
@@ -2600,7 +2614,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="pageViewId">Initial value of PageViewId.</param>
         /// <param name="viewed">Initial value of Viewed.</param>
         /// <param name="timeSpentOnPage">Initial value of TimeSpentOnPage.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static PageView CreatePageView(int pageViewId, global::System.DateTimeOffset viewed, global::System.TimeSpan timeSpentOnPage)
         {
             PageView pageView = new PageView();
@@ -2612,7 +2626,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property PageViewId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int PageViewId
         {
             get
@@ -2626,14 +2640,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPageViewIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _PageViewId;
         partial void OnPageViewIdChanging(int value);
         partial void OnPageViewIdChanged();
         /// <summary>
         /// There are no comments for Property Username in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Username
         {
             get
@@ -2647,14 +2661,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnUsernameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Username;
         partial void OnUsernameChanging(string value);
         partial void OnUsernameChanged();
         /// <summary>
         /// There are no comments for Property Viewed in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset Viewed
         {
             get
@@ -2668,14 +2682,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnViewedChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _Viewed;
         partial void OnViewedChanging(global::System.DateTimeOffset value);
         partial void OnViewedChanged();
         /// <summary>
         /// There are no comments for Property TimeSpentOnPage in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.TimeSpan TimeSpentOnPage
         {
             get
@@ -2689,14 +2703,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnTimeSpentOnPageChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.TimeSpan _TimeSpentOnPage;
         partial void OnTimeSpentOnPageChanging(global::System.TimeSpan value);
         partial void OnTimeSpentOnPageChanged();
         /// <summary>
         /// There are no comments for Property PageUrl in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string PageUrl
         {
             get
@@ -2710,14 +2724,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPageUrlChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _PageUrl;
         partial void OnPageUrlChanging(string value);
         partial void OnPageUrlChanged();
         /// <summary>
         /// There are no comments for Property Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login Login
         {
             get
@@ -2731,7 +2745,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLoginChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login _Login;
         partial void OnLoginChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login value);
         partial void OnLoginChanged();
@@ -2762,7 +2776,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle Login
         {
             get
@@ -2778,7 +2792,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Login;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle _Login;
     }
     /// <summary>
@@ -2796,7 +2810,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="username">Initial value of Username.</param>
         /// <param name="loggedIn">Initial value of LoggedIn.</param>
         /// <param name="duration">Initial value of Duration.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static LastLogin CreateLastLogin(string username, global::System.DateTimeOffset loggedIn, global::System.TimeSpan duration)
         {
             LastLogin lastLogin = new LastLogin();
@@ -2808,7 +2822,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Username in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Username
         {
             get
@@ -2822,14 +2836,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnUsernameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Username;
         partial void OnUsernameChanging(string value);
         partial void OnUsernameChanged();
         /// <summary>
         /// There are no comments for Property LoggedIn in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset LoggedIn
         {
             get
@@ -2843,14 +2857,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLoggedInChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _LoggedIn;
         partial void OnLoggedInChanging(global::System.DateTimeOffset value);
         partial void OnLoggedInChanged();
         /// <summary>
         /// There are no comments for Property LoggedOut in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Nullable<global::System.DateTimeOffset> LoggedOut
         {
             get
@@ -2864,14 +2878,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLoggedOutChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Nullable<global::System.DateTimeOffset> _LoggedOut;
         partial void OnLoggedOutChanging(global::System.Nullable<global::System.DateTimeOffset> value);
         partial void OnLoggedOutChanged();
         /// <summary>
         /// There are no comments for Property Duration in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.TimeSpan Duration
         {
             get
@@ -2885,14 +2899,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDurationChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.TimeSpan _Duration;
         partial void OnDurationChanging(global::System.TimeSpan value);
         partial void OnDurationChanged();
         /// <summary>
         /// There are no comments for Property Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login Login
         {
             get
@@ -2906,7 +2920,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLoginChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login _Login;
         partial void OnLoginChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login value);
         partial void OnLoginChanged();
@@ -2937,7 +2951,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Sender in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle Sender
         {
             get
@@ -2953,12 +2967,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Sender;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle _Sender;
         /// <summary>
         /// There are no comments for Recipient in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle Recipient
         {
             get
@@ -2974,12 +2988,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Recipient;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle _Recipient;
         /// <summary>
         /// There are no comments for Attachments in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.MessageAttachment> Attachments
         {
             get
@@ -2995,7 +3009,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Attachments;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.MessageAttachment> _Attachments;
     }
     /// <summary>
@@ -3015,7 +3029,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="fromUsername">Initial value of FromUsername.</param>
         /// <param name="sent">Initial value of Sent.</param>
         /// <param name="isRead">Initial value of IsRead.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Message CreateMessage(int messageId, string fromUsername, global::System.DateTimeOffset sent, bool isRead)
         {
             Message message = new Message();
@@ -3028,7 +3042,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property MessageId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int MessageId
         {
             get
@@ -3042,14 +3056,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnMessageIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _MessageId;
         partial void OnMessageIdChanging(int value);
         partial void OnMessageIdChanged();
         /// <summary>
         /// There are no comments for Property FromUsername in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string FromUsername
         {
             get
@@ -3063,14 +3077,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnFromUsernameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _FromUsername;
         partial void OnFromUsernameChanging(string value);
         partial void OnFromUsernameChanged();
         /// <summary>
         /// There are no comments for Property ToUsername in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string ToUsername
         {
             get
@@ -3084,14 +3098,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnToUsernameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _ToUsername;
         partial void OnToUsernameChanging(string value);
         partial void OnToUsernameChanged();
         /// <summary>
         /// There are no comments for Property Sent in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset Sent
         {
             get
@@ -3105,14 +3119,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSentChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _Sent;
         partial void OnSentChanging(global::System.DateTimeOffset value);
         partial void OnSentChanged();
         /// <summary>
         /// There are no comments for Property Subject in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Subject
         {
             get
@@ -3126,14 +3140,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSubjectChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Subject;
         partial void OnSubjectChanging(string value);
         partial void OnSubjectChanged();
         /// <summary>
         /// There are no comments for Property Body in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Body
         {
             get
@@ -3147,14 +3161,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBodyChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Body;
         partial void OnBodyChanging(string value);
         partial void OnBodyChanged();
         /// <summary>
         /// There are no comments for Property IsRead in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public bool IsRead
         {
             get
@@ -3168,14 +3182,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnIsReadChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private bool _IsRead;
         partial void OnIsReadChanging(bool value);
         partial void OnIsReadChanged();
         /// <summary>
         /// There are no comments for Property Sender in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login Sender
         {
             get
@@ -3189,14 +3203,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSenderChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login _Sender;
         partial void OnSenderChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login value);
         partial void OnSenderChanged();
         /// <summary>
         /// There are no comments for Property Recipient in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login Recipient
         {
             get
@@ -3210,14 +3224,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnRecipientChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login _Recipient;
         partial void OnRecipientChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login value);
         partial void OnRecipientChanged();
         /// <summary>
         /// There are no comments for Property Attachments in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.MessageAttachment> Attachments
         {
             get
@@ -3231,7 +3245,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnAttachmentsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.MessageAttachment> _Attachments = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.MessageAttachment>();
         partial void OnAttachmentsChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.MessageAttachment> value);
         partial void OnAttachmentsChanged();
@@ -3273,7 +3287,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new MessageAttachment object.
         /// </summary>
         /// <param name="attachmentId">Initial value of AttachmentId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static MessageAttachment CreateMessageAttachment(global::System.Guid attachmentId)
         {
             MessageAttachment messageAttachment = new MessageAttachment();
@@ -3283,7 +3297,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property AttachmentId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Guid AttachmentId
         {
             get
@@ -3297,14 +3311,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnAttachmentIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Guid _AttachmentId;
         partial void OnAttachmentIdChanging(global::System.Guid value);
         partial void OnAttachmentIdChanged();
         /// <summary>
         /// There are no comments for Property Attachment in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public byte[] Attachment
         {
             get
@@ -3318,7 +3332,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnAttachmentChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private byte[] _Attachment;
         partial void OnAttachmentChanging(byte[] value);
         partial void OnAttachmentChanged();
@@ -3349,7 +3363,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle Login
         {
             get
@@ -3365,12 +3379,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Login;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle _Login;
         /// <summary>
         /// There are no comments for Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle Customer
         {
             get
@@ -3386,7 +3400,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Customer;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CustomerSingle _Customer;
     }
     /// <summary>
@@ -3402,7 +3416,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new Order object.
         /// </summary>
         /// <param name="orderId">Initial value of OrderId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Order CreateOrder(int orderId)
         {
             Order order = new Order();
@@ -3412,7 +3426,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property OrderId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int OrderId
         {
             get
@@ -3426,14 +3440,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnOrderIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _OrderId;
         partial void OnOrderIdChanging(int value);
         partial void OnOrderIdChanged();
         /// <summary>
         /// There are no comments for Property CustomerId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Nullable<int> CustomerId
         {
             get
@@ -3447,14 +3461,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCustomerIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Nullable<int> _CustomerId;
         partial void OnCustomerIdChanging(global::System.Nullable<int> value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Concurrency in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo Concurrency
         {
             get
@@ -3468,14 +3482,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnConcurrencyChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo _Concurrency;
         partial void OnConcurrencyChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo value);
         partial void OnConcurrencyChanged();
         /// <summary>
         /// There are no comments for Property Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login Login
         {
             get
@@ -3489,14 +3503,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLoginChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login _Login;
         partial void OnLoginChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Login value);
         partial void OnLoginChanged();
         /// <summary>
         /// There are no comments for Property Customer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer Customer
         {
             get
@@ -3510,7 +3524,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCustomerChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer _Customer;
         partial void OnCustomerChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Customer value);
         partial void OnCustomerChanged();
@@ -3541,7 +3555,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Order in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.OrderSingle Order
         {
             get
@@ -3557,12 +3571,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Order;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.OrderSingle _Order;
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle Product
         {
             get
@@ -3578,7 +3592,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Product;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle _Product;
     }
     /// <summary>
@@ -3598,7 +3612,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="orderId">Initial value of OrderId.</param>
         /// <param name="productId">Initial value of ProductId.</param>
         /// <param name="quantity">Initial value of Quantity.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static OrderLine CreateOrderLine(global::Microsoft.OData.Client.DataServiceStreamLink orderLineStream, int orderId, int productId, int quantity)
         {
             OrderLine orderLine = new OrderLine();
@@ -3611,7 +3625,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property OrderLineStream in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceStreamLink OrderLineStream
         {
             get
@@ -3625,14 +3639,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnOrderLineStreamChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceStreamLink _OrderLineStream;
         partial void OnOrderLineStreamChanging(global::Microsoft.OData.Client.DataServiceStreamLink value);
         partial void OnOrderLineStreamChanged();
         /// <summary>
         /// There are no comments for Property OrderId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int OrderId
         {
             get
@@ -3646,14 +3660,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnOrderIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _OrderId;
         partial void OnOrderIdChanging(int value);
         partial void OnOrderIdChanged();
         /// <summary>
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ProductId
         {
             get
@@ -3667,14 +3681,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ProductId;
         partial void OnProductIdChanging(int value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property Quantity in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Quantity
         {
             get
@@ -3688,14 +3702,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnQuantityChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Quantity;
         partial void OnQuantityChanging(int value);
         partial void OnQuantityChanged();
         /// <summary>
         /// There are no comments for Property ConcurrencyToken in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string ConcurrencyToken
         {
             get
@@ -3709,14 +3723,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnConcurrencyTokenChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _ConcurrencyToken;
         partial void OnConcurrencyTokenChanging(string value);
         partial void OnConcurrencyTokenChanged();
         /// <summary>
         /// There are no comments for Property Order in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order Order
         {
             get
@@ -3730,14 +3744,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnOrderChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order _Order;
         partial void OnOrderChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Order value);
         partial void OnOrderChanged();
         /// <summary>
         /// There are no comments for Property Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product Product
         {
             get
@@ -3751,7 +3765,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product _Product;
         partial void OnProductChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product value);
         partial void OnProductChanged();
@@ -3782,7 +3796,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for RelatedProducts in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product> RelatedProducts
         {
             get
@@ -3798,12 +3812,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._RelatedProducts;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product> _RelatedProducts;
         /// <summary>
         /// There are no comments for Detail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductDetailSingle Detail
         {
             get
@@ -3819,12 +3833,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Detail;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductDetailSingle _Detail;
         /// <summary>
         /// There are no comments for Reviews in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview> Reviews
         {
             get
@@ -3840,12 +3854,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Reviews;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview> _Reviews;
         /// <summary>
         /// There are no comments for Photos in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto> Photos
         {
             get
@@ -3861,7 +3875,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Photos;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto> _Photos;
     }
     /// <summary>
@@ -3878,7 +3892,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="picture">Initial value of Picture.</param>
         /// <param name="productId">Initial value of ProductId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Product CreateProduct(global::Microsoft.OData.Client.DataServiceStreamLink picture, int productId)
         {
             Product product = new Product();
@@ -3889,7 +3903,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Picture in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceStreamLink Picture
         {
             get
@@ -3903,14 +3917,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPictureChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceStreamLink _Picture;
         partial void OnPictureChanging(global::Microsoft.OData.Client.DataServiceStreamLink value);
         partial void OnPictureChanged();
         /// <summary>
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ProductId
         {
             get
@@ -3924,14 +3938,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ProductId;
         partial void OnProductIdChanging(int value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property Description in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Description
         {
             get
@@ -3945,14 +3959,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDescriptionChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Description;
         partial void OnDescriptionChanging(string value);
         partial void OnDescriptionChanged();
         /// <summary>
         /// There are no comments for Property Dimensions in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Dimensions Dimensions
         {
             get
@@ -3966,14 +3980,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDimensionsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Dimensions _Dimensions;
         partial void OnDimensionsChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Dimensions value);
         partial void OnDimensionsChanged();
         /// <summary>
         /// There are no comments for Property BaseConcurrency in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string BaseConcurrency
         {
             get
@@ -3987,14 +4001,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBaseConcurrencyChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _BaseConcurrency;
         partial void OnBaseConcurrencyChanging(string value);
         partial void OnBaseConcurrencyChanged();
         /// <summary>
         /// There are no comments for Property ComplexConcurrency in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo ComplexConcurrency
         {
             get
@@ -4008,14 +4022,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnComplexConcurrencyChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo _ComplexConcurrency;
         partial void OnComplexConcurrencyChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo value);
         partial void OnComplexConcurrencyChanged();
         /// <summary>
         /// There are no comments for Property NestedComplexConcurrency in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.AuditInfo NestedComplexConcurrency
         {
             get
@@ -4029,14 +4043,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnNestedComplexConcurrencyChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.AuditInfo _NestedComplexConcurrency;
         partial void OnNestedComplexConcurrencyChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.AuditInfo value);
         partial void OnNestedComplexConcurrencyChanged();
         /// <summary>
         /// There are no comments for Property RelatedProducts in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product> RelatedProducts
         {
             get
@@ -4050,14 +4064,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnRelatedProductsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product> _RelatedProducts = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product>();
         partial void OnRelatedProductsChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product> value);
         partial void OnRelatedProductsChanged();
         /// <summary>
         /// There are no comments for Property Detail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductDetail Detail
         {
             get
@@ -4071,14 +4085,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDetailChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductDetail _Detail;
         partial void OnDetailChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductDetail value);
         partial void OnDetailChanged();
         /// <summary>
         /// There are no comments for Property Reviews in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview> Reviews
         {
             get
@@ -4092,14 +4106,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnReviewsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview> _Reviews = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview>();
         partial void OnReviewsChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview> value);
         partial void OnReviewsChanged();
         /// <summary>
         /// There are no comments for Property Photos in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto> Photos
         {
             get
@@ -4113,7 +4127,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPhotosChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto> _Photos = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto>();
         partial void OnPhotosChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto> value);
         partial void OnPhotosChanged();
@@ -4144,7 +4158,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle Product
         {
             get
@@ -4160,7 +4174,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Product;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle _Product;
     }
     /// <summary>
@@ -4176,7 +4190,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new ProductDetail object.
         /// </summary>
         /// <param name="productId">Initial value of ProductId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static ProductDetail CreateProductDetail(int productId)
         {
             ProductDetail productDetail = new ProductDetail();
@@ -4186,7 +4200,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ProductId
         {
             get
@@ -4200,14 +4214,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ProductId;
         partial void OnProductIdChanging(int value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property Details in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Details
         {
             get
@@ -4221,14 +4235,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDetailsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Details;
         partial void OnDetailsChanging(string value);
         partial void OnDetailsChanged();
         /// <summary>
         /// There are no comments for Property Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product Product
         {
             get
@@ -4242,7 +4256,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product _Product;
         partial void OnProductChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product value);
         partial void OnProductChanged();
@@ -4273,7 +4287,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle Product
         {
             get
@@ -4289,7 +4303,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Product;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle _Product;
     }
     /// <summary>
@@ -4309,7 +4323,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="productId">Initial value of ProductId.</param>
         /// <param name="reviewId">Initial value of ReviewId.</param>
         /// <param name="revisionId">Initial value of RevisionId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static ProductReview CreateProductReview(int productId, int reviewId, string revisionId)
         {
             ProductReview productReview = new ProductReview();
@@ -4321,7 +4335,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ProductId
         {
             get
@@ -4335,14 +4349,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ProductId;
         partial void OnProductIdChanging(int value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property ReviewId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ReviewId
         {
             get
@@ -4356,14 +4370,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnReviewIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ReviewId;
         partial void OnReviewIdChanging(int value);
         partial void OnReviewIdChanged();
         /// <summary>
         /// There are no comments for Property Review in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Review
         {
             get
@@ -4377,14 +4391,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnReviewChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Review;
         partial void OnReviewChanging(string value);
         partial void OnReviewChanged();
         /// <summary>
         /// There are no comments for Property RevisionId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string RevisionId
         {
             get
@@ -4398,14 +4412,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnRevisionIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _RevisionId;
         partial void OnRevisionIdChanging(string value);
         partial void OnRevisionIdChanged();
         /// <summary>
         /// There are no comments for Property Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product Product
         {
             get
@@ -4419,7 +4433,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product _Product;
         partial void OnProductChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product value);
         partial void OnProductChanged();
@@ -4463,7 +4477,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="productId">Initial value of ProductId.</param>
         /// <param name="photoId">Initial value of PhotoId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static ProductPhoto CreateProductPhoto(int productId, int photoId)
         {
             ProductPhoto productPhoto = new ProductPhoto();
@@ -4474,7 +4488,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ProductId
         {
             get
@@ -4488,14 +4502,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ProductId;
         partial void OnProductIdChanging(int value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property PhotoId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int PhotoId
         {
             get
@@ -4509,14 +4523,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPhotoIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _PhotoId;
         partial void OnPhotoIdChanging(int value);
         partial void OnPhotoIdChanged();
         /// <summary>
         /// There are no comments for Property Photo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public byte[] Photo
         {
             get
@@ -4530,7 +4544,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPhotoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private byte[] _Photo;
         partial void OnPhotoChanging(byte[] value);
         partial void OnPhotoChanged();
@@ -4573,7 +4587,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new CustomerInfo object.
         /// </summary>
         /// <param name="customerInfoId">Initial value of CustomerInfoId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static CustomerInfo CreateCustomerInfo(int customerInfoId)
         {
             CustomerInfo customerInfo = new CustomerInfo();
@@ -4583,7 +4597,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property CustomerInfoId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int CustomerInfoId
         {
             get
@@ -4597,14 +4611,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCustomerInfoIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _CustomerInfoId;
         partial void OnCustomerInfoIdChanging(int value);
         partial void OnCustomerInfoIdChanged();
         /// <summary>
         /// There are no comments for Property Information in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Information
         {
             get
@@ -4618,7 +4632,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnInformationChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Information;
         partial void OnInformationChanging(string value);
         partial void OnInformationChanged();
@@ -4649,7 +4663,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for ComputerDetail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComputerDetailSingle ComputerDetail
         {
             get
@@ -4665,7 +4679,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._ComputerDetail;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComputerDetailSingle _ComputerDetail;
     }
     /// <summary>
@@ -4681,7 +4695,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new Computer object.
         /// </summary>
         /// <param name="computerId">Initial value of ComputerId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Computer CreateComputer(int computerId)
         {
             Computer computer = new Computer();
@@ -4691,7 +4705,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ComputerId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ComputerId
         {
             get
@@ -4705,14 +4719,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnComputerIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ComputerId;
         partial void OnComputerIdChanging(int value);
         partial void OnComputerIdChanged();
         /// <summary>
         /// There are no comments for Property Name in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Name
         {
             get
@@ -4726,14 +4740,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnNameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Name;
         partial void OnNameChanging(string value);
         partial void OnNameChanged();
         /// <summary>
         /// There are no comments for Property ComputerDetail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComputerDetail ComputerDetail
         {
             get
@@ -4747,7 +4761,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnComputerDetailChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComputerDetail _ComputerDetail;
         partial void OnComputerDetailChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComputerDetail value);
         partial void OnComputerDetailChanged();
@@ -4791,7 +4805,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Computer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComputerSingle Computer
         {
             get
@@ -4807,7 +4821,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Computer;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComputerSingle _Computer;
     }
     /// <summary>
@@ -4824,7 +4838,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="computerDetailId">Initial value of ComputerDetailId.</param>
         /// <param name="purchaseDate">Initial value of PurchaseDate.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static ComputerDetail CreateComputerDetail(int computerDetailId, global::System.DateTimeOffset purchaseDate)
         {
             ComputerDetail computerDetail = new ComputerDetail();
@@ -4835,7 +4849,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ComputerDetailId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ComputerDetailId
         {
             get
@@ -4849,14 +4863,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnComputerDetailIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ComputerDetailId;
         partial void OnComputerDetailIdChanging(int value);
         partial void OnComputerDetailIdChanged();
         /// <summary>
         /// There are no comments for Property Manufacturer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Manufacturer
         {
             get
@@ -4870,14 +4884,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManufacturerChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Manufacturer;
         partial void OnManufacturerChanging(string value);
         partial void OnManufacturerChanged();
         /// <summary>
         /// There are no comments for Property Model in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Model
         {
             get
@@ -4891,14 +4905,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnModelChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Model;
         partial void OnModelChanging(string value);
         partial void OnModelChanged();
         /// <summary>
         /// There are no comments for Property Serial in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Serial
         {
             get
@@ -4912,14 +4926,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSerialChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Serial;
         partial void OnSerialChanging(string value);
         partial void OnSerialChanged();
         /// <summary>
         /// There are no comments for Property SpecificationsBag in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<string> SpecificationsBag
         {
             get
@@ -4933,14 +4947,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSpecificationsBagChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<string> _SpecificationsBag = new global::System.Collections.ObjectModel.Collection<string>();
         partial void OnSpecificationsBagChanging(global::System.Collections.ObjectModel.Collection<string> value);
         partial void OnSpecificationsBagChanged();
         /// <summary>
         /// There are no comments for Property PurchaseDate in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset PurchaseDate
         {
             get
@@ -4954,14 +4968,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPurchaseDateChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _PurchaseDate;
         partial void OnPurchaseDateChanging(global::System.DateTimeOffset value);
         partial void OnPurchaseDateChanged();
         /// <summary>
         /// There are no comments for Property Dimensions in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Dimensions Dimensions
         {
             get
@@ -4975,14 +4989,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDimensionsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Dimensions _Dimensions;
         partial void OnDimensionsChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Dimensions value);
         partial void OnDimensionsChanged();
         /// <summary>
         /// There are no comments for Property Computer in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Computer Computer
         {
             get
@@ -4996,7 +5010,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnComputerChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Computer _Computer;
         partial void OnComputerChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Computer value);
         partial void OnComputerChanged();
@@ -5041,7 +5055,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for License in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LicenseSingle License
         {
             get
@@ -5057,7 +5071,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._License;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LicenseSingle _License;
     }
     /// <summary>
@@ -5074,7 +5088,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="name">Initial value of Name.</param>
         /// <param name="birthDate">Initial value of BirthDate.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Driver CreateDriver(string name, global::System.DateTimeOffset birthDate)
         {
             Driver driver = new Driver();
@@ -5085,7 +5099,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Name in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Name
         {
             get
@@ -5099,14 +5113,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnNameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Name;
         partial void OnNameChanging(string value);
         partial void OnNameChanged();
         /// <summary>
         /// There are no comments for Property BirthDate in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset BirthDate
         {
             get
@@ -5120,14 +5134,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBirthDateChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _BirthDate;
         partial void OnBirthDateChanging(global::System.DateTimeOffset value);
         partial void OnBirthDateChanged();
         /// <summary>
         /// There are no comments for Property License in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.License License
         {
             get
@@ -5141,7 +5155,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLicenseChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.License _License;
         partial void OnLicenseChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.License value);
         partial void OnLicenseChanged();
@@ -5172,7 +5186,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Driver in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.DriverSingle Driver
         {
             get
@@ -5188,7 +5202,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Driver;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.DriverSingle _Driver;
     }
     /// <summary>
@@ -5205,7 +5219,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="name">Initial value of Name.</param>
         /// <param name="expirationDate">Initial value of ExpirationDate.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static License CreateLicense(string name, global::System.DateTimeOffset expirationDate)
         {
             License license = new License();
@@ -5216,7 +5230,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Name in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Name
         {
             get
@@ -5230,14 +5244,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnNameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Name;
         partial void OnNameChanging(string value);
         partial void OnNameChanged();
         /// <summary>
         /// There are no comments for Property LicenseNumber in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string LicenseNumber
         {
             get
@@ -5251,14 +5265,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLicenseNumberChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _LicenseNumber;
         partial void OnLicenseNumberChanging(string value);
         partial void OnLicenseNumberChanged();
         /// <summary>
         /// There are no comments for Property LicenseClass in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string LicenseClass
         {
             get
@@ -5272,14 +5286,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLicenseClassChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _LicenseClass;
         partial void OnLicenseClassChanging(string value);
         partial void OnLicenseClassChanged();
         /// <summary>
         /// There are no comments for Property Restrictions in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Restrictions
         {
             get
@@ -5293,14 +5307,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnRestrictionsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Restrictions;
         partial void OnRestrictionsChanging(string value);
         partial void OnRestrictionsChanged();
         /// <summary>
         /// There are no comments for Property ExpirationDate in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset ExpirationDate
         {
             get
@@ -5314,14 +5328,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnExpirationDateChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _ExpirationDate;
         partial void OnExpirationDateChanging(global::System.DateTimeOffset value);
         partial void OnExpirationDateChanged();
         /// <summary>
         /// There are no comments for Property Driver in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Driver Driver
         {
             get
@@ -5335,7 +5349,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDriverChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Driver _Driver;
         partial void OnDriverChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Driver value);
         partial void OnDriverChanged();
@@ -5378,7 +5392,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="ID">Initial value of Id.</param>
         /// <param name="length">Initial value of Length.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static MappedEntityType CreateMappedEntityType(int ID, int length)
         {
             MappedEntityType mappedEntityType = new MappedEntityType();
@@ -5389,7 +5403,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Id in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Id
         {
             get
@@ -5403,14 +5417,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Id;
         partial void OnIdChanging(int value);
         partial void OnIdChanged();
         /// <summary>
         /// There are no comments for Property Href in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Href
         {
             get
@@ -5424,14 +5438,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnHrefChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Href;
         partial void OnHrefChanging(string value);
         partial void OnHrefChanged();
         /// <summary>
         /// There are no comments for Property Title in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Title
         {
             get
@@ -5445,14 +5459,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnTitleChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Title;
         partial void OnTitleChanging(string value);
         partial void OnTitleChanged();
         /// <summary>
         /// There are no comments for Property HrefLang in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string HrefLang
         {
             get
@@ -5466,14 +5480,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnHrefLangChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _HrefLang;
         partial void OnHrefLangChanging(string value);
         partial void OnHrefLangChanged();
         /// <summary>
         /// There are no comments for Property Type in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Type
         {
             get
@@ -5487,14 +5501,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnTypeChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Type;
         partial void OnTypeChanging(string value);
         partial void OnTypeChanged();
         /// <summary>
         /// There are no comments for Property Length in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Length
         {
             get
@@ -5508,14 +5522,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLengthChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Length;
         partial void OnLengthChanging(int value);
         partial void OnLengthChanged();
         /// <summary>
         /// There are no comments for Property BagOfPrimitiveToLinks in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<string> BagOfPrimitiveToLinks
         {
             get
@@ -5529,14 +5543,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfPrimitiveToLinksChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<string> _BagOfPrimitiveToLinks = new global::System.Collections.ObjectModel.Collection<string>();
         partial void OnBagOfPrimitiveToLinksChanging(global::System.Collections.ObjectModel.Collection<string> value);
         partial void OnBagOfPrimitiveToLinksChanged();
         /// <summary>
         /// There are no comments for Property Logo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public byte[] Logo
         {
             get
@@ -5550,14 +5564,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLogoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private byte[] _Logo;
         partial void OnLogoChanging(byte[] value);
         partial void OnLogoChanged();
         /// <summary>
         /// There are no comments for Property BagOfDecimals in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<decimal> BagOfDecimals
         {
             get
@@ -5571,14 +5585,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfDecimalsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<decimal> _BagOfDecimals = new global::System.Collections.ObjectModel.Collection<decimal>();
         partial void OnBagOfDecimalsChanging(global::System.Collections.ObjectModel.Collection<decimal> value);
         partial void OnBagOfDecimalsChanged();
         /// <summary>
         /// There are no comments for Property BagOfDoubles in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<double> BagOfDoubles
         {
             get
@@ -5592,14 +5606,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfDoublesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<double> _BagOfDoubles = new global::System.Collections.ObjectModel.Collection<double>();
         partial void OnBagOfDoublesChanging(global::System.Collections.ObjectModel.Collection<double> value);
         partial void OnBagOfDoublesChanged();
         /// <summary>
         /// There are no comments for Property BagOfSingles in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<float> BagOfSingles
         {
             get
@@ -5613,14 +5627,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfSinglesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<float> _BagOfSingles = new global::System.Collections.ObjectModel.Collection<float>();
         partial void OnBagOfSinglesChanging(global::System.Collections.ObjectModel.Collection<float> value);
         partial void OnBagOfSinglesChanged();
         /// <summary>
         /// There are no comments for Property BagOfBytes in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<byte> BagOfBytes
         {
             get
@@ -5634,14 +5648,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfBytesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<byte> _BagOfBytes = new global::System.Collections.ObjectModel.Collection<byte>();
         partial void OnBagOfBytesChanging(global::System.Collections.ObjectModel.Collection<byte> value);
         partial void OnBagOfBytesChanged();
         /// <summary>
         /// There are no comments for Property BagOfInt16s in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<short> BagOfInt16s
         {
             get
@@ -5655,14 +5669,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfInt16sChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<short> _BagOfInt16s = new global::System.Collections.ObjectModel.Collection<short>();
         partial void OnBagOfInt16sChanging(global::System.Collections.ObjectModel.Collection<short> value);
         partial void OnBagOfInt16sChanged();
         /// <summary>
         /// There are no comments for Property BagOfInt32s in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<int> BagOfInt32s
         {
             get
@@ -5676,14 +5690,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfInt32sChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<int> _BagOfInt32s = new global::System.Collections.ObjectModel.Collection<int>();
         partial void OnBagOfInt32sChanging(global::System.Collections.ObjectModel.Collection<int> value);
         partial void OnBagOfInt32sChanged();
         /// <summary>
         /// There are no comments for Property BagOfInt64s in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<long> BagOfInt64s
         {
             get
@@ -5697,14 +5711,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfInt64sChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<long> _BagOfInt64s = new global::System.Collections.ObjectModel.Collection<long>();
         partial void OnBagOfInt64sChanging(global::System.Collections.ObjectModel.Collection<long> value);
         partial void OnBagOfInt64sChanged();
         /// <summary>
         /// There are no comments for Property BagOfGuids in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::System.Guid> BagOfGuids
         {
             get
@@ -5718,14 +5732,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfGuidsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::System.Guid> _BagOfGuids = new global::System.Collections.ObjectModel.Collection<global::System.Guid>();
         partial void OnBagOfGuidsChanging(global::System.Collections.ObjectModel.Collection<global::System.Guid> value);
         partial void OnBagOfGuidsChanged();
         /// <summary>
         /// There are no comments for Property BagOfDateTimeOffset in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::System.DateTimeOffset> BagOfDateTimeOffset
         {
             get
@@ -5739,14 +5753,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfDateTimeOffsetChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::System.DateTimeOffset> _BagOfDateTimeOffset = new global::System.Collections.ObjectModel.Collection<global::System.DateTimeOffset>();
         partial void OnBagOfDateTimeOffsetChanging(global::System.Collections.ObjectModel.Collection<global::System.DateTimeOffset> value);
         partial void OnBagOfDateTimeOffsetChanged();
         /// <summary>
         /// There are no comments for Property BagOfComplexToCategories in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComplexToCategory> BagOfComplexToCategories
         {
             get
@@ -5760,14 +5774,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBagOfComplexToCategoriesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComplexToCategory> _BagOfComplexToCategories = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComplexToCategory>();
         partial void OnBagOfComplexToCategoriesChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ComplexToCategory> value);
         partial void OnBagOfComplexToCategoriesChanged();
         /// <summary>
         /// There are no comments for Property ComplexPhone in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone ComplexPhone
         {
             get
@@ -5781,14 +5795,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnComplexPhoneChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone _ComplexPhone;
         partial void OnComplexPhoneChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone value);
         partial void OnComplexPhoneChanged();
         /// <summary>
         /// There are no comments for Property ComplexContactDetails in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails ComplexContactDetails
         {
             get
@@ -5802,7 +5816,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnComplexContactDetailsChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails _ComplexContactDetails;
         partial void OnComplexContactDetailsChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ContactDetails value);
         partial void OnComplexContactDetailsChanged();
@@ -5847,7 +5861,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="photo">Initial value of Photo.</param>
         /// <param name="video">Initial value of Video.</param>
         /// <param name="vIN">Initial value of VIN.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Car CreateCar(global::Microsoft.OData.Client.DataServiceStreamLink photo, global::Microsoft.OData.Client.DataServiceStreamLink video, int vIN)
         {
             Car car = new Car();
@@ -5859,7 +5873,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Photo in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceStreamLink Photo
         {
             get
@@ -5873,14 +5887,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPhotoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceStreamLink _Photo;
         partial void OnPhotoChanging(global::Microsoft.OData.Client.DataServiceStreamLink value);
         partial void OnPhotoChanged();
         /// <summary>
         /// There are no comments for Property Video in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceStreamLink Video
         {
             get
@@ -5894,14 +5908,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnVideoChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceStreamLink _Video;
         partial void OnVideoChanging(global::Microsoft.OData.Client.DataServiceStreamLink value);
         partial void OnVideoChanged();
         /// <summary>
         /// There are no comments for Property VIN in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int VIN
         {
             get
@@ -5915,14 +5929,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnVINChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _VIN;
         partial void OnVINChanging(int value);
         partial void OnVINChanged();
         /// <summary>
         /// There are no comments for Property Description in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Description
         {
             get
@@ -5936,7 +5950,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDescriptionChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Description;
         partial void OnDescriptionChanging(string value);
         partial void OnDescriptionChanged();
@@ -5967,7 +5981,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> PersonMetadata
         {
             get
@@ -5983,7 +5997,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._PersonMetadata;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
@@ -5999,7 +6013,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new Person object.
         /// </summary>
         /// <param name="personId">Initial value of PersonId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Person CreatePerson(int personId)
         {
             Person person = new Person();
@@ -6009,7 +6023,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property PersonId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int PersonId
         {
             get
@@ -6023,14 +6037,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPersonIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _PersonId;
         partial void OnPersonIdChanging(int value);
         partial void OnPersonIdChanged();
         /// <summary>
         /// There are no comments for Property Name in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Name
         {
             get
@@ -6044,14 +6058,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnNameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Name;
         partial void OnNameChanging(string value);
         partial void OnNameChanged();
         /// <summary>
         /// There are no comments for Property PersonMetadata in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> PersonMetadata
         {
             get
@@ -6065,7 +6079,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPersonMetadataChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> _PersonMetadata = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata>();
         partial void OnPersonMetadataChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> value);
         partial void OnPersonMetadataChanged();
@@ -6096,7 +6110,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Person in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonSingle Person
         {
             get
@@ -6112,7 +6126,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Person;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonSingle _Person;
     }
     /// <summary>
@@ -6129,7 +6143,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// </summary>
         /// <param name="personMetadataId">Initial value of PersonMetadataId.</param>
         /// <param name="personId">Initial value of PersonId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static PersonMetadata CreatePersonMetadata(int personMetadataId, int personId)
         {
             PersonMetadata personMetadata = new PersonMetadata();
@@ -6140,7 +6154,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property PersonMetadataId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int PersonMetadataId
         {
             get
@@ -6154,14 +6168,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPersonMetadataIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _PersonMetadataId;
         partial void OnPersonMetadataIdChanging(int value);
         partial void OnPersonMetadataIdChanged();
         /// <summary>
         /// There are no comments for Property PersonId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int PersonId
         {
             get
@@ -6175,14 +6189,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPersonIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _PersonId;
         partial void OnPersonIdChanging(int value);
         partial void OnPersonIdChanged();
         /// <summary>
         /// There are no comments for Property PropertyName in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string PropertyName
         {
             get
@@ -6196,14 +6210,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPropertyNameChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _PropertyName;
         partial void OnPropertyNameChanging(string value);
         partial void OnPropertyNameChanged();
         /// <summary>
         /// There are no comments for Property PropertyValue in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string PropertyValue
         {
             get
@@ -6217,14 +6231,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPropertyValueChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _PropertyValue;
         partial void OnPropertyValueChanging(string value);
         partial void OnPropertyValueChanged();
         /// <summary>
         /// There are no comments for Property Person in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Person Person
         {
             get
@@ -6238,7 +6252,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPersonChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Person _Person;
         partial void OnPersonChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Person value);
         partial void OnPersonChanged();
@@ -6251,7 +6265,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property EmailBag in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<string> EmailBag
         {
             get
@@ -6265,14 +6279,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnEmailBagChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<string> _EmailBag = new global::System.Collections.ObjectModel.Collection<string>();
         partial void OnEmailBagChanging(global::System.Collections.ObjectModel.Collection<string> value);
         partial void OnEmailBagChanged();
         /// <summary>
         /// There are no comments for Property AlternativeNames in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<string> AlternativeNames
         {
             get
@@ -6286,14 +6300,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnAlternativeNamesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<string> _AlternativeNames = new global::System.Collections.ObjectModel.Collection<string>();
         partial void OnAlternativeNamesChanging(global::System.Collections.ObjectModel.Collection<string> value);
         partial void OnAlternativeNamesChanged();
         /// <summary>
         /// There are no comments for Property ContactAlias in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Aliases ContactAlias
         {
             get
@@ -6307,14 +6321,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnContactAliasChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Aliases _ContactAlias;
         partial void OnContactAliasChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Aliases value);
         partial void OnContactAliasChanged();
         /// <summary>
         /// There are no comments for Property HomePhone in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone HomePhone
         {
             get
@@ -6328,14 +6342,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnHomePhoneChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone _HomePhone;
         partial void OnHomePhoneChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone value);
         partial void OnHomePhoneChanged();
         /// <summary>
         /// There are no comments for Property WorkPhone in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone WorkPhone
         {
             get
@@ -6349,14 +6363,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnWorkPhoneChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone _WorkPhone;
         partial void OnWorkPhoneChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone value);
         partial void OnWorkPhoneChanged();
         /// <summary>
         /// There are no comments for Property MobilePhoneBag in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone> MobilePhoneBag
         {
             get
@@ -6370,7 +6384,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnMobilePhoneBagChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone> _MobilePhoneBag = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone>();
         partial void OnMobilePhoneBagChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone> value);
         partial void OnMobilePhoneBagChanged();
@@ -6384,7 +6398,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new AuditInfo object.
         /// </summary>
         /// <param name="modifiedDate">Initial value of ModifiedDate.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static AuditInfo CreateAuditInfo(global::System.DateTimeOffset modifiedDate)
         {
             AuditInfo auditInfo = new AuditInfo();
@@ -6394,7 +6408,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ModifiedDate in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset ModifiedDate
         {
             get
@@ -6408,14 +6422,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnModifiedDateChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _ModifiedDate;
         partial void OnModifiedDateChanging(global::System.DateTimeOffset value);
         partial void OnModifiedDateChanged();
         /// <summary>
         /// There are no comments for Property ModifiedBy in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string ModifiedBy
         {
             get
@@ -6429,14 +6443,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnModifiedByChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _ModifiedBy;
         partial void OnModifiedByChanging(string value);
         partial void OnModifiedByChanged();
         /// <summary>
         /// There are no comments for Property Concurrency in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo Concurrency
         {
             get
@@ -6450,7 +6464,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnConcurrencyChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo _Concurrency;
         partial void OnConcurrencyChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ConcurrencyInfo value);
         partial void OnConcurrencyChanged();
@@ -6463,7 +6477,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Token in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Token
         {
             get
@@ -6477,14 +6491,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnTokenChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Token;
         partial void OnTokenChanging(string value);
         partial void OnTokenChanged();
         /// <summary>
         /// There are no comments for Property QueriedDateTime in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Nullable<global::System.DateTimeOffset> QueriedDateTime
         {
             get
@@ -6498,7 +6512,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnQueriedDateTimeChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Nullable<global::System.DateTimeOffset> _QueriedDateTime;
         partial void OnQueriedDateTimeChanging(global::System.Nullable<global::System.DateTimeOffset> value);
         partial void OnQueriedDateTimeChanged();
@@ -6514,7 +6528,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="width">Initial value of Width.</param>
         /// <param name="height">Initial value of Height.</param>
         /// <param name="depth">Initial value of Depth.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Dimensions CreateDimensions(decimal width, decimal height, decimal depth)
         {
             Dimensions dimensions = new Dimensions();
@@ -6526,7 +6540,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Width in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public decimal Width
         {
             get
@@ -6540,14 +6554,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnWidthChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private decimal _Width;
         partial void OnWidthChanging(decimal value);
         partial void OnWidthChanged();
         /// <summary>
         /// There are no comments for Property Height in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public decimal Height
         {
             get
@@ -6561,14 +6575,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnHeightChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private decimal _Height;
         partial void OnHeightChanging(decimal value);
         partial void OnHeightChanged();
         /// <summary>
         /// There are no comments for Property Depth in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public decimal Depth
         {
             get
@@ -6582,7 +6596,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDepthChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private decimal _Depth;
         partial void OnDepthChanging(decimal value);
         partial void OnDepthChanged();
@@ -6595,7 +6609,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Term in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Term
         {
             get
@@ -6609,14 +6623,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnTermChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Term;
         partial void OnTermChanging(string value);
         partial void OnTermChanged();
         /// <summary>
         /// There are no comments for Property Scheme in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Scheme
         {
             get
@@ -6630,14 +6644,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSchemeChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Scheme;
         partial void OnSchemeChanging(string value);
         partial void OnSchemeChanged();
         /// <summary>
         /// There are no comments for Property Label in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Label
         {
             get
@@ -6651,7 +6665,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnLabelChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Label;
         partial void OnLabelChanging(string value);
         partial void OnLabelChanged();
@@ -6664,7 +6678,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property PhoneNumber in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string PhoneNumber
         {
             get
@@ -6678,14 +6692,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnPhoneNumberChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _PhoneNumber;
         partial void OnPhoneNumberChanging(string value);
         partial void OnPhoneNumberChanged();
         /// <summary>
         /// There are no comments for Property Extension in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Extension
         {
             get
@@ -6699,7 +6713,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnExtensionChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Extension;
         partial void OnExtensionChanging(string value);
         partial void OnExtensionChanged();
@@ -6712,7 +6726,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property AlternativeNames in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<string> AlternativeNames
         {
             get
@@ -6726,7 +6740,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnAlternativeNamesChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<string> _AlternativeNames = new global::System.Collections.ObjectModel.Collection<string>();
         partial void OnAlternativeNamesChanging(global::System.Collections.ObjectModel.Collection<string> value);
         partial void OnAlternativeNamesChanged();
@@ -6768,7 +6782,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// Create a new AllSpatialCollectionTypes_Simple object.
         /// </summary>
         /// <param name="ID">Initial value of Id.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static AllSpatialCollectionTypes_Simple CreateAllSpatialCollectionTypes_Simple(int ID)
         {
             AllSpatialCollectionTypes_Simple allSpatialCollectionTypes_Simple = new AllSpatialCollectionTypes_Simple();
@@ -6778,7 +6792,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ManyGeogPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPoint> ManyGeogPoint
         {
             get
@@ -6792,14 +6806,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManyGeogPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPoint> _ManyGeogPoint = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPoint>();
         partial void OnManyGeogPointChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPoint> value);
         partial void OnManyGeogPointChanged();
         /// <summary>
         /// There are no comments for Property ManyGeogLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyLineString> ManyGeogLine
         {
             get
@@ -6813,14 +6827,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManyGeogLineChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyLineString> _ManyGeogLine = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyLineString>();
         partial void OnManyGeogLineChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyLineString> value);
         partial void OnManyGeogLineChanged();
         /// <summary>
         /// There are no comments for Property ManyGeogPolygon in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPolygon> ManyGeogPolygon
         {
             get
@@ -6834,14 +6848,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManyGeogPolygonChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPolygon> _ManyGeogPolygon = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPolygon>();
         partial void OnManyGeogPolygonChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeographyPolygon> value);
         partial void OnManyGeogPolygonChanged();
         /// <summary>
         /// There are no comments for Property ManyGeomPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPoint> ManyGeomPoint
         {
             get
@@ -6855,14 +6869,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManyGeomPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPoint> _ManyGeomPoint = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPoint>();
         partial void OnManyGeomPointChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPoint> value);
         partial void OnManyGeomPointChanged();
         /// <summary>
         /// There are no comments for Property ManyGeomLine in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryLineString> ManyGeomLine
         {
             get
@@ -6876,14 +6890,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManyGeomLineChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryLineString> _ManyGeomLine = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryLineString>();
         partial void OnManyGeomLineChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryLineString> value);
         partial void OnManyGeomLineChanged();
         /// <summary>
         /// There are no comments for Property ManyGeomPolygon in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPolygon> ManyGeomPolygon
         {
             get
@@ -6897,7 +6911,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManyGeomPolygonChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPolygon> _ManyGeomPolygon = new global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPolygon>();
         partial void OnManyGeomPolygonChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.Spatial.GeometryPolygon> value);
         partial void OnManyGeomPolygonChanged();
@@ -6928,7 +6942,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle Login
         {
             get
@@ -6944,7 +6958,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Login;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.LoginSingle _Login;
     }
     /// <summary>
@@ -6963,7 +6977,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="viewed">Initial value of Viewed.</param>
         /// <param name="timeSpentOnPage">Initial value of TimeSpentOnPage.</param>
         /// <param name="productId">Initial value of ProductId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static ProductPageView CreateProductPageView(int pageViewId, global::System.DateTimeOffset viewed, global::System.TimeSpan timeSpentOnPage, int productId)
         {
             ProductPageView productPageView = new ProductPageView();
@@ -6976,7 +6990,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ProductId
         {
             get
@@ -6990,14 +7004,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnProductIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ProductId;
         partial void OnProductIdChanging(int value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property ConcurrencyToken in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string ConcurrencyToken
         {
             get
@@ -7011,7 +7025,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnConcurrencyTokenChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _ConcurrencyToken;
         partial void OnConcurrencyTokenChanging(string value);
         partial void OnConcurrencyTokenChanged();
@@ -7042,7 +7056,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Order in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.OrderSingle Order
         {
             get
@@ -7058,12 +7072,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Order;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.OrderSingle _Order;
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle Product
         {
             get
@@ -7079,7 +7093,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Product;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle _Product;
     }
     /// <summary>
@@ -7099,7 +7113,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="orderId">Initial value of OrderId.</param>
         /// <param name="productId">Initial value of ProductId.</param>
         /// <param name="quantity">Initial value of Quantity.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static BackOrderLine CreateBackOrderLine(global::Microsoft.OData.Client.DataServiceStreamLink orderLineStream, int orderId, int productId, int quantity)
         {
             BackOrderLine backOrderLine = new BackOrderLine();
@@ -7136,7 +7150,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Order in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.OrderSingle Order
         {
             get
@@ -7152,12 +7166,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Order;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.OrderSingle _Order;
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle Product
         {
             get
@@ -7173,7 +7187,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Product;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductSingle _Product;
     }
     /// <summary>
@@ -7193,7 +7207,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="orderId">Initial value of OrderId.</param>
         /// <param name="productId">Initial value of ProductId.</param>
         /// <param name="quantity">Initial value of Quantity.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static BackOrderLine2 CreateBackOrderLine2(global::Microsoft.OData.Client.DataServiceStreamLink orderLineStream, int orderId, int productId, int quantity)
         {
             BackOrderLine2 backOrderLine2 = new BackOrderLine2();
@@ -7230,7 +7244,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for RelatedProducts in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product> RelatedProducts
         {
             get
@@ -7246,12 +7260,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._RelatedProducts;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Product> _RelatedProducts;
         /// <summary>
         /// There are no comments for Detail in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductDetailSingle Detail
         {
             get
@@ -7267,12 +7281,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Detail;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductDetailSingle _Detail;
         /// <summary>
         /// There are no comments for Reviews in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview> Reviews
         {
             get
@@ -7288,12 +7302,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Reviews;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductReview> _Reviews;
         /// <summary>
         /// There are no comments for Photos in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto> Photos
         {
             get
@@ -7309,7 +7323,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Photos;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.ProductPhoto> _Photos;
     }
     /// <summary>
@@ -7327,7 +7341,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="picture">Initial value of Picture.</param>
         /// <param name="productId">Initial value of ProductId.</param>
         /// <param name="discontinued">Initial value of Discontinued.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static DiscontinuedProduct CreateDiscontinuedProduct(global::Microsoft.OData.Client.DataServiceStreamLink picture, int productId, global::System.DateTimeOffset discontinued)
         {
             DiscontinuedProduct discontinuedProduct = new DiscontinuedProduct();
@@ -7339,7 +7353,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Discontinued in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset Discontinued
         {
             get
@@ -7353,14 +7367,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDiscontinuedChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _Discontinued;
         partial void OnDiscontinuedChanging(global::System.DateTimeOffset value);
         partial void OnDiscontinuedChanged();
         /// <summary>
         /// There are no comments for Property ReplacementProductId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.Nullable<int> ReplacementProductId
         {
             get
@@ -7374,14 +7388,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnReplacementProductIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.Nullable<int> _ReplacementProductId;
         partial void OnReplacementProductIdChanging(global::System.Nullable<int> value);
         partial void OnReplacementProductIdChanged();
         /// <summary>
         /// There are no comments for Property DiscontinuedPhone in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone DiscontinuedPhone
         {
             get
@@ -7395,14 +7409,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDiscontinuedPhoneChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone _DiscontinuedPhone;
         partial void OnDiscontinuedPhoneChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Phone value);
         partial void OnDiscontinuedPhoneChanged();
         /// <summary>
         /// There are no comments for Property ChildConcurrencyToken in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string ChildConcurrencyToken
         {
             get
@@ -7416,7 +7430,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnChildConcurrencyTokenChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _ChildConcurrencyToken;
         partial void OnChildConcurrencyTokenChanging(string value);
         partial void OnChildConcurrencyTokenChanged();
@@ -7447,7 +7461,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> PersonMetadata
         {
             get
@@ -7463,7 +7477,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._PersonMetadata;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
@@ -7482,7 +7496,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="contratorCompanyId">Initial value of ContratorCompanyId.</param>
         /// <param name="billingRate">Initial value of BillingRate.</param>
         /// <param name="teamContactPersonId">Initial value of TeamContactPersonId.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Contractor CreateContractor(int personId, int contratorCompanyId, int billingRate, int teamContactPersonId)
         {
             Contractor contractor = new Contractor();
@@ -7495,7 +7509,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ContratorCompanyId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ContratorCompanyId
         {
             get
@@ -7509,14 +7523,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnContratorCompanyIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ContratorCompanyId;
         partial void OnContratorCompanyIdChanging(int value);
         partial void OnContratorCompanyIdChanged();
         /// <summary>
         /// There are no comments for Property BillingRate in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int BillingRate
         {
             get
@@ -7530,14 +7544,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBillingRateChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _BillingRate;
         partial void OnBillingRateChanging(int value);
         partial void OnBillingRateChanged();
         /// <summary>
         /// There are no comments for Property TeamContactPersonId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int TeamContactPersonId
         {
             get
@@ -7551,14 +7565,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnTeamContactPersonIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _TeamContactPersonId;
         partial void OnTeamContactPersonIdChanging(int value);
         partial void OnTeamContactPersonIdChanged();
         /// <summary>
         /// There are no comments for Property JobDescription in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string JobDescription
         {
             get
@@ -7572,7 +7586,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnJobDescriptionChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _JobDescription;
         partial void OnJobDescriptionChanging(string value);
         partial void OnJobDescriptionChanged();
@@ -7603,7 +7617,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Manager in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.EmployeeSingle Manager
         {
             get
@@ -7619,12 +7633,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Manager;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.EmployeeSingle _Manager;
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> PersonMetadata
         {
             get
@@ -7640,7 +7654,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._PersonMetadata;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
@@ -7658,7 +7672,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="personId">Initial value of PersonId.</param>
         /// <param name="managersPersonId">Initial value of ManagersPersonId.</param>
         /// <param name="salary">Initial value of Salary.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static Employee CreateEmployee(int personId, int managersPersonId, int salary)
         {
             Employee employee = new Employee();
@@ -7670,7 +7684,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property ManagersPersonId in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int ManagersPersonId
         {
             get
@@ -7684,14 +7698,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManagersPersonIdChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _ManagersPersonId;
         partial void OnManagersPersonIdChanging(int value);
         partial void OnManagersPersonIdChanged();
         /// <summary>
         /// There are no comments for Property Salary in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Salary
         {
             get
@@ -7705,14 +7719,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSalaryChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Salary;
         partial void OnSalaryChanging(int value);
         partial void OnSalaryChanged();
         /// <summary>
         /// There are no comments for Property Title in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string Title
         {
             get
@@ -7726,14 +7740,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnTitleChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _Title;
         partial void OnTitleChanging(string value);
         partial void OnTitleChanged();
         /// <summary>
         /// There are no comments for Property Manager in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Employee Manager
         {
             get
@@ -7747,7 +7761,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnManagerChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Employee _Manager;
         partial void OnManagerChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Employee value);
         partial void OnManagerChanged();
@@ -7791,7 +7805,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Car in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CarSingle Car
         {
             get
@@ -7807,12 +7821,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Car;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.CarSingle _Car;
         /// <summary>
         /// There are no comments for Manager in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.EmployeeSingle Manager
         {
             get
@@ -7828,12 +7842,12 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._Manager;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.EmployeeSingle _Manager;
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> PersonMetadata
         {
             get
@@ -7849,7 +7863,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 return this._PersonMetadata;
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
@@ -7870,7 +7884,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="carsVIN">Initial value of CarsVIN.</param>
         /// <param name="bonus">Initial value of Bonus.</param>
         /// <param name="isFullyVested">Initial value of IsFullyVested.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static SpecialEmployee CreateSpecialEmployee(int personId, 
                     int managersPersonId, 
                     int salary, 
@@ -7890,7 +7904,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property CarsVIN in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int CarsVIN
         {
             get
@@ -7904,14 +7918,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCarsVINChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _CarsVIN;
         partial void OnCarsVINChanging(int value);
         partial void OnCarsVINChanged();
         /// <summary>
         /// There are no comments for Property Bonus in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Bonus
         {
             get
@@ -7925,14 +7939,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBonusChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Bonus;
         partial void OnBonusChanging(int value);
         partial void OnBonusChanged();
         /// <summary>
         /// There are no comments for Property IsFullyVested in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public bool IsFullyVested
         {
             get
@@ -7946,14 +7960,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnIsFullyVestedChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private bool _IsFullyVested;
         partial void OnIsFullyVestedChanging(bool value);
         partial void OnIsFullyVestedChanged();
         /// <summary>
         /// There are no comments for Property Car in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Car Car
         {
             get
@@ -7967,7 +7981,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnCarChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Car _Car;
         partial void OnCarChanging(global::Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.Car value);
         partial void OnCarChanged();
@@ -7990,7 +8004,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <param name="int64">Initial value of Int64.</param>
         /// <param name="sByte">Initial value of SByte.</param>
         /// <param name="single">Initial value of Single.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public static ComplexWithAllPrimitiveTypes CreateComplexWithAllPrimitiveTypes(bool boolean, 
                     byte @byte, 
                     global::System.DateTimeOffset dateTimeOffset, 
@@ -8018,7 +8032,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
         /// <summary>
         /// There are no comments for Property Binary in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public byte[] Binary
         {
             get
@@ -8032,14 +8046,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBinaryChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private byte[] _Binary;
         partial void OnBinaryChanging(byte[] value);
         partial void OnBinaryChanged();
         /// <summary>
         /// There are no comments for Property Boolean in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public bool Boolean
         {
             get
@@ -8053,14 +8067,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnBooleanChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private bool _Boolean;
         partial void OnBooleanChanging(bool value);
         partial void OnBooleanChanged();
         /// <summary>
         /// There are no comments for Property Byte in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public byte Byte
         {
             get
@@ -8074,14 +8088,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnByteChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private byte _Byte;
         partial void OnByteChanging(byte value);
         partial void OnByteChanged();
         /// <summary>
         /// There are no comments for Property DateTimeOffset in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::System.DateTimeOffset DateTimeOffset
         {
             get
@@ -8095,14 +8109,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDateTimeOffsetChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::System.DateTimeOffset _DateTimeOffset;
         partial void OnDateTimeOffsetChanging(global::System.DateTimeOffset value);
         partial void OnDateTimeOffsetChanged();
         /// <summary>
         /// There are no comments for Property Decimal in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public decimal Decimal
         {
             get
@@ -8116,14 +8130,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDecimalChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private decimal _Decimal;
         partial void OnDecimalChanging(decimal value);
         partial void OnDecimalChanged();
         /// <summary>
         /// There are no comments for Property Double in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public double Double
         {
             get
@@ -8137,14 +8151,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnDoubleChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private double _Double;
         partial void OnDoubleChanging(double value);
         partial void OnDoubleChanged();
         /// <summary>
         /// There are no comments for Property Int16 in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public short Int16
         {
             get
@@ -8158,14 +8172,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnInt16Changed();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private short _Int16;
         partial void OnInt16Changing(short value);
         partial void OnInt16Changed();
         /// <summary>
         /// There are no comments for Property Int32 in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public int Int32
         {
             get
@@ -8179,14 +8193,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnInt32Changed();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private int _Int32;
         partial void OnInt32Changing(int value);
         partial void OnInt32Changed();
         /// <summary>
         /// There are no comments for Property Int64 in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public long Int64
         {
             get
@@ -8200,14 +8214,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnInt64Changed();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private long _Int64;
         partial void OnInt64Changing(long value);
         partial void OnInt64Changed();
         /// <summary>
         /// There are no comments for Property SByte in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public sbyte SByte
         {
             get
@@ -8221,14 +8235,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSByteChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private sbyte _SByte;
         partial void OnSByteChanging(sbyte value);
         partial void OnSByteChanged();
         /// <summary>
         /// There are no comments for Property String in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public string String
         {
             get
@@ -8242,14 +8256,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnStringChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private string _String;
         partial void OnStringChanging(string value);
         partial void OnStringChanged();
         /// <summary>
         /// There are no comments for Property Single in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public float Single
         {
             get
@@ -8263,14 +8277,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnSingleChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private float _Single;
         partial void OnSingleChanging(float value);
         partial void OnSingleChanged();
         /// <summary>
         /// There are no comments for Property GeographyPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeographyPoint GeographyPoint
         {
             get
@@ -8284,14 +8298,14 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeographyPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeographyPoint _GeographyPoint;
         partial void OnGeographyPointChanging(global::Microsoft.Spatial.GeographyPoint value);
         partial void OnGeographyPointChanged();
         /// <summary>
         /// There are no comments for Property GeometryPoint in the schema.
         /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public global::Microsoft.Spatial.GeometryPoint GeometryPoint
         {
             get
@@ -8305,7 +8319,7 @@ namespace Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReferenc
                 this.OnGeometryPointChanged();
             }
         }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.4.0")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.Spatial.GeometryPoint _GeometryPoint;
         partial void OnGeometryPointChanging(global::Microsoft.Spatial.GeometryPoint value);
         partial void OnGeometryPointChanged();

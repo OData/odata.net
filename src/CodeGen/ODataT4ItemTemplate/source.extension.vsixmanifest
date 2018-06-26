@@ -6,9 +6,10 @@
         <Description xml:space="preserve">An item template that simplifies the process of accessing OData v4 services by generating C# and VB.Net client-side proxy classes.</Description>
         <MoreInfo>https://github.com/odata/odata.net</MoreInfo>
         <License>ap-pl.txt</License>
+        <Icon>odata_logo.png</Icon>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0, 15.0]" />
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
