@@ -211,7 +211,6 @@ namespace Microsoft.OData {
         internal const string ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed = "ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed";
         internal const string ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed = "ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed";
         internal const string ODataBatchReader_DependsOnIdNotFound = "ODataBatchReader_DependsOnIdNotFound";
-        internal const string ODataBatchReader_AbsoluteURINotMatchingBaseUri = "ODataBatchReader_AbsoluteURINotMatchingBaseUri";
         internal const string ODataBatchReader_ReferenceIdNotIncludedInDependsOn = "ODataBatchReader_ReferenceIdNotIncludedInDependsOn";
         internal const string ODataBatch_GroupIdOrChangeSetIdCannotBeNull = "ODataBatch_GroupIdOrChangeSetIdCannotBeNull";
         internal const string ODataBatchReader_MessageIdPositionedIncorrectly = "ODataBatchReader_MessageIdPositionedIncorrectly";
