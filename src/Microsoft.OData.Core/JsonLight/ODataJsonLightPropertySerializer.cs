@@ -194,7 +194,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            if (value is ODataStringValue)
+            if (value is ODataStreamValue)
             {
                 return;
             }

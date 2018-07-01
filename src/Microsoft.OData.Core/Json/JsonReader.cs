@@ -433,6 +433,11 @@ namespace Microsoft.OData.Json
         /// <returns>A stream for reading a base64 URL encoded binary value.</returns>
         public Stream CreateReadStream()
         {
+            if (!this.canStream)
+            {
+                throw new Exception("CreateTextReader cannot be called in the current state");
+            }
+
             this.canStream = false;
             if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
             {
@@ -453,6 +458,11 @@ namespace Microsoft.OData.Json
         /// <returns>A TextReader for reading a text value.</returns>
         public TextReader CreateTextReader()
         {
+            if (!this.canStream)
+            {
+                throw new Exception("CreateTextReader cannot be called in the current state");
+            }
+
             this.canStream = false;
             if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
             {
@@ -516,6 +526,9 @@ namespace Microsoft.OData.Json
                     // Start of array
                     this.PushScope(ScopeType.Array);
                     this.tokenStartIndex++;
+                    this.canStream = 
+                        this.characterBuffer[this.tokenStartIndex] == '"' ||
+                        this.characterBuffer[this.tokenStartIndex] == '\'';
                     return JsonNodeType.StartArray;
 
                 case '"':

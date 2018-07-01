@@ -387,7 +387,7 @@ namespace Microsoft.OData
         /// <returns>A stream for reading the stream property.</returns>
         public override sealed TextReader CreateTextReader()
         {
-            if (this.State == ODataReaderState.String)
+            if (this.State == ODataReaderState.Stream)
             {
                 // todo (mikep): if we decide we need async version, implement
                 // and call this.VerifyCanReadStream(true);
@@ -396,7 +396,7 @@ namespace Microsoft.OData
             else
             {
                 // todo (mikep): create a proper error for this
-                throw new Exception("CreateReadStream can only be called while in ODataReaderState.Stream");
+                throw new Exception("CreateTextReader can only be called while in ODataReaderState.Stream");
             }
         }
 
@@ -472,15 +472,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         protected virtual bool ReadAtStreamImplementation()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Implementation of the reader logic when in state 'String'.
-        /// </summary>
-        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual bool ReadAtStringImplementation()
         {
             throw new NotImplementedException();
         }
@@ -779,10 +770,6 @@ namespace Microsoft.OData
                     result = this.ReadAtStreamImplementation();
                     break;
 
-                case ODataReaderState.String:
-                    result = this.ReadAtStringImplementation();
-                    break;
-
                 case ODataReaderState.NestedResourceInfoStart:
                     result = this.ReadAtNestedResourceInfoStartImplementation();
                     break;
@@ -942,8 +929,7 @@ namespace Microsoft.OData
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||
                     state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
                     state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue) ||
-                    state == ODataReaderState.Stream && (item == null || item is ODataStreamReferenceValue) ||
-                    state == ODataReaderState.String && (item == null || item is ODataStringValue) ||
+                    state == ODataReaderState.Stream && (item == null || item is ODataStreamValue) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||

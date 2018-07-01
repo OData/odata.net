@@ -1303,15 +1303,15 @@ namespace Microsoft.OData.JsonLight
                     if (primitiveType == null || primitiveType.IsString())
                     {
                         // individual string value
-                        ODataStringValue stringPropertyValue = new ODataStringValue
-                        {
-                            PropertyName = propertyName,
-                            TypeKind = primitiveType == null ? EdmPrimitiveTypeKind.None : EdmPrimitiveTypeKind.String
-                        };
+                        ODataStreamValue stringPropertyValue = 
+                            new ODataStreamValue(primitiveType == null ? EdmPrimitiveTypeKind.None : EdmPrimitiveTypeKind.String)
+                            {
+                                PropertyName = propertyName,
+                            };
 
                         // return without reading over the property node; we will create a stream over the value
                         this.AssertJsonCondition(JsonNodeType.PrimitiveValue);
-                        return new ODataJsonLightReaderNestedStringInfo(property, stringPropertyValue);
+                        return new ODataJsonLightReaderNestedStreamInfo(property, stringPropertyValue);
                     }
                     else
                     {

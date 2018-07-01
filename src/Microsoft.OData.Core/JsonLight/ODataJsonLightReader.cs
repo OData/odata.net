@@ -429,49 +429,25 @@ namespace Microsoft.OData.JsonLight
                 return null;
             }
 
-            return scope.Stream;
-        }
-
-        #endregion
-
-        #region Text
-
-        /// <summary>
-        /// Implementation of the reader logic when in state 'String'.
-        /// </summary>
-        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        protected override bool ReadAtStringImplementation()
-        {
-            return this.ReadAtStringSynchronously();
-        }
-
-#if PORTABLELIB
-        /// <summary>
-        /// Implementation of the reader logic when in state 'String'.
-        /// </summary>
-        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected override Task<bool> ReadAtStringImplementationAsync()
-        {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtStringSynchronously);
-        }
-#endif
-
-        /// <summary>
-        /// Creates a TextReader for reading an inline stream property.
-        /// </summary>
-        /// <returns>A TextReader for reading the string property.</returns>
-        protected override TextReader CreateTextReaderImplementation()
-        {
-            JsonLightNestedTextInfoScope scope = this.CurrentScope as JsonLightNestedTextInfoScope;
-            if (scope == null)
+            Stream stream;
+            IJsonStreamReader streamReader = this.jsonLightInputContext.JsonReader as IJsonStreamReader;
+            if (streamReader != null)
             {
-                return null;
+                stream = streamReader.CreateReadStream();
+            }
+            else
+            {
+                // JSONReader doesn't support streaming; read as a string and convert
+                // Skip over property or start array
+                this.jsonLightInputContext.JsonReader.Read();
+                string valueAsString = this.jsonLightInputContext.JsonReader.ReadStringValue();
+                stream = new MemoryStream(Convert.FromBase64String(valueAsString.Replace('_', '/').Replace('-', '+')));
             }
 
-            return scope.Reader;
+            return stream;
         }
 
-        #endregion
+    #endregion
 
         #region NestedResourceInfo
         /// <summary>
@@ -1524,25 +1500,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadNextNestedInfo();
         }
 
-        /// <summary>
-        /// Implementation of the reader logic when in state 'Stream'.
-        /// </summary>
-        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
-        private bool ReadAtStringSynchronously()
-        {
-            this.PopScope(ODataReaderState.String);
-            if (this.State == ODataReaderState.ResourceSetStart ||
-                this.State == ODataReaderState.DeltaResourceSetStart)
-            {
-                // We are reading a string within a collection
-                this.ReadNextResourceSetItem();
-                return true;
-            }
-
-            // We are reading a string value
-            return this.ReadNextNestedInfo();
-        }
-
         private bool ReadNextNestedInfo()
         {
             this.jsonLightResourceDeserializer.AssertJsonCondition(
@@ -1588,15 +1545,10 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 ODataJsonLightReaderNestedStreamInfo readerNestedStreamInfo = nestedInfo as ODataJsonLightReaderNestedStreamInfo;
+                Debug.Assert(readerNestedStreamInfo != null, "NestedInfo is not a resource, stream, string");
                 if (readerNestedStreamInfo != null)
                 {
                     this.StartNestedStreamInfo(readerNestedStreamInfo);
-                }
-                else
-                {
-                    ODataJsonLightReaderNestedStringInfo readerNestedTextInfo = nestedInfo as ODataJsonLightReaderNestedStringInfo;
-                    Debug.Assert(readerNestedTextInfo != null, "NestedInfo is not a resource, stream, string");
-                    this.StartNestedTextInfo(readerNestedTextInfo);
                 }
             }
         }
@@ -2100,13 +2052,13 @@ namespace Microsoft.OData.JsonLight
             {
                 if (resourceType == null || resourceType.IsUntyped())
                 {
-                    this.StartNestedTextInfo(new ODataJsonLightReaderNestedStringInfo(null,
-                        new ODataStringValue { TypeKind = EdmPrimitiveTypeKind.None }));
+                    this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null,
+                        new ODataStreamValue(EdmPrimitiveTypeKind.None)));
                 }
                 else if (resourceType.IsString() || resourceType.IsUntyped())
                 {
-                    this.StartNestedTextInfo(new ODataJsonLightReaderNestedStringInfo(null,
-                        new ODataStringValue { TypeKind = EdmPrimitiveTypeKind.String }));
+                    this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null,
+                        new ODataStreamValue(EdmPrimitiveTypeKind.String)));
                 }
                 else if (resourceType.IsStream() || resourceType.IsBinary())
                 {
@@ -2380,34 +2332,11 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue || this.CurrentScope is JsonLightResourceSetScope,
                 "Starting stream while not positioned on a primitive value or within an array");
 
-            Stream stream;
-            IJsonStreamReader streamReader = this.jsonLightInputContext.JsonReader as IJsonStreamReader;
-            if (streamReader != null)
-            {
-                stream = streamReader.CreateReadStream();
-            }
-            else
-            {
-                // JSONReader doesn't support streaming; read as a string and convert
-                // Skip over property or start array
-                this.jsonLightInputContext.JsonReader.Read();
-                string valueAsString = this.jsonLightInputContext.JsonReader.ReadStringValue();
-                stream = new MemoryStream(Convert.FromBase64String(valueAsString.Replace('_', '/').Replace('-', '+')));
-            }
-
-            this.EnterScope(new JsonLightNestedStreamInfoScope(stream, readerNestedStreamInfo, this.CurrentNavigationSource, this.CurrentScope.ODataUri));
+            this.EnterScope(new JsonLightNestedStreamInfoScope(readerNestedStreamInfo, this.CurrentNavigationSource, this.CurrentScope.ODataUri));
         }
 
-        /// <summary>
-        /// Starts the nested text info.
-        /// </summary>
-        /// <param name="readerNestedTextInfo">The nested resource info for the nested resource info to start.</param>
-        private void StartNestedTextInfo(ODataJsonLightReaderNestedStringInfo readerNestedTextInfo)
+        protected override TextReader CreateTextReaderImplementation()
         {
-            Debug.Assert(readerNestedTextInfo != null, "readerNestedResourceInfo != null");
-            Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue || this.CurrentScope is JsonLightResourceSetScope,
-                "Starting stream while not positioned on a primitive value or within an array");
-
             TextReader reader;
             IJsonStreamReader jsonStreamReader = this.jsonLightInputContext.JsonReader as IJsonStreamReader;
             if (jsonStreamReader != null)
@@ -2423,7 +2352,7 @@ namespace Microsoft.OData.JsonLight
                 reader = new StringReader(valueAsString);
             }
 
-            this.EnterScope(new JsonLightNestedTextInfoScope(reader, readerNestedTextInfo, this.CurrentNavigationSource, this.CurrentScope.ODataUri));
+            return reader;
         }
 
         /// <summary>
@@ -2907,42 +2836,11 @@ namespace Microsoft.OData.JsonLight
             /// <param name="nestedStreamInfo">The nested resource info attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            internal JsonLightNestedStreamInfoScope(Stream stream, ODataJsonLightReaderNestedStreamInfo nestedStreamInfo, IEdmNavigationSource navigationSource, ODataUri odataUri)
-                : base(ODataReaderState.Stream, nestedStreamInfo.StreamReference, navigationSource, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), odataUri)
+            internal JsonLightNestedStreamInfoScope(ODataJsonLightReaderNestedStreamInfo nestedStreamInfo, IEdmNavigationSource navigationSource, ODataUri odataUri)
+                : base(ODataReaderState.Stream, nestedStreamInfo.StreamValue, navigationSource, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), odataUri)
             {
                 Debug.Assert(nestedStreamInfo != null, "JsonLightNestedStreamInfoScope created with a null nestedStreamInfo");
-                this.Stream = stream;
             }
-
-            /// <summary>
-            /// The nested Stream for reading the stream property value.
-            /// </summary>
-            public Stream Stream { get; private set; }
-        }
-
-        /// <summary>
-        /// A reader scope; keeping track of the current reader state and an item associated with this state.
-        /// </summary>
-        private sealed class JsonLightNestedTextInfoScope : Scope
-        {
-            /// <summary>
-            /// Constructor creating a new reader scope.
-            /// </summary>
-            /// <param name="reader">The TextReader associated with the current nested text.</param>
-            /// <param name="nestedTextInfo">The nested resource info attached to this scope.</param>
-            /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-            /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
-            internal JsonLightNestedTextInfoScope(TextReader reader, ODataJsonLightReaderNestedStringInfo nestedTextInfo, IEdmNavigationSource navigationSource, ODataUri odataUri)
-                : base(ODataReaderState.String, nestedTextInfo.StringValue, navigationSource, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), odataUri)
-            {
-                Debug.Assert(nestedTextInfo != null, "JsonLightNestedTextInfoScope created with a null nestedStreamInfo");
-                this.Reader = reader;
-            }
-
-            /// <summary>
-            /// The nested TextReader for reading the string property value.
-            /// </summary>
-            public TextReader Reader { get; private set; }
         }
 
         /// <summary>

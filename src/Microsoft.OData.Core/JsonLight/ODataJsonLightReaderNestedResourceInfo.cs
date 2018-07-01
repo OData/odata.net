@@ -48,61 +48,31 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The Stream associated with the nested info.
         /// </summary>
-        private readonly ODataStreamReferenceValue nestedStreamReference;
+        private readonly ODataStreamValue nestedStreamValue;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="nestedProperty">The nested property for which the nested resource info will be reported.</param>
-        /// <param name="streamReference">The ODataStreamReferenceValue representing the stream reference.</param>
-        internal ODataJsonLightReaderNestedStreamInfo(IEdmProperty nestedProperty, ODataStreamReferenceValue streamReference)
+        /// <param name="streamValue">The ODataStreamValue representing the stream value.</param>
+        internal ODataJsonLightReaderNestedStreamInfo(IEdmProperty nestedProperty, ODataStreamValue streamValue)
             : base(nestedProperty)
         {
-            this.nestedStreamReference = streamReference;
+            this.nestedStreamValue = streamValue;
         }
 
         /// <summary>
-        /// The stream reference describing the nested stream.
+        /// The stream value describing the nested stream.
         /// </summary>
-        internal ODataStreamReferenceValue StreamReference
+        internal ODataStreamValue StreamValue
         {
             get
             {
-                return this.nestedStreamReference;
+                return this.nestedStreamValue;
             }
         }
     }
     
-    internal sealed class ODataJsonLightReaderNestedStringInfo : ODataJsonLightReaderNestedInfo
-    {
-        /// <summary>
-        /// The Stream associated with the nested info.
-        /// </summary>
-        private readonly ODataStringValue nestedStringValue;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="nestedProperty">The nested property for which the nested resource info will be reported.</param>
-        /// <param name="stringValue">The ODataStringValue representing the string value</param>
-        internal ODataJsonLightReaderNestedStringInfo(IEdmProperty nestedProperty, ODataStringValue stringValue)
-            : base(nestedProperty)
-        {
-            this.nestedStringValue = stringValue;
-        }
-
-        /// <summary>
-        /// The string value describing the nested string.
-        /// </summary>
-        internal ODataStringValue StringValue
-        {
-            get
-            {
-                return this.nestedStringValue;
-            }
-        }
-    }
-
     /// <summary>
     /// Class which holds information about nested resource info to be reported by the reader.
     /// </summary>
