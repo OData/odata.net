@@ -39,6 +39,13 @@ namespace Microsoft.OData
             throw new NotImplementedException();
         }
 
+        /// <summary>Creates a TextReader for reading an inline string property. </summary>
+        /// <returns>A TextReader for reading the text property.</returns>
+        public virtual TextReader CreateTextReader()
+        {
+            throw new NotImplementedException();
+        }
+
 #if PORTABLELIB
         /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
@@ -49,6 +56,13 @@ namespace Microsoft.OData
         public virtual Task<Stream> CreateReadStreamAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateReadStream());
+        }
+
+        /// <summary>Asynchronously creates a stream for reading an inline stream property. </summary>
+        /// <returns>A stream for reading the stream property.</returns>
+        public virtual Task<TextReader> CreateTextReaderAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextReader());
         }
 #endif
     }

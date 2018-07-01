@@ -71,12 +71,36 @@ namespace Microsoft.OData.JsonLight
                 return this.nestedStreamReference;
             }
         }
+    }
+    
+    internal sealed class ODataJsonLightReaderNestedStringInfo : ODataJsonLightReaderNestedInfo
+    {
+        /// <summary>
+        /// The Stream associated with the nested info.
+        /// </summary>
+        private readonly ODataStringValue nestedStringValue;
 
         /// <summary>
-        /// Encoding for text streams (null for binary streams).
+        /// Constructor.
         /// </summary>
-        internal Encoding Encoding;
+        /// <param name="nestedProperty">The nested property for which the nested resource info will be reported.</param>
+        /// <param name="stringValue">The ODataStringValue representing the string value</param>
+        internal ODataJsonLightReaderNestedStringInfo(IEdmProperty nestedProperty, ODataStringValue stringValue)
+            : base(nestedProperty)
+        {
+            this.nestedStringValue = stringValue;
+        }
 
+        /// <summary>
+        /// The string value describing the nested string.
+        /// </summary>
+        internal ODataStringValue StringValue
+        {
+            get
+            {
+                return this.nestedStringValue;
+            }
+        }
     }
 
     /// <summary>

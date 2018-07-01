@@ -382,6 +382,25 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Creates a stream for reading an inline stream property.
+        /// </summary>
+        /// <returns>A stream for reading the stream property.</returns>
+        public override sealed TextReader CreateTextReader()
+        {
+            if (this.State == ODataReaderState.String)
+            {
+                // todo (mikep): if we decide we need async version, implement
+                // and call this.VerifyCanReadStream(true);
+                return this.InterceptException(this.CreateTextReaderImplementation);
+            }
+            else
+            {
+                // todo (mikep): create a proper error for this
+                throw new Exception("CreateReadStream can only be called while in ODataReaderState.Stream");
+            }
+        }
+
+        /// <summary>
         /// Seek scope in the stack which is type of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of scope to seek.</typeparam>
@@ -458,10 +477,28 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Implementation of the reader logic when in state 'String'.
+        /// </summary>
+        /// <returns>true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual bool ReadAtStringImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Creates a Stream for reading a stream property when in state 'Stream'.
         /// </summary>
         /// <returns>A stream for reading the stream property.</returns>
         protected virtual Stream CreateReadStreamImplementation()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Creates a TextReader for reading a string property when in state 'Text'.
+        /// </summary>
+        /// <returns>A TextReader for reading the string property.</returns>
+        protected virtual TextReader CreateTextReaderImplementation()
         {
             throw new NotImplementedException();
         }
@@ -742,6 +779,10 @@ namespace Microsoft.OData
                     result = this.ReadAtStreamImplementation();
                     break;
 
+                case ODataReaderState.String:
+                    result = this.ReadAtStringImplementation();
+                    break;
+
                 case ODataReaderState.NestedResourceInfoStart:
                     result = this.ReadAtNestedResourceInfoStartImplementation();
                     break;
@@ -898,7 +939,9 @@ namespace Microsoft.OData
             {
                 Debug.Assert(expectedResourceType == null ||
                     expectedResourceType.AsElementType() is IEdmStructuredType ||
-                    expectedResourceType.AsElementType().IsStream(),
+                    expectedResourceType.AsElementType().IsStream() ||
+                    expectedResourceType.AsElementType().IsBinary() ||
+                    expectedResourceType.AsElementType().IsString(),
                     "expectedType must be a structured type or stream");
 
                 Debug.Assert(
@@ -907,6 +950,7 @@ namespace Microsoft.OData
                     state == ODataReaderState.ResourceEnd && (item is ODataResource || item == null) ||
                     state == ODataReaderState.Primitive && (item == null || item is ODataPrimitiveValue) ||
                     state == ODataReaderState.Stream && (item == null || item is ODataStreamReferenceValue) ||
+                    state == ODataReaderState.String && (item == null || item is ODataStringValue) ||
                     state == ODataReaderState.ResourceSetStart && item is ODataResourceSet ||
                     state == ODataReaderState.ResourceSetEnd && item is ODataResourceSet ||
                     state == ODataReaderState.NestedResourceInfoStart && item is ODataNestedResourceInfo ||

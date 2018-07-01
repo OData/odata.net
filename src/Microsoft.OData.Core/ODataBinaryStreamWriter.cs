@@ -17,7 +17,90 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
 #endif
 
-    // todo (mikep): move this to it's own file...
+    // todo (mikep): move these to their own files...
+    internal sealed class ODataNotificationWriter : TextWriter
+    {
+        private readonly TextWriter textWriter;
+        private IODataBatchOperationListener listener;
+
+        internal ODataNotificationWriter(TextWriter textWriter, IODataBatchOperationListener listener)
+            : base (System.Globalization.CultureInfo.InvariantCulture)
+        {
+            this.textWriter = textWriter;
+            this.listener = listener;
+        }
+
+        /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.listener != null)
+                {
+                    // Tell the listener that the stream is being disposed.
+                    this.listener.BatchOperationContentStreamDisposed();
+                    this.listener = null;
+                }
+            }
+
+            // mikep todo: don't call dispose if this is the jsonreader's underlying reader!
+            base.Dispose(disposing);
+        }
+
+        public override Encoding Encoding
+        {
+            get
+            {
+                return textWriter.Encoding;
+            }
+        }
+
+        public override void Write(char value)
+        {
+            textWriter.Write(value);
+        }
+
+        public override void Write(bool value)
+        {
+            textWriter.Write(value);
+        }
+
+        public override void Write(string value)
+        {
+            textWriter.Write(value);
+        }
+
+        public override void Write(char[] buffer)
+        {
+            textWriter.Write(buffer);
+        }
+
+        public override void Write(char[] buffer, int index, int count)
+        {
+            textWriter.Write(buffer, index, count);
+        }
+
+        public override void Write(string format, params object[] arg)
+        {
+            textWriter.Write(format, arg);
+        }
+
+        public override void Write(decimal value)
+        {
+            textWriter.Write(value);
+        }
+
+        public override void Write(object value)
+        {
+            textWriter.Write(value);
+        }
+
+        //todo: implement more methods
+    }
+
     internal sealed class ODataNotificationStream : Stream
     {
         private readonly Stream stream;
@@ -110,7 +193,6 @@ namespace Microsoft.OData
                 if (this.listener != null)
                 {
                     // Tell the listener that the stream is being disposed.
-                    // todo (mikep): okay that the writer is going to do work here, including (a?)synchronously writing to the underlying stream?
                     this.listener.BatchOperationContentStreamDisposed();
                     this.listener = null;
                 }
@@ -119,6 +201,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
     }
+
 
     /// <summary>
     /// A stream for writing stream values.
@@ -235,16 +318,10 @@ namespace Microsoft.OData
     }
 
     /// <summary>
-    /// A stream for writing base64 URL encoded binary values.
+    /// A stream for writing base64 encoded binary values.
     /// </summary>
     internal sealed class ODataBinaryStreamWriter : ODataStreamWriter
     {
-        /// <summary>
-        /// Whether the stream should be urlEncoded upon writing.
-        /// Binary properties are not urlEncoded, stream properties are.
-        /// </summary>
-        private readonly bool urlEncode;
-
         /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
         private Byte[] trailingBytes = new Byte[0];
 
@@ -252,11 +329,9 @@ namespace Microsoft.OData
         /// Constructor.
         /// </summary>
         /// <param name="writer">A Textwriter for writing to the stream.</param>
-        /// <param name="urlEncode">True if content should be urlEncoded.</param>
-        public ODataBinaryStreamWriter(TextWriter writer, bool urlEncode) : base(writer)
+        public ODataBinaryStreamWriter(TextWriter writer) : base(writer)
         {
             Debug.Assert(writer != null, "writer cannot be null");
-            this.urlEncode = urlEncode;
         }
 
         /// <summary>
@@ -267,7 +342,7 @@ namespace Microsoft.OData
         /// <param name="count">The number of bytes to write.</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-                this.Writer.Write(Base64Encode(buffer, offset, count));
+            this.Writer.Write(Base64Encode(buffer, offset, count));
         }
 
 #if PORTABLELIB
@@ -287,7 +362,7 @@ namespace Microsoft.OData
             // write any trailing bytes to stream
             if (disposing && this.trailingBytes != null && this.trailingBytes.Length > 0)
             {
-                this.Writer.Write(UrlEncode(Convert.ToBase64String(trailingBytes, 0, trailingBytes.Length)));
+                this.Writer.Write(Convert.ToBase64String(trailingBytes, 0, trailingBytes.Length));
                 trailingBytes = null;
             }
 
@@ -319,49 +394,13 @@ namespace Microsoft.OData
             int remainingBytes = (length - numberOfBytesToPrefix) % 3;
             trailingBytes = bytes.Skip(offset + length - remainingBytes).Take(remainingBytes).ToArray();
 
-            string base64String = prefixByteString + Convert.ToBase64String(bytes, offset + numberOfBytesToPrefix, length - numberOfBytesToPrefix - remainingBytes);
-            return this.urlEncode ? UrlEncode(base64String) : base64String;
+            return prefixByteString + Convert.ToBase64String(bytes, offset + numberOfBytesToPrefix, length - numberOfBytesToPrefix - remainingBytes);
         }
 
-        private static string UrlEncode(string unencodedString)
-        {
-            // todo (mikep): official method for UrlEncoding the string?
-            return unencodedString.Replace('/', '_').Replace('+', '-');
-        }
+        //private static string UrlEncode(string unencodedString)
+        //{
+        //    // todo (mikep): official method for UrlEncoding the string?
+        //    return unencodedString.Replace('/', '_').Replace('+', '-');
+        //}
     }
-
-//    /// <summary>
-//    /// A stream for writing text values.
-//    /// </summary>
-//    internal sealed class ODataTextStreamWriter : ODataStreamWriter
-//    {
-//        /// <summary>
-//        /// Constructor.
-//        /// </summary>
-//        /// <param name="writer">A Textwriter for writing to the stream.</param>
-//        public ODataTextStreamWriter(TextWriter writer) : base(writer)
-//        {
-//            Debug.Assert(writer != null, "writer cannot be null");
-//        }
-
-//        /// <summary>
-//        /// Writes to the stream.
-//        /// </summary>
-//        /// <param name="buffer">The buffer to get data from.</param>
-//        /// <param name="offset">The offset in the buffer to start from.</param>
-//        /// <param name="count">The number of bytes to write.</param>
-//        public override void Write(byte[] buffer, int offset, int count)
-//        {
-//            this.Writer.Write(this.Writer.Encoding.GetChars(buffer, offset, count));
-//        }
-
-//#if PORTABLELIB
-//        /// <inheritdoc />
-//        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-//        {
-//            // todo (mikep) what about cancellationToken?
-//            return this.Writer.WriteAsync(this.Writer.Encoding.GetChars(buffer, offset, count));
-//        }
-//#endif
-//    }
 }

@@ -13,7 +13,7 @@ namespace Microsoft.OData
 
     #endregion
 
-    // todo (mikep): move to its own file
+    // todo (mikep): move these to their own files
 
     /// <summary>
     /// A class to represent a binary stream value
@@ -36,7 +36,33 @@ namespace Microsoft.OData
     }
 
     /// <summary>
-    /// Represents a media resource.
+    /// A class to represent a string value
+    /// </summary>
+    public class ODataStringValue : ODataValue
+    {
+        /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
+        private string edmPropertyName;
+
+        /// <summary>
+        /// Gets the name of the property for this string reference value.
+        /// </summary>
+        /// <returns>The name of the property for the string reference value, or null for a string within a collection.</returns>
+        public string PropertyName
+        {
+            get
+            {
+                return this.edmPropertyName;
+            }
+
+            internal set
+            {
+                this.edmPropertyName = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents a Stream value.
     /// </summary>
     public sealed class ODataStreamReferenceValue : ODataValue
     {

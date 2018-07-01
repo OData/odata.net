@@ -91,6 +91,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Implementation of the reader logic when in state 'String'.
+        /// </summary>
+        /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
+        protected virtual Task<bool> ReadAtStringImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtStringImplementation);
+        }
+
+        /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>

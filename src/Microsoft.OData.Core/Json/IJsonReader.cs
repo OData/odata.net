@@ -16,11 +16,16 @@ namespace Microsoft.OData.Json
     public interface IJsonStreamReader : IJsonReader
     {
         /// <summary>
-        /// Creates a stream for reading a stream value.
+        /// Creates a Stream for reading a binary value.
         /// </summary>
-        /// <param name="encoding">The encoding to use for string values, or null for base64UrlEncoded binary strings</param>
-        /// <returns>A stream for reading the stream value.</returns>
-        Stream CreateReadStream(Encoding encoding);
+        /// <returns>A Stream for reading the binary value.</returns>
+        Stream CreateReadStream();
+
+        /// <summary>
+        /// Creates a TextReader for reading a string value.
+        /// </summary>
+        /// <returns>A TextReader for reading the string value.</returns>
+        TextReader CreateTextReader();
     }
 
     /// <summary>

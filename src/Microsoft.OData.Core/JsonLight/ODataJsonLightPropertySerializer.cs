@@ -194,6 +194,11 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
+            if (value is ODataStringValue)
+            {
+                return;
+            }
+
             if (value is ODataNullValue || value == null)
             {
                 this.WriteNullProperty(property);

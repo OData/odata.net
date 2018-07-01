@@ -19,13 +19,22 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Start the stream property valuescope.
         /// </summary>
-        /// <returns>The stream to write the property value to</returns>
-        Stream StartStreamValueScope(bool isUrlEncoded);
+        Stream StartStreamValueScope();
+
+        /// <summary>
+        /// Start the TextWriter value valuescope.
+        /// </summary>
+        TextWriter StartTextWriterValueScope();
 
         /// <summary>
         /// End the current stream property value scope.
         /// </summary>
         void EndStreamValueScope();
+
+        /// <summary>
+        /// End the current TextWriter value valuescope.
+        /// </summary>
+        void EndTextWriterValueScope();
     }
 
     /// <summary>

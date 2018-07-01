@@ -737,17 +737,18 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="collectionProperty">The collection of stream property for which to read the nested resource info. null for undeclared property.</param>
         /// <param name="propertyName">The property name.</param>
+        /// <param name="primitiveType">They primitive type of the collection element</param>
         /// <returns>The nested resource info for the stream collection.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        protected static ODataJsonLightReaderNestedResourceInfo ReadStreamCollectionNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty collectionProperty, string propertyName)
+        protected static ODataJsonLightReaderNestedResourceInfo ReadStreamCollectionNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty collectionProperty, string propertyName, IEdmPrimitiveType primitiveType)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert((propertyName != null) || (collectionProperty != null),
                 "The collection property and property name shouldn't both be null");
-            Debug.Assert(collectionProperty == null || collectionProperty.Type.Definition.AsElementType().IsStream(),
-                "The type of the property, if specified, must be Collection(Edm.Stream)");
+            Debug.Assert(primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream || primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Binary || primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.String,
+                "The type of the property, if specified, must be Collection(Edm.Stream | Edm.String | Edm.Binary)");
 
             ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
             {
@@ -757,7 +758,7 @@ namespace Microsoft.OData.JsonLight
             };
 
             ODataResourceSet expandedResourceSet = CreateCollectionResourceSet(resourceState, propertyName);
-            return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), expandedResourceSet);
+            return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, primitiveType, expandedResourceSet);
         }
 
         /// <summary>

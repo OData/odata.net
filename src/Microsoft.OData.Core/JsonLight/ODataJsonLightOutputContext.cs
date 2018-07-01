@@ -37,7 +37,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// An in-memory stream for writing stream properties to non-streaming json writer.
         /// </summary>
-        private MemoryStream binaryValueStream = null;
+        internal MemoryStream binaryValueStream = null;
+
+        /// <summary>
+        /// An in-memory StringWriter for writing string properties to non-streaming json writer.
+        /// </summary>
+        internal StringWriter stringWriter = null;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
@@ -140,22 +145,6 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(this.jsonWriter != null, "Trying to get JsonWriter while none is available.");
                 return this.jsonWriter;
-            }
-        }
-
-        /// <summary>
-        /// Returns an in-memory stream for writing stream properties to non-streaming json writer.
-        /// </summary>
-        public MemoryStream BinaryValueStream
-        {
-            get
-            {
-                return this.binaryValueStream;
-            }
-
-            set
-            {
-                this.binaryValueStream = value;
             }
         }
 
@@ -803,7 +792,14 @@ namespace Microsoft.OData.JsonLight
 
                 if (this.binaryValueStream != null)
                 {
+                    this.binaryValueStream.Flush();
                     this.binaryValueStream.Dispose();
+                }
+
+                if (this.stringWriter != null)
+                {
+                    this.stringWriter.Flush();
+                    this.stringWriter.Dispose();
                 }
             }
             finally
@@ -813,6 +809,7 @@ namespace Microsoft.OData.JsonLight
                 this.binaryValueStream = null;
                 this.textWriter = null;
                 this.jsonWriter = null;
+                this.stringWriter = null;
             }
 
             base.Dispose(disposing);

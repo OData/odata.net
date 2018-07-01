@@ -356,9 +356,25 @@ namespace Microsoft.OData
 #if PORTABLELIB
         /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
         /// <returns>A stream to write a binary value to.</returns>
-        public virtual Task<Stream> CreateWriteStreamAsync()
+        public virtual Task<Stream> CreateBinaryWriteStreamAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBinaryWriteStream());
+        }
+#endif
+
+        /// <summary>Creates a TextWriter for writing a string value.</summary>
+        /// <returns>A TextWriter to write a string value.</returns>
+        public virtual TextWriter CreateTextWriter()
+        {
+            throw new NotImplementedException();
+        }
+
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a TextWriter for writing a string value.</summary>
+        /// <returns>A TextWriter to write a string value.</returns>
+        public virtual Task<TextWriter> CreateTextWriterAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextWriter());
         }
 #endif
 

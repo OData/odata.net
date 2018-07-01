@@ -16,10 +16,10 @@ namespace Microsoft.OData
     using System.Linq;
     using System.Text;
 
-#endregion Namespaces
+    #endregion Namespaces
 
     /// <summary>
-    /// A stream for reading base64 URL encoded binary values.
+    /// A stream for reading base64 (possibly URL encoded) binary values.
     /// </summary>
     internal sealed class ODataBinaryStreamReader : Stream
     {
@@ -27,12 +27,7 @@ namespace Microsoft.OData
         /// A function to read a specified number of characters into
         /// a character array. Returns the actual number of characters read.
         /// </summary>
-        private readonly Func<char[], int, int> reader;
-
-        /// <summary>
-        /// The encoding for the stream.
-        /// </summary>
-        private readonly Encoding encoding;
+        private readonly Func<char[], int, int, int> reader;
 
         /// <summary>Size of character buffer.</summary>
         /// <remarks>
@@ -54,13 +49,49 @@ namespace Microsoft.OData
         /// Constructor.
         /// </summary>
         /// <param name="reader">A function from which to read character values.</param>
-        /// <param name="encoding">The encoding to use for string values, or null for base64UrlEncoded binary strings</param>
-        internal ODataBinaryStreamReader(Func<char[], int, int> reader, Encoding encoding)
+        internal ODataBinaryStreamReader(Func<char[], int, int, int> reader)
         {
             Debug.Assert(reader != null, "reader cannot be null");
             this.reader = reader;
             chars = new char[charLength];
-            this.encoding = encoding;
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int bytesCopied = 0;
+            int bytesRemaining = bytes.Length - bytesOffset;
+
+            while (bytesCopied < count)
+            {
+                if (bytesRemaining == 0)
+                {
+                    int charsRead = reader(chars, offset, charLength);
+                    if (charsRead < 1)
+                    {
+                        break;
+                    }
+
+                    chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
+                    bytes = Convert.FromBase64CharArray(chars, 0, charsRead);
+
+
+                    bytesRemaining = bytes.Length;
+                    bytesOffset = 0;
+
+                    // If the remaining characters were padding characters then no bytes will be returned
+                    if (bytesRemaining < 1)
+                    {
+                        break;
+                    }
+                }
+
+                buffer[bytesCopied] = bytes[bytesOffset];
+                bytesCopied++;
+                bytesOffset++;
+                bytesRemaining--;
+            }
+
+            return bytesCopied;
         }
 
         /// <summary>
@@ -142,50 +173,28 @@ namespace Microsoft.OData
         {
             throw new NotSupportedException();
         }
+    }
 
-        public override int Read(byte[] buffer, int offset, int count)
+    /// <summary>
+    /// A textreader for reading a text value.
+    /// </summary>
+    internal sealed class ODataTextStreamReader : TextReader
+    {
+        private Func<char[], int, int, int> reader;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="reader">A function from which to read character values.</param>
+        internal ODataTextStreamReader(Func<char[], int, int, int> reader)
         {
-            int bytesCopied = 0;
-            int bytesRemaining = bytes.Length - bytesOffset;
+            Debug.Assert(reader != null, "reader cannot be null");
+            this.reader = reader;
+        }
 
-            while (bytesCopied < count)
-            {
-                if (bytesRemaining == 0)
-                {
-                    int charsRead = reader(chars, charLength);
-                    if (charsRead < 1)
-                    {
-                        break;
-                    }
-
-                    if (this.encoding == null)
-                    {
-                        // UrlDecode by replacing '_' with '/' and '-' with '+'
-                        chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
-                        bytes = Convert.FromBase64CharArray(chars, 0, charsRead);
-                    }
-                    else
-                    {
-                        bytes = this.encoding.GetBytes(chars, 0, charsRead);
-                    }
-
-                    bytesRemaining = bytes.Length;
-                    bytesOffset = 0;
-
-                    // If the remaining characters were padding characters then no bytes will be returned
-                    if (bytesRemaining < 1)
-                    {
-                        break;
-                    }
-                }
-
-                buffer[bytesCopied] = bytes[bytesOffset];
-                bytesCopied++;
-                bytesOffset++;
-                bytesRemaining--;
-            }
-
-            return bytesCopied;
+        public override int Read(char[] buffer, int offset, int count)
+        {
+            return reader(buffer, offset, count);
         }
     }
 }

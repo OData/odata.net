@@ -210,8 +210,15 @@ namespace Microsoft.OData.Json
                 if (this.parsingString)
                 {
                     this.parsingString = false;
-                    bool hasLeadingBackslash;
-                    this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                    {
+                        this.nodeValue = this.ParseNullPrimitiveValue();
+                    }
+                    else
+                    {
+                        bool hasLeadingBackslash;
+                        this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                    }
                 }
 
                 return this.nodeValue;
@@ -257,7 +264,14 @@ namespace Microsoft.OData.Json
             {
                 // caller is positioned on a string value that they haven't read, so skip it
                 this.parsingString = false;
-                this.ParseStringPrimitiveValue();
+                if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                {
+                    this.ParseNullPrimitiveValue();
+                }
+                else
+                {
+                    this.ParseStringPrimitiveValue();
+                }
             }
 
             // Reset the node value.
@@ -405,16 +419,43 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Creates a stream for reading a base64 URL encoded binary value.
+        /// Creates a stream for reading a base64 binary value.
         /// </summary>
-        /// <param name="encoding">The encoding to use for string values, or null for base64UrlEncoded binary strings</param>
         /// <returns>A stream for reading a base64 URL encoded binary value.</returns>
-        public Stream CreateReadStream(Encoding encoding)
+        public Stream CreateReadStream()
         {
-            this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex++];
-            this.readingStream = true;
             this.parsingString = false;
-            return new ODataBinaryStreamReader(this.ReadChars, encoding);
+            if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
+            {
+                this.ParseNullPrimitiveValue();
+                this.scopes.Peek().ValueCount++;
+                this.Read();
+                return new ODataBinaryStreamReader((a,b,c)=> { return 0; });
+            }
+
+            this.tokenStartIndex++;
+            this.readingStream = true;
+            return new ODataBinaryStreamReader(this.ReadChars);
+        }
+
+        /// <summary>
+        /// Creates a TextReader for reading text values.
+        /// </summary>
+        /// <returns>A TextReader for reading a text value.</returns>
+        public TextReader CreateTextReader()
+        {
+            this.parsingString = false;
+            if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
+            {
+                this.ParseNullPrimitiveValue();
+                this.scopes.Peek().ValueCount++;
+                this.Read();
+                return new ODataTextStreamReader((a, b, c) => { return 0; });
+            }
+
+            this.tokenStartIndex++;
+            this.readingStream = true;
+            return new ODataTextStreamReader(this.ReadChars);
         }
 
         /// <summary>
@@ -476,7 +517,8 @@ namespace Microsoft.OData.Json
                     break;
 
                 case 'n':
-                    this.nodeValue = this.ParseNullPrimitiveValue();
+                    // Don't parse yet, as user may be streaming a stream. Defer parsing until .Value is called.
+                    this.parsingString = true;
                     break;
 
                 case 't':
@@ -859,7 +901,7 @@ namespace Microsoft.OData.Json
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
         /// So it can either return a string succesfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
-        private int ReadChars(char[] chars, int maxLength)
+        private int ReadChars(char[] chars, int offset, int maxLength)
         {
             if (!readingStream)
             {
@@ -885,7 +927,7 @@ namespace Microsoft.OData.Json
 
                 // Normal character, just skip over it - it will become part of the value as is.
                 this.tokenStartIndex++;
-                chars[charsRead] = character;
+                chars[charsRead + offset] = character;
                 charsRead++;
             }
 

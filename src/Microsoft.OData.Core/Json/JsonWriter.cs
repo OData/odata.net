@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.Globalization;
     using System.IO;
     using Microsoft.OData.Edm;
+    using System.Text;
     #endregion Namespaces
 
     /// <summary>
@@ -379,19 +380,16 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Start the stream property valuescope.
         /// </summary>
-        /// <param name="urlEncode">Whether to UrlEncode the stream</param>
         /// <returns>The stream to write the property value to</returns>
-        public Stream StartStreamValueScope(bool urlEncode)
+        public Stream StartStreamValueScope()
         {
             this.WriteValueSeparator();
             this.TextWriter.Write(JsonConstants.QuoteCharacter);
             this.TextWriter.Flush();
 
-            // Wrap the stream so that it doesn't get disposed.
             // Todo (mikep): should we listen for dispose?
-            this.binaryValueStream = new ODataBinaryStreamWriter(TextWriter, urlEncode);
+            this.binaryValueStream = new ODataBinaryStreamWriter(TextWriter);
 
-            // mikep: todo rename to stream
             return this.binaryValueStream;
         }
 
@@ -404,6 +402,28 @@ namespace Microsoft.OData.Json
             this.binaryValueStream.Dispose();
             this.binaryValueStream = null;
             this.TextWriter.Flush();
+            this.TextWriter.Write(JsonConstants.QuoteCharacter);
+        }
+
+        /// <summary>
+        /// Start the TextWriter valuescope.
+        /// </summary>
+        /// <returns>The textwriter to write the text property value to</returns>
+        public TextWriter StartTextWriterValueScope()
+        {
+            this.WriteValueSeparator();
+            this.TextWriter.Write(JsonConstants.QuoteCharacter);
+            this.TextWriter.Flush();
+
+            // mikep: todo wrap to make sure they don't write invalid characters
+            return TextWriter;
+        }
+
+        /// <summary>
+        /// End the TextWriter valuescope.
+        /// </summary>
+        public void EndTextWriterValueScope()
+        {
             this.TextWriter.Write(JsonConstants.QuoteCharacter);
         }
 

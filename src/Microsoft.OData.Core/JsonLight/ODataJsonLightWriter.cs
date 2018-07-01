@@ -17,6 +17,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Json;
+using System.Text;
 
 namespace Microsoft.OData.JsonLight
 {
@@ -821,13 +822,14 @@ namespace Microsoft.OData.JsonLight
             Stream stream;
             if (this.jsonStreamWriter == null)
             {
-                this.jsonLightOutputContext.BinaryValueStream = new MemoryStream();
-                stream = this.jsonLightOutputContext.BinaryValueStream;
+                this.jsonLightOutputContext.binaryValueStream = new MemoryStream();
+                stream = this.jsonLightOutputContext.binaryValueStream;
             }
             else
             {
-                bool urlEncode = this.ParentScope.ItemType == null || !this.ParentScope.ItemType.IsBinary();
-                stream = this.jsonStreamWriter.StartStreamValueScope(urlEncode);
+                // spec says to url encode binary values, but we have never done so for properties
+                // bool urlEncode = this.ParentScope.ItemType == null || !this.ParentScope.ItemType.IsBinary();
+                stream = this.jsonStreamWriter.StartStreamValueScope();
             }
 
             return stream;
@@ -840,14 +842,61 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.jsonStreamWriter == null)
             {
-                this.jsonWriter.WriteValue(this.jsonLightOutputContext.BinaryValueStream.ToArray());
-                this.jsonLightOutputContext.BinaryValueStream.Flush();
-                this.jsonLightOutputContext.BinaryValueStream.Dispose();
-                this.jsonLightOutputContext.BinaryValueStream = null;
+                this.jsonWriter.WriteValue(this.jsonLightOutputContext.binaryValueStream.ToArray());
+                this.jsonLightOutputContext.binaryValueStream.Flush();
+                this.jsonLightOutputContext.binaryValueStream.Dispose();
+                this.jsonLightOutputContext.binaryValueStream = null;
             }
             else
             {
                 this.jsonStreamWriter.EndStreamValueScope();
+            }
+        }
+
+        /// <summary>
+        /// Create a TextWriter for writing a string value.
+        /// </summary>
+        /// <returns>TextWriter for writing a string value.</returns>
+        protected override TextWriter StartTextWriter()
+        {
+            ODataProperty property = this.ParentScope.Item as ODataProperty;
+            if (property != null)
+            {
+                // writing a text property - write the property name
+                this.jsonWriter.WriteName(property.Name);
+                this.jsonWriter.Flush();
+            }
+
+            TextWriter writer;
+            if (this.jsonStreamWriter == null)
+            {
+                this.jsonLightOutputContext.stringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
+                writer = this.jsonLightOutputContext.stringWriter;
+            }
+            else
+            {
+                writer = this.jsonStreamWriter.StartTextWriterValueScope();
+            }
+
+            return writer;
+        }
+
+        /// <summary>
+        /// Finish writing a text value.
+        /// </summary>
+        protected sealed override void EndTextWriter()
+        {
+            if (this.jsonStreamWriter == null)
+            {
+                Debug.Assert(this.jsonLightOutputContext.stringWriter != null, "Calling EndTextWriter with a non-streaming JsonWriter and a null StringWriter");
+                this.jsonLightOutputContext.stringWriter.Flush();
+                this.jsonWriter.WriteValue(this.jsonLightOutputContext.stringWriter.GetStringBuilder().ToString());
+                this.jsonLightOutputContext.stringWriter.Dispose();
+                this.jsonLightOutputContext.stringWriter = null;
+            }
+            else
+            {
+                this.jsonStreamWriter.EndTextWriterValueScope();
             }
         }
 

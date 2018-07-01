@@ -176,26 +176,37 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Creates a stream for reading a stream value
         /// </summary>
-        /// <param name="encoding">Text encoding for reading a text stream</param>
         /// <returns>A Stream used to read a stream value</returns>
-        public Stream CreateReadStream(Encoding encoding)
+        public Stream CreateReadStream()
         {
             IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
             if (!this.isBuffering && streamReader != null)
             {
-                return streamReader.CreateReadStream(encoding);
+                return streamReader.CreateReadStream();
             }
 
             this.innerReader.Read();
 
-            if (encoding == null)
+            return new MemoryStream(
+                Convert.FromBase64String(((string)this.Value).Replace('_', '/').Replace('-', '+')));
+        }
+
+
+        /// <summary>
+        /// Creates a TextReader for reading a text value.
+        /// </summary>
+        /// <returns>A TextReader for reading the text value.</returns>
+        public TextReader CreateTextReader()
+        {
+            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
+            if (!this.isBuffering && streamReader != null)
             {
-                return new MemoryStream(
-                    Convert.FromBase64String(((string)this.Value).Replace('_', '/').Replace('-', '+')));
+                return streamReader.CreateTextReader();
             }
 
-            return new MemoryStream(
-                encoding.GetBytes(((string)this.Value) /*.Replace('_', '/').Replace('-', '+')*/));
+            this.innerReader.Read();
+
+            return new StringReader((string)this.Value);
         }
 
         /// <summary>

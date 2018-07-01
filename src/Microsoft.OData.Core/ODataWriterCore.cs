@@ -136,6 +136,9 @@ namespace Microsoft.OData
             /// <summary>The writer is currently writing a stream value.</summary>
             Stream,
 
+            /// <summary>The writer is currently writing a string value.</summary>
+            String,
+
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
 
@@ -635,10 +638,28 @@ namespace Microsoft.OData
 #if PORTABLELIB
         /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
         /// <returns>A stream to write a binary value to.</returns>
-        public sealed override Task<Stream> CreateWriteStreamAsync()
+        public sealed override Task<Stream> CreateBinaryWriteStreamAsync()
         {
             this.VerifyCanCreateWriteStream(false);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateWriteStreamImplementation());
+        }
+#endif
+
+        /// <summary>Creates a TextWriter for writing a string value.</summary>
+        /// <returns>A TextWriter to write a string value to.</returns>
+        public sealed override TextWriter CreateTextWriter()
+        {
+            this.VerifyCanCreateTextWriter(true);
+            return this.CreateTextWriterImplementation();
+        }
+
+#if PORTABLELIB
+        /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
+        /// <returns>A stream to write a binary value to.</returns>
+        public sealed override Task<TextWriter> CreateTextWriterAsync()
+        {
+            this.VerifyCanCreateWriteStream(false);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextWriterImplementation());
         }
 #endif
 
@@ -784,10 +805,18 @@ namespace Microsoft.OData
         /// </summary>
         void IODataBatchOperationListener.BatchOperationContentStreamDisposed()
         {
-            Debug.Assert(this.State == WriterState.Stream, "Stream was disposed when not in WriterState.Stream state.");
+            Debug.Assert(this.State == WriterState.Stream || this.State == WriterState.String, "Stream was disposed when not in WriterState.Stream state.");
 
             // Complete writing the stream
-            this.EndBinaryStream();
+            if (this.State == WriterState.Stream)
+            {
+                this.EndBinaryStream();
+            }
+            else if (this.State == WriterState.String)
+            {
+                this.EndTextWriter();
+            }
+
             this.LeaveScope();
         }
 
@@ -940,6 +969,23 @@ namespace Microsoft.OData
         /// Finish writing a stream.
         /// </summary>
         protected virtual void EndBinaryStream()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Create a TextWriter to write a tring value to.
+        /// </summary>
+        /// <returns>A TextWriter for writing the text value.</returns>
+        protected virtual TextWriter StartTextWriter()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Finish writing a stream.
+        /// </summary>
+        protected virtual void EndTextWriter()
         {
             throw new NotImplementedException();
         }
@@ -1559,6 +1605,26 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Verifies that calling CreateTextWriter is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        private void VerifyCanCreateTextWriter(bool synchronousCall)
+        {
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+        }
+
+        /// <summary>
+        /// Create a text writer - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A TextWriter for writing the string value.</returns>
+        private TextWriter CreateTextWriterImplementation()
+        {
+            this.EnterScope(WriterState.String, null);
+            return new ODataNotificationWriter(this.StartTextWriter(), this);
+        }
+
+        /// <summary>
         /// Verify that calling WriteEnd is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
@@ -1657,8 +1723,9 @@ namespace Microsoft.OData
                         // WriteEnd for WriterState.Primitive is a no-op; just leave scope
                         break;
                     case WriterState.Stream:
+                    case WriterState.String:
                         // todo (mikep): make this a real error
-                        throw new ODataException("Stream must be disposed before calling WriteEnd");
+                        throw new ODataException("Stream or TextWriter must be disposed before calling WriteEnd");
                     case WriterState.Start:                 // fall through
                     case WriterState.Completed:             // fall through
                     case WriterState.Error:                 // fall through
@@ -2455,7 +2522,7 @@ namespace Microsoft.OData
                     if (newState != WriterState.Resource &&
                         (this.CurrentScope.ResourceType != null &&
                             (this.CurrentScope.ResourceType.TypeKind != EdmTypeKind.Untyped ||
-                                (newState != WriterState.Primitive && newState != WriterState.Stream && newState != WriterState.ResourceSet))))
+                                (newState != WriterState.Primitive && newState != WriterState.Stream && newState != WriterState.String && newState != WriterState.ResourceSet))))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
@@ -2485,15 +2552,16 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.Property:
-                    if (newState != WriterState.Stream)
+                    if (newState != WriterState.Stream && newState != WriterState.String)
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidStateTransition(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case WriterState.Stream:
+                case WriterState.String:
                     // todo (mikep): create appropriate error string
-                    throw new ODataException("Stream must be disposed before calling Write on ODataWriter");
+                    throw new ODataException("Stream or TextWriter must be disposed before calling Write on ODataWriter");
                 case WriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
                     throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
@@ -2538,6 +2606,7 @@ namespace Microsoft.OData
                 state == WriterState.NestedResourceInfo && item is ODataNestedResourceInfo ||
                 state == WriterState.NestedResourceInfoWithContent && item is ODataNestedResourceInfo ||
                 state == WriterState.Stream && item == null ||
+                state == WriterState.String && item == null ||
                 state == WriterState.Start && item == null ||
                 state == WriterState.Completed && item == null,
                 "Writer state and associated item do not match.");
@@ -2595,6 +2664,7 @@ namespace Microsoft.OData
                     break;
                 case WriterState.Primitive:                 // fall through
                 case WriterState.Stream:                    // fall through
+                case WriterState.String:                    // fall through
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
                 case WriterState.Error:

@@ -271,7 +271,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                Stream stream = streamWriter.StartStreamValueScope(false);
+                Stream stream = streamWriter.StartStreamValueScope();
 #if PORTABLELIB
                 streamValue.Stream.CopyTo(stream);
 #else
