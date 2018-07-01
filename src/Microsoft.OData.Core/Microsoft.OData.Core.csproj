@@ -44,6 +44,7 @@
     <Compile Include="AnnotationFilter.cs" />
     <Compile Include="AnnotationFilterPattern.cs" />
     <Compile Include="AsyncBufferedStream.cs" />
+    <Compile Include="Buffers\BufferUtils.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="BindingPathHelper.cs" />
     <Compile Include="UriParser\Binders\ComputeBinder.cs" />
+    <Compile Include="UriParser\Binders\InBinder.cs" />
     <Compile Include="UriParser\Aggregation\AggregateTokenBase.cs" />
     <Compile Include="UriParser\Aggregation\ApplyTransformationToken.cs" />
     <Compile Include="UriParser\Aggregation\EntitySetAggregateExpression.cs" />
@@ -92,15 +94,18 @@
     <Compile Include="UriParser\ODataPathInfo.cs" />
     <Compile Include="UriParser\SemanticAst\AggregatedCollectionPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionConstantNode.cs" />
     <Compile Include="UriParser\SemanticAst\ComputeClause.cs" />
     <Compile Include="UriParser\SemanticAst\ComputeExpression.cs" />
     <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\AnnotationSegment.cs" />
+    <Compile Include="UriParser\SemanticAst\InNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
     <Compile Include="UriParser\SyntacticAst\ComputeToken.cs" />
     <Compile Include="UriParser\SyntacticAst\ComputeExpressionToken.cs" />
+    <Compile Include="UriParser\SyntacticAst\InToken.cs" />
     <Compile Include="UriParser\TypeFacetsPromotionRules.cs" />
     <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />

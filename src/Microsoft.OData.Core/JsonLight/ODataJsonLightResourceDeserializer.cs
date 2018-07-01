@@ -1276,31 +1276,36 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The ODataJsonLightReaderNestedInfo for a nested stream property, or null if the property shouldn't be streamed</returns>
         private ODataJsonLightReaderNestedInfo TryReadAsStream(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty property, IEdmTypeReference propertyType, string propertyName)
         {
-            Debug.Assert(propertyName != null && propertyType != null, "Property name and type must not be null");
+            Debug.Assert(propertyName != null, "Property name must not be null");
 
-            IEdmPrimitiveType primitiveType = propertyType.Definition.AsElementType() as IEdmPrimitiveType;
+            IEdmPrimitiveType primitiveType = propertyType == null ? null : propertyType.Definition.AsElementType() as IEdmPrimitiveType;
+            bool isCollection = this.JsonReader.NodeType == JsonNodeType.StartArray;
+
             // is the property a stream or a stream collection,
             // or a binary or binary collection the client wants to read as a stream...
-            if (primitiveType != null &&
-                (primitiveType.IsStream() ||
+            if ((primitiveType != null
+                && (primitiveType.IsStream() ||
                     (this.MessageReaderSettings.ReadAsStream != null
-                        && (primitiveType.IsBinary() || primitiveType.IsString()))
+                        && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
+                        && this.MessageReaderSettings.ReadAsStream(property)))
+                || ((propertyType == null || propertyType.Definition.AsElementType().IsUntyped()) && (isCollection || this.JsonReader.CanStream()) && this.MessageReaderSettings.ReadAsStream != null
                         && this.MessageReaderSettings.ReadAsStream(property)))
             {
-                bool isCollection = propertyType.IsCollection();
                 if (isCollection)
                 {
+                    IEdmType elementType = propertyType == null ? EdmCoreModel.Instance.GetUntypedType() : propertyType.Definition.AsElementType();
                     // Collection of streams, or binary/string values to read as streams
-                    return ReadStreamCollectionNestedResourceInfo(resourceState, property, propertyName, primitiveType);
+                    return ReadStreamCollectionNestedResourceInfo(resourceState, property, propertyName, elementType);
                 }
                 else
                 {
-                    if (primitiveType.IsString())
+                    if (primitiveType == null || primitiveType.IsString())
                     {
                         // individual string value
                         ODataStringValue stringPropertyValue = new ODataStringValue
                         {
-                            PropertyName = propertyName
+                            PropertyName = propertyName,
+                            TypeKind = primitiveType == null ? EdmPrimitiveTypeKind.None : EdmPrimitiveTypeKind.String
                         };
 
                         // return without reading over the property node; we will create a stream over the value
@@ -1423,6 +1428,12 @@ namespace Microsoft.OData.JsonLight
                     out typeAnnotation);
             }
 
+            ODataJsonLightReaderNestedInfo nestedResourceInfo = TryReadAsStream(resourceState, null, payloadTypeReference, propertyName);
+            if (nestedResourceInfo != null)
+            {
+                return nestedResourceInfo;
+            }
+
             payloadTypeReference = ResolveUntypedType(
                 this.JsonReader.NodeType,
                 this.JsonReader.Value,
@@ -1447,51 +1458,6 @@ namespace Microsoft.OData.JsonLight
                     return ReadNonExpandedResourceNestedResourceInfo(resourceState, null, payloadTypeOrItemType, propertyName);
                 }
             }
-
-            ODataJsonLightReaderNestedInfo readerNestedResourceInfo = TryReadAsStream(resourceState, null, payloadTypeReference, propertyName);
-            if(readerNestedResourceInfo != null)
-            {
-                return readerNestedResourceInfo;
-            }
-
-            //// is the property a stream or a stream collection,
-            //// or a binary or binary collection the client wants to read as a stream...
-            //IEdmType elementType = payloadTypeReference.Definition.AsElementType();
-            //if (elementType.IsStream() ||
-            //     (this.MessageReaderSettings.ReadAsStream != null
-            //        && (elementType.IsBinary() || elementType.IsString()))
-            //        && this.MessageReaderSettings.ReadAsStream(null))
-            //{
-            //    if (isCollection)
-            //    {
-            //        return ReadStreamCollectionNestedResourceInfo(resourceState, null, propertyName, (IEdmPrimitiveType)elementType);
-            //    }
-            //    else
-            //    {
-            //        if (elementType.IsBinary())
-            //        {
-            //            // individual stream or binary value
-            //            ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
-            //            AddResourceProperty(resourceState, propertyName, streamPropertyValue);
-
-            //            // return without reading over the property node; we will create a stream over the value
-            //            this.AssertJsonCondition(JsonNodeType.Property);
-            //            return new ODataJsonLightReaderNestedStreamInfo(null, streamPropertyValue);
-            //        }
-            //        else
-            //        {
-            //            // individual string value
-            //            ODataStringValue stringPropertyValue = new ODataStringValue
-            //            {
-            //                PropertyName = propertyName
-            //            };
-
-            //            // return without reading over the property node; we will create a stream over the value
-            //            this.AssertJsonCondition(JsonNodeType.PrimitiveValue);
-            //            return new ODataJsonLightReaderNestedStringInfo(null, stringPropertyValue);
-            //        }
-            //    }
-            //}
 
             if (!(payloadTypeReference is IEdmUntypedTypeReference))
             {

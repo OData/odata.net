@@ -40,6 +40,11 @@ namespace Microsoft.OData.Json
         private readonly bool isIeee754Compatible;
 
         /// <summary>
+        /// The buffer to help with streaming responses.
+        /// </summary>
+        private char[] buffer;
+
+        /// <summary>
         /// Current stream for writing a binary property.
         /// </summary>
         private Stream binaryValueStream = null;
@@ -168,7 +173,7 @@ namespace Microsoft.OData.Json
 
             currentScope.ObjectCount++;
 
-            JsonValueUtils.WriteEscapedJsonString(this.TextWriter, name);
+            JsonValueUtils.WriteEscapedJsonString(this.TextWriter, name, ref this.buffer);
             this.TextWriter.Write(JsonConstants.NameValueSeparator);
         }
 
@@ -232,7 +237,7 @@ namespace Microsoft.OData.Json
             // if it is IEEE754Compatible, write numbers with quotes; otherwise, write numbers directly.
             if (isIeee754Compatible)
             {
-                JsonValueUtils.WriteValue(this.TextWriter, value.ToString(CultureInfo.InvariantCulture));
+                JsonValueUtils.WriteValue(this.TextWriter, value.ToString(CultureInfo.InvariantCulture), ref this.buffer);
             }
             else
             {
@@ -271,7 +276,7 @@ namespace Microsoft.OData.Json
             // if it is not IEEE754Compatible, write numbers directly without quotes;
             if (isIeee754Compatible)
             {
-                JsonValueUtils.WriteValue(this.TextWriter, value.ToString(CultureInfo.InvariantCulture));
+                JsonValueUtils.WriteValue(this.TextWriter, value.ToString(CultureInfo.InvariantCulture), ref this.buffer);
             }
             else
             {
@@ -346,7 +351,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(string value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.TextWriter, value);
+            JsonValueUtils.WriteValue(this.TextWriter, value, ref this.buffer);
         }
 
         /// <summary>

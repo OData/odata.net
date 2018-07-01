@@ -26,6 +26,12 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A TextReader for reading the string value.</returns>
         TextReader CreateTextReader();
+
+        /// <summary>
+        /// Whether or not the current value can be streamed
+        /// </summary>
+        /// <returns>True if the current value can be streamed, otherwise false</returns>
+        bool CanStream();
     }
 
     /// <summary>

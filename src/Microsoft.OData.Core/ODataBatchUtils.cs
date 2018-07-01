@@ -170,7 +170,7 @@ namespace Microsoft.OData
             {
                 if (baseUri == null)
                 {
-                    // The absolution Uri can contain $ character followed by name of system resource
+                    // The absolute Uri can contain $ character followed by name of system resource
                     // such as $all, $metadata, etc, along with an unspecified baseUri. In such cases there are
                     // not reference Uri to validate.
                     return;
@@ -179,8 +179,8 @@ namespace Microsoft.OData
                 string baseUriString = UriUtils.UriToString(baseUri);
                 if (!uri.AbsoluteUri.StartsWith(baseUriString, StringComparison.Ordinal))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_AbsoluteURINotMatchingBaseUri(
-                        uri.AbsoluteUri, baseUriString));
+                    // Skip validation if uri doesn't start with the baseUri.
+                    return;
                 }
 
                 relativePath = uri.AbsoluteUri.Substring(baseUriString.Length);

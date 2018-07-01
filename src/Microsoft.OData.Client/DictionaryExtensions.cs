@@ -8,11 +8,12 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    /// Useful extension methods for IDictionary
+    /// Useful extension methods for IDictionary and ConcurrentDictionary
     /// </summary>
     internal static class DictionaryExtensions
     {
@@ -54,7 +55,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if PORTABLELIB
+#if PORTABLELIB && WINDOWSPHONE
         /// <summary>
         /// Try to add a key/value pair to the dictionary and returns true if the key was added, false if it was already present.
         /// The difference with Add is that it will not throw <see cref="ArgumentException"/> if the key is already present.
@@ -84,6 +85,23 @@ namespace Microsoft.OData.Client
             }
 
             return false;
+        }
+#else
+        /// <summary>
+        /// Convenience function that wraps ConcurrentDictionary.TryAdd() to allow same signature as IDictionary
+        /// </summary>
+        public static void Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
+        {
+            if (!self.TryAdd(key, value))
+                throw new ArgumentException("Argument_AddingDuplicate");
+        }
+
+        /// <summary>
+        /// Convenience function for ConcurrentDictionary to allow same signature as IDictionary
+        /// </summary>
+        public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key)
+        {
+            return ((IDictionary<TKey, TValue>)self).Remove(key);
         }
 #endif
     }

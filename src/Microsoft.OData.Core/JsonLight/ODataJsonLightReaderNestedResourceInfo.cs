@@ -137,7 +137,7 @@ namespace Microsoft.OData.JsonLight
         /// The type of the nested resource info which will be reported.
         /// </summary>
         private IEdmType nestedResourceType;
-
+                
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -206,8 +206,13 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// true if the nested resource info has a value.
+        /// Whether individual members of the collection should be streamed.
         /// </summary>
+        internal bool StreamMembers { get; set; }
+        
+        /// <summary>
+                 /// true if the nested resource info has a value.
+                 /// </summary>
         internal bool HasValue
         {
             get

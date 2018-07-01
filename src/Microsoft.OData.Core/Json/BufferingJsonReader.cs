@@ -191,7 +191,6 @@ namespace Microsoft.OData.Json
                 Convert.FromBase64String(((string)this.Value).Replace('_', '/').Replace('-', '+')));
         }
 
-
         /// <summary>
         /// Creates a TextReader for reading a text value.
         /// </summary>
@@ -209,6 +208,21 @@ namespace Microsoft.OData.Json
             return new StringReader((string)this.Value);
         }
 
+        /// <summary>
+        /// Whether or not the current value can be streamed
+        /// </summary>
+        /// <returns>True if the current value can be streamed, otherwise false</returns>
+        public bool CanStream()
+        {
+            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
+            if (!this.isBuffering && streamReader != null)
+            {
+                return streamReader.CanStream();
+            }
+            
+            return (this.Value is string || this.Value == null);
+        }
+        
         /// <summary>
         /// Reads the next node from the input.
         /// </summary>

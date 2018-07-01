@@ -901,6 +901,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\ComputeBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\ComputeBinder.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\InBinder.cs">
+      <Link>Microsoft\OData\Core\UriParser\Binders\InBinder.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\DottedIdentifierBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\DottedIdentifierBinder.cs</Link>
     </Compile>
@@ -1312,6 +1315,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\ComputeExpressionToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\InToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\SyntacticAst\InToken.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>
     </Compile>
@@ -1539,6 +1545,9 @@
     <Compile Include="..\BindingPathHelper.cs">
       <Link>Microsoft\OData\Core\BindingPathHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Buffers\BufferUtils.cs">
+      <Link>Microsoft\OData\Core\Buffers\BufferUtils.cs</Link>
+    </Compile>
     <Compile Include="..\DuplicatePropertyNameChecker.cs">
       <Link>Microsoft\OData\Core\DuplicatePropertyNameChecker.cs</Link>
     </Compile>
@@ -1662,9 +1671,15 @@
     <Compile Include="..\UriParser\SemanticAst\AnnotationSegment.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\AnnotationSegment.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\InNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\InNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionComplexNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionComplexNode.cs</Link>
-    </Compile>    
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CollectionConstantNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionConstantNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionResourceCastNode.cs</Link>
     </Compile>

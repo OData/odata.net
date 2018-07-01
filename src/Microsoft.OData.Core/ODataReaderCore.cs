@@ -937,13 +937,6 @@ namespace Microsoft.OData
             [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug.Assert check only.")]
             internal Scope(ODataReaderState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType expectedResourceType, ODataUri odataUri)
             {
-                Debug.Assert(expectedResourceType == null ||
-                    expectedResourceType.AsElementType() is IEdmStructuredType ||
-                    expectedResourceType.AsElementType().IsStream() ||
-                    expectedResourceType.AsElementType().IsBinary() ||
-                    expectedResourceType.AsElementType().IsString(),
-                    "expectedType must be a structured type or stream");
-
                 Debug.Assert(
                     state == ODataReaderState.Exception && item == null ||
                     state == ODataReaderState.ResourceStart && (item == null || item is ODataResource) ||

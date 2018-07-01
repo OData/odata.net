@@ -488,6 +488,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns true if this definition refers to an untyped type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This definition refers to a string type.</returns>
+        public static bool IsUntyped(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.TypeKind == EdmTypeKind.Untyped;
+        }
+
+        /// <summary>
         /// Returns true if this definition refers to a binary type.
         /// </summary>
         /// <param name="type">Type reference.</param>

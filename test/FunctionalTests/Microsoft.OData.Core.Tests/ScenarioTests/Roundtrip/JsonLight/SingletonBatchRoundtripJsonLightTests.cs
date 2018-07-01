@@ -28,7 +28,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
         private const string batchContentTypeMultipartMime = "multipart/mixed; boundary=batch_cb48b61f-511b-48e6-b00a-77c847badfb9";
         private const string batchContentTypeApplicationJson = "application/json; odata.streaming=true";
-        private const string serviceDocumentUri = "http://odata.org/test/";
+        private const string serviceDocumentUri = "http://odata.org/test";
+        private const string differentServiceUri = "http://vip.odata.org/test";
         private const string dependsOnIdNotFound = "is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed.";
         private const string changesetContainingQueryNotAllowed =
             "was detected for a request in a change set. Requests in change sets only support the HTTP methods 'POST', 'PUT', 'DELETE', and 'PATCH'.";
@@ -43,7 +44,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 Content-Type: application/http
 Content-Transfer-Encoding: binary
 
-GET http://odata.org/test//MySingleton HTTP/1.1
+GET http://odata.org/test/MySingleton HTTP/1.1
 Accept: application/json;odata.metadata=full
 
 
@@ -55,7 +56,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 1
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -65,7 +66,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -75,7 +76,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 Content-Type: application/http
 Content-Transfer-Encoding: binary
 
-GET http://odata.org/test//MySingleton/WebId HTTP/1.1
+GET http://odata.org/test/MySingleton/WebId HTTP/1.1
 Accept: application/json;odata.metadata=full
 
 
@@ -102,7 +103,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 1
 
-PATCH http://odata.org/test//MySingleton1 HTTP/1.1
+PATCH http://odata.org/test/MySingleton1 HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -112,7 +113,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2
 
-PATCH http://odata.org/test//MySingleton2 HTTP/1.1
+PATCH http://odata.org/test/MySingleton2 HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -126,7 +127,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 3
 
-PATCH http://odata.org/test//MySingleton3 HTTP/1.1
+PATCH http://odata.org/test/MySingleton3 HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -136,7 +137,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 Content-Type: application/http
 Content-Transfer-Encoding: binary
 
-GET http://odata.org/test//MySingleton3/WebId HTTP/1.1
+GET http://odata.org/test/MySingleton3/WebId HTTP/1.1
 Accept: application/json;odata.metadata=full
 
 
@@ -261,7 +262,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2A
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -271,7 +272,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2B
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -295,7 +296,74 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 3A
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
+OData-Version: 4.0
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+
+{""@odata.type"":""#NS.Web"",""WebId"":112}
+--changeset_ac35271a-a4f8-4cb2-9967-46c640c716ab--
+--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+GET http://odata.org/test/MySingleton HTTP/1.1
+Accept: application/json;odata.metadata=full
+
+
+--batch_cb48b61f-511b-48e6-b00a-77c847badfb9--
+";
+
+        private const string ExpectedRequestPayloadVerifyDependsOnIds_UseDifferentBaseUri = @"--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+GET http://odata.org/test/MySingleton HTTP/1.1
+Accept: application/json;odata.metadata=full
+
+
+--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
+Content-Type: multipart/mixed; boundary=changeset_702fbcf5-653b-4217-bf4b-563aae4971fd
+
+--changeset_702fbcf5-653b-4217-bf4b-563aae4971fd
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2A
+
+PATCH http://odata.org/test/MySingleton HTTP/1.1
+OData-Version: 4.0
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+
+{""@odata.type"":""#NS.Web"",""WebId"":9}
+--changeset_702fbcf5-653b-4217-bf4b-563aae4971fd
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2B
+
+PATCH http://odata.org/test/MySingleton HTTP/1.1
+OData-Version: 4.0
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+
+{""@odata.type"":""#NS.Web"",""WebId"":10}
+--changeset_702fbcf5-653b-4217-bf4b-563aae4971fd
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2C
+
+PATCH http://odata.org/test/$2B HTTP/1.1
+OData-Version: 4.0
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+
+{""@odata.type"":""#NS.Web"",""WebId"":111}
+--changeset_702fbcf5-653b-4217-bf4b-563aae4971fd--
+--batch_cb48b61f-511b-48e6-b00a-77c847badfb9
+Content-Type: multipart/mixed; boundary=changeset_ac35271a-a4f8-4cb2-9967-46c640c716ab
+
+--changeset_ac35271a-a4f8-4cb2-9967-46c640c716ab
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3A
+
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -395,7 +463,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2A
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -405,7 +473,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2B
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -492,7 +560,7 @@ Content-Type: application/json;odata.metadata=none
     ""requests"": [{
             ""id"": ""a05368c8-479d-4409-a2ee-9b54b133ec38"",
             ""method"": ""GET"",
-            ""url"": ""http://odata.org/test//MySingleton"",
+            ""url"": ""http://odata.org/test/MySingleton"",
             ""headers"": {
                 ""accept"": ""application/json;odata.metadata=full""
             }
@@ -500,7 +568,7 @@ Content-Type: application/json;odata.metadata=none
             ""id"": ""1"",
             ""atomicityGroup"": ""f7de7314-2f3d-4422-b840-ada6d6de0f18"",
             ""method"": ""PATCH"",
-            ""url"": ""http://odata.org/test//MySingleton"",
+            ""url"": ""http://odata.org/test/MySingleton"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -514,7 +582,7 @@ Content-Type: application/json;odata.metadata=none
             ""id"": ""2"",
             ""atomicityGroup"": ""f7de7314-2f3d-4422-b840-ada6d6de0f18"",
             ""method"": ""PATCH"",
-            ""url"": ""http://odata.org/test//MySingleton"",
+            ""url"": ""http://odata.org/test/MySingleton"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -526,7 +594,7 @@ Content-Type: application/json;odata.metadata=none
         }, {
             ""id"": ""adec0e52-7647-4d9d-baac-9316f9dc6927"",
             ""method"": ""GET"",
-            ""url"": ""http://odata.org/test//MySingleton/WebId"",
+            ""url"": ""http://odata.org/test/MySingleton/WebId"",
             ""headers"": {
                 ""accept"": ""application/json;odata.metadata=full""
             }
@@ -546,7 +614,7 @@ Content-Type: application/json;odata.metadata=none
             ""id"": ""1"",
             ""atomicityGroup"": ""2ffeac98-237b-46a7-b97c-6a360d622aaa"",
             ""method"": ""PATCH"",
-            ""url"": ""http://odata.org/test//MySingleton1"",
+            ""url"": ""http://odata.org/test/MySingleton1"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -560,7 +628,7 @@ Content-Type: application/json;odata.metadata=none
             ""id"": ""2"",
             ""atomicityGroup"": ""2ffeac98-237b-46a7-b97c-6a360d622aaa"",
             ""method"": ""PATCH"",
-            ""url"": ""http://odata.org/test//MySingleton2"",
+            ""url"": ""http://odata.org/test/MySingleton2"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -573,7 +641,7 @@ Content-Type: application/json;odata.metadata=none
             ""id"": ""3"",
             ""atomicityGroup"": ""2ffabc98-257b-46a7-b17c-97650d6220aa"",
             ""method"": ""PATCH"",
-            ""url"": ""http://odata.org/test//MySingleton3"",
+            ""url"": ""http://odata.org/test/MySingleton3"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -586,7 +654,7 @@ Content-Type: application/json;odata.metadata=none
         }, {
             ""id"": ""0d24a607-3fb0-4a83-a8fb-ef33f8c7e4ba"",
             ""method"": ""GET"",
-            ""url"": ""http://odata.org/test//MySingleton3/WebId"",
+            ""url"": ""http://odata.org/test/MySingleton3/WebId"",
             ""headers"": {
                 ""accept"": ""application/json;odata.metadata=full""
             }
@@ -688,7 +756,7 @@ Content-Type: application/json;odata.metadata=none
             ""id"": ""1"",
             ""atomicityGroup"": ""11d431dd-cfee-48c8-95fb-da8491644fa6"",
             ""method"": ""PUT"",
-            ""url"": ""http://odata.org/test//MySingleton"",
+            ""url"": ""http://odata.org/test/MySingleton"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -703,7 +771,7 @@ Content-Type: application/json;odata.metadata=none
             ""atomicityGroup"": ""11d431dd-cfee-48c8-95fb-da8491644fa6"",
             ""dependsOn"": [""1""],
             ""method"": ""PATCH"",
-            ""url"": ""http://odata.org/test//$1"",
+            ""url"": ""http://odata.org/test/$1"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -717,6 +785,53 @@ Content-Type: application/json;odata.metadata=none
             ""dependsOn"": [""1"", ""2""],
             ""method"": ""PATCH"",
             ""url"": ""$1/alias"",
+            ""headers"": {
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 13
+            }
+        }
+    ]
+}";
+
+        private const string ExpectedReferenceUriRequestPayload_UseDifferentBaseUri = @"
+{
+    ""requests"": [{
+            ""id"": ""1"",
+            ""atomicityGroup"": ""11d431dd-cfee-48c8-95fb-da8491644fa6"",
+            ""method"": ""PUT"",
+            ""url"": ""http://odata.org/test/MySingleton"",
+            ""headers"": {
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 10,
+                ""Name"": ""SingletonWebForRequestIdRefTest""
+            }
+        }, {
+            ""id"": ""2"",
+            ""atomicityGroup"": ""11d431dd-cfee-48c8-95fb-da8491644fa6"",
+            ""dependsOn"": [""1""],
+            ""method"": ""PATCH"",
+            ""url"": ""http://odata.org/test/$1"",
+            ""headers"": {
+                ""odata-version"": ""4.0"",
+                ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 12
+            }
+        }, {
+            ""id"": ""3"",
+            ""dependsOn"": [""1"", ""2""],
+            ""method"": ""PATCH"",
+            ""url"": ""http://odata.org/test/$1/alias"",
             ""headers"": {
                 ""odata-version"": ""4.0"",
                 ""content-type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
@@ -797,16 +912,24 @@ Content-Type: application/json;odata.metadata=none
             // Verify reference of content id works when dependsOn Ids are correctly specified.
             string contentIdRef = "2B";
 
-            foreach (ODataVersion odataVersion in new[] { ODataVersion.V4, ODataVersion.V401 })
+            foreach (bool useDifferentBaseUri in new[] {false, true})
             {
-                byte[] requestPayload = ClientWriteRequestForMultipartBatchVerifyDependsOnIds(
-                    contentIdRef, odataVersion);
-                VerifyPayloadForMultipartBatch(requestPayload, ExpectedRequestPayloadVerifyDependsOnIds);
+                foreach (ODataVersion odataVersion in new[] {ODataVersion.V4, ODataVersion.V401})
+                {
+                    byte[] requestPayload = ClientWriteRequestForMultipartBatchVerifyDependsOnIds(
+                        contentIdRef, odataVersion, useDifferentBaseUri);
+                    VerifyPayloadForMultipartBatch(requestPayload,
+                        useDifferentBaseUri
+                        ? ExpectedRequestPayloadVerifyDependsOnIds_UseDifferentBaseUri
+                        : ExpectedRequestPayloadVerifyDependsOnIds);
 
-                byte[] responsePayload = this.ServiceReadRequestAndWriterResponseForMultipartBatchVerifyDependsOnIds(requestPayload, odataVersion);
-                VerifyPayloadForMultipartBatch(responsePayload, ExpectedResponsePayloadVerifyDependsOnIds);
+                    byte[] responsePayload =
+                        this.ServiceReadRequestAndWriterResponseForMultipartBatchVerifyDependsOnIds(requestPayload,
+                            odataVersion, useDifferentBaseUri);
+                    VerifyPayloadForMultipartBatch(responsePayload, ExpectedResponsePayloadVerifyDependsOnIds);
 
-                ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
+                    ClientReadSingletonBatchResponse(responsePayload, batchContentTypeMultipartMime);
+                }
             }
         }
 
@@ -967,6 +1090,16 @@ Content-Type: application/json;odata.metadata=none
         {
             byte[] requestPayload = this.CreateReferenceUriBatchRequest(ODataVersion.V401);
             VerifyPayload(requestPayload, ExpectedReferenceUriRequestPayload);
+
+            byte[] responsePayload = this.ServiceReadReferenceUriBatchRequestAndWriteResponse(requestPayload);
+            VerifyPayload(responsePayload, ExpectedReferenceUriResponsePayload);
+        }
+
+        [Fact]
+        public void BatchJsonLightReferenceUriV401Test_UseDifferentBaseUri()
+        {
+            byte[] requestPayload = this.CreateCreateReferenceUriBatchRequestUseDifferentBaseUri(ODataVersion.V401);
+            VerifyPayload(requestPayload, ExpectedReferenceUriRequestPayload_UseDifferentBaseUri);
 
             byte[] responsePayload = this.ServiceReadReferenceUriBatchRequestAndWriteResponse(requestPayload);
             VerifyPayload(responsePayload, ExpectedReferenceUriResponsePayload);
@@ -1217,7 +1350,7 @@ Content-Type: application/json;odata.metadata=none
 
                 // DELETE singleton, invalid
                 batchWriter.WriteStartChangeset();
-                batchWriter.CreateOperationRequestMessage("DELETE", new Uri(serviceDocumentUri + "MySingleton"), "3");
+                batchWriter.CreateOperationRequestMessage("DELETE", new Uri(serviceDocumentUri + "/MySingleton"), "3");
                 batchWriter.WriteEndChangeset();
 
                 batchWriter.WriteEndBatch();
@@ -1416,6 +1549,17 @@ Content-Type: application/json;odata.metadata=none
         }
 
         /// <summary>
+        /// Create a batch request that contains cross-referencing requests, using a batch writer setting of different base Uri.
+        /// </summary>
+        /// <param name="version">The OData version for request.</param>
+        /// <returns>Stream containing the batch request.</returns>
+        private byte[] CreateCreateReferenceUriBatchRequestUseDifferentBaseUri(ODataVersion version)
+        {
+            return CreateReferenceUriBatchRequest(version, useInvalidDependsOnIds: false,
+                useRequestIdOfGroupForDependsOnIds: false, useDifferentBaseUri: true);
+        }
+
+        /// <summary>
         /// Create a batch request that contains cross-referencing requests.
         /// </summary>
         /// <param name="version">The OData version for request.</param>
@@ -1423,15 +1567,18 @@ Content-Type: application/json;odata.metadata=none
         /// Whether to use invalid id value as dependsOn ids for the test case. Set to true to trigger exception.</param>
         /// <param name="useRequestIdOfGroupForDependsOnIds">
         /// Whether to use request id belonging to atomic group as dependsOn id. Set to true to trigger exception.</param>
+        /// <param name="useDifferentBaseUri">
+        /// Whether to use, in writer setting, a baseUri that doesn't match batch operation's Uri; Default value is <code>false</code>.</param>
         /// <returns>Stream containing the batch request.</returns>
-        private byte[] CreateReferenceUriBatchRequest(ODataVersion version, bool useInvalidDependsOnIds = false, bool useRequestIdOfGroupForDependsOnIds = false)
+        private byte[] CreateReferenceUriBatchRequest(ODataVersion version, bool useInvalidDependsOnIds = false, bool useRequestIdOfGroupForDependsOnIds = false,
+            bool useDifferentBaseUri = false)
         {
             MemoryStream stream = new MemoryStream();
 
             IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
             requestMessage.SetHeader("Content-Type", GetContentTypeHeader(BatchFormat.ApplicationJson));
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-            settings.BaseUri = new Uri(serviceDocumentUri);
+            settings.BaseUri = new Uri(useDifferentBaseUri ? differentServiceUri : serviceDocumentUri);
             settings.Version = version;
 
             using (ODataMessageWriter messageWriter = new ODataMessageWriter(requestMessage, settings))
@@ -1506,9 +1653,11 @@ Content-Type: application/json;odata.metadata=none
 
                 updateOperationMessage = batchWriter.CreateOperationRequestMessage(
                     "PATCH",
-                    new Uri("$1/alias", UriKind.Relative),
+                    useDifferentBaseUri
+                    ? new Uri(string.Format(CultureInfo.InvariantCulture, "{0}/{1}", serviceDocumentUri, "$1/alias"))
+                    : new Uri("$1/alias", UriKind.Relative),
                     "3",
-                    BatchPayloadUriOption.RelativeUri,
+                    useDifferentBaseUri ? BatchPayloadUriOption.AbsoluteUri : BatchPayloadUriOption.RelativeUri,
                     dependsOnIds);
 
                 using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
@@ -1786,7 +1935,7 @@ Content-Type: application/json;odata.metadata=none
             }
         }
 
-        private byte[] ClientWriteRequestForMultipartBatchVerifyDependsOnIds(string contentIdRef, ODataVersion version)
+        private byte[] ClientWriteRequestForMultipartBatchVerifyDependsOnIds(string contentIdRef, ODataVersion version, bool useDifferentBaseUri = false)
         {
             MemoryStream stream = new MemoryStream();
 
@@ -1797,7 +1946,7 @@ Content-Type: application/json;odata.metadata=none
                 new ODataMessageWriterSettings
                 {
                     Version = version,
-                    BaseUri = new Uri(serviceDocumentUri)
+                    BaseUri = new Uri(useDifferentBaseUri ? differentServiceUri : serviceDocumentUri)
                 }))
             {
                 ODataBatchWriter batchWriter = messageWriter.CreateODataBatchWriter();
@@ -1806,7 +1955,7 @@ Content-Type: application/json;odata.metadata=none
 
                 // Write a query operation.
                 ODataBatchOperationRequestMessage queryOperationMessage =
-                    batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "MySingleton"), "1"/*not written*/);
+                    batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/MySingleton"), "1"/*not written*/);
 
                 // Header modification on inner payload.
                 queryOperationMessage.SetHeader("Accept", "application/json;odata.metadata=full");
@@ -1826,7 +1975,7 @@ Content-Type: application/json;odata.metadata=none
                         ODataResource entry = new ODataResource
                         {
                             TypeName = "NS.Web",
-                            Properties = new[] {new ODataProperty {Name = "WebId", Value = 9}}
+                            Properties = new[] { new ODataProperty { Name = "WebId", Value = 9 } }
                         };
                         entryWriter.WriteStart(entry);
                         entryWriter.WriteEnd();
@@ -1843,15 +1992,17 @@ Content-Type: application/json;odata.metadata=none
                         ODataResource entry = new ODataResource
                         {
                             TypeName = "NS.Web",
-                            Properties = new[] {new ODataProperty {Name = "WebId", Value = 10}}
+                            Properties = new[] { new ODataProperty { Name = "WebId", Value = 10 } }
                         };
                         entryWriter.WriteStart(entry);
                         entryWriter.WriteEnd();
                     }
 
-                    Uri referenceUri = new Uri("$" + contentIdRef, UriKind.Relative);
+                    Uri referenceUri = useDifferentBaseUri
+                                        ? new Uri("http://odata.org/test/$" + contentIdRef, UriKind.Absolute)
+                                        : new Uri("$" + contentIdRef, UriKind.Relative);
                     updateOperationMessage = batchWriter.CreateOperationRequestMessage("PATCH", referenceUri, "2C",
-                        BatchPayloadUriOption.RelativeUri);
+                        useDifferentBaseUri ? BatchPayloadUriOption.AbsoluteUri : BatchPayloadUriOption.RelativeUri);
 
                     using (ODataMessageWriter operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                     {
@@ -1859,7 +2010,7 @@ Content-Type: application/json;odata.metadata=none
                         ODataResource entry = new ODataResource()
                         {
                             TypeName = "NS.Web",
-                            Properties = new[] {new ODataProperty() {Name = "WebId", Value = 111}}
+                            Properties = new[] { new ODataProperty() { Name = "WebId", Value = 111 } }
                         };
                         entryWriter.WriteStart(entry);
                         entryWriter.WriteEnd();
@@ -1881,7 +2032,7 @@ Content-Type: application/json;odata.metadata=none
                         ODataResource entry = new ODataResource
                         {
                             TypeName = "NS.Web",
-                            Properties = new[] {new ODataProperty {Name = "WebId", Value = 112}}
+                            Properties = new[] { new ODataProperty { Name = "WebId", Value = 112 } }
                         };
                         entryWriter.WriteStart(entry);
                         entryWriter.WriteEnd();
@@ -1891,7 +2042,7 @@ Content-Type: application/json;odata.metadata=none
 
                 // Write a query operation.
                 queryOperationMessage =
-                    batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "MySingleton"), "4"/*not written*/);
+                    batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/MySingleton"), "4"/*not written*/);
 
                 // Header modification on inner payload.
                 queryOperationMessage.SetHeader("Accept", "application/json;odata.metadata=full");
@@ -1959,7 +2110,7 @@ Content-Type: application/json;odata.metadata=none
             }
         }
 
-        private byte[] ServiceReadRequestAndWriterResponseForMultipartBatchVerifyDependsOnIds(byte[] requestPayload, ODataVersion odataVersion)
+        private byte[] ServiceReadRequestAndWriterResponseForMultipartBatchVerifyDependsOnIds(byte[] requestPayload, ODataVersion odataVersion, bool useDifferentBaseUri = false)
         {
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
             requestMessage.SetHeader("Content-Type", batchContentTypeMultipartMime);
@@ -1968,7 +2119,7 @@ Content-Type: application/json;odata.metadata=none
                 new ODataMessageReaderSettings
                 {
                     Version = odataVersion,
-                    BaseUri = new Uri(serviceDocumentUri)
+                    BaseUri = new Uri(useDifferentBaseUri ? differentServiceUri : serviceDocumentUri)
                 },
                 this.userModel))
             {

@@ -113,7 +113,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Parses argument lists or entity key value list.
         /// </summary>
-        /// <param name="restoreAction">Action to take to restore.</param>
+        /// <param name="restoreAction">Action invoked for restoring a state during failure.</param>
         /// <returns>The lexical tokens representing the arguments.</returns>
         public FunctionParameterToken[] ParseArgumentListOrEntityKeyList(Action restoreAction = null)
         {

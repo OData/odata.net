@@ -18,6 +18,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     public class ParameterAliasFunctionalTests
     {
+
         #region alias in path
         [Fact]
         public void ParsePath_AliasInFunctionImport()
@@ -325,14 +326,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void ParseFilter_AliasInFunction_BuiltIn()
+        public void ParseFilter_AliasInsideInOperator_OperandsAsExpressions()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People?$filter=contains(@p1,Name)&@p1=Name"),
+                new Uri("http://gobbledygook/People?$filter=@p1 in RelatedIDs&@p1=ID"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    filterClause.Expression.As<SingleValueFunctionCallNode>().Parameters.First().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
-                    aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+                    filterClause.Expression.As<InNode>().Left.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+                    filterClause.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+                    aliasNodes["@p1"].As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
                 });
         }
         #endregion

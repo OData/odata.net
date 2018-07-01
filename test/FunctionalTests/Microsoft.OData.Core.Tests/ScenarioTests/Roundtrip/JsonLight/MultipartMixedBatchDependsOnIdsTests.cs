@@ -44,7 +44,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2A
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 
@@ -54,7 +54,7 @@ Content-Type: application/http
 Content-Transfer-Encoding: binary
 Content-ID: 2B
 
-PATCH http://odata.org/test//MySingleton HTTP/1.1
+PATCH http://odata.org/test/MySingleton HTTP/1.1
 OData-Version: 4.0
 Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
 

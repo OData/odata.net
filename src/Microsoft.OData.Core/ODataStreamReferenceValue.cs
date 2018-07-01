@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.IO;
     using Microsoft.OData.Evaluation;
+    using Edm;
 
     #endregion
 
@@ -43,6 +44,9 @@ namespace Microsoft.OData
         /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
         private string edmPropertyName;
 
+        /// <summary>Primitive Type, if known.  Either String or None.</summary>
+        private EdmPrimitiveTypeKind typeKind = EdmPrimitiveTypeKind.String;
+
         /// <summary>
         /// Gets the name of the property for this string reference value.
         /// </summary>
@@ -57,6 +61,26 @@ namespace Microsoft.OData
             internal set
             {
                 this.edmPropertyName = value;
+            }
+        }
+
+        /// <summary>
+        /// PrimitiveTypeKind of the string.
+        /// </summary>
+        /// <returns>
+        /// EdmPrimitiveTypeKind.String, if the contents is a plain string; 
+        /// EdmPrimitiveTypeKind.None if it could be a binary string
+        /// </returns>
+        public EdmPrimitiveTypeKind TypeKind
+        {
+            get
+            {
+                return this.typeKind;
+            }
+
+            internal set
+            {
+                this.typeKind = value;
             }
         }
     }

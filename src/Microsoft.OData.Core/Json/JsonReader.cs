@@ -71,18 +71,17 @@ namespace Microsoft.OData.Json
         private bool endOfInputReached;
 
         /// <summary>
-        /// Whether the reader is positioned on a string property.
-        /// </summary>
-        /// <remarks>When positioned on a string we don't read the value until it is accessed or until
-        /// CreateReadStream is called.</remarks>
-        private bool parsingString = false;
-
-        /// <summary>
         /// Whether the user is currently reading a string property as a stream.
         /// </summary>
         /// <remarks>This is used to avoid calling Read on the text reader multiple times
         /// even though it already reported the end of input.</remarks>
         private bool readingStream = false;
+
+        /// <summary>
+        /// Whether or not the current value can be streamed
+        /// </summary>
+        /// <remarks>True if we are positioned on a string or null value, otherwise false</remarks>
+        private bool canStream = false;
 
         /// <summary>
         /// The opening character read when reading a stream value.
@@ -207,9 +206,9 @@ namespace Microsoft.OData.Json
                     throw new Exception("Can't access Value when reading primitive as stream.");
                 }
 
-                if (this.parsingString)
+                if (this.canStream)
                 {
-                    this.parsingString = false;
+                    this.canStream = false;
                     if (this.characterBuffer[this.tokenStartIndex] == 'n')
                     {
                         this.nodeValue = this.ParseNullPrimitiveValue();
@@ -225,6 +224,16 @@ namespace Microsoft.OData.Json
             }
         }
 
+
+        /// <summary>
+        /// Whether the reader can stream the current value.
+        /// </summary>
+        /// <remarks>If the property is a string (or null) it can be streamed</remarks>
+        public bool CanStream()
+        {
+            return this.canStream;
+        }
+        
         /// <summary>
         /// The type of the last node read.
         /// </summary>
@@ -260,10 +269,10 @@ namespace Microsoft.OData.Json
                 throw new Exception("Must read to end of stream before calling Read()");
             }
 
-            if (this.parsingString)
+            if (this.canStream)
             {
                 // caller is positioned on a string value that they haven't read, so skip it
-                this.parsingString = false;
+                this.canStream = false;
                 if (this.characterBuffer[this.tokenStartIndex] == 'n')
                 {
                     this.ParseNullPrimitiveValue();
@@ -424,7 +433,7 @@ namespace Microsoft.OData.Json
         /// <returns>A stream for reading a base64 URL encoded binary value.</returns>
         public Stream CreateReadStream()
         {
-            this.parsingString = false;
+            this.canStream = false;
             if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
             {
                 this.ParseNullPrimitiveValue();
@@ -444,7 +453,7 @@ namespace Microsoft.OData.Json
         /// <returns>A TextReader for reading a text value.</returns>
         public TextReader CreateTextReader()
         {
-            this.parsingString = false;
+            this.canStream = false;
             if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
             {
                 this.ParseNullPrimitiveValue();
@@ -513,12 +522,12 @@ namespace Microsoft.OData.Json
                 case '\'':
                     // String primitive value
                     // Don't parse yet, as it may be a stream. Defer parsing until .Value is called.
-                    this.parsingString = true;
+                    this.canStream = true;
                     break;
 
                 case 'n':
                     // Don't parse yet, as user may be streaming a stream. Defer parsing until .Value is called.
-                    this.parsingString = true;
+                    this.canStream = true;
                     break;
 
                 case 't':

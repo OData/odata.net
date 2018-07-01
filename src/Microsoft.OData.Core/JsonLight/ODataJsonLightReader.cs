@@ -1261,8 +1261,7 @@ namespace Microsoft.OData.JsonLight
         private bool ReadAtPrimitiveSynchronously()
         {
             Debug.Assert(
-                this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                (this.jsonLightResourceDeserializer.JsonReader.Value == null || this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped),
+                this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue,
                 "Pre-Condition: JsonNodeType.PrimitiveValue (null or untyped)");
 
             this.PopScope(ODataReaderState.Primitive);
@@ -1581,9 +1580,7 @@ namespace Microsoft.OData.JsonLight
         private void ReadNestedInfo(ODataJsonLightReaderNestedInfo nestedInfo)
         {
             ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = nestedInfo as ODataJsonLightReaderNestedResourceInfo;
-            if (readerNestedResourceInfo != null &&
-                (readerNestedResourceInfo.StructuralProperty == null || 
-                !(readerNestedResourceInfo.StructuralProperty.Type.IsODataPrimitiveTypeKind() || readerNestedResourceInfo.StructuralProperty.Type.IsStream())))
+            if (readerNestedResourceInfo != null)
             {
                 // Next nested resource info on the resource
                 this.StartNestedResourceInfo(readerNestedResourceInfo);
@@ -1658,9 +1655,10 @@ namespace Microsoft.OData.JsonLight
             {
                 this.jsonLightResourceDeserializer.ReadResourceSetContentStart();
                 IJsonReader jsonReader = this.jsonLightResourceDeserializer.JsonReader;
-                if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject
-                    && !(jsonReader.NodeType == JsonNodeType.PrimitiveValue && jsonReader.Value == null)
-                    && !(this.CurrentScope.ResourceType.TypeKind == EdmTypeKind.Untyped && (jsonReader.NodeType == JsonNodeType.PrimitiveValue || jsonReader.NodeType == JsonNodeType.StartArray)))
+                if (jsonReader.NodeType != JsonNodeType.EndArray
+                    && jsonReader.NodeType != JsonNodeType.StartObject
+                    && jsonReader.NodeType != JsonNodeType.PrimitiveValue
+                    && jsonReader.NodeType != JsonNodeType.StartArray)
                 {
                     throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
                 }
@@ -2061,7 +2059,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         // we are at a null value, or a non-null primitive value within an untyped collection
                         object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
-                        if (primitiveValue != null && this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped)
+                        if (primitiveValue != null)
                         {
                             this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
                                 this.CurrentNavigationSource, this.CurrentResourceType, this.CurrentScope.ODataUri));
@@ -2088,23 +2086,34 @@ namespace Microsoft.OData.JsonLight
             // 1. Primitive is a stream value
             // 2. Reading an individual value within a primitive collection
             // 3. Primitive is a string or binary value within an untyped collection that the reader wants to read as a stream
-            if (
+            JsonLightNestedResourceInfoScope parentScope = this.ParentScope as JsonLightNestedResourceInfoScope;
+            ODataJsonLightReaderNestedResourceInfo parentInfo = parentScope == null ? null : parentScope.ReaderNestedResourceInfo;     
+            if(
                 (resourceType != null && resourceType.IsStream()) ||
-                (this.ParentScope != null
-                   && this.ParentScope.ResourceType != null
-                   && (this.ParentScope.ResourceType.IsString() || this.ParentScope.ResourceType.IsBinary())) ||
+                (parentInfo != null && parentInfo.StreamMembers && this.jsonLightInputContext.JsonReader.CanStream()) ||
                 (resourceType != null
                    && this.jsonLightInputContext.MessageReaderSettings.ReadAsStream != null
                    && (resourceType.IsBinary() || resourceType.IsString())
                    && this.jsonLightInputContext.MessageReaderSettings.ReadAsStream(null)))
             {
-                if (resourceType.IsString())
+                if (resourceType == null || resourceType.IsUntyped())
                 {
-                    this.StartNestedTextInfo(new ODataJsonLightReaderNestedStringInfo(null, new ODataStringValue()));
+                    this.StartNestedTextInfo(new ODataJsonLightReaderNestedStringInfo(null,
+                        new ODataStringValue { TypeKind = EdmPrimitiveTypeKind.None }));
+                }
+                else if (resourceType.IsString() || resourceType.IsUntyped())
+                {
+                    this.StartNestedTextInfo(new ODataJsonLightReaderNestedStringInfo(null,
+                        new ODataStringValue { TypeKind = EdmPrimitiveTypeKind.String }));
+                }
+                else if (resourceType.IsStream() || resourceType.IsBinary())
+                {
+                    this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null, new ODataStreamReferenceValue()));
                 }
                 else
                 {
-                    this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null, new ODataStreamReferenceValue()));
+                    Debug.Assert(false, "We thought we could read as stream, but ran out of options");
+                    return false;
                 }
 
                 return true;

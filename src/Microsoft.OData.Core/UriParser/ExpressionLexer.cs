@@ -78,7 +78,7 @@ namespace Microsoft.OData.UriParser
         };
 
         /// <summary> flag to indicate whether to delimit on a semicolon. </summary>
-        private readonly bool useSemicolonDelimeter;
+        private readonly bool useSemicolonDelimiter;
 
         /// <summary>Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</summary>
         private readonly bool parsingFunctionParameters;
@@ -93,25 +93,25 @@ namespace Microsoft.OData.UriParser
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
         /// <param name="expression">Expression to parse.</param>
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
-        /// <param name="useSemicolonDelimeter">If true, the lexer will tokenize based on semicolons as well.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimeter)
-            : this(expression, moveToFirstToken, useSemicolonDelimeter, false /*parsingFunctionParameters*/)
+        /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
+        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter)
+            : this(expression, moveToFirstToken, useSemicolonDelimiter, false /*parsingFunctionParameters*/)
         {
         }
 
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
         /// <param name="expression">Expression to parse.</param>
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
-        /// <param name="useSemicolonDelimeter">If true, the lexer will tokenize based on semicolons as well.</param>
+        /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimeter, bool parsingFunctionParameters)
+        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
         {
             Debug.Assert(expression != null, "expression != null");
 
             this.ignoreWhitespace = true;
             this.Text = expression;
             this.TextLen = this.Text.Length;
-            this.useSemicolonDelimeter = useSemicolonDelimeter;
+            this.useSemicolonDelimiter = useSemicolonDelimiter;
             this.parsingFunctionParameters = parsingFunctionParameters;
 
             this.SetTextPos(0);
@@ -549,8 +549,18 @@ namespace Microsoft.OData.UriParser
             switch (this.ch)
             {
                 case '(':
-                    this.NextChar();
-                    t = ExpressionTokenKind.OpenParen;
+                    if (this.CurrentToken.Text == ExpressionConstants.KeywordIn)
+                    {
+                        this.NextChar();
+                        this.AdvanceThroughBalancedExpression('(', ')');
+                        t = ExpressionTokenKind.ParenthesesExpression;
+                    }
+                    else
+                    {
+                        this.NextChar();
+                        t = ExpressionTokenKind.OpenParen;
+                    }
+
                     break;
                 case ')':
                     this.NextChar();
@@ -687,7 +697,7 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
-                    if (this.useSemicolonDelimeter && this.ch == ';')
+                    if (this.useSemicolonDelimiter && this.ch == ';')
                     {
                         this.NextChar();
                         t = ExpressionTokenKind.SemiColon;
@@ -713,7 +723,9 @@ namespace Microsoft.OData.UriParser
                         }
 
                         int start = this.textPos;
-                        this.ParseIdentifier();
+
+                        // Include dots for the case of annotation.
+                        this.ParseIdentifier(true /*includingDots*/);
 
                         // Extract the identifier from expression.
                         string leftToken = ExpressionText.Substring(start, this.textPos - start);
@@ -1234,14 +1246,15 @@ namespace Microsoft.OData.UriParser
 
 
         /// <summary>Parses an identifier by advancing the current character.</summary>
-        private void ParseIdentifier()
+        /// <param name="includingDots">Optional flag for whether to include dots as part of the identifier.</param>
+        private void ParseIdentifier(bool includingDots = false)
         {
             Debug.Assert(this.IsValidStartingCharForIdentifier || this.ch == UriQueryConstants.AnnotationPrefix, "Expected valid starting char for identifier");
             do
             {
                 this.NextChar();
             }
-            while (this.IsValidNonStartingCharForIdentifier);
+            while (this.IsValidNonStartingCharForIdentifier || (includingDots && this.ch == '.'));
         }
 
         /// <summary>Sets the text position.</summary>

@@ -742,13 +742,11 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        protected static ODataJsonLightReaderNestedResourceInfo ReadStreamCollectionNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty collectionProperty, string propertyName, IEdmPrimitiveType primitiveType)
+        protected static ODataJsonLightReaderNestedResourceInfo ReadStreamCollectionNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmStructuralProperty collectionProperty, string propertyName, IEdmType elementType)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert((propertyName != null) || (collectionProperty != null),
                 "The collection property and property name shouldn't both be null");
-            Debug.Assert(primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream || primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Binary || primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.String,
-                "The type of the property, if specified, must be Collection(Edm.Stream | Edm.String | Edm.Binary)");
 
             ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
             {
@@ -758,7 +756,10 @@ namespace Microsoft.OData.JsonLight
             };
 
             ODataResourceSet expandedResourceSet = CreateCollectionResourceSet(resourceState, propertyName);
-            return ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, primitiveType, expandedResourceSet);
+
+            ODataJsonLightReaderNestedResourceInfo nestedInfo = ODataJsonLightReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, elementType, expandedResourceSet);
+            nestedInfo.StreamMembers = true;
+            return nestedInfo;
         }
 
         /// <summary>
