@@ -2082,6 +2082,8 @@ namespace Microsoft.OData.JsonLight
 
         private bool TryReadPrimitiveAsStream(IEdmType resourceType)
         {
+            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> resolver = this.jsonLightInputContext.MessageReaderSettings.ReadAsStream;
+
             // Should stream primitive if
             // 1. Primitive is a stream value
             // 2. Reading an individual value within a primitive collection
@@ -2092,9 +2094,9 @@ namespace Microsoft.OData.JsonLight
                 (resourceType != null && resourceType.IsStream()) ||
                 (parentInfo != null && parentInfo.StreamMembers && this.jsonLightInputContext.JsonReader.CanStream()) ||
                 (resourceType != null
-                   && this.jsonLightInputContext.MessageReaderSettings.ReadAsStream != null
+                   && resolver != null
                    && (resourceType.IsBinary() || resourceType.IsString())
-                   && this.jsonLightInputContext.MessageReaderSettings.ReadAsStream(null)))
+                   && resolver(resourceType as IEdmPrimitiveType, false, null, null)))
             {
                 if (resourceType == null || resourceType.IsUntyped())
                 {

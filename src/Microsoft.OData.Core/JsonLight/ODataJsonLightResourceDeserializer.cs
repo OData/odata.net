@@ -1280,16 +1280,17 @@ namespace Microsoft.OData.JsonLight
 
             IEdmPrimitiveType primitiveType = propertyType == null ? null : propertyType.Definition.AsElementType() as IEdmPrimitiveType;
             bool isCollection = this.JsonReader.NodeType == JsonNodeType.StartArray;
+            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> resolver = this.MessageReaderSettings.ReadAsStream;
 
             // is the property a stream or a stream collection,
             // or a binary or binary collection the client wants to read as a stream...
             if ((primitiveType != null
                 && (primitiveType.IsStream() ||
-                    (this.MessageReaderSettings.ReadAsStream != null
+                    (resolver != null
                         && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
-                        && this.MessageReaderSettings.ReadAsStream(property)))
-                || ((propertyType == null || propertyType.Definition.AsElementType().IsUntyped()) && (isCollection || this.JsonReader.CanStream()) && this.MessageReaderSettings.ReadAsStream != null
-                        && this.MessageReaderSettings.ReadAsStream(property)))
+                        && resolver(primitiveType, isCollection, propertyName, property)))
+                || ((propertyType == null || propertyType.Definition.AsElementType().IsUntyped()) && (isCollection || this.JsonReader.CanStream()) && resolver != null
+                        && resolver(null, isCollection, propertyName, property)))
             {
                 if (isCollection)
                 {

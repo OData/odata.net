@@ -19,7 +19,7 @@ namespace Microsoft.OData
     /// <summary>
     /// A class to represent a binary stream value
     /// </summary>
-    public class ODataBinaryStreamValue : ODataValue
+    public sealed class ODataBinaryStreamValue : ODataValue
     {
         /// <summary>
         /// Constructor
@@ -39,7 +39,7 @@ namespace Microsoft.OData
     /// <summary>
     /// A class to represent a string value
     /// </summary>
-    public class ODataStringValue : ODataValue
+    public sealed class ODataStringValue : ODataValue
     {
         /// <summary>The name of the named stream this value belongs to; null for the default media resource.</summary>
         private string edmPropertyName;

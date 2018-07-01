@@ -1206,6 +1206,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static bool IsBinary (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static bool IsBinary (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
@@ -1442,6 +1447,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	ExtensionAttribute(),
 	]
 	public static bool IsTypeDefinition (Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsUntyped (Microsoft.OData.Edm.IEdmType type)
 
 	[
 	ExtensionAttribute(),
@@ -4033,6 +4043,8 @@ public enum Microsoft.OData.ODataReaderState : int {
 	ResourceSetStart = 1
 	ResourceStart = 3
 	Start = 0
+	Stream = 17
+	String = 18
 }
 
 public enum Microsoft.OData.ODataVersion : int {
@@ -4403,6 +4415,10 @@ public abstract class Microsoft.OData.ODataReader {
 	Microsoft.OData.ODataItem Item  { public abstract get; }
 	Microsoft.OData.ODataReaderState State  { public abstract get; }
 
+	public virtual System.IO.Stream CreateReadStream ()
+	public virtual System.Threading.Tasks.Task`1[[System.IO.Stream]] CreateReadStreamAsync ()
+	public virtual System.IO.TextReader CreateTextReader ()
+	public virtual System.Threading.Tasks.Task`1[[System.IO.TextReader]] CreateTextReaderAsync ()
 	public abstract bool Read ()
 	public abstract System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
 }
@@ -4455,6 +4471,10 @@ public abstract class Microsoft.OData.ODataValue : Microsoft.OData.ODataItem {
 public abstract class Microsoft.OData.ODataWriter {
 	protected ODataWriter ()
 
+	public virtual System.IO.Stream CreateBinaryWriteStream ()
+	public virtual System.Threading.Tasks.Task`1[[System.IO.Stream]] CreateBinaryWriteStreamAsync ()
+	public virtual System.IO.TextWriter CreateTextWriter ()
+	public virtual System.Threading.Tasks.Task`1[[System.IO.TextWriter]] CreateTextWriterAsync ()
 	public abstract void Flush ()
 	public abstract System.Threading.Tasks.Task FlushAsync ()
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeletedResource deletedResource)
@@ -4463,13 +4483,16 @@ public abstract class Microsoft.OData.ODataWriter {
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataPrimitiveValue primitiveValue)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataProperty primitiveProperty)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeletedResource deletedResource, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo, System.Action nestedAction)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataProperty primitiveProperty, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource, System.Action nestedAction)
 	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet, System.Action nestedAction)
+	public virtual System.Threading.Tasks.Task WriteAsync (Microsoft.OData.ODataProperty primitiveProperty)
 	public virtual void WriteDeltaDeletedLink (Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink)
 	public virtual System.Threading.Tasks.Task WriteDeltaDeletedLinkAsync (Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink)
 	public virtual void WriteDeltaLink (Microsoft.OData.ODataDeltaLink deltaLink)
@@ -4483,6 +4506,7 @@ public abstract class Microsoft.OData.ODataWriter {
 	public virtual void WriteStart (Microsoft.OData.ODataDeletedResource deletedResource)
 	public virtual void WriteStart (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
 	public abstract void WriteStart (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
+	public virtual void WriteStart (Microsoft.OData.ODataProperty primitiveProperty)
 	public abstract void WriteStart (Microsoft.OData.ODataResource resource)
 	public abstract void WriteStart (Microsoft.OData.ODataResourceSet resourceSet)
 	public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeletedResource deletedResource)
@@ -4490,6 +4514,7 @@ public abstract class Microsoft.OData.ODataWriter {
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResource resource)
 	public abstract System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResourceSet resourceSet)
+	public Microsoft.OData.ODataWriter WriteStream (Microsoft.OData.ODataBinaryStreamValue stream)
 }
 
 [
@@ -4610,7 +4635,7 @@ public sealed class Microsoft.OData.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
-	public static void SetSerializationInfo (Microsoft.OData.ODataResourceBase resource, Microsoft.OData.ODataResourceSerializationInfo serializationInfo)
+	public static void SetSerializationInfo (Microsoft.OData.ODataResource resource, Microsoft.OData.ODataResourceSerializationInfo serializationInfo)
 
 	[
 	ExtensionAttribute(),
@@ -4668,6 +4693,12 @@ public sealed class Microsoft.OData.ODataUtils {
 	public static Microsoft.OData.ODataVersion StringToODataVersion (string version)
 }
 
+public class Microsoft.OData.ODataBinaryStreamValue : Microsoft.OData.ODataValue {
+	public ODataBinaryStreamValue (System.IO.Stream stream)
+
+	System.IO.Stream Stream  { public get; }
+}
+
 [
 DebuggerDisplayAttribute(),
 ]
@@ -4711,6 +4742,13 @@ public class Microsoft.OData.ODataPreferenceHeader {
 	protected void Clear (string preference)
 	protected Microsoft.OData.HttpHeaderValueElement Get (string preferenceName)
 	protected void Set (Microsoft.OData.HttpHeaderValueElement preference)
+}
+
+public class Microsoft.OData.ODataStringValue : Microsoft.OData.ODataValue {
+	public ODataStringValue ()
+
+	string PropertyName  { public get; }
+	Microsoft.OData.Edm.EdmPrimitiveTypeKind TypeKind  { public get; }
 }
 
 public sealed class Microsoft.OData.HttpHeaderValueElement {
@@ -5093,6 +5131,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	System.Func`3[[System.Object],[System.String],[Microsoft.OData.Edm.IEdmTypeReference]] PrimitiveTypeResolver  { public get; public set; }
+	System.Func`5[[Microsoft.OData.Edm.IEdmPrimitiveType],[System.Boolean],[System.String],[Microsoft.OData.Edm.IEdmProperty],[System.Boolean]] ReadAsStream  { public get; public set; }
 	bool ReadUntypedAsString  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
@@ -5219,7 +5258,7 @@ public sealed class Microsoft.OData.ODataPrimitiveValue : Microsoft.OData.ODataV
 	object Value  { public get; }
 }
 
-public sealed class Microsoft.OData.ODataProperty : Microsoft.OData.ODataAnnotatable {
+public sealed class Microsoft.OData.ODataProperty : Microsoft.OData.ODataItem {
 	public ODataProperty ()
 
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
@@ -5288,6 +5327,7 @@ public sealed class Microsoft.OData.ODataStreamReferenceValue : Microsoft.OData.
 	string ContentType  { public get; public set; }
 	System.Uri EditLink  { public get; public set; }
 	string ETag  { public get; public set; }
+	string PropertyName  { public get; }
 	System.Uri ReadLink  { public get; public set; }
 }
 
@@ -5353,6 +5393,22 @@ public interface Microsoft.OData.Json.IJsonReader {
 
 public interface Microsoft.OData.Json.IJsonReaderFactory {
 	Microsoft.OData.Json.IJsonReader CreateJsonReader (System.IO.TextReader textReader, bool isIeee754Compatible)
+}
+
+public interface Microsoft.OData.Json.IJsonStreamReader : IJsonReader {
+	bool CanStream ()
+	System.IO.Stream CreateReadStream ()
+	System.IO.TextReader CreateTextReader ()
+}
+
+[
+CLSCompliantAttribute(),
+]
+public interface Microsoft.OData.Json.IJsonStreamWriter : IJsonWriter {
+	void EndStreamValueScope ()
+	void EndTextWriterValueScope ()
+	System.IO.Stream StartStreamValueScope ()
+	System.IO.TextWriter StartTextWriterValueScope ()
 }
 
 [
