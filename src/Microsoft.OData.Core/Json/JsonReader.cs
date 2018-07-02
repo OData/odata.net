@@ -209,14 +209,17 @@ namespace Microsoft.OData.Json
                 if (this.canStream)
                 {
                     this.canStream = false;
-                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                    if (this.nodeType != JsonNodeType.StartArray)
                     {
-                        this.nodeValue = this.ParseNullPrimitiveValue();
-                    }
-                    else
-                    {
-                        bool hasLeadingBackslash;
-                        this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                        if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                        {
+                            this.nodeValue = this.ParseNullPrimitiveValue();
+                        }
+                        else
+                        {
+                            bool hasLeadingBackslash;
+                            this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                        }
                     }
                 }
 
@@ -271,15 +274,18 @@ namespace Microsoft.OData.Json
 
             if (this.canStream)
             {
-                // caller is positioned on a string value that they haven't read, so skip it
                 this.canStream = false;
-                if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                if (this.nodeType != JsonNodeType.StartArray)
                 {
-                    this.ParseNullPrimitiveValue();
-                }
-                else
-                {
-                    this.ParseStringPrimitiveValue();
+                    // caller is positioned on a string value that they haven't read, so skip it
+                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                    {
+                        this.ParseNullPrimitiveValue();
+                    }
+                    else
+                    {
+                        this.ParseStringPrimitiveValue();
+                    }
                 }
             }
 

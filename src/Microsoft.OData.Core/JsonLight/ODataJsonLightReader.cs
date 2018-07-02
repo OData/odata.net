@@ -2055,14 +2055,14 @@ namespace Microsoft.OData.JsonLight
                     this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null,
                         new ODataStreamValue(EdmPrimitiveTypeKind.None)));
                 }
-                else if (resourceType.IsString() || resourceType.IsUntyped())
+                else if (resourceType.IsString())
                 {
                     this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null,
                         new ODataStreamValue(EdmPrimitiveTypeKind.String)));
                 }
                 else if (resourceType.IsStream() || resourceType.IsBinary())
                 {
-                    this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null, new ODataStreamReferenceValue()));
+                    this.StartNestedStreamInfo(new ODataJsonLightReaderNestedStreamInfo(null, new ODataStreamValue(EdmPrimitiveTypeKind.Stream)));
                 }
                 else
                 {

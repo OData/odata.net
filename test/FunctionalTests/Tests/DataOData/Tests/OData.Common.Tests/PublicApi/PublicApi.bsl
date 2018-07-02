@@ -4044,7 +4044,6 @@ public enum Microsoft.OData.ODataReaderState : int {
 	ResourceStart = 3
 	Start = 0
 	Stream = 17
-	String = 18
 }
 
 public enum Microsoft.OData.ODataVersion : int {
@@ -4693,12 +4692,6 @@ public sealed class Microsoft.OData.ODataUtils {
 	public static Microsoft.OData.ODataVersion StringToODataVersion (string version)
 }
 
-public class Microsoft.OData.ODataBinaryStreamValue : Microsoft.OData.ODataValue {
-	public ODataBinaryStreamValue (System.IO.Stream stream)
-
-	System.IO.Stream Stream  { public get; }
-}
-
 [
 DebuggerDisplayAttribute(),
 ]
@@ -4744,9 +4737,7 @@ public class Microsoft.OData.ODataPreferenceHeader {
 	protected void Set (Microsoft.OData.HttpHeaderValueElement preference)
 }
 
-public class Microsoft.OData.ODataStringValue : Microsoft.OData.ODataValue {
-	public ODataStringValue ()
-
+public class Microsoft.OData.ODataStreamValue : Microsoft.OData.ODataValue {
 	string PropertyName  { public get; }
 	Microsoft.OData.Edm.EdmPrimitiveTypeKind TypeKind  { public get; }
 }
@@ -4834,6 +4825,12 @@ public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContai
 	public virtual System.IO.Stream GetStream ()
 	public virtual System.Threading.Tasks.Task`1[[System.IO.Stream]] GetStreamAsync ()
 	public virtual void SetHeader (string headerName, string headerValue)
+}
+
+public sealed class Microsoft.OData.ODataBinaryStreamValue : Microsoft.OData.ODataValue {
+	public ODataBinaryStreamValue (System.IO.Stream stream)
+
+	System.IO.Stream Stream  { public get; }
 }
 
 public sealed class Microsoft.OData.ODataCollectionStart : Microsoft.OData.ODataAnnotatable {
@@ -5321,14 +5318,17 @@ public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataSe
 	public ODataSingletonInfo ()
 }
 
-public sealed class Microsoft.OData.ODataStreamReferenceValue : Microsoft.OData.ODataValue {
+public sealed class Microsoft.OData.ODataStreamReferenceValue : Microsoft.OData.ODataStreamValue {
 	public ODataStreamReferenceValue ()
 
 	string ContentType  { public get; public set; }
 	System.Uri EditLink  { public get; public set; }
 	string ETag  { public get; public set; }
-	string PropertyName  { public get; }
 	System.Uri ReadLink  { public get; public set; }
+}
+
+public sealed class Microsoft.OData.ODataTextStreamValue : Microsoft.OData.ODataStreamValue {
+	public ODataTextStreamValue ()
 }
 
 public sealed class Microsoft.OData.ODataTypeAnnotation {

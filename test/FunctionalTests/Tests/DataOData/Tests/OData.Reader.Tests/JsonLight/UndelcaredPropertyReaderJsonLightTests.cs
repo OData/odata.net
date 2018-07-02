@@ -166,7 +166,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the reading of undeclared stream properties on entry payloads.")]
+ //       [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the reading of undeclared stream properties on entry payloads.")]
         public void UndeclaredStreamPropertyTests()
         {
             IEdmModel model = TestModels.BuildTestModel();
