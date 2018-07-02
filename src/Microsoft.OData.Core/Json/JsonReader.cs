@@ -532,6 +532,7 @@ namespace Microsoft.OData.Json
                     // Start of array
                     this.PushScope(ScopeType.Array);
                     this.tokenStartIndex++;
+                    this.SkipWhitespaces();
                     this.canStream = 
                         this.characterBuffer[this.tokenStartIndex] == '"' ||
                         this.characterBuffer[this.tokenStartIndex] == '\'';
