@@ -187,6 +187,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void CanSelectSubPropertyOfComplexCollection()
+        {
+            Uri queryUri = new Uri("People?$select=PreviousAddresses/City", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("PreviousAddresses/City"), actualUri.OriginalString);
+        }
+
+        [Fact]
         public void SelectManyDeclaredPropertiesSucceeds()
         {
             Uri queryUri = new Uri("People?$select= Shoe, Birthdate,GeographyPoint,    TimeEmployed, \tPreviousAddresses", UriKind.Relative);

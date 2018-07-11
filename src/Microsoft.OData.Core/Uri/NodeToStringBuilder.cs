@@ -81,6 +81,21 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Translates a <see cref="InNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(InNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+
+            string left = this.TranslateNode(node.Left);
+            string right = this.TranslateNode(node.Right);
+
+            return String.Concat(left, ' ', ExpressionConstants.KeywordIn, ' ', right);
+        }
+
+        /// <summary>
         /// Translates a <see cref="CountNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
@@ -127,7 +142,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="CollectionPropertyAccessNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="ConstantNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
@@ -135,6 +150,22 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             if (node.Value == null)
+            {
+                return ExpressionConstants.KeywordNull;
+            }
+
+            return node.LiteralText;
+        }
+
+        /// <summary>
+        /// Translates a <see cref="CollectionConstantNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(CollectionConstantNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+            if (String.IsNullOrEmpty(node.LiteralText))
             {
                 return ExpressionConstants.KeywordNull;
             }
@@ -630,7 +661,10 @@ namespace Microsoft.OData
         private static bool IsValidSearchWord(string text)
         {
             Match match = SearchLexer.InvalidWordPattern.Match(text);
-            if (match.Success || String.Equals(text, "AND") || String.Equals(text, "OR") || String.Equals(text, "NOT"))
+            if (match.Success ||
+                String.Equals(text, "AND", StringComparison.Ordinal) ||
+                String.Equals(text, "OR", StringComparison.Ordinal) ||
+                String.Equals(text, "NOT", StringComparison.Ordinal))
             {
                 return false;
             }

@@ -146,6 +146,12 @@ namespace Microsoft.OData.Client
             PrimitiveType primitiveType;
             if (PrimitiveType.TryGetPrimitiveType(propertyType, out primitiveType))
             {
+                // Map DateTime to DateTimeOffset
+                if (primitiveType.ClrType == typeof(DateTime))
+                {
+                    return XmlConstants.EdmDateTimeOffsetTypeName;
+                }
+
                 if (primitiveType.EdmTypeName != null)
                 {
                     return primitiveType.EdmTypeName;

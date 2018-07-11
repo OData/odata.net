@@ -40,6 +40,13 @@ namespace Microsoft.OData.UriParser
         T Visit(BinaryOperatorToken tokenIn);
 
         /// <summary>
+        /// Visits an InToken
+        /// </summary>
+        /// <param name="tokenIn">The In token to visit.</param>
+        /// <returns>An InNode thats bound to this token</returns>
+        T Visit(InToken tokenIn);
+
+        /// <summary>
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>
@@ -157,6 +164,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="tokenIn">The AggregateExpressionToken to bind</param>
         /// <returns>A T node bound to this AggregateExpressionToken</returns>
         T Visit(AggregateExpressionToken tokenIn);
+
+        /// <summary>
+        /// Visits a EntitySetAggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The EntitySetAggregateToken to bind</param>
+        /// <returns>A T node bound to this EntitySetAggregateToken</returns>
+        T Visit(EntitySetAggregateToken tokenIn);
 
         /// <summary>
         /// Visits a GroupByToken

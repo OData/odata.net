@@ -75,6 +75,43 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void ParseAnnotationInFilterForOpenTypeShouldWork()
+        {
+            Uri entitySetUri = new Uri("http://host/Paintings");
+            var filterClauseString = "?filter=@my.annotation eq 5";
+
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(entitySetUri, filterClauseString));
+            uriParser.EnableNoDollarQueryOptions = true;
+            var path = uriParser.ParsePath();
+            path.Should().HaveCount(1);
+            path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPaintingsSet());
+            var filterResult = uriParser.ParseFilter();
+            filterResult.Should().NotBeNull();
+            filterResult.Expression.Kind.Should().Be(QueryNodeKind.BinaryOperator);
+            (filterResult.Expression as BinaryOperatorNode).Should().NotBeNull();
+            (filterResult.Expression as BinaryOperatorNode).Left.Should().NotBeNull();
+            (filterResult.Expression as BinaryOperatorNode).Right.Should().NotBeNull();
+
+            var selectExpandResult = uriParser.ParseSelectAndExpand();
+            selectExpandResult.Should().BeNull();
+        }
+
+        [Fact]
+        public void ParseAnnotationInFilterForEntityTypeShouldThrow()
+        {
+            var filterClauseString = "?filter=@my.annotation eq 5";
+
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, filterClauseString));
+            uriParser.EnableNoDollarQueryOptions = true;
+            var path = uriParser.ParsePath();
+            path.Should().HaveCount(1);
+            path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            Action action  = () => uriParser.ParseFilter();
+            action.ShouldThrow<ODataException>().WithMessage(
+                ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "@my.annotation"));
+        }
+
+        [Fact]
         public void DupilicateNonODataQueryOptionShouldWork()
         {
             ODataUriParser uriParserProcessingDupODataSystemQuery = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot,
@@ -377,6 +414,19 @@ namespace Microsoft.OData.Tests.UriParser
             }.ParsePath();
 
             action.ShouldThrow<ODataException>().WithMessage("Bad Request - Error in query syntax.");
+        }
+
+        [Fact]
+        public void CompositeAlternateKeyShouldFailOnlyWithInvalidAlternateKey()
+        {
+            Uri fullUri = new Uri("http://host/People(NameAlias='anyName', FirstNameAlias='anyFirst', extraAltKey='any')");
+            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), fullUri)
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            action.ShouldThrow<ODataException>()
+                .WithMessage(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]

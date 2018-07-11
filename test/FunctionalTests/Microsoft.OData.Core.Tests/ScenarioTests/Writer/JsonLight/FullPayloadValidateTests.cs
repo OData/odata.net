@@ -321,13 +321,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "\"value\":[" +
                                                     "{" +
                                                          "\"ID\":101,\"Name\":\"Alice\"," +
-                                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ContainedCollectionNavProp)\"," +
                                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                         "\"ContainedCollectionNavProp\":" +
                                                             "[" +
                                                                 "{" +
                                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                                    "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(102)/ContainedCollectionNavProp\"," +
                                                                     "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                                     "\"ContainedCollectionNavProp\":" +
                                                                         "[" +
@@ -363,11 +361,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedNavProp(ContainedNavProp)/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                         "{" +
                                                             "\"ID\":102,\"Name\":\"Bob\"," +
-                                                            "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedNavProp/ContainedNavProp/$entity\"," +
                                                             "\"ContainedNavProp\":" +
                                                             "{" +
                                                                 "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -398,13 +394,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ContainedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":" +
                                             "[" +
                                                 "{" +
                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(102)/ContainedNavProp/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                     "{" +
                                                         "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -440,7 +434,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "[" +
                                                 "{" +
                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(102)/ContainedNavProp/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                         "{" +
                                                             "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -472,7 +465,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string expectedPayload = "{" +
                                         "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ExpandedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ExpandedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":" +
                                             "[" +
@@ -512,13 +504,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                                 "\"value\":[" +
                                                     "{" +
                                                          "\"ID\":101,\"Name\":\"Alice\"," +
-                                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(Namespace.DerivedType/ContainedCollectionNavProp)\"," +
                                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                         "\"ContainedCollectionNavProp\":" +
                                                             "[" +
                                                                 "{" +
                                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                                    "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(102)/Namespace.DerivedType/ContainedCollectionNavProp\"," +
                                                                     "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                                     "\"ContainedCollectionNavProp\":" +
                                                                         "[" +
@@ -553,11 +543,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedNavProp(Namespace.DerivedType/ContainedNavProp)/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                         "{" +
                                                             "\"ID\":102,\"Name\":\"Bob\"," +
-                                                            "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedNavProp/Namespace.DerivedType/ContainedNavProp/$entity\"," +
                                                             "\"ContainedNavProp\":" +
                                                             "{" +
                                                                 "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -588,13 +576,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":" +
                                             "[" +
                                                 "{" +
                                                     "\"ID\":102,\"Name\":\"Bob\"," +
-                                                    "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(102)/ContainedNavProp/$entity\"," +
                                                     "\"ContainedNavProp\":" +
                                                     "{" +
                                                         "\"ID\":103,\"Name\":\"Charlie\"" +
@@ -676,12 +662,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ID,Name,ExpandedNavProp,ContainedCollectionNavProp(ID),ContainedNavProp(ID,Name))/$entity\"," +
                                             "\"ID\":101,\"Name\":\"Alice\"," +
                                             "\"ExpandedNavProp\":{\"ID\":102,\"Name\":\"Bob\"}," +
-                                            "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ID)\"," +
                                             "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                             "\"ContainedCollectionNavProp\":[" +
                                                 "{\"ID\":102,\"Name\":\"Bob\"}" +
                                             "]," +
-                                            "\"ContainedNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedNavProp(ID,Name)/$entity\"," +
                                             "\"ContainedNavProp\":{\"ID\":103,\"Name\":\"Charlie\"}" +
                                         "}";
             result.Should().Be(expectedPayload);
@@ -816,7 +800,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
-                                                    "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp\"," +
                                                     "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                     "\"ContainedCollectionNavProp@odata.count\":1," +
                                                     "\"ContainedCollectionNavProp\":[]" +
@@ -972,11 +955,27 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedNavProp)/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
-                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ContainedCollectionNavProp\":[{\"ID\":102,\"Name\":\"Bob\"}]" +
                                       "}";
             result.Should().Be(expectedPayload);
+        }
+
+        [Fact]
+        public void WriteContextMetadataEntityApplyComputeProperties()
+        {
+            ODataItem[] itemsToWrite = new ODataItem[]
+            {
+                new ODataResourceSet(), this.entryWithOnlyData2
+            };
+
+            IEdmNavigationProperty containedNavProp = EntityType.FindProperty("ContainedCollectionNavProp") as IEdmNavigationProperty;
+            IEdmEntitySetBase contianedEntitySet = EntitySet.FindNavigationTarget(containedNavProp) as IEdmEntitySetBase;
+            string resourcePath = "EntitySet(123)/ContainedCollectionNavProp";
+            string applyClause = "compute(ID mul 2 as idMul2,length(Name) as nameLenght)";
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, contianedEntitySet, EntityType, null, null, resourcePath, applyClause);
+
+            result.Should().StartWith("{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(123)/ContainedCollectionNavProp(idMul2,nameLenght)");
         }
 
         #region Help Methods
@@ -990,6 +989,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             string selectClause = null,
             string expandClause = null,
             string resourcePath = null,
+            string applyClause = null,
             bool enableBasicValidation = true)
         {
             MemoryStream outputStream = new MemoryStream();
@@ -1000,13 +1000,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 Validations = (enableBasicValidation ? ValidationKinds.All : ValidationKinds.None),
             };
 
-            var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();
+            var parser = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause }, { "$apply", applyClause } });
+            var result = parser.ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()
             {
                 ServiceRoot = new Uri("http://example.org/odata.svc"),
-                SelectAndExpand = result
-            };
+                SelectAndExpand = parser.ParseSelectAndExpand(),
+                Apply = parser.ParseApply()
+        };
 
             if (resourcePath != null)
             {

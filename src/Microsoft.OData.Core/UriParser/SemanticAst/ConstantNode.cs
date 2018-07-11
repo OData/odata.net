@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// Node representing a constant value, can either be primtive, complex, entity, or collection value.
+    /// Node representing a constant value, can either be primitive, complex, entity, or collection value.
     /// </summary>
     public sealed class ConstantNode : SingleValueNode
     {

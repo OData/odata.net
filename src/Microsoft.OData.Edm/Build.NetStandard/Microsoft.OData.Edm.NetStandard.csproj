@@ -121,14 +121,8 @@
     <Compile Include="..\Csdl\Parsing\Ast\CsdlDirectValueAnnotation.cs">
       <Link>Csdl\Parsing\Ast\CsdlDirectValueAnnotation.cs</Link>
     </Compile>
-    <Compile Include="..\Csdl\Parsing\Ast\CsdlDocumentation.cs">
-      <Link>Csdl\Parsing\Ast\CsdlDocumentation.cs</Link>
-    </Compile>
     <Compile Include="..\Csdl\Parsing\Ast\CsdlElement.cs">
       <Link>Csdl\Parsing\Ast\CsdlElement.cs</Link>
-    </Compile>
-    <Compile Include="..\Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs">
-      <Link>Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Parsing\Ast\CsdlEntityContainer.cs">
       <Link>Csdl\Parsing\Ast\CsdlEntityContainer.cs</Link>
@@ -409,9 +403,6 @@
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs">
       <Link>Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs</Link>
-    </Compile>
-    <Compile Include="..\Csdl\Semantics\CsdlSemanticsDocumentation.cs">
-      <Link>Csdl\Semantics\CsdlSemanticsDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs">
       <Link>Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs</Link>
@@ -783,9 +774,6 @@
     <Compile Include="..\Schema\EdmDecimalTypeReference.cs">
       <Link>Schema\EdmDecimalTypeReference.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\EdmDocumentation.cs">
-      <Link>Schema\EdmDocumentation.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\EdmElement.cs">
       <Link>Schema\EdmElement.cs</Link>
     </Compile>
@@ -984,9 +972,6 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmDecimalTypeReference.cs">
       <Link>Schema\Interfaces\IEdmDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmDocumentation.cs">
-      <Link>Schema\Interfaces\IEdmDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmElement.cs">
       <Link>Schema\Interfaces\IEdmElement.cs</Link>

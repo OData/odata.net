@@ -1802,6 +1802,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                         "\"Name\":\"Bob\"," +
                         "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
                         "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/expanded/navigation\"," +
+                        "\"ExpandedNavLink@odata.type\":\"#Collection(Namespace.EntityType)\"," +
                         "\"ExpandedNavLink\":[" +
                         "{" +
                             "\"@odata.type\":\"#Namespace.EntityType\"," +
@@ -1815,6 +1816,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                             "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/EntitySet(234)/DeferredNavLink\"," +
                             "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/EntitySet(234)/ExpandedNavLink/$ref\"," +
                             "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/EntitySet(234)/ExpandedNavLink\"," +
+                            "\"ExpandedNavLink@odata.type\":\"#Collection(Namespace.EntityType)\"," +
                             "\"ExpandedNavLink\":[" +
                             "{" +
                                 "\"@odata.type\":\"#Namespace.EntityType\"," +
@@ -1878,6 +1880,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                         "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
                         "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
                         "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/expanded/navigation\"," +
+                        "\"ExpandedNavLink@odata.type\":\"#Collection(Namespace.EntityType)\"," +
                         "\"ExpandedNavLink\":[" +
                         "{" +
                             "\"@odata.type\":\"#Namespace.EntityType\"," +
@@ -1893,6 +1896,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                             "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/EntitySet(234)/DeferredNavLink\"," +
                             "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
                             "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/expanded/navigation\"," +
+                            "\"ExpandedNavLink@odata.type\":\"#Collection(Namespace.EntityType)\"," +
                             "\"ExpandedNavLink\":[" +
                             "{" +
                                 "\"@odata.type\":\"#Namespace.EntityType\"," +

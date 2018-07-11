@@ -211,7 +211,6 @@ namespace Microsoft.OData {
         internal const string ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed = "ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed";
         internal const string ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed = "ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed";
         internal const string ODataBatchReader_DependsOnIdNotFound = "ODataBatchReader_DependsOnIdNotFound";
-        internal const string ODataBatchReader_AbsoluteURINotMatchingBaseUri = "ODataBatchReader_AbsoluteURINotMatchingBaseUri";
         internal const string ODataBatchReader_ReferenceIdNotIncludedInDependsOn = "ODataBatchReader_ReferenceIdNotIncludedInDependsOn";
         internal const string ODataBatch_GroupIdOrChangeSetIdCannotBeNull = "ODataBatch_GroupIdOrChangeSetIdCannotBeNull";
         internal const string ODataBatchReader_MessageIdPositionedIncorrectly = "ODataBatchReader_MessageIdPositionedIncorrectly";
@@ -652,6 +651,8 @@ namespace Microsoft.OData {
         internal const string MetadataBinder_PropertyAccessWithoutParentParameter = "MetadataBinder_PropertyAccessWithoutParentParameter";
         internal const string MetadataBinder_BinaryOperatorOperandNotSingleValue = "MetadataBinder_BinaryOperatorOperandNotSingleValue";
         internal const string MetadataBinder_UnaryOperatorOperandNotSingleValue = "MetadataBinder_UnaryOperatorOperandNotSingleValue";
+        internal const string MetadataBinder_LeftOperandNotSingleValue = "MetadataBinder_LeftOperandNotSingleValue";
+        internal const string MetadataBinder_RightOperandNotCollectionValue = "MetadataBinder_RightOperandNotCollectionValue";
         internal const string MetadataBinder_PropertyAccessSourceNotSingleValue = "MetadataBinder_PropertyAccessSourceNotSingleValue";
         internal const string MetadataBinder_IncompatibleOperandsError = "MetadataBinder_IncompatibleOperandsError";
         internal const string MetadataBinder_IncompatibleOperandError = "MetadataBinder_IncompatibleOperandError";
@@ -676,10 +677,12 @@ namespace Microsoft.OData {
         internal const string MetadataBinder_QueryOptionNotApplicable = "MetadataBinder_QueryOptionNotApplicable";
         internal const string ApplyBinder_AggregateExpressionIncompatibleTypeForMethod = "ApplyBinder_AggregateExpressionIncompatibleTypeForMethod";
         internal const string ApplyBinder_UnsupportedAggregateMethod = "ApplyBinder_UnsupportedAggregateMethod";
+        internal const string ApplyBinder_UnsupportedAggregateKind = "ApplyBinder_UnsupportedAggregateKind";
         internal const string ApplyBinder_AggregateExpressionNotSingleValue = "ApplyBinder_AggregateExpressionNotSingleValue";
         internal const string ApplyBinder_GroupByPropertyNotPropertyAccessValue = "ApplyBinder_GroupByPropertyNotPropertyAccessValue";
         internal const string ApplyBinder_UnsupportedType = "ApplyBinder_UnsupportedType";
         internal const string ApplyBinder_UnsupportedGroupByChild = "ApplyBinder_UnsupportedGroupByChild";
+        internal const string AggregateTransformationNode_UnsupportedAggregateExpressions = "AggregateTransformationNode_UnsupportedAggregateExpressions";
         internal const string FunctionCallBinder_CannotFindASuitableOverload = "FunctionCallBinder_CannotFindASuitableOverload";
         internal const string FunctionCallBinder_UriFunctionMustHaveHaveNullParent = "FunctionCallBinder_UriFunctionMustHaveHaveNullParent";
         internal const string FunctionCallBinder_CallingFunctionOnOpenProperty = "FunctionCallBinder_CallingFunctionOnOpenProperty";
@@ -713,6 +716,7 @@ namespace Microsoft.OData {
         internal const string Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
         internal const string Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity = "Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity";
         internal const string Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum = "Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum";
+        internal const string Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType = "Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType";
         internal const string ExpandTreeNormalizer_NonPathInPropertyChain = "ExpandTreeNormalizer_NonPathInPropertyChain";
         internal const string UriExpandParser_TermIsNotValidForStar = "UriExpandParser_TermIsNotValidForStar";
         internal const string UriExpandParser_TermIsNotValidForStarRef = "UriExpandParser_TermIsNotValidForStarRef";
@@ -820,6 +824,7 @@ namespace Microsoft.OData {
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
         internal const string JsonReader_UnexpectedComma = "JsonReader_UnexpectedComma";
+        internal const string JsonReader_ArrayClosureMismatch = "JsonReader_ArrayClosureMismatch";
         internal const string JsonReader_MultipleTopLevelValues = "JsonReader_MultipleTopLevelValues";
         internal const string JsonReader_EndOfInputWithOpenScope = "JsonReader_EndOfInputWithOpenScope";
         internal const string JsonReader_UnexpectedToken = "JsonReader_UnexpectedToken";

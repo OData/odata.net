@@ -17,8 +17,6 @@ namespace Microsoft.OData.Edm
     {
         private readonly Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>>();
 
-        private readonly Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet> containedNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet>();
-
         private readonly Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
 
         private readonly Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> navigationTargetsCache = new Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>>();
@@ -61,6 +59,13 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
             EdmUtil.CheckArgumentNull(target, "navigation target");
 
+            // It doesn't make sense to bind a containment navigation property. This should really error,
+            // but doing so would be a breaking change, so just ignore the binding.
+            if (navigationProperty.ContainsTarget)
+            {
+                return;
+            }
+
             string path = navigationProperty.Name;
 
             if (!this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType))
@@ -68,12 +73,7 @@ namespace Microsoft.OData.Edm
                 path = navigationProperty.DeclaringType.FullTypeName() + '/' + path;
             }
 
-            if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
-            {
-                this.navigationPropertyMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
-            }
-
-            this.navigationPropertyMappings[navigationProperty][path] = new EdmNavigationPropertyBinding(navigationProperty, target, new EdmPathExpression(path));
+            AddNavigationPropertyBinding(navigationProperty, target, new EdmPathExpression(path));
             this.navigationTargetsCache.Clear(null);
         }
 
@@ -89,17 +89,19 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(target, "navigation target");
             EdmUtil.CheckArgumentNull(bindingPath, "binding path");
 
+            // It doesn't make sense to bind a containment navigation property. This should really error,
+            // but doing so would be a breaking change, so just ignore the binding.
+            if (navigationProperty.ContainsTarget)
+            {
+                return;
+            }
+
             if (navigationProperty.Name != bindingPath.PathSegments.Last())
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
             }
 
-            if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
-            {
-                this.navigationPropertyMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
-            }
-
-            this.navigationPropertyMappings[navigationProperty][bindingPath.Path] = new EdmNavigationPropertyBinding(navigationProperty, target, bindingPath);
+            AddNavigationPropertyBinding(navigationProperty, target, bindingPath);
             this.navigationTargetsCache.Clear(null);
         }
 
@@ -112,8 +114,10 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
 
-            Dictionary<string, IEdmNavigationPropertyBinding> result;
-            if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result))
+            Dictionary<string, IEdmNavigationPropertyBinding> result =
+                EdmUtil.DictionarySafeGet(this.navigationPropertyMappings, navigationProperty);
+
+            if (result != null)
             {
                 return result.Select(item => item.Value);
             }
@@ -130,7 +134,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "property");
 
-            bool isDerived = !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
+            bool isDerived = !(navigationProperty.DeclaringType.AsElementType() is IEdmComplexType) && !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
 
             IEdmPathExpression bindingPath = isDerived
                 ? new EdmPathExpression(navigationProperty.DeclaringType.FullTypeName(), navigationProperty.Name)
@@ -149,21 +153,27 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
 
-            if (!navigationProperty.ContainsTarget && bindingPath != null)
+            bindingPath = bindingPath ?? new EdmPathExpression(navigationProperty.Name);
+
+            Dictionary<string, IEdmNavigationPropertyBinding> result = EdmUtil.DictionarySafeGet(this.navigationPropertyMappings, navigationProperty);
+            if (result != null)
             {
-                Dictionary<string, IEdmNavigationPropertyBinding> result;
-                IEdmNavigationPropertyBinding binding;
-                if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result) && result.TryGetValue(bindingPath.Path, out binding))
+                IEdmNavigationPropertyBinding binding = EdmUtil.DictionarySafeGet(result, bindingPath.Path);
                 {
-                    return binding.Target;
+                    if (binding != null)
+                    {
+                        return binding.Target;
+                    }
                 }
             }
-            else if (navigationProperty.ContainsTarget)
+
+            if (navigationProperty.ContainsTarget)
             {
-                return EdmUtil.DictionaryGetOrUpdate(
-                    this.containedNavigationPropertyCache,
-                    navigationProperty,
-                    navProperty => new EdmContainedEntitySet(this, navProperty));
+                return AddNavigationPropertyBinding(
+                    navigationProperty, 
+                    new EdmContainedEntitySet(this, navigationProperty, bindingPath), 
+                    bindingPath)
+                    .Target;
             }
 
             return EdmUtil.DictionaryGetOrUpdate(
@@ -172,14 +182,35 @@ namespace Microsoft.OData.Edm
                 navProperty => new EdmUnknownEntitySet(this, navProperty));
         }
 
+        private IEdmNavigationPropertyBinding AddNavigationPropertyBinding(IEdmNavigationProperty navigationProperty, IEdmNavigationSource target, IEdmPathExpression bindingPath)
+        {
+            Dictionary<string, IEdmNavigationPropertyBinding> mapping = EdmUtil.DictionaryGetOrUpdate(
+                this.navigationPropertyMappings,
+                navigationProperty,
+                navProperty => new Dictionary<string, IEdmNavigationPropertyBinding>());
+
+            IEdmNavigationPropertyBinding containedBinding = EdmUtil.DictionaryGetOrUpdate<string, IEdmNavigationPropertyBinding>(
+                mapping,
+                bindingPath.Path,
+                path => new EdmNavigationPropertyBinding(navigationProperty, target, new EdmPathExpression(path)));
+
+            return containedBinding;
+        }
+
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
         {
             List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
-            foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
+            lock (this.navigationPropertyMappings)
             {
-                foreach (KeyValuePair<string, IEdmNavigationPropertyBinding> kv in mapping.Value)
+                foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
                 {
-                    result.Add(kv.Value);
+                    if (!mapping.Key.ContainsTarget)
+                    {
+                        foreach (KeyValuePair<string, IEdmNavigationPropertyBinding> kv in mapping.Value)
+                        {
+                            result.Add(kv.Value);
+                        }
+                    }
                 }
             }
 

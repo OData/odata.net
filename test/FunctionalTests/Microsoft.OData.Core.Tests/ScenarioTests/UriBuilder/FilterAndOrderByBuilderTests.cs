@@ -402,6 +402,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(a%3Aa%2FOpenProperty%20eq%201)"), actualUri);
         }
+
+        [Fact]
+        public void BuildFilterWithInOperatorUsingProperties()
+        {
+            Uri queryUri = new Uri("People?$filter=ID in RelatedIDs", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=ID%20in%20RelatedIDs"), actualUri);
+        }
+
+        [Fact]
+        public void BuildFilterWithInOperatorUsingCollectionConstant()
+        {
+            Uri queryUri = new Uri("People?$filter=ID in (1,2,3)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=ID%20in%20(1%2C2%2C3)"), actualUri);
+        }
+
+        [Fact]
+        public void BuildFilterWithInOperatorUsingSingleConstant()
+        {
+            Uri queryUri = new Uri("People?$filter=1 in RelatedIDs", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=1%20in%20RelatedIDs"), actualUri);
+        }
         #endregion
 
         #region test $orderby
@@ -500,6 +524,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/Paintings?$orderby=Fully.Qualified.Namespace.GetColorAtPosition(position%3Dgeometry%27SRID%3D0%3BPOINT(1%202)%27%2CincludeAlpha%3Dnull)"), actualUri);
         }
+
         [Fact]
         public void OrderByTypeDefinitionProperty()
         {
@@ -508,6 +533,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal(new Uri("http://gobbledygook/People?$orderby=FirstName"), actualUri);
         }
 
+        [Fact]
+        public void BuildOrderByWithInOperatorUsingProperties()
+        {
+            Uri queryUri = new Uri("People?$orderby=ID in RelatedIDs", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20in%20RelatedIDs"), actualUri);
+        }
+
+        [Fact]
+        public void BuildOrderByWithInOperatorUsingCollectionConstant()
+        {
+            Uri queryUri = new Uri("People?$orderby=ID in (1,2,3)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20in%20(1%2C2%2C3)"), actualUri);
+        }
+
+        [Fact]
+        public void BuildOrderByWithInOperatorUsingSingleConstant()
+        {
+            Uri queryUri = new Uri("People?$orderby=1 in RelatedIDs", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$orderby=1%20in%20RelatedIDs"), actualUri);
+        }
         #endregion
     }
 }

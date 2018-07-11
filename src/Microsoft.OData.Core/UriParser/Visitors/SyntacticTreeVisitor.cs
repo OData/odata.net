@@ -50,6 +50,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Visits an InToken
+        /// </summary>
+        /// <param name="tokenIn">The In token to visit.</param>
+        /// <returns>An InNode thats bound to this token</returns>
+        public virtual T Visit(InToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>
@@ -125,6 +135,16 @@ namespace Microsoft.OData.UriParser
         /// <param name="tokenIn">The AggregateExpressionToken to visit</param>
         /// <returns>A T bound to this AggregateExpressionToken</returns>
         public virtual T Visit(AggregateExpressionToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits an EntitySetAggregateToken
+        /// </summary>
+        /// <param name="tokenIn">The EntitySetAggregateToken to visit</param>
+        /// <returns>A T bound to this EntitySetAggregateToken</returns>
+        public virtual T Visit(EntitySetAggregateToken tokenIn)
         {
             throw new NotImplementedException();
         }

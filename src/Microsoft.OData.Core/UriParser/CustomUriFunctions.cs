@@ -142,18 +142,40 @@ namespace Microsoft.OData.UriParser
         #region Internal Methods
 
         /// <summary>
-        /// Returns a list of signatures for a function name.
+        /// Returns a list of name-signature pairs for a function name.
         /// </summary>
-        /// <param name="name">The name of the function to look for.</param>
-        /// <param name="signatures">The list of signatures available for the function name.</param>
+        /// <param name="functionCallToken">The name of the function to look for.</param>
+        /// <param name="nameSignatures">
+        /// Output for the list of signature objects for matched function names, with canonical name of the function;
+        /// null if no matches found.
+        /// </param>
+        /// <param name="enableCaseInsensitive">Whether to perform case-insensitive match for function name.</param>
         /// <returns>true if the function was found, or false otherwise.</returns>
-        internal static bool TryGetCustomFunction(string name, out FunctionSignatureWithReturnType[] signatures)
+        internal static bool TryGetCustomFunction(string functionCallToken, out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures,
+            bool enableCaseInsensitive = false)
         {
-            Debug.Assert(name != null, "name != null");
+            Debug.Assert(functionCallToken != null, "name != null");
 
             lock (Locker)
             {
-                return CustomFunctions.TryGetValue(name, out signatures);
+                IList<KeyValuePair<string, FunctionSignatureWithReturnType>> bufferedKeyValuePairs
+                    = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+
+                foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> func in CustomFunctions)
+                {
+                    if (func.Key.Equals(functionCallToken, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    {
+                        foreach (FunctionSignatureWithReturnType sig in func.Value)
+                        {
+                            bufferedKeyValuePairs.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(func.Key, sig));
+                        }
+                    }
+                }
+
+                // Setup the output values.
+                nameSignatures = bufferedKeyValuePairs.Count != 0 ? bufferedKeyValuePairs : null;
+
+                return nameSignatures != null;
             }
         }
 

@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
@@ -96,21 +98,39 @@ namespace Microsoft.OData
 
         private void Translate(AggregateTransformationNode transformation)
         {
+            Translate(transformation.AggregateExpressions);
+        }
+
+        private void Translate(IEnumerable<AggregateExpressionBase> expressions)
+        {
             bool appendComma = false;
-            foreach (AggregateExpression aggExpression in transformation.Expressions)
+            foreach (AggregateExpressionBase expression in expressions)
             {
                 appendComma = AppendComma(appendComma);
 
-                if (aggExpression.Method != AggregationMethod.VirtualPropertyCount)
+                switch (expression.AggregateKind)
                 {
-                    AppendExpression(aggExpression.Expression);
-                    query.Append(ExpressionConstants.SymbolEscapedSpace);
-                    AppendWord(ExpressionConstants.KeywordWith);
-                }
+                    case AggregateExpressionKind.PropertyAggregate:
+                        AggregateExpression aggExpression = expression as AggregateExpression;
+                        if (aggExpression.Method != AggregationMethod.VirtualPropertyCount)
+                        {
+                            AppendExpression(aggExpression.Expression);
+                            query.Append(ExpressionConstants.SymbolEscapedSpace);
+                            AppendWord(ExpressionConstants.KeywordWith);
+                        }
 
-                AppendWord(GetAggregationMethodName(aggExpression));
-                AppendWord(ExpressionConstants.KeywordAs);
-                query.Append(aggExpression.Alias);
+                        AppendWord(GetAggregationMethodName(aggExpression));
+                        AppendWord(ExpressionConstants.KeywordAs);
+                        query.Append(aggExpression.Alias);
+                        break;
+                    case AggregateExpressionKind.EntitySetAggregate:
+                        EntitySetAggregateExpression entitySetExpression = expression as EntitySetAggregateExpression;
+                        query.Append(entitySetExpression.Alias);
+                        query.Append(ExpressionConstants.SymbolOpenParen);
+                        Translate(entitySetExpression.Children);
+                        query.Append(ExpressionConstants.SymbolClosedParen);
+                        break;
+                }
             }
         }
 
@@ -153,10 +173,10 @@ namespace Microsoft.OData
                     AppendExpression(node.Expression);
                 }
 
-                bool appendSlash = false;
+                bool appendCommaChild = false;
                 foreach (GroupByPropertyNode childNode in node.ChildTransformations)
                 {
-                    appendSlash = AppendSlash(appendSlash);
+                    appendCommaChild = AppendComma(appendCommaChild);
                     AppendExpression(childNode.Expression);
                 }
             }

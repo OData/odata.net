@@ -18,6 +18,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
         [InlineData("http://gobbledygook/People?$apply=groupby((FirstName),aggregate($count as cnt))")]
         [InlineData("http://gobbledygook/People?$apply=groupby((FirstName),aggregate(LifeTime with Custom.Aggregate as custLifeTime))")]
         [InlineData("http://gobbledygook/People?$apply=compute((cast(LifeTime,'Edm.Double') add MyDog/LionWhoAteMe/AngerLevel) mul 2 as lifeAngerLevel,StockQuantity div FavoriteNumber as StockNumber)")]
+        [InlineData("http://gobbledygook/People?$apply=groupby((MyDog/Color,MyDog/Breed))")]
+        [InlineData("http://gobbledygook/People?$apply=groupby((FirstName),aggregate(MyPaintings($count as cnt)))")]
         public void BuildUrlWithApply(string query)
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(query));

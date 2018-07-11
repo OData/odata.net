@@ -813,7 +813,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // regression test for: [UriParser] day() allowed. What does that mean?
             // make sure that, if we do find a cannonical function, we match its parameters. 
             Action parseWithInvalidParameters = () => ParseFilter("day() eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetUriFunctionSignatures("day"); // to match the error message... blah
+            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
+                FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
             parseWithInvalidParameters.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
@@ -825,7 +826,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // regression test for: [UriParser] day() allowed. What does that mean?
             // make sure that, if we do find a cannonical function, we match its parameters. 
             Action parseWithInvalidParameters = () => ParseFilter("day(1) eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.GetUriFunctionSignatures("day"); // to match the error message... blah
+            FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
+                FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
             parseWithInvalidParameters.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
@@ -1660,6 +1662,234 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             orderby.Expression.As<SingleValueCastNode>().InternalKind.ShouldBeEquivalentTo(InternalQueryNodeKind.SingleValueCast);
             orderby.Expression.As<SingleValueCastNode>().Kind.ShouldBeEquivalentTo(QueryNodeKind.SingleValueCast);
             orderby.Expression.As<SingleValueCastNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Assistant");
+        }
+        #endregion
+
+        #region In Operator Tests
+        [Fact]
+        public void FilterWithInOperationWithPrimitiveTypeProperties()
+        {
+            FilterClause filter = ParseFilter("ID in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithIntConstant()
+        {
+            FilterClause filter = ParseFilter("9001 in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be(9001);
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithStringConstant()
+        {
+            FilterClause filter = ParseFilter("'777-42-9001' in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be("777-42-9001");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedSSNs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithMismatchedOperandTypes()
+        {
+            Action parse = () => ParseFilter("ID in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ArgumentException>().WithMessage(
+                ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("Edm.String", "Edm.Int32"));
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithNestedOperation()
+        {
+            FilterClause filter = ParseFilter("(ID in RelatedIDs) eq false", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithMultipleNestedOperations()
+        {
+            FilterClause filter = ParseFilter("((ID in RelatedIDs) eq ('777-42-9001' in RelatedSSNs))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithNavigationProperties()
+        {
+            FilterClause filter = ParseFilter("MyDog/LionWhoAteMe in MyDog/LionsISaw", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleNavigationNode>().NavigationProperty.Name.Should().Be("LionWhoAteMe");
+            filter.Expression.As<InNode>().Right.As<CollectionNavigationNode>().NavigationProperty.Name.Should().Be("LionsISaw");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithBoundFunctions()
+        {
+            FilterClause filter = ParseFilter("Fully.Qualified.Namespace.GetPriorAddress in Fully.Qualified.Namespace.GetPriorAddresses", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValueFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddress");
+            filter.Expression.As<InNode>().Right.As<CollectionResourceFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddresses");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithComplexTypeProperties()
+        {
+            FilterClause filter = ParseFilter("GeographyPoint in GeographyCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("GeographyPoint");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyCollection");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithDerivedTypeCollection()
+        {
+            FilterClause filter = ParseFilter("Geography in GeographyCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("Geography");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyCollection");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithDerivedTypeSingleValue()
+        {
+            FilterClause filter = ParseFilter("GeographyPoint in GeographyParentCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("GeographyPoint");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyParentCollection");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithEnums()
+        {
+            FilterClause filter = ParseFilter("Fully.Qualified.Namespace.ColorPattern'SolidYellow' in FavoriteColors", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<ConstantNode>().LiteralText.Should().Be("Fully.Qualified.Namespace.ColorPattern'SolidYellow'");
+            filter.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("FavoriteColors");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithParensCollection()
+        {
+            FilterClause filter = ParseFilter("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            filter.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            filter.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithMismatchedClosureCollection()
+        {
+            Action parse = () => ParseFilter("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithPrimitiveTypeProperties()
+        {
+            OrderByClause orderby = ParseOrderBy("ID in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithIntConstant()
+        {
+            OrderByClause orderby = ParseOrderBy("9001 in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be(9001);
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithStringConstant()
+        {
+            OrderByClause orderby = ParseOrderBy("'777-42-9001' in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<ConstantNode>().Value.Should().Be("777-42-9001");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedSSNs");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithMismatchedOperandTypes()
+        {
+            Action parse = () => ParseOrderBy("ID in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ArgumentException>().WithMessage(
+                ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("Edm.String", "Edm.Int32"));
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithNestedOperation()
+        {
+            OrderByClause orderby = ParseOrderBy("(ID in RelatedIDs) eq false", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithMultipleNestedOperations()
+        {
+            OrderByClause orderby = ParseOrderBy("((ID in RelatedIDs) eq ('777-42-9001' in RelatedSSNs))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<BinaryOperatorNode>().Left.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("RelatedIDs");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithNavigationProperties()
+        {
+            OrderByClause orderby = ParseOrderBy("MyDog/LionWhoAteMe in MyDog/LionsISaw", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleNavigationNode>().NavigationProperty.Name.Should().Be("LionWhoAteMe");
+            orderby.Expression.As<InNode>().Right.As<CollectionNavigationNode>().NavigationProperty.Name.Should().Be("LionsISaw");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithBoundFunctions()
+        {
+            OrderByClause orderby = ParseOrderBy("Fully.Qualified.Namespace.GetPriorAddress in Fully.Qualified.Namespace.GetPriorAddresses", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleValueFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddress");
+            orderby.Expression.As<InNode>().Right.As<CollectionResourceFunctionCallNode>().Name.Should().Be("Fully.Qualified.Namespace.GetPriorAddresses");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithComplexTypeProperties()
+        {
+            OrderByClause orderby = ParseOrderBy("GeographyPoint in GeographyCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("GeographyPoint");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyCollection");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithEnums()
+        {
+            OrderByClause orderby = ParseOrderBy("Fully.Qualified.Namespace.ColorPattern'SolidYellow' in FavoriteColors", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<ConstantNode>().LiteralText.Should().Be("Fully.Qualified.Namespace.ColorPattern'SolidYellow'");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("FavoriteColors");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithDerivedTypeCollection()
+        {
+            OrderByClause orderby = ParseOrderBy("Geography in GeographyCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("Geography");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyCollection");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithDerivedTypeSingleValue()
+        {
+            OrderByClause orderby = ParseOrderBy("GeographyPoint in GeographyParentCollection", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("GeographyPoint");
+            orderby.Expression.As<InNode>().Right.As<CollectionPropertyAccessNode>().Property.Name.Should().Be("GeographyParentCollection");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithParensCollection()
+        {
+            OrderByClause orderby = ParseOrderBy("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            orderby.Expression.As<InNode>().Left.As<SingleValuePropertyAccessNode>().Property.Name.Should().Be("ID");
+            orderby.Expression.As<InNode>().Right.As<CollectionConstantNode>().LiteralText.Should().Be("(1,2,3)");
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithMismatchedClosureCollection()
+        {
+            Action parse = () => ParseOrderBy("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
         }
         #endregion
 

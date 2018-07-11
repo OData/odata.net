@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void BindLiteralShouldReturnIntValue()
         {
-            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(5));
+            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(5)) as ConstantNode;
             result.Value.Should().Be(5);
         }
 
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void BindLiteralShouldReturnDateTimeOffsetValue()
         {
             var value = new DateTimeOffset(2012, 12, 2, 3, 34, 20, 0, new TimeSpan(2, 0, 0));
-            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value));
+            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value)) as ConstantNode;
             result.Value.Should().Be(value);
         }
 
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void BindLiteralShouldReturnDateValue()
         {
             var value = new Date(2012, 12, 2);
-            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value));
+            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value)) as ConstantNode;
             result.Value.Should().Be(value);
         }
 
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void BindLiteralShouldReturnTimeOfDayValue()
         {
             var value = new TimeOfDay(10, 15, 5, 20);
-            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value));
+            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value)) as ConstantNode;
             result.Value.Should().Be(value);
         }
 
@@ -50,14 +50,14 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void BindLiteralShouldReturnQueryNode()
         {
             var value = GeometryPoint.Create(5, 2);
-            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value));
+            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value)) as ConstantNode;
             result.Value.Should().Be(value);
         }
 
         [Fact]
         public void BindLiteralShouldSetLiteralTextFromToken()
         {
-            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(1, "originalText"));
+            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(1, "originalText")) as ConstantNode;
             result.LiteralText.Should().Be("originalText");
         }
     }

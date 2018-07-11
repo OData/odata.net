@@ -471,7 +471,7 @@ namespace Microsoft.OData.Client
                     Encoding encoding;
                     Exception inner = contentTypeException;
                     ContentTypeUtil.ReadContentType(this.batchResponseMessage.GetHeader(XmlConstants.HttpContentType), out mime, out encoding);
-                    if (String.Equals(XmlConstants.MimeTextPlain, mime))
+                    if (String.Equals(XmlConstants.MimeTextPlain, mime, StringComparison.Ordinal))
                     {
                         inner = GetResponseText(
                             this.batchResponseMessage.GetStream,

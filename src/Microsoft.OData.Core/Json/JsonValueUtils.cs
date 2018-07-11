@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.IO;
     using System.Text;
     using System.Xml;
+    using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -35,7 +36,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// The NumberFormatInfo used in OData Json format.
         /// </summary>
-        internal static readonly NumberFormatInfo ODataNumberFormatInfo = InitializeODataNumberFormatInfo();
+        internal static readonly NumberFormatInfo ODataNumberFormatInfo = JsonValueUtils.InitializeODataNumberFormatInfo();
 
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Map of special characters to strings.
         /// </summary>
-        private static readonly string[] SpecialCharToEscapedStringMap = CreateSpecialCharToEscapedStringMap();
+        private static readonly string[] SpecialCharToEscapedStringMap = JsonValueUtils.CreateSpecialCharToEscapedStringMap();
 
         /// <summary>
         /// Write a boolean value.
@@ -88,7 +89,7 @@ namespace Microsoft.OData.Json
 
             if (float.IsInfinity(value) || float.IsNaN(value))
             {
-                WriteQuoted(writer, value.ToString(ODataNumberFormatInfo));
+                JsonValueUtils.WriteQuoted(writer, value.ToString(JsonValueUtils.ODataNumberFormatInfo));
             }
             else
             {
@@ -134,7 +135,7 @@ namespace Microsoft.OData.Json
 
             if (JsonSharedUtils.IsDoubleValueSerializedAsString(value))
             {
-                WriteQuoted(writer, value.ToString(ODataNumberFormatInfo));
+                JsonValueUtils.WriteQuoted(writer, value.ToString(JsonValueUtils.ODataNumberFormatInfo));
             }
             else
             {
@@ -144,7 +145,7 @@ namespace Microsoft.OData.Json
                 string valueToWrite = XmlConvert.ToString(value);
 
                 writer.Write(valueToWrite);
-                if (valueToWrite.IndexOfAny(DoubleIndicatingCharacters) < 0)
+                if (valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) < 0)
                 {
                     writer.Write(".0");
                 }
@@ -160,7 +161,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            WriteQuoted(writer, value.ToString());
+            JsonValueUtils.WriteQuoted(writer, value.ToString());
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace Microsoft.OData.Json
                         //
                         // offset = 4DIGIT
                         string textValue = XmlConvert.ToString(value);
-                        WriteQuoted(writer, textValue);
+                        JsonValueUtils.WriteQuoted(writer, textValue);
                     }
 
                     break;
@@ -220,10 +221,10 @@ namespace Microsoft.OData.Json
                         string textValue = String.Format(
                             CultureInfo.InvariantCulture,
                             JsonConstants.ODataDateTimeOffsetFormat,
-                            DateTimeTicksToJsonTicks(value.Ticks),
+                            JsonValueUtils.DateTimeTicksToJsonTicks(value.Ticks),
                             offsetMinutes >= 0 ? JsonConstants.ODataDateTimeOffsetPlusSign : string.Empty,
                             offsetMinutes);
-                        WriteQuoted(writer, textValue);
+                        JsonValueUtils.WriteQuoted(writer, textValue);
                     }
 
                     break;
@@ -239,7 +240,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            WriteQuoted(writer, EdmValueWriter.DurationAsXml(value));
+            JsonValueUtils.WriteQuoted(writer, EdmValueWriter.DurationAsXml(value));
         }
 
         /// <summary>
@@ -251,7 +252,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            WriteQuoted(writer, value.ToString());
+            JsonValueUtils.WriteQuoted(writer, value.ToString());
         }
 
         /// <summary>
@@ -263,7 +264,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            WriteQuoted(writer, value.ToString());
+            JsonValueUtils.WriteQuoted(writer, value.ToString());
         }
 
         /// <summary>
@@ -295,7 +296,8 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">String value to be written.</param>
-        internal static void WriteValue(TextWriter writer, string value)
+        /// <param name="buffer">Char buffer to use for streaming data</param>
+        internal static void WriteValue(TextWriter writer, string value, ref char[] buffer)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -305,7 +307,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                WriteEscapedJsonString(writer, value);
+                JsonValueUtils.WriteEscapedJsonString(writer, value, ref buffer);
             }
         }
 
@@ -335,42 +337,97 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="inputString">Input string value.</param>
-        internal static void WriteEscapedJsonString(TextWriter writer, string inputString)
+        /// <param name="buffer">Char buffer to use for streaming data</param>
+        internal static void WriteEscapedJsonString(TextWriter writer, string inputString, ref char[] buffer)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(inputString != null, "The string value must not be null.");
 
             writer.Write(JsonConstants.QuoteCharacter);
 
-            int startIndex = 0;
-            int inputStringLength = inputString.Length;
-            int subStrLength;
-            for (int currentIndex = 0; currentIndex < inputStringLength; currentIndex++)
+            int firstIndex;
+            if (!JsonValueUtils.CheckIfStringHasSpecialChars(inputString, out firstIndex))
             {
-                char c = inputString[currentIndex];
-
-                // Append the unhandled characters (that do not require special treament)
-                // to the string builder when special characters are detected.
-                if (SpecialCharToEscapedStringMap[c] == null)
-                {
-                    continue;
-                }
-
-                // Flush out the unescaped characters we've built so far.
-                subStrLength = currentIndex - startIndex;
-                if (subStrLength > 0)
-                {
-                    writer.Write(inputString.Substring(startIndex, subStrLength));
-                }
-
-                writer.Write(SpecialCharToEscapedStringMap[c]);
-                startIndex = currentIndex + 1;
+                writer.Write(inputString);
             }
-
-            subStrLength = inputStringLength - startIndex;
-            if (subStrLength > 0)
+            else
             {
-                writer.Write(inputString.Substring(startIndex, subStrLength));
+                int inputStringLength = inputString.Length;
+
+                Debug.Assert(firstIndex < inputStringLength, "First index of the special character should be within the string");
+                buffer = BufferUtils.InitializeBufferIfRequired(buffer);
+                int bufferLength = buffer.Length;
+                int bufferIndex = 0;
+                int currentIndex = 0;
+
+                // Let's copy and flush strings up to the first index of the special char
+                while (currentIndex < firstIndex)
+                {
+                    int subStrLength = firstIndex - currentIndex;
+
+                    Debug.Assert(subStrLength > 0, "SubStrLength should be greater than 0 always");
+
+                    // If the first index of the special character is larger than the buffer length,
+                    // flush everything to the buffer first and reset the buffer to the next chunk.
+                    // Otherwise copy to the buffer and go on from there.
+                    if (subStrLength >= bufferLength)
+                    {
+                        inputString.CopyTo(currentIndex, buffer, 0, bufferLength);
+                        writer.Write(buffer, 0, bufferLength);
+                        currentIndex += bufferLength;
+                    }
+                    else
+                    {
+                        inputString.CopyTo(currentIndex, buffer, 0, subStrLength);
+                        bufferIndex = subStrLength;
+                        currentIndex += subStrLength;
+                    }
+                }
+
+                for (; currentIndex < inputStringLength; currentIndex++)
+                {
+                    char c = inputString[currentIndex];
+                    string escapedString = JsonValueUtils.SpecialCharToEscapedStringMap[c];
+
+                    // Append the unhandled characters (that do not require special treament)
+                    // to the buffer.
+                    if (escapedString == null)
+                    {
+                        buffer[bufferIndex] = c;
+                        bufferIndex++;
+                    }
+                    else
+                    {
+                        // Okay, an unhandled character was deteced.
+                        // First lets check if we can fit it in the existing buffer, if not,
+                        // flush the current buffer and reset. Add the escaped string to the buffer
+                        // and continue.
+                        int escapedStringLength = escapedString.Length;
+                        Debug.Assert(escapedStringLength <= bufferLength, "Buffer should be larger than the escaped string");
+
+                        if ((bufferIndex + escapedStringLength) > bufferLength)
+                        {
+                            writer.Write(buffer, 0, bufferIndex);
+                            bufferIndex = 0;
+                        }
+
+                        escapedString.CopyTo(0, buffer, bufferIndex, escapedStringLength);
+                        bufferIndex += escapedStringLength;
+                    }
+
+                    if (bufferIndex >= bufferLength)
+                    {
+                        Debug.Assert(bufferIndex == bufferLength,
+                            "We should never encounter a situation where the buffer index is greater than the buffer length");
+                        writer.Write(buffer, 0, bufferIndex);
+                        bufferIndex = 0;
+                    }
+                }
+
+                if (bufferIndex > 0)
+                {
+                    writer.Write(buffer, 0, bufferIndex);
+                }
             }
 
             writer.Write(JsonConstants.QuoteCharacter);
@@ -385,7 +442,7 @@ namespace Microsoft.OData.Json
         {
             // Ticks in .NET are in 100-nanoseconds and start at 1.1.0001.
             // Ticks in the JSON date time format are in milliseconds and start at 1.1.1970.
-            return (ticks * 10000) + JsonDateTimeMinTimeTicks;
+            return (ticks * 10000) + JsonValueUtils.JsonDateTimeMinTimeTicks;
         }
 
         /// <summary>
@@ -408,7 +465,7 @@ namespace Microsoft.OData.Json
 
                 // Append the un-handled characters (that do not require special treatment)
                 // to the string builder when special characters are detected.
-                if (SpecialCharToEscapedStringMap[c] == null)
+                if (JsonValueUtils.SpecialCharToEscapedStringMap[c] == null)
                 {
                     continue;
                 }
@@ -420,7 +477,7 @@ namespace Microsoft.OData.Json
                     builder.Append(inputString.Substring(startIndex, subStrLength));
                 }
 
-                builder.Append(SpecialCharToEscapedStringMap[c]);
+                builder.Append(JsonValueUtils.SpecialCharToEscapedStringMap[c]);
                 startIndex = currentIndex + 1;
             }
 
@@ -434,14 +491,43 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Checks if the string contains special char and returns the first index 
+        /// of special char if present.
+        /// </summary>
+        /// <param name="inputString">string that might contain special characters.</param>
+        /// <param name="firstIndex">first index of the special char</param>
+        /// <returns>A value indicating whether the string contains special character</returns>
+        private static bool CheckIfStringHasSpecialChars(string inputString, out int firstIndex)
+        {
+            Debug.Assert(inputString != null, "The string value must not be null.");
+
+            firstIndex = -1;
+            int inputStringLength = inputString.Length;
+            for (int currentIndex = 0; currentIndex < inputStringLength; currentIndex++)
+            {
+                char c = inputString[currentIndex];
+
+                // Append the un-handled characters (that do not require special treatment)
+                // to the string builder when special characters are detected.
+                if (JsonValueUtils.SpecialCharToEscapedStringMap[c] != null)
+                {
+                    firstIndex = currentIndex;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Initialize static property ODataNumberFormatInfo.
         /// </summary>
         /// <returns>The <see cref=" NumberFormatInfo"/> object.</returns>
         private static NumberFormatInfo InitializeODataNumberFormatInfo()
         {
             NumberFormatInfo odataNumberFormatInfo = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
-            odataNumberFormatInfo.PositiveInfinitySymbol = ODataJsonPositiveInfinitySymbol;
-            odataNumberFormatInfo.NegativeInfinitySymbol = ODataJsonNegativeInfinitySymbol;
+            odataNumberFormatInfo.PositiveInfinitySymbol = JsonValueUtils.ODataJsonPositiveInfinitySymbol;
+            odataNumberFormatInfo.NegativeInfinitySymbol = JsonValueUtils.ODataJsonNegativeInfinitySymbol;
             return odataNumberFormatInfo;
         }
 
@@ -466,7 +552,7 @@ namespace Microsoft.OData.Json
         {
             // Ticks in .NET are in 100-nanoseconds and start at 1.1.0001.
             // Ticks in the JSON date time format are in milliseconds and start at 1.1.1970.
-            return (ticks - JsonDateTimeMinTimeTicks) / 10000;
+            return (ticks - JsonValueUtils.JsonDateTimeMinTimeTicks) / 10000;
         }
 
         /// <summary>

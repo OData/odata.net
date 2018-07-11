@@ -132,6 +132,7 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespacePerson_ID = FullyQualifiedNamespacePerson.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
             var FullyQualifiedNamespacePerson_SSN = FullyQualifiedNamespacePerson.AddStructuralProperty("SSN", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("Shoe", EdmCoreModel.Instance.GetString(true));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("Geography", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyLineString", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyLineString, true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyPolygon", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPolygon, true));
@@ -139,6 +140,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeometryLineString", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryLineString, true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeometryPolygon", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPolygon, true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyCollection", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true))));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("GeographyParentCollection", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, true))));
             FullyQualifiedNamespacePerson.AddStructuralProperty("GeometryCollection", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true))));
             var FullyQualifiedNamespacePerson_Name = FullyQualifiedNamespacePerson.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
             var FullyQualifiedNamespacePerson_FirstName = FullyQualifiedNamespacePerson.AddStructuralProperty("FirstName", FullyQualifiedNamespaceNameTypeReference);
@@ -155,6 +157,8 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespacePerson.AddStructuralProperty("PreviousAddresses", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespaceAddressTypeReference)));
             FullyQualifiedNamespacePerson.AddStructuralProperty("FavoriteColors", new EdmCollectionTypeReference(new EdmCollectionType(colorTypeReference)));
             FullyQualifiedNamespacePerson.AddStructuralProperty("FavoriteNumber", FullyQualifiedNamespaceUInt16Reference);
+            FullyQualifiedNamespacePerson.AddStructuralProperty("RelatedIDs", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("RelatedSSNs", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
             FullyQualifiedNamespacePerson.AddStructuralProperty("StockQuantity", FullyQualifiedNamespaceUInt32Reference);
             FullyQualifiedNamespacePerson.AddStructuralProperty("LifeTime", FullyQualifiedNamespaceUInt64Reference);
             FullyQualifiedNamespacePerson.AddKeys(FullyQualifiedNamespacePerson_ID);
@@ -781,19 +785,19 @@ namespace Microsoft.OData.Tests.UriParser
                 IEdmModel parsedModel;
                 if (CsdlReader.TryParse(XmlReader.Create(new StringReader(HardCodedTestModelXml.MainModelXml)), (Uri uri) =>
                 {
-                    if (string.Equals(uri.AbsoluteUri, "http://submodel1/"))
+                    if (string.Equals(uri.AbsoluteUri, "http://submodel1/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml1));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel2/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel2/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml2));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel3/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel3/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml3));
                     }
-                    else if (string.Equals(uri.AbsoluteUri, "http://submodel4/"))
+                    else if (string.Equals(uri.AbsoluteUri, "http://submodel4/", StringComparison.Ordinal))
                     {
                         return XmlReader.Create(new StringReader(HardCodedTestModelXml.SubModelXml4));
                     }
@@ -955,6 +959,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
         <Property Name=""SSN"" Type=""Edm.String"" />
         <Property Name=""Shoe"" Type=""Edm.String"" />
+        <Property Name=""Geography"" Type=""Edm.Geography"" SRID=""4326"" />
         <Property Name=""GeographyPoint"" Type=""Edm.GeographyPoint"" SRID=""4326"" />
         <Property Name=""GeographyLineString"" Type=""Edm.GeographyLineString"" SRID=""4326"" />
         <Property Name=""GeographyPolygon"" Type=""Edm.GeographyPolygon"" SRID=""4326"" />
@@ -962,6 +967,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""GeometryLineString"" Type=""Edm.GeometryLineString"" SRID=""0"" />
         <Property Name=""GeometryPolygon"" Type=""Edm.GeometryPolygon"" SRID=""0"" />
         <Property Name=""GeographyCollection"" Type=""Collection(Edm.GeographyPoint)"" SRID=""4326"" />
+        <Property Name=""GeographyParentCollection"" Type=""Collection(Edm.Geography)"" SRID=""0"" />
         <Property Name=""GeometryCollection"" Type=""Collection(Edm.GeometryPoint)"" SRID=""0"" />
         <Property Name=""Name"" Type=""Edm.String"" />
         <Property Name=""FirstName"" Type=""Fully.Qualified.Namespace.NameType"" />
@@ -978,6 +984,8 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""PreviousAddresses"" Type=""Collection(Fully.Qualified.Namespace.Address)"" />
         <Property Name=""FavoriteColors"" Type=""Collection(Fully.Qualified.Namespace.ColorPattern)"" />
         <Property Name=""FavoriteNumber"" Type=""Fully.Qualified.Namespace.UInt16"" />
+        <Property Name=""RelatedIDs"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
+        <Property Name=""RelatedSSNs"" Type=""Collection(Edm.String)"" Nullable=""true"" />
         <Property Name=""StockQuantity"" Type=""Fully.Qualified.Namespace.UInt32"" />
         <Property Name=""LifeTime"" Type=""Fully.Qualified.Namespace.UInt64"" />
         <NavigationProperty Name=""MyDog"" Type=""Fully.Qualified.Namespace.Dog"" />
@@ -1801,6 +1809,11 @@ namespace Microsoft.OData.Tests.UriParser
             return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("MyAddress");
         }
 
+        public static IEdmStructuralProperty GetPersonGeographyProp()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("Geography");
+        }
+
         public static IEdmStructuralProperty GetPersonGeographyPointProp()
         {
             return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("GeographyPoint");
@@ -1834,6 +1847,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmStructuralProperty GetPersonGeographyCollectionProp()
         {
             return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("GeographyCollection");
+        }
+
+        public static IEdmStructuralProperty GetPersonGeographyParentCollectionProp()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("GeographyParentCollection");
         }
 
         public static IEdmStructuralProperty GetEmployeeWorkEmailProp()

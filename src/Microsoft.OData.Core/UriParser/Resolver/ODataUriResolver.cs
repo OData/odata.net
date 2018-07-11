@@ -289,6 +289,15 @@ namespace Microsoft.OData.UriParser
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IList<string> positionalValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
             var keyProperties = type.Key().ToList();
+
+            // Throw an error if key size from url doesn't match that from model.
+            // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
+            // should override this ResolveKeys method.
+            if (keyProperties.Count != positionalValues.Count)
+            {
+                throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyCountMismatch(type.FullName()));
+            }
+
             var keyPairList = new List<KeyValuePair<string, object>>(positionalValues.Count);
 
             for (int i = 0; i < keyProperties.Count; i++)
@@ -318,6 +327,14 @@ namespace Microsoft.OData.UriParser
         {
             var convertedPairs = new Dictionary<string, object>(StringComparer.Ordinal);
             var keyProperties = type.Key().ToList();
+
+            // Throw an error if key size from url doesn't match that from model.
+            // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
+            // should override this ResolveKeys method.
+            if (keyProperties.Count != namedValues.Count)
+            {
+                throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyCountMismatch(type.FullName()));
+            }
 
             foreach (IEdmStructuralProperty property in keyProperties)
             {

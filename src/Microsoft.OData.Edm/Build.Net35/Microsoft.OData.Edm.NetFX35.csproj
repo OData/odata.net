@@ -388,14 +388,8 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlDocumentation.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlElement.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlElement.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEntityContainer.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEntityContainer.cs</Link>
@@ -508,9 +502,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsDocumentation.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntityContainer.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityContainer.cs</Link>
@@ -860,9 +851,6 @@
     <Compile Include="..\Schema\EdmDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmDecimalTypeReference.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\EdmDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Schema\EdmDocumentation.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\EdmElement.cs">
       <Link>Microsoft\OData\Edm\Schema\EdmElement.cs</Link>
     </Compile>
@@ -1060,9 +1048,6 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmDecimalTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmDecimalTypeReference.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmDocumentation.cs">
-      <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmDocumentation.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmElement.cs">
       <Link>Microsoft\OData\Edm\Schema\Interfaces\IEdmElement.cs</Link>

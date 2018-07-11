@@ -93,6 +93,7 @@
     <Compile Include="..\AnnotationFilterPatternTests.cs" />
     <Compile Include="..\AnnotationFilterTests.cs" />
     <Compile Include="..\ArgumentValidationUtils.cs" />
+    <Compile Include="..\BufferUtilsTests.cs" />
     <Compile Include="..\IntegrationTests\Reader\JsonLight\UriParameterReaderIntegrationTests.cs" />
     <Compile Include="..\IntegrationTests\Writer\JsonLight\ODataJsonLightWriterComplexIntegrationTests.cs" />
     <Compile Include="..\IntegrationTests\Writer\JsonLight\UriParameterWriterIntegrationTests.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\JsonBigBatchRoundTripTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\MultipartMixedBatchDependsOnIdsTests.cs" />
     <Compile Include="..\ScenarioTests\Roundtrip\JsonLight\Utils.cs" />
+    <Compile Include="..\ScenarioTests\UriBuilder\ApplyBuilderTest.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\ContextUrlPathStringTests.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\CountBuilderTests.cs" />
     <Compile Include="..\ScenarioTests\UriBuilder\FilterAndOrderByBuilderTests.cs" />
@@ -360,6 +362,7 @@
     <Compile Include="..\UriParser\SemanticAst\BatchReferenceSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\BatchSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\BinaryOperatorNodeTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\CollectionConstantNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionFunctionCallNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionNavigationNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionPropertyAccessNodeTests.cs" />
@@ -369,6 +372,7 @@
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\FilterSegmentTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\InNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ReferenceSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableTests.cs" />

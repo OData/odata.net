@@ -17,12 +17,11 @@ namespace Microsoft.OData.UriParser.Aggregation
     /// <summary>
     /// Query token representing an Aggregate expression.
     /// </summary>
-    public sealed class AggregateExpressionToken : QueryToken
+    public sealed class AggregateExpressionToken : AggregateTokenBase
     {
         private readonly QueryToken expression;
 
         private readonly AggregationMethod method;
-
         private readonly AggregationMethodDefinition methodDefinition;
 
         private readonly string alias;
@@ -72,19 +71,22 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Gets the aggregate method definition.
-        /// </summary>
-        public AggregationMethodDefinition MethodDefinition
-        {
-            get { return this.methodDefinition; }
-        }
-
-        /// <summary>
         /// Gets the expression.
         /// </summary>
         public QueryToken Expression
         {
             get { return this.expression; }
+        }
+
+        /// <summary>
+        /// Gets the aggregate method definition.
+        /// </summary>
+        public AggregationMethodDefinition MethodDefinition
+        {
+            get
+            {
+                return methodDefinition;
+            }
         }
 
         /// <summary>

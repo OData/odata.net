@@ -292,6 +292,13 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmNavigationSource>(
                 (context, navigationSource) =>
                 {
+                    // Entity types used in Singletons don't require keys
+                    if (navigationSource.NavigationSourceKind() == EdmNavigationSourceKind.Singleton
+                        || navigationSource.NavigationSourceKind() == EdmNavigationSourceKind.None)
+                    {
+                        return;
+                    }
+
                     IEdmEntityType entityType = navigationSource.EntityType();
 
                     if (entityType == null)
