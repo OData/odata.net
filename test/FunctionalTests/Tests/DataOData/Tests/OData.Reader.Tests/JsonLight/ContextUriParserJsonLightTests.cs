@@ -89,17 +89,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new ContextUriParserTestCase
                 {
-                    DebugDescription = "empty string is a relative URI; context URIs have to absolute",
+                    DebugDescription = "empty string is a relative URI; context URIs have to be absolute or relative",
                     ContextUri = string.Empty,
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute", "")
-                },
-                new ContextUriParserTestCase
-                {
-                    DebugDescription = "another relative URI; context URIs have to absolute",
-                    ContextUri = "relativeUri",
-                    Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute", "relativeUri")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_TopLevelContextUrlIsInvalid", "")
                 },
                 new ContextUriParserTestCase
                 {
@@ -470,7 +463,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#NonExistingContainer.Persons/TestModel.Employee/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonLightContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#NonExistingContainer.Persons/TestModel.Employee/$entity")
                 },
                 // Metadata document URI for an entry with a type cast to a non-existing entity type
@@ -479,7 +472,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/TestModel.NonExistingType/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonLightContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/TestModel.NonExistingType/$entity")
                 },
                 // Metadata document URI for an entry of a type incompatible with the base type of the entity set
@@ -515,7 +508,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonLightContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet/$entity")
                 },
                 // Metadata document URI for an entry with type cast (invalid entity set)
@@ -524,7 +517,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonLightContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee/$entity")
                 },
                 #endregion Cases
@@ -653,7 +646,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet",
                     ExpectedException = ODataExpectedExceptions.ODataException(
                         "ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName",
-                        MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet", 
+                        MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet",
                         "TestModel.DefaultContainer.WrongSet")
                 },
                 // Metadata document URI for a feed with a type cast (invalid entity set)
@@ -662,7 +655,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonLightContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee")
                 },
                 #endregion Cases
@@ -753,7 +746,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public void JsonLightContextUriParserSelectQueryOptionTest()
         {
             const string contextUriSuffix = "#TestModel.DefaultContainer.Persons";
-            // NOTE: testing of the parsing of the $select query option itself is already done 
+            // NOTE: testing of the parsing of the $select query option itself is already done
             //       in the TDD tests (see ProjectedPropertiesHierarchyAnnotationTests.cs)
             var testCases = new ContextUriParserTestCase[]
             {
@@ -837,7 +830,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 //        SelectQueryOption = "Id,*",
                 //    },
                 //    ExpectedException = ODataExpectedExceptions.ODataException(
-                //        "ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption", 
+                //        "ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption",
                 //        "Property")
                 //},
                 #endregion Cases

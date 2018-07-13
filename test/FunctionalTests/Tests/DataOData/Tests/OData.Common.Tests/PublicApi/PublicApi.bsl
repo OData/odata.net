@@ -5094,6 +5094,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	System.Func`3[[System.Object],[System.String],[Microsoft.OData.Edm.IEdmTypeReference]] PrimitiveTypeResolver  { public get; public set; }
 	bool ReadUntypedAsString  { public get; public set; }
+	System.Uri RequestUri  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }

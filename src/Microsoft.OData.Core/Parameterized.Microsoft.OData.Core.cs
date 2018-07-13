@@ -3495,10 +3495,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The top level context URL '{0}' should be an absolute Uri."
+        /// A string like "The top level context URL '{0}' is not a valid absolute or relative Uri."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute, p0);
+        internal static string ODataJsonLightContextUriParser_TopLevelContextUrlIsInvalid(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_TopLevelContextUrlIsInvalid, p0);
         }
 
         /// <summary>

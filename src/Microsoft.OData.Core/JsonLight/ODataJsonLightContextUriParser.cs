@@ -61,9 +61,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="model">The model to use when resolving the target of the URI.</param>
         /// <param name="contextUriFromPayload">The string value of the odata.metadata annotation read from the payload.</param>
         /// <param name="payloadKind">The payload kind we expect the context URI to conform to.</param>
-        /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
+        /// <param name="clientCustomTypeResolver">The function of client custom type resolver.</param>
         /// <param name="needParseFragment">Whether the fragment after $metadata should be parsed, if set to false, only MetadataDocumentUri is parsed.</param>
         /// <param name="throwIfMetadataConflict">Whether to throw if a type specified in the ContextUri is not found in metadata.</param>
+        /// <param name="baseUri">Optional value (with default value of null) of base Uri used for resolving the context url.
+        /// It should be a non-null value when resolving a top-level relative context Uri.
+        /// </param>
         /// <returns>The result from parsing the context URI.</returns>
         internal static ODataJsonLightContextUriParseResult Parse(
             IEdmModel model,
@@ -71,19 +74,22 @@ namespace Microsoft.OData.JsonLight
             ODataPayloadKind payloadKind,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             bool needParseFragment,
-            bool throwIfMetadataConflict = true)
+            bool throwIfMetadataConflict = true,
+            Uri baseUri = null)
         {
             if (contextUriFromPayload == null)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_NullMetadataDocumentUri);
             }
 
-            // Create an absolute URI from the payload string
-            // TODO: Support relative context uri and resolving other relative uris
+            // Create an absolute URI from the payload string.
+            // Uri.TryCreate(Uri, string, out Uri) try creating the Uri directly from specified string value first.
+            // Resultant Uri is returned directly if it is an absolute Uri; otherwise, baseUri will be used to resolve the relative Uri
+            // into an absolute Uri. See https://github.com/Microsoft/referencesource/blob/master/System/net/System/UriExt.cs#L315
             Uri contextUri;
-            if (!Uri.TryCreate(contextUriFromPayload, UriKind.Absolute, out contextUri))
+            if (!Uri.TryCreate(baseUri, contextUriFromPayload, out contextUri))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(contextUriFromPayload));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlIsInvalid(contextUriFromPayload));
             }
 
             ODataJsonLightContextUriParser parser = new ODataJsonLightContextUriParser(model, contextUri);
