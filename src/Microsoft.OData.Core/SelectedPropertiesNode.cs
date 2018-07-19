@@ -483,7 +483,7 @@ namespace Microsoft.OData
         {
             IEnumerable<string> dynamicProperties = Enumerable.Empty<string>();
 
-            if (structuredType.IsOpen && this.selectedProperties != null && this.selectedProperties.Count > 0)
+            if ( this.selectedProperties != null && this.selectedProperties.Count > 0)
             {
                 dynamicProperties = this.selectedProperties.Select(
                     prop => structuredType.FindProperty(prop) == null

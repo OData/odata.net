@@ -1032,8 +1032,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Person", StringComparison.Ordinal));
                 person.Should().NotBeNull();
 
-                // Verify that unknown property doesn't cause anomaly and is not restored.
-                person.Properties.Any(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Should().BeFalse();
+                // Verify that unknown property doesn't cause anomaly. And it is restored only when omit-values=nulls is specified.
+                if (bNullValuesOmitted)
+                {
+                    person.Properties.Single(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Value
+                        .Should().BeNull();
+                }
+                else
+                {
+                    person.Properties.Any(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Should().BeFalse();
+                }
 
                 person.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
                     .Value.Should().Be(0);
@@ -1092,7 +1100,18 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             ODataResource edu =
                 entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
             edu.Should().NotBeNull();
-            edu.Properties.Any(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Should().BeFalse();
+
+            // Verify that unknown property doesn't cause anomaly. And it is restored only when omit-values=nulls is specified.
+            if (bNullValuesOmitted)
+            {
+                edu.Properties.Single(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Value
+                    .Should().BeNull();
+            }
+            else
+            {
+                edu.Properties.Any(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal))
+                    .Should().BeFalse();
+            }
 
             edu.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.Ordinal))
                 .Value.Should().Be(1);
@@ -1109,6 +1128,54 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             // not selected property should not be restored.
             edu.Properties.Any(s => string.Equals(s.Name, "Campuses", StringComparison.Ordinal)).Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadingUnknownPropertyOfNonOpenTypeShouldWork(bool bNullValuesOmitted)
+        {
+            EdmEntityType entityType;
+            EdmEntitySet entitySet;
+            EdmModel model = BuildEdmModelForOmittedNullValuesTestCases(out entityType, out entitySet);
+
+            // null-able property Height is not selected, thus should not be restored.
+            // null-able property Address is selected, thus should be restored.
+            // Property Education is null-able.
+            const string payloadWithSelectedPropertiesPartialSubTreeInQueryOption = @"{
+                    ""@odata.context"":""http://www.example.com/$metadata#EntityNs.MyContainer.People(Id,%20Education/Id,%20Education/SchoolName,%20Education/UnknownPropX,%20Address)/$entity"",
+                    ""@odata.id"":""http://mytest"",
+                    ""Id"":0,
+                    ""Education"":{""Id"":1, ""UnknownPropX"": ""pX""}
+                }";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            List<ODataNestedResourceInfo> nestedResourceInfos = new List<ODataNestedResourceInfo>();
+            this.ReadEntryPayload(model, payloadWithSelectedPropertiesPartialSubTreeInQueryOption, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            nestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                nullValuesOmitted: bNullValuesOmitted);
+
+            // Education
+            ODataResource edu =
+                entries.FirstOrDefault(s => string.Equals(s.TypeName, "NS.Edu", StringComparison.Ordinal));
+            edu.Should().NotBeNull();
+
+            // Verify that unknown property on non-open type doesn't cause anomaly.
+            edu.Properties.Single(s => string.Equals(s.Name, "UnknownPropX", StringComparison.Ordinal)).Value
+                .Should().Equals("pX");
         }
 
         [Fact]

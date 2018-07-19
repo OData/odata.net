@@ -2286,7 +2286,7 @@ namespace Microsoft.OData.JsonLight
 
                         if (resourceState.SelectedProperties == SelectedPropertiesNode.EntireSubtree)
                         {
-                            selectedProperties = GetSelfAndBaseTypeProperties(edmStructuredType);
+                            selectedProperties = edmStructuredType.Properties();
                         }
                         else
                         {
@@ -2294,9 +2294,15 @@ namespace Microsoft.OData.JsonLight
                            selectedProperties = resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType);
                         }
 
-                        // All dynamic properties: null value restoration.
+                        // All dynamic properties: null value restoration for properties that are not present.
                         foreach (string name in resourceState.SelectedProperties.GetSelectedDynamicProperties(edmStructuredType))
                         {
+                            if (resource.Properties.Any(p => p.Name.Equals(name, StringComparison.Ordinal))
+                                || resourceState.NavigationPropertiesRead.Contains(name))
+                            {
+                                continue;
+                            }
+
                             RestoreNullODataProperty(name, resourceState);
                         }
 
@@ -2353,21 +2359,6 @@ namespace Microsoft.OData.JsonLight
                 resource.Properties =
                     resource.Properties.Concat(new List<ODataProperty>() { property });
             }
-        }
-
-        /// <summary>
-        /// Get all properties defined by the EDM structural type and its base types.
-        /// </summary>
-        /// <param name="edmStructuredType">The EDM structural type.</param>
-        /// <returns>All the properties of this type.</returns>
-        private static IEnumerable<IEdmProperty> GetSelfAndBaseTypeProperties(IEdmStructuredType edmStructuredType)
-        {
-            if (edmStructuredType == null)
-            {
-                return Enumerable.Empty<IEdmProperty>();
-            }
-
-            return edmStructuredType.DeclaredProperties.Concat(GetSelfAndBaseTypeProperties(edmStructuredType.BaseType));
         }
 
         /// <summary>
