@@ -65,7 +65,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="needParseFragment">Whether the fragment after $metadata should be parsed, if set to false, only MetadataDocumentUri is parsed.</param>
         /// <param name="throwIfMetadataConflict">Whether to throw if a type specified in the ContextUri is not found in metadata.</param>
         /// <param name="baseUri">Optional value (with default value of null) of base Uri used for resolving the context url.
-        /// It should be a non-null value when resolving a top-level relative context Uri.
+        /// It should be a non-null value when resolving relative context Uri.
         /// </param>
         /// <returns>The result from parsing the context URI.</returns>
         internal static ODataJsonLightContextUriParseResult Parse(
