@@ -13,7 +13,7 @@ namespace Microsoft.OData.Tests.Nuget.Core
 
     public class CoreLibTest
     {
-        static Uri baseUri = new Uri("http://services.odata.org/V4/(S(f1yueljyzoy0bfv5deqdqkdq))/TrippinServiceRW/");
+        static Uri baseUri = new Uri("https://services.odata.org/V4/(S(f1yueljyzoy0bfv5deqdqkdq))/TrippinServiceRW/");
         static string nameSpace = "Microsoft.OData.SampleService.Models.TripPin";
         static IEdmModel Model { get; set; }
 
@@ -34,8 +34,8 @@ namespace Microsoft.OData.Tests.Nuget.Core
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = baseUri;
 
-            var orderType = Model.FindDeclaredType(nameSpace + ".Person") as IEdmEntityType;
-            var orderSet = Model.EntityContainer.FindEntitySet("People");
+            var personType = Model.FindDeclaredType(nameSpace + ".Person") as IEdmEntityType;
+            var people = Model.EntityContainer.FindEntitySet("People");
 
             var requestMessage = new HttpWebRequestMessage(new Uri(settings.BaseUri + "People"));
             requestMessage.SetHeader("Content-Type", "application/json");
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.Nuget.Core
             requestMessage.Method = "POST";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataResourceWriter(orderSet, orderType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(people, personType);
                 odataWriter.WriteStart(personEntry);
                 odataWriter.WriteEnd();
             }
