@@ -280,10 +280,9 @@ this.State == ODataParameterReaderState.Collection,
                     // Note that the binding parameter will be specified on the Uri rather than the payload, skip the binding parameter.
                     foreach (IEdmOperationParameter parameter in this.Operation.Parameters.Skip(this.Operation.IsBound ? 1 : 0))
                     {
-                        bool isOptionalPameter = parameter is IEdmOptionalParameter;
-                        if (!isOptionalPameter)
+                        // only check the non-optional parameter
+                        if (!(parameter is IEdmOptionalParameter))
                         {
-                            // only check the non-optional parameter
                             if (!this.parametersRead.Contains(parameter.Name) && !this.inputContext.EdmTypeResolver.GetParameterType(parameter).IsNullable)
                             {
                                 missingParameters.Add(parameter.Name);
