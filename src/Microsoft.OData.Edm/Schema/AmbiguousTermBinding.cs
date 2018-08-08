@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a name binding to more than one item.
     /// </summary>
-    internal class AmbiguousTermBinding : AmbiguousBinding<IEdmTerm>, IEdmTerm
+    internal class AmbiguousTermBinding : AmbiguousBinding<IEdmTerm>, IEdmTerm, IEdmFullNamedElement
     {
         private readonly IEdmTerm first;
         private readonly string fullName;

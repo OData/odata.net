@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlEnumType.
     /// </summary>
-    internal class CsdlSemanticsEnumTypeDefinition : CsdlSemanticsTypeDefinition, IEdmEnumType
+    internal class CsdlSemanticsEnumTypeDefinition : CsdlSemanticsTypeDefinition, IEdmEnumType, IEdmFullNamedElement
     {
         private readonly string fullName;
         private readonly CsdlEnumType enumeration;

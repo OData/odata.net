@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Represents information about an EDM operation that failed to resolve.
     /// </summary>
-    internal class UnresolvedOperation : BadElement, IEdmOperation, IUnresolvedElement
+    internal class UnresolvedOperation : BadElement, IEdmOperation, IUnresolvedElement, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

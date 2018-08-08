@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
-    internal class AmbiguousEntityContainerBinding : AmbiguousBinding<IEdmEntityContainer>, IEdmEntityContainer
+    internal class AmbiguousEntityContainerBinding : AmbiguousBinding<IEdmEntityContainer>, IEdmEntityContainer, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string fullName;

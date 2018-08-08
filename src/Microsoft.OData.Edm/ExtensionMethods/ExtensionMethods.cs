@@ -1383,7 +1383,23 @@ namespace Microsoft.OData.Edm
         public static string FullName(this IEdmSchemaElement element)
         {
             EdmUtil.CheckArgumentNull(element, "element");
-            return element.FullName;
+            if (element.Name == null)
+            {
+                return string.Empty;
+            }
+
+            if (element.Namespace == null)
+            {
+                return element.Name;
+            }
+
+            IEdmFullNamedElement fullNamedElement = element as IEdmFullNamedElement;
+            if (fullNamedElement != null)
+            {
+                return fullNamedElement.FullName;
+            }
+
+            return element.Namespace + "." + element.Name;
         }
 
         /// <summary>

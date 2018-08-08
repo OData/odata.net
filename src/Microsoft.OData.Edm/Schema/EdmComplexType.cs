@@ -10,7 +10,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a definition of an EDM complex type.
     /// </summary>
-    public class EdmComplexType : EdmStructuredType, IEdmComplexType
+    public class EdmComplexType : EdmStructuredType, IEdmComplexType, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

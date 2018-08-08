@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM entity container.
     /// </summary>
-    internal class BadEntityContainer : BadElement, IEdmEntityContainer
+    internal class BadEntityContainer : BadElement, IEdmEntityContainer, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

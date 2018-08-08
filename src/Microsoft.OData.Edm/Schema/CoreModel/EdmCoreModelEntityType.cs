@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The built-in Edm.EntityType abstract type in the core model.
     /// </summary>
-    internal sealed class EdmCoreModelEntityType : EdmType, IEdmEntityType, IEdmCoreModelElement
+    internal sealed class EdmCoreModelEntityType : EdmType, IEdmEntityType, IEdmCoreModelElement, IEdmFullNamedElement
     {
         /// <summary>
         /// The core Edm.EntityType singleton.

@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents the definition of an Edm enumeration type.
     /// </summary>
-    public class EdmEnumType : EdmType, IEdmEnumType
+    public class EdmEnumType : EdmType, IEdmEnumType, IEdmFullNamedElement
     {
         private readonly IEdmPrimitiveType underlyingType;
         private readonly string namespaceName;

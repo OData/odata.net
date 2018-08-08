@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// <summary>
     /// Represents an EDM term.
     /// </summary>
-    public class EdmTerm : EdmNamedElement, IEdmTerm
+    public class EdmTerm : EdmNamedElement, IEdmTerm, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string fullName;

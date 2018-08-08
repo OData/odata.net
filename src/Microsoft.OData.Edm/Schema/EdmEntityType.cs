@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a definition of an EDM entity type.
     /// </summary>
-    public class EdmEntityType : EdmStructuredType, IEdmEntityType
+    public class EdmEntityType : EdmStructuredType, IEdmEntityType, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

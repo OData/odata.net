@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents an EDM operation.
     /// </summary>
-    public abstract class EdmOperation : EdmNamedElement, IEdmOperation
+    public abstract class EdmOperation : EdmNamedElement, IEdmOperation, IEdmFullNamedElement
     {
         private readonly string fullName;
         private readonly List<IEdmOperationParameter> parameters = new List<IEdmOperationParameter>();

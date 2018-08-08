@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlEntityContainer.
     /// </summary>
-    internal class CsdlSemanticsEntityContainer : CsdlSemanticsElement, IEdmEntityContainer, IEdmCheckable
+    internal class CsdlSemanticsEntityContainer : CsdlSemanticsElement, IEdmEntityContainer, IEdmCheckable, IEdmFullNamedElement
     {
         private readonly string fullName;
         private readonly CsdlEntityContainer entityContainer;

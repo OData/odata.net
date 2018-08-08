@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM primitive type definition.
     /// </summary>
-    internal class BadPrimitiveType : BadType, IEdmPrimitiveType
+    internal class BadPrimitiveType : BadType, IEdmPrimitiveType, IEdmFullNamedElement
     {
         private readonly EdmPrimitiveTypeKind primitiveKind;
         private readonly string name;

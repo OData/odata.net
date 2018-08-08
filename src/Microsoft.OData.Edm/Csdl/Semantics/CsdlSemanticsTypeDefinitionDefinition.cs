@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlTypeDefinition.
     /// </summary>
-    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinition
+    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinition, IEdmFullNamedElement
     {
         private readonly CsdlSemanticsSchema context;
         private readonly CsdlTypeDefinition typeDefinition;

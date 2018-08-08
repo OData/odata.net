@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents an EDM entity container.
     /// </summary>
-    public class EdmEntityContainer : EdmElement, IEdmEntityContainer
+    public class EdmEntityContainer : EdmElement, IEdmEntityContainer, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

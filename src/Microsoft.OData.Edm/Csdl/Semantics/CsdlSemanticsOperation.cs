@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for a CsdlOperation
     /// </summary>
-    internal abstract class CsdlSemanticsOperation : CsdlSemanticsElement, IEdmOperation
+    internal abstract class CsdlSemanticsOperation : CsdlSemanticsElement, IEdmOperation, IEdmFullNamedElement
     {
         private readonly string fullName;
         private readonly CsdlOperation operation;

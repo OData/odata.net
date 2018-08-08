@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM enumeration type.
     /// </summary>
-    internal class BadEnumType : BadType, IEdmEnumType
+    internal class BadEnumType : BadType, IEdmEnumType, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

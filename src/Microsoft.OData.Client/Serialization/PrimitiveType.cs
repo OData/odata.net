@@ -10,8 +10,9 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.Spatial;
+
     using Microsoft.OData.Edm;
+    using Microsoft.Spatial;
 
     /// <summary>
     /// Represent a Primitive Type on the client
@@ -448,7 +449,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Represents a definition of an EDM primitive type.
         /// </summary>
-        private class ClientEdmPrimitiveType : EdmType, IEdmPrimitiveType
+        private class ClientEdmPrimitiveType : EdmType, IEdmPrimitiveType, IEdmFullNamedElement
         {
             /// <summary>
             /// Namespace of the type.

@@ -13,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM named structured type definition.
     /// </summary>
-    internal abstract class BadNamedStructuredType : BadStructuredType, IEdmSchemaElement
+    internal abstract class BadNamedStructuredType : BadStructuredType, IEdmSchemaElement, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

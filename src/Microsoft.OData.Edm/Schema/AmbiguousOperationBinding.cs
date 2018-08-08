@@ -8,10 +8,10 @@ using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm
 {
-    internal class AmbiguousOperationBinding : AmbiguousBinding<IEdmOperation>, IEdmOperation
+    internal class AmbiguousOperationBinding : AmbiguousBinding<IEdmOperation>, IEdmOperation, IEdmFullNamedElement
     {
-        private IEdmOperation first;
         private readonly string fullName;
+        private IEdmOperation first;
 
         public AmbiguousOperationBinding(IEdmOperation first, IEdmOperation second)
             : base(first, second)

@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Common base class for definitions of EDM structured types.
     /// </summary>
-    public sealed class EdmUntypedStructuredType : EdmStructuredType, IEdmStructuredType, IEdmSchemaElement, IEdmSchemaType
+    public sealed class EdmUntypedStructuredType : EdmStructuredType, IEdmStructuredType, IEdmSchemaElement, IEdmSchemaType, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// Provides semantics for a CsdlTerm.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("CsdlSemanticsTerm({Name})")]
-    internal class CsdlSemanticsTerm : CsdlSemanticsElement, IEdmTerm
+    internal class CsdlSemanticsTerm : CsdlSemanticsElement, IEdmTerm, IEdmFullNamedElement
     {
         protected readonly CsdlSemanticsSchema Context;
         private readonly string fullName;

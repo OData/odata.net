@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents the definition of an Edm type definition.
     /// </summary>
-    public class EdmTypeDefinition : EdmType, IEdmTypeDefinition
+    public class EdmTypeDefinition : EdmType, IEdmTypeDefinition, IEdmFullNamedElement
     {
         private readonly IEdmPrimitiveType underlyingType;
         private readonly string namespaceName;

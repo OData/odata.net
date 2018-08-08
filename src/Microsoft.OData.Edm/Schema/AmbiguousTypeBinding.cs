@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a name binding to more than one item.
     /// </summary>
-    internal class AmbiguousTypeBinding : AmbiguousBinding<IEdmSchemaType>, IEdmSchemaType
+    internal class AmbiguousTypeBinding : AmbiguousBinding<IEdmSchemaType>, IEdmSchemaType, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string fullName;

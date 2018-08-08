@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The built-in Edm.Untyped type in the core model.
     /// </summary>
-    internal sealed class EdmCoreModelUntypedType : EdmType, IEdmUntypedType, IEdmCoreModelElement
+    internal sealed class EdmCoreModelUntypedType : EdmType, IEdmUntypedType, IEdmCoreModelElement, IEdmFullNamedElement
     {
         /// <summary>
         /// The core Edm.Untyped singleton.

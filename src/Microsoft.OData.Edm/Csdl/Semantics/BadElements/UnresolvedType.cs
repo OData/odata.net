@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Represents information about an EDM type definition that failed to resolve.
     /// </summary>
-    internal class UnresolvedType : BadType, IEdmSchemaType, IUnresolvedElement
+    internal class UnresolvedType : BadType, IEdmSchemaType, IUnresolvedElement, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

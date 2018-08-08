@@ -8,7 +8,7 @@ using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
-    internal class UnresolvedVocabularyTerm : EdmElement, IEdmTerm, IUnresolvedElement
+    internal class UnresolvedVocabularyTerm : EdmElement, IEdmTerm, IUnresolvedElement, IEdmFullNamedElement
     {
         private readonly UnresolvedTermTypeReference type = new UnresolvedTermTypeReference();
         private readonly string namespaceName;

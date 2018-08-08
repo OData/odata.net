@@ -7,12 +7,13 @@
 namespace Microsoft.OData.Edm
 {
     using System.Collections.Generic;
+
     using Microsoft.OData.Edm.Validation;
 
     /// <summary>
     /// Represents a semantically invalid EDM type definition.
     /// </summary>
-    internal class BadTypeDefinition : BadType, IEdmTypeDefinition
+    internal class BadTypeDefinition : BadType, IEdmTypeDefinition, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;

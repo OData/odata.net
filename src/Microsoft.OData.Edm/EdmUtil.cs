@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Vocabularies;
@@ -487,6 +488,9 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets full name for the schema element with the provided namespace and name
         /// </summary>
+        /// <param name="elementNamespace">Namespace of the element</param>
+        /// <param name="elementName">The element name</param>
+        /// <returns>The full name of the element</returns>
         internal static string GetFullNameForSchemaElement(string elementNamespace, string elementName)
         {
             if (elementName == null)
