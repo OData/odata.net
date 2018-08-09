@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Vocabularies;
@@ -275,6 +274,13 @@ namespace Microsoft.OData.Edm
                 {
                     namespaceName = String.Empty;
                     name = qualifiedName;
+
+                    // For backwards compatibility reasons, if name is empty and namespace is empty set the full name to "."
+                    if (name.Length == 0)
+                    {
+                        fullName = ".";
+                    }
+
                     return false;
                 }
 

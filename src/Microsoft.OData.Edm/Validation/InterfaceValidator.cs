@@ -400,6 +400,14 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
+        private sealed class VisitorOfIEdmFullNamedElement : VisitorOfT<IEdmFullNamedElement>
+        {
+            protected override IEnumerable<EdmError> VisitT(IEdmFullNamedElement element, List<object> followup, List<object> references)
+            {
+                return element.Name != null ? null : new EdmError[] { CreatePropertyMustNotBeNullError(element, "Name") };
+            }
+        }
+
         private sealed class VisitorOfIEdmNamedElement : VisitorOfT<IEdmNamedElement>
         {
             protected override IEnumerable<EdmError> VisitT(IEdmNamedElement element, List<object> followup, List<object> references)
