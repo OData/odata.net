@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Vocabularies;
@@ -262,12 +263,12 @@ namespace Microsoft.OData.Edm
 
         internal static bool TryGetNamespaceNameFromQualifiedName(string qualifiedName, out string namespaceName, out string name, out string fullName)
         {
+            bool foundNamespace;
+
             // Qualified name can be a operation import name which is separated by '/'
             int lastSlash = qualifiedName.LastIndexOf('/');
             if (lastSlash < 0)
             {
-                fullName = qualifiedName;
-
                 // Not a OperationImport
                 int lastDot = qualifiedName.LastIndexOf('.');
                 if (lastDot < 0)
@@ -275,24 +276,24 @@ namespace Microsoft.OData.Edm
                     namespaceName = String.Empty;
                     name = qualifiedName;
 
-                    // For backwards compatibility reasons, if name is empty and namespace is empty set the full name to "."
-                    if (name.Length == 0)
-                    {
-                        fullName = ".";
-                    }
-
-                    return false;
+                    foundNamespace = false;
                 }
-
-                namespaceName = qualifiedName.Substring(0, lastDot);
-                name = qualifiedName.Substring(lastDot + 1);
-                return true;
+                else
+                {
+                    namespaceName = qualifiedName.Substring(0, lastDot);
+                    name = qualifiedName.Substring(lastDot + 1);
+                    foundNamespace = true;
+                }
+            }
+            else
+            {
+                foundNamespace = true;
+                namespaceName = qualifiedName.Substring(0, lastSlash);
+                name = qualifiedName.Substring(lastSlash + 1);
             }
 
-            namespaceName = qualifiedName.Substring(0, lastSlash);
-            name = qualifiedName.Substring(lastSlash + 1);
             fullName = EdmUtil.GetFullNameForSchemaElement(namespaceName, name);
-            return true;
+            return foundNamespace;
         }
 
         internal static string FullyQualifiedName(IEdmVocabularyAnnotatable element)
