@@ -348,7 +348,18 @@ namespace Microsoft.OData.UriParser
             {
             }
 
-            bool matched = this.CurrentToken.Kind == ExpressionTokenKind.Identifier && this.PeekNextToken().Kind == ExpressionTokenKind.OpenParen;
+            bool matched = false;
+            if (this.CurrentToken.Kind == ExpressionTokenKind.Identifier)
+            {
+                ExpressionTokenKind nextKind = this.PeekNextToken().Kind;
+
+                // Special case for 'in' operator: It is legal to have a custom function with the same name as an operator.
+                // If the current identifier is 'in', PeekNextToken() will return ParenthesesExpression instead of OpenParen.
+                // Nevertheless, we should still treat it as a function.
+                matched =
+                    nextKind == ExpressionTokenKind.OpenParen ||
+                    (nextKind == ExpressionTokenKind.ParenthesesExpression && this.CurrentToken.Text == ExpressionConstants.KeywordIn);
+            }
 
             if (matched)
             {

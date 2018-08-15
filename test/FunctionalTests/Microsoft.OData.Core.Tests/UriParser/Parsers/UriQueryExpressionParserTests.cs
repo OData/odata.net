@@ -64,6 +64,16 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void QualifiedFunctionNamedAfterOperatorShouldParseSuccessfully()
+        {
+            this.testSubject.ParseFilter("fq.ns.in()").ShouldBeFunctionCallToken("fq.ns.in");
+            this.testSubject.ParseFilter("fq.ns.eq()").ShouldBeFunctionCallToken("fq.ns.eq");
+            this.testSubject.ParseFilter("fq.ns.ne()").ShouldBeFunctionCallToken("fq.ns.ne");
+            this.testSubject.ParseFilter("fq.ns.any()").ShouldBeFunctionCallToken("fq.ns.any");
+            this.testSubject.ParseFilter("fq.ns.all()").ShouldBeFunctionCallToken("fq.ns.all");
+        }
+
+        [Fact]
         public void QualifiedFunctionNameWithParameterShouldParseSuccessfully()
         {
             this.testSubject.ParseFilter("fq.ns.container.function(arg=1)")
