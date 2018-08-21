@@ -29,7 +29,7 @@ namespace Microsoft.OData
         public ODataMessageQuotas()
         {
             this.maxPartsPerBatch = ODataConstants.DefaultMaxPartsPerBatch;
-            this.maxOperationsPerChangeset = ODataConstants.DefulatMaxOperationsPerChangeset;
+            this.maxOperationsPerChangeset = ODataConstants.DefaultMaxOperationsPerChangeset;
             this.maxNestingDepth = ODataConstants.DefaultMaxRecursionDepth;
             this.maxReceivedMessageSize = ODataConstants.DefaultMaxReadMessageSize;
         }

@@ -121,7 +121,7 @@ namespace Microsoft.OData
         internal const int DefaultMaxPartsPerBatch = 100;
 
         /// <summary>The default maximum number of operations per changeset.</summary>
-        internal const int DefulatMaxOperationsPerChangeset = 1000;
+        internal const int DefaultMaxOperationsPerChangeset = 1000;
 
         /// <summary>The '/' (forward slash) which is the URI segment separator.</summary>
         internal const string UriSegmentSeparator = "/";
