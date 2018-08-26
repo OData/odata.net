@@ -25,7 +25,7 @@
     project: sln\OData.Net45.sln
     verbosity: minimal
   test_script:
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" "-targetargs:"D:\odata.net\bin\AnyCPU\Debug\Test\Desktop\Microsoft.OData.Client.Tests.dll -noshadow" -filter:"+[*]* -[Microsoft.OData.Client.Tests]*" -output:".\coverage.xml"
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"D:\odata.net\bin\AnyCPU\Debug\Test\Desktop\Microsoft.OData.Client.Tests.dll -noshadow" -filter:"+[*]* -[Microsoft.OData.Client.Tests]*" -output:".\coverage.xml"
   after_test:
   - ps: |
       $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
