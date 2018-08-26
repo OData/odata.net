@@ -19,7 +19,7 @@
   - choco install "msbuild-sonarqube-runner" -y
   - choco install opencover.portable
   before_build:
-  - ps: .paket\paket.exe restore
+  #- ps: .paket\paket.exe restore
   - MSBuild.SonarQube.Runner.exe begin /k:"Odata" /n:"Odata" /v:"1.0"
   build:
     project: sln\OData.Net45.sln
