@@ -1,0 +1,44 @@
+# configuration for master/CI branch
+-
+  branches:
+    only:
+      - demo
+
+  #os:
+  image: Visual Studio 2017
+  configuration: Debug
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '2.5.0.{build}'
+    assembly_file_version: '2.5.0.{build}'
+    assembly_informational_version: '2.5.0.{build}'
+  environment:
+    RestorePackages: false
+  install:
+  - choco install "msbuild-sonarqube-runner" -y
+  - choco install opencover.portable
+  before_build:
+  - ps: .paket\paket.exe restore
+  - MSBuild.SonarQube.Runner.exe begin /k:"Odata" /n:"Odata" /v:"1.0"
+  build:
+    project: sln\OData.Net45.sln
+    verbosity: minimal
+  test_script:
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" "-targetargs:"D:\odata.net\bin\AnyCPU\Debug\Test\Desktop\Microsoft.OData.Client.Tests.dll -noshadow" -filter:"+[*]* -[Microsoft.OData.Client.Tests]*" -output:".\coverage.xml"
+  after_test:
+  - ps: |
+      $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
+      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+      bash codecov.sh -f "coverage.xml"
+  after_build:
+  - msbuild "sln\OData.Net45.sln" /t:Rebuild
+  - MSBuild.SonarQube.Runner.exe end /d:sonar.login="705f88ba464efc4e93f916c7ce25cfdd183dc1e1"
+  #- ps: nuget pack MaterialDesignThemes.nuspec -Version $env:APPVEYOR_BUILD_VERSION
+  #- ps: 7z a Demo.2.5.0.$env:APPVEYOR_BUILD_NUMBER.zip MainDemo.Wpf\bin\**\*.*
+  #artifacts:
+  #- path: '**\MaterialDesignThemes.*.nupkg'
+  #- path: Demo.*.zip
+
+  version: 2.5.0-ci{build}
+
