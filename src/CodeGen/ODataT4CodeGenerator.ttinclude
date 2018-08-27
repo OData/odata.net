@@ -48,7 +48,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             UseDataServiceCollection = this.UseDataServiceCollection,
             TargetLanguage = this.TargetLanguage,
             EnableNamingAlias = this.EnableNamingAlias,
-			TempFilePath = this.TempFilePath,
+            TempFilePath = this.TempFilePath,
             IgnoreUnexpectedElementsAndAttributes = this.IgnoreUnexpectedElementsAndAttributes
         };
     }
