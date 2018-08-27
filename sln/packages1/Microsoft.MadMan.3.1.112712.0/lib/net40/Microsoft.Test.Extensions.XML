@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Test.Extensions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Test.Extensions.AppDomainExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:System.AppDomain"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.AppDomainExtensions.LocateType(System.AppDomain,System.String)">
+            <summary>
+            Gets the <see cref="T:System.Type"/> for the full type name <paramref name="fullTypeName"/> by
+            inspecting all types in all loaded assemblies in the specified application domain <paramref name="applicationDomain"/>.
+            </summary>
+            <param name="applicationDomain">The application domain.</param>
+            <param name="fullTypeName">Full name of the type to locate.</param>
+            <returns>An instance of <see cref="T:System.Type"/> or <c>null</c>.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.BooleanExtensions">
+            <summary>
+            Contains extensions methods for the <see cref="T:System.Boolean"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.BooleanExtensions.ToReadableString(System.Boolean)">
+            <summary>
+            Converts a boolean value into a human readable string. Typically, <c>false</c> is mapped to the string &quot;no&quot;
+            and <c>true</c> is mapped to the string &quot;yes&quot;
+            </summary>
+            <param name="value">The boolean value to retrieve a human readable string for.</param>
+            <returns>A human readable string for a boolean value.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.ByteExtensions">
+            <summary>
+            A class containing extension methods for the <see cref="T:System.Byte"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ByteExtensions.Deserialize(System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Deserializes the specified array that is assumed to be the result of a previous serialization using the
+            default serialization mechanism.
+            </summary>
+            <param name="value">The byte array to deserialize.</param>
+            <returns>An object instance.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ByteExtensions.Deserialize``1(System.Collections.Generic.IEnumerable{System.Byte})">
+            <summary>
+            Deserializes the specified array that is assumed to be the result of a previous serialization using the
+            default serialization mechanism.
+            </summary>
+            <typeparam name="T">The type to case the deserialized object instance to.</typeparam>
+            <param name="value">The byte array to deserialize.</param>
+            <returns>An object instance.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.GenericIDictionaryExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:System.Collections.Generic.IDictionary{T,K}"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.GenericIDictionaryExtensions.ValueOrDefault``3(System.Collections.Generic.IDictionary{``1,``2},``1)">
+            <summary>
+            Retrieves the value for the specified key from the specified <see cref="T:System.Collections.Generic.IDictionary{T,K}"/>.
+            </summary>
+            <typeparam name="T">The type to cast the value to.</typeparam>
+            <typeparam name="K">The type of the keys in <paramref name="map"/>.</typeparam>
+            <typeparam name="V">The type of the values in <paramref name="map"/>.</typeparam>
+            <param name="map">The map to retrieve the value from.</param>
+            <param name="key">The key to retrieve the value for.</param>
+            <returns>
+            The value for the specified key if it is found; otherwise, the default value for the type <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.ICollectionExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:System.Collections.Generic.ICollection{T}"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ICollectionExtensions.AddRange``2(System.Collections.Generic.ICollection{``0},``1[])">
+            <summary>
+            Inserts each of the items in <paramref name="items"/> into the target collection <paramref name="collection"/>.
+            </summary>
+            <remarks>
+            This operation is linear in the number of items in the source enumeration <paramref name="items"/>.
+            </remarks>
+            <typeparam name="T">The types of items in the target collection.</typeparam>
+            <typeparam name="TD">The type of items in the source enumeration.</typeparam>
+            <param name="collection">The collection to insert into.</param>
+            <param name="items">The items to insert.</param>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ICollectionExtensions.AddRange``2(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Inserts each of the items in <paramref name="items"/> into the target collection <paramref name="collection"/>.
+            </summary>
+            <remarks>
+            This operation is linear in the number of items in the source enumeration <paramref name="items"/>.
+            </remarks>
+            <typeparam name="T">The types of items in the target collection.</typeparam>
+            <typeparam name="TD">The type of items in the source enumeration.</typeparam>
+            <param name="collection">The collection to insert into.</param>
+            <param name="items">The items to insert.</param>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ICollectionExtensions.IsEmpty``1(System.Collections.Generic.ICollection{``0})">
+            <summary>
+            Determines whether the specified collection is empty.
+            </summary>
+            <typeparam name="T">The type of the items in the collection <paramref name="items"/>.</typeparam>
+            <param name="items">The items.</param>
+            <returns>
+            	<c>true</c> if the specified collection is empty; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.IEnumerableExtensions">
+            <summary>
+            Contains extensions for the <see cref="T:System.Collections.Generic.IEnumerable{T}"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.IEnumerableExtensions.ToCsvString``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a comma separated list of the string representations of a sequence of items.
+            </summary>
+            <typeparam name="T">The type of items in the enumeration <paramref name="items"/>.</typeparam>
+            <param name="items">The items.</param>
+            <returns>An instance of <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.IEnumerableExtensions.ToCsvString``1(System.Collections.Generic.IEnumerable{``0},System.Globalization.CultureInfo)">
+            <summary>
+            Returns a comma separated list of the string representations of a sequence of items.
+            </summary>
+            <typeparam name="T">The type of items in the enumeration <paramref name="items"/>.</typeparam>
+            <param name="items">The items.</param>
+            <param name="culture">The culture.</param>
+            <returns>
+            An instance of <see cref="T:System.String"/>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.IListExtensions">
+            <summary>
+            Contains extensions methods for the <see cref="T:System.Collections.Generic.IList{T}"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.IListExtensions.IsInRange``1(System.Collections.Generic.IList{``0},System.Int32)">
+            <summary>
+            Determines whether <paramref name="index"/> is a valid index for use with <paramref name="list"/>.
+            </summary>
+            <typeparam name="T">The type of the items in <paramref name="list"/>.</typeparam>
+            <param name="list">The list.</param>
+            <param name="index">The index to check.</param>
+            <returns>
+            	<c>true</c> if <paramref name="index"/> is a valid item index for <paramref name="list"/>;
+            otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.IDictionaryExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:System.Collections.IDictionary"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.IDictionaryExtensions.ValueOrDefault``1(System.Collections.IDictionary,System.Object)">
+            <summary>
+            Retrieves the value for the specified key from the specified <see cref="T:System.Collections.IDictionary"/>.
+            </summary>
+            <typeparam name="T">The type to cast the value to.</typeparam>
+            <param name="map">The map to retrieve the value from.</param>
+            <param name="key">The key to retrieve the value for.</param>
+            <returns>
+            The value for the specified key if it is found; otherwise, the default value for the type <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.ExceptionExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:System.Exception"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ExceptionExtensions.Flatten(System.Exception)">
+            <summary>
+            Retrieves all exceptions starting from the specified exception and including
+            all inner exceptions.
+            </summary>
+            <param name="exception">The topmost exception.</param>
+            <returns>A <see cref="T:System.Collections.Generic.ICollection`1"/> of <see cref="T:System.Exception"/>
+            instances.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="exception"/> is a <c>null</c>
+            reference.</exception>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.ObjectExtensions">
+            <summary>
+            A class containing extension methods for the <see cref="T:System.Object"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ObjectExtensions.Serialize(System.Object)">
+            <summary>
+            Serializes the specified instance into a byte array.
+            </summary>
+            <param name="instance">The instance to serialize.</param>
+            <returns>An array of bytes that is the serialized form of the specified instance using the default serialization mechanism.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="instance"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.ObjectExtensions.Invoke(System.Object,System.String,System.Object[])">
+            <summary>
+            Invokes the specified member on the specified object instance using reflection. By default, all
+            visible and non-visible, static and instance members are searched.
+            </summary>
+            <param name="instance">The instance to invoke the member on.</param>
+            <param name="memberName">Name of the member to invoke.</param>
+            <param name="arguments">The arguments to pass.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="instance"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="memberName"/> is <c>null</c> or empty.</exception>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.AssemblyExtensions">
+            <summary>
+            Contains extension methods for the type <see cref="T:System.Reflection.Assembly"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.AssemblyExtensions.GetPath(System.Reflection.Assembly)">
+            <summary>
+            Gets the absolute local path of the location from which the specified assembly 
+            was loaded.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <returns>The local path from where the specified assembly was loaded.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.AssemblyNameComparisonType">
+            <summary>
+            Enumeration to specify how comparisons of <see cref="T:System.Reflection.AssemblyName"/>
+            instances should be performed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Extensions.AssemblyNameComparisonType.None">
+            <summary>The compared objects must match exactly. This is equivalent to invoking <see cref="M:System.Reflection.AssemblyName.Equals"/>.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Extensions.AssemblyNameComparisonType.IgnoreVersion">
+            <summary>Ignore the version number. Indicates that name, culture and token must match.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Extensions.AssemblyNameComparisonType.IgnoreToken">
+            <summary>Ignore the public key token. Indicates that name, version and culture must match.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Extensions.AssemblyNameComparisonType.IgnoreCulture">
+            <summary>Ignore the culture. Indicates that name, version and token must match.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Extensions.AssemblyNameComparisonType.IgnoreArchitecture">
+            <summary>Ignore the processor architecture. Indicates that name, version, token and culture must match.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Extensions.AssemblyNameComparisonType.Standard">
+            <summary>Ignore token and culture. Equivalent to specifying <see cref="F:AssemblyNameComparisonType.IgnoreToken"/> and <see cref="F:AssemblyNameComparisonType.IgnoreCulture"/> and <see cref="F:AssemblyNameComparisonType.IgnoreArchitecture"/>.</summary>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.AssemblyNameExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:System.Reflection.AssemblyName"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.AssemblyNameExtensions.Matches(System.Reflection.AssemblyName,System.Reflection.AssemblyName,Microsoft.Test.Extensions.AssemblyNameComparisonType)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Reflection.AssemblyName"/> is equal to the current <see cref="T:System.Reflection.AssemblyName"/>.
+            </summary>
+            <param name="myName">The assembly name to match with.</param>
+            <param name="otherName">The <see cref="T:System.Reflection.AssemblyName"/> to compare with the current <see cref="T:System.Reflection.AssemblyName"/>.</param>
+            <param name="comparisonType">Type of the comparison.</param>
+            <returns>
+            	<c>true</c> if the specified <see cref="T:System.Reflection.AssemblyName"/> is equal to the current <see cref="T:System.Reflection.AssemblyName"/>; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="otherName"/> parameter is <c>null</c>.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.AssemblyNameExtensions.Equals``1(``0[],``0[])">
+            <summary>
+            Compares the given arrays.
+            </summary>
+            <typeparam name="T">The type of the elements in the array.</typeparam>
+            <param name="left">The left array.</param>
+            <param name="right">The right array.</param>
+            <returns><c>true</c>, if every item in <paramref name="left"/> is equal to the corresponding item in <paramref name="right"/>;<c>false</c>, otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.AssemblyNameExtensions.IsNotSet(Microsoft.Test.Extensions.AssemblyNameComparisonType,Microsoft.Test.Extensions.AssemblyNameComparisonType)">
+            <summary>
+            Determines whether the flag <paramref name="flag"/> is set in the given combination <paramref name="flags"/>.
+            </summary>
+            <param name="flags">The flags combination.</param>
+            <param name="flag">The flag to check for.</param>
+            <returns>
+            	<c>true</c> if the flag <paramref name="flag"/> is set in the given combination <paramref name="flags"/>; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.LogicalCallContextExtensions">
+            <summary>
+            Contains extension methods for the <see cref="T:System.Runtime.Remoting.Messaging.LogicalCallContext"/>
+            type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.LogicalCallContextExtensions.GetDataStore(System.Runtime.Remoting.Messaging.LogicalCallContext)">
+            <summary>
+            Gets the data store that contains the call context properties and their
+            associated values in the logical call context.
+            </summary>
+            <param name="callContext">The logical call context.</param>
+            <returns>A dictionary of key-value pairs found in the logical call context.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.StringExtensions">
+            <summary>
+            Contains extension methods for the type <see cref="T:System.String"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.StringExtensions.Clean(System.String)">
+            <summary>
+            Retrieves a version of the input string <paramref name="value"/> that is either trimmed
+            if the value is not <c>null</c> or <c>null</c> if <paramref name="value"/> is <c>null</c>.
+            </summary>
+            <param name="value">The value.</param>
+            <returns><c>null</c> or the result of invoking <see cref="M:System.String.Trim"/> on <paramref name="value"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.StringExtensions.XmlClean(System.String)">
+            <summary>
+            Retrieves a version of the input string <paramref name="value"/> that is trimmed with non-displayable
+            characters removed if the value is not <c>null</c> or <c>null</c> 
+            if <paramref name="value"/> is <c>null</c>.
+            </summary>
+            <param name="value">The value.</param>
+            <returns><c>null</c> or <paramref name="value"/> with non-displayable characters and consecutive spaces removed.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.TypeExtensions">
+            <summary>
+            Contains extension methods for the the type <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.TypeExtensions.CanBeCreated(System.Type)">
+            <summary>
+            Determines whether instances of the specified type can be instantiated using a default
+            constructor.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>
+            	<c>true</c> if instances of the specified type can be instantiated; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.TypeExtensions.CanBeCreated(System.Type,System.Type[])">
+            <summary>
+            Determines whether instances of the specified type can be instantiated using a public constructor
+            that consumes arguments of the specified type(s).
+            </summary>
+            <param name="type">The type.</param>
+            <param name="argumentTypes">The argument types to match.</param>
+            <returns>
+            	<c>true</c> if instances of the specified type can be instantiated; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.TypeExtensions.GetCommonName(System.Type)">
+            <summary>
+            Gets a commonly used alias for the specified type. 
+            </summary>
+            <remarks>
+            For example, System.Int32 is commonly used as int, while System.String is commonly
+            used as string. This method will map the name of the type to such common names. Otherwise
+            it will return the value of the property <see cref="P:System.Type.Name"/>.
+            </remarks>
+            <param name="type">The type to retrieve the common name for.</param>
+            <returns>A short string that is commonly used as a built in type name.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Extensions.XmlNodeExtensions">
+            <summary>
+            A class containing extension methods for the <see cref="T:System.Xml.XmlNode"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.XmlNodeExtensions.Children(System.Xml.XmlNode,System.String)">
+            <summary>
+            Gets the child nodes for the specified XML node that have the specified local name.
+            </summary>
+            <param name="node">The node to retrieve child nodes from.</param>
+            <param name="localName">The local name of the child nodes to retrieve.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable{T}"/> of <see cref="T:System.Xml.XmlNode"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="node"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="localName"/> is empty or <c>null</c>.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Extensions.XmlNodeExtensions.Children(System.Xml.XmlNode,System.String,System.StringComparison)">
+            <summary>
+            Gets the child nodes for the specified XML node that have the specified local name.
+            </summary>
+            <param name="node">The node to retrieve child nodes from.</param>
+            <param name="localName">The local name of the child nodes to retrieve.</param>
+            <param name="comparisonType">The type of comparison to apply to the local name.</param>
+            <returns>
+            An <see cref="T:System.Collections.Generic.IEnumerable{T}"/> of <see cref="T:System.Xml.XmlNode"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="node"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">If <paramref name="localName"/> is empty or <c>null</c>.</exception>
+        </member>
+    </members>
+</doc>

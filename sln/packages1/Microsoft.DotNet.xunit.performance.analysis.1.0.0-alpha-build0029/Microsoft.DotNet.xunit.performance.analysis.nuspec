@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="2.8.5">
+    <id>Microsoft.DotNet.xunit.performance.analysis</id>
+    <version>1.0.0-alpha-build0029</version>
+    <title>xUnit Performance Analysis tools</title>
+    <authors>ericeil@microsoft.com;pharring@microsoft.com</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Microsoft/xunit-performance/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/xunit-performance</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Contains the tools necessary for analyzing the output of xunit Performance tests (ETL files).</description>
+    <language>en-US</language>
+  </metadata>
+</package>

@@ -1,0 +1,2797 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Test.Validation</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Test.Validation.Conditions.FormattingExtensions">
+            <summary>
+            Contains extension methods various types involved in expressions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FormattingExtensions.ToReadableString(Microsoft.Test.Validation.Operation)">
+            <summary>
+            Gets a <see cref="T:System.String"/> for the specified <see cref="E:Microsoft.Test.Validation.Conditions.Operation"/> 
+            that can be used to represent this operation in a programming language (C#) specific manner.
+            </summary>
+            <param name="operation">The operation.</param>
+            <returns>A programming language specific printable string that has the same meaning as the specified operation.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FormattingExtensions.ToReadableString``1(Microsoft.Test.Validation.ICondition{``0})">
+            <summary>
+            Gets a string that is easier and meaningful for use in logs when an <see cref="T:Microsoft.Test.Validation.ICondition`1"/>
+            instance has to be printed out.
+            </summary>
+            <typeparam name="T">The type of the value that the condition evaluates.</typeparam>
+            <param name="condition">The condition.</param>
+            <returns>A human readable string for use in logs.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FormattingExtensions.ToReadableString``1(Microsoft.Test.Validation.ResultCondition{``0})">
+            <summary>
+            Gets a string that is easier and meaningful for use in logs when an <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/>
+            instance has to be printed out.
+            </summary>
+            <typeparam name="T">The type of the value that the condition evaluates.</typeparam>
+            <param name="condition">The condition.</param>
+            <returns>A human readable string for use in logs.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FormattingExtensions.ToReadableString``1(System.Predicate{``0})">
+            <summary>
+            Gets a string that is easier and meaningful for use in logs when an 
+            <see cref="T:System.Predicate`1"/> instance has to be printed out.
+            </summary>
+            <typeparam name="T">The type of the value that the condition evaluates.</typeparam>
+            <param name="predicate">The predicate.</param>
+            <returns>A human readable string for use in logs.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FormattingExtensions.ToReadableString``1(System.Func{``0,System.Boolean})">
+            <summary>
+            Gets a string that is easier and meaningful for use in logs when an
+            <see cref="T:System.Func`2"/> instance has to be printed out.
+            </summary>
+            <typeparam name="T">The type of the value that the condition evaluates.</typeparam>
+            <param name="func">The <see cref="T:System.Func`2"/> to format.</param>
+            <returns>A human readable string for use in logs.</returns>
+        </member>
+        <member name="T:Microsoft.Test.Validation.IEnumerableConditionExtensions">
+            <summary>
+            Defines extension methods that enable <see cref="T:Microsoft.Test.Validation.Condition`1"/> instances to be used
+            with LINQ on types that implement the <see cref="T:System.Collections.Generic.IEnumerable`1"/> 
+            interface.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.All``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Determines whether all elements of a sequence satisfy a given <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the 
+            elements to apply the Condition to.</param>
+            <param name="condition">The <see cref="T:Microsoft.Test.Validation.Condition`1"/> to be satisfied.</param>
+            <returns><c>true</c> if every element of the source sequence passes the test in the specified Condition, or if the sequence
+            is empty; otherwise <c>false</c>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="source"/> or <paramref name="condition"/>
+            is a <c>null</c> reference.</exception>
+            <remarks>
+            This method does not return all the elements of a sequence. Instead, it determines if all the
+            elements of a sequence satisfy a condition. The enumeration of <paramref name="source"/> is
+            stopped as soon as the result can be determined. 
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Any``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Determines whether any element of a sequence satisfy a condition.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> whose elements to apply the
+            specified condition to.</param>
+            <param name="condition">The <see cref="T:Microsoft.Test.Validation.Condition`1"/> to apply to each element.</param>
+            <returns><c>true</c> if any elements in the source sequence satisfy the specified condition; otherwise <c>false</c>.</returns>
+            <remarks>
+            The method does not return any one element of a sequence. Instead, it determines if any of the elements
+            in a sequence satisfy a condition. The enumeration of <paramref name="source"/> is stopped as soon
+            as the result can be determined. 
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">if <paramref name="source"/> or <paramref name="condition"/>
+            is a <c>null</c> reference.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Count``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Returns a number that represents how many elements in the specified sequence satisfy a 
+            condition.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">A <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains elements to be tested and counted.</param>
+            <param name="condition">The <see cref="T:Microsoft.Test.Validation.Condition`1"/> that must be satisfied.</param>
+            <returns>A number that returns how many elements in the sequence satisfy the condition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="source"/> or <paramref name="condition"/>
+            is a <c>null</c> reference.</exception>
+            <exception cref="T:System.OverflowException">The number of elements in <paramref name="source"/> is larger than <see cref="F:System.Int32.MaxValue"/>.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.First``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Returns the first element in a sequence that satisfies a specified condition.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.</param>
+            <param name="condition">The <see cref="T:Microsoft.Test.Validation.Condition`1"/> which should be satisfied.</param>
+            <returns>The first element in the sequence that satisfies the specified condition.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="source"/> or <paramref name="condition"/>
+            is a <c>null</c> reference</exception>
+            <exception cref="T:System.InvalidOperationException">No element satisfies the <paramref name="condition"/> or 
+            the source sequence is empty.</exception>
+            <remarks>
+            To retrieve a default value when no matching element is found, use the <see cref="M:System.Collections.Generic.IEnumerable{T}.FirstOrDefault"/>
+            method.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.FirstOrDefault``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Returns the first element in a sequence that satisfies a specified condition or a default
+            value if no such element is found.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.</param>
+            <param name="condition">The <see cref="T:Microsoft.Test.Validation.Condition`1"/> which should be satisfied.</param>
+            <returns><c>default(T)</c> if <paramref name="source"/> is empty or if not element in the sequence satisfies the specified condition; otherwise 
+            the first element in <paramref name="source"/> that satisfies <paramref name="condition"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="source"/> or <paramref name="condition"/>
+            is a <c>null</c> reference</exception>
+            <remarks>
+            The default value for reference and nullable types is a <c>null</c> reference.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Last``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Returns the last element of a sequence that satisfies the specified condition.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.</param>
+            <param name="condition">The <see cref="T:Microsoft.Test.Validation.Condition`1"/> that must be satisfied.</param>
+            <returns>The last element in the sequence that satisfies the specified condition.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="condition"/>
+            is a <c>null</c> reference.</exception>
+            <exception cref="T:System.InvalidOperationException">No element satisfies the specified condition or 
+            the source sequence is empty.</exception>
+            <remarks>
+            This method throws an exception if no matching element is found. To return a default value use
+            the <see cref="M:IEnumerable.LastOrDefault"/> method.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.LastOrDefault``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Returns the last element of a sequence that satisfies the specified condition or a default value
+            if no such elements are found.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to return an element from.</param>
+            <param name="condition">The <see cref="T:Microsoft.Test.Validation.Condition`1"/> that must be satisfied.</param>
+            <returns><c>default(T)</c> if no element in the sequence that satisfies the specified condition or 
+            the sequence is empty; otherwise, the last element that passes the specified condition.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="condition"/>
+            is a <c>null</c> reference.</exception>
+            <remarks>
+            The default value for reference and nullable types is a <c>null</c> reference.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Validate(System.Collections.Generic.IEnumerable{Microsoft.Test.Validation.ValidatorBase})">
+            <summary>
+            Forces each condition in a collection of conditions to immediately validate.
+            </summary>
+            <param name="items">The conditions to force to validate.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Validate(System.Collections.Generic.IEnumerable{Microsoft.Test.Validation.ValidatorBase},System.Boolean)">
+            <summary>
+            Forces each validator in a collection of conditions to immediately validate.
+            </summary>
+            <param name="items">The conditions to force to validate.</param>
+            <param name="throwOnFailure">If set to <c>true</c> then an exception will be thrown 
+            when the condition(s) expressed by this condition are not satisfied.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Validate(System.Collections.Generic.IEnumerable{Microsoft.Test.Validation.ValidatorBase},System.Boolean,System.Boolean)">
+            <summary>
+            Forces each condition in a collection of conditions to immediately validate.
+            </summary>
+            <param name="items">The conditions to force to validate.</param>
+            <param name="throwOnFailure">If set to <c>true</c> then an exception will be thrown 
+            when the condition(s) expressed by this condition are not satisfied.</param>
+            <param name="throwIfNoResults">if set to <c>true</c>
+            	<see cref="T:Microsoft.Test.Validation.ValidationException"/> will be
+            thrown if no result data items are registered for validation.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Validate(System.Collections.Generic.IEnumerable{Microsoft.Test.Validation.ValidatorBase},Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Forces each condition in a collection of conditions to immediately validate.
+            </summary>
+            <param name="items">The conditions to force to validate.</param>
+            <param name="options">A validation options that overrides the value of the individual condition options.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.IEnumerableConditionExtensions.Where``1(System.Collections.Generic.IEnumerable{``0},Microsoft.Test.Validation.Condition{``0})">
+            <summary>
+            Filters a sequence of values based on a condition.
+            </summary>
+            <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> to filter on.</param>
+            <param name="condition">The condition that must be satisfied by an element for it to be selected.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains element from the 
+            input sequence that satisfy the specifid condition.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="condition"/> is
+            a <c>null</c> reference.</exception>
+            <remarks>
+            Unlike the other Where methods, the implementation of this method is not deferred.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Test.Validation.IEnumerableConditionExtensions.DefaultValidationOptions">
+            <summary>
+            Gets the default validation options used by the extension methods defined in this class.
+            </summary>
+            <value>The default validation options.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.CannotAddResultsToChildValidator">
+            <summary>
+              Looks up a localized string similar to Cannot add results to a child validator. Add results to the root validator that contains this validator instance..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ConditionEvaluationFailed">
+            <summary>
+              Looks up a localized string similar to The evaluation of the condition {0} failed with the error &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ConditionEvaluationFailedButDidNotSetError">
+            <summary>
+              Looks up a localized string similar to Evaluation of the condition {0} failed but the condition did not have an error message..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ExpressionToString">
+            <summary>
+              Looks up a localized string similar to R {0} {1}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.NoMatchingElements">
+            <summary>
+              Looks up a localized string similar to No elements of the source sequence satisfy the specified validator..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ProvidedValueIsNull">
+            <summary>
+              Looks up a localized string similar to [null].
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ProvideValueIsNotNull">
+            <summary>
+              Looks up a localized string similar to  with provided value &quot;{0}&quot;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ResultDataNotFound">
+            <summary>
+              Looks up a localized string similar to No result data items found to validate..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.UnrecognizedComparisonOperation">
+            <summary>
+              Looks up a localized string similar to Operation {0} is not a recognized comparison operator..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ValidationForValidatorOfTypeThrewException">
+            <summary>
+              Looks up a localized string similar to Validator &quot;{0}&quot; of type {1} threw an exception on validation: &quot;{2}&quot;.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ValidatorAlreadyRegistered">
+            <summary>
+              Looks up a localized string similar to Validator with ID {0} is already registered..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ValidatorFailed">
+            <summary>
+              Looks up a localized string similar to Validator &quot;{0}&quot; failed{1}..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ValidatorFailedWithMessage">
+            <summary>
+              Looks up a localized string similar to Validator &quot;{0}&quot; failed{1}:  {2}.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Properties.Resources.ValidatorNullException">
+            <summary>
+              Looks up a localized string similar to A validator in the sequence was set to null, this is invalid..
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.StateCondition">
+            <summary>
+            Base class for all entities that wish to validate that the system is in a specific state when invoked.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:StateCondition"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.op_Implicit(Microsoft.Test.Validation.StateCondition)~Microsoft.Test.Validation.StateValidator">
+            <summary>
+            Performs an implicit conversion from <see cref="T:Microsoft.Test.Validation.StateCondition"/> to 
+            <see cref="T:Microsoft.Test.Validation.StateValidator"/>.
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.op_LogicalNot(Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Implements the operator ! for an instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/>. This ensures that state
+            conditions can be combined into compound validators similar to typed validators (<see cref="T:Microsoft.Test.Validation.Validator`1"/>).
+            </summary>
+            <param name="inner">The inner validator to negate.</param>
+            <returns>The result of the ! operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.Not">
+            <summary>
+            Implements the operator ! for an instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/>. This ensures that state
+            conditions can be combined into compound validators similar to typed validators (<see cref="T:Microsoft.Test.Validation.Validator`1"/>).
+            </summary>
+            <returns>The result of the ! operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.op_BitwiseAnd(Microsoft.Test.Validation.StateCondition,Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Implements the operator &amp; for two instances of <see cref="T:Microsoft.Test.Validation.StateCondition"/>. This ensures that state
+            conditions can be combined into compound validators similar to typed validators (<see cref="T:Microsoft.Test.Validation.Validator`1"/>).
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.And(Microsoft.Test.Validation.StateCondition,Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/> that represents the logical AND 
+            of two other instances of <see cref="T:Microsoft.Test.Validation.StateCondition"/>.
+            </summary>
+            <param name="left">The left condition.</param>
+            <param name="right">The right condition.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.Not(Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/> that represents the logical NOT 
+            of an instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/>.
+            </summary>
+            <param name="condition">The condition to negate.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.Or(Microsoft.Test.Validation.StateCondition,Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/> that represents the logical OR 
+            of two other instances of <see cref="T:Microsoft.Test.Validation.StateCondition"/>.
+            </summary>
+            <param name="left">The left condition.</param>
+            <param name="right">The right condition.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.op_BitwiseOr(Microsoft.Test.Validation.StateCondition,Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Implements the operator | for two instances of <see cref="T:Microsoft.Test.Validation.StateCondition"/>. This ensures that state
+            conditions can be combined into compound validators similar to typed validators (<see cref="T:Microsoft.Test.Validation.Validator`1"/>).
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.Evaluate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Invoked by the containing <see cref="T:Microsoft.Test.Validation.StateValidator"/> to validate this condition.
+            </summary>
+            <remarks>
+            This method should be overriden by derived types to implement the validation logic.
+            </remarks>
+            <param name="options">The validation options.</param>
+            <returns><c>true</c> if the condition expressed by this instance is satisfied; <c>false</c>, otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.OnError(System.String)">
+            <summary>
+            Registers an error message to be logged when this expression fails.
+            </summary>
+            <param name="errorMessage">The error message to log.</param>
+            <returns>Returns this instance.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.OnError(System.Func{Microsoft.Test.Validation.StateValidator,System.Collections.Generic.IEnumerable{System.Exception},System.Boolean})">
+            <summary>
+            Registers a handler to be invoked when this expression fails. The return
+            value of the handler will be used as the result of this expression.
+            </summary>
+            <param name="failureHandler">The failure handler function.</param>
+            <returns>Returns this instance.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.OnSuccess(System.String)">
+            <summary>
+            Registers a success message to be logged when this expression succeeds.
+            </summary>
+            <param name="successMessage">The success message to log.</param>
+            <returns>Returns this instance.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.HandleFailure(Microsoft.Test.Validation.ValidationOptions,System.Exception[])">
+            <summary>
+            Invoked by inheriting expressions when a sub-expression or the
+            expression itself fails to succeed for a specific value.
+            </summary>
+            <param name="options">The validation options.</param>
+            <param name="exceptions">The exceptions that occurred while this expression was evaluated.</param>
+            <returns>A value to override as the result.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.HandleSuccess(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Invoked by inheriting expressions when a sub-expression or the
+            expression itself succeeds for a specific value.
+            </summary>
+            <param name="options">The validation options.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.ProcessResult(System.Boolean,Microsoft.Test.Validation.ValidationOptions,System.Exception[])">
+            <summary>
+            Processes the given result and determines if the <see cref="M:Microsoft.Test.Validation.Condition{T}.HandleSuccess"/>
+            or <see cref="M:Microsoft.Test.Validation.Condition{T}.HandleFailure"/>
+            method must be invoked.
+            </summary>
+            <param name="result">The result of this expression.</param>
+            <param name="options">The validation options.</param>
+            <param name="exceptions">The exceptions that occurred while this expression was being evalauted.</param>
+            <returns>The override result to be returned from this expression.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateCondition.TryEvaluate(Microsoft.Test.Validation.StateValidator,Microsoft.Test.Validation.ValidationOptions,System.Exception@)">
+            <summary>
+            Attempts to evaluate the specified expression for the specified value with the specified
+            options.
+            </summary>
+            <param name="validator">The validator to evaluate.</param>
+            <param name="options">The validation options.</param>
+            <param name="exception">The exception that is caught if any.</param>
+            <returns>The result of the evalaution.</returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.StateCondition.ErrorHandler">
+            <summary>
+            Gets or sets the error handler function of type <see cref="T:System.Func`2"/>
+            that will be invoked when this state validator fails. 
+            </summary>
+            <value>The error handler.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.StateCondition.ErrorMessage">
+            <summary>
+            Gets or sets the error message to be logged when this expression
+            fails to evaluate.
+            </summary>
+            <value>The error message.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.StateCondition.HasErrorHandler">
+            <summary>
+            Gets a value indicating whether an error handler function is registered
+            for this expression.
+            </summary>
+            <value>
+            	<c>true</c> if this expression has an error handler registered; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.StateCondition.SuccessMessage">
+            <summary>
+            Gets or sets the success message to be logged when this expression
+            succeeds in evaluation.
+            </summary>
+            <value>The success message.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.StateValidator">
+            <summary>
+            The base validator type for all validators that perform validation based on system state and not a result.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ValidatorBase">
+            <summary>
+            The base type for validators. This type provides some basic functionality for tracking validator
+            instances.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidatorBase.creationStack">
+            <summary>The stack trace when this validator instance was created.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidatorBase.description">
+            <summary>A description for this valdiator.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidatorBase.id">
+            <summary>The ID of this validator instance.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidatorBase.isRegistered">
+            <summary>Flag to check if this registered has already been registered.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidatorBase.name">
+            <summary>A descriptive name for this validator.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidatorBase.options">
+            <summary>The validation options container.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidatorBase.useCount">
+            <summary>Counter to track the number of times that this validator has been used to validate a result.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidatorBase"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+            	<c>true</c> if the specified <see cref="T:System.Object"/> is equal to this instance; 
+            	otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
+            <remarks>Validators aren't exactly comparable. This implementation only checks if references
+            are equal or if IDs are equal.</remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures 
+            like a hash table. 
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.Validate">
+            <summary>
+            Forces this validator to validate all registered result data. 
+            </summary>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered
+            or any registered result data item fails to satisfy this validator.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.Validate(System.Boolean)">
+            <summary>
+            Forces this validator to validate all registered result data.
+            </summary>
+            <param name="thrownOnFailure">if set to <c>true</c> <see cref="T:Microsoft.Test.Validation.ValidationException"/> will be 
+            thrown if a result data item fails to validate.</param>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered
+            or any registered result data item fails to satisfy this validator and <paramref name="thrownOnFailure"/>
+            is <c>true</c>.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.Validate(System.Boolean,System.Boolean)">
+            <summary>
+            Forces this validator to validate all registered result data.
+            </summary>
+            <param name="thrownOnFailure">if set to <c>true</c> <see cref="T:Microsoft.Test.Validation.ValidationException"/> will be 
+            thrown if a result data item fails to validate.</param>
+            <param name="throwIfNoResults">if set to <c>true</c> <see cref="T:Microsoft.Test.Validation.ValidationException"/> will be
+            thrown if no result data items are registered for validation.</param>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered and <paramref name="throwIfNoResults"/> is <c>true</c>
+            or any registered result data item fails to satisfy this validator and <paramref name="thrownOnFailure"/>
+            is <c>true</c>.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.Validate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Forces this validator to validate all registered result data.
+            </summary>
+            <param name="validationOptions">The validation options to use for validation.</param>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowIfNoResults"/> property of
+            <paramref name="validationOptions"/> is <c>true</c>
+            or any registered result data item fails to satisfy this validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.IncrementUseCount">
+            <summary>
+            Increments the use count for this validator
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorBase.Register">
+            <summary>
+            Registers this validator with the validation engine.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidatorBase.CreationStack">
+            <summary>
+            Gets the <see cref="T:System.Diagnostics.StackTrace"/> instance captured when this instance was created.
+            </summary>
+            <value>The creation stack.</value>
+            <remarks>
+            This helps in logging error results when this validator fails to evaluate or to inspect
+            and find out where a specific validator was created.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidatorBase.Description">
+            <summary>
+            Gets or sets the description for this validator.
+            </summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidatorBase.Id">
+            <summary>
+            Gets the unique ID of this validator instance.
+            </summary>
+            <value>The id.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidatorBase.IsRegistered">
+            <summary>
+            Gets a value indicating whether this validator is registered with the validation engine.
+            </summary>
+            <value>
+            	<c>true</c> if this validator is registered; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidatorBase.Name">
+            <summary>
+            Gets or sets the name for this validator.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidatorBase.Options">
+            <summary>
+            Gets or sets the validation options.
+            </summary>
+            <value>The options.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidatorBase.UseCount">
+            <summary>
+            Gets the use count for this validator.
+            </summary>
+            <value>The use count.</value>
+        </member>
+        <member name="F:Microsoft.Test.Validation.StateValidator.condition">
+            <summary>The state condition evaluated by this validator.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateValidator.#ctor(Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:StateValidator"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateValidator.Validate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Forces this validator to validate all registered result data.
+            </summary>
+            <param name="validationOptions">The validation options to use for validation.</param>
+            <returns></returns>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowIfNoResults"/> property of
+            <paramref name="validationOptions"/> is <c>true</c>
+            or any registered result data item fails to satisfy this validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.StateValidator.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.StateValidator.Condition">
+            <summary>
+            Gets or sets the state condition evaluated by this state validator.
+            </summary>
+            <value>The condition.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.State.AndStateCondition">
+            <summary>
+            A state validator that combines two instances of <see cref="T:Microsoft.Test.Validation.StateCondition"/> in a logical AND fashion.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.State.AndStateCondition.left">
+            <summary>The left validator.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.State.AndStateCondition.right">
+            <summary>The right validator.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.State.AndStateCondition.#ctor(Microsoft.Test.Validation.StateCondition,Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AndStateCondition"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.State.AndStateCondition.Evaluate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates the specified validation options.
+            </summary>
+            <param name="validationOptions">The validation options.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Test.Validation.State.NotStateCondition">
+            <summary>
+            A state validator that combines an instance of <see cref="T:Microsoft.Test.Validation.StateCondition"/> in a logical NOT fashion.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.State.NotStateCondition.inner">
+            <summary>The right validator.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.State.NotStateCondition.#ctor(Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NotStateCondition"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.State.NotStateCondition.Evaluate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates the specified validation options.
+            </summary>
+            <param name="validationOptions">The validation options.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Test.Validation.State.OrStateCondition">
+            <summary>
+            A state validator that combines two instances of <see cref="T:Microsoft.Test.Validation.StateCondition"/> in a logical OR fashion.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.State.OrStateCondition.left">
+            <summary>The left condition.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.State.OrStateCondition.right">
+            <summary>The right condition.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.State.OrStateCondition.#ctor(Microsoft.Test.Validation.StateCondition,Microsoft.Test.Validation.StateCondition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:OrStateCondition"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.State.OrStateCondition.Evaluate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates the specified validation options.
+            </summary>
+            <param name="validationOptions">The validation options.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.AndCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that applies the logical AND operation to
+            two instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.BinaryCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that evaluates a logical binary operation
+            on two instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Condition`1">
+            <summary>
+            The base type for all expressions involving a <see cref="T:Microsoft.Test.Validation.Result`1"/>.
+            </summary>
+            <typeparam name="T">The type of the value for which this expression can be applied.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Condition`1.comparer">
+            <summary>The comparer that this comparison expression will use to compare the result value and a constant value.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Condition`1.creationStack">
+            <summary>The stack trace when this expression instance was created.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Condition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.#ctor(System.Collections.Generic.IComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Condition`1"/> type.
+            </summary>
+            <param name="comparer">The comparer.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_Implicit(Microsoft.Test.Validation.Condition{`0})~Microsoft.Test.Validation.Validator{`0}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:Microsoft.Test.Validation.Condition`1"/> to 
+            <see cref="T:Microsoft.Test.Validation.Validator`1"/>.
+            </summary>
+            <param name="expression">The expression.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_Implicit(Microsoft.Test.Validation.ResultCondition{`0})~Microsoft.Test.Validation.Condition{`0}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/> 
+            to <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_Implicit(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})~Microsoft.Test.Validation.Condition{`0}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:System.Linq.Expressions.Expression`1"/> to 
+            <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="linqExpression">The linq expression.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_LogicalNot(Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator ! for an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="right">The right expression.</param>
+            <returns>The result of the ! operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Not">
+            <summary>
+            Implements the operator ! for an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <returns>The result of the ! operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator &amp; for two instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(Microsoft.Test.Validation.Condition{`0},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Implements the operator &amp; for an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an
+            instance of <see cref="T:System.Linq.Expressions.Expression`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator &amp; for an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an
+            instance of <see cref="T:System.Linq.Expressions.Expression`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.ResultCondition{`0})">
+            <summary>
+            Implements the operator &amp; for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(Microsoft.Test.Validation.ResultCondition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator &amp; for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.ICondition{`0})">
+            <summary>
+            Implements the operator &amp; for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ICondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(Microsoft.Test.Validation.ICondition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator &amp; for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ICondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(Microsoft.Test.Validation.Condition{`0},System.Boolean)">
+            <summary>
+            Implements the operator &amp; for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:System.Boolean"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseAnd(System.Boolean,Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator &amp; for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:System.Boolean"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the &amp; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.And(Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that implements the logical NOT operator for an
+            instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="condition">The condition to negate.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.And(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that implements the logical AND operator for two 
+            instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="left">The left condition.</param>
+            <param name="right">The right condition.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(System.Boolean)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that encapsulates a constant boolean
+            expression and evaluates to the value of this boolean expression when evaluated.
+            </summary>
+            <param name="condition">The value of the constant boolean expression that the returned instance evalautes to.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(Microsoft.Test.Validation.Operation,`0)">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that performs a specific type of comparison
+            with a constant value.
+            </summary>
+            <param name="comparisonOperation">The comparison operation.</param>
+            <param name="value">The value to compare to.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(Microsoft.Test.Validation.Operation,`0,System.Collections.Generic.IComparer{`0})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that performs a specific type of comparison
+            with a constant value.
+            </summary>
+            <param name="comparisonOperation">The comparison operation.</param>
+            <param name="value">The value to compare to.</param>
+            <param name="comparer">The <see cref="T:System.Collections.Generic.IComparer`1"/> to use to perform the comparison.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(Microsoft.Test.Validation.ICondition{`0},System.Object[])">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that encapsulates an instance of a type that implements
+            the <see cref="T:Microsoft.Test.Validation.ICondition`1"/> interface and invokes the <see cref="M:ICondition{T}.Satisfies"/> method
+            on this instance when forced to evaluate.
+            </summary>
+            <param name="condition">The instance of <see cref="T:Microsoft.Test.Validation.ICondition`1"/> that is wrapped.</param>
+            <param name="data">Additional data to be passed to <paramref name="condition"/> at evaluation time.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(Microsoft.Test.Validation.ResultCondition{`0},System.Object[])">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that encapsulates an instance of a the <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/> 
+            delegate and invokes this delegate when forced to evaluate.
+            </summary>
+            <param name="condition">The instance of <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/> that is wrapped.</param>
+            <param name="data">Additional data to be passed to <paramref name="condition"/> at evaluation time.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(System.Func{`0,System.Boolean})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that encapsulates a <see cref="T:System.Func`2"/> 
+            delegate and invokes this delegate when forced to evaluate.
+            </summary>
+            <param name="function">The instance of <see cref="T:System.Func`2"/> that is wrapped.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that encapsulates a <see cref="T:System.Linq.Expressions.Expression{T}"/> 
+            delegate and invokes this delegate when forced to evaluate.
+            </summary>
+            <param name="expression">The LINQ instance that is wrapped.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Create(System.Predicate{`0})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that encapsulates a <see cref="T:System.Predicate{T}"/> 
+            delegate and invokes this delegate when forced to evaluate.
+            </summary>
+            <param name="predicate">The predicate that is wrapped.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Or(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/> that implements the logical OR operator for two 
+            instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="left">The left condition.</param>
+            <param name="right">The right condition.</param>
+            <returns>An instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator | for two instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(Microsoft.Test.Validation.Condition{`0},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an
+            instance of <see cref="T:System.Linq.Expressions.Expression`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an
+            instance of <see cref="T:System.Linq.Expressions.Expression`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.ResultCondition{`0})">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(Microsoft.Test.Validation.ResultCondition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.ICondition{`0})">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ICondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(Microsoft.Test.Validation.ICondition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:Microsoft.Test.Validation.ICondition`1"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(Microsoft.Test.Validation.Condition{`0},System.Boolean)">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:System.Boolean"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.op_BitwiseOr(System.Boolean,Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Implements the operator | for an instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/> and an 
+            instance of <see cref="T:System.Boolean"/>.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+            <returns>The result of the | operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.OnError(System.String)">
+            <summary>
+            Registers an error message to be logged when this expression fails.
+            </summary>
+            <param name="errorMessage">The error message to log.</param>
+            <returns>Returns this instance.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.OnError(System.Func{`0,System.Collections.Generic.IEnumerable{System.Exception},System.Boolean})">
+            <summary>
+            Registers a handler to be invoked when this expression fails. The return
+            value of the handler will be used as the result of this expression.
+            </summary>
+            <param name="failureHandler">The failure handler function.</param>
+            <returns>Returns this instance.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.OnSuccess(System.String)">
+            <summary>
+            Registers a success message to be logged when this expression succeeds.
+            </summary>
+            <param name="successMessage">The success message to log.</param>
+            <returns>Returns this instance.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Satisfies(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance. 
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation 
+            should behave.</param>
+            <returns><c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance. 
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation 
+            should behave.</param>
+            <returns><c>true</c>, if <paramref name="value"/> satisfies this expression; 
+            <c>false</c>, otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.HandleFailure(`0,Microsoft.Test.Validation.ValidationOptions,System.Exception[])">
+            <summary>
+            Invoked by inheriting expressions when a sub-expression or the
+            expression itself fails to succeed for a specific value.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="options">The validation options.</param>
+            <param name="exceptions">The exceptions that occurred while this expression was evaluated.</param>
+            <returns>A value to override as the result.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.HandleSuccess(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Invoked by inheriting expressions when a sub-expression or the
+            expression itself succeeds for a specific value.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="options">The validation options.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.ProcessResult(System.Boolean,`0,Microsoft.Test.Validation.ValidationOptions,System.Exception[])">
+            <summary>
+            Processes the given result and determines if the <see cref="M:Microsoft.Test.Validation.Condition{T}.HandleSuccess"/>
+            or <see cref="M:Microsoft.Test.Validation.Condition{T}.HandleFailure"/>
+            method must be invoked.
+            </summary>
+            <param name="result">The result of this expression.</param>
+            <param name="value">The value that was validated.</param>
+            <param name="options">The validation options.</param>
+            <param name="exceptions">The exceptions that occurred while this expression was being evalauted.</param>
+            <returns>The override result to be returned from this expression.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Condition`1.TryEvaluate(Microsoft.Test.Validation.Condition{`0},`0,Microsoft.Test.Validation.ValidationOptions,System.Exception@)">
+            <summary>
+            Attempts to evaluate the specified expression for the specified value with the specified
+            options.
+            </summary>
+            <param name="expression">The expression to evaluate.</param>
+            <param name="value">The value to evaluate <paramref name="expression"/> for.</param>
+            <param name="options">The validation options.</param>
+            <param name="exception">The exception that is caught if any.</param>
+            <returns>The result of the evalaution.</returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Condition`1.Comparer">
+            <summary>
+            Gets or sets the <see cref="T:System.Collections.Generic.IComparer`1"/> to use to compare two instances
+            of <typeparamref name="T"/>.
+            </summary>
+            <value>The <see cref="T:System.Collections.Generic.IComparer`1"/> to use.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Condition`1.CreationStack">
+            <summary>
+            Gets the <see cref="T:System.Diagnostics.StackTrace"/> instance captured when this instance was created.
+            </summary>
+            <value>The creation stack.</value>
+            <remarks>
+            This helps in logging error results when this expression fails to evaluate or to inspect
+            and find out where a specific expression was created.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Condition`1.ErrorHandler">
+            <summary>
+            Gets or sets the error handler function of type <see cref="T:System.Func`2"/>
+            that will be invoked when this expression fails. 
+            </summary>
+            <value>The error handler.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Condition`1.ErrorMessage">
+            <summary>
+            Gets or sets the error message to be logged when this expression
+            fails to evaluate.
+            </summary>
+            <value>The error message.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Condition`1.HasErrorHandler">
+            <summary>
+            Gets a value indicating whether an error handler function is registered
+            for this expression.
+            </summary>
+            <value>
+            	<c>true</c> if this expression has an error handler registered; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Condition`1.SuccessMessage">
+            <summary>
+            Gets or sets the success message to be logged when this expression
+            succeeds in evaluation.
+            </summary>
+            <value>The success message.</value>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.BinaryCondition`1.left">
+            <summary>The left side of this binary expression.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.BinaryCondition`1.right">
+            <summary>The right side of this binary expression.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.BinaryCondition`1.#ctor(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.BinaryCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.BinaryCondition`1.Left">
+            <summary>
+            Gets the left side of this binary expression.
+            </summary>
+            <value>The left expression.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.BinaryCondition`1.Right">
+            <summary>
+            Gets the right side of this binary expression.
+            </summary>
+            <value>The right expression.</value>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.AndCondition`1.#ctor(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.AndCondition`1"/> type.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.AndCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.AndCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.AndCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.AndCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.BooleanCondition`1">
+            <summary>
+            A <see cref="T:Microsoft.Test.Validation.Condition`1"/> that consumes a constant <see cref="T:System.Boolean"/>.
+            </summary>
+            <remarks>
+            This type ensures that normal expressions can be consumed into a validator.
+            </remarks>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.BooleanCondition`1.expressionValue">
+            <summary>The value of this expression.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.BooleanCondition`1.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.BooleanCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.BooleanCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.BooleanCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.BooleanCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.BooleanCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.BooleanCondition`1.Value">
+            <summary>
+            Gets the value of this expression.
+            </summary>
+            <value>The value of this expression.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.ComparisonCondition`1">
+            <summary>
+            Represents a comparison operation where the comparison to be performed is one of 
+            <see cref="E:Microsoft.Test.Validation.Conditions.Operation"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.operation">
+            <summary>The comparison operation to apply.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.valueToCompareWith">
+            <summary>The value to which the result should be compared by this comparison expression.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.#ctor(Microsoft.Test.Validation.Operation,`0,System.Collections.Generic.IComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.ComparisonCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.ComparisonCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.ComparisonCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.IsTargetTypeNullable">
+            <summary>
+            Determines whether <typeparamref name="T"/> is a nullable type.
+            </summary>
+            <returns>
+            	<c>true</c> if <typeparamref name="T"/> is nullable; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.MapComparerResult(System.Int32)">
+            <summary>
+            Maps the value <paramref name="comparerResult"/> which is obtained by invoking
+            the method <see cref="M:IComparer{T}.Compare"/> on two instances of <typeparamref name="T"/>
+            to <c>true</c> or <c>false</c> depending on the operation <see cref="P:Microsoft.Test.Validation.Conditions.ComparisonCondition{T}.Operation"/>
+            </summary>
+            <param name="comparerResult">The comparer result.</param>
+            <returns><c>true</c>, if <paramref name="comparerResult"/> is a value that indicates that
+            the comparison operation <see cref="P:Microsoft.Test.Validation.Conditions.ComparisonOperation{T}.Operation"/> is satisfied; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.SatisfiesForReferenceType(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance when <typeparamref name="T"/> is a nullable
+            (reference) type.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.SatisfiesForValueType(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance when <typeparamref name="T"/> is a non-nullable
+            (value) type.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.Operation">
+            <summary>
+            Gets the comparison <see cref="E:Microsoft.Test.Validation.Conditions.Operation"/> that this comparison expression
+            will perform.
+            </summary>
+            <value>The comparison operation.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.ComparisonCondition`1.ValueToCompareWith">
+            <summary>
+            Gets the value that this comparison expression will compare a result value with.
+            </summary>
+            <value>The value to compare with.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.ConditionCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that applies a <see cref="T:Microsoft.Test.Validation.ICondition`1"/> to
+            an instance of <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.ConditionCondition`1.condition">
+            <summary>The <see cref="T:Microsoft.Test.Validation.ICondition`1"/> to evaluate.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.ConditionCondition`1.otherData">
+            <summary>Additional data to be passed to <see cref="F:condition"/> when evaluating.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ConditionCondition`1.#ctor(Microsoft.Test.Validation.ICondition{`0},System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.ConditionCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ConditionCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.ConditionCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.ConditionCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.ConditionCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.ConditionCondition`1.Condition">
+            <summary>
+            Gets the <see cref="T:Microsoft.Test.Validation.ICondition`1"/> used by this expression to evaluate a result instance.
+            </summary>
+            <value>The condition to evaluate.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.ConditionCondition`1.Data">
+            <summary>
+            Gets the array of additional data items passed to the condition <see cref="P:Microsoft.Test.Validation.Conditions.ConditionCondition{T}.Condition"/>
+            evaluated by this expression.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.FuncCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that encapsulates a <see cref="T:System.Func`2"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.FuncCondition`1.function">
+            <summary>The function wrapped by this expression instance.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FuncCondition`1.#ctor(System.Func{`0,System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.FuncCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FuncCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.FuncCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.FuncCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.FuncCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.FuncCondition`1.Function">
+            <summary>
+            Gets the <see cref="T:System.Func`2"/> wrapped by this expression.
+            </summary>
+            <value>The function.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.LinqCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that wraps a <see cref="T:System.Linq.Expressions.Expression`1"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.LinqCondition`1.function">
+            <summary>The function that is obtained by compiling the underlying LINQ expression.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.LinqCondition`1.linqExpression">
+            <summary>The LINQ expression wrapped by this expression instance.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.LinqCondition`1.#ctor(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.LinqCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.LinqCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.LinqCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.LinqCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.LinqCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.LinqCondition`1.Expression">
+            <summary>
+            Gets the LINQ expression wrapped by this expression instance.
+            </summary>
+            <value>The expression.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.LinqCondition`1.Function">
+            <summary>
+            Gets the function that is obtained by compiling the underlying LINQ expression.
+            </summary>
+            <value>The function.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.OrCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that applies the logical OR operation to
+            two instances of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.OrCondition`1.#ctor(Microsoft.Test.Validation.Condition{`0},Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.OrCondition`1"/> type.
+            </summary>
+            <param name="left">The left expression.</param>
+            <param name="right">The right expression.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.OrCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.OrCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.OrCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.OrCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.DelegateCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that applies a <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/>
+            delegate to an instance of <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.DelegateCondition`1.condition">
+            <summary>The delegate that is to be invoked to evaluate this expression.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.DelegateCondition`1.otherData">
+            <summary>Additional data to be passed to <see cref="F:condition"/> when evaluating.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.DelegateCondition`1.#ctor(Microsoft.Test.Validation.ResultCondition{`0},System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.DelegateCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.DelegateCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.DelegateCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.DelegateCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.DelegateCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.DelegateCondition`1.Condition">
+            <summary>
+            Gets the <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/> delegate that is invoked by this
+            expression instance.
+            </summary>
+            <value>The condition.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.DelegateCondition`1.Data">
+            <summary>
+            Gets the array of additional data items passed to the condition <see cref="P:Microsoft.Test.Validation.Conditions.DelegateCondition{T}.Condition"/>
+            evaluated by this expression.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ICondition`1">
+            <summary>
+            Represents some entity that consumes an instance of <typeparamref name="T"/> and indicates
+            if the condition represented by this instance is satisfied or not.
+            </summary>
+            <typeparam name="T">The type of the values that implementations of this
+            interface consume.</typeparam>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ICondition`1.Satisfies(`0,System.Object[])">
+            <summary>
+            Indicates if the condition represented by this instances is satisfied or not.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="otherData">External data that may used by this condition to evalute whether
+            <paramref name="value"/> satifies the condition represented by this instance.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies the condition represented by
+            this instance; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.NotCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that applies the logical NOT operation
+            to another instance of <see cref="T:Microsoft.Test.Validation.Condition`1"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.NotCondition`1.expression">
+            <summary>The <see cref="T:Microsoft.Test.Validation.Condition`1"/> instance whose 
+            result is negated by this expression.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.NotCondition`1.#ctor(Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.NotCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.NotCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.NotCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.NotCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.NotCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.NotCondition`1.Expression">
+            <summary>
+            Gets the <see cref="T:Microsoft.Test.Validation.Condition`1"/> that is negated by this NOT expression.
+            </summary>
+            <value>The sub-expression.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Conditions.PredicateCondition`1">
+            <summary>
+            Represents a <see cref="T:Microsoft.Test.Validation.Condition`1"/> that applies a <see cref="T:System.Predicate`1"/>
+            on an instance of <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type of the values for which this expression is evaluated.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Conditions.PredicateCondition`1.predicate">
+            <summary>The <see cref="T:System.Predicate`1"/> that is evaluated by this expression.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.PredicateCondition`1.#ctor(System.Predicate{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Conditions.PredicateCondition`1"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.PredicateCondition`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.PredicateCondition`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Conditions.PredicateCondition`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Conditions.PredicateCondition`1.Evaluate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Evaluates whether the value <paramref name="value"/> satisfies the conditions
+            expressed by this expression instance.
+            </summary>
+            <param name="value">The value to evaluate this expression for.</param>
+            <param name="options">The validation options that provides information on how validation
+            should behave.</param>
+            <returns>
+            	<c>true</c>, if <paramref name="value"/> satisfies this expression;
+            <c>false</c>, otherwise.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Conditions.PredicateCondition`1.Condition">
+            <summary>
+            Gets the condition that is evaluated by this expression.
+            </summary>
+            <value>The condition.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Result`1">
+            <summary>
+            A placeholder for a strongly typed but unknown result that may be available at some
+            time in the future as a test progresses. This is also known as a future.
+            See http://home.pipeline.com/~hbaker1/Futures.html.
+            </summary>
+            <typeparam name="T">The type of the value for which this instance is a placeholder.</typeparam>
+            <remarks>
+            A single instance of this type may be used repeatedly to build different validators
+            for the same type of values. All intermediate instances of this type are discarded
+            as the expression tree for each validator is built. This type also defines some
+            convenience comparison operators that make it easier to express conditions.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Result`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.#ctor(System.Collections.Generic.IComparer{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Result`1"/> class.
+            </summary>
+            <param name="comparer">The comparer to use to perform comparisons.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_Inequality(Microsoft.Test.Validation.Result{`0},`0)">
+            <summary>
+            Implements the != operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the != operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_Inequality(`0,Microsoft.Test.Validation.Result{`0})">
+            <summary>
+            Implements the != operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the != operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_LessThan(Microsoft.Test.Validation.Result{`0},`0)">
+            <summary>
+            Implements the &lt; operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &lt; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_LessThan(`0,Microsoft.Test.Validation.Result{`0})">
+            <summary>
+            Implements the &lt; operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &lt; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_LessThanOrEqual(Microsoft.Test.Validation.Result{`0},`0)">
+            <summary>
+            Implements the &lt;= operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &lt;= operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_LessThanOrEqual(`0,Microsoft.Test.Validation.Result{`0})">
+            <summary>
+            Implements the &lt;= operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &lt;= operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_Equality(Microsoft.Test.Validation.Result{`0},`0)">
+            <summary>
+            Implements the == operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the == operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_Equality(`0,Microsoft.Test.Validation.Result{`0})">
+            <summary>
+            Implements the == operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the == operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_GreaterThan(Microsoft.Test.Validation.Result{`0},`0)">
+            <summary>
+            Implements the &gt; operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &gt; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_GreaterThan(`0,Microsoft.Test.Validation.Result{`0})">
+            <summary>
+            Implements the &gt; operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &gt; operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_GreaterThanOrEqual(Microsoft.Test.Validation.Result{`0},`0)">
+            <summary>
+            Implements the &gt;= operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &gt;= operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.op_GreaterThanOrEqual(`0,Microsoft.Test.Validation.Result{`0})">
+            <summary>
+            Implements the &gt;= operator.
+            </summary>
+            <param name="left">The left operand.</param>
+            <param name="right">The right operand.</param>
+            <returns>The result of the &gt;= operator.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:Microsoft.Test.Validation.Result`1"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:Microsoft.Test.Validation.Result`1"/> to compare with this instance.</param>
+            <returns>
+            	<c>true</c> if the specified <see cref="T:Microsoft.Test.Validation.Result`1"/> is equal to this instance; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.NullReferenceException">
+            The <paramref name="obj"/> parameter is null.
+            </exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data 
+            structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.Satisfies(System.Predicate{`0})">
+            <summary>
+            Indicates if this result placeholder satisfies the given predicate.
+            </summary>
+            <param name="predicate">The predicate to check.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.Satisfies(Microsoft.Test.Validation.ResultCondition{`0},System.Object[])">
+            <summary>
+            Indicates if this result placeholder satisfies the given condition.
+            </summary>
+            <param name="condition">The condition.</param>
+            <param name="otherData">External data to be passed to the condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.Satisfies(Microsoft.Test.Validation.ICondition{`0},System.Object[])">
+            <summary>
+            Indicates if this result placeholder satisfies the given condition.
+            </summary>
+            <param name="condition">The condition.</param>
+            <param name="otherData">External data to be passed to the condition.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Result`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Result`1.Comparer">
+            <summary>
+            Gets or sets the <see cref="T:System.Collections.Generic.IComparer`1"/> to use to compare two instances
+            of <typeparamref name="T"/>.
+            </summary>
+            <value>The <see cref="T:System.Collections.Generic.IComparer`1"/> to use.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ResultCondition`1">
+            <summary>
+            Represents a delegate that is invoked with a value and related data. This
+            delegate can be passed to a result instance for delayed invocation.
+            </summary>
+            <typeparam name="TValue">The type of the values passed to this delegate.</typeparam>
+            <param name="otherData">External data to be used by the delegate and passed in from the context 
+            in which the sub-expression using the delegate was created.</param>
+            <param name="value">The value on which the delegate operates.</param>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Operation">
+            <summary>
+            The operator to be associated with an instance of <see cref="T:Microsoft.Test.Validation.Conditions.ComparisonCondition{T}"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Operation.Equals">
+            <summary>Represents equality.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Operation.NotEquals">
+            <summary>Represents inequality.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Operation.LessThan">
+            <summary>Represents the &lt; operation.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Operation.LessThanOrEqual">
+            <summary>Represents the &lt;= operation.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Operation.GreaterThan">
+            <summary>Represents the &gt; operation.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Operation.GreaterThanOrEqual">
+            <summary>Represents the &gt;= operation.</summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ConsoleLogger">
+            <summary>
+            A <see cref="T:Microsoft.Test.Validation.ValidationLogger"/> that logs all messages to the
+            standard console output and to the debug/trace log.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ValidationLogger">
+            <summary>
+            A sink for logging data generated by the validators and the validation engine.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationLogger.s_defaultLogger">
+            <summary>The default validation engine logger.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationLogger.currentIndentLevel">
+            <summary>Tracks the current indentation level.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationLogger.expandedIndentString">
+            <summary>Transient indent string that is an expansion of <see cref="F:indentString"/> by <see cref="F:currentIndentLevel"/>.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationLogger.indentString">
+            <summary>The indent string to use.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationLogger.logLevel">
+            <summary>Map to track which logging levels are enabled or disabled.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationLogger"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Indent">
+            <summary>
+            Increments the current indentation level by one unit.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.String)">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.String,System.Object[])">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="format">The format string.</param>
+            <param name="values">The values to format and log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.Exception,System.String,System.Object[])">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="exception">The exception to log.</param>
+            <param name="format">The format string.</param>
+            <param name="values">The values to format and log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.Exception)">
+            <summary>
+            Logs the specified exception to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="exception">The exception.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.Object[])">
+            <summary>
+            Logs the specified values to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="values">The values to log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.IFormatProvider,System.String)">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="provider">The format provider.</param>
+            <param name="message">The message to log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.IFormatProvider,System.Exception)">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="provider">The format provider.</param>
+            <param name="exception">The exception to log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.IFormatProvider,System.Object[])">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="provider">The format provider.</param>
+            <param name="values">The values to log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="provider">The format provider.</param>
+            <param name="format">The format string.</param>
+            <param name="values">The values to format and log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Log(System.Diagnostics.TraceLevel,System.IFormatProvider,System.Exception,System.String,System.Object[])">
+            <summary>
+            Logs the specified data to the underlying log sink.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="provider">The format provider.</param>
+            <param name="exception">The exception to log.</param>
+            <param name="format">The format string.</param>
+            <param name="values">The values to format and log.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.Unindent">
+            <summary>
+            Decrements the current indentation level by one unit.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.CheckNotNull``1(``0,System.String)">
+            <summary>
+            Verifies if the specified value <paramref name="value"/> is not <c>null</c>. If it is <c>null</c>
+            then an <see cref="T:System.ArgumentNullException"/> is thrown.
+            </summary>
+            <typeparam name="T">The type of the value.</typeparam>
+            <param name="value">The value to check.</param>
+            <param name="message">The error message.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.LogInternal(System.Diagnostics.TraceLevel,System.IFormatProvider,System.String)">
+            <summary>
+            Invoked by all of the logging methods to log formatted text data to the underlying log sink.
+            Must be implemented by inheriting types.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="provider">The format provider.</param>
+            <param name="text">The text to write.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationLogger.UpdateIndent">
+            <summary>
+            Recomputes the indent expansion string.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationLogger.Default">
+            <summary>
+            Gets the default <see cref="T:Microsoft.Test.Validation.ValidationLogger"/> to be used to log
+            validation progress.
+            </summary>
+            <value>The default.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationLogger.ExpandedIndentString">
+            <summary>
+            Gets the expanded indent string.
+            </summary>
+            <value>The expanded indent string.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationLogger.IndentString">
+            <summary>
+            Gets or sets the indent string.
+            </summary>
+            <value>The indent string.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationLogger.Item(System.Diagnostics.TraceLevel)">
+            <summary>
+            Gets or sets a value indicating messages for which tracing priority will be logged 
+            by this <see cref="T:Microsoft.Test.Validation.ValidationLogger"/>.
+            </summary>
+            <value><c>true</c> if logging is enabled for a specific priority level; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ConsoleLogger.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ConsoleLogger"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ConsoleLogger.LogInternal(System.Diagnostics.TraceLevel,System.IFormatProvider,System.String)">
+            <summary>
+            Invoked by all of the logging methods to log formatted text data to the underlying log sink.
+            Must be implemented by inheriting types.
+            </summary>
+            <param name="level">The logging category for the current message being logged.</param>
+            <param name="provider">The format provider.</param>
+            <param name="text">The text to write.</param>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ValidationContext">
+            <summary>
+            A validation context. The validation context is a container for all the validators created in a specific context. When 
+            the validation engine is forced to validate all registered validators, the validators in the current context are evaluated.
+            Contexts can be nested. When a user establishes a context, they should ensure that the context is automatically destroyed.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationContext.DefaultContextName">
+            <summary>The name of the default validation context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationContext.DefaultContextId">
+            <summary>The ID of the default validation context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationContext.allRootValidators">
+            <summary>A registry of all top-level validators.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationContext.contextName">
+            <summary>A friendly name for this validation context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationContext.creationStack">
+            <summary>The stack trace when this context instance was created.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationContext.id">
+            <summary>An unique ID associated with this validation engine instance.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationContext.isDefault">
+            <summary>Flag to indicate if this instance is the default validation context.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.#ctor(System.String,Microsoft.Test.Validation.ValidationContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ValidationContext"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.Clear">
+            <summary>
+            Clears all validators in this validation context.
+            </summary>
+            <remarks>
+            Users should typically not invoke this method directly.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.</param>
+            <returns><c>true</c> if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection of the top level validators
+            registered with this validation engine.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate 
+            through the collection.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection of the top level validators
+            registered with this validation engine.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate 
+            through the collection.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.Register(Microsoft.Test.Validation.ValidatorBase)">
+            <summary>
+            Registers the specified validator to the list of validators tracked
+            by this validation context.
+            </summary>
+            <param name="validator">The validator to register.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.Validate">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.Validate(System.Boolean)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="throwOnFailure">if set to <c>true</c> forces a failed validator
+            to throw <see cref="T:Microsoft.Test.Validation.ValidationException"/> if a result data item fails to validate.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.Validate(System.Boolean,System.Boolean)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="throwOnFailure">if set to <c>true</c> forces a validator
+            to throw <see cref="T:Microsoft.Test.Validation.ValidationException"/> if a result data item fails to validate.</param>
+            <param name="throwIfNoResults">if set to <c>true</c> forces a validator to throw
+            <see cref="T:Microsoft.Test.Validation.ValidationException"/> if no result data items are registered for validation.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationContext.Validate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="options">The validation options to use for validation.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="options"/> is a <c>null</c>
+            reference.</exception>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered for a validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowIfNoResults"/> property of
+            <paramref name="options"/> is <c>true</c>
+            or any registered result data item fails to satisfy a validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property</exception>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationContext.CreationStack">
+            <summary>
+            Gets the <see cref="T:System.Diagnostics.StackTrace"/> instance captured when this instance was created.
+            </summary>
+            <value>The creation stack.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationContext.CurrentContext">
+            <summary>
+            Returns the current validation context
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationContext.Id">
+            <summary>
+            Gets the unique ID for this validation engine instance.
+            </summary>
+            <value>The id.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationContext.IsDefault">
+            <summary>
+            Gets a value indicating whether this validation context is the default instance.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is the default validation context; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationContext.Name">
+            <summary>
+            Gets the name of this validation context.
+            </summary>
+            <value>The context name.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationContext.ParentValidationContext">
+            <summary>
+            The ValidationContext that serves as the parent for this instance
+            </summary>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationContext.Default">
+            <summary>
+            Returns a new instance of the default validation context.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ValidationEngine">
+            <summary>
+            Provides services to track validators.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationEngine.LogicalCallContextEngineInstanceKey">
+            <summary>The key used to persist a validation engine instance into the current logical call context.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.ValidationEngine.id">
+            <summary>An unique ID associated with this validation engine instance.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationEngine"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.</param>
+            <returns><c>true</c> if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.PopContext">
+            <summary>
+            Discards the current validation context and retrieves the last saved context from the context stack.
+            </summary>
+            <remarks>
+            If the currente context is the initial (default) validation context, then this method has no effect.
+            </remarks>
+            <returns>ValidationContext that was popped off the current validation stack</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.PushContext(System.String)">
+            <summary>
+            Pushes the current validation context onto the context stack and creates a new validation context.
+            </summary>
+            <param name="contextName">The name to assign to the new validation context.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.ValidationEngine"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.PopAndValidatePastContext(Microsoft.Test.Validation.ValidationContext)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="popTo">The validation context to pop off.</param>
+            <remarks>This method will pop off any contexts that were pushed onto the stack after the specified context to keep contexts aligned properly on the stack.  Validation will be called until an exception is called, regardless of context which throws the exception all contexts will be rolled off.</remarks>
+            <returns>True if validation succeeded, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.PopAndValidatePastContext(Microsoft.Test.Validation.ValidationContext,System.Boolean)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="thrownOnFailure">if set to <c>true</c> forces a failed validator
+            to throw <see cref="T:Microsoft.Test.Validation.ValidationException"/> if a result data item fails to validate.</param>
+            <param name="popTo">The validation context to pop off.</param>
+            <remarks>This method will pop off any contexts that were pushed onto the stack after the specified context to keep contexts aligned properly on the stack.  Validation will be called until an exception is called, regardless of context which throws the exception all contexts will be rolled off.</remarks>
+            <returns>True if validation succeeded, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.PopAndValidatePastContext(Microsoft.Test.Validation.ValidationContext,System.Boolean,System.Boolean)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="thrownOnFailure">if set to <c>true</c> forces a validator
+            to throw <see cref="T:Microsoft.Test.Validation.ValidationException"/> if a result data item fails to validate.</param>
+            <param name="throwIfNoResults">if set to <c>true</c> forces a validator to throw
+            <see cref="T:Microsoft.Test.Validation.ValidationException"/> if no result data items are registered for validation.</param>
+            <param name="popTo">The validation context to pop off.</param>
+            <remarks>This method will pop off any contexts that were pushed onto the stack after the specified context to keep contexts aligned properly on the stack.  Validation will be called until an exception is called, regardless of context which throws the exception all contexts will be rolled off.</remarks>
+            <returns>True if validation succeeded, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.PopAndValidatePastContext(Microsoft.Test.Validation.ValidationContext,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="options">The validation options to use for validation.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="options"/> is a <c>null</c>
+            reference.</exception>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered for a validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowIfNoResults"/> property of
+            <paramref name="options"/> is <c>true</c>
+            or any registered result data item fails to satisfy a validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property</exception>
+            <param name="popTo">The validation context to pop off.</param>
+            <remarks>This method will pop off any contexts that were pushed onto the stack after the specified context to keep contexts aligned properly on the stack.  Validation will be called until an exception is called, regardless of context which throws the exception all contexts will be rolled off.</remarks>
+            <returns>True if validation succeeded, false otherwise.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.Validate">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.Validate(System.Boolean)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="thrownOnFailure">if set to <c>true</c> forces a failed validator
+            to throw <see cref="T:Microsoft.Test.Validation.ValidationException"/> if a result data item fails to validate.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.Validate(System.Boolean,System.Boolean)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="thrownOnFailure">if set to <c>true</c> forces a validator
+            to throw <see cref="T:Microsoft.Test.Validation.ValidationException"/> if a result data item fails to validate.</param>
+            <param name="throwIfNoResults">if set to <c>true</c> forces a validator to throw
+            <see cref="T:Microsoft.Test.Validation.ValidationException"/> if no result data items are registered for validation.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.Validate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Forces all registered top-level validators to validate their registered
+            result data.
+            </summary>
+            <param name="options">The validation options to use for validation.</param>
+            <exception cref="T:System.ArgumentNullException">If <paramref name="options"/> is a <c>null</c>
+            reference.</exception>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered for a validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowIfNoResults"/> property of
+            <paramref name="options"/> is <c>true</c>
+            or any registered result data item fails to satisfy a validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationEngine.Register(Microsoft.Test.Validation.ValidatorBase)">
+            <summary>
+            Registers the specified validator to the list of validators tracked
+            by this validation engine.
+            </summary>
+            <param name="validator">The validator to register.</param>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationEngine.Instance">
+            <summary>
+            Gets the validation engine instance for the current logical call context.
+            </summary>
+            <value>An existing validation instance if an instance was previously created in the current logical context
+            or a new instance that is inherited by execution flow in the current logical call context.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationEngine.CurrentContext">
+            <summary>
+            Gets the current validation context.
+            </summary>
+            <value>The current context.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationEngine.Id">
+            <summary>
+            Gets the unique ID for this validation engine instance.
+            </summary>
+            <value>The id.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ValidationException">
+            <summary>
+            The type of exception thrown when validation fails.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> class.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="inner">The inner exception.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor(Microsoft.Test.Validation.ValidatorBase)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> class.
+            </summary>
+            <param name="validator">The validator that failed and caused this exception to be thrown.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor(Microsoft.Test.Validation.ValidatorBase,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> class.
+            </summary>
+            <param name="validator">The validator that failed and caused this exception to be thrown.</param>
+            <param name="value">The value for which validation failed.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor(System.String,Microsoft.Test.Validation.ValidatorBase)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> class.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="validator">The validator that failed and caused this exception to be thrown.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor(System.String,Microsoft.Test.Validation.ValidatorBase,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> class.
+            </summary>
+            <param name="message">The exception message.</param>
+            <param name="validator">The validator that failed and caused this exception to be thrown.</param>
+            <param name="value">The value for which validation failed.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> 
+            with information about the exception.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is a null reference (Nothing in Visual Basic).
+            </exception>
+            <PermissionSet>
+            	<IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*"/>
+            	<IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="SerializationFormatter"/>
+            </PermissionSet>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationException.ValidatorFailedMessage(System.String,Microsoft.Test.Validation.ValidatorBase,System.Object)">
+            <summary>
+            Provides a validator failed message based off of either a user defined message or a default message if one is not specified.  If there is a value specified this also is output.
+            </summary>
+            <param name="message">User message if provided, null or empty if not.</param>
+            <param name="validator">The validator that failed.</param>
+            <param name="value">The value that was provided to the validator.</param>
+            <returns>Validator failed message.</returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationException.Validator">
+            <summary>
+            Gets or sets the <see cref="T:Microsoft.Test.Validation.ValidatorBase"/> that failed.
+            </summary>
+            <value>The validator.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationException.Value">
+            <summary>
+            Gets or sets the value for which validation failed.
+            </summary>
+            <value>The value.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationException.UserMessage">
+            <summary>
+            The user's error message
+            </summary>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ValidationOptions">
+            <summary>
+            A container for storing options related to a validation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationOptions.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationOptions"/> type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationOptions.#ctor(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidationOptions"/> class.
+            </summary>
+            <param name="source">The source.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationOptions.Clone">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationOptions.Copy">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>
+            A new object that is a copy of this instance.
+            </returns>
+            <remarks>
+            This method is a strongly typed version of <see cref="M:Microsoft.Test.Validation.ValidationOptions.Clone"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationOptions.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:Microsoft.Test.Validation.ValidationOptions"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:Microsoft.Test.Validation.ValidationOptions"/>.</param>
+            <returns><c>true</c> if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:Microsoft.Test.Validation.ValidationOptions"/>; otherwise, false.</returns>
+            <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is null.</exception>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationOptions.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>A hash code for the current <see cref="T:Microsoft.Test.Validation.ValidationOptions"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidationOptions.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.ValidationOptions"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.ValidationOptions"/>.</returns>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationOptions.Logger">
+            <summary>
+            Gets or sets the logger to use to report validation progress and related data.
+            </summary>
+            <value>The logger.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationOptions.ThrowIfNoResults">
+            <summary>
+            Gets or sets a value indicating whether a validator setup with this options instance should 
+            thrown an exception if no result objects are registered into that validator.
+            </summary>
+            <value><c>true</c> if no result data is registered with the associated validator; 
+            otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure">
+            <summary>
+            Gets or sets a value indicating whether this validator should thrown an exception
+            if any of the conditions represented by this validator fail to be satisfied.
+            </summary>
+            <value><c>true</c> if an exception should be thrown if any of the conditions represented by this 
+            validator are not satisfied; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Microsoft.Test.Validation.ValidationOptions.TreatExceptionsAsFailures">
+            <summary>
+            Gets or sets a value indicating whether an exception thrown when evaluating a sub-expression
+            in a validator should be treated as a failure. 
+            </summary>
+            <remarks>
+            This is <c>true</c> by default. If set to <c>false</c>, exceptions are propagated.
+            </remarks>
+            <value>
+            	<c>true</c> if exceptions should be treated as failures; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.Validator`1">
+            <summary>
+            Represents a validator that represents a set of conditions that a single strongly typed test data item 
+            or test result item must satisfy.
+            </summary>
+            <typeparam name="T">The type of the value that the expression rooted at this validator
+            will validate.</typeparam>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Validator`1.results">
+            <summary>A list of all result data registered with this validator to be validated in a 
+            deferred manner.</summary>
+        </member>
+        <member name="F:Microsoft.Test.Validation.Validator`1.rootExpression">
+            <summary>The root expression that is evaluated by this validator.</summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.#ctor(Microsoft.Test.Validation.Condition{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.Validator`1"/> type.
+            </summary>
+            <param name="rootExpression">The root expression evaluated by this validator.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.#ctor(System.Predicate{`0})">
+            <summary>
+            Constructs a new validator from a predicate
+            </summary>
+            <param name="toValidate">The predicate to validate with</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.op_Implicit(System.Predicate{`0})~Microsoft.Test.Validation.Validator{`0}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:System.Predicate`1"/> to 
+            <see cref="T:Microsoft.Test.Validation.Validator`1"/>.
+            </summary>
+            <param name="predicate">The predicate.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.op_Implicit(Microsoft.Test.Validation.ResultCondition{`0})~Microsoft.Test.Validation.Validator{`0}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:Microsoft.Test.Validation.ResultCondition`1"/> 
+            to <see cref="T:Microsoft.Test.Validation.Validator`1"/>.
+            </summary>
+            <param name="condition">The condition.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.op_Implicit(System.Func{`0,System.Boolean})~Microsoft.Test.Validation.Validator{`0}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:System.Func`2"/>
+            to <see cref="T:Microsoft.Test.Validation.Validator`1"/>.
+            </summary>
+            <param name="func">The <see cref="T:System.Func`2"/> wrapped by this validator.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.op_Implicit(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})~Microsoft.Test.Validation.Validator{`0}">
+            <summary>
+            Performs an implicit conversion from <see cref="T:System.Linq.Expressions.Expression`1"/>
+            to <see cref="T:Microsoft.Test.Validation.Validator`1"/>.
+            </summary>
+            <param name="expression">The expression.</param>
+            <returns>The result of the conversion.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.AddResult(`0)">
+            <summary>
+            Adds a result data object to the results list maintained by this validator
+            for deferred validation.
+            </summary>
+            <param name="result">The result data to add.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.AddResults(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Adds result data objects to the results list maintained by this validator
+            for deferred validation.
+            </summary>
+            <param name="range">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of the result data objects to add to this validator.</param>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Validator`1"/>.
+            </summary>
+            <returns>A <see cref="T:System.String"/> that represents the current <see cref="T:Microsoft.Test.Validation.Validator`1"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.Validate(`0)">
+            <summary>
+            Validates the specified value against the conditions expressed by this validator.
+            </summary>
+            <param name="instance">The value to validate.</param>
+            <returns><c>true</c> if <paramref name="instance"/> satisfies the conditions expressed by this validator; <c>false</c>, otherwise.</returns>
+            <remarks>If the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property is set to <c>true</c>, 
+            then this method will fail by throwing an exception; otherwise <c>true</c> or <c>false</c> may 
+            be returned.</remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.Validate(`0,System.Boolean)">
+            <summary>
+            Validates the specified value against the conditions expressed by this validator.
+            </summary>
+            <param name="instance">The value to validate.</param>
+            <param name="throwOnFailure">If set to <c>true</c> then an exception will be thrown 
+            when the condition(s) expressed by this validator are not satisfied.</param>
+            <returns>
+            	<c>true</c> if <paramref name="instance"/> satisfies the conditions expressed by this validator; <c>false</c>, otherwise.
+            </returns>
+            <remarks>If the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property is set to <c>true</c>,
+            then this method will fail by throwing an exception; otherwise <c>true</c> or <c>false</c> may
+            be returned.</remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.Validate(`0,Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Validates the specified value against the conditions expressed by this validator.
+            </summary>
+            <param name="instance">The value to validate.</param>
+            <param name="options">A validation options that overrides the value of the <see cref="P:Options"/>
+            property.</param>
+            <returns>
+            	<c>true</c> if <paramref name="instance"/> satisfies the conditions expressed by this validator; <c>false</c>, otherwise.
+            </returns>
+            <remarks>If the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property is set to <c>true</c>,
+            then this method will fail by throwing an exception; otherwise <c>true</c> or <c>false</c> may
+            be returned.</remarks>
+        </member>
+        <member name="M:Microsoft.Test.Validation.Validator`1.Validate(Microsoft.Test.Validation.ValidationOptions)">
+            <summary>
+            Forces this validator to validate all registered result data.
+            </summary>
+            <param name="validationOptions">The validation options to use for validation.</param>
+            <returns></returns>
+            <exception cref="T:Microsoft.Test.Validation.ValidationException">If no result data items are registered and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowIfNoResults"/> property of
+            <paramref name="validationOptions"/> is <c>true</c>
+            or any registered result data item fails to satisfy this validator and the <see cref="P:Microsoft.Test.Validation.ValidationOptions.ThrowOnFailure"/> property</exception>
+        </member>
+        <member name="P:Microsoft.Test.Validation.Validator`1.Condition">
+            <summary>
+            Gets the condition evaluated by this validator against its result set.
+            </summary>
+            <value>An instance of <see cref="T:Microsoft.Test.Validation.Condition{T}"/>.</value>.
+        </member>
+        <member name="P:Microsoft.Test.Validation.Validator`1.Results">
+            <summary>
+            Gets a read-only <see cref="T:System.Collections.Generic.ICollection`1"/> of result
+            data items that have been added to this validator for deferred validation.
+            </summary>
+            <value>The results collection.</value>
+        </member>
+        <member name="T:Microsoft.Test.Validation.ValidatorCollection">
+            <summary>
+            A <see cref="T:System.Collections.Generic.ICollection`1"/> to track
+            <see cref="T:Microsoft.Test.Validation.ValidatorBase"/> instances keyed by the <see cref="P:Microsoft.Test.Validation.ValidatorBase.Id"/>
+            property.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Test.Validation.ValidatorCollection"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Test.Validation.ValidatorCollection.GetKeyForItem(Microsoft.Test.Validation.ValidatorBase)">
+            <summary>
+            When implemented in a derived class, extracts the key from the specified element.
+            </summary>
+            <param name="item">The element from which to extract the key.</param>
+            <returns>The key for the specified element.</returns>
+        </member>
+    </members>
+</doc>

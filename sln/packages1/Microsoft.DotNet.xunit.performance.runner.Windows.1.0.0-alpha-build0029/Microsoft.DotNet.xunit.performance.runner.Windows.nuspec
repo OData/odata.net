@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="2.8.5">
+    <id>Microsoft.DotNet.xunit.performance.runner.Windows</id>
+    <version>1.0.0-alpha-build0029</version>
+    <title>xUnit Performance Runner for Windows</title>
+    <authors>ericeil@microsoft.com;pharring@microsoft.com</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>https://raw.githubusercontent.com/Microsoft/xunit-performance/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/xunit-performance</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Contains the tools necessary for running xunit Performance tests in Windows using ETW tracing.</description>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="xunit.runner.console" version="2.1.0" />
+    </dependencies>
+  </metadata>
+</package>
