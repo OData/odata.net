@@ -1,4 +1,4 @@
-# configuration for master/CI branch
+# configuration for demo/CI branch
 -
   branches:
     only:
@@ -25,12 +25,12 @@
     project: sln\OData.Net45.sln
     verbosity: minimal
   test_script:
-  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"bin\AnyCPU\Debug\Test\Desktop\Microsoft.OData.Client.Tests.dll -noshadow" -filter:"+[*]* -[Microsoft.OData.Client.Tests]*" -output:".\coverage.xml"
+  - OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.exe" -targetargs:"bin\AnyCPU\Debug\Test\Desktop\Microsoft.Spatial.Tests.dll -noshadow" -filter:"+[Microsoft.Spatial*]* -[Microsoft.Spatial.Tests*]*" -output:"sln\coverage.xml"
   after_test:
   - ps: |
       $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
       Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
-      bash codecov.sh -f "coverage.xml"
+      bash codecov.sh -f "sln\coverage.xml"
   after_build:
   #- msbuild "sln\OData.Net45.sln" /t:Rebuild
   #- MSBuild.SonarQube.Runner.exe end /d:sonar.login="705f88ba464efc4e93f916c7ce25cfdd183dc1e1"
