@@ -17,6 +17,7 @@ namespace Microsoft.OData.Client.Metadata
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using c = Microsoft.OData.Client;
+    using System.Runtime.Serialization;
 
     #endregion Namespaces.
 
@@ -435,7 +436,7 @@ namespace Microsoft.OData.Client.Metadata
 
             string typeName = type.ToString();
             IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
-            bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
+            bool isEntity = customAttributes.OfType<DataContractAttribute>().Any();
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
             List<PropertyInfo> keyProperties = new List<PropertyInfo>();
             PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
@@ -509,57 +510,57 @@ namespace Microsoft.OData.Client.Metadata
             return fieldInfo.FieldType;
         }
 
-        /// <summary>Gets the server defined name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="propertyInfo"/>.</summary>
+        /// <summary>Gets the server defined name in <see cref="DataMemberAttribute"/> of the specified <paramref name="propertyInfo"/>.</summary>
         /// <param name="propertyInfo">Member to get server defined name of.</param>
         /// <returns>Server defined name.</returns>
         internal static string GetServerDefinedName(PropertyInfo propertyInfo)
         {
-            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)propertyInfo.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-            if (originalNameAttribute != null)
+            DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)propertyInfo.GetCustomAttributes(typeof(DataMemberAttribute), false).SingleOrDefault();
+            if (dataMemberAttribute != null)
             {
-                return originalNameAttribute.OriginalName;
+                return dataMemberAttribute.Name;
             }
 
             return propertyInfo.Name;
         }
 
-        /// <summary>Gets the server defined name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="memberInfo"/>.</summary>
+        /// <summary>Gets the server defined name in <see cref="DataMemberAttribute"/> of the specified <paramref name="memberInfo"/>.</summary>
         /// <param name="memberInfo">Member to get server defined name of.</param>
         /// <returns>The server defined name.</returns>
         internal static string GetServerDefinedName(MemberInfo memberInfo)
         {
-            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)memberInfo.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-            if (originalNameAttribute != null)
+            DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)memberInfo.GetCustomAttributes(typeof(DataMemberAttribute), false).SingleOrDefault();
+            if (dataMemberAttribute != null)
             {
-                return originalNameAttribute.OriginalName;
+                return dataMemberAttribute.Name;
             }
 
             return memberInfo.Name;
         }
 
-        /// <summary>Gets the server defined type name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="type"/>.</summary>
+        /// <summary>Gets the server defined type name in <see cref="DataMemberAttribute"/> of the specified <paramref name="type"/>.</summary>
         /// <param name="type">Member to get server defined type name of.</param>
         /// <returns>The server defined type name.</returns>
         internal static string GetServerDefinedTypeName(Type type)
         {
-            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-            if (originalNameAttribute != null)
+            DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)type.GetCustomAttributes(typeof(DataMemberAttribute), false).SingleOrDefault();
+            if (dataMemberAttribute != null)
             {
-                return originalNameAttribute.OriginalName;
+                return dataMemberAttribute.Name;
             }
 
             return type.Name;
         }
 
-        /// <summary>Gets the full server defined type name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="type"/>.</summary>
+        /// <summary>Gets the full server defined type name in <see cref="DataMemberAttribute"/> of the specified <paramref name="type"/>.</summary>
         /// <param name="type">Member to get server defined name of.</param>
         /// <returns>The server defined type full name.</returns>
         internal static string GetServerDefinedTypeFullName(Type type)
         {
-            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-            if (originalNameAttribute != null)
+            DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)type.GetCustomAttributes(typeof(DataMemberAttribute), false).SingleOrDefault();
+            if (dataMemberAttribute != null)
             {
-                return type.Namespace + "." + originalNameAttribute.OriginalName;
+                return type.Namespace + "." + dataMemberAttribute.Name;
             }
 
             return type.FullName;
@@ -579,8 +580,8 @@ namespace Microsoft.OData.Client.Metadata
             {
                 FieldInfo memberInfo = t.GetField(serverSideName) ?? t.GetFields().ToList().Where(m =>
                 {
-                    OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                    return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
+                    DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)m.GetCustomAttributes(typeof(DataMemberAttribute), false).SingleOrDefault();
+                    return dataMemberAttribute != null && dataMemberAttribute.Name == serverSideName;
                 }).SingleOrDefault();
 
                 if (memberInfo == null)
@@ -609,8 +610,8 @@ namespace Microsoft.OData.Client.Metadata
                 propertyInfo = t.GetProperties().Where(
                          m =>
                          {
-                             OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                             return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName;
+                             DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)m.GetCustomAttributes(typeof(DataMemberAttribute), false).SingleOrDefault();
+                             return dataMemberAttribute != null && dataMemberAttribute.Name == serverDefinedName;
                          }).SingleOrDefault();
             }
 
@@ -650,8 +651,8 @@ namespace Microsoft.OData.Client.Metadata
                 var clientNamedMethodInfo = t.GetMethods().Where(
                     m =>
                     {
-                        OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                        return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName;
+                        DataMemberAttribute dataMemberAttribute = (DataMemberAttribute)m.GetCustomAttributes(typeof(DataMemberAttribute), false).SingleOrDefault();
+                        return dataMemberAttribute != null && dataMemberAttribute.Name == serverDefinedName;
                     }).FirstOrDefault();
 
                 if (clientNamedMethodInfo != null)

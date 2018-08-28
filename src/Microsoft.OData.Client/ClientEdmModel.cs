@@ -27,6 +27,7 @@ namespace Microsoft.OData.Client
     using ConcurrentEdmSchemaDictionary = System.Collections.Generic.Dictionary<string, Edm.IEdmSchemaElement>;
 #else
     using ConcurrentEdmSchemaDictionary = System.Collections.Concurrent.ConcurrentDictionary<string, Edm.IEdmSchemaElement>;
+    using System.Runtime.Serialization;
 #endif
 
     #endregion Namespaces.
@@ -306,8 +307,8 @@ namespace Microsoft.OData.Client
                 {
                     // Find the type where the DataServiceEntityAttribute is declared on.
                     baseEntityType = type;
-                    Debug.Assert(type.GetCustomAttributes(true).OfType<EntityTypeAttribute>().Any(), "type.GetCustomAttributes(true).OfType<DataServiceEntityAttribute>().Any()");
-                    while (!baseEntityType.GetCustomAttributes(false).OfType<EntityTypeAttribute>().Any() && c.PlatformHelper.GetBaseType(baseEntityType) != null)
+                    Debug.Assert(type.GetCustomAttributes(true).OfType<DataContractAttribute>().Any(), "type.GetCustomAttributes(true).OfType<DataServiceEntityAttribute>().Any()");
+                    while (!baseEntityType.GetCustomAttributes(false).OfType<DataContractAttribute>().Any() && c.PlatformHelper.GetBaseType(baseEntityType) != null)
                     {
                         baseEntityType = c.PlatformHelper.GetBaseType(baseEntityType);
                     }

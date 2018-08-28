@@ -10,6 +10,7 @@ namespace Microsoft.OData.Client
 
     /// <summary>Denotes the original name of a variable defined in metadata. </summary>
     [AttributeUsage(AttributeTargets.All)]
+    [Obsolete("This attribute is no longer used to define the name of an OData entity. Please use System.Runtime.Serialization.DataMemberAttribute instead.")]
     public sealed class OriginalNameAttribute : Attribute
     {
         /// <summary>The original name.</summary>

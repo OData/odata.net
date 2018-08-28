@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.Serialization;
 using FluentAssertions;
 using Xunit;
 
@@ -156,7 +157,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($expand=NavProp3($select=SubTestProperty))");
         }
 
-        [EntityType]
+        [DataContract]
         [Key("testKey")]
         private class TestEntity
         {
@@ -166,7 +167,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             public SubTestEntity2 NavProp2 { get; set; }
         }
 
-        [EntityType]
+        [DataContract]
         [Key("testSubKey1")]
         private class SubTestEntity1
         {
@@ -174,7 +175,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             public SubTestEntity2 NavProp3 { get; set; }
         }
 
-        [EntityType]
+        [DataContract]
         [Key("testSubKey2")]
         private class SubTestEntity2
         {

@@ -96,11 +96,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 /// <summary>
 /// The string for the edmx content.
 /// </summary>
-public string Edmx
-{
-    get;
-    set;
-}
+public string Edmx { get; set; }
 
 /// <summary>
 /// The Uri string to the metadata document.
@@ -145,11 +141,7 @@ private string metadataDocumentUri;
 /// <summary>
 /// The Func to get referenced model's XmlReader. Must have value when the this.Edmx xml or this.metadataDocumentUri's model has referneced model.
 /// </summary>
-public Func<Uri,XmlReader> GetReferencedModelReaderFunc
-{
-    get;
-    set;
-}
+public Func<Uri,XmlReader> GetReferencedModelReaderFunc { get; set; }
 
 /// <summary>
 /// The NamespacePrefix is used as the only namespace for types in the same namespace as the default container,
@@ -181,38 +173,22 @@ private string namespacePrefix;
 /// <summary>
 /// true to use DataServiceCollection in the generated code, false otherwise.
 /// </summary>
-public bool UseDataServiceCollection
-{
-    get;
-    set;
-}
+public bool UseDataServiceCollection { get; set; }
 
 /// <summary>
 /// Specifies which specific .Net Framework language the generated code will target.
 /// </summary>
-public LanguageOption TargetLanguage
-{
-    get;
-    set;
-}
+public LanguageOption TargetLanguage { get; set; }
 
 /// <summary>
 /// true to use Upper camel case for all class and property names, false otherwise.
 /// </summary>
-public bool EnableNamingAlias
-{
-    get;
-    set;
-}
+public bool EnableNamingAlias { get; set; }
 
 /// <summary>
 /// true to ignore unknown elements or attributes in metadata, false otherwise.
 /// </summary>
-public bool IgnoreUnexpectedElementsAndAttributes
-{
-    get;
-    set;
-}
+public bool IgnoreUnexpectedElementsAndAttributes { get; set; }
 
 /// <summary>
 /// Generate code targeting a specific .Net Framework language.
@@ -550,11 +526,7 @@ public class CodeGenerationContext
     /// <summary>
     /// Dictionary that stores uri and referenced xml mapping.
     /// </summary>
-    public Dictionary<Uri, XElement> ReferencesMap
-    {
-        get;
-        set;
-    }
+    public Dictionary<Uri, XElement> ReferencesMap { get; set; }
 
     /// <summary>
     /// The array of namespaces in the current edm model.
@@ -669,38 +641,22 @@ public class CodeGenerationContext
     /// <summary>
     /// true to use DataServiceCollection in the generated code, false otherwise.
     /// </summary>
-    public bool UseDataServiceCollection
-    {
-        get;
-        set;
-    }
+    public bool UseDataServiceCollection { get; set; }
 
     /// <summary>
     /// Specifies which specific .Net Framework language the generated code will target.
     /// </summary>
-    public LanguageOption TargetLanguage
-    {
-        get;
-        set;
-    }
+    public LanguageOption TargetLanguage { get; set; }
 
     /// <summary>
     /// true to use Upper camel case for all class and property names, false otherwise.
     /// </summary>
-    public bool EnableNamingAlias
-    {
-        get;
-        set;
-    }
+    public bool EnableNamingAlias { get; set; }
 
     /// <summary>
     /// true to ignore unknown elements or attributes in metadata, false otherwise.
     /// </summary>
-    public bool IgnoreUnexpectedElementsAndAttributes
-    {
-        get;
-        set;
-    }
+    public bool IgnoreUnexpectedElementsAndAttributes { get; set; }
 
     /// <summary>
     /// Maps the element type of an entity set to the entity set.
@@ -1029,7 +985,7 @@ public abstract class ODataClientTemplate : TemplateBase
     internal abstract void WriteClassEndForEntityContainer();
     internal abstract void WriteSummaryCommentForStructuredType(string typeName);
     internal abstract void WriteKeyPropertiesCommentAndAttribute(IEnumerable<string> keyProperties, string keyString);
-    internal abstract void WriteEntityTypeAttribute();
+    internal abstract void WriteDataContractAttribute();
     internal abstract void WriteEntitySetAttribute(string entitySetName);
     internal abstract void WriteEntityHasStreamAttribute();
     internal abstract void WriteClassStartForStructuredType(string abstractModifier, string typeName, string originalTypeName, string baseTypeName);
@@ -1638,7 +1594,7 @@ public abstract class ODataClientTemplate : TemplateBase
         }
         else
         {
-            this.WriteEntityTypeAttribute();
+            this.WriteDataContractAttribute();
         }
 
         if (this.context.UseDataServiceCollection)
@@ -3146,7 +3102,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-    [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalContainerName #>")]
+    [global::System.Runtime.Serialization.DataContract(Name="<#= originalContainerName #>")]
 <#+
         }
 #>
@@ -3253,7 +3209,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-            global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
+            global::System.Runtime.Serialization.DataMemberAttribute dataMemberAttribute = (global::System.Runtime.Serialization.DataMemberAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::System.Runtime.Serialization.DataMemberAttribute), true));
 <#+
         }
     }
@@ -3267,9 +3223,9 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-                if (originalNameAttribute != null)
+                if (dataMemberAttribute != null)
                 {
-                    return string.Concat("<#= fullNamespace #>.", originalNameAttribute.OriginalName);
+                    return string.Concat("<#= fullNamespace #>.", dataMemberAttribute.Name);
                 }
 <#+
         }
@@ -3284,9 +3240,9 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias && modelHasInheritance)
         {
 #>
-            if (originalNameAttribute != null)
+            if (dataMemberAttribute != null)
             {
-                return clientType.Namespace + "." + originalNameAttribute.OriginalName;
+                return clientType.Namespace + "." + dataMemberAttribute.Name;
             }
 <#+
         }
@@ -3331,7 +3287,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalEntitySetName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalEntitySetName #>")]
 <#+
         }
 #>
@@ -3373,7 +3329,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalSingletonName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalSingletonName #>")]
 <#+
         }
 #>
@@ -3557,10 +3513,10 @@ namespace <#= fullNamespace #>
 <#+
     }
 
-    internal override void WriteEntityTypeAttribute()
+    internal override void WriteDataContractAttribute()
     {
 #>
-    [global::Microsoft.OData.Client.EntityType()]
+    [global::System.Runtime.Serialization.DataContract()]
 <#+
     }
 
@@ -3583,7 +3539,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-    [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalTypeName #>")]
+    [global::System.Runtime.Serialization.DataContract(Name="<#= originalTypeName #>")]
 <#+
         }
 #>
@@ -3664,7 +3620,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias || IdentifierMappings.ContainsKey(originalPropertyName))
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalPropertyName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalPropertyName #>")]
 <#+
         }
 #>
@@ -3747,7 +3703,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-    [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalEnumName #>")]
+    [global::System.Runtime.Serialization.DataMember(Name="<#= originalEnumName #>")]
 <#+
         }
 #>
@@ -3761,7 +3717,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalMemberName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalMemberName #>")]
 <#+
         }
 #>
@@ -3786,7 +3742,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalFunctionName #>")]
 <#+
         }
 #>
@@ -3807,7 +3763,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalFunctionName #>")]
 <#+
         }
 #>
@@ -3828,7 +3784,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalFunctionName #>")]
 <#+
         }
 #>
@@ -3851,7 +3807,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalFunctionName #>")]
 <#+
         }
 #>
@@ -3875,7 +3831,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalActionName #>")]
 <#+
         }
 #>
@@ -3896,7 +3852,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalActionName #>")]
 <#+
         }
 #>
@@ -3992,7 +3948,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalFunctionName #>")]
 <#+
         }
 #>
@@ -4018,7 +3974,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalFunctionName #>")]
 <#+
         }
 #>
@@ -4044,7 +4000,7 @@ namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")]
+        [global::System.Runtime.Serialization.DataMember(Name="<#= originalActionName #>")]
 <#+
         }
 #>
@@ -4211,7 +4167,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-    <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalContainerName #>")>  _
+    <Global.System.Runtime.Serialization.DataContractAttribute("<#= originalContainerName #>")>  _
 <#+
         }
 #>
@@ -4329,8 +4285,8 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-            Dim originalNameAttribute As Global.Microsoft.OData.Client.OriginalNameAttribute =
-                CType(Global.System.Linq.Enumerable.SingleOrDefault(Global.Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, GetType(Global.Microsoft.OData.Client.OriginalNameAttribute), true)), Global.Microsoft.OData.Client.OriginalNameAttribute)
+            Dim dataMemberAttribute As Global.System.Runtime.Serialization.DataMemberAttribute =
+                CType(Global.System.Linq.Enumerable.SingleOrDefault(Global.Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, GetType(Global.System.Runtime.Serialization.DataMemberAttribute), true)), Global.System.Runtime.Serialization.DataMemberAttribute)
 <#+
     }
     }
@@ -4343,8 +4299,8 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-                If (Not (originalNameAttribute) Is Nothing) Then
-                    Return String.Concat("<#= fullNamespace #>.", originalNameAttribute.OriginalName)
+                If (Not (dataMemberAttribute) Is Nothing) Then
+                    Return String.Concat("<#= fullNamespace #>.", dataMemberAttribute.Name)
                 End If
 <#+
         }
@@ -4359,9 +4315,9 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias && modelHasInheritance)
         {
 #>
-            If (Not (originalNameAttribute) Is Nothing) Then
+            If (Not (dataMemberAttribute) Is Nothing) Then
                 Dim fullName As String = clientType.FullName.Substring(ROOTNAMESPACE.Length)
-                Return fullName.Remove(fullName.LastIndexOf(clientType.Name)) + originalNameAttribute.OriginalName
+                Return fullName.Remove(fullName.LastIndexOf(clientType.Name)) + dataMemberAttribute.Name
             End If
 <#+
         }
@@ -4408,7 +4364,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalEntitySetName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalEntitySetName #>")>  _
 <#+
         }
 #>
@@ -4446,7 +4402,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalSingletonName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalSingletonName #>")>  _
 <#+
         }
 #>
@@ -4599,7 +4555,7 @@ Namespace <#= fullNamespace #>
 <#+
     }
 
-    internal override void WriteEntityTypeAttribute()
+    internal override void WriteDataContractAttribute()
     {
 #>
     <Global.Microsoft.OData.Client.EntityType()>  _
@@ -4625,7 +4581,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
     {
 #>
-    <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalTypeName #>")>  _
+    <Global.System.Runtime.Serialization.DataContractAttribute("<#= originalTypeName #>")>  _
 <#+
         }
 #>
@@ -4704,7 +4660,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias || IdentifierMappings.ContainsKey(originalPropertyName))
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalPropertyName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalPropertyName #>")>  _
 <#+
         }
 #>
@@ -4791,7 +4747,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
     {
 #>
-    <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalEnumName #>")>  _
+    <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalEnumName #>")>  _
 <#+
         }
 #>
@@ -4804,7 +4760,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalMemberName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalMemberName #>")>  _
 <#+
         }
 #>
@@ -4829,7 +4785,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalFunctionName #>")>  _
 <#+
         }
 #>
@@ -4849,7 +4805,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalFunctionName #>")>  _
 <#+
         }
 #>
@@ -4869,7 +4825,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalFunctionName #>")>  _
 <#+
         }
 #>
@@ -4891,7 +4847,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalFunctionName #>")>  _
 <#+
         }
 #>
@@ -4913,7 +4869,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalActionName #>")>  _
 <#+
         }
 #>
@@ -4933,7 +4889,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalActionName #>")>  _
 <#+
         }
 #>
@@ -5027,7 +4983,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalFunctionName #>")>  _
 <#+
         }
 #>
@@ -5052,7 +5008,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalFunctionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalFunctionName #>")>  _
 <#+
         }
 #>
@@ -5077,7 +5033,7 @@ Namespace <#= fullNamespace #>
         if (this.context.EnableNamingAlias)
         {
 #>
-        <Global.Microsoft.OData.Client.OriginalNameAttribute("<#= originalActionName #>")>  _
+        <Global.System.Runtime.Serialization.DataMemberAttribute("<#= originalActionName #>")>  _
 <#+
         }
 #>
