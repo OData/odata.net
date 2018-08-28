@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Extensions.DependencyInjection</id>
+    <version>1.0.0</version>
+    <authors>Microsoft.Extensions.DependencyInjection</authors>
+    <owners>Microsoft.Extensions.DependencyInjection</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
+    <projectUrl>http://www.asp.net/</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+    <description>Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.</description>
+    <copyright>Copyright © Microsoft Corporation</copyright>
+    <tags>dependencyinjection,di</tags>
+    <serviceable>true</serviceable>
+    <dependencies>
+      <group targetFramework=".NETStandard1.1">
+        <dependency id="System.Collections" version="4.0.11" />
+        <dependency id="System.Collections.Concurrent" version="4.0.12" />
+        <dependency id="System.Runtime.Extensions" version="4.1.0" />
+        <dependency id="System.Threading" version="4.0.11" />
+        <dependency id="System.Threading.Tasks" version="4.0.11" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="1.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

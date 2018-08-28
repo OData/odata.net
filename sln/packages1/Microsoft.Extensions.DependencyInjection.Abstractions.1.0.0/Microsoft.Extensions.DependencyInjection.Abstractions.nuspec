@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Extensions.DependencyInjection.Abstractions</id>
+    <version>1.0.0</version>
+    <authors>Microsoft.Extensions.DependencyInjection.Abstractions</authors>
+    <owners>Microsoft.Extensions.DependencyInjection.Abstractions</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
+    <projectUrl>http://www.asp.net/</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+    <description>Abstractions for dependency injection.
+Commonly used types:
+Microsoft.Extensions.DependencyInjection.IServiceCollection
+Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions</description>
+    <copyright>Copyright © Microsoft Corporation</copyright>
+    <tags>dependencyinjection,di</tags>
+    <serviceable>true</serviceable>
+    <dependencies>
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="System.ComponentModel" version="4.0.1" />
+        <dependency id="System.Diagnostics.Debug" version="4.0.11" />
+        <dependency id="System.Globalization" version="4.0.11" />
+        <dependency id="System.Linq" version="4.1.0" />
+        <dependency id="System.Linq.Expressions" version="4.1.0" />
+        <dependency id="System.Reflection" version="4.1.0" />
+        <dependency id="System.Resources.ResourceManager" version="4.0.1" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
