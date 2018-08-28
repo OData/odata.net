@@ -1,4 +1,4 @@
-# configuration for demo/CI branch
+# configuration for master/CI branch
 -
   branches:
     only:
