@@ -115,6 +115,7 @@ Here are some other usages or `build.cmd`:
 - `build.cmd DisableSkipStrongName` - Disable strong name skip of OData libraries on your machine and build (no test run).
 
 Notes: If there is build error with message "build.ps1 cannot be loaded", right click "build.ps1" -> Properties -> "Unlock".
+There will be few test report generated after build test execute.
 
 ### 3.3 Debug
 

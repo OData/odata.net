@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>xunit.performance.core</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Xunit.Performance.Benchmark">
+            <summary>
+            Provides methods to control benchmark execution.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xunit.Performance.Benchmark.Iterations">
+            <summary>
+            Gets a sequence of benchmark iterations.
+            </summary>
+            <remarks>
+            Call <see cref="M:Microsoft.Xunit.Performance.BenchmarkIteration.StartMeasurement"/> on each iteration
+            before executing the code to be measured.
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Benchmark.Iterate(System.Action)">
+            <summary>
+            Automatically iterate over a measured operation.
+            </summary>
+            <param name="measuredOperation">The operation to measure and iterate over.</param>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Benchmark.IterateAsync(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Automatically iterate over an asynchronous measured operation.
+            </summary>
+            <param name="asyncMeasuredOperation">The operation to measure and iterate over.</param>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.BenchmarkAttribute">
+            <summary>
+            Attribute that is applied to a method to indicate that it is a performance test that
+            should be run and measured by the performance test runner.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.BenchmarkIteration">
+            <summary>
+            Represents a single iteration of a benchmark.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.BenchmarkIteration.StartMeasurement">
+            <summary>
+            Starts measuring performance metrics for this iteration.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.BenchmarkIterationMeasurement">
+            <summary>
+            Represents an ongoing measurement of a benchmark iteration.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.BenchmarkIterationMeasurement.Dispose">
+            <summary>
+            Completes measurement of this iteration.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.Internal.BenchmarkIterator">
+            <summary>
+            Provides iterations for <see cref="P:Microsoft.Xunit.Performance.Benchmark.Iterations"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Internal.BenchmarkIterator.RunAsync(System.Func{System.Threading.Tasks.Task})">
+            <summary>
+            Runs the specified method with this <see cref="T:Microsoft.Xunit.Performance.Internal.BenchmarkIterator"/> as the <see cref="P:Microsoft.Xunit.Performance.Internal.BenchmarkIterator.Current"/> iterator.
+            </summary>
+            <param name="testMethod"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Microsoft.Xunit.Performance.Internal.BenchmarkIterator.Iterations">
+            <summary>
+            Gets the iterations for the current benchmark
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Internal.BenchmarkIterator.StartMeasurement(System.Int32)">
+            <summary>
+            Starts measurement for the given iteration, if it is the current iteration.
+            </summary>
+            <param name="iterationNumber"></param>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Internal.BenchmarkIterator.StopMeasurement(System.Int32)">
+            <summary>
+            Stops measurement for the given iteration, if it is the current iteration.
+            </summary>
+            <param name="iterationNumber"></param>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Internal.BenchmarkIterator.CreateIteration(System.Int32)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.Xunit.Performance.BenchmarkIteration"/> instance for the given iteration.
+            </summary>
+            <param name="iterationNumber"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.Sdk.IPerformanceMetricAttribute">
+            <summary>
+            Marker interface used by attributes which provide performance metric data.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.Sdk.IPerformanceMetricDiscoverer">
+            <summary>
+            Implemented by discoverers that provide metrics to performance tests.
+            </summary> 
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Sdk.IPerformanceMetricDiscoverer.GetMetrics(Xunit.Abstractions.IAttributeInfo)">
+            <summary>
+            Gets the performance metrics from the metric attribute.
+            </summary>
+            <param name="metricAttribute"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.Sdk.PerformanceMetricDiscovererAttribute">
+            <summary>
+            An attribute used to decorate classes which implement <see cref="T:Microsoft.Xunit.Performance.Sdk.IPerformanceMetricAttribute"/>, to indicate
+            how performance metrics should be discovered.  The discoverer type must implement <see cref="T:Microsoft.Xunit.Performance.Sdk.IPerformanceMetricDiscoverer"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Sdk.PerformanceMetricDiscovererAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:Microsoft.Xunit.Performance.Sdk.PerformanceMetricDiscovererAttribute"/>.
+            </summary>
+            <param name="typeName">The fully qualified name of the discoverer.</param>
+            <param name="assemblyName">The name of the assembly that the discoverer type is located in, without file extension.</param>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.Sdk.PerformanceMetricInfo">
+            <summary>
+            Provides information about a performance metric
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xunit.Performance.Sdk.PerformanceMetricInfo.Id">
+            <summary>
+            Gets a string that uniquely identifies this metric, and can be used as an element or attribute name in XML output.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xunit.Performance.Sdk.PerformanceMetricInfo.DisplayName">
+            <summary>
+            Gets the human-readable name of the metric.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Xunit.Performance.Sdk.PerformanceMetricInfo.Unit">
+            <summary>
+            Gets a string describing the units of measurement for this metric.  Use one of the pre-defined strings in <see cref="T:Microsoft.Xunit.Performance.Sdk.PerformanceMetricUnits"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.Sdk.PerformanceMetricInfo.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Constructs a new PerformamceMetricInfo
+            </summary>
+            <param name="id"></param>
+            <param name="displayName"></param>
+            <param name="unit"></param>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.Sdk.PerformanceMetricUnits">
+            <summary>
+            Provides standard strings for <see cref="P:Microsoft.Xunit.Performance.Sdk.PerformanceMetricInfo.Unit"/>
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xunit.Performance.Sdk.PerformanceMetricUnits.Count">
+            <summary>
+            Indicates that a performance metric's value is a unitless count.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xunit.Performance.Sdk.PerformanceMetricUnits.Milliseconds">
+            <summary>
+            Indicates that a performance metric's value is measures in milliseconds.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Xunit.Performance.Sdk.PerformanceMetricUnits.Bytes">
+            <summary>
+            Indicates that a performance metric's value is measured in bytes.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.MeasureGCAllocationsAttribute">
+            <summary>
+            An attribute that is applied to a method, class, or assembly, to indicate that the performance test framework
+            should collect and report the total size of objects allocated on the GC heap.
+            </summary>
+            <remarks>
+            Note that the underlying GC events used to collect this data report samples of aggregates of object allocations.
+            Even if every iteration of the test allocates, many iterations may report zero allocations.  The average value collected
+            across all iterations should give a meaningful measure of per-iteration allocations.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.MeasureInstructionsRetiredAttribute">
+            <summary>
+            An attribute that is applied to a method, class, or assembly, to indicate that the performance test framework
+            should collect and report the number of instructions retired per test iteration.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.MeasureInstructionsRetiredAttribute.#ctor">
+            <summary>
+            Mesaure instructions retired using the default sampling interval
+            </summary>
+        </member>
+        <member name="M:Microsoft.Xunit.Performance.MeasureInstructionsRetiredAttribute.#ctor(System.Int32)">
+            <summary>
+            Measure instructions retired using the specified sampling interval
+            </summary>
+            <param name="maxSampleInterval">
+            The maximum number of retired instructions to include in each sample.  If this it outside of the valid 
+            range for the machine being tested, the nearest valid value will be used instead.
+            A suggested starting point for this value is 100,000.
+            </param>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.MeasureGCCountsAttribute">
+            <summary>
+            An attribute that is applied to a method, class, or assembly, to indicate that the performance test framework
+            should collect and report GC counts for the given test(s).
+            </summary>
+        </member>
+        <member name="T:Microsoft.Xunit.Performance.OptimizeForBenchmarksAttribute">
+            <summary>
+            Apply this attribute to an assembly if it contains benchmarks.  This attribute configures xUnit for benchmark execution.
+            </summary>
+        </member>
+    </members>
+</doc>

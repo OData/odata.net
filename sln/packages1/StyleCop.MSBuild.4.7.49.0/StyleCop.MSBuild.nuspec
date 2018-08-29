@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="2.7">
+    <id>StyleCop.MSBuild</id>
+    <version>4.7.49.0</version>
+    <authors>Andy Reeves, Adam Ralph</authors>
+    <owners>Adam Ralph</owners>
+    <licenseUrl>https://bitbucket.org/adamralph/stylecop-msbuild/src/f067e2091562/license.txt</licenseUrl>
+    <projectUrl>https://bitbucket.org/adamralph/stylecop-msbuild</projectUrl>
+    <iconUrl>https://bitbucket.org/adamralph/stylecop-msbuild/raw/d2da22861c7ebed86110f416e0b9310fc3a74940/img/StyleCop.MSBuild.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>true</developmentDependency>
+    <description>NOTE: if you are using 4.7.48.0 or earlier, uninstall, then reinstall this version. DO NOT perform an update.
+
+Adds official StyleCop MSBuild targets to your project for running StyleCop analysis with every build. Includes official StyleCop binaries. Works both on a developer workstation (with or without Visual Studio) and on a build server. Does not require installation of StyleCop on any machine. Compatible with NuGet package restore. For update notifications follow https://twitter.com/adamralph. Come and chat to fellow developers about StyleCop and StyleCop.MSBuild at https://jabbr.net/#/rooms/stylecop/.</description>
+    <summary>NOTE: if you are using 4.7.48.0 or earlier, uninstall, then reinstall this version. DO NOT perform an update.
+
+Adds official StyleCop MSBuild targets to your project for running StyleCop analysis with every build. Includes official StyleCop binaries. Works both on a developer workstation (with or without Visual Studio) and on a build server. Does not require installation of StyleCop on any machine.</summary>
+    <releaseNotes>NOTE: if you are using 4.7.48.0 or earlier, uninstall, then reinstall this version. DO NOT perform an update.
+
+For StyleCop release notes see http://stylecop.codeplex.com/.
+
+StyleCop.MSBuild release notes:-
+
+4.7.48.1 New: Switch to using /build NuGet feature - https://bitbucket.org/adamralph/stylecop-msbuild/issue/12/
+
+4.7.46.1 Fixed: 'intitial' typo in Install.ps1 - https://bitbucket.org/adamralph/stylecop-msbuild/issue/11/
+
+4.7.36.1 New: Add StyleCopSettingsEditor.exe to tools folder - https://bitbucket.org/adamralph/stylecop-msbuild/issue/5/
+
+4.7.32.0 New: Remove duplication in XML elements - https://bitbucket.org/adamralph/stylecop-msbuild/issue/3/
+
+4.7.31.2 New: Compatibility with package restore workflow - https://bitbucket.org/adamralph/stylecop-msbuild/issue/1/
+
+4.7.31.1 Fixed: Changes element content line endings to unix style in project file - https://bitbucket.org/adamralph/stylecop-msbuild/issue/2/
+
+4.7.26.6 Fixed: Import element is not removed from csproj file when the repository root folder is not named 'packages' and/or when the repository root folder belongs to the same folder as the csproj file.
+
+4.7.17.1 New: Update .csproj Import during Nuget package install - https://stylecop.codeplex.com/workitem/7206/</releaseNotes>
+    <copyright>Copyright (c) Adam Ralph (adam@adamralph.com)</copyright>
+    <language>en-US</language>
+  </metadata>
+</package>
