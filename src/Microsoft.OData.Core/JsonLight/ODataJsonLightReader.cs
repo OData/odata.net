@@ -2282,17 +2282,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         ODataResourceBase resource = resourceState.Resource;
 
-                        IEnumerable<IEdmProperty> selectedProperties;
-
-                        if (resourceState.SelectedProperties == SelectedPropertiesNode.EntireSubtree)
-                        {
-                            selectedProperties = edmStructuredType.Properties();
-                        }
-                        else
-                        {
-                           // Partial subtree.
-                           selectedProperties = resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType);
-                        }
+                        IEnumerable<IEdmProperty> selectedProperties = resourceState.SelectedProperties.GetSelectedProperties(edmStructuredType);
 
                         // All dynamic properties: null value restoration for properties that are not present.
                         foreach (string name in resourceState.SelectedProperties.GetSelectedDynamicProperties(edmStructuredType))
@@ -2311,7 +2301,7 @@ namespace Microsoft.OData.JsonLight
                             Debug.Assert(currentProperty.Type != null, "currentProperty.Type != null");
 
                             // Skip declared properties that are not null-able types.
-                            // Skip navigation properties (no navigation link means link value is null)
+                            // Skip navigation properties (no navigation links need to be restored as null.)
                             // Skip properties that have been read (primitive or structural).
                             if (!currentProperty.Type.IsNullable
                                 || currentProperty.PropertyKind == EdmPropertyKind.Navigation

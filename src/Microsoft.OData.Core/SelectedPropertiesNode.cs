@@ -465,25 +465,25 @@ namespace Microsoft.OData
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
             {
-                return structuredType.DeclaredProperties;
+                return structuredType.Properties();
             }
 
             Debug.Assert(this.selectedProperties != null, "selectedProperties != null");
 
-            // Get declared properties selected, and filter out unrecognized properties.
+            // Get properties selected, and filter out unrecognized properties.
             return this.selectedProperties.Select(structuredType.FindProperty).OfType<IEdmProperty>();
         }
 
         /// <summary>
-        /// Return names of dynamic properties if current structured node is open type.
+        /// Return names of dynamic properties.
         /// </summary>
         /// <param name="structuredType">The current structured type.</param>
-        /// <returns>The names of dynamic properties, empty if the current structured type is not open type.</returns>
+        /// <returns>The names of dynamic properties.</returns>
         internal IEnumerable<string> GetSelectedDynamicProperties(IEdmStructuredType structuredType)
         {
             IEnumerable<string> dynamicProperties = Enumerable.Empty<string>();
 
-            if ( this.selectedProperties != null && this.selectedProperties.Count > 0)
+            if (this.selectedProperties != null && this.selectedProperties.Count > 0)
             {
                 dynamicProperties = this.selectedProperties.Select(
                     prop => structuredType.FindProperty(prop) == null

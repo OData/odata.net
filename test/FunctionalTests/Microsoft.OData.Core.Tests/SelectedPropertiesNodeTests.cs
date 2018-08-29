@@ -117,7 +117,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void WildcardShouldSelectAllProperties()
         {
             SelectedPropertiesNode.Create("*").Should()
-                .HaveProperties(this.cityType, "Photo", "Districts")
+                .HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
                 .And.HaveNavigations(this.cityType, "Districts")
                 .And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEmpty());
         }
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
             SelectedPropertiesNode.Create("Districts,*,Photo").Should()
                 .HaveStreams(this.cityType, "Photo")
-                .And.HaveProperties(this.cityType, "Photo", "Districts")
+                .And.HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
                 .And.HaveNavigations(this.cityType, "Districts")
                 .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Tests.Evaluation
             // 2) 'Districts/*' should not override 'Districts'
             SelectedPropertiesNode.Create("*,Districts,Districts/*").Should()
                 .HaveStreams(this.cityType, "Photo")
-                .And.HaveProperties(this.cityType, "Photo", "Districts")
+                .And.HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
                 .And.HaveNavigations(this.cityType, "Districts")
                 .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
@@ -352,7 +352,7 @@ namespace Microsoft.OData.Tests.Evaluation
             SelectedPropertiesNode right = SelectedPropertiesNode.Create("Fake");
             this.VerifyCombination(left, right,
                 n => n.Should().HaveStreams(this.cityType, "Photo")
-                    .And.HaveProperties(this.cityType, "Districts", "Photo")
+                    .And.HaveProperties(this.cityType, "Id", "Name", "Size", "Photo", "Districts")
                     .And.HaveNavigations(this.cityType, "Districts"));
         }
 
