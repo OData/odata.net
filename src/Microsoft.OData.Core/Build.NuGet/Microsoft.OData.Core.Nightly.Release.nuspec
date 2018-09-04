@@ -5,8 +5,7 @@
     <id>Microsoft.OData.Core</id>
     <tags>wcf data services odata odatalib edmlib spatial ado.net ef entity framework open protocol wcfds wcfdataservices dataservices</tags>
     <version>$VersionFullSemantic$-Nightly$NightlyBuildVersion$</version>
-    <authors>Microsoft Corporation</authors>
-    <owners>Microsoft Corporation</owners>
+    <authors>Microsoft</authors>
     <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
@@ -14,7 +13,7 @@
     <summary>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 only.</summary>
     <description>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 only. Enables construction of OData services and clients. Targets .NET Platform Standard 1.1. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
-    <copyright>© Microsoft Corporation.  All rights reserved.</copyright>
+    <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <dependencies>
       <dependency id="Microsoft.Spatial" version="[$VersionFullSemantic$-Nightly$NightlyBuildVersion$]" />
       <dependency id="Microsoft.OData.Edm" version="[$VersionFullSemantic$-Nightly$NightlyBuildVersion$]" />
