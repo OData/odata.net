@@ -7,7 +7,7 @@
 //     the code is regenerated.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace Microsoft.Test.OData.Tests.Client
+namespace Microsoft.OData.Client.Design.T4
 {
     using System;
     using System.IO;
