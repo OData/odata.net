@@ -116,7 +116,7 @@ namespace Microsoft.OData.Tests
         public void WriteUndeclaredUIntValueShouldFail()
         {
             var settings = new ODataMessageWriterSettings();
-            var model = new EdmModel();
+            var model = new EdmModel()
             model.GetUInt32("MyNS", false);
             var writer = new ODataMessageWriter(new DummyRequestMessage(), settings, model);
             Action write = () => writer.WriteValue((UInt16)123);
