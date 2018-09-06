@@ -98,7 +98,8 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                     string currentFolder = Directory.GetCurrentDirectory();
                     string path = Path.Combine(currentFolder, filename);
                     File.WriteAllText(path, actualBak);
-                    string basePath = string.Format(currentFolder + @"\..\CodeGen\{0}", filename);
+                    string basePath = string.Format(Path.Combine(currentFolder,"Expected" + filename));
+                    File.WriteAllText(basePath, expected);
                     equal.Should().Be(true, "Baseline not equal.\n " +
                         "To diff run: \n" +
                         "odd \"{0}\" \"{1}\"\n" +

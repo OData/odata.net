@@ -3440,9 +3440,10 @@ namespace <#= fullNamespace #>
 
     internal override void WriteGeneratedEdmModel(string escapedEdmxString)
     {
+
 		string path = this.context.TempFilePath; 
         
-		if(String.IsNullOrEmpty(path))
+		if(!String.IsNullOrEmpty(path))
 		{
 			using (StreamWriter writer = new StreamWriter(path, true))
 			{
