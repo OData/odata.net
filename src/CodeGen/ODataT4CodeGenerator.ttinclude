@@ -353,12 +353,6 @@ private void ApplyParametersFromCommandLine()
         this.NamespacePrefix = namespacePrefix;
     }
 
-	string tempFilePath = this.Host.ResolveParameterValue("notempty", "notempty", "TempFilePath");
-    if (!string.IsNullOrEmpty(tempFilePath))
-    {
-        this.TempFilePath = tempFilePath;
-    }
-
     string useDataServiceCollection = this.Host.ResolveParameterValue("notempty", "notempty", "UseDataServiceCollection");
     if (!string.IsNullOrEmpty(useDataServiceCollection))
     {
