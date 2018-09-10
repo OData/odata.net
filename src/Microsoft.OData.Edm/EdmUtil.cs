@@ -263,6 +263,14 @@ namespace Microsoft.OData.Edm
 
         internal static bool TryGetNamespaceNameFromQualifiedName(string qualifiedName, out string namespaceName, out string name, out string fullName)
         {
+            bool foundNamespace = EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out namespaceName, out name);
+
+            fullName = EdmUtil.GetFullNameForSchemaElement(namespaceName, name);
+            return foundNamespace;
+        }
+
+        internal static bool TryGetNamespaceNameFromQualifiedName(string qualifiedName, out string namespaceName, out string name)
+        {
             bool foundNamespace;
 
             // Qualified name can be a operation import name which is separated by '/'
@@ -292,7 +300,6 @@ namespace Microsoft.OData.Edm
                 name = qualifiedName.Substring(lastSlash + 1);
             }
 
-            fullName = EdmUtil.GetFullNameForSchemaElement(namespaceName, name);
             return foundNamespace;
         }
 

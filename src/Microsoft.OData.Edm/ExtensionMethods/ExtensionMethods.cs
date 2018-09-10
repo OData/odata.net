@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -323,9 +324,8 @@ namespace Microsoft.OData.Edm
             // Look up annotations on the element by name. There's no particular advantage in searching for a term first.
             string name;
             string namespaceName;
-            string fullName;
 
-            if (EdmUtil.TryGetNamespaceNameFromQualifiedName(termName, out namespaceName, out name, out fullName))
+            if (EdmUtil.TryGetNamespaceNameFromQualifiedName(termName, out namespaceName, out name))
             {
                 foreach (T annotation in model.FindVocabularyAnnotations(element).OfType<T>())
                 {
