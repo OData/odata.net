@@ -271,8 +271,6 @@ namespace Microsoft.OData.Edm
 
         internal static bool TryGetNamespaceNameFromQualifiedName(string qualifiedName, out string namespaceName, out string name)
         {
-            bool foundNamespace;
-
             // Qualified name can be a operation import name which is separated by '/'
             int lastSlash = qualifiedName.LastIndexOf('/');
             if (lastSlash < 0)
@@ -283,24 +281,16 @@ namespace Microsoft.OData.Edm
                 {
                     namespaceName = String.Empty;
                     name = qualifiedName;
-
-                    foundNamespace = false;
+                    return false;
                 }
-                else
-                {
-                    namespaceName = qualifiedName.Substring(0, lastDot);
-                    name = qualifiedName.Substring(lastDot + 1);
-                    foundNamespace = true;
-                }
-            }
-            else
-            {
-                foundNamespace = true;
-                namespaceName = qualifiedName.Substring(0, lastSlash);
-                name = qualifiedName.Substring(lastSlash + 1);
-            }
 
-            return foundNamespace;
+                namespaceName = qualifiedName.Substring(0, lastDot);
+                name = qualifiedName.Substring(lastDot + 1);
+                return true;
+            }
+            namespaceName = qualifiedName.Substring(0, lastSlash);
+            name = qualifiedName.Substring(lastSlash + 1);
+            return true;
         }
 
         internal static string FullyQualifiedName(IEdmVocabularyAnnotatable element)
