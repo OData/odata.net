@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData
+namespace Microsoft.OData.Json
 {
     /// <summary>
     /// Enum type to specify how to escape string value when writing JSON text.
