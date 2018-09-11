@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData;
+    using Microsoft.OData.Json;
 
     /// <summary>
     /// Tests for the ODataJsonConvert class
