@@ -4035,11 +4035,6 @@ public enum Microsoft.OData.ODataReaderState : int {
 	Start = 0
 }
 
-public enum Microsoft.OData.ODataStringEscapeOption : int {
-	EscapeNonAscii = 0
-	EscapeOnlyControls = 1
-}
-
 public enum Microsoft.OData.ODataVersion : int {
 	V4 = 0
 	V401 = 1
@@ -5348,6 +5343,11 @@ public enum Microsoft.OData.Json.JsonNodeType : int {
 	StartObject = 1
 }
 
+public enum Microsoft.OData.Json.ODataStringEscapeOption : int {
+	EscapeNonAscii = 0
+	EscapeOnlyControls = 1
+}
+
 public interface Microsoft.OData.Json.IJsonReader {
 	bool IsIeee754Compatible  { public abstract get; }
 	Microsoft.OData.Json.JsonNodeType NodeType  { public abstract get; }
@@ -5401,7 +5401,7 @@ public interface Microsoft.OData.Json.IJsonWriterFactory {
 
 public sealed class Microsoft.OData.Json.DefaultJsonWriterFactory : IJsonWriterFactory {
 	public DefaultJsonWriterFactory ()
-	public DefaultJsonWriterFactory (Microsoft.OData.ODataStringEscapeOption stringEscapeOption)
+	public DefaultJsonWriterFactory (Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption)
 
 	[
 	CLSCompliantAttribute(),
