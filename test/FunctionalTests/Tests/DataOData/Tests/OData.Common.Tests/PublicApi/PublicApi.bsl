@@ -4035,6 +4035,11 @@ public enum Microsoft.OData.ODataReaderState : int {
 	Start = 0
 }
 
+public enum Microsoft.OData.ODataStringEscapeOption : int {
+	EscapeNonAscii = 0
+	EscapeOnlyControls = 1
+}
+
 public enum Microsoft.OData.ODataVersion : int {
 	V4 = 0
 	V401 = 1
@@ -5392,6 +5397,16 @@ CLSCompliantAttribute(),
 ]
 public interface Microsoft.OData.Json.IJsonWriterFactory {
 	Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool isIeee754Compatible)
+}
+
+public sealed class Microsoft.OData.Json.DefaultJsonWriterFactory : IJsonWriterFactory {
+	public DefaultJsonWriterFactory ()
+	public DefaultJsonWriterFactory (Microsoft.OData.ODataStringEscapeOption stringEscapeOption)
+
+	[
+	CLSCompliantAttribute(),
+	]
+	public virtual Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool isIeee754Compatible)
 }
 
 public enum Microsoft.OData.UriParser.BinaryOperatorKind : int {

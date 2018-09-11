@@ -887,6 +887,9 @@
     <Compile Include="..\ODataStreamReferenceValue.cs">
       <Link>ODataStreamReferenceValue.cs</Link>
     </Compile>
+    <Compile Include="..\ODataStringEscapeOption.cs">
+      <Link>ODataStringEscapeOption.cs</Link>
+    </Compile>
     <Compile Include="..\ODataTypeAnnotation.cs">
       <Link>ODataTypeAnnotation.cs</Link>
     </Compile>

@@ -814,6 +814,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataStreamReferenceValue.cs">
       <Link>Microsoft\OData\Core\ODataStreamReferenceValue.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataStringEscapeOption.cs">
+      <Link>Microsoft\OData\Core\ODataStringEscapeOption.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTypeAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataTypeAnnotation.cs</Link>
     </Compile>
