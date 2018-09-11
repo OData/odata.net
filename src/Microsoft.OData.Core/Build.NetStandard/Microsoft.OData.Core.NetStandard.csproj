@@ -437,6 +437,9 @@
     <Compile Include="..\Json\ODataJsonWriterUtils.cs">
       <Link>Json\ODataJsonWriterUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Json\ODataStringEscapeOption.cs">
+      <Link>Json\ODataStringEscapeOption.cs</Link>
+    </Compile>
     <Compile Include="..\Json\TextWriterWrapper.cs">
       <Link>Json\TextWriterWrapper.cs</Link>
     </Compile>
@@ -886,9 +889,6 @@
     </Compile>
     <Compile Include="..\ODataStreamReferenceValue.cs">
       <Link>ODataStreamReferenceValue.cs</Link>
-    </Compile>
-    <Compile Include="..\ODataStringEscapeOption.cs">
-      <Link>ODataStringEscapeOption.cs</Link>
     </Compile>
     <Compile Include="..\ODataTypeAnnotation.cs">
       <Link>ODataTypeAnnotation.cs</Link>
