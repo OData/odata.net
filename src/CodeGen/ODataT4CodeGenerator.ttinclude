@@ -70,7 +70,7 @@ THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         };
     }
 
-    if(this.GetReferencedModelReaderFunc != null)
+    if (this.GetReferencedModelReaderFunc != null)
     {
         context.GetReferencedModelReaderFunc = this.GetReferencedModelReaderFunc;
     }
@@ -3443,7 +3443,7 @@ namespace <#= fullNamespace #>
 
         string path = this.context.TempFilePath; 
         
-        if(!String.IsNullOrEmpty(path))
+        if (!String.IsNullOrEmpty(path))
         {
             using (StreamWriter writer = new StreamWriter(path, true))
             {
@@ -3478,7 +3478,7 @@ namespace <#= fullNamespace #>
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")]
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
 <#+
-        if(useTempFile)
+        if (useTempFile)
         {
 #>   
            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")]
@@ -3517,7 +3517,7 @@ namespace <#= fullNamespace #>
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
 <#+
-            if(useTempFile)
+            if (useTempFile)
             {
 #>   
                 global::System.Xml.XmlReader reader = CreateXmlReader();
@@ -3548,7 +3548,7 @@ namespace <#= fullNamespace #>
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
 <#+
-            if(useTempFile)
+            if (useTempFile)
             {
 #>   
                 global::System.Xml.XmlReader reader = CreateXmlReader();
@@ -3593,7 +3593,7 @@ namespace <#= fullNamespace #>
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
             }
 <#+
-        if(useTempFile)
+        if (useTempFile)
         {
 #>   
                 [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "<#=T4Version#>")]

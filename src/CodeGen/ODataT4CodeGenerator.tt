@@ -20,7 +20,7 @@ public static class Configuration
 	
 	// The path for the temporary file where the metadata xml document can be stored. Use this if your metadata is too big to be stored in a string literal. Ensure that you have write permission for this path.
 	// For example - "C:\\temp\\Test.xml"	
-	public const string TempFilePath = "";
+	public const string TempFilePath = string.Empty;
 
 	// This flag indicates whether to enable naming alias. The value must be set to true or false.
 	public const bool EnableNamingAlias = true;
