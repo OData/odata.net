@@ -9,6 +9,7 @@ using System.IO;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -99,6 +100,68 @@ namespace Microsoft.OData.Tests
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
             output.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#MyNS.UInt32\",\"value\":123}");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(ODataStringEscapeOption.EscapeNonAscii)]
+        public void WriteTopLevelStringPropertyWithStringEscapeOptionShouldWork(ODataStringEscapeOption? stringEscapeOption)
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+
+            var request = new InMemoryMessage() { Stream = new MemoryStream() };
+
+            if (stringEscapeOption != null)
+            {
+                var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+                containerBuilder.AddDefaultODataServices();
+                containerBuilder.AddService(ServiceLifetime.Singleton, sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
+                request.Container = containerBuilder.BuildContainer();
+            }
+
+            settings.ODataUri.ServiceRoot = new Uri("http://host/service");
+            settings.SetContentType(ODataFormat.Json);
+            var model = new EdmModel();
+            var writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
+            Action write = () => writer.WriteProperty(new ODataProperty()
+            {
+                Name = "Name",
+                Value = "ия"
+            });
+            write.ShouldNotThrow();
+            request.GetStream().Position = 0;
+            var reader = new StreamReader(request.GetStream());
+            string output = reader.ReadToEnd();
+            output.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"\\u0438\\u044f\"}");
+        }
+
+        [Fact]
+        public void WriteTopLevelStringPropertyWithStringEscapeOnlyControlsOptionShouldWork()
+        {
+            var settings = new ODataMessageWriterSettings();
+            var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+            containerBuilder.AddDefaultODataServices();
+            containerBuilder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new DefaultJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
+
+            settings.ODataUri.ServiceRoot = new Uri("http://host/service");
+            settings.SetContentType(ODataFormat.Json);
+            var model = new EdmModel();
+            IODataRequestMessage request = new InMemoryMessage()
+            {
+                Stream = new MemoryStream(),
+                Container = containerBuilder.BuildContainer()
+            };
+            var writer = new ODataMessageWriter(request, settings, model);
+            Action write = () => writer.WriteProperty(new ODataProperty()
+            {
+                Name = "Name",
+                Value = "ия"
+            });
+            write.ShouldNotThrow();
+            request.GetStream().Position = 0;
+            var reader = new StreamReader(request.GetStream());
+            string output = reader.ReadToEnd();
+            output.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"ия\"}");
         }
 
         [Fact]

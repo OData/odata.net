@@ -121,7 +121,7 @@ namespace Microsoft.OData
             Debug.Assert(builder != null, "builder != null");
 
             builder.AddService<IJsonReaderFactory, DefaultJsonReaderFactory>(ServiceLifetime.Singleton);
-            builder.AddService<IJsonWriterFactory, DefaultJsonWriterFactory>(ServiceLifetime.Singleton);
+            builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new DefaultJsonWriterFactory());
             builder.AddService(ServiceLifetime.Singleton, sp => ODataMediaTypeResolver.GetMediaTypeResolver(null));
             builder.AddService<ODataMessageInfo>(ServiceLifetime.Scoped);
             builder.AddServicePrototype(new ODataMessageReaderSettings());
