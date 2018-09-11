@@ -391,7 +391,7 @@ namespace Microsoft.OData.Json
                     char c = inputString[currentIndex];
                     string escapedString = null;
 
-                    if (stringEscapeOption == ODataStringEscapeOption.EscapeNonAscii || c < 0x7F)
+                    if (stringEscapeOption == ODataStringEscapeOption.EscapeNonAscii || c <= 0x7F)
                     {
                         escapedString = JsonValueUtils.SpecialCharToEscapedStringMap[c];
                     }
