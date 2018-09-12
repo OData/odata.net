@@ -745,7 +745,7 @@ namespace Microsoft.OData.Tests.Metadata
             }
         }
 
-        private class EntityContainerThatThrowsOnLookup : EdmEntityContainer, IEdmEntityContainer
+        private class EntityContainerThatThrowsOnLookup : EdmEntityContainer, IEdmEntityContainer, IEdmFullNamedElement
         {
             public EntityContainerThatThrowsOnLookup(string namespaceName, string name) 
                 : base(namespaceName, name)

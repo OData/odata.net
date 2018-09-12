@@ -14,10 +14,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlTypeDefinition.
     /// </summary>
-    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinition
+    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinition, IEdmFullNamedElement
     {
         private readonly CsdlSemanticsSchema context;
         private readonly CsdlTypeDefinition typeDefinition;
+        private readonly string fullName;
 
         private readonly Cache<CsdlSemanticsTypeDefinitionDefinition, IEdmPrimitiveType> underlyingTypeCache = new Cache<CsdlSemanticsTypeDefinitionDefinition, IEdmPrimitiveType>();
         private static readonly Func<CsdlSemanticsTypeDefinitionDefinition, IEdmPrimitiveType> ComputeUnderlyingTypeFunc = (me) => me.ComputeUnderlyingType();
@@ -27,6 +28,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             this.context = context;
             this.typeDefinition = typeDefinition;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.context?.Namespace, this.typeDefinition?.Name);
         }
 
         IEdmPrimitiveType IEdmTypeDefinition.UnderlyingType
@@ -47,6 +49,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         string IEdmNamedElement.Name
         {
             get { return this.typeDefinition.Name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public override EdmTypeKind TypeKind
