@@ -7,23 +7,21 @@
 namespace Microsoft.OData.Edm
 {
     using System.Collections.Generic;
-
     using Microsoft.OData.Edm.Validation;
 
     /// <summary>
     /// Represents a semantically invalid EDM type definition.
     /// </summary>
-    internal class BadTypeDefinition : BadType, IEdmTypeDefinition, IEdmFullNamedElement
+    internal class BadTypeDefinition : BadType, IEdmTypeDefinition
     {
         private readonly string namespaceName;
         private readonly string name;
-        private readonly string fullName;
 
         public BadTypeDefinition(string qualifiedName, IEnumerable<EdmError> errors)
             : base(errors)
         {
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
         }
 
         public override EdmTypeKind TypeKind
@@ -49,14 +47,6 @@ namespace Microsoft.OData.Edm
         public string Name
         {
             get { return this.name; }
-        }
-
-        /// <summary>
-        /// Gets the full name of this schema element.
-        /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
         }
     }
 }

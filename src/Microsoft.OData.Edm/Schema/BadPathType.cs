@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
@@ -14,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM path type.
     /// </summary>
-    internal class BadPathType : BadType, IEdmPathType, IEdmFullNamedElement
+    internal class BadPathType : BadType, IEdmPathType
     {
         public BadPathType(string qualifiedName, IEnumerable<EdmError> errors)
             : base(errors)
@@ -30,14 +29,6 @@ namespace Microsoft.OData.Edm
         }
 
         public string Namespace
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string FullName
         {
             get
             {

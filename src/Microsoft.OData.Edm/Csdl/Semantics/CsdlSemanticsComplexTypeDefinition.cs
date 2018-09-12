@@ -13,9 +13,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlComplexType.
     /// </summary>
-    internal class CsdlSemanticsComplexTypeDefinition : CsdlSemanticsStructuredTypeDefinition, IEdmComplexType, IEdmFullNamedElement
+    internal class CsdlSemanticsComplexTypeDefinition : CsdlSemanticsStructuredTypeDefinition, IEdmComplexType
     {
-        private readonly string fullName;
         private readonly CsdlComplexType complex;
 
         private readonly Cache<CsdlSemanticsComplexTypeDefinition, IEdmComplexType> baseTypeCache = new Cache<CsdlSemanticsComplexTypeDefinition, IEdmComplexType>();
@@ -26,7 +25,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             : base(context, complex)
         {
             this.complex = complex;
-            this.fullName = EdmUtil.GetFullNameForSchemaElement(context?.Namespace, this.complex?.Name);
         }
 
         public override IEdmStructuredType BaseType
@@ -52,14 +50,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Name
         {
             get { return this.complex.Name; }
-        }
-
-        /// <summary>
-        /// Gets the full name of this schema element.
-        /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
         }
 
         protected override CsdlStructuredType MyStructured

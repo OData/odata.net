@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
@@ -13,10 +12,9 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a name binding to more than one item.
     /// </summary>
-    internal class AmbiguousTermBinding : AmbiguousBinding<IEdmTerm>, IEdmTerm, IEdmFullNamedElement
+    internal class AmbiguousTermBinding : AmbiguousBinding<IEdmTerm>, IEdmTerm
     {
         private readonly IEdmTerm first;
-        private readonly string fullName;
 
         // Type cache.
         private readonly Cache<AmbiguousTermBinding, IEdmTypeReference> type = new Cache<AmbiguousTermBinding, IEdmTypeReference>();
@@ -29,7 +27,6 @@ namespace Microsoft.OData.Edm
             : base(first, second)
         {
             this.first = first;
-            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.Namespace, this.Name);
         }
 
         public EdmSchemaElementKind SchemaElementKind
@@ -40,14 +37,6 @@ namespace Microsoft.OData.Edm
         public string Namespace
         {
             get { return this.first.Namespace ?? string.Empty; }
-        }
-
-        /// <summary>
-        /// Gets the full name of this schema element.
-        /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
         }
 
         public IEdmTypeReference Type

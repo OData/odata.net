@@ -11,12 +11,11 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents the definition of an Edm enumeration type.
     /// </summary>
-    public class EdmEnumType : EdmType, IEdmEnumType, IEdmFullNamedElement
+    public class EdmEnumType : EdmType, IEdmEnumType
     {
         private readonly IEdmPrimitiveType underlyingType;
         private readonly string namespaceName;
         private readonly string name;
-        private readonly string fullName;
         private readonly bool isFlags;
         private readonly List<IEdmEnumMember> members = new List<IEdmEnumMember>();
 
@@ -70,7 +69,6 @@ namespace Microsoft.OData.Edm
             this.name = name;
             this.namespaceName = namespaceName;
             this.isFlags = isFlags;
-            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.namespaceName, this.name);
         }
 
         /// <summary>
@@ -103,14 +101,6 @@ namespace Microsoft.OData.Edm
         public string Name
         {
             get { return this.name; }
-        }
-
-        /// <summary>
-        /// Gets the full name of this schema element.
-        /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
         }
 
         /// <summary>

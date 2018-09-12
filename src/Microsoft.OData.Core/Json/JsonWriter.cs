@@ -13,7 +13,6 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-
     using Microsoft.OData.Edm;
     #endregion Namespaces
 

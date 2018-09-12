@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
@@ -13,17 +12,16 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM named structured type definition.
     /// </summary>
-    internal abstract class BadNamedStructuredType : BadStructuredType, IEdmSchemaElement, IEdmFullNamedElement
+    internal abstract class BadNamedStructuredType : BadStructuredType, IEdmSchemaElement
     {
         private readonly string namespaceName;
         private readonly string name;
-        private readonly string fullName;
 
         protected BadNamedStructuredType(string qualifiedName, IEnumerable<EdmError> errors)
             : base(errors)
         {
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
         }
 
         public string Name
@@ -34,14 +32,6 @@ namespace Microsoft.OData.Edm
         public string Namespace
         {
             get { return this.namespaceName; }
-        }
-
-        /// <summary>
-        /// Gets the full name of this schema element.
-        /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
         }
 
         public EdmSchemaElementKind SchemaElementKind

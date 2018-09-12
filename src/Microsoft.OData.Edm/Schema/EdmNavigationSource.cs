@@ -170,8 +170,8 @@ namespace Microsoft.OData.Edm
             if (navigationProperty.ContainsTarget)
             {
                 return AddNavigationPropertyBinding(
-                    navigationProperty,
-                    new EdmContainedEntitySet(this, navigationProperty, bindingPath),
+                    navigationProperty, 
+                    new EdmContainedEntitySet(this, navigationProperty, bindingPath), 
                     bindingPath)
                     .Target;
             }

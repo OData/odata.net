@@ -11,9 +11,8 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents an EDM operation.
     /// </summary>
-    public abstract class EdmOperation : EdmNamedElement, IEdmOperation, IEdmFullNamedElement
+    public abstract class EdmOperation : EdmNamedElement, IEdmOperation
     {
-        private readonly string fullName;
         private readonly List<IEdmOperationParameter> parameters = new List<IEdmOperationParameter>();
 
         /// <summary>
@@ -33,7 +32,6 @@ namespace Microsoft.OData.Edm
             this.Namespace = namespaceName;
             this.IsBound = isBound;
             this.EntitySetPath = entitySetPathExpression;
-            this.fullName = EdmUtil.GetFullNameForSchemaElement(namespaceName, this.Name);
         }
 
         /// <summary>
@@ -73,14 +71,6 @@ namespace Microsoft.OData.Edm
         /// Gets the namespace of this function.
         /// </summary>
         public string Namespace { get; private set; }
-
-        /// <summary>
-        /// Gets the full name of this schema element.
-        /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
 
         /// <summary>
         /// Gets the return type of this function.
