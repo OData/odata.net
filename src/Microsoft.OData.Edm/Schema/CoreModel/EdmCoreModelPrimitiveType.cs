@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The built-in Edm.PrimitiveType and other concrete primitive types in the core model.
     /// </summary>
-    internal sealed class EdmCoreModelPrimitiveType : EdmType, IEdmPrimitiveType, IEdmCoreModelElement, IEdmFullNamedElement
+    internal sealed class EdmCoreModelPrimitiveType : EdmType, IEdmPrimitiveType, IEdmCoreModelElement
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmCoreModelPrimitiveType"/> class.
@@ -19,7 +19,6 @@ namespace Microsoft.OData.Edm
         {
             Name = primitiveKind.ToString();
             PrimitiveKind = primitiveKind;
-            FullName = this.Namespace + "." + this.Name;
         }
 
         /// <summary>
@@ -50,6 +49,6 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the full name of this type.
         /// </summary>
-        public string FullName { get; }
+        public string FullName => Namespace + "." + Name;
     }
 }

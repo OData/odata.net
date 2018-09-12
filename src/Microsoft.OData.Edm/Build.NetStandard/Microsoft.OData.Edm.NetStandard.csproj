@@ -1015,9 +1015,6 @@
     <Compile Include="..\Schema\Interfaces\IEdmExpression.cs">
       <Link>Schema\Interfaces\IEdmExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Schema\Interfaces\IEdmFullNamedElement.cs">
-      <Link>Schema\Interfaces\IEdmFullNamedElement.cs</Link>
-    </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmFunction.cs">
       <Link>Schema\Interfaces\IEdmFunction.cs</Link>
     </Compile>
