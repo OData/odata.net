@@ -38,9 +38,6 @@ namespace Microsoft.OData
 
             Debug.Assert(depth >= 1, "'depth' should always be greater than or equal to 1");
 			
-            // In production, depthStr == 1 in most cases. So we optimize string allocation for this case.
-            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
-
             string uniqueName = owningType != null
                 ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, name, depth.ToString(CultureInfo.InvariantCulture)) 
                 : string.Concat(name, depth.ToString(CultureInfo.InvariantCulture));
