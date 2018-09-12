@@ -7,8 +7,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+
 using FluentAssertions;
+
 using Microsoft.OData.Json;
+
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
