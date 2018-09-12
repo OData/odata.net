@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -18,7 +19,6 @@ using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm
 {
@@ -1387,14 +1387,19 @@ namespace Microsoft.OData.Edm
             {
                 return string.Empty;
             }
-            else if (element.Namespace == null)
+
+            if (element.Namespace == null)
             {
                 return element.Name;
             }
-            else
+
+            IEdmFullNamedElement fullNamedElement = element as IEdmFullNamedElement;
+            if (fullNamedElement != null)
             {
-                return element.Namespace + "." + element.Name;
+                return fullNamedElement.FullName;
             }
+
+            return element.Namespace + "." + element.Name;
         }
 
         /// <summary>

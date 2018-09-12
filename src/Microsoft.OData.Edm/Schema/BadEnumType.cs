@@ -13,16 +13,17 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a semantically invalid EDM enumeration type.
     /// </summary>
-    internal class BadEnumType : BadType, IEdmEnumType
+    internal class BadEnumType : BadType, IEdmEnumType, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
 
         public BadEnumType(string qualifiedName, IEnumerable<EdmError> errors)
             : base(errors)
         {
             qualifiedName = qualifiedName ?? string.Empty;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
         }
 
         public IEnumerable<IEdmEnumMember> Members
@@ -58,6 +59,14 @@ namespace Microsoft.OData.Edm
         public string Name
         {
             get { return this.name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
     }
 }

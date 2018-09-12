@@ -156,6 +156,7 @@
     <Compile Include="Schema\EdmUntypedStructuredTypeReference.cs" />
     <Compile Include="Schema\EdmPathTypeReference.cs" />
     <Compile Include="Schema\EdmUntypedTypeReference.cs" />
+    <Compile Include="Schema\Interfaces\IEdmFullNamedElement.cs" />
     <Compile Include="Schema\Interfaces\IEdmPathTypeReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmPathType.cs" />
     <Compile Include="Schema\Interfaces\IEdmUntypedType.cs" />
