@@ -8,14 +8,16 @@ using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm
 {
-    internal class AmbiguousOperationBinding : AmbiguousBinding<IEdmOperation>, IEdmOperation
+    internal class AmbiguousOperationBinding : AmbiguousBinding<IEdmOperation>, IEdmOperation, IEdmFullNamedElement
     {
+        private readonly string fullName;
         private IEdmOperation first;
 
         public AmbiguousOperationBinding(IEdmOperation first, IEdmOperation second)
             : base(first, second)
         {
             this.first = first;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.Namespace, this.Name);
         }
 
         public IEdmTypeReference ReturnType
@@ -27,6 +29,14 @@ namespace Microsoft.OData.Edm
         public string Namespace
         {
             get { return this.first.Namespace; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public IEnumerable<IEdmOperationParameter> Parameters

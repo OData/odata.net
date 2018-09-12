@@ -14,9 +14,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlEntityType.
     /// </summary>
-    internal class CsdlSemanticsEntityTypeDefinition : CsdlSemanticsStructuredTypeDefinition, IEdmEntityType
+    internal class CsdlSemanticsEntityTypeDefinition : CsdlSemanticsStructuredTypeDefinition, IEdmEntityType, IEdmFullNamedElement
     {
         private readonly CsdlEntityType entity;
+        private readonly string fullName;
 
         private readonly Cache<CsdlSemanticsEntityTypeDefinition, IEdmEntityType> baseTypeCache = new Cache<CsdlSemanticsEntityTypeDefinition, IEdmEntityType>();
         private static readonly Func<CsdlSemanticsEntityTypeDefinition, IEdmEntityType> ComputeBaseTypeFunc = (me) => me.ComputeBaseType();
@@ -29,6 +30,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             : base(context, entity)
         {
             this.entity = entity;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(context?.Namespace, this.entity?.Name);
         }
 
         public override IEdmStructuredType BaseType
@@ -44,6 +46,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string Name
         {
             get { return this.entity.Name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         public override bool IsAbstract

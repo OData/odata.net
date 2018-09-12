@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+
 using Microsoft.OData.Edm.Csdl;
 
 namespace Microsoft.OData.Edm
@@ -13,7 +14,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The built-in Edm.EntityType abstract type in the core model.
     /// </summary>
-    internal sealed class EdmCoreModelEntityType : EdmType, IEdmEntityType, IEdmCoreModelElement
+    internal sealed class EdmCoreModelEntityType : EdmType, IEdmEntityType, IEdmCoreModelElement, IEdmFullNamedElement
     {
         /// <summary>
         /// The core Edm.EntityType singleton.
@@ -39,6 +40,11 @@ namespace Microsoft.OData.Edm
         /// Gets the namespace of this type.
         /// </summary>
         public string Namespace => EdmConstants.EdmNamespace;
+
+        /// <summary>
+        /// Gets the full name of this type.
+        /// </summary>
+        public string FullName => CsdlConstants.TypeName_Entity;
 
         /// <summary>
         /// Gets the value indicating whether or not this type is a media entity.
