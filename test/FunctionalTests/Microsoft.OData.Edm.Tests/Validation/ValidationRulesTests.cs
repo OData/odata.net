@@ -1351,6 +1351,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             {
                 this.Name = name;
                 this.Namespace = namespaceName;
+                this.FullName = this.Namespace + "." + this.Name;
                 this.IsComposable = false;
                 this.ReturnType = null;
                 this.Parameters = new Collection<IEdmOperationParameter>();
@@ -1380,6 +1381,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
             public string Namespace { get; set; }
 
             public string Name { get; set; }
+
+            public string FullName { get; set; }
         }
 
         private sealed class CustomEntitySet : EdmNamedElement, IEdmEntitySet
