@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Helper for Cache class.
     /// </summary>
-    internal static class CacheHelper11111111111111
+    internal static class CacheHelper11111111111111dffgdrs
     {
         internal static readonly object Unknown = new object();
         internal static readonly object CycleSentinel = new object();
