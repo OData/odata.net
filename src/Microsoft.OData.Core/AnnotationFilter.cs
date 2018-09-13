@@ -10,7 +10,7 @@ using System.Linq;
 namespace Microsoft.OData
 {
     /// <summary>
-    /// Filter class to determine whether or not to read an annotation.
+    /// Filter class to determine whether or not to read an annotation. 
     /// </summary>
     internal class AnnotationFilter
     {
