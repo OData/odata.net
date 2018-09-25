@@ -902,6 +902,65 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(expected, csdlStr);
         }
 
+        [Fact]
+        public void ShouldWriteAnnotationForEnumMember()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EnumType Name=\"Appliance\" UnderlyingType=\"Edm.Int64\" IsFlags=\"true\">" +
+                    "<Member Name=\"Stove\" Value=\"1\">" +
+                      "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Stove Inline LongDescription\" />" +
+                    "</Member>" +
+                    "<Member Name=\"Washer\" Value=\"2\">" +
+                      "<Annotation Term=\"NS.FooBar\" String=\"Washer Inline FooBar\" />" +
+                    "</Member>" +
+                  "</EnumType>" +
+                  "<Term Name=\"FooBar\" Type=\"Edm.String\" />" +
+                  "<Annotations Target=\"NS.Appliance/Stove\">" +
+                    "<Annotation Term=\"NS.FooBar\" String=\"Stove OutOfLine FooBar\" />" +
+                  "</Annotations>" +
+                  "<Annotations Target=\"NS.Appliance/Washer\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Washer OutOfLine LongDescription\" />" +
+                  "</Annotations>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            EdmModel model = new EdmModel();
+            EdmEnumType appliance = new EdmEnumType("NS", "Appliance", EdmPrimitiveTypeKind.Int64, isFlags: true);
+            model.AddElement(appliance);
+
+            var stove = new EdmEnumMember(appliance, "Stove", new EdmEnumMemberValue(1));
+            appliance.AddMember(stove);
+
+            var washer = new EdmEnumMember(appliance, "Washer", new EdmEnumMemberValue(2));
+            appliance.AddMember(washer);
+
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(stove, CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant("Stove Inline LongDescription"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            annotation = new EdmVocabularyAnnotation(washer, CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant("Washer OutOfLine LongDescription"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
+            EdmTerm term = new EdmTerm("NS", "FooBar", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(term);
+            annotation = new EdmVocabularyAnnotation(stove, term, new EdmStringConstant("Stove OutOfLine FooBar"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
+            annotation = new EdmVocabularyAnnotation(washer, term, new EdmStringConstant("Washer Inline FooBar"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
         private string GetCsdl(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;

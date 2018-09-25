@@ -341,6 +341,18 @@ namespace Microsoft.OData.Edm
                                 return parameterOwnerName + "/" + parameter.Name;
                             }
                         }
+                        else
+                        {
+                            IEdmEnumMember enumMember = element as IEdmEnumMember;
+                            if (enumMember != null)
+                            {
+                                string enumMemberOwnerName = FullyQualifiedName(enumMember.DeclaringType);
+                                if (enumMemberOwnerName != null)
+                                {
+                                    return enumMemberOwnerName + "/" + enumMember.Name;
+                                }
+                            }
+                        }
                     }
                 }
             }

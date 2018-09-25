@@ -289,7 +289,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 {
                     foreach (CsdlAnnotation annotation in annotations.Annotations.Annotations)
                     {
-                        result.Add(this.WrapVocabularyAnnotation(annotation, annotations.Context, null, annotations, annotations.Annotations.Qualifier));
+                        IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(annotation, annotations.Context, null, annotations, annotations.Annotations.Qualifier);
+                        vocabAnnotation.SetSerializationLocation(this, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+                        result.Add(vocabAnnotation);
                     }
                 }
 
