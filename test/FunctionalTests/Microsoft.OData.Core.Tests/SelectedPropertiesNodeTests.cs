@@ -419,7 +419,44 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void UnQualifiedNameWithParametersShouldNotIncludeActionOnOpenType()
         {
-            SelectedPropertiesNode.Create("Action(Edm.Int32)").Should().NotHaveAction(this.openType, this.action);
+            SelectedPropertiesNode.Create("Action(Edm.Int32)", this.openType).Should().NotHaveAction(this.openType, this.action);
+        }
+
+        [Fact]
+        public void ExpandTokenWithoutTypeInfoShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("Districts()").Should().HaveEntireSubtree();
+        }
+
+        [Fact]
+        public void ExpandTokenForNavigationPropertyShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("MetropolisNavigation(Thumbnail)", this.metropolisType).Should().HaveEntireSubtree();
+        }
+
+       [Fact]
+        public void SelectedPropertyAndExpandTokenShouldHavePartialSubtree()
+        {
+            SelectedPropertiesNode.Create("MetropolisStream,MetropolisNavigation(Thumbnail)", this.metropolisType).Should().HaveEntireSubtree(false);
+            SelectedPropertiesNode.Create("MetropolisStream,MetropolisNavigation(Thumbnail)").Should().HaveEntireSubtree(false);
+        }
+
+        [Fact]
+        public void ExpandTokenForCollectionOfNavigationPropertyShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("Districts()", this.cityType).Should().HaveEntireSubtree();
+        }
+
+        [Fact]
+        public void InvalidExpandTokenShouldHavePartialSubtree()
+        {
+            SelectedPropertiesNode.Create("FabrikamNavProp()", this.cityType).Should().HaveEntireSubtree(false);
+        }
+
+        [Fact]
+        public void InvalidExpandTokenWithoutTypeShouldHaveEntireSubtree()
+        {
+            SelectedPropertiesNode.Create("FabrikamNavProp()").Should().HaveEntireSubtree();
         }
 
         [Fact]
@@ -623,6 +660,20 @@ namespace Microsoft.OData.Tests.Evaluation
         internal AndConstraint<SelectedPropertiesNodeAssertions> NotHaveAction(EdmEntityType entityType, IEdmOperation action)
         {
             this.Subject.As<SelectedPropertiesNode>().IsOperationSelected(entityType, action, entityType.IsOpen).Should().BeFalse();
+            return new AndConstraint<SelectedPropertiesNodeAssertions>(this);
+        }
+
+        internal AndConstraint<SelectedPropertiesNodeAssertions> HaveEntireSubtree(bool isTrue = true)
+        {
+            if (isTrue)
+            {
+                this.Subject.As<SelectedPropertiesNode>().IsEntireSubtree().Should().BeTrue();
+            }
+            else
+            {
+                this.Subject.As<SelectedPropertiesNode>().IsEntireSubtree().Should().BeFalse();
+            }
+
             return new AndConstraint<SelectedPropertiesNodeAssertions>(this);
         }
     }

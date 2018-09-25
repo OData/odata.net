@@ -697,6 +697,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         {
             Dictionary<string, int[]> testCases = new Dictionary<string, int[]>()
             {
+                { "Accounts(101)?$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 4} },
                 { "Accounts(101)?$expand=MyGiftCard", new int[] {2, 4} },
                 { "Accounts(101)?$expand=MyPaymentInstruments", new int[] {4, 15} },
                 { "Accounts(101)?$select=AccountID&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1}  }
@@ -1197,9 +1198,9 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         [TestMethod]
         public void CreateContainedEntityFromODataClientUsingAddRelatedObject()
         {
-           
+
                     TestClientContext.Format.UseJson(Model);
-             
+
                 // create an an account entity and a contained PI entity
                 Account newAccount = new Account()
                 {
