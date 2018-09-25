@@ -106,12 +106,10 @@ namespace Microsoft.OData.UriParser
             {
                 string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
                 T subResult = default(T);
-                if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
-                {
-                    Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, version, out subResult);
-                }
+                Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, version, out subResult);
 
                 var expandItem = processSubResult(currentExpandClause, subResult, version);
+
                 if (expandItem != null)
                 {
                     expandList.Add(expandItem);

@@ -688,6 +688,11 @@ namespace Microsoft.OData
             List<string> rawSelect = selectList.ToList();
             rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
 
+            if (selectList.Count == 0)
+            {
+                return SelectedPropertiesNode.EntireSubtree;
+            }
+
             SelectedPropertiesNode node = new SelectedPropertiesNode(SelectionType.PartialSubtree)
             {
                 selectedProperties = CreateSelectedPropertiesHashSet(),

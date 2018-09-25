@@ -403,8 +403,7 @@ namespace Microsoft.OData
         /// <returns>The generated expand string.</returns>
         private static string ProcessSubExpand(string expandNode, string subExpand, ODataVersion version)
         {
-            return string.IsNullOrEmpty(subExpand) && version <= ODataVersion.V4 ? null :
-                expandNode + ODataConstants.ContextUriProjectionStart + subExpand + ODataConstants.ContextUriProjectionEnd;
+            return expandNode + ODataConstants.ContextUriProjectionStart + subExpand + ODataConstants.ContextUriProjectionEnd;
         }
 
         /// <summary>Create combined result string using selected items list and expand items list.</summary>

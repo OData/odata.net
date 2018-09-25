@@ -697,7 +697,12 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         {
             Dictionary<string, int[]> testCases = new Dictionary<string, int[]>()
             {
+                { "Accounts(101)?$select=AccountInfo/FirstName, AccountInfo/LastName", new int[] {1, 0} },
+                { "Accounts(101)?$select=AccountID&$expand=MyPaymentInstruments($select=PaymentInstrumentID;$expand=TheStoredPI)", new int[]{7,4} },
+
+                //This case should work for minimal metadata:
                 { "Accounts(101)?$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 4} },
+
                 { "Accounts(101)?$expand=MyGiftCard", new int[] {2, 4} },
                 { "Accounts(101)?$expand=MyPaymentInstruments", new int[] {4, 15} },
                 { "Accounts(101)?$select=AccountID&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1}  }

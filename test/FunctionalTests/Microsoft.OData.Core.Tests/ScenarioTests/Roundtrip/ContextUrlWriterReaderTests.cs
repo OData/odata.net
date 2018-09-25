@@ -737,7 +737,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // Sample Request: http://host/service/Employees?$expand=Company
         // Context Url in Response: http://host/service/$metadata#Employees(Company())
         [Theory]
-        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees\"")]
+        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany())\"")]
         [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany())\"")]
         public void CollectionOfExpandedEntities(ODataVersion version, string contextString)
         {
@@ -780,7 +780,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         {
             foreach (ODataFormat mimeType in mimeTypes)
             {
-                // In 7.4.1 and before, this scenario resulted in the same 
+                // In 7.4.1 and before, this scenario resulted in the same
                 // context Uri as 10.2: http://host/service/$metadata#Employees
                 var writerSettings = new ODataMessageWriterSettings
                 {
@@ -803,7 +803,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
-                }, string.Format("\"{0}$metadata#Employees\"", TestBaseUri), out payload, out contentType);
+                }, string.Format("\"{0}$metadata#Employees(AssociatedCompany())\"", TestBaseUri), out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
@@ -906,7 +906,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
-                string.Format("\"{0}$metadata#Employees(AssociatedCompany)/$entity\"", TestBaseUri),
+                string.Format("\"{0}$metadata#Employees(AssociatedCompany())/$entity\"", TestBaseUri),
                 out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
@@ -921,7 +921,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // V4 Protocol Spec Chapter 10.10: Projected Expanded Entities (not contain select)
         // Sample Request: http://host/service/Employees(0)?$expand=AssociatedCompany
         [Theory]
-        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany)/$entity\"")]
+        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany())/$entity\"")]
         [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany())/$entity\"")]
         public void ExpandedMultiSegmentEntity(ODataVersion version, string contextString)
         {

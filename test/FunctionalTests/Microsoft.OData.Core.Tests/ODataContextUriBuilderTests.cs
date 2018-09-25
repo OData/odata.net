@@ -211,13 +211,13 @@ namespace Microsoft.OData.Tests
 
         [Theory]
         // expand without select, $expand=A
-        [InlineData(ODataVersion.V4, "TestModel.CapitolCity/Districts", "")]
+        [InlineData(ODataVersion.V4, "TestModel.CapitolCity/Districts", "TestModel.CapitolCity/Districts()")]
         [InlineData(ODataVersion.V401, "TestModel.CapitolCity/Districts", "TestModel.CapitolCity/Districts()")]
         // expands without select, $expand=A,B
-        [InlineData(ODataVersion.V4, "TestModel.CapitolCity/CapitolDistrict,TestModel.CapitolCity/Districts", "")]
+        [InlineData(ODataVersion.V4, "TestModel.CapitolCity/CapitolDistrict,TestModel.CapitolCity/Districts",   "TestModel.CapitolCity/CapitolDistrict(),TestModel.CapitolCity/Districts()")]
         [InlineData(ODataVersion.V401, "TestModel.CapitolCity/CapitolDistrict,TestModel.CapitolCity/Districts", "TestModel.CapitolCity/CapitolDistrict(),TestModel.CapitolCity/Districts()")]
         // expand with nested select, $expand=A($select=B)
-        [InlineData(ODataVersion.V4, "TestModel.CapitolCity/Districts($select=Name)", "TestModel.CapitolCity/Districts(Name)")]
+        [InlineData(ODataVersion.V4, "TestModel.CapitolCity/Districts($select=Name)",   "TestModel.CapitolCity/Districts(Name)")]
         [InlineData(ODataVersion.V401, "TestModel.CapitolCity/Districts($select=Name)", "TestModel.CapitolCity/Districts(Name)")]
 
         public void FeedContextUriWithSingleExpandString(ODataVersion version, string expandClause, string expectedClause)
@@ -227,23 +227,24 @@ namespace Microsoft.OData.Tests
 
         [Theory]
         // $select=A&$expand=B
-        [InlineData(ODataVersion.V4, "Name", "Districts", "Name,Districts")]
+        [InlineData(ODataVersion.V4,   "Name", "Districts", "Name,Districts()")]
         [InlineData(ODataVersion.V401, "Name", "Districts", "Name,Districts()")]
         // $select=A&$expand=A
-        [InlineData(ODataVersion.V4, "Districts", "Districts", "Districts")]
+        [InlineData(ODataVersion.V4,   "Districts", "Districts", "Districts()")]
         [InlineData(ODataVersion.V401, "Districts", "Districts", "Districts()")]
         // $select=A,B,C&$expand=A
-        [InlineData(ODataVersion.V4, "Name,Districts,Size", "Districts", "Name,Districts,Size")]
+        [InlineData(ODataVersion.V4,   "Name,Districts,Size", "Districts", "Name,Size,Districts()")]
         [InlineData(ODataVersion.V401, "Name,Districts,Size", "Districts", "Name,Size,Districts()")]
-        // $select=A&$expand=A,B
-        [InlineData(ODataVersion.V4, "Districts", "Districts,TestModel.CapitolCity/CapitolDistrict", "Districts,TestModel.CapitolCity/CapitolDistrict")]
+        // $select=A&$expand=A,B ---Nav prop "Districts" is currently filtered out in ODataContextUrlInfo.CombineSelectAndExpandResult
+        [InlineData(ODataVersion.V4,   "Districts", "Districts,TestModel.CapitolCity/CapitolDistrict", "Districts(),TestModel.CapitolCity/CapitolDistrict()")]
         [InlineData(ODataVersion.V401, "Districts", "Districts,TestModel.CapitolCity/CapitolDistrict", "Districts(),TestModel.CapitolCity/CapitolDistrict()")]
         // $select=A,B&$expand=B($select=C)
         [InlineData(ODataVersion.V4, "Name,Districts", "Districts($select=Name)", "Name,Districts(Name)")]
         [InlineData(ODataVersion.V401, "Name,Districts", "Districts($select=Name)", "Name,Districts(Name)")]
         public void FeedContextUriWithSelectAndExpandString(ODataVersion version, string selectClause, string expandClause, string expectedClause)
         {
-            this.CreateFeedContextUri(selectClause, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
+            string uriString = this.CreateFeedContextUri(selectClause, expandClause, version).OriginalString;
+            uriString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
         }
 
         [Fact]
@@ -266,17 +267,19 @@ namespace Microsoft.OData.Tests
         }
 
         [Theory]
-        [InlineData(ODataVersion.V4, "")]
-        [InlineData(ODataVersion.V401, "Districts(City(Districts()))")]
-        public void EntryContextUriWithExpandNestedExpandString(ODataVersion version, string expectedExpandWithoutNesting)
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        public void EntryContextUriWithExpandNestedExpandString(ODataVersion version)
         {
             // Without inner $select, $expand=A($expand=B($expand=C))
             string expandClause = "Districts($expand=City($expand=Districts))";
-            this.CreateEntryContextUri(null, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedExpandWithoutNesting));
+            string expectedClause = "Districts(City(Districts()))";
+            string urlString = this.CreateEntryContextUri(null, expandClause, version).OriginalString;
+            urlString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
 
             // With inner $select, $expand=A($expand=B($select=C))
             expandClause = "Districts($expand=City($select=Districts))";
-            string expectedClause = "Districts(City(Districts))";
+            expectedClause = "Districts(City(Districts))";
             this.CreateEntryContextUri(null, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
 
             // With inner $expand, $expand=A($expand=C($select=D)))
@@ -291,12 +294,13 @@ namespace Microsoft.OData.Tests
         }
 
         [Theory]
-        [InlineData(ODataVersion.V4, "Size,Name,Districts(Zip,City(Name,Districts))")]
-        [InlineData(ODataVersion.V401, "Size,Name,Districts(Zip,City(Name,Districts()))")]
-        public void FeedContextUriWithMixedSelectAndExpandString(ODataVersion version, string expectedClause)
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        public void FeedContextUriWithMixedSelectAndExpandString(ODataVersion version)
         {
             const string selectClause = "Size,Name";
             const string expandClause = "Districts($select=Zip,City;$expand=City($expand=Districts;$select=Name))";
+            const string expectedClause = "Size,Name,Districts(Zip,City(Name,Districts()))";
             this.CreateFeedContextUri(selectClause, expandClause, version).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
         }
         #endregion context uri with $select and $expand
