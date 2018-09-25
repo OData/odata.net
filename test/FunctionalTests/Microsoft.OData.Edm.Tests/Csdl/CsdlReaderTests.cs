@@ -665,6 +665,71 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty}, errors.Select(e => e.ErrorCode));
         }
 
+        [Fact]
+        public void ParsingEnumMemberWithAnnotationsWorks()
+        {
+            string types =
+@"<EnumType Name=""Color"" >
+  <Member Name=""Red"" Value=""1"" >
+    <Annotation String=""Inline Description"" Term=""Org.OData.Core.V1.LongDescription""/>
+    <Annotation String=""Inline FooBar"" Term=""NS.FooBar""/>
+  </Member>
+  <Member Name=""Blue"" Value=""2"" />
+</EnumType>
+<Term Name=""FooBar"" Type=""Edm.String""/>
+<Annotations Target=""NS.Color/Blue"" >
+  <Annotation String=""OutOfLine Description"" Term=""Org.OData.Core.V1.LongDescription""/>
+  <Annotation String=""OutOfLine FooBar"" Term=""NS.FooBar""/>
+</Annotations>";
+
+            IEdmModel model = GetEdmModel(types: types);
+            Assert.NotNull(model);
+
+            var color = model.SchemaElements.OfType<IEdmEnumType>().FirstOrDefault(c => c.Name == "Color");
+            Assert.NotNull(color);
+
+            IEdmTerm fooBarTerm = model.FindDeclaredTerm("NS.FooBar");
+            Assert.NotNull(fooBarTerm);
+
+            // Red
+            var red = color.Members.FirstOrDefault(c => c.Name == "Red");
+            Assert.NotNull(red);
+            string redAnnotation = GetStringAnnotation(model, red, CoreVocabularyModel.LongDescriptionTerm, EdmVocabularyAnnotationSerializationLocation.Inline);
+            Assert.Equal("Inline Description", redAnnotation);
+
+            redAnnotation = GetStringAnnotation(model, red, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.Inline);
+            Assert.Equal("Inline FooBar", redAnnotation);
+
+            // Blue
+            var blue = color.Members.FirstOrDefault(c => c.Name == "Blue");
+            Assert.NotNull(blue);
+            string blueAnnotation = GetStringAnnotation(model, blue, CoreVocabularyModel.LongDescriptionTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("OutOfLine Description", blueAnnotation);
+
+            blueAnnotation = GetStringAnnotation(model, blue, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("OutOfLine FooBar", blueAnnotation);
+
+            blueAnnotation = GetStringAnnotation(model, blue, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("OutOfLine FooBar", blueAnnotation);
+        }
+
+        private string GetStringAnnotation(IEdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, EdmVocabularyAnnotationSerializationLocation location)
+        {
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, term).FirstOrDefault();
+            if (annotation != null)
+            {
+                Assert.True(annotation.GetSerializationLocation(model) == location);
+
+                IEdmStringConstantExpression stringConstant = annotation.Value as IEdmStringConstantExpression;
+                if (stringConstant != null)
+                {
+                    return stringConstant.Value;
+                }
+            }
+
+            return null;
+        }
+
         private void RunValidTest(Func<XmlReader, IEdmModel> parse)
         {
             var result = parse(this.validReader);
