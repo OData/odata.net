@@ -372,6 +372,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Parses a $index query option
+        /// </summary>
+        /// <returns>A value representing that index option, null if $index query does not exist.</returns>
+        public long? ParseIndex()
+        {
+            this.Initialize();
+            return this.queryOptionParser.ParseIndex();
+        }
+
+        /// <summary>
         /// Parses a $count query option
         /// </summary>
         /// <returns>An count representing that count option, null if $count query does not exist.</returns>
@@ -450,6 +460,7 @@ namespace Microsoft.OData.UriParser
             ComputeClause compute = this.ParseCompute();
             long? top = this.ParseTop();
             long? skip = this.ParseSkip();
+            long? index = this.ParseIndex();
             bool? count = this.ParseCount();
             string skipToken = this.ParseSkipToken();
             string deltaToken = this.ParseDeltaToken();
@@ -457,7 +468,7 @@ namespace Microsoft.OData.UriParser
             // TODO:  check it shouldn't be empty
             List<QueryNode> boundQueryOptions = new List<QueryNode>();
 
-            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, count, compute);
+            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, index, count, compute);
             odataUri.ServiceRoot = this.serviceRoot;
             odataUri.SkipToken = skipToken;
             odataUri.DeltaToken = deltaToken;
@@ -585,6 +596,7 @@ namespace Microsoft.OData.UriParser
                 case UriQueryConstants.DeltaTokenQueryOption:
                 case UriQueryConstants.IdQueryOption:
                 case UriQueryConstants.TopQueryOption:
+                case UriQueryConstants.IndexQueryOption:
                 case UriQueryConstants.CountQueryOption:
                 case UriQueryConstants.FormatQueryOption:
                 case UriQueryConstants.SearchQueryOption:

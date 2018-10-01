@@ -146,6 +146,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseIndex()
+        {
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/RelatedIDs?$index=1"));
+            ODataUri parsedUri = parser.ParseUri();
+            parsedUri.Index.Should().Be(1);
+        }
+
+        [Fact]
         public void ParseCount()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$count=false"));
@@ -153,7 +161,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parsedUri.QueryCount.Should().BeFalse();
         }
 
-        [Fact]
+       [Fact]
         public void ParseWithAllQueryOptionsWithoutAlias()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), new Uri("http://www.odata.com/OData/Dogs?$select=Color, MyPeople&$expand=MyPeople&$filter=startswith(Color, 'Blue')&$orderby=Color asc"));

@@ -71,6 +71,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>A count query option name.</summary>
         internal const string CountQueryOption = "$count";
 
+        /// <summary>An index query option name.</summary>
+        internal const string IndexQueryOption = "$index";
+
         /// <summary>A format query option name.</summary>
         internal const string FormatQueryOption = "$format";
 

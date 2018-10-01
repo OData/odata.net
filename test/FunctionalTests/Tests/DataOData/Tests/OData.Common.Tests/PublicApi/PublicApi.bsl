@@ -5324,6 +5324,7 @@ public sealed class Microsoft.OData.ODataUri {
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryNode]] CustomQueryOptions  { public get; public set; }
 	string DeltaToken  { public get; public set; }
 	Microsoft.OData.UriParser.FilterClause Filter  { public get; public set; }
+	System.Nullable`1[[System.Int64]] Index  { public get; public set; }
 	Microsoft.OData.UriParser.OrderByClause OrderBy  { public get; public set; }
 	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.UriParser.SingleValueNode]] ParameterAliasNodes  { public get; }
 	Microsoft.OData.UriParser.ODataPath Path  { public get; public set; }
@@ -5865,6 +5866,7 @@ public class Microsoft.OData.UriParser.ODataQueryOptionParser {
 	public System.Nullable`1[[System.Boolean]] ParseCount ()
 	public string ParseDeltaToken ()
 	public Microsoft.OData.UriParser.FilterClause ParseFilter ()
+	public System.Nullable`1[[System.Int64]] ParseIndex ()
 	public Microsoft.OData.UriParser.OrderByClause ParseOrderBy ()
 	public Microsoft.OData.UriParser.SearchClause ParseSearch ()
 	public Microsoft.OData.UriParser.SelectExpandClause ParseSelectAndExpand ()
@@ -6535,6 +6537,7 @@ public sealed class Microsoft.OData.UriParser.ODataUriParser {
 	public string ParseDeltaToken ()
 	public Microsoft.OData.UriParser.EntityIdSegment ParseEntityId ()
 	public Microsoft.OData.UriParser.FilterClause ParseFilter ()
+	public System.Nullable`1[[System.Int64]] ParseIndex ()
 	public Microsoft.OData.UriParser.OrderByClause ParseOrderBy ()
 	public Microsoft.OData.UriParser.ODataPath ParsePath ()
 	public Microsoft.OData.UriParser.SearchClause ParseSearch ()

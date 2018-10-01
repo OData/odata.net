@@ -619,6 +619,7 @@ namespace Microsoft.OData {
         internal const string SyntacticTree_InvalidSkipQueryOptionValue = "SyntacticTree_InvalidSkipQueryOptionValue";
         internal const string SyntacticTree_InvalidTopQueryOptionValue = "SyntacticTree_InvalidTopQueryOptionValue";
         internal const string SyntacticTree_InvalidCountQueryOptionValue = "SyntacticTree_InvalidCountQueryOptionValue";
+        internal const string SyntacticTree_InvalidIndexQueryOptionValue = "SyntacticTree_InvalidIndexQueryOptionValue";
         internal const string QueryOptionUtils_QueryParameterMustBeSpecifiedOnce = "QueryOptionUtils_QueryParameterMustBeSpecifiedOnce";
         internal const string UriBuilder_NotSupportedClrLiteral = "UriBuilder_NotSupportedClrLiteral";
         internal const string UriBuilder_NotSupportedQueryToken = "UriBuilder_NotSupportedQueryToken";
