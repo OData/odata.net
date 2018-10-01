@@ -49,6 +49,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
         #endregion $skip option
 
+        [Theory]
+        [InlineData(42)]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void BuildUrlWithIndexValueWorks(int value)
+        {
+            string expect = "http://gobbledygook/People(1)/RelatedIDs?$index=" + value;
+            string uriString = "People(1)/RelatedIDs?$index=" + value;
+            Uri queryUri = new Uri(uriString, UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri(expect), actualUri);
+        }
+
         #region new ODataUri
         [Fact]
         public void BuildUrlWithNewODataUri()
@@ -91,6 +104,5 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal(new Uri("http://gobbledygook/People?$deltatoken=MyToken"), res);
         }
         #endregion
-
     }
 }
