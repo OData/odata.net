@@ -9,6 +9,7 @@
 
 namespace Microsoft.OData {
     using System;
+    using System.Resources;
 
     /// <summary>
     ///    Strongly-typed and parameterized string resources.
@@ -163,8 +164,7 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}' when writing an OData 4.0 payload. To write content to a deleted resource, please specify ODataVersion 4.01 or greater in MessageWriterSettings."
         /// </summary>
-        internal static string ODataWriterCore_InvalidTransitionFrom40DeletedResource(object p0, object p1)
-        {
+        internal static string ODataWriterCore_InvalidTransitionFrom40DeletedResource(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFrom40DeletedResource, p0, p1);
         }
 
@@ -232,6 +232,15 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified."
+        /// </summary>
+        internal static string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
+            }
+        }
+
+        /// <summary>
         /// A string like "The ODataResourceSet.Count must be null for request payloads. Query counts are only supported in responses."
         /// </summary>
         internal static string ODataWriterCore_QueryCountInRequest {
@@ -241,12 +250,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot write a deleted resource, delta link, or delta deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter."
+        /// A string like "Cannot write a delta deleted resource, link, or deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter."
         /// </summary>
-        internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter
-        {
-            get
-            {
+        internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
             }
         }
@@ -254,11 +261,9 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Nested content is not allowed in an OData 4.0 deleted entry. For content in deleted entries, please specify OData 4.01 or greater."
         /// </summary>
-        internal static string ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteNestedContentIn40DeltaPayload);
+        internal static string ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
             }
         }
 
@@ -295,15 +300,6 @@ namespace Microsoft.OData {
         internal static string ODataWriterCore_AsyncCallOnSyncWriter {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_AsyncCallOnSyncWriter);
-            }
-        }
-
-        /// <summary>
-        /// A string like "No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified."
-        /// </summary>
-        internal static string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
             }
         }
 
@@ -1043,16 +1039,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Changeset boundary must have been set by now."
-        /// </summary>
-        internal static string ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull);
-            }
-        }
-
-        /// <summary>
         /// A string like "The method CreateOperationResponseMessage was called in state '{0}', which is not allowed. CreateOperationResponseMessage can only be called in state 'Operation'."
         /// </summary>
         internal static string ODataBatchReader_InvalidStateForCreateOperationResponseMessage(object p0) {
@@ -1117,107 +1103,109 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Reader mode is not setup correctly."
+        /// </summary>
+        internal static string ODataBatchReader_ReaderModeNotInitilized {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_ReaderModeNotInitilized);
+            }
+        }
+
+        /// <summary>
+        /// A string like "JsonLight batch format requires top level property name 'requests' or 'response' but it is missing."
+        /// </summary>
+        internal static string ODataBatchReader_JsonBatchTopLevelPropertyMissing {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+            }
+        }
+
+        /// <summary>
         /// A string like "The content ID '{0}' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01."
         /// </summary>
         internal static string ODataBatchReader_DuplicateContentIDsNotAllowed(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_DuplicateContentIDsNotAllowed, p0);
         }
 
-        /// A string like "Reader mode is not setup correctly."
-        /// </summary>
-        internal static string ODataBatchReader_ReaderModeNotInitilized
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_ReaderModeNotInitilized);
-            }
-        }
-
-        /// <summary>
-        /// A string like "JsonLight batch format requires top level property name 'requests' or 'responses' but it is missing."
-        /// </summary>
-        internal static string ODataBatchReader_JsonBatchTopLevelPropertyMissing
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
-            }
-        }
-
         /// <summary>
         /// A string like "The atomicityGroup ID [{0}] was found duplicated in the batch request. AtomicityGroup IDs have to be adjacent, otherwise would be detected as duplicated."
         /// </summary>
-        internal static string ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed(object p0)
-        {
+        internal static string ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed, p0);
         }
 
         /// <summary>
         /// A string like "Request property [{0}] is required but is missing."
         /// </summary>
-        internal static string ODataBatchReader_RequestPropertyMissing(object p0)
-        {
+        internal static string ODataBatchReader_RequestPropertyMissing(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_RequestPropertyMissing, p0);
         }
 
         /// <summary>
         /// A string like "The dependsOn request Id [{0}] is same as atomicityGroup property value [{1}], and is not allowed."
         /// </summary>
-        internal static string ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed(object p0, object p1)
-        {
+        internal static string ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed, p0, p1);
         }
 
         /// <summary>
         /// A string like "The dependsOn request Id [{0}] is same as id property value [{1}], and it is not allowed."
         /// </summary>
-        internal static string ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed(object p0, object p1)
-        {
+        internal static string ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed, p0, p1);
         }
 
         /// <summary>
-        /// A string like "The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore
-        /// dependsOn property should refer to atomic group Id [{1}] instead."
+        /// A string like "The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore dependsOn property should refer to atomic group Id [{1}] instead."
         /// </summary>
-        internal static string ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(object p0, object p1)
-        {
+        internal static string ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, p0, p1);
         }
 
         /// <summary>
         /// A string like "The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id and atomic group Id seen so far. Forward reference is not allowed."
         /// </summary>
-        internal static string ODataBatchReader_DependsOnIdNotFound(object p0, object p1)
-        {
+        internal static string ODataBatchReader_DependsOnIdNotFound(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_DependsOnIdNotFound, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Absolute URI {0} is not start with the base URI [{1}] specified by the operation message."
+        /// </summary>
+        internal static string ODataBatchReader_AbsoluteURINotMatchingBaseUri(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_AbsoluteURINotMatchingBaseUri, p0, p1);
         }
 
         /// <summary>
         /// A string like "Request Id reference [{0}] in Uri [{1}] is not found in effective depends-on-Ids [{2}] of the request."
         /// </summary>
-        internal static string ODataBatchReader_ReferenceIdNotIncludedInDependsOn(object p0, object p1, object p2)
-        {
+        internal static string ODataBatchReader_ReferenceIdNotIncludedInDependsOn(object p0, object p1, object p2) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_ReferenceIdNotIncludedInDependsOn, p0, p1, p2);
         }
 
         /// <summary>
         /// A string like "Group id or changeset GUID cannot be null."
         /// </summary>
-        internal static string ODataBatch_GroupIdOrChangeSetIdCannotBeNull
-        {
-            get
-            {
+        internal static string ODataBatch_GroupIdOrChangeSetIdCannotBeNull {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatch_GroupIdOrChangeSetIdCannotBeNull);
             }
         }
 
         /// <summary>
-        /// A string like " Message with id {0} is positioned incorrectly: all messages of same groupId {1} must be adjacent."
+        /// A string like "Message with id [{0}] is positioned incorrectly: all messages of same groupId [{1}] must be adjacent."
         /// </summary>
-        internal static string ODataBatchReader_MessageIdPositionedIncorrectly(object p0, object p1)
-        {
+        internal static string ODataBatchReader_MessageIdPositionedIncorrectly(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_MessageIdPositionedIncorrectly, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "Changeset boundary must have been set by now."
+        /// </summary>
+        internal static string ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull);
+            }
         }
 
         /// <summary>
@@ -1741,20 +1729,19 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "An OData version of {0} was specified and the maximum supported OData version is {1}."
+        /// </summary>
+        internal static string ODataUtils_MaxProtocolVersionExceeded(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_MaxProtocolVersionExceeded, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "An invalid enum value was specified for the version number."
         /// </summary>
         internal static string ODataUtils_UnsupportedVersionNumber {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_UnsupportedVersionNumber);
             }
-        }
-
-        /// <summary>
-        /// A string like "An OData version of {0} was specified and the maximum supported OData version is {1}."
-        /// </summary>
-        internal static string ODataUtils_MaxProtocolVersionExceeded(object p0, object p1)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUtils_MaxProtocolVersionExceeded, p0, p1);
         }
 
         /// <summary>
@@ -3380,18 +3367,16 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A collection type '{0}' was specified for a non-collection value."
+        /// A string like "A collection type of '{0}' was specified for a non-collection value."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected(object p0)
-        {
+        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected, p0);
         }
 
         /// <summary>
-        /// A string like "A non-collection type '{0}' was specified for a collection value."
+        /// A string like "A non-collection type of '{0}' was specified for a collection value."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected(object p0)
-        {
+        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected, p0);
         }
 
@@ -3411,13 +3396,6 @@ namespace Microsoft.OData {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource);
             }
-        }
-
-        /// <summary>
-        /// A string like "Invalid primitive value '{0}' for @removed annotation. @removed annotation must be a JSON object, optionally containing a 'reason' property."
-        /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject, p0);
         }
 
         /// <summary>
@@ -3499,6 +3477,13 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid primitive value '{0}' for @removed annotation. @removed annotation must be a JSON object, optionally containing a 'reason' property."
+        /// </summary>
+        internal static string ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject, p0);
         }
 
         /// <summary>
@@ -3611,8 +3596,8 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-         /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
-         /// </summary>
+        /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
+        /// </summary>
         internal static string ODataJsonLightResourceDeserializer_CannotReadNestedResource(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadNestedResource, p0);
         }
@@ -4498,8 +4483,7 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The left operand for the IN operation is not a single value. IN operations require the left operand to be a single value and the right operand to be a collection value."
         /// </summary>
-        internal static string MetadataBinder_LeftOperandNotSingleValue
-        {
+        internal static string MetadataBinder_LeftOperandNotSingleValue {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_LeftOperandNotSingleValue);
             }
@@ -4508,8 +4492,7 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The right operand for the IN operation is not a collection value. IN operations require the left operand to be a single value and the right operand to be a collection value."
         /// </summary>
-        internal static string MetadataBinder_RightOperandNotCollectionValue
-        {
+        internal static string MetadataBinder_RightOperandNotCollectionValue {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_RightOperandNotCollectionValue);
             }
@@ -4581,10 +4564,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The bind state cannot be null. In OData, the bind state for query options should not be null and there should be query options in the object."
         /// </summary>
-        internal static string MetadataBinder_QueryOptionsBindStateCannotBeNull
-        {
-            get
-            {
+        internal static string MetadataBinder_QueryOptionsBindStateCannotBeNull {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_QueryOptionsBindStateCannotBeNull);
             }
         }
@@ -4592,10 +4573,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The bind method cannot be null. In OData, the processing of query options should have a corresponding bind method."
         /// </summary>
-        internal static string MetadataBinder_QueryOptionsBindMethodCannotBeNull
-        {
-            get
-            {
+        internal static string MetadataBinder_QueryOptionsBindMethodCannotBeNull {
+            get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
             }
         }
@@ -4704,7 +4683,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "$apply/aggregate token kind '{0}' not supported."
+        /// A string like "$apply/aggregate expression token kind '{0}' not supported."
         /// </summary>
         internal static string ApplyBinder_UnsupportedAggregateKind(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ApplyBinder_UnsupportedAggregateKind, p0);
@@ -4741,8 +4720,10 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "There are unsupported aggregation expressions in the transformation node."
         /// </summary>
-        internal static string AggregateTransformationNode_UnsupportedAggregateExpressions() {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AggregateTransformationNode_UnsupportedAggregateExpressions);
+        internal static string AggregateTransformationNode_UnsupportedAggregateExpressions {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AggregateTransformationNode_UnsupportedAggregateExpressions);
+            }
         }
 
         /// <summary>
@@ -5005,10 +4986,9 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An instance of InNode can only be created where the item type of the right operand collection '{0}' is equal to that of the left operand single value '{0}'."
+        /// A string like "An instance of InNode can only be created where the item types of the right operand '{0}' and the left operand '{1}' can be compared."
         /// </summary>
-        internal static string Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType(object p0, object p1)
-        {
+        internal static string Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType, p0, p1);
         }
 
@@ -5767,8 +5747,7 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Invalid JSON. A array closure mismatch occurred. A '{0}' was expected to match '{1}', but instead '{2}' was found."
         /// </summary>
-        internal static string JsonReader_ArrayClosureMismatch(object p0, object p1, object p2)
-        {
+        internal static string JsonReader_ArrayClosureMismatch(object p0, object p1, object p2) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonReader_ArrayClosureMismatch, p0, p1, p2);
         }
 
