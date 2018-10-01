@@ -66,6 +66,7 @@ namespace Microsoft.OData
             ApplyClause apply,
             long? skip,
             long? top,
+            long? index,
             bool? queryCount,
             ComputeClause compute = null)
         {
@@ -79,6 +80,7 @@ namespace Microsoft.OData
             this.Apply = apply;
             this.Skip = skip;
             this.Top = top;
+            this.Index = index;
             this.QueryCount = queryCount;
             this.Compute = compute;
         }
@@ -184,6 +186,11 @@ namespace Microsoft.OData
         public long? Top { get; set; }
 
         /// <summary>
+        /// Gets or sets any $index option for this uri.
+        /// </summary>
+        public long? Index { get; set; }
+
+        /// <summary>
         /// Get or sets any query $count option for this uri.
         /// </summary>
         public bool? QueryCount { get; set; }
@@ -229,6 +236,7 @@ namespace Microsoft.OData
                 Search = Search,
                 Skip = Skip,
                 Top = Top,
+                Index = Index,
                 QueryCount = QueryCount,
                 SkipToken = SkipToken,
                 DeltaToken = DeltaToken,

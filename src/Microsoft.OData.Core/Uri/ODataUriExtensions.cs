@@ -78,6 +78,13 @@ namespace Microsoft.OData
                 queryOptions = string.Concat(queryOptions, "$skip", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(odataUri.Skip.ToString()));
             }
 
+            if (odataUri.Index != null)
+            {
+                queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
+                writeQueryPrefix = false;
+                queryOptions = string.Concat(queryOptions, "$index", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(odataUri.Index.ToString()));
+            }
+
             if (odataUri.QueryCount != null)
             {
                 queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
