@@ -150,6 +150,17 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         }
 
         [Fact]
+        public void CaseInsensitiveIndexShouldWork()
+        {
+            this.TestCaseInsensitiveBuiltIn(
+                "People(0)/RelatedIDs?$index=4",
+                "People(0)/RelatedIDs?$iNDex=4",
+                uriParser => uriParser.ParseIndex(),
+                val => val.Should().Be(4),
+                /*errorMessage*/ null);
+        }
+
+        [Fact]
         public void CaseInsensitiveIdShouldWork()
         {
             this.TestCaseInsensitiveBuiltIn(

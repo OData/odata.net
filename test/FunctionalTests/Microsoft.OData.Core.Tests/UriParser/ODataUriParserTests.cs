@@ -47,9 +47,9 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Theory]
-        [InlineData("?filter=&select=&expand=&orderby=&top=&skip=&count=&search=&unknown=&$unknownvalue&skiptoken=&deltatoken=&$compute=", true)]
-        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=&$compute=", true)]
-        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=&$compute=", false)]
+        [InlineData("?filter=&select=&expand=&orderby=&top=&skip=&index=&count=&search=&unknown=&$unknownvalue&skiptoken=&deltatoken=&$compute=", true)]
+        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$index=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=&$compute=", true)]
+        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$index=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=&$compute=", false)]
         public void EmptyValueQueryOptionShouldWork(string relativeUriString, bool enableNoDollarQueryOptions)
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, relativeUriString));
@@ -66,6 +66,8 @@ namespace Microsoft.OData.Tests.UriParser
             action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
             action = () => uriParser.ParseSkip();
             action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
+            action = () => uriParser.ParseIndex();
+            action.ShouldThrow<ODataException>().WithMessage(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
             action = () => uriParser.ParseCount();
             action.ShouldThrow<ODataException>().WithMessage(Strings.ODataUriParser_InvalidCount(""));
             action = () => uriParser.ParseSearch();
@@ -466,6 +468,17 @@ namespace Microsoft.OData.Tests.UriParser
             parser.ParseSearch().Should().NotBeNull();
             parser.ParseSkipToken().Should().Be("abc");
             parser.ParseDeltaToken().Should().Be("def");
+        }
+
+        [Theory]
+        [InlineData("People(1)/RelatedIDs?index=42", true)]
+        [InlineData("People(1)/RelatedIDs?$index=42", true)]
+        [InlineData("People(1)/RelatedIDs?$index=42", false)]
+        public void ParseIndexQueryOptionShouldWork(string relativeUriString, bool enableNoDollarQueryOptions)
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            parser.ParseIndex().Should().Be(42);
         }
 
         [Theory]

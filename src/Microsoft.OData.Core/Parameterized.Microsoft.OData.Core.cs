@@ -4236,6 +4236,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Invalid value '{0}' for $index query option found. The $index query option requires an integer value."
+        /// </summary>
+        internal static string SyntacticTree_InvalidIndexQueryOptionValue(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SyntacticTree_InvalidIndexQueryOptionValue, p0);
+        }
+
+        /// <summary>
         /// A string like "Query option '{0}' was specified more than once, but it must be specified at most once."
         /// </summary>
         internal static string QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(object p0) {

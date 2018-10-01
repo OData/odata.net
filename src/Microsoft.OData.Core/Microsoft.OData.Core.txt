@@ -668,6 +668,7 @@ SyntacticTree_MaxDepthInvalid=The maximum depth setting must be a number greater
 SyntacticTree_InvalidSkipQueryOptionValue=Invalid value '{0}' for $skip query option found. The $skip query option requires a non-negative integer value.
 SyntacticTree_InvalidTopQueryOptionValue=Invalid value '{0}' for $top query option found. The $top query option requires a non-negative integer value.
 SyntacticTree_InvalidCountQueryOptionValue=Invalid value '{0}' for $count query option found. Valid values are '{1}'.
+SyntacticTree_InvalidIndexQueryOptionValue=Invalid value '{0}' for $index query option found. The $index query option requires an integer value.
 
 QueryOptionUtils_QueryParameterMustBeSpecifiedOnce=Query option '{0}' was specified more than once, but it must be specified at most once.
 

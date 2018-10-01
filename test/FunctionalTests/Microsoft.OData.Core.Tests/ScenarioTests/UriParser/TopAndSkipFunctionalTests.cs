@@ -85,5 +85,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             return new ODataQueryOptionParser(EdmCoreModel.Instance, null, null, new Dictionary<string, string>() { { "$skip", p } }).ParseSkip();
         }
+
+        [Theory]
+        [InlineData("5", 5)]
+        [InlineData("   5   ", 5)]
+        [InlineData("   000   ", 0)]
+        [InlineData("-1", -1)]
+        [InlineData("-1001", -1001)]
+        public void IndexValueWorks(string value, long expect)
+        {
+            var parser = new ODataQueryOptionParser(EdmCoreModel.Instance, null, null, new Dictionary<string, string>() { { "$index", value } });
+            var index = parser.ParseIndex();
+            index.Should().Be(expect);
+        }
     }
 }

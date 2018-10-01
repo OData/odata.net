@@ -281,6 +281,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Parses a $index query option
+        /// </summary>
+        /// <returns>A value representing that index option, null if $index query does not exist.</returns>
+        public long? ParseIndex()
+        {
+            string indexQuery;
+            return this.TryGetQueryOption(UriQueryConstants.IndexQueryOption, out indexQuery) ? ParseIndex(indexQuery) : null;
+        }
+
+        /// <summary>
         /// Parses a $count query option
         /// </summary>
         /// <returns>A count representing that count option, null if $count query does not exist.</returns>
@@ -521,6 +531,30 @@ namespace Microsoft.OData.UriParser
             }
 
             return skipValue;
+        }
+
+        /// <summary>
+        /// Parses a $index query option
+        /// </summary>
+        /// <param name="indexQuery">The value of $index from the query</param>
+        /// <returns>A value representing that index option, null if $index query does not exist.</returns>
+        /// <exception cref="ODataException">Throws if the input value is not a valid $index value.</exception>
+        private static long? ParseIndex(string indexQuery)
+        {
+            if (indexQuery == null)
+            {
+                return null;
+            }
+
+            // A negative ordinal number indexes from the end of the collection,
+            // with -1 representing an insert as the last item in the collection.
+            long indexValue;
+            if (!long.TryParse(indexQuery, out indexValue))
+            {
+                throw new ODataException(Strings.SyntacticTree_InvalidIndexQueryOptionValue(indexQuery));
+            }
+
+            return indexValue;
         }
 
         /// <summary>
