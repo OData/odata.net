@@ -53,6 +53,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         [InlineData(42)]
         [InlineData(0)]
         [InlineData(-1)]
+        [InlineData(-998)]
         public void BuildUrlWithIndexValueWorks(int value)
         {
             string expect = "http://gobbledygook/People(1)/RelatedIDs?$index=" + value;
