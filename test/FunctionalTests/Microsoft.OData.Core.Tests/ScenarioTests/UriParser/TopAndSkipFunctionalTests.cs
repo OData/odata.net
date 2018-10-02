@@ -98,5 +98,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var index = parser.ParseIndex();
             index.Should().Be(expect);
         }
+
+        [Theory]
+        [InlineData("null")]
+        [InlineData("9223372036854775808")]
+        [InlineData("I'm long value")]
+        [InlineData("2 + 3")]
+        [InlineData("(1)")]
+        public void InvaidIndexValueThrows(string value)
+        {
+            var parser = new ODataQueryOptionParser(EdmCoreModel.Instance, null, null, new Dictionary<string, string>() { { "$index", value } });
+            Action action = () => parser.ParseIndex();
+            action.ShouldThrow<ODataException>("'{0}' should be invalid input", value).WithMessage(Strings.SyntacticTree_InvalidIndexQueryOptionValue(value));
+        }
     }
 }
