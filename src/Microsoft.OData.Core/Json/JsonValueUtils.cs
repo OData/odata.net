@@ -491,7 +491,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Checks if the string contains special char and returns the first index 
+        /// Checks if the string contains special char and returns the first index
         /// of special char if present.
         /// </summary>
         /// <param name="inputString">string that might contain special characters.</param>

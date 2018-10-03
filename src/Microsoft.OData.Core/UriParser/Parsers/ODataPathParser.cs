@@ -471,7 +471,7 @@ namespace Microsoft.OData.UriParser
 
             // Get the syntactic representation of the filter expression.
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(
-                configuration.Settings.FilterLimit, configuration.EnableCaseInsensitive);
+                configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
             QueryToken filterToken = expressionParser.ParseFilter(filter);
 
             // Bind it to metadata.
@@ -512,7 +512,7 @@ namespace Microsoft.OData.UriParser
             // because we will assume that the user is attempting to use the $filter path segment.
             if (!segmentText.StartsWith(
                 UriQueryConstants.FilterSegment,
-                this.configuration.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
             {
                 return false;
             }
@@ -1386,7 +1386,7 @@ namespace Microsoft.OData.UriParser
             return string.Equals(
                 expected,
                 identifier,
-                this.configuration.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+                this.configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace Microsoft.OData.UriParser
             out ExpandToken expandTree,
             out SelectToken selectTree)
         {
-            SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitive)
+            SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
                 MaxPathDepth = configuration.Settings.PathLimit
             };
@@ -41,7 +41,7 @@ namespace Microsoft.OData.UriParser
                 expandClause,
                 parentEntityType,
                 configuration.Settings.SelectExpandLimit,
-                configuration.EnableCaseInsensitive,
+                configuration.EnableCaseInsensitiveUriFunctionIdentifier,
                 configuration.EnableNoDollarQueryOptions)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,

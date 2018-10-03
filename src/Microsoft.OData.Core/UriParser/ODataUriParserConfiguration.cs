@@ -107,7 +107,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
-        internal bool EnableCaseInsensitive
+        internal bool EnableCaseInsensitiveUriFunctionIdentifier
         {
             get
             {
