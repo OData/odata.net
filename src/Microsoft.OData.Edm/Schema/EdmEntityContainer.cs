@@ -7,17 +7,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// Represents an EDM entity container.
     /// </summary>
-    public class EdmEntityContainer : EdmElement, IEdmEntityContainer
+    public class EdmEntityContainer : EdmElement, IEdmEntityContainer, IEdmFullNamedElement
     {
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
         private readonly List<IEdmEntityContainerElement> containerElements = new List<IEdmEntityContainerElement>();
         private readonly Dictionary<string, IEdmEntitySet> entitySetDictionary = new Dictionary<string, IEdmEntitySet>();
         private readonly Dictionary<string, IEdmSingleton> singletonDictionary = new Dictionary<string, IEdmSingleton>();
@@ -35,6 +35,7 @@ namespace Microsoft.OData.Edm
 
             this.namespaceName = namespaceName;
             this.name = name;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.namespaceName, this.Name);
         }
 
         /// <summary>
@@ -59,6 +60,14 @@ namespace Microsoft.OData.Edm
         public string Name
         {
             get { return this.name; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         /// <summary>

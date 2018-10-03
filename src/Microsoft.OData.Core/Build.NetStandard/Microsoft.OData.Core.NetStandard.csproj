@@ -437,6 +437,9 @@
     <Compile Include="..\Json\ODataJsonWriterUtils.cs">
       <Link>Json\ODataJsonWriterUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Json\ODataStringEscapeOption.cs">
+      <Link>Json\ODataStringEscapeOption.cs</Link>
+    </Compile>
     <Compile Include="..\Json\TextWriterWrapper.cs">
       <Link>Json\TextWriterWrapper.cs</Link>
     </Compile>

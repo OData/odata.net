@@ -32,19 +32,23 @@ namespace Microsoft.OData.Tests.Json
             {string.Format("{0}", (char)0x80), string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}", 0x80)},
         };
 
-        [Fact]
-        public void WriteEmptyStringShouldWork()
+        [Theory]
+        [InlineData(ODataStringEscapeOption.EscapeOnlyControls)]
+        [InlineData(ODataStringEscapeOption.EscapeNonAscii)]
+        public void WriteEmptyStringShouldWork(ODataStringEscapeOption stringEscapeOption)
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty, stringEscapeOption, ref this.buffer);
             this.StreamToString().Should().Be("\"\"");
         }
 
-        [Fact]
-        public void WriteNonSpecialCharactersShouldWork()
+        [Theory]
+        [InlineData(ODataStringEscapeOption.EscapeOnlyControls)]
+        [InlineData(ODataStringEscapeOption.EscapeNonAscii)]
+        public void WriteNonSpecialCharactersShouldWork(ODataStringEscapeOption stringEscapeOption)
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123", ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123", stringEscapeOption, ref this.buffer);
             this.StreamToString().Should().Be("\"abcdefg123\"");
         }
 
@@ -54,9 +58,26 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar), ref this.buffer);
+                JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar),
+                    ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
                 this.StreamToString().Should().Be(string.Format("\"{0}\"", this.escapedCharMap[specialChar]));
             }
+        }
+
+        [Fact]
+        public void WriteHighSpecialCharactersShouldWorkForEscapeNonAsciiOption()
+        {
+            this.TestInit();
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
+            this.StreamToString().Should().Be("\"cA_\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\"");
+        }
+
+        [Fact]
+        public void WriteHighSpecialCharactersShouldWorkForEscapeOnlyControlsOption()
+        {
+            this.TestInit();
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeOnlyControls, ref this.buffer);
+            this.StreamToString().Should().Be("\"cA_Россия\"");
         }
 
         [Fact]

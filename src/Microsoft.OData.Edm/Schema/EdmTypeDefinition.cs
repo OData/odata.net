@@ -9,11 +9,12 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents the definition of an Edm type definition.
     /// </summary>
-    public class EdmTypeDefinition : EdmType, IEdmTypeDefinition
+    public class EdmTypeDefinition : EdmType, IEdmTypeDefinition, IEdmFullNamedElement
     {
         private readonly IEdmPrimitiveType underlyingType;
         private readonly string namespaceName;
         private readonly string name;
+        private readonly string fullName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmTypeDefinition"/> class with <see cref="EdmPrimitiveTypeKind.Int32"/> underlying type.
@@ -41,6 +42,7 @@ namespace Microsoft.OData.Edm
             this.underlyingType = underlyingType;
             this.name = name;
             this.namespaceName = namespaceName;
+            this.fullName = EdmUtil.GetFullNameForSchemaElement(this.namespaceName, this.name);
         }
 
         /// <summary>
@@ -65,6 +67,14 @@ namespace Microsoft.OData.Edm
         public string Namespace
         {
             get { return this.namespaceName; }
+        }
+
+        /// <summary>
+        /// Gets the full name of this schema element.
+        /// </summary>
+        public string FullName
+        {
+            get { return this.fullName; }
         }
 
         /// <summary>

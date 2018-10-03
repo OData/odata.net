@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The built-in Edm.Untyped type in the core model.
     /// </summary>
-    internal sealed class EdmCoreModelUntypedType : EdmType, IEdmUntypedType, IEdmCoreModelElement
+    internal sealed class EdmCoreModelUntypedType : EdmType, IEdmUntypedType, IEdmCoreModelElement, IEdmFullNamedElement
     {
         /// <summary>
         /// The core Edm.Untyped singleton.
@@ -52,9 +52,18 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the namespace of this type.
         /// </summary>
-        public string Namespace
+        public string Namespace => EdmConstants.EdmNamespace;
+
+        /// <summary>
+        /// Gets the full name of this type.
+        /// </summary>
+        public string FullName => CsdlConstants.TypeName_Untyped;
+
+        /// <summary>
+        /// Private constructor.
+        /// </summary>
+        private EdmCoreModelUntypedType()
         {
-            get { return EdmConstants.EdmNamespace; }
         }
     }
 }

@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+
 using Microsoft.OData.Edm.Csdl;
 
 namespace Microsoft.OData.Edm
@@ -13,7 +14,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The built-in Edm.ComplexType abstract type in the core model.
     /// </summary>
-    internal sealed class EdmCoreModelComplexType : EdmType, IEdmComplexType, IEdmCoreModelElement
+    internal sealed class EdmCoreModelComplexType : EdmType, IEdmComplexType, IEdmCoreModelElement, IEdmFullNamedElement
     {
         /// <summary>
         /// The core Edm.ComplexType singleton.
@@ -64,6 +65,11 @@ namespace Microsoft.OData.Edm
         {
             get { return EdmConstants.EdmNamespace; }
         }
+
+        /// <summary>
+        /// Gets the full name of this type.
+        /// </summary>
+        public string FullName => CsdlConstants.TypeName_Complex;
 
         /// <summary>
         /// Gets a value indicating whether this type is abstract.

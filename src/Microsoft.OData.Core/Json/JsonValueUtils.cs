@@ -38,7 +38,6 @@ namespace Microsoft.OData.Json
         /// </summary>
         internal static readonly NumberFormatInfo ODataNumberFormatInfo = JsonValueUtils.InitializeODataNumberFormatInfo();
 
-
         /// <summary>
         /// Const tick value for calculating tick values.
         /// </summary>
@@ -296,8 +295,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">String value to be written.</param>
+        /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data</param>
-        internal static void WriteValue(TextWriter writer, string value, ref char[] buffer)
+        internal static void WriteValue(TextWriter writer, string value, ODataStringEscapeOption stringEscapeOption, ref char[] buffer)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                JsonValueUtils.WriteEscapedJsonString(writer, value, ref buffer);
+                JsonValueUtils.WriteEscapedJsonString(writer, value, stringEscapeOption, ref buffer);
             }
         }
 
@@ -337,8 +337,10 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="inputString">Input string value.</param>
+        /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data</param>
-        internal static void WriteEscapedJsonString(TextWriter writer, string inputString, ref char[] buffer)
+        internal static void WriteEscapedJsonString(TextWriter writer, string inputString,
+            ODataStringEscapeOption stringEscapeOption, ref char[] buffer)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(inputString != null, "The string value must not be null.");
@@ -346,7 +348,7 @@ namespace Microsoft.OData.Json
             writer.Write(JsonConstants.QuoteCharacter);
 
             int firstIndex;
-            if (!JsonValueUtils.CheckIfStringHasSpecialChars(inputString, out firstIndex))
+            if (!JsonValueUtils.CheckIfStringHasSpecialChars(inputString, stringEscapeOption, out firstIndex))
             {
                 writer.Write(inputString);
             }
@@ -387,7 +389,12 @@ namespace Microsoft.OData.Json
                 for (; currentIndex < inputStringLength; currentIndex++)
                 {
                     char c = inputString[currentIndex];
-                    string escapedString = JsonValueUtils.SpecialCharToEscapedStringMap[c];
+                    string escapedString = null;
+
+                    if (stringEscapeOption == ODataStringEscapeOption.EscapeNonAscii || c <= 0x7F)
+                    {
+                        escapedString = JsonValueUtils.SpecialCharToEscapedStringMap[c];
+                    }
 
                     // Append the unhandled characters (that do not require special treament)
                     // to the buffer.
@@ -495,9 +502,10 @@ namespace Microsoft.OData.Json
         /// of special char if present.
         /// </summary>
         /// <param name="inputString">string that might contain special characters.</param>
+        /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="firstIndex">first index of the special char</param>
         /// <returns>A value indicating whether the string contains special character</returns>
-        private static bool CheckIfStringHasSpecialChars(string inputString, out int firstIndex)
+        private static bool CheckIfStringHasSpecialChars(string inputString, ODataStringEscapeOption stringEscapeOption, out int firstIndex)
         {
             Debug.Assert(inputString != null, "The string value must not be null.");
 
@@ -506,6 +514,11 @@ namespace Microsoft.OData.Json
             for (int currentIndex = 0; currentIndex < inputStringLength; currentIndex++)
             {
                 char c = inputString[currentIndex];
+
+                if (stringEscapeOption == ODataStringEscapeOption.EscapeOnlyControls && c >= 0x7F)
+                {
+                    continue;
+                }
 
                 // Append the un-handled characters (that do not require special treatment)
                 // to the string builder when special characters are detected.

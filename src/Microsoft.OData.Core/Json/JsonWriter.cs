@@ -39,6 +39,11 @@ namespace Microsoft.OData.Json
         private readonly bool isIeee754Compatible;
 
         /// <summary>
+        /// Gets or sets a value indicating how to escape the string when writing JSON string.
+        /// </summary>
+        private readonly ODataStringEscapeOption stringEscapeOption;
+
+        /// <summary>
         /// The buffer to help with streaming responses.
         /// </summary>
         private char[] buffer;
@@ -47,12 +52,24 @@ namespace Microsoft.OData.Json
         /// Creates a new instance of Json writer.
         /// </summary>
         /// <param name="writer">Writer to which text needs to be written.</param>
-        /// <param name="isIeee754Compatible">if it is IEEE754Compatible</param>
+        /// <param name="isIeee754Compatible">if it is IEEE754Compatible.</param>
         internal JsonWriter(TextWriter writer, bool isIeee754Compatible)
+            : this(writer, isIeee754Compatible, ODataStringEscapeOption.EscapeNonAscii)
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of Json writer.
+        /// </summary>
+        /// <param name="writer">Writer to which text needs to be written.</param>
+        /// <param name="isIeee754Compatible">if it is IEEE754Compatible.</param>
+        /// <param name="stringEscapeOption">Specifies how to escape string.</param>
+        internal JsonWriter(TextWriter writer, bool isIeee754Compatible, ODataStringEscapeOption stringEscapeOption)
         {
             this.writer = new NonIndentedTextWriter(writer);
             this.scopes = new Stack<Scope>();
             this.isIeee754Compatible = isIeee754Compatible;
+            this.stringEscapeOption = stringEscapeOption;
         }
 
         /// <summary>
@@ -167,7 +184,7 @@ namespace Microsoft.OData.Json
 
             currentScope.ObjectCount++;
 
-            JsonValueUtils.WriteEscapedJsonString(this.writer, name, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, name, this.stringEscapeOption, ref this.buffer);
             this.writer.Write(JsonConstants.NameValueSeparator);
         }
 
@@ -231,7 +248,8 @@ namespace Microsoft.OData.Json
             // if it is IEEE754Compatible, write numbers with quotes; otherwise, write numbers directly.
             if (isIeee754Compatible)
             {
-                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture), ref this.buffer);
+                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
+                    this.stringEscapeOption, ref this.buffer);
             }
             else
             {
@@ -270,7 +288,8 @@ namespace Microsoft.OData.Json
             // if it is not IEEE754Compatible, write numbers directly without quotes;
             if (isIeee754Compatible)
             {
-                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture), ref this.buffer);
+                JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
+                    this.stringEscapeOption, ref this.buffer);
             }
             else
             {
@@ -345,7 +364,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(string value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, value, this.stringEscapeOption, ref this.buffer);
         }
 
         /// <summary>

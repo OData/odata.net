@@ -379,6 +379,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\ODataJsonWriterUtils.cs">
       <Link>Microsoft\OData\Core\Json\ODataJsonWriterUtils.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\ODataStringEscapeOption.cs">
+      <Link>Microsoft\OData\Core\Json\ODataStringEscapeOption.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\TextWriterWrapper.cs">
       <Link>Microsoft\OData\Core\Json\TextWriterWrapper.cs</Link>
     </Compile>
