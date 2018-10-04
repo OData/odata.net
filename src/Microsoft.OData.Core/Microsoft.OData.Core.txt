@@ -852,8 +852,8 @@ RequestUriProcessor_InvalidValueForKeySegment=The KeySegment provided (Id = {0})
 
 RequestUriProcessor_CannotApplyFilterOnSingleEntities=$filter path segment cannot be applied on single entities or singletons. Entity type: '{0}'.
 RequestUriProcessor_CannotApplyEachOnSingleEntities=$each set-based operation cannot be applied on single entities or singletons. Entity type: '{0}'.
+RequestUriProcessor_FilterPathSegmentSyntaxError=The $filter path segment must be in the form $filter(@alias).
 RequestUriProcessor_NoNavigationSourceFound=There are no navigation sources found to apply '{0}'.
-RequestUriProcessor_FilterPathSegmentRequiresParameterAlias=The $filter path segment must contain a single parameter alias in the form $filter=@alias.
 RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment=Only a single action can proceed $each.
 
 ; Copied from the server, will be incrementally replaced.

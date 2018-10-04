@@ -398,7 +398,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         [Fact]
         public void BuildFullUri_AliasInFilterPathSegment_AliasAsBoolean()
         {
-            Uri fullUri = new Uri("http://gobbledygook/People/$filter=@p1?@p1=true");
+            Uri fullUri = new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
@@ -417,7 +417,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         [Fact]
         public void BuildRelativeUri_AliasInFilterPathSegment_AliasAsBoolean()
         {
-            Uri relativeUri = new Uri("People/$filter=@p1?@p1=true", UriKind.Relative);
+            Uri relativeUri = new Uri("People/$filter(@p1)?@p1=true", UriKind.Relative);
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, relativeUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
@@ -427,10 +427,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUri.ParameterAliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
-            Assert.Equal(new Uri("http://gobbledygook/People/$filter=@p1?@p1=true"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri);
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
-            Assert.Equal(new Uri("http://gobbledygook/People/$filter=@p1?@p1=true"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"), actualUri);
         }
         #endregion
 

@@ -773,7 +773,7 @@ namespace Microsoft.OData {
         internal const string RequestUriProcessor_CannotApplyFilterOnSingleEntities = "RequestUriProcessor_CannotApplyFilterOnSingleEntities";
         internal const string RequestUriProcessor_CannotApplyEachOnSingleEntities = "RequestUriProcessor_CannotApplyEachOnSingleEntities";
         internal const string RequestUriProcessor_NoNavigationSourceFound = "RequestUriProcessor_NoNavigationSourceFound";
-        internal const string RequestUriProcessor_FilterPathSegmentRequiresParameterAlias = "RequestUriProcessor_FilterPathSegmentRequiresParameterAlias";
+        internal const string RequestUriProcessor_FilterPathSegmentSyntaxError = "RequestUriProcessor_FilterPathSegmentSyntaxError";
         internal const string RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment = "RequestUriProcessor_OnlySingleActionCanProceedEachPathSegment";
         internal const string RequestUriProcessor_EmptySegmentInRequestUrl = "RequestUriProcessor_EmptySegmentInRequestUrl";
         internal const string RequestUriProcessor_SyntaxError = "RequestUriProcessor_SyntaxError";

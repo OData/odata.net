@@ -341,18 +341,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasAsFirstSegment()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/$filter=@p1&@p1=true"),
+                new Uri("http://gobbledygook/$filter(@p1)&@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$filter=@p1&@p1=true"));
+            parse.ShouldThrow<ODataException>().WithMessage(Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void ParseFilter_AliasInFilterPathSegment_FilterSegmentOnSingleton()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/Boss/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/Boss/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_SingleEntity()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/1/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/People/1/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -376,7 +376,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasAsBoolean()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(2);
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasAsExpression()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=ID eq 42"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=ID eq 42"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(2);
@@ -418,7 +418,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasAsNestedExpression()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=ID eq @p2&@p2=9001"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=ID eq @p2&@p2=9001"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(2);
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_InvalidAliasName()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p!1?@p!1=true"),
+                new Uri("http://gobbledygook/People/$filter(@p!1)?@p!1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -452,7 +452,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasAsNonBoolean()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasAsNull()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=null"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=null"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(2);
@@ -484,7 +484,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasWithCircleReference()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=@p2&@p2=@p1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=@p2&@p2=@p1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasIsItself()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=@p1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=@p1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -506,7 +506,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_WithoutValue()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(2);
@@ -527,29 +527,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_ValueAsExpression()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=ID eq @p1?@p1=1"),
+                new Uri("http://gobbledygook/People/$filter(ID eq @p1)?@p1=1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
         }
 
         [Fact]
         public void ParseFilter_AliasInFilterPathSegment_ValueAsBoolean()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=true"),
+                new Uri("http://gobbledygook/People/$filter(true)"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
         }
 
         [Fact]
         public void ParseFilter_AliasInFilterPathSegment_ValueAsFunction()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?@p1=Fully.Qualified.Namespace.AllHaveDog(inOffice=true)"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?@p1=Fully.Qualified.Namespace.AllHaveDog(inOffice=true)"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(2);
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_MultipleFilterSegments()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/$filter=@p2?@p1=true&@p2=false"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/$filter(@p2)?@p1=true&@p2=false"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);
@@ -596,7 +596,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_WithFilterQueryOption()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1?$filter=@p2&@p1=SSN eq 'num'&@p2=ID eq 1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)?$filter=@p2&@p1=SSN eq 'num'&@p2=ID eq 1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(2);
@@ -620,7 +620,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_NavigationProperty()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/1/MyFriendsDogs/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/People/1/MyFriendsDogs/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(4);
@@ -641,7 +641,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_WithRef()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/1/MyFriendsDogs/$filter=@p1/$ref?@p1=true"),
+                new Uri("http://gobbledygook/People/1/MyFriendsDogs/$filter(@p1)/$ref?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(5);
@@ -662,7 +662,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_RefThenFilterSegment()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/1/MyFriendsDogs/$ref/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/People/1/MyFriendsDogs/$ref/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -674,7 +674,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_WithCount()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/$count?@p1=true"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/$count?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);
@@ -695,7 +695,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_CountThenFilterSegment()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$count/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/People/$count/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -709,7 +709,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_WithCountAndFilterQueryOption()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/$count?$filter=@p2&@p1=true&@p2=ID eq 1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/$count?$filter=@p2&@p1=true&@p2=ID eq 1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);
@@ -732,7 +732,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AppliedOnBoundFunctionResults()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);
@@ -753,7 +753,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_FilterSegmentThenBoundFunctionThenFilterSegment()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$filter=@p2?@p1=ID eq 1&@p2=SSN eq 'num'"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$filter(@p2)?@p1=ID eq 1&@p2=SSN eq 'num'"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(4);
@@ -777,7 +777,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_FilterSegmentThenBoundAction()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/Fully.Qualified.Namespace.AdoptShibaInu?@p1=ID eq 1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/Fully.Qualified.Namespace.AdoptShibaInu?@p1=ID eq 1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);
@@ -797,7 +797,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_FilterSegmentAfterNonComposableOperation()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.AdoptShibaInu/$filter=@p1?@p1=ID eq 1"),
+                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.AdoptShibaInu/$filter(@p1)?@p1=ID eq 1"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
@@ -809,7 +809,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_FilterSegmentOnTypeCastedMembers()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.Employee/$filter=@p1?@p1=WorkEmail eq 'example@contoso.com'"),
+                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.Employee/$filter(@p1)?@p1=WorkEmail eq 'example@contoso.com'"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);

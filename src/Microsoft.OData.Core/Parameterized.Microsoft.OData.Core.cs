@@ -5405,12 +5405,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The $filter path segment must contain a single parameter alias in the form $filter=@alias."
+        /// A string like "The $filter path segment must be in the form $filter(@alias)."
         /// </summary>
-        internal static string RequestUriProcessor_FilterPathSegmentRequiresParameterAlias
+        internal static string RequestUriProcessor_FilterPathSegmentSyntaxError
         {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_FilterPathSegmentSyntaxError);
             }
         }
 

@@ -31,7 +31,7 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmType bindingType;
 
         /// <summary>
-        /// String representing "$filter=@alias".
+        /// String representing "$filter(expression)".
         /// </summary>
         private readonly string fullSegment;
 
@@ -58,7 +58,8 @@ namespace Microsoft.OData.UriParser
             this.parameterAlias = parameterAlias;
             this.rangeVariable = rangeVariable;
             this.bindingType = navigationSource.Type;
-            this.fullSegment = UriQueryConstants.FilterSegment + "=" + parameterAlias.Alias;
+            this.fullSegment = UriQueryConstants.FilterSegment + ExpressionConstants.SymbolOpenParen + parameterAlias.Alias
+                + ExpressionConstants.SymbolClosedParen;
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the string representing "$filter=@alias".
+        /// Gets the string representing "$filter(expression)".
         /// </summary>
         public string FullSegment
         {

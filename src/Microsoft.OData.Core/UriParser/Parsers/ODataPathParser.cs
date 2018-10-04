@@ -494,7 +494,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="segmentText">The raw segment text.</param>
         /// <returns>Whether the segment was $filter.</returns>
         /// <remarks>$filter path segment is different from existing path segments in that it strictly
-        /// follows the format of "$filter=@a", where @a represents a parameter alias. Thus, this function
+        /// follows the format of "$filter(@a)", where @a represents a parameter alias. Thus, this function
         /// should validate the format of the path segment closely.</remarks>
         private bool TryCreateFilterSegment(string segmentText)
         {
@@ -503,8 +503,8 @@ namespace Microsoft.OData.UriParser
 
             /*
              * 1) Check whether the path segment starts with $filter.
-             * 2) Ensure that "=@" follows the identifier and that there's only one '@' in the entire segment string.
-             * 3) Extract the parameter alias and validate it syntactically.
+             * 2) Ensure that the expression that follows the identifier is enclosed in parentheses.
+             * 3) Extract the expression and validate it syntactically.
              * 4) Add the filter segment to list of parsed segments.
              */
 
@@ -517,18 +517,13 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            // 2) There should be an '=' and a single alias that follow UriQueryConstants.FilterSegment. The following if-statement checks that
-            //      - the length of this segment should be longer than "$filter=@", indicating that there's a parameter alias that follows
-            //      - "=@" follows "$filter", indicating that the $filter path segment format is correct
-            //      - the last index of '@' is the one in "=@", indicating that there's only one parameter alias
-            //
-            // The rest of the parameter alias validation (e.g. illegal characters) is performed when generating the filter clause expression in 3).
+            // 2) The expression that follows UriQueryConstants.FilterSegment should be enclosed in parentheses.
+            // Step 3) performs the expression validation (e.g. illegal characters).
+            //      - the length of this segment should be longer than "$filter()", indicating that there's a valid expression
             int index = UriQueryConstants.FilterSegment.Length;
-            if (segmentText.Length <= index + JsonLightConstants.FunctionParameterAssignment.Length ||
-                segmentText.Substring(index, JsonLightConstants.FunctionParameterAssignment.Length) != JsonLightConstants.FunctionParameterAssignment ||
-                segmentText.LastIndexOf('@') != index + 1)
+            if (segmentText.Length <= index + 2 || segmentText[index] != '(' || segmentText[segmentText.Length - 1] != ')')
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
             }
 
             // 3) Extract the parameter alias and perform the rest of the validations on it.
@@ -542,8 +537,8 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyFilterOnSingleEntities(lastNavigationSource.Name));
             }
 
-            // The "index + 1" is to move past the '=' and extract the parameter alias.
-            string alias = segmentText.Substring(index + 1);
+            // The "index + 1" is to move past the '(' and the '-2' accounts for the two paren characters.
+            string alias = segmentText.Substring(index + 1, segmentText.Length - UriQueryConstants.FilterSegment.Length - 2);
 
             // If the previous segment is a type segment, then the entity set has been casted and the filter expression should reflect the cast.
             TypeSegment typeSegment = this.parsedSegments.Last() as TypeSegment;
@@ -556,7 +551,7 @@ namespace Microsoft.OData.UriParser
             ParameterAliasNode aliasNode = filterClause.Expression as ParameterAliasNode;
             if (aliasNode == null)
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentRequiresParameterAlias);
+                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
             }
 
             // 4) Create filter segment with the validated expression and add it to parsed segments.
