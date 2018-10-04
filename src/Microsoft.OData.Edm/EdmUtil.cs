@@ -288,6 +288,7 @@ namespace Microsoft.OData.Edm
                 name = qualifiedName.Substring(lastDot + 1);
                 return true;
             }
+
             namespaceName = qualifiedName.Substring(0, lastSlash);
             name = qualifiedName.Substring(lastSlash + 1);
             return true;
