@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.ODataClient.Abstraction</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.ODataClient.ClientCreatedArgs">
+            <summary>
+            Argument passed to <see cref="M:Microsoft.Extensions.ODataClient.IODataClientHandler.OnClientCreated(Microsoft.Extensions.ODataClient.ClientCreatedArgs)"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ClientCreatedArgs.#ctor(System.String,Microsoft.OData.Client.DataServiceContext)">
+            <summary>
+            Create a new instance of <see cref="T:Microsoft.Extensions.ODataClient.ClientCreatedArgs"/>
+            </summary>
+            <param name="name">the logical name of the client.</param>
+            <param name="container">the instance of data service context for client communication.</param>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.ClientCreatedArgs.Name">
+            <summary>
+            The logic name of the client.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.ClientCreatedArgs.ODataClient">
+            <summary>
+            the instance of data service context for client communication.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.ClientCreatedArgs.Properties">
+            <summary>
+            A central location for sharing state between OData client handlers during the client process pipeline.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.IODataClientBuilder">
+            <summary>
+            A builder for configuring named OData V4 client instances returned by factory.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.IODataClientBuilder.Name">
+            <summary>
+            Gets the name of the client configured by this builder.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.IODataClientBuilder.Services">
+            <summary>
+            Gets the application service collection.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:Microsoft.Extensions.ODataClient.IODataClientFactory`1" -->
+        <member name="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.String)">
+            <summary>
+            Creates and configures an <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance using the configuration that corresponds
+            to the logical name specified by <paramref name="name"/>.
+            </summary>
+            <param name="name">
+            The logical name of the client to create. the same logic name will be used to create underlying <see cref="T:System.Net.Http.HttpClient"/> instance for communication.
+            </param>
+            <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance.</returns>
+            <remarks>
+            <para>
+            Each call to <see cref="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.String)"/> is guaranteed to return a new <see cref="T:System.Net.Http.HttpClient"/>
+            instance. Callers may cache the returned <see cref="T:System.Net.Http.HttpClient"/> instance indefinitely or surround
+            its use in a <langword>using</langword> block to dispose it when desired.
+            </para>
+            <para>
+            Callers are also free to mutate the returned <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance's public properties
+            as desired.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.IODataClientHandler">
+            <summary>
+            A single handler that can alter the behavior of odataclient
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.IODataClientHandler.OnClientCreated(Microsoft.Extensions.ODataClient.ClientCreatedArgs)">
+            <summary>
+            Called after IODataProxyFactory{T}.CreateProxy(string, string)
+            If multiple handlers are registered, then they are called in reverse order of registration.
+            </summary>
+            <param name="args">the output proxy</param>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.ODataClientOptions">
+            <summary>
+            An options class for configuring the default IODataClientFactory for v3 and v4.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.ODataClient.ODataClientOptions.DefaultName">
+            <summary>
+            The default logic name if no name is specified for the client when creating client from factory.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.ODataClientOptions.ODataHandlers">
+            <summary>
+            Gets a list of operations used to configure an IODataClientFactory.
+            </summary>
+        </member>
+    </members>
+</doc>

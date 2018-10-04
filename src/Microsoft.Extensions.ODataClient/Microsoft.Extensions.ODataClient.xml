@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Extensions.ODataClient</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1">
+            <summary>
+            Factory for Containers to an ODATA v4 service. 
+            </summary>
+            <remarks>
+               
+            For containers to ODATA v3 services, a separate factory will be used. The interfaces will be similar
+            but it will rely on basic types from the ODATA v3 client package instead of the v4 package.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.#ctor(Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.Extensions.ODataClient.ODataClientOptions})">
+            <summary>
+            constructor for default client factory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.CreateClient(System.String)">
+            <summary>
+            create a connection to an OData service, specifying a named HTTP client
+            </summary>
+            <param name="name">the logic name of the client to use, including both HttpClient and ODataClient.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.OnClientCreated(Microsoft.Extensions.ODataClient.ClientCreatedArgs)">
+            <summary>
+            call OnProxyCreated for each this.handlers
+            </summary>
+            <param name="args">ProxyCreatedArgs</param>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.HttpClientODataClientHandler">
+            <summary>
+            an OData proxy handler that configures the proxy to use HttpClientFactory 
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.HttpClientRequestMessage">
+            <summary>
+            HttpClient based implementation of DataServiceClientRequestMessage.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.contentHeaderNames">
+            <summary>
+            HttpClient distinguishes "Content" headers from "Request" headers, so we
+            need to know which category a header belongs to.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.#ctor(System.Net.Http.IHttpClientFactory,System.String,System.String)">
+            <summary>
+            Constructor for HttpClientRequestMessage.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.Headers">
+            <summary>
+            Returns the collection of request headers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.Url">
+            <summary>
+            Gets or sets the request url.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.Method">
+            <summary>
+            Gets or sets the method for this request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.Credentials">
+            <summary>
+             Gets or set the credentials for this request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.GetHeader(System.String)">
+            <summary>
+            Returns the value of the header with the given name.
+            </summary>
+            <param name="headerName">Name of the header.</param>
+            <returns>Returns the value of the header with the given name.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.SetHeader(System.String,System.String)">
+            <summary>
+            Sets the value of the header with the given name.
+            </summary>
+            <param name="headerName">Name of the header.</param>
+            <param name="headerValue">Value of the header.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.GetStream">
+            <summary>
+            Gets the stream to be used to write the request payload.
+            </summary>
+            <returns>Stream to which the request payload needs to be written.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.Abort">
+            <summary>
+            Abort the current request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.BeginGetRequestStream(System.AsyncCallback,System.Object)">
+            <summary>
+            Begins an asynchronous request for a System.IO.Stream object to use to write data.
+            </summary>
+            <param name="callback">The System.AsyncCallback delegate.</param>
+            <param name="state">The state object for this request.</param>
+            <returns>An System.IAsyncResult that references the asynchronous request.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.EndGetRequestStream(System.IAsyncResult)">
+            <summary>
+            Ends an asynchronous request for a System.IO.Stream object to use to write data.
+            </summary>
+            <param name="asyncResult">The pending request for a stream.</param>
+            <returns>A System.IO.Stream to use to write request data.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.BeginGetResponse(System.AsyncCallback,System.Object)">
+            <summary>
+            Begins an asynchronous request to an Internet resource.
+            </summary>
+            <param name="callback">The System.AsyncCallback delegate.</param>
+            <param name="state">The state object for this request</param>
+            <returns>An System.IAsyncResult that references the asynchronous request for a response.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.EndGetResponse(System.IAsyncResult)">
+            <summary>
+            Ends an asynchronous request to an Internet resource.
+            </summary>
+            <param name="asyncResult">The pending request for a response.</param>
+            <returns> A System.Net.WebResponse that contains the response from the Internet resource.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.TaskExtensionMethods">
+            <summary>
+            Extension methods for working with Tasks
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.TaskExtensionMethods.ToApm``1(System.Threading.Tasks.Task{``0},System.AsyncCallback,System.Object)">
+            <summary>
+            Adapts a Task to the APM pattern.
+            </summary>
+            <typeparam name="TResult">The result type of the task.</typeparam>
+            <param name="task">The Task to adapt.</param>
+            <param name="callback">The APM callback to inject.</param>
+            <param name="state">The APM state to inject.</param>
+            <returns>A Task that has been adapted to use the APM pattern.</returns>
+            <remarks>Taken from http://blogs.msdn.com/b/pfxteam/archive/2011/06/27/10179452.aspx </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions">
+            <summary>
+            Extension methods for configuring an <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.ConfigureODataClient(Microsoft.Extensions.ODataClient.IODataClientBuilder,System.Action{Microsoft.OData.Client.DataServiceContext})">
+            <summary>
+            Adds a delegate that will be used to configure a named OData proxy.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="configureProxy">A delegate that is used to configure an OData proxy.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> that can be used to configure the client.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.ConfigureHttpClient(Microsoft.Extensions.ODataClient.IODataClientBuilder,System.Action{System.Net.Http.HttpClient})">
+            <summary>
+            Adds a delegate that will be used to configure the http client for the named OData proxy.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="configureClient">A delegate that is used to configure the http client for the OData proxy.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to further configure the http client.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddODataClientHandler``1(Microsoft.Extensions.ODataClient.IODataClientBuilder)">
+            <summary>
+            Adds an additional message handler from the dependency injection container for a named OData proxy.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> that can be used to configure the client.</returns>
+            <typeparam name="THandler">
+            The type of the <see cref="T:Microsoft.Extensions.ODataClient.IODataClientHandler"/>. The handler type will be registered as a transient service.
+            </typeparam>
+            <remarks>
+            <para>
+            The <typeparamref name="THandler"/> will be resolved from a scoped service provider that shares 
+            the lifetime of the handler being constructed.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddHttpClientODataClientHandler(Microsoft.Extensions.ODataClient.IODataClientBuilder)">
+            <summary>
+            Adds the Intune default OData proxy handler from the dependency injection container for a named OData proxy.
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions">
+            <summary>
+            Client extensions
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions.AddODataClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+            <summary>
+            Adds the <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> and related services to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> and configures
+            a named OData proxy and underlying <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="name">The logical name of the OData proxy and <see cref="T:System.Net.Http.HttpClient"/> to configure.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> that can be used to configure the client.</returns>
+            <remarks>
+            <para>
+            <see cref="T:System.Net.Http.HttpClient"/> instances that apply the provided configuration can be retrieved using 
+            <see cref="M:System.Net.Http.IHttpClientFactory.CreateClient(System.String)"/> and providing the matching name.
+            </para>
+            <para>
+            Use <see cref="F:Microsoft.Extensions.ODataClient.ODataClientOptions.DefaultName"/> as the default name to configure the default client if name not specified.
+            </para>
+            </remarks>
+        </member>
+    </members>
+</doc>

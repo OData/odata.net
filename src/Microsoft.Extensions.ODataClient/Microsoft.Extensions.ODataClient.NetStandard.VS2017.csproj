@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Extensions.ODataClient</AssemblyName>
+    <RootNamespace>Microsoft.Extensions.ODataClient</RootNamespace>
+    
+    <!-- target 2.0 only because IHttpClientFactory dependency is available on 2.0 and above.-->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>True</DelaySign>
+    <SignAssembly>True</SignAssembly>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <EnableLocalization>true</EnableLocalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    
+    <!-- Use DI version 2.1 as IHttpClientFactory is supported on 2.1 version and above.-->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Extensions.ODataClient.Abstractions\Microsoft.Extensions.ODataClient.Abstractions.NetStandard.VS2017.csproj" />
+  </ItemGroup>
+  
+</Project>
