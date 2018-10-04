@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityReferenceCanAppearAfterAFilteredEntitySet()
         {
-            var path = PathFunctionalTestsUtil.RunParsePath("People/$filter=@p1/$ref?@p1=true");
+            var path = PathFunctionalTestsUtil.RunParsePath("People/$filter(@p1)/$ref?@p1=true");
             path.LastSegment.ShouldBeReferenceSegment(HardCodedTestModel.GetPeopleSet());
         }
 

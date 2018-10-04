@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SetBasedOperations_EachSegmentOnEntityCollectionWithFilterSegment_ReturnsSuccess()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/$each?@p1=ID eq 42"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/$each?@p1=ID eq 42"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SetBasedOperations_EachSegmentOnEntityCollectionWithFilterSegmentAndFilterQuery_ReturnsSuccess()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/$each?$filter=SSN eq 'num'&@p1=ID eq 42"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/$each?$filter=SSN eq 'num'&@p1=ID eq 42"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(3);
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SetBasedOperations_EachSegmentOnTypeCastedMembersWithFilterSegment_ReturnsSuccess()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.Employee/$filter=@p1/$each?@p1=WorkEmail eq 'example@contoso.com'"),
+                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.Employee/$filter(@p1)/$each?@p1=WorkEmail eq 'example@contoso.com'"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(4);
@@ -200,7 +200,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SetBasedOperations_EachSegmentOnTypeCastedMembersWithFilterSegmentAndFilterQuery_ReturnsSuccess()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.Employee/$filter=@p1/$each?$filter=ID eq 42&@p1=WorkEmail eq 'example@contoso.com'"),
+                new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.Employee/$filter(@p1)/$each?$filter=ID eq 42&@p1=WorkEmail eq 'example@contoso.com'"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(4);
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SetBasedOperations_EachSegmentOnFilteredBoundFunctionResults_ReturnsSuccess()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$each?@p1=ID eq 1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs/$each?@p1=ID eq 1"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(4);
@@ -298,7 +298,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SetBasedOperations_ApplySetBasedActionOnFilteredCollection_ReturnsSuccess()
         {
             ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$filter=@p1/$each/Fully.Qualified.Namespace.SummonPuppies?@p1=ID eq 1"),
+                new Uri("http://gobbledygook/People/$filter(@p1)/$each/Fully.Qualified.Namespace.SummonPuppies?@p1=ID eq 1"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                     oDataPath.Count.Should().Be(4);
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SetBasedOperations_NonActionPathSegmentAfterEachSegment_ThrowsException()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/People/$each/$filter=@p1?@p1=true"),
+                new Uri("http://gobbledygook/People/$each/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                 });
