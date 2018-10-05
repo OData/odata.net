@@ -573,6 +573,26 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             string result = translater.TranslateSelectExpandClause(topLeveItem, false);
             Assert.Equal("$expand=" + expandClause, result);
         }
+
+        [Fact]
+        public void TranslateSelectExpandClauseWithNestedComputeShouldWork()
+        {
+            string expandClause = "MyFriendsDogs($compute=Weight mul 8 as Ratio)";
+            var topLeveItem = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string> { { "$expand", expandClause }, { "$select", "" } }).ParseSelectAndExpand();
+            SelectExpandClauseToStringBuilder translater = new SelectExpandClauseToStringBuilder();
+            string result = translater.TranslateSelectExpandClause(topLeveItem, false);
+            Assert.Equal("$expand=" + expandClause, result.Replace("%20", " "));
+        }
+
+        [Fact]
+        public void TranslateSelectExpandClauseWithNestedApplyShouldWork()
+        {
+            string expandClause = "MyFriendsDogs($apply=aggregate(Weight with sum as Total))";
+            var topLeveItem = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string> { { "$expand", expandClause }, { "$select", "" } }).ParseSelectAndExpand();
+            SelectExpandClauseToStringBuilder translater = new SelectExpandClauseToStringBuilder();
+            string result = translater.TranslateSelectExpandClause(topLeveItem, false);
+            Assert.Equal("$expand=" + expandClause, result.Replace("%20", " "));
+        }
         #endregion
 
         #region mixed examples

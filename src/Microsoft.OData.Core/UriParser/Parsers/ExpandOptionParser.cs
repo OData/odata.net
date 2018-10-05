@@ -129,6 +129,7 @@ namespace Microsoft.OData.UriParser
             SelectToken selectOption = null;
             ExpandToken expandOption = null;
             ComputeToken computeOption = null;
+            IEnumerable<QueryToken> applyOptions = null;
 
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
             {
@@ -279,6 +280,16 @@ namespace Microsoft.OData.UriParser
                                 break;
                             }
 
+                        case ExpressionConstants.QueryOptionApply: // nested $apply
+                            {
+                                this.lexer.NextToken();
+                                string applyText = this.ReadQueryOption();
+
+                                UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+                                applyOptions = applyParser.ParseApply(applyText);
+                                break;
+                            }
+
                         case ExpressionConstants.QueryOptionExpand:
                             {
                                 // advance to the equal sign
@@ -331,7 +342,7 @@ namespace Microsoft.OData.UriParser
             // TODO, there should be some check here in case pathToken identifier is $ref, select, expand and levels options are not allowed.
             List<ExpandTermToken> expandTermTokenList = new List<ExpandTermToken>();
             ExpandTermToken currentToken = new ExpandTermToken(pathToken, filterOption, orderByOptions, topOption,
-                skipOption, countOption, levelsOption, searchOption, selectOption, expandOption, computeOption);
+                skipOption, countOption, levelsOption, searchOption, selectOption, expandOption, computeOption, applyOptions);
             expandTermTokenList.Add(currentToken);
 
             return expandTermTokenList;
@@ -438,7 +449,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 ExpandTermToken currentToken = new ExpandTermToken(tmpPathToken, null, null,
-                    null, null, null, levelsOption, null, null, null, null);
+                    null, null, null, levelsOption, null, null, null, null, null);
                 expandTermTokenList.Add(currentToken);
             }
 
