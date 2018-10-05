@@ -71,6 +71,11 @@ namespace Microsoft.OData.UriParser
         private readonly ComputeToken computeOption;
 
         /// <summary>
+        /// the apply options for this expand term
+        /// </summary>
+        private readonly IEnumerable<QueryToken> applyOptions;
+
+        /// <summary>
         /// the expand option for this expand term.
         /// </summary>
         private readonly ExpandToken expandOption;
@@ -139,6 +144,38 @@ namespace Microsoft.OData.UriParser
             SelectToken selectOption,
             ExpandToken expandOption,
             ComputeToken computeOption)
+            : this(pathToNavigationProp, filterOption, orderByOptions, topOption, skipOption, countQueryOption, levelsOption, searchOption, selectOption, expandOption, computeOption, null)
+        {
+        }
+
+        /// <summary>
+        /// Create an expand term token
+        /// </summary>
+        /// <param name="pathToNavigationProp">the nav prop for this expand term</param>
+        /// <param name="filterOption">the filter option for this expand term</param>
+        /// <param name="orderByOptions">the orderby options for this expand term</param>
+        /// <param name="topOption">the top option for this expand term</param>
+        /// <param name="skipOption">the skip option for this expand term</param>
+        /// <param name="countQueryOption">the query count option for this expand term</param>
+        /// <param name="levelsOption">the levels option for this expand term</param>
+        /// <param name="searchOption">the search option for this expand term</param>
+        /// <param name="selectOption">the select option for this expand term</param>
+        /// <param name="expandOption">the expand option for this expand term</param>
+        /// <param name="computeOption">the compute option for this expand term.</param>
+        /// <param name="applyOptions">the apply options for this expand term.</param>
+        public ExpandTermToken(
+            PathSegmentToken pathToNavigationProp,
+            QueryToken filterOption,
+            IEnumerable<OrderByToken> orderByOptions,
+            long? topOption,
+            long? skipOption,
+            bool? countQueryOption,
+            long? levelsOption,
+            QueryToken searchOption,
+            SelectToken selectOption,
+            ExpandToken expandOption,
+            ComputeToken computeOption,
+            IEnumerable<QueryToken> applyOptions)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProp, "property");
 
@@ -153,6 +190,7 @@ namespace Microsoft.OData.UriParser
             this.selectOption = selectOption;
             this.computeOption = computeOption;
             this.expandOption = expandOption;
+            this.applyOptions = applyOptions;
         }
 
         /// <summary>
@@ -233,6 +271,14 @@ namespace Microsoft.OData.UriParser
         public ComputeToken ComputeOption
         {
             get { return this.computeOption; }
+        }
+
+        /// <summary>
+        /// the apply options for this expand term.
+        /// </summary>
+        public IEnumerable<QueryToken> ApplyOptions
+        {
+            get { return this.applyOptions; }
         }
 
         /// <summary>
