@@ -206,6 +206,23 @@ namespace Microsoft.OData
                 res += nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
             }
 
+            // nested $compute=
+            if (item.ComputeOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$compute";
+                res += ExpressionConstants.SymbolEqual;
+                res += nodeToStringBuilder.TranslateComputeClause(item.ComputeOption);
+            }
+
+            // nested $apply=
+            if (item.ApplyOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                var applyClauseToStringBuilder = new ApplyClauseToStringBuilder();
+                res += applyClauseToStringBuilder.TranslateApplyClause(item.ApplyOption);
+            }
+
             return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
         }
     }

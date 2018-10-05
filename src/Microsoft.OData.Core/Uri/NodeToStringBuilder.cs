@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.Text.RegularExpressions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser;
+    using System.Text;
 
     /// <summary>
     /// Build QueryNode to String Representation
@@ -459,7 +460,7 @@ namespace Microsoft.OData
             return node.Accept(this);
         }
 
-        /// <summary>Translates a <see cref="FilterClause"/> into a <see cref="FilterClause"/>.</summary>
+        /// <summary>Translates a <see cref="FilterClause"/> into a string.</summary>
         /// <param name="filterClause">The filter clause to translate.</param>
         /// <returns>The translated String.</returns>
         internal String TranslateFilterClause(FilterClause filterClause)
@@ -468,7 +469,7 @@ namespace Microsoft.OData
             return this.TranslateNode(filterClause.Expression);
         }
 
-        /// <summary>Translates a <see cref="OrderByClause"/> into a <see cref="OrderByClause"/>.</summary>
+        /// <summary>Translates a <see cref="OrderByClause"/> into a string.</summary>
         /// <param name="orderByClause">The orderBy clause to translate.</param>
         /// <returns>The translated String.</returns>
         internal String TranslateOrderByClause(OrderByClause orderByClause)
@@ -492,7 +493,7 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>Translates a <see cref="SearchClause"/> into a <see cref="SearchClause"/>.</summary>
+        /// <summary>Translates a <see cref="SearchClause"/> into a string.</summary>
         /// <param name="searchClause">The search clause to translate.</param>
         /// <returns>The translated String.</returns>
         internal String TranslateSearchClause(SearchClause searchClause)
@@ -502,6 +503,36 @@ namespace Microsoft.OData
             string searchStr = this.TranslateNode(searchClause.Expression);
             searchFlag = false;
             return searchStr;
+        }
+
+        /// <summary>Translates a <see cref="ComputeClause"/> into a string.</summary>
+        /// <param name="computeClause">The compute clause to translate.</param>
+        /// <returns>The translated String.</returns>
+        internal string TranslateComputeClause(ComputeClause computeClause)
+        {
+            Debug.Assert(computeClause != null, "computeClause != null");
+
+            bool appendComma = false;
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in computeClause.ComputedItems)
+            {
+                if (appendComma)
+                {
+                    sb.Append(ExpressionConstants.SymbolComma);
+                }
+                else
+                {
+                    appendComma = true;
+                }
+
+                sb.Append(this.TranslateNode(item.Expression));
+                sb.Append(ExpressionConstants.SymbolEscapedSpace); //  "%20"
+                sb.Append(ExpressionConstants.KeywordAs);
+                sb.Append(ExpressionConstants.SymbolEscapedSpace); //  "%20"
+                sb.Append(item.Alias);
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>

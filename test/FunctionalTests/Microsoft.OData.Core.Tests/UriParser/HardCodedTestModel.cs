@@ -244,6 +244,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceDog.AddStructuralProperty("Nicknames", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
             FullyQualifiedNamespaceDog.AddStructuralProperty("Breed", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespaceDog.AddStructuralProperty("NamedStream", EdmCoreModel.Instance.GetStream(true));
+            FullyQualifiedNamespaceDog.AddStructuralProperty("Weight", EdmCoreModel.Instance.GetDouble(true));
             FullyQualifiedNamespaceDog.AddKeys(new IEdmStructuralProperty[] { FullyQualifiedNamespaceDog_ID, });
             var FullyQualifiedNamespaceDog_MyPeople = FullyQualifiedNamespaceDog.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyPeople", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePerson });
             var FullyQualifiedNamespaceDog_FastestOwner = FullyQualifiedNamespaceDog.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "FastestOwner", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = FullyQualifiedNamespacePerson });
@@ -1035,6 +1036,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""Nicknames"" Type=""Collection(Edm.String)"" />
         <Property Name=""Breed"" Type=""Edm.String"" />
         <Property Name=""NamedStream"" Type=""Edm.Stream"" />
+        <Property Name=""Weight"" Type=""Edm.Double"" />
         <NavigationProperty Name=""EmployeeOwner"" Type=""Fully.Qualified.Namespace.Employee"" Nullable=""false"" Partner=""OfficeDog"" />
         <NavigationProperty Name=""MyPeople"" Type=""Collection(Fully.Qualified.Namespace.Person)"" />
         <NavigationProperty Name=""FastestOwner"" Type=""Fully.Qualified.Namespace.Person"" />
