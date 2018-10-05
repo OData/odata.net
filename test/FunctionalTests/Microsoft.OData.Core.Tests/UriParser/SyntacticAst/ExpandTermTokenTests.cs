@@ -9,6 +9,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Xunit;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.Tests.UriParser.SyntacticAst
 {
@@ -40,7 +41,9 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
                                                                   null /*levelsOption*/,
                                                                   null /*searchOption*/,
                                                                   null /*selectOption*/,
-                                                                  null /*expandOption*/);
+                                                                  null /*expandOption*/,
+                                                                  null /*computeOption*/,
+                                                                  null /*applyOptions*/);
             expandTermToken.FilterOption.Should().BeNull();
             expandTermToken.OrderByOptions.Should().BeNull();
             expandTermToken.TopOption.Should().Be(null);
@@ -50,6 +53,8 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             expandTermToken.SearchOption.Should().Be(null);
             expandTermToken.SelectOption.Should().BeNull();
             expandTermToken.ExpandOption.Should().BeNull();
+            expandTermToken.ComputeOption.Should().BeNull();
+            expandTermToken.ApplyOptions.Should().BeNull();
         }
 
         [Fact]
@@ -209,6 +214,43 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
                                                              null /*selectOption*/,
                                                              expand);
             expandTerm.ExpandOption.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ComputeSetCorrectly()
+        {
+            ComputeToken compute = new ComputeToken(new ComputeExpressionToken[] { });
+            ExpandTermToken expandTerm = new ExpandTermToken(new NonSystemToken("stuff", null, null),
+                                                             null /*filterOption*/,
+                                                             null /*orderByOption*/,
+                                                             null /*topOption*/,
+                                                             null /*skipOption*/,
+                                                             null /*countQueryOption*/,
+                                                             null /*levelsOption*/,
+                                                             null /*searchOption*/,
+                                                             null /*selectOption*/,
+                                                             null /*expandOption*/,
+                                                             compute);
+            expandTerm.ComputeOption.Should().BeSameAs(compute);
+        }
+
+        [Fact]
+        public void ApplySetCorrectly()
+        {
+            IEnumerable<QueryToken> applyOptions = new QueryToken[] { };
+            ExpandTermToken expandTerm = new ExpandTermToken(new NonSystemToken("stuff", null, null),
+                                                             null /*filterOption*/,
+                                                             null /*orderByOption*/,
+                                                             null /*topOption*/,
+                                                             null /*skipOption*/,
+                                                             null /*countQueryOption*/,
+                                                             null /*levelsOption*/,
+                                                             null /*searchOption*/,
+                                                             null /*selectOption*/,
+                                                             null /*expandOption*/,
+                                                             null /*computeOption*/,
+                                                             applyOptions /*applyOptions*/);
+            Assert.Same(expandTerm.ApplyOptions, applyOptions);
         }
     }
 }

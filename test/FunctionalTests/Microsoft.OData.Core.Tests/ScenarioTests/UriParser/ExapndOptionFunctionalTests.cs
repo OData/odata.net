@@ -225,6 +225,40 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
         #endregion
 
+        #region $compute
+        [Fact]
+        public void ComputeWithValidExpression()
+        {
+            var clause = this.Run("MyFriendsDogs($compute=Weight mul 8 as Ratio)", PersonType, PeopleSet);
+            Assert.NotNull(clause.ComputeOption);
+        }
+
+        [Fact]
+        public void ComputeWithInvalidExpression()
+        {
+            Action action = () => this.Run("MyFriendsDogs($compute=Invalid Expression)", PersonType, PeopleSet);
+            var exception = Assert.Throws<ODataException>(action);
+            Assert.Equal("'as' expected at position 8 in 'Invalid Expression'.", exception.Message);
+        }
+        #endregion $compute
+
+        #region $apply
+        [Fact]
+        public void ApplyWithValidExpression()
+        {
+            var clause = this.Run("MyFriendsDogs($apply=aggregate(Weight with sum as Total))", PersonType, PeopleSet);
+            Assert.NotNull(clause.ApplyOption);
+        }
+
+        [Fact]
+        public void ApplyWithInvalidExpression()
+        {
+            Action action = () => this.Run("MyFriendsDogs($apply=Invalid Expression)", PersonType, PeopleSet);
+            var exception = Assert.Throws<ODataException>(action);
+            Assert.Equal("'aggregate|filter|groupby' expected at position 0 in 'Invalid Expression'.", exception.Message);
+        }
+        #endregion $apply
+
         #region helper methods
         private ExpandedNavigationSelectItem Run(string expandStr, IEdmStructuredType elementType, IEdmNavigationSource navigationSource)
         {
