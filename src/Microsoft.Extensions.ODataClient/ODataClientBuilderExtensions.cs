@@ -33,17 +33,6 @@ namespace Microsoft.Extensions.ODataClient
         }
 
         /// <summary>
-        /// Adds a delegate that will be used to configure the http client for the named OData proxy.
-        /// </summary>
-        /// <param name="builder">The <see cref="IServiceCollection"/>.</param>
-        /// <param name="configureClient">A delegate that is used to configure the http client for the OData proxy.</param>
-        /// <returns>An <see cref="IHttpClientBuilder"/> that can be used to further configure the http client.</returns>
-        public static IHttpClientBuilder ConfigureHttpClient(this IODataClientBuilder builder, Action<HttpClient> configureClient)
-        {
-            return builder.Services.AddHttpClient(builder.Name, configureClient);
-        }
-
-        /// <summary>
         /// Adds an additional message handler from the dependency injection container for a named OData proxy.
         /// </summary>
         /// <param name="builder">The <see cref="IODataClientBuilder"/>.</param>
@@ -63,26 +52,23 @@ namespace Microsoft.Extensions.ODataClient
             // Use transient as those handler will only be created a few times, to transient is not that expensive.
             // Adding as singleton will need handler to make sure the class is thread safe
             builder.Services.AddTransient<THandler>();
-            builder.Services.AddTransient<IConfigureOptions<ODataClientOptions>>(services =>
-            {
-                return new ConfigureNamedOptions<ODataClientOptions>(builder.Name, (options) =>
-                {
-                    // Use DI to resolve the handler, to support the handler to declare dependency in constructor.
-                    options.ODataHandlers.Add(services.GetRequiredService<THandler>());
-                });
-            });
+
+            builder.Services
+                .AddOptions<ODataClientOptions>(builder.Name)
+                .Configure<THandler>((o, h) => o.ODataHandlers.Add(h));
 
             return builder;
         }
 
         /// <summary>
-        /// Adds the Intune default OData proxy handler from the dependency injection container for a named OData proxy.
+        /// Adds a delegate that will be used to configure the http client for the named OData proxy.
         /// </summary>
-        /// <remarks>
-        /// </remarks>
-        internal static IODataClientBuilder AddHttpClientODataClientHandler(this IODataClientBuilder builder)
+        /// <param name="builder">The <see cref="IServiceCollection"/>.</param>
+        /// <returns>An <see cref="IHttpClientBuilder"/> that can be used to further configure the http client.</returns>
+        public static IHttpClientBuilder AddHttpClient(this IODataClientBuilder builder)
         {
-            return builder.AddODataClientHandler<HttpClientODataClientHandler>();
+            builder.AddODataClientHandler<HttpClientODataClientHandler>();
+            return builder.Services.AddHttpClient(builder.Name);
         }
     }
 }

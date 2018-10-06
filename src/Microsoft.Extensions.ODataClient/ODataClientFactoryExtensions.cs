@@ -18,10 +18,10 @@ namespace Microsoft.Extensions.ODataClient
     {
         /// <summary>
         /// Adds the <see cref="IODataClientBuilder"/> and related services to the <see cref="IServiceCollection"/> and configures
-        /// a named OData proxy and underlying <see cref="HttpClient"/>.
+        /// a named OData client and underlying <see cref="HttpClient"/>.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-        /// <param name="name">The logical name of the OData proxy and <see cref="HttpClient"/> to configure.</param>
+        /// <param name="name">The logical name of the OData client and <see cref="HttpClient"/> to configure.</param>
         /// <returns>An <see cref="IODataClientBuilder"/> that can be used to configure the client.</returns>
         /// <remarks>
         /// <para>
@@ -45,9 +45,9 @@ namespace Microsoft.Extensions.ODataClient
             }
 
             services.TryAddSingleton(typeof(IODataClientFactory<>), typeof(DefaultODataClientFactory<>));
+            services.TryAddSingleton(typeof(IODataClientActivator), typeof(DefaultODataClientActivator));
 
             var builder = new DefaultODataClientBuilder(services, name);
-            builder.AddHttpClientODataClientHandler();
 
             return builder;
         }

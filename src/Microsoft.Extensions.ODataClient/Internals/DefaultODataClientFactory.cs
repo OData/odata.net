@@ -22,27 +22,18 @@ namespace Microsoft.Extensions.ODataClient
     /// </remarks>
     internal sealed class DefaultODataClientFactory<T> : IODataClientFactory<T> where T : DataServiceContext
     {
-        private readonly IEnumerable<IODataClientHandler> handlers;
+        private readonly IOptionsMonitor<ODataClientOptions> options;
         private readonly ILogger<DefaultODataClientFactory<T>> logger;
+        private readonly IODataClientActivator activator;
 
         /// <summary>
         /// constructor for default client factory.
         /// </summary>
-        public DefaultODataClientFactory(ILoggerFactory loggerFactory, IOptions<ODataClientOptions> options)
+        public DefaultODataClientFactory(IODataClientActivator activator, ILogger<DefaultODataClientFactory<T>> logger, IOptionsMonitor<ODataClientOptions> options)
         {
-            if (options == null || options.Value == null)
-            {
-                throw new ArgumentNullException(nameof(options));
-            }
-
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-
-            var config = options.Value;
-            this.handlers = config.ODataHandlers;
-            this.logger = loggerFactory.CreateLogger<DefaultODataClientFactory<T>>();
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.activator = activator ?? throw new ArgumentNullException(nameof(activator));
         }
 
         /// <summary>
@@ -56,9 +47,7 @@ namespace Microsoft.Extensions.ODataClient
             var odataVersion = ODataProtocolVersion.V401;
             Log.BeforeCreateClient(this.logger, odataVersion, name, null);
 
-            T container = (T)Activator.CreateInstance(typeof(T), new Object[] { });
-
-            Log.ContainerCreated(this.logger, odataVersion, name, null);
+            T container = this.activator.CreateClient<T>();
 
             var args = new ClientCreatedArgs(name, container);
 
@@ -72,12 +61,10 @@ namespace Microsoft.Extensions.ODataClient
         /// <param name="args">ProxyCreatedArgs</param>
         private void OnClientCreated(ClientCreatedArgs args)
         {
-            if (this.handlers == null)
-            {
-                return;
-            }            
+            var op = this.options.Get(args.Name);
+            var handlers = op.ODataHandlers;
 
-            foreach (IODataClientHandler handler in this.handlers)
+            foreach (IODataClientHandler handler in handlers)
             {
                 var odataVersion = args.ODataClient.MaxProtocolVersion;
                 Log.OnClientCreatedHandler(this.logger, odataVersion, handler.GetType().FullName, args.Name, null);
@@ -90,22 +77,17 @@ namespace Microsoft.Extensions.ODataClient
             public static readonly Action<ILogger, ODataProtocolVersion, string, Exception> BeforeCreateClient = LoggerMessage.Define<ODataProtocolVersion, string>(
                 LogLevel.Debug,
                 new EventId(1001, nameof(BeforeCreateClient)),
-                "Before Creat OData {ODataVersion} client factory for service:{serviceName}, version:{schemaVersion}, logical name:{name}");
+                "Before Creat OData {ODataVersion} client factory with logical name:{name}");
 
             public static readonly Action<ILogger, ODataProtocolVersion, string, string, Exception> OnCreatingClientHandler = LoggerMessage.Define<ODataProtocolVersion, string, string>(
                 LogLevel.Information,
                 new EventId(1002, nameof(OnCreatingClientHandler)),
-                "Calling OnCreatingClient with {ODataVersion} handler {handlerName} for service:{serviceName}, version:{schemaVersion}, logical name:{name}");
-
-            public static readonly Action<ILogger, ODataProtocolVersion, string, Exception> ContainerCreated = LoggerMessage.Define<ODataProtocolVersion, string>(
-                LogLevel.Information,
-                new EventId(1003, nameof(ContainerCreated)),
-                "Created OData {ODataVersion} container created with url {rootUrl} for service:{serviceName}, version:{schemaVersion}, logical name:{name}");
+                "Calling OnCreatingClient with {ODataVersion} handler {handlerName} with logical name:{name}");
 
             public static readonly Action<ILogger, ODataProtocolVersion, string, string, Exception> OnClientCreatedHandler = LoggerMessage.Define<ODataProtocolVersion, string, string>(
                 LogLevel.Debug,
                 new EventId(1004, nameof(OnClientCreatedHandler)),
-                "Calling OnClientCreated with {ODataVersion} handler {handlerName} for service:{serviceName}, version:{schemaVersion}, logical name:{name}");
+                "Calling OnClientCreated with {ODataVersion} handler {handlerName} with logical name:{name}");
         }
     }
 }

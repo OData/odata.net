@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Extensions.ODataClient.Tests</AssemblyName>
+    <RootNamespace>Microsoft.Extensions.ODataClient.Tests.Netcore</RootNamespace>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <OutputPath>..\..\..\bin\AnyCPU\$(Configuration)\Test\.NETPortable</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.Extensions.ODataClient\Microsoft.Extensions.ODataClient.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.NetCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

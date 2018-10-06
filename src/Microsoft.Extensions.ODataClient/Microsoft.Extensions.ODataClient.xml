@@ -4,6 +4,11 @@
         <name>Microsoft.Extensions.ODataClient</name>
     </assembly>
     <members>
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientActivator.#ctor(Microsoft.Extensions.Logging.ILogger{Microsoft.Extensions.ODataClient.DefaultODataClientActivator})">
+            <summary>
+            constructor for default OData client activator.
+            </summary>
+        </member>
         <member name="T:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1">
             <summary>
             Factory for Containers to an ODATA v4 service. 
@@ -14,7 +19,7 @@
             but it will rely on basic types from the ODATA v3 client package instead of the v4 package.
             </remarks>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.#ctor(Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Options.IOptions{Microsoft.Extensions.ODataClient.ODataClientOptions})">
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.#ctor(Microsoft.Extensions.ODataClient.IODataClientActivator,Microsoft.Extensions.Logging.ILogger{Microsoft.Extensions.ODataClient.DefaultODataClientFactory{`0}},Microsoft.Extensions.Options.IOptionsMonitor{Microsoft.Extensions.ODataClient.ODataClientOptions})">
             <summary>
             constructor for default client factory.
             </summary>
@@ -128,6 +133,19 @@
             <param name="asyncResult">The pending request for a response.</param>
             <returns> A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         </member>
+        <member name="F:Microsoft.Extensions.ODataClient.HttpClientResponseMessage.streamReturned">
+            <summary>set to true once the GetStream was called.</summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.HttpClientResponseMessage.Headers">
+            <summary>
+            Returns the collection of response headers.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Extensions.ODataClient.HttpClientResponseMessage.StatusCode">
+            <summary>
+            The response status code.
+            </summary>
+        </member>
         <member name="T:Microsoft.Extensions.ODataClient.TaskExtensionMethods">
             <summary>
             Extension methods for working with Tasks
@@ -157,14 +175,6 @@
             <param name="configureProxy">A delegate that is used to configure an OData proxy.</param>
             <returns>An <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> that can be used to configure the client.</returns>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.ConfigureHttpClient(Microsoft.Extensions.ODataClient.IODataClientBuilder,System.Action{System.Net.Http.HttpClient})">
-            <summary>
-            Adds a delegate that will be used to configure the http client for the named OData proxy.
-            </summary>
-            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
-            <param name="configureClient">A delegate that is used to configure the http client for the OData proxy.</param>
-            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to further configure the http client.</returns>
-        </member>
         <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddODataClientHandler``1(Microsoft.Extensions.ODataClient.IODataClientBuilder)">
             <summary>
             Adds an additional message handler from the dependency injection container for a named OData proxy.
@@ -181,12 +191,12 @@
             </para>
             </remarks>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddHttpClientODataClientHandler(Microsoft.Extensions.ODataClient.IODataClientBuilder)">
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddHttpClient(Microsoft.Extensions.ODataClient.IODataClientBuilder)">
             <summary>
-            Adds the Intune default OData proxy handler from the dependency injection container for a named OData proxy.
+            Adds a delegate that will be used to configure the http client for the named OData proxy.
             </summary>
-            <remarks>
-            </remarks>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to further configure the http client.</returns>
         </member>
         <member name="T:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions">
             <summary>
@@ -196,10 +206,10 @@
         <member name="M:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions.AddODataClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
             <summary>
             Adds the <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> and related services to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> and configures
-            a named OData proxy and underlying <see cref="T:System.Net.Http.HttpClient"/>.
+            a named OData client and underlying <see cref="T:System.Net.Http.HttpClient"/>.
             </summary>
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
-            <param name="name">The logical name of the OData proxy and <see cref="T:System.Net.Http.HttpClient"/> to configure.</param>
+            <param name="name">The logical name of the OData client and <see cref="T:System.Net.Http.HttpClient"/> to configure.</param>
             <returns>An <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> that can be used to configure the client.</returns>
             <remarks>
             <para>

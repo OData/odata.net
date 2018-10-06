@@ -45,6 +45,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Extensions.ODataC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Extensions.ODataClient.NetStandard.VS2017", "..\src\Microsoft.Extensions.ODataClient\Microsoft.Extensions.ODataClient.NetStandard.VS2017.csproj", "{6CD9CFEB-DEE6-4143-9EBF-9F12EC6226E6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Extensions.ODataClient.Tests.Netcore", "..\test\FunctionalTests\Microsoft.Extensions.ODataClient.Tests\Microsoft.Extensions.ODataClient.Tests.Netcore.csproj", "{56980DDE-FD0B-4A39-9474-222C2406C631}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cover|Any CPU = Cover|Any CPU
@@ -328,6 +330,24 @@ Global
 		{6CD9CFEB-DEE6-4143-9EBF-9F12EC6226E6}.Release|x64.Build.0 = Release|Any CPU
 		{6CD9CFEB-DEE6-4143-9EBF-9F12EC6226E6}.Release|x86.ActiveCfg = Release|Any CPU
 		{6CD9CFEB-DEE6-4143-9EBF-9F12EC6226E6}.Release|x86.Build.0 = Release|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Cover|Any CPU.ActiveCfg = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Cover|Any CPU.Build.0 = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Cover|x64.ActiveCfg = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Cover|x64.Build.0 = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Cover|x86.ActiveCfg = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Cover|x86.Build.0 = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Debug|x64.Build.0 = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Debug|x86.Build.0 = Debug|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Release|x64.ActiveCfg = Release|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Release|x64.Build.0 = Release|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Release|x86.ActiveCfg = Release|Any CPU
+		{56980DDE-FD0B-4A39-9474-222C2406C631}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -352,6 +372,7 @@ Global
 		{17F6E0B6-6249-4E7C-B78C-2BCCBC130217} = {C8E49548-264D-49A9-B73A-CA72FEA98E2C}
 		{B062BCE1-6B46-4A58-A2AC-F6BE07D9647B} = {AE28D570-28A6-45E1-A695-35C5B27CC4F8}
 		{6CD9CFEB-DEE6-4143-9EBF-9F12EC6226E6} = {AE28D570-28A6-45E1-A695-35C5B27CC4F8}
+		{56980DDE-FD0B-4A39-9474-222C2406C631} = {31EFC4F5-C88F-434C-BB94-4C6769997C88}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9A8C8EA9-487D-4990-BFA6-2D5A9462AEDC}

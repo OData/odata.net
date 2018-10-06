@@ -31,6 +31,12 @@
             A central location for sharing state between OData client handlers during the client process pipeline.
             </summary>
         </member>
+        <member name="T:Microsoft.Extensions.ODataClient.IODataClientActivator">
+            <summary>
+            An activator that's responsbile soly to create the raw <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instances.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.Extensions.ODataClient.IODataClientActivator.CreateClient``1" -->
         <member name="T:Microsoft.Extensions.ODataClient.IODataClientBuilder">
             <summary>
             A builder for configuring named OData V4 client instances returned by factory.
