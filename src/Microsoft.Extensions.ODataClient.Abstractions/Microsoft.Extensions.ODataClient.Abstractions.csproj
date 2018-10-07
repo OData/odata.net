@@ -12,6 +12,7 @@
     <SignAssembly>True</SignAssembly>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
+    <DefineConstants>$(DefineConstants);ODATA_CLIENT;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;SUPPRESS_SECURITY_RULES</DefineConstants>
     <EnableLocalization>true</EnableLocalization>
   </PropertyGroup>
 
@@ -23,4 +24,10 @@
     <ProjectReference Include="..\Microsoft.OData.Client\Microsoft.OData.Client.NetStandard.VS2017.csproj" />
   </ItemGroup>
 
+  <Import Project="..\Build.props" />
+  <ItemGroup>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
 </Project>

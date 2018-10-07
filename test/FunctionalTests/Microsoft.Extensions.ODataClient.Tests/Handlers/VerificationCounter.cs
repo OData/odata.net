@@ -1,6 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="VerificationCounter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.Extensions.ODataClient.Tests.Netcore.Handlers
 {
@@ -9,5 +13,6 @@ namespace Microsoft.Extensions.ODataClient.Tests.Netcore.Handlers
         public int ODataInvokeCount { get; internal set; }
 
         public int HttpInvokeCount { get; internal set; }
+        public IDictionary<string, object> HttpRequestProperties { get; internal set; } = new Dictionary<string, object>();
     }
 }

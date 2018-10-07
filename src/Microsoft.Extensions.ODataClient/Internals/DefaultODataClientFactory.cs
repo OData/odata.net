@@ -40,14 +40,15 @@ namespace Microsoft.Extensions.ODataClient
         /// create a connection to an OData service, specifying a named HTTP client
         /// </summary>
         /// <param name="name">the logic name of the client to use, including both HttpClient and ODataClient.</param>
+        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         /// <returns></returns>
-        public T CreateClient(string name)
+        public T CreateClient(Uri serviceRoot, string name)
         {
             // default to higest protocol version client support.
             var odataVersion = ODataProtocolVersion.V401;
             Log.BeforeCreateClient(this.logger, odataVersion, name, null);
 
-            T container = this.activator.CreateClient<T>();
+            T container = this.activator.CreateClient<T>(serviceRoot);
 
             var args = new ClientCreatedArgs(name, container);
 

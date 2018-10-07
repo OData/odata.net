@@ -20,21 +20,10 @@ namespace Microsoft.Extensions.ODataClient
         {
             this.HttpClientFactory = httpClientFactory;
         }
-        
-        private DataServiceClientRequestMessage OnMessageCreating(DataServiceClientRequestMessageArgs args, string clientName)
-        {
-            var message = new HttpClientRequestMessage(this.HttpClientFactory, args.ActualMethod, clientName) { Url = args.RequestUri, Method = args.Method, };
-            foreach (var header in args.Headers)
-            {
-                message.SetHeader(header.Key, header.Value);
-            }
 
-            return message;
-        }
-
-        public void OnClientCreated(ClientCreatedArgs clientCreatedArgs)
+        public void OnClientCreated(ClientCreatedArgs clientArgs)
         {
-            clientCreatedArgs.ODataClient.Configurations.RequestPipeline.OnMessageCreating = (args) => this.OnMessageCreating(args, clientCreatedArgs.Name);
+            clientArgs.ODataClient.Configurations.RequestPipeline.OnMessageCreating = (args) => new HttpClientRequestMessage(this.HttpClientFactory.CreateClient(clientArgs.Name), args, clientArgs.ODataClient.Configurations);
         }
     }
 }

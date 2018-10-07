@@ -1,6 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//---------------------------------------------------------------------
+// <copyright file="Startup.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Extensions.ODataClient.Tests.Netcore.Handlers
@@ -11,6 +15,9 @@ namespace Microsoft.Extensions.ODataClient.Tests.Netcore.Handlers
         {
             sc.AddSingleton<VerificationCounter>();
             sc.AddTransient<VerificationController>();
+
+            sc.AddTransient<VerificationODataClientHandler>();
+            sc.AddTransient<VerificationHttpClientHandler>();
 
             sc
                 .AddODataClient("Verification")

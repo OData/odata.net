@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Microsoft.Extensions.ODataClient.Tests</AssemblyName>
-    <RootNamespace>Microsoft.Extensions.ODataClient.Tests.Netcore</RootNamespace>
+    <RootNamespace>Microsoft.Extensions.ODataClient.Tests</RootNamespace>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <!-- Disable GenerateAssemblyInfo to use the existing AssemblyInfo.cs -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Microsoft.Extensions.ODataClient\Microsoft.Extensions.ODataClient.NetStandard.VS2017.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.Extensions.ODataClient\Microsoft.Extensions.ODataClient.csproj" />
     <ProjectReference Include="..\..\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.NetCore.csproj" />
   </ItemGroup>
 

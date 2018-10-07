@@ -7,6 +7,7 @@
 namespace Microsoft.Extensions.ODataClient
 {
     using Microsoft.OData.Client;
+    using System;
     using System.Net.Http;
 
     /// <summary>
@@ -16,6 +17,8 @@ namespace Microsoft.Extensions.ODataClient
     {
         /// <summary>
         /// Creates an <see cref="DataServiceContext"/> instance.
-        T CreateClient<T>() where T : DataServiceContext;
+        /// </summary>
+        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
+        T CreateClient<T>(Uri serviceRoot) where T : DataServiceContext;
     }
 }

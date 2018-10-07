@@ -6,6 +6,7 @@
 
 namespace Microsoft.Extensions.ODataClient
 {
+    using Microsoft.Extensions.ODataClient.Internals.Handlers;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using System;
@@ -42,30 +43,42 @@ namespace Microsoft.Extensions.ODataClient
 
         private readonly HttpRequestMessage requestMessage;
         private readonly HttpClient client;
-        private readonly HttpClientHandler handler;
         private readonly MemoryStream messageStream;
         private readonly Dictionary<string, string> contentHeaderValueCache;
+        private readonly DataServiceClientConfigurations config;
 
         /// <summary>
         /// Constructor for HttpClientRequestMessage.
         /// </summary>
-        public HttpClientRequestMessage(IHttpClientFactory clientFactory, string actualMethod, string clientName) 
-            : base(actualMethod)
+        public HttpClientRequestMessage(HttpClient client, DataServiceClientRequestMessageArgs args, DataServiceClientConfigurations config)
+            : base(args.ActualMethod)
         {
             this.requestMessage = new HttpRequestMessage();
-            this.messageStream = new MemoryStream(); //Task 2734342: FSI Core client: avoid using memorystream in HttpClientRequestMessage
-            this.handler = new HttpClientHandler(); //TODO: BUGBUG 
 
-            // DefaultHttpClientFactory throws if CreateClient(clientName) is called with null. Instead call CreateClient()
-            if (string.IsNullOrEmpty(clientName))
-            {
-                this.client = clientFactory.CreateClient();
-            }
-            else
-            {
-                this.client = clientFactory.CreateClient(clientName);
-            }
+            // TODO, avoid create Memory Stream each time, consider object pooling
+            this.messageStream = new MemoryStream(); 
+
             this.contentHeaderValueCache = new Dictionary<string, string>();
+
+            foreach (var header in args.Headers)
+            {
+                this.SetHeader(header.Key, header.Value);
+            }
+
+            this.Url = args.RequestUri;
+            this.Method = args.Method;
+            this.config = config;
+
+            // link http and odata properties to share state between odata and http handlers
+            if (config.Properties != null)
+            {
+                foreach (var item in config.Properties)
+                {
+                    this.requestMessage.Properties[item.Key] = item.Value;
+                }
+            }
+
+            this.client = client;
         }
 
         /// <summary>
@@ -77,10 +90,10 @@ namespace Microsoft.Extensions.ODataClient
             {
                 if (this.requestMessage.Content != null)
                 {
-                    return HttpHeadersToStringDictionary(this.requestMessage.Headers).Concat(HttpHeadersToStringDictionary(this.requestMessage.Content.Headers));
+                    return this.requestMessage.Headers.ToStringDictionary().Concat(this.requestMessage.Content.Headers.ToStringDictionary());
                 }
 
-                return HttpHeadersToStringDictionary(this.requestMessage.Headers).Concat(this.contentHeaderValueCache);
+                return this.requestMessage.Headers.ToStringDictionary().Concat(this.contentHeaderValueCache);
             }
         }
 
@@ -121,11 +134,12 @@ namespace Microsoft.Extensions.ODataClient
         {
             get
             {
-                return this.handler.Credentials;
+                return this.requestMessage.Properties[typeof(ICredentials).FullName] as ICredentials;
             }
+
             set
             {
-                this.handler.Credentials = value;
+                this.requestMessage.Properties[typeof(ICredentials).FullName] = value;
             }
         }
 
@@ -230,11 +244,7 @@ namespace Microsoft.Extensions.ODataClient
         /// <returns> A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
         {
-            return UnwrapAggregateException(() =>
-            {
-                var result = ((Task<HttpResponseMessage>)asyncResult).Result;
-                return ConvertHttpClientResponse(result);
-            });
+            return UnwrapAggregateException(() =>new HttpClientResponseMessage(((Task<HttpResponseMessage>)asyncResult).Result, this.config));
         }
 
         private Task<HttpResponseMessage> CreateSendTask()
@@ -259,25 +269,6 @@ namespace Microsoft.Extensions.ODataClient
             return send;
         }
 
-        private static IDictionary<string, string> HttpHeadersToStringDictionary(HttpHeaders headers)
-        {
-            return headers.ToDictionary((h1) => h1.Key, (h2) => string.Join(",", h2.Value));
-        }
-
-        private static HttpWebResponseMessage ConvertHttpClientResponse(HttpResponseMessage response)
-        {
-            var allHeaders = HttpHeadersToStringDictionary(response.Headers).Concat(HttpHeadersToStringDictionary(response.Content.Headers));
-            return new HttpWebResponseMessage(
-                allHeaders.ToDictionary((h1) => h1.Key, (h2) => h2.Value),
-                (int)response.StatusCode,
-                () =>
-                {
-                    var task = response.Content.ReadAsStreamAsync();
-                    task.Wait();
-                    return task.Result;
-                });
-        }
-
         private static T UnwrapAggregateException<T>(Func<T> action)
         {
             try
@@ -286,9 +277,9 @@ namespace Microsoft.Extensions.ODataClient
             }
             catch (AggregateException aggregateException)
             {
-                if (aggregateException.InnerExceptions.Count == 1)
+                if (aggregateException.InnerExceptions.Count == 1 && aggregateException.InnerExceptions.Single() is WebException webException)
                 {
-                    throw ConvertToDataServiceWebException(aggregateException.InnerExceptions.Single() as WebException);
+                    throw ConvertToDataServiceWebException(webException);
                 }
 
                 throw;

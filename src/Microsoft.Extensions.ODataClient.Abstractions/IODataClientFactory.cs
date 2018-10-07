@@ -7,6 +7,7 @@
 namespace Microsoft.Extensions.ODataClient
 {
     using Microsoft.OData.Client;
+    using System;
     using System.Net.Http;
 
     /// <summary>
@@ -22,15 +23,16 @@ namespace Microsoft.Extensions.ODataClient
     {
         /// <summary>
         /// Creates and configures an <see cref="DataServiceContext"/> instance using the configuration that corresponds
-        /// to the logical name specified by <paramref name="name"/>.
+        /// to the logical name specified by <paramref name="name"/> with the specified <paramref name="serviceRoot" />
         /// </summary>
+        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         /// <param name="name">
         /// The logical name of the client to create. the same logic name will be used to create underlying <see cref="HttpClient"/> instance for communication.
         /// </param>
         /// <returns>A new <see cref="DataServiceContext"/> instance.</returns>
         /// <remarks>
         /// <para>
-        /// Each call to <see cref="CreateClient(string)"/> is guaranteed to return a new <see cref="HttpClient"/>
+        /// Each call to <see cref="CreateClient(Uri, string)"/> is guaranteed to return a new <see cref="HttpClient"/>
         /// instance. Callers may cache the returned <see cref="HttpClient"/> instance indefinitely or surround
         /// its use in a <langword>using</langword> block to dispose it when desired.
         /// </para>
@@ -39,6 +41,6 @@ namespace Microsoft.Extensions.ODataClient
         /// as desired.
         /// </para>
         /// </remarks>
-        T CreateClient(string name);
+        T CreateClient(Uri serviceRoot, string name = ODataClientOptions.DefaultName);
     }
 }

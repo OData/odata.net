@@ -26,17 +26,17 @@
             the instance of data service context for client communication.
             </summary>
         </member>
-        <member name="P:Microsoft.Extensions.ODataClient.ClientCreatedArgs.Properties">
-            <summary>
-            A central location for sharing state between OData client handlers during the client process pipeline.
-            </summary>
-        </member>
         <member name="T:Microsoft.Extensions.ODataClient.IODataClientActivator">
             <summary>
             An activator that's responsbile soly to create the raw <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instances.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Microsoft.Extensions.ODataClient.IODataClientActivator.CreateClient``1" -->
+        <member name="M:Microsoft.Extensions.ODataClient.IODataClientActivator.CreateClient``1(System.Uri)">
+            <summary>
+            Creates an <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance.
+            </summary>
+            <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
+        </member>
         <member name="T:Microsoft.Extensions.ODataClient.IODataClientBuilder">
             <summary>
             A builder for configuring named OData V4 client instances returned by factory.
@@ -53,18 +53,19 @@
             </summary>
         </member>
         <!-- Badly formed XML comment ignored for member "T:Microsoft.Extensions.ODataClient.IODataClientFactory`1" -->
-        <member name="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.String)">
+        <member name="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.Uri,System.String)">
             <summary>
             Creates and configures an <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance using the configuration that corresponds
-            to the logical name specified by <paramref name="name"/>.
+            to the logical name specified by <paramref name="name"/> with the specified <paramref name="serviceRoot" />
             </summary>
+            <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
             <param name="name">
             The logical name of the client to create. the same logic name will be used to create underlying <see cref="T:System.Net.Http.HttpClient"/> instance for communication.
             </param>
             <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance.</returns>
             <remarks>
             <para>
-            Each call to <see cref="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.String)"/> is guaranteed to return a new <see cref="T:System.Net.Http.HttpClient"/>
+            Each call to <see cref="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.Uri,System.String)"/> is guaranteed to return a new <see cref="T:System.Net.Http.HttpClient"/>
             instance. Callers may cache the returned <see cref="T:System.Net.Http.HttpClient"/> instance indefinitely or surround
             its use in a <langword>using</langword> block to dispose it when desired.
             </para>
@@ -88,7 +89,7 @@
         </member>
         <member name="T:Microsoft.Extensions.ODataClient.ODataClientOptions">
             <summary>
-            An options class for configuring the default IODataClientFactory for v3 and v4.
+            An options class for configuring the default IODataClientFactory.
             </summary>
         </member>
         <member name="F:Microsoft.Extensions.ODataClient.ODataClientOptions.DefaultName">
@@ -100,6 +101,20 @@
             <summary>
             Gets a list of operations used to configure an IODataClientFactory.
             </summary>
+        </member>
+        <member name="T:AssemblyRef">
+            <summary>
+            Sets public key string for friend assemblies.
+            </summary>
+        </member>
+        <member name="F:AssemblyRef.ProductPublicKey">
+            <summary>ProductPublicKey is an official MS supported public key for external releases.</summary>
+        </member>
+        <member name="F:AssemblyRef.TestPublicKey">
+            <summary>TestPublicKey is an unsupported strong key for testing purpose only.</summary>
+        </member>
+        <member name="F:AssemblyRef.ProductPublicKeyToken">
+            <summary>Dont know what this is</summary>
         </member>
     </members>
 </doc>

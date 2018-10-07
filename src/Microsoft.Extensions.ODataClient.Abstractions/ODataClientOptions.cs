@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace Microsoft.Extensions.ODataClient
 {
     /// <summary>
-    /// An options class for configuring the default IODataClientFactory for v3 and v4.
+    /// An options class for configuring the default IODataClientFactory.
     /// </summary>
     public class ODataClientOptions
     {

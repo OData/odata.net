@@ -22,24 +22,24 @@ namespace Microsoft.Extensions.ODataClient
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public T CreateClient<T>() where T : DataServiceContext
+        public T CreateClient<T>(Uri serviceRoot) where T : DataServiceContext
         {
             // default to higest protocol version client support.
             var odataVersion = ODataProtocolVersion.V401;
 
-            T container = (T)Activator.CreateInstance(typeof(T), new Object[] { null });
+            T container = (T)Activator.CreateInstance(typeof(T), new Object[] { serviceRoot });
 
-            Log.ContainerCreated(this.logger, odataVersion, null);
+            Log.ContainerCreated(this.logger, odataVersion, serviceRoot, null);
 
             return container;
         }
                 
         private static class Log
         {
-            public static readonly Action<ILogger, ODataProtocolVersion, Exception> ContainerCreated = LoggerMessage.Define<ODataProtocolVersion>(
+            public static readonly Action<ILogger, ODataProtocolVersion, Uri, Exception> ContainerCreated = LoggerMessage.Define<ODataProtocolVersion, Uri>(
                 LogLevel.Information,
                 new EventId(1003, nameof(ContainerCreated)),
-                "Created OData {ODataVersion} container created.");
+                "Created OData {ODataVersion} container with root uri:{ServiceRoot}");
         }
     }
 }

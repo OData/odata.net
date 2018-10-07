@@ -24,11 +24,12 @@
             constructor for default client factory.
             </summary>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.CreateClient(System.String)">
+        <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.CreateClient(System.Uri,System.String)">
             <summary>
             create a connection to an OData service, specifying a named HTTP client
             </summary>
             <param name="name">the logic name of the client to use, including both HttpClient and ODataClient.</param>
+            <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
             <returns></returns>
         </member>
         <member name="M:Microsoft.Extensions.ODataClient.DefaultODataClientFactory`1.OnClientCreated(Microsoft.Extensions.ODataClient.ClientCreatedArgs)">
@@ -53,7 +54,7 @@
             need to know which category a header belongs to.
             </summary>
         </member>
-        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.#ctor(System.Net.Http.IHttpClientFactory,System.String,System.String)">
+        <member name="M:Microsoft.Extensions.ODataClient.HttpClientRequestMessage.#ctor(System.Net.Http.HttpClient,Microsoft.OData.Client.DataServiceClientRequestMessageArgs,Microsoft.OData.Client.DataServiceClientConfigurations)">
             <summary>
             Constructor for HttpClientRequestMessage.
             </summary>
@@ -133,19 +134,6 @@
             <param name="asyncResult">The pending request for a response.</param>
             <returns> A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         </member>
-        <member name="F:Microsoft.Extensions.ODataClient.HttpClientResponseMessage.streamReturned">
-            <summary>set to true once the GetStream was called.</summary>
-        </member>
-        <member name="P:Microsoft.Extensions.ODataClient.HttpClientResponseMessage.Headers">
-            <summary>
-            Returns the collection of response headers.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Extensions.ODataClient.HttpClientResponseMessage.StatusCode">
-            <summary>
-            The response status code.
-            </summary>
-        </member>
         <member name="T:Microsoft.Extensions.ODataClient.TaskExtensionMethods">
             <summary>
             Extension methods for working with Tasks
@@ -177,19 +165,26 @@
         </member>
         <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddODataClientHandler``1(Microsoft.Extensions.ODataClient.IODataClientBuilder)">
             <summary>
-            Adds an additional message handler from the dependency injection container for a named OData proxy.
+            Adds an additional odata client handler from the dependency injection container for a named OData proxy.
             </summary>
             <param name="builder">The <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/>.</param>
             <returns>An <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> that can be used to configure the client.</returns>
             <typeparam name="THandler">
-            The type of the <see cref="T:Microsoft.Extensions.ODataClient.IODataClientHandler"/>. The handler type will be registered as a transient service.
+            The type of the <see cref="T:Microsoft.Extensions.ODataClient.IODataClientHandler"/>. The handler type needs to be register in the DI container.
             </typeparam>
             <remarks>
             <para>
-            The <typeparamref name="THandler"/> will be resolved from a scoped service provider that shares 
+            The <typeparamref name="THandler"/> will be resolved from a service provider that shares 
             the lifetime of the handler being constructed.
             </para>
             </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddProperty(Microsoft.Extensions.ODataClient.IODataClientBuilder,System.String,System.Object)">
+            <summary>
+            Adds an additional property and value to be shared with other OData or Http handlers.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.ODataClient.IODataClientBuilder"/> that can be used to configure the client.</returns>
         </member>
         <member name="M:Microsoft.Extensions.ODataClient.ODataClientBuilderExtensions.AddHttpClient(Microsoft.Extensions.ODataClient.IODataClientBuilder)">
             <summary>
@@ -220,6 +215,20 @@
             Use <see cref="F:Microsoft.Extensions.ODataClient.ODataClientOptions.DefaultName"/> as the default name to configure the default client if name not specified.
             </para>
             </remarks>
+        </member>
+        <member name="T:AssemblyRef">
+            <summary>
+            Sets public key string for friend assemblies.
+            </summary>
+        </member>
+        <member name="F:AssemblyRef.ProductPublicKey">
+            <summary>ProductPublicKey is an official MS supported public key for external releases.</summary>
+        </member>
+        <member name="F:AssemblyRef.TestPublicKey">
+            <summary>TestPublicKey is an unsupported strong key for testing purpose only.</summary>
+        </member>
+        <member name="F:AssemblyRef.ProductPublicKeyToken">
+            <summary>Dont know what this is</summary>
         </member>
     </members>
 </doc>

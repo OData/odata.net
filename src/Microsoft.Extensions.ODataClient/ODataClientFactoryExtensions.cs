@@ -44,6 +44,9 @@ namespace Microsoft.Extensions.ODataClient
                 throw new ArgumentNullException(nameof(name));
             }
 
+            services.AddLogging();
+            services.AddOptions();
+
             services.TryAddSingleton(typeof(IODataClientFactory<>), typeof(DefaultODataClientFactory<>));
             services.TryAddSingleton(typeof(IODataClientActivator), typeof(DefaultODataClientActivator));
 

@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     /// <summary>
@@ -13,11 +14,14 @@ namespace Microsoft.OData.Client
     /// </summary>
     public class DataServiceClientConfigurations
     {
+        // default to null and lazy initialize it to avoid memory impact for majority case that does not use this.
+        private IDictionary<string, object> properties = null;
+
         /// <summary>
         /// Creates a data service client configurations class
         /// </summary>
         /// <param name="sender"> The sender for the Reading Atom event.</param>
-        internal DataServiceClientConfigurations(object sender)
+        public DataServiceClientConfigurations(object sender)
         {
             Debug.Assert(sender != null, "sender!= null");
 
@@ -34,5 +38,23 @@ namespace Microsoft.OData.Client
         /// Gets the request pipeline.
         /// </summary>
         public DataServiceClientRequestPipelineConfiguration RequestPipeline { get; private set; }
+
+        /// <summary>
+        /// A central location for sharing state between OData client handlers during the client process pipeline.
+        /// </summary>
+        public IDictionary<string, object> Properties
+        {
+            get
+            {
+                // lazy initialize it to avoid memory impact
+                // no need to lock as DataServiceContext instance are not designed for concurrent access.
+                if (this.properties == null)
+                {
+                    this.properties = new Dictionary<string, object>();
+                }
+
+                return this.properties;
+            }
+        }
     }
 }

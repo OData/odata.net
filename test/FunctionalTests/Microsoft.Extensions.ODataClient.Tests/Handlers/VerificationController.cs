@@ -1,8 +1,13 @@
-﻿using FluentAssertions;
+﻿//---------------------------------------------------------------------
+// <copyright file="VerificationController.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using FluentAssertions;
 using Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.ODataClient.Tests.Netcore.Handlers
 {
@@ -17,15 +22,17 @@ namespace Microsoft.Extensions.ODataClient.Tests.Netcore.Handlers
             this.counter = counter;
         }
 
-        internal void TestHappyCase()
+        internal async Task TestHappyCase()
         {
             counter.ODataInvokeCount.Should().Be(0);
-            var client = factory.CreateClient("Verification");
+            var client = factory.CreateClient(new Uri("http://localhost"), "Verification");
+            client.Configurations.Properties.Add("api-version", "1.0");
 
             counter.ODataInvokeCount.Should().Be(1);
             counter.HttpInvokeCount.Should().Be(0);
 
-            client.SaveChangesAsync();
+            Func<Task> task = async() => await client.Person.GetAllPagesAsync();
+            task.ShouldThrow<InvalidOperationException>("No one is listen to that Url.");
 
             counter.ODataInvokeCount.Should().Be(1);
             counter.HttpInvokeCount.Should().Be(1);

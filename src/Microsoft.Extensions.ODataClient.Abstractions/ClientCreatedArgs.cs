@@ -23,7 +23,6 @@ namespace Microsoft.Extensions.ODataClient
         {
             Name = name;
             this.ODataClient = container;
-            this.Properties = new Dictionary<object, object>();
         }
 
         /// <summary>
@@ -35,10 +34,5 @@ namespace Microsoft.Extensions.ODataClient
         /// the instance of data service context for client communication.
         /// </summary>
         public DataServiceContext ODataClient { get; }
-
-        /// <summary>
-        /// A central location for sharing state between OData client handlers during the client process pipeline.
-        /// </summary>
-        public IDictionary<object, object> Properties { get; }
     }
 }

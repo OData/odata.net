@@ -33,16 +33,16 @@ namespace Microsoft.Extensions.ODataClient
         }
 
         /// <summary>
-        /// Adds an additional message handler from the dependency injection container for a named OData proxy.
+        /// Adds an additional odata client handler from the dependency injection container for a named OData proxy.
         /// </summary>
         /// <param name="builder">The <see cref="IODataClientBuilder"/>.</param>
         /// <returns>An <see cref="IODataClientBuilder"/> that can be used to configure the client.</returns>
         /// <typeparam name="THandler">
-        /// The type of the <see cref="IODataClientHandler"/>. The handler type will be registered as a transient service.
+        /// The type of the <see cref="IODataClientHandler"/>. The handler type needs to be register in the DI container.
         /// </typeparam>
         /// <remarks>
         /// <para>
-        /// The <typeparamref name="THandler"/> will be resolved from a scoped service provider that shares 
+        /// The <typeparamref name="THandler"/> will be resolved from a service provider that shares 
         /// the lifetime of the handler being constructed.
         /// </para>
         /// </remarks>
@@ -56,6 +56,18 @@ namespace Microsoft.Extensions.ODataClient
             builder.Services
                 .AddOptions<ODataClientOptions>(builder.Name)
                 .Configure<THandler>((o, h) => o.ODataHandlers.Add(h));
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds an additional property and value to be shared with other OData or Http handlers.
+        /// </summary>
+        /// <param name="builder">The <see cref="IODataClientBuilder"/>.</param>
+        /// <returns>An <see cref="IODataClientBuilder"/> that can be used to configure the client.</returns>
+        public static IODataClientBuilder AddProperty(this IODataClientBuilder builder, string propertyName, object propertyValue)
+        {
+            builder.ConfigureODataClient(dsc => dsc.Configurations.Properties[propertyName] = propertyValue);
 
             return builder;
         }
