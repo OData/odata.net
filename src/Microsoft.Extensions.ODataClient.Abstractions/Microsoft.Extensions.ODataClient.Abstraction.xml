@@ -37,21 +37,6 @@
             </summary>
             <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         </member>
-        <member name="T:Microsoft.Extensions.ODataClient.IODataClientBuilder">
-            <summary>
-            A builder for configuring named OData V4 client instances returned by factory.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Extensions.ODataClient.IODataClientBuilder.Name">
-            <summary>
-            Gets the name of the client configured by this builder.
-            </summary>
-        </member>
-        <member name="P:Microsoft.Extensions.ODataClient.IODataClientBuilder.Services">
-            <summary>
-            Gets the application service collection.
-            </summary>
-        </member>
         <!-- Badly formed XML comment ignored for member "T:Microsoft.Extensions.ODataClient.IODataClientFactory`1" -->
         <member name="M:Microsoft.Extensions.ODataClient.IODataClientFactory`1.CreateClient(System.Uri,System.String)">
             <summary>
@@ -86,6 +71,30 @@
             If multiple handlers are registered, then they are called in reverse order of registration.
             </summary>
             <param name="args">the output proxy</param>
+        </member>
+        <member name="T:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions">
+            <summary>
+            Client extensions
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.ODataClient.ODataClientFactoryExtensions.CreateClient``1(Microsoft.Extensions.ODataClient.IODataClientFactory{``0},System.Uri)">
+            <summary>
+            Creates and configures an <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance using the configuration that corresponds
+            to the logical name specified by <paramref name="name"/> with the specified <paramref name="serviceRoot" />
+            </summary>
+            <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
+            <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance.</returns>
+            <remarks>
+            <para>
+            Each call to <see cref="!:CreateClient(Uri, string)"/> is guaranteed to return a new <see cref="T:System.Net.Http.HttpClient"/>
+            instance. Callers may cache the returned <see cref="T:System.Net.Http.HttpClient"/> instance indefinitely or surround
+            its use in a <langword>using</langword> block to dispose it when desired.
+            </para>
+            <para>
+            Callers are also free to mutate the returned <see cref="T:Microsoft.OData.Client.DataServiceContext"/> instance's public properties
+            as desired.
+            </para>
+            </remarks>
         </member>
         <member name="T:Microsoft.Extensions.ODataClient.ODataClientOptions">
             <summary>

@@ -95,13 +95,16 @@ $NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
 
-$NugetRestoreSolutions = "OData.NetStandard.sln"
+$NugetRestoreSolutions = "OData.NetStandard.sln",
+    "OData.Tests.E2E.NetCore.VS2017.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
     "Microsoft.OData.Edm.dll",
     "Microsoft.OData.Service.Design.T4.dll",
-    "Microsoft.Spatial.dll"
+    "Microsoft.Spatial.dll",
+    "Microsoft.Extensions.ODataClient",
+    "Microsoft.Extensions.ODataClient.Abstractions"
 
 $XUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
     "Microsoft.OData.Edm.Tests.dll",
@@ -110,7 +113,8 @@ $XUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
 
 $NetCoreXUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
     "Microsoft.OData.Edm.Tests.dll",
-    "Microsoft.Spatial.Tests.dll"
+    "Microsoft.Spatial.Tests.dll",
+    "Microsoft.Extensions.ODataClient.Tests.dll"
 
 $TestSupportDlls = "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.OData.Service.dll",
@@ -141,7 +145,8 @@ $NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsof
     "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.NetCore.csproj",
     "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj",
     "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.NetCore.csproj",
-    "\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj"
+    "\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj",
+    "\test\FunctionalTests\Microsoft.Extensions.ODataClient.Tests\Microsoft.Extensions.ODataClient.Tests.Netcore.csproj"
 
 $QuickTestSuite = @()
 $NightlyTestSuite = @()

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IODataClientFactory.cs" company="Microsoft">
+// <copyright file="ODataClientFactoryExtensions.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,24 +11,15 @@ namespace Microsoft.Extensions.ODataClient
     using System.Net.Http;
 
     /// <summary>
-    /// A factory abstraction for a component that can create <see cref="DataServiceContext"/> instances with custom
-    /// configuration for a given logical name.
+    /// Client extensions
     /// </summary>
-    /// <remarks>
-    /// A default <see cref="IODataClientFactory<typeparamref name="T"/>"/> can be registered in an <see cref="IServiceCollection"/>
-    /// by calling <see cref="ODataClientFactoryExtensions.AddODataClient(IServiceCollection)"/>.
-    /// The default <see cref="IODataClientFactory<typeparamref name="T"/>"/> will be registered in the service collection as a singleton.
-    /// </remarks>
-    public interface IODataClientFactory<T> where T : DataServiceContext
+    public static class ODataClientFactoryExtensions
     {
         /// <summary>
         /// Creates and configures an <see cref="DataServiceContext"/> instance using the configuration that corresponds
         /// to the logical name specified by <paramref name="name"/> with the specified <paramref name="serviceRoot" />
         /// </summary>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
-        /// <param name="name">
-        /// The logical name of the client to create. the same logic name will be used to create underlying <see cref="HttpClient"/> instance for communication.
-        /// </param>
         /// <returns>A new <see cref="DataServiceContext"/> instance.</returns>
         /// <remarks>
         /// <para>
@@ -41,6 +32,9 @@ namespace Microsoft.Extensions.ODataClient
         /// as desired.
         /// </para>
         /// </remarks>
-        T CreateClient(Uri serviceRoot, string name);
+        public static T CreateClient<T>(this IODataClientFactory<T> factory, Uri serviceRoot) where T : DataServiceContext
+        {
+            return factory.CreateClient(serviceRoot, ODataClientOptions.DefaultName);
+        }
     }
 }
