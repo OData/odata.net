@@ -187,12 +187,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>Defined by the implementer.</returns>
         public override string Translate(FilterSegment segment)
         {
-            Debug.Assert(segment != null, "segment != null");
-            NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
-            string expression = nodeToStringBuilder.TranslateNode(segment.Expression);
-
-            return "/" + UriQueryConstants.FilterSegment + ExpressionConstants.SymbolOpenParen +
-                expression + ExpressionConstants.SymbolClosedParen;
+            return "/" + segment.FullSegment;
         }
 
         /// <summary>

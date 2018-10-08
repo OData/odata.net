@@ -31,6 +31,11 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmType bindingType;
 
         /// <summary>
+        /// String representing "$filter(expression)".
+        /// </summary>
+        private readonly string fullSegment;
+
+        /// <summary>
         /// Build a segment representing $filter.
         /// </summary>
         /// <param name="expression">The filter expression - this should evaluate to a single boolean value.</param>
@@ -53,6 +58,11 @@ namespace Microsoft.OData.UriParser
             this.expression = expression;
             this.rangeVariable = rangeVariable;
             this.bindingType = navigationSource.Type;
+
+            NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
+            string expressionString = nodeToStringBuilder.TranslateNode(expression);
+            this.fullSegment = UriQueryConstants.FilterSegment + ExpressionConstants.SymbolOpenParen + expressionString
+                + ExpressionConstants.SymbolClosedParen;
         }
 
         /// <summary>
@@ -61,6 +71,14 @@ namespace Microsoft.OData.UriParser
         public SingleValueNode Expression
         {
             get { return this.expression; }
+        }
+
+        /// <summary>
+        /// Gets the string representing "$filter(expression)".
+        /// </summary>
+        public string FullSegment
+        {
+            get { return this.fullSegment; }
         }
 
         /// <summary>
