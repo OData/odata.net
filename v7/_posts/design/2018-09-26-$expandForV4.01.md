@@ -30,7 +30,7 @@ As shown above, @odata.context annotation specifies the context url, and provide
 - It contains two property values "FirstName", "LastName".
 
 ## Expanded Entity Specification for OData V4.01
-In OData V4.01, a different [format](http://docs.oasis-open.org/odata/odata/v4.01/cs01/part1-protocol/odata-v4.01-cs01-part1-protocol.html#sec_ExpandedEntity) is introduced for $expand clause (for expanded entity and projected expanded entity).
+In OData V4.01, notion for expanded entity and projected expanded entity [format](http://docs.oasis-open.org/odata/odata/v4.01/cs01/part1-protocol/odata-v4.01-cs01-part1-protocol.html#sec_ExpandedEntity) is introduced for $expand clause in context url.
 ```
 10.10 Expanded Entity
 Context URL template:
@@ -47,7 +47,7 @@ For a 4.0 response, the expanded navigation property suffixed with parentheses M
 ```
 
 ## Change Summary
-According to the OData spec above, this change is for creating proper expand token in response's context url, corresponding to $expand clause in the request url. Context Url is used as response metadata and is used to control data materialization when response is received by the client.
+According to the OData spec above, this change is for creating proper expand token in response's context url, corresponding to $expand clause in the request url. Context Url is used as response metadata to control data materialization when response is received by the client.
 We need to make sure that:
 - Context url in the response generated contains correct token for the $expand clause.
 - Client can parse the context url correctly and uses the metadata for response processing.
@@ -61,31 +61,79 @@ Request Url | Context Url in Response
  root/Cities('id')?$expand=TestModel.CapitolCity/Districts                       | root/$metadata#Cities(TestModel.CapitolCity/Districts())/$entity
  root/Cities('id')?$expand=TestModel.CapitolCity/Districts($select=DistrictName) | root/$metadata#Cities(TestModel.CapitolCity/Districts(DistrictName))/$entity
  root/Cities('id')?$select=Name&$expand=TestModel.CapitolCity/Districts($select=DistrictName) | root/$metadata#Cities(Name,TestModel.CapitolCity/Districts(DistrictName))/$entity
- root/Cities('id')?$select=Name,TestModel.CapitolCity/Districts$expand=TestModel.CapitolCity/Districts($select=DistrictName) | root/$metadata#Cities(Name,TestModel.CapitolCity/Districts(DistrictName))/$entity
+ root/Cities('id')?$select=Name,TestModel.CapitolCity/Districts&$expand=TestModel.CapitolCity/Districts($select=DistrictName) | root/$metadata#Cities(Name,TestModel.CapitolCity/Districts,TestModel.CapitolCity/Districts(DistrictName))/$entity
 
 
-Except for the case (due to known issue https://github.com/OData/odata.net/issues/1104) when a navigation link is both expanded and selected, the parenthesized navigation property will not be present in the context-url, which only has the navigation link in the selected list:
+We also fix the known issue https://github.com/OData/odata.net/issues/1104 when a navigation link is both expanded and selected, the parenthesized navigation property will be present in the context-url, along with the navigation link explicitly selected:
 
 Request Url | Context Url in Response
 ----------- | -----------------------
- root/Cities('id')?$select=**TestModel.CapitolCity/Districts**&$expand=**TestModel.CapitolCity/Districts** | root/$metadata#Cities(**TestModel.CapitolCity/Districts**)/$entity
- root/Cities('id')?$select=Id,Name,**ExpandedNavProp**&$expand=**ExpandedNavProp**                         | root/$metadata#Cities(Id,Name,**ExpandedNavProp**)/$entity
+ root/Cities('id')?$select=**TestModel.CapitolCity/Districts**&$expand=**TestModel.CapitolCity/Districts** | root/$metadata#Cities(**TestModel.CapitolCity/Districts,TestModel.CapitolCity/Districts()**)/$entity
+ root/Cities('id')?$select=Id,Name,**ExpandedNavProp**&$expand=**ExpandedNavProp**                         | root/$metadata#Cities(Id,Name,**ExpandedNavProp,ExpandedNavProp()**)/$entity
 
 ### V4.0
-We are going to tweet the behavior to align with that of the 4.01. It is not considered a breaking change because the updated context-url form for expanded navigation link is legal, but just was not required. It has been confirmed through code examination and ODL tests that this change doesn't break existing libraries and client.
+We are going to tweet the behavior to align with that of the 4.01. While this change does introduce slightly different semantics for explicitly selected navigation property, it is not considered a breaking change because the updated context-url form for expanded navigation link is legal, but just was not required. It has been confirmed through code examination and ODL tests that this change doesn't cause anomalies for libraries and client.
+
+### Context Url Parsing Updates to Align with OData V4/V4.01 ABNF Spec
+Notion of expanded entity in context url has been introduced since [OData V4 ABNF](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/abnf/odata-abnf-construction-rules.txt). Here is the excerpt of context url select clause in OData V4.01 ABNF:
+
+```
+;------------------------------------------------------------------------------
+; 3. Context URL Fragments
+;------------------------------------------------------------------------------
+
+context         = "#" contextFragment
+contextFragment = 'Collection($ref)'
+                / '$ref'
+                / 'Collection(Edm.EntityType)'
+                / 'Collection(Edm.ComplexType)'
+                / singletonEntity [ navigation *( containmentNavigation ) [ "/" qualifiedEntityTypeName ] ] [ selectList ]
+                / qualifiedTypeName [ selectList ]
+                / entitySet ( '/$deletedEntity' / '/$link' / '/$deletedLink' )
+                / entitySet keyPredicate "/" contextPropertyPath [ selectList ]
+                / entitySet [ selectList ] [ '/$entity' / '/$delta' ]
+                
+entitySet = entitySetName *( containmentNavigation ) [ "/" qualifiedEntityTypeName ]
+            
+containmentNavigation = keyPredicate [ "/" qualifiedEntityTypeName ] navigation
+navigation            = *( "/" complexProperty [ "/" qualifiedComplexTypeName ] ) "/" navigationProperty   
+
+selectList         = OPEN selectListItem *( COMMA selectListItem ) CLOSE
+selectListItem     = STAR ; all structural properties
+                   / allOperationsInSchema 
+                   / [ qualifiedEntityTypeName "/" ] 
+                     ( qualifiedActionName
+                     / qualifiedFunctionName 
+                     / selectListProperty
+                     )
+selectListProperty = primitiveProperty  
+                   / primitiveColProperty 
+                   / navigationProperty [ "+" ] [ selectList ]
+                   / selectPath [ "/" selectListProperty ]
+
+contextPropertyPath = primitiveProperty
+                    / primitiveColProperty
+                    / complexColProperty
+                    / complexProperty [ [ "/" qualifiedComplexTypeName ] "/" contextPropertyPath ]
+```
+
+The expanded entity introduced nested list of comma-separated items for the projected expanded entity. While expanded entity is supported at high level per OData V4 Spec, some common cases such as projecting multiple properties in expanded entities, e.g. $expand=Account($select=UPN,DisplayName), are not supported by context Url parsing implementation, which currently is aligned with only ABNF V3.
+
+This requires updating the context URL selected clause parsing implementation to align with ABNF V4.01. [Issue #1268](https://github.com/OData/odata.net/issues/1268) is added to the scope of this task.
 
 
 ## Design
-1. During response de-serialization, the emitted expanded navigation property token (in the form of parenthesized navigation link) could cause incompatibility/ambiguity to the semantics of context-url's selected-list, where an empty list stands for select-all(entire subtree). This is actually an issue in current library which always emits "Projected Expanded Entity" into the selected list. It could cause inadvertent omission of navigation link information during materialization (see issue #1259) in current library, and needs to be addressed as a prerequisite of this task.
+1. In OData 6.x & 7.x implementation, while creation of the context url select clause is aligned with OData V4/V4.01 ABNF spec, its counterpart of lexical parsing is still using OData ABNF V3, which specifies context url select list as a flat list of comma-separated items. To align with OData ABNF V4.01, parser needs to adopt a recursive approach. In addition to the path segments representing simple properties originally, a notion of expanded entity needs to be introduced in SelectedPropertiesNode to accommodate requirements from OData ABNF V4.
+
+2. During response de-serialization, the emitted expanded navigation property token (in the form of parenthesized navigation link) could cause incompatibility/ambiguity to the semantics of context-url's selected-list, where an empty list stands for select-all(entire subtree). This is actually an issue in current library which always emits "Projected Expanded Entity" into the selected list. It could cause inadvertent omission of navigation link information during materialization (see issue #1259) in current library, and needs to be addressed as a prerequisite of this task.
     . Check whether the select clause during SelectPropretiesNode instantiation only contains expanded navigation link, which contains balanced parentheses. The item should also be resolvable to navigation property, not other types of property.
-    . Current implementation of SelectPropretiesNode has limitation of processing select cause as comma-separated list, and it needs update to commodate the projected expanded navigation property case.
     . Additional EDM type information needs to be passed in for navigation property resolution in the constructor of the SelectedPropertiesNode. The EDM type information is originated from the OData reader, which instantiates the SelectedPropertiesNode.
 
-2. For both V4 and V4.01, always emit the parenthesized navigation link during response writing for context-url.
+3. For both V4 and V4.01, always emit the parenthesized navigation link during response writing for context-url.
 
-3. For internal logic of combining select list and expand list together, we should, according to select list's semantics, create a node of entire subtree when the selected list is empty.
+4. For internal logic of combining select list and expand list together, we should, according to select list's semantics, create a node of entire subtree when the selected list is empty.
 
-4. Cleanup the callback function processSubResult signatures by removing ODataVersion argument and associated method, since same logic is used for both V4 and V4.01. The callback function is used for traversing the select&expand clause recursively and providing aggregated result.
+5. Cleanup the callback function processSubResult signatures by removing ODataVersion argument and associated method, since same logic is used for both V4 and V4.01. The callback function is used for traversing the select&expand clause recursively and providing aggregated result.
 ```
 private static string ProcessSubExpand(string expandNode, string subExpand, ODataVersion version)
 ```
@@ -100,9 +148,10 @@ private static SelectedPropertiesNode ProcessSubExpand(string nodeName, Selected
 ------| --------
     Research on OData spec for v4.01 related to context-url and projected expand entity	| Completed
     Research on OData implementation related to context-url serialization / de-serialization / metadata level | Completed
-    Address prerequisite issue of navigation link materialization for expand-sub-select clause combined with minimal metadata | 3 days (WIP, pending on Code Review)
+    Address prerequisite issue of navigation link materialization for expand-sub-select clause combined with minimal metadata | Completed (Code Review pending)
     Design documentation | Completed
     Implementation of $expand in context url for V4.01: based on PoC done during research | 3 days (WIP, pending on Design Review)
+    Implementation of context url select clause parsing per OData V4.01 ABNF spec.
     Feature doc	| 1 day
 
 Note: The above estimates include test pass for the initial implementation. Code review cycles are not included.
