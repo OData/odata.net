@@ -195,7 +195,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void NestedGroupbyTransformationsIsAllowed()
         {
-            var result = this.ParseExpandOptions("($apply=groupby((Customer/Country,Product/Name),aggregate(Amount with sum as Total)))");
+            var result = this.ParseExpandOptions("($apply=groupby((Customer/CountryRegion,Product/Name),aggregate(Amount with sum as Total)))");
             result.Should().NotBeNull();
 
             QueryToken token = result.ApplyOptions.Single();
@@ -203,7 +203,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             GroupByToken groupBy = token as GroupByToken;
             groupBy.Properties.Should().HaveCount(2);
             QueryToken queryToken = groupBy.Properties.ElementAt(0);
-            EndPathToken pathToken = queryToken.ShouldBeEndPathToken("Country").And;
+            EndPathToken pathToken = queryToken.ShouldBeEndPathToken("CountryRegion").And;
             pathToken.NextToken.ShouldBeInnerPathToken("Customer");
 
             queryToken = groupBy.Properties.ElementAt(1);
