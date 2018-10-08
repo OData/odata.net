@@ -906,7 +906,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
-                string.Format("\"{0}$metadata#Employees(AssociatedCompany())/$entity\"", TestBaseUri),
+                string.Format("\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"", TestBaseUri),
                 out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
@@ -921,8 +921,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // V4 Protocol Spec Chapter 10.10: Projected Expanded Entities (not contain select)
         // Sample Request: http://host/service/Employees(0)?$expand=AssociatedCompany
         [Theory]
-        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany())/$entity\"")]
-        [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany())/$entity\"")]
+        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"")]
+        [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"")]
         public void ExpandedMultiSegmentEntity(ODataVersion version, string contextString)
         {
             ODataResource entry = new ODataResource()

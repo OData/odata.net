@@ -39,10 +39,18 @@ namespace Microsoft.OData
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
 
         /// <summary>The type of the current node.</summary>
-        private readonly SelectionType selectionType;
+        private SelectionType selectionType = SelectionType.PartialSubtree;
+
+        /// <summary>
+        /// Boolean flag indicating whether this is an expanded navigation property.
+        /// </summary>
+        internal readonly bool isExpandedNavigationProperty;
 
         /// <summary>The Edm structured type of the current node.</summary>
-        private readonly IEdmStructuredType structuredType;
+        private IEdmStructuredType structuredType;
+
+        /// <summary>The Edm model.</summary>
+        private IEdmModel edmModel;
 
         /// <summary>The separator character used to separate property names in a path.</summary>
         private const char PathSeparator = '/';
@@ -67,49 +75,118 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Constructor.
-        /// TODO: Update SelectedPropertiesNode class to adapt to V4, get rid of old style constructor
         /// </summary>
         /// <param name="selectClause">The string representation of the selected property hierarchy using
         /// the same format as in the $select query option.</param>
-        /// <param name="structuredType">The Edm structural type of the node.</param>
-        internal SelectedPropertiesNode(string selectClause, IEdmStructuredType structuredType)
+        /// <param name="structuredType">The Edm structured type of this node.</param>
+        /// <param name="edmModel">The Edm model.</param>
+        internal SelectedPropertiesNode(string selectClause, IEdmStructuredType structuredType, IEdmModel edmModel)
             : this(SelectionType.PartialSubtree)
         {
             Debug.Assert(!string.IsNullOrEmpty(selectClause), "!string.IsNullOrEmpty(selectClause)");
 
             this.structuredType = structuredType;
+            this.edmModel = edmModel;
 
-            // NOTE: The select clause is a list of paths separated by comma (',').
-            string[] paths = selectClause.Split(ItemSeparator);
+            // NOTE: The select clause is a list of paths and parenthesized expand tokens separated by comma (',').
+            // E.g, Accounts('abc')?$expand=User($select(FirstName, LastName)), for the case of projected expanded entity.
+            this.Parse(selectClause);
+        }
+
+        private void Parse(string selectClause)
+        {
+            string[] paths = GetTopLevelItems(selectClause);
             Debug.Assert(paths.Length > 0, "Paths should never be empty");
             foreach (string t in paths)
             {
-                string[] segments = t.Split(PathSeparator);
+                string[] segments = null;
+                int idxLP = t.IndexOf('(');
+                if ( -1 == idxLP )
+                {
+                    segments = t.Split(PathSeparator);
+                }
+                else
+                {
+                    // Take the substring before the left parenthesis and get the path segments.
+                    segments = t.Substring(0, idxLP).Split(PathSeparator);
+
+                    // Add parenthesized part to the last path segment.
+                    segments[segments.Length - 1] += t.Substring(idxLP);
+                }
+
                 this.ParsePathSegment(segments, 0);
             }
 
-            if (this.selectedProperties != null
-                && this.selectedProperties.Count > 0
-                && this.selectedProperties.All(IsValidExpandToken))
+            if ( (this.selectedProperties == null || this.selectedProperties.Count == 0)
+                && this.children.Values.All( n => n.selectionType == SelectionType.EntireSubtree))
             {
-                // select list is not empty and only contains expand tokens
                 this.selectionType = SelectionType.EntireSubtree;
             }
+        }
+
+        private static string[] GetTopLevelItems(string selectClause)
+        {
+            List<string> result = new List<string>();
+            int parenBalance = 0;
+            int startIdx = 0;
+            char[] chars = selectClause.ToCharArray();
+            for (int i = 0; i < chars.Length; i++)
+            {
+                switch (chars[i])
+                {
+                    case '(':
+                        ++parenBalance;
+                        break;
+                    case ')':
+                        --parenBalance;
+                        break;
+                    case ItemSeparator:
+                        if (parenBalance == 0)
+                        {
+                            string item = selectClause.Substring(startIdx, i - startIdx);
+                            if (item.Length != 0)
+                            {
+                                // Add non-empty item only.
+                                result.Add(item);
+                            }
+                            startIdx = i + 1;
+                        }
+                        break;
+                }
+            }
+
+            if (startIdx < chars.Length)
+            {
+                // Add the last item, which is non-empty.
+                result.Add(selectClause.Substring(startIdx, chars.Length - startIdx));
+            }
+            return result.ToArray();
         }
 
         /// <summary>
         /// Prevents a default instance of the <see cref="SelectedPropertiesNode"/> class from being created.
         /// </summary>
         /// <param name="selectionType">Type of the selection.</param>
-        private SelectedPropertiesNode(SelectionType selectionType)
+        internal SelectedPropertiesNode(SelectionType selectionType)
+            :this(selectionType, /*isExpandedNavigationProperty*/ false)
+        {
+        }
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="SelectedPropertiesNode"/> class from being created.
+        /// </summary>
+        /// <param name="selectionType">Type of the selection.</param>
+        /// <param name="isExpandedNavigationProperty">Boolean flag indicating whether this is an expanded navigation property.</param>
+        private SelectedPropertiesNode(SelectionType selectionType, bool isExpandedNavigationProperty)
         {
             this.selectionType = selectionType;
+            this.isExpandedNavigationProperty = isExpandedNavigationProperty;
         }
 
         /// <summary>
         /// Enum representing the different special cases of selection.
         /// </summary>
-        private enum SelectionType
+        internal enum SelectionType
         {
             /// <summary>
             /// Represents the case where no properties are selected.
@@ -118,7 +195,6 @@ namespace Microsoft.OData
 
             /// <summary>
             /// Represents the case where an entire subtree is selected.
-            /// TODO: Update SelectedPropertiesNode class to adapt to V4, fix EntireSubtree logic for V4
             /// </summary>
             EntireSubtree = 1,
 
@@ -132,13 +208,13 @@ namespace Microsoft.OData
         /// Creates a node from the given raw $select query option value and structural type information.
         /// </summary>
         /// <param name="selectQueryOption">The value of the $select query option.</param>
-        /// <param name="structuredType">The structural type of this node.</param>
+        /// <param name="edmModel">The Edm model.</param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
-        internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType)
+        internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType, IEdmModel edmModel)
         {
             if (selectQueryOption == null)
             {
-                return EntireSubtree;
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
             selectQueryOption = selectQueryOption.Trim();
@@ -149,7 +225,7 @@ namespace Microsoft.OData
                 return Empty;
             }
 
-            return new SelectedPropertiesNode(selectQueryOption, structuredType);
+            return new SelectedPropertiesNode(selectQueryOption, structuredType, edmModel);
         }
 
         /// <summary>
@@ -159,7 +235,7 @@ namespace Microsoft.OData
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
         internal static SelectedPropertiesNode Create(string selectQueryOption)
         {
-            return Create(selectQueryOption, /*structuredType*/ null);
+            return Create(selectQueryOption, /*structuredType*/ null, /*edmModel*/ null);
         }
 
         /// <summary>
@@ -172,7 +248,7 @@ namespace Microsoft.OData
         {
             if (selectExpandClause.AllSelected)
             {
-                return EntireSubtree;
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
             return CreateFromSelectExpandClause(selectExpandClause, version);
@@ -193,7 +269,7 @@ namespace Microsoft.OData
             // if either one includes the entire subtree, then so does the result
             if (left.selectionType == SelectionType.EntireSubtree || right.selectionType == SelectionType.EntireSubtree)
             {
-                return EntireSubtree;
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
             // if the left hand side is empty, then use the right hand side
@@ -275,20 +351,21 @@ namespace Microsoft.OData
 
             if (this.selectionType == SelectionType.EntireSubtree)
             {
-                return EntireSubtree;
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
             // We cannot determine the selected navigation properties without the user model. This means we won't be computing the missing navigation properties.
-            // For reading we will report what's on the wire and for writing we just write what the user explicitely told us to write.
+            // For reading we will report what's on the wire and for writing we just write what the user explicitly told us to write.
             if (structuredType == null)
             {
-                return EntireSubtree;
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
-            // $select=Orders will include the entire subtree
-            if (this.selectedProperties.Contains(navigationPropertyName))
+            // $select=Orders will include the entire subtree when there are no same expanded entity.
+            if (this.selectedProperties.Contains(navigationPropertyName) &&
+                (this.children == null || !this.children.Any(n => n.Key.Equals(navigationPropertyName) && n.Value.isExpandedNavigationProperty)))
             {
-                return EntireSubtree;
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
             if (this.children != null)
@@ -325,13 +402,14 @@ namespace Microsoft.OData
             }
 
             // We cannot determine the selected navigation properties without the user model. This means we won't be computing the missing navigation properties.
-            // For reading we will report what's on the wire and for writing we just write what the user explicitely told us to write.
+            // For reading we will report what's on the wire and for writing we just write what the user explicitly told us to write.
             if (structuredType == null)
             {
                 return EmptyNavigationProperties;
             }
 
-            if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
+            if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard
+                || (this.selectedProperties.Count() == 0 && this.children.Values.All( n => n.isExpandedNavigationProperty)))
             {
                 return structuredType.NavigationProperties();
             }
@@ -374,7 +452,7 @@ namespace Microsoft.OData
             }
 
             // We cannot determine the selected stream properties without the user model. This means we won't be computing the missing stream properties.
-            // For reading we will report what's on the wire and for writing we just write what the user explicitely told us to write.
+            // For reading we will report what's on the wire and for writing we just write what the user explicitly told us to write.
             if (entityType == null)
             {
                 return EmptyStreamProperties;
@@ -505,20 +583,17 @@ namespace Microsoft.OData
 
         private bool IsValidExpandToken(string item)
         {
-            // Check #1: Expand token must contain '(', must be related to navigation property.
-            int idxRP = item.IndexOf('(');
-            if (idxRP == -1
-                || (this.structuredType != null &&
-                    !(this.structuredType.FindProperty(item.Substring(0, idxRP)) is IEdmNavigationProperty)
-                    )
-                )
+            // Check #1: Expand token must contain '(' and end with ')', must be related to navigation property.
+            int idxLP = item.IndexOf('(');
+            if (idxLP == -1
+                || !item.EndsWith(")", StringComparison.Ordinal)
+                || (this.structuredType != null && IsBoundOperationToken(item.Substring(0, idxLP))))
             {
-                // selected item does not contain '(',
-                // or is not navigation property (for example when an Action is selected).
+                // selected item is not properly parenthesized, or is an operation token.
                 return false;
             }
 
-            // Check #2: paretheses must be balanced.
+            // Check #2: parentheses must be balanced.
             int count = 0;
             foreach (char c in item)
             {
@@ -539,6 +614,39 @@ namespace Microsoft.OData
             }
 
             return count == 0;
+        }
+
+        /// <summary>
+        /// Checks the specified model and structuredType and see whether the token can be resolved to a bound operation name.
+        /// </summary>
+        /// <param name="token">The token to check.</param>
+        /// <returns>true if token can be matched a bound operation; false otherwise.</returns>
+        private bool IsBoundOperationToken(string token)
+        {
+            const char nameSpaceSeparator = '.';
+
+            if (this.edmModel == null)
+            {
+                return false;
+            }
+
+            bool found = false;
+            int idx = token.LastIndexOf(nameSpaceSeparator);
+            if (idx == -1)
+            {
+                // Token is in unqualified form, try matching the unqualified name of the bound operation.
+                found = this.edmModel.FindDeclaredBoundOperations(this.structuredType)
+                        .Any(op => op.Name.Equals(token, StringComparison.Ordinal));
+            }
+            else
+            {
+                // Qualified name: try to match bound and unbound operations
+                found = this.edmModel.FindBoundOperations(token, this.structuredType).Count() != 0
+                    || this.edmModel.FindDeclaredOperations(token).Count() != 0;
+
+            }
+
+            return found;
         }
 
         /// <summary>
@@ -585,20 +693,62 @@ namespace Microsoft.OData
             }
 
             bool isStar = string.CompareOrdinal(StarSegment, currentSegment) == 0;
-            bool isLastSegment = index == segments.Length - 1;
-            if (!isLastSegment)
-            {
-                if (isStar)
-                {
-                    throw new ODataException(ODataErrorStrings.SelectedPropertiesNode_StarSegmentNotLastSegment);
-                }
+            int idxLP = currentSegment.IndexOf('(');
 
-                SelectedPropertiesNode childNode = this.EnsureChildAnnotation(currentSegment);
-                childNode.ParsePathSegment(segments, index + 1);
+            if (idxLP != -1 && IsValidExpandToken(currentSegment))
+            {
+                string token = currentSegment.Substring(0, idxLP);
+                SelectedPropertiesNode childNode = this.EnsureChildAnnotation(token, /* isExpandedNavigationProperty */ true);
+                childNode.edmModel = this.edmModel;
+
+                if (idxLP < currentSegment.Length - 2)
+                {
+                    string clause = currentSegment.Substring(idxLP + 1, currentSegment.Length - idxLP - 2).Trim();
+                    if (!String.IsNullOrEmpty(clause))
+                    {
+                        // Setup the edm model and structured type for the child node before start parsing the select clause.
+                        IEdmNavigationProperty navProp = this.structuredType?.DeclaredNavigationProperties()
+                            ?.SingleOrDefault(p => p.Name.Equals(token, StringComparison.Ordinal));
+
+                        if (navProp?.Type != null)
+                        {
+                            // navigation property could be structural type or collection of structural type.
+                            IEdmStructuredType navPropStructuredType = navProp.Type.Definition as IEdmStructuredType;
+
+                            if (navPropStructuredType == null)
+                            {
+                                IEdmCollectionType collectionType = navProp.Type.Definition as IEdmCollectionType;
+                                navPropStructuredType = collectionType?.ElementType.Definition as IEdmStructuredType;
+                            }
+
+                            childNode.structuredType = navPropStructuredType;
+                        }
+
+                        childNode.Parse(clause);
+                    }
+                }
+                else
+                {
+                    childNode.selectionType = SelectionType.EntireSubtree;
+                }
             }
             else
             {
-                this.selectedProperties.Add(currentSegment);
+                bool isLastSegment = index == segments.Length - 1;
+                if (!isLastSegment)
+                {
+                    if (isStar)
+                    {
+                        throw new ODataException(ODataErrorStrings.SelectedPropertiesNode_StarSegmentNotLastSegment);
+                    }
+
+                    SelectedPropertiesNode childNode = this.EnsureChildAnnotation(currentSegment, false);
+                    childNode.ParsePathSegment(segments, index + 1);
+                }
+                else
+                {
+                    this.selectedProperties.Add(currentSegment);
+                }
             }
 
             this.hasWildcard |= isStar;
@@ -608,8 +758,10 @@ namespace Microsoft.OData
         /// Ensures that a child annotation for the specified segment name already exists; if not creates one.
         /// </summary>
         /// <param name="segmentName">The segment name to get the child annotation for.</param>
+        /// <param name="isExpandedNavigationProperty">Boolean flag indicating whether this is an expanded navigation property.</param>
+
         /// <returns>The existing or newly created child annotation for the <paramref name="segmentName"/>.</returns>
-        private SelectedPropertiesNode EnsureChildAnnotation(string segmentName)
+        private SelectedPropertiesNode EnsureChildAnnotation(string segmentName, bool isExpandedNavigationProperty)
         {
             Debug.Assert(segmentName != null, "segmentName != null");
 
@@ -621,7 +773,7 @@ namespace Microsoft.OData
             SelectedPropertiesNode childNode;
             if (!this.children.TryGetValue(segmentName, out childNode))
             {
-                childNode = new SelectedPropertiesNode(SelectionType.PartialSubtree);
+                childNode = new SelectedPropertiesNode(SelectionType.PartialSubtree, isExpandedNavigationProperty);
                 this.children.Add(segmentName, childNode);
             }
 
@@ -688,9 +840,9 @@ namespace Microsoft.OData
             List<string> rawSelect = selectList.ToList();
             rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
 
-            if (selectList.Count == 0)
+            if (selectList.Count == 0 && expandList.All( n => n.IsEntireSubtree()))
             {
-                return SelectedPropertiesNode.EntireSubtree;
+                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
             SelectedPropertiesNode node = new SelectedPropertiesNode(SelectionType.PartialSubtree)

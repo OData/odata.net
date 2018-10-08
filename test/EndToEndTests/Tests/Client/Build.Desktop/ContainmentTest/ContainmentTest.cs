@@ -697,15 +697,16 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         {
             Dictionary<string, int[]> testCases = new Dictionary<string, int[]>()
             {
-                { "Accounts(101)?$select=AccountInfo/FirstName, AccountInfo/LastName", new int[] {1, 0} },
-                { "Accounts(101)?$select=AccountID&$expand=MyPaymentInstruments($select=PaymentInstrumentID;$expand=TheStoredPI)", new int[]{7,4} },
+                { "Accounts(101)?$select=AccountInfo/FirstName, AccountInfo/LastName", new int[] {1, 0, 0} },
+                { "Accounts(101)?$select=AccountID&$expand=MyPaymentInstruments($select=PaymentInstrumentID;$expand=TheStoredPI)", new int[]{7,4,4} },
+                { "Accounts(101)?$expand=MyPaymentInstruments($select=PaymentInstrumentID,FriendlyName)", new int[]{4, 15, 4} },
 
-                //This case should work for minimal metadata:
-                { "Accounts(101)?$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 4} },
+                { "Accounts(101)?$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 4, 4} },
 
-                { "Accounts(101)?$expand=MyGiftCard", new int[] {2, 4} },
-                { "Accounts(101)?$expand=MyPaymentInstruments", new int[] {4, 15} },
-                { "Accounts(101)?$select=AccountID&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1}  }
+                { "Accounts(101)?$expand=MyGiftCard", new int[] {2, 4, 4} },
+                { "Accounts(101)?$expand=MyPaymentInstruments", new int[] {4, 15, 15} },
+                { "Accounts(101)?$select=AccountID&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1, 1}  },
+                { "Accounts(101)?$select=AccountID,MyGiftCard&$expand=MyGiftCard($select=GiftCardID)", new int[] {2, 1, 1}  },
             };
 
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -788,7 +789,11 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                             Assert.AreEqual(ODataReaderState.Completed, reader.State);
                             Assert.AreEqual(testCase.Value[0], entries.Count);
-                            Assert.AreEqual(testCase.Value[1], navigationLinks.Count);
+
+                            int expectedLinksCount = mimeType.Contains(MimeTypes.ODataParameterFullMetadata)
+                                ? testCase.Value[1]
+                                : testCase.Value[2];
+                            Assert.AreEqual(expectedLinksCount, navigationLinks.Count);
                         }
                     }
                 }

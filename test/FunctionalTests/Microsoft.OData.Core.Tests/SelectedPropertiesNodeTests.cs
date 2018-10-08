@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests.Evaluation
 {
     public class SelectedPropertiesNodeTests
     {
-        private static readonly SelectedPropertiesNode EntireSubtreeNode = SelectedPropertiesNode.EntireSubtree;
+        private static readonly SelectedPropertiesNode EntireSubtreeNode = SelectedPropertiesNode.Create(null);
         private static readonly SelectedPropertiesNode EmptyNode = SelectedPropertiesNode.Create(string.Empty);
 
         private EdmModel edmModel;
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void NoSelectClauseShouldIncludeEntireSubtree()
         {
-            SelectedPropertiesNode.EntireSubtree.Should().BeSameAsEntireSubtree().And.IncludeEntireSubtree(this.cityType);
+            SelectedPropertiesNode.EntireSubtree.Should().HaveEntireSubtree().And.IncludeEntireSubtree(this.cityType);
         }
 
         [Fact]
@@ -128,25 +128,25 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void SelectingANavigationShouldSelectTheEntireTree()
         {
-            SelectedPropertiesNode.Create("Districts").Should().HaveOnlyNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEntireSubtree());
+            SelectedPropertiesNode.Create("Districts").Should().HaveOnlyNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
 
         [Fact]
         public void SpecifyingTheSameNavigationTwiceShouldNotCauseDuplicates()
         {
-            SelectedPropertiesNode.Create("Districts,Districts").Should().HaveOnlyNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEntireSubtree());
+            SelectedPropertiesNode.Create("Districts,Districts").Should().HaveOnlyNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
 
         [Fact]
         public void SpecifyingAWildCardShouldNotCauseDuplicates()
         {
-            SelectedPropertiesNode.Create("Districts,*,Photo").Should().HaveStreams(this.cityType, "Photo").And.HaveNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEntireSubtree());
+            SelectedPropertiesNode.Create("Districts,*,Photo").Should().HaveStreams(this.cityType, "Photo").And.HaveNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
 
         [Fact]
         public void SelectingANavigationShouldSelectTheEntireTreeIfWildcardAlsoPresent()
         {
-            SelectedPropertiesNode.Create("Districts,Districts/*").Should().HaveOnlyNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEntireSubtree());
+            SelectedPropertiesNode.Create("Districts,Districts/*").Should().HaveOnlyNavigations(this.cityType, "Districts").And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
 
         [Fact]
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Tests.Evaluation
             SelectedPropertiesNode.Create("Districts,Districts/Thumbnail")
                 .Should()
                 .HaveOnlyNavigations(this.cityType, "Districts")
-                .And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEntireSubtree());
+                .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
 
         [Fact]
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Tests.Evaluation
             SelectedPropertiesNode.Create("*,Districts,Districts/*").Should()
                 .HaveStreams(this.cityType, "Photo")
                 .And.HaveNavigations(this.cityType, "Districts")
-                .And.HaveChild(this.cityType, "Districts", c => c.Should().BeSameAsEntireSubtree());
+                .And.HaveChild(this.cityType, "Districts", c => c.Should().HaveEntireSubtree());
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Tests.Evaluation
                     "Districts",
                     c => c.Should()
                         .HaveStreams(this.districtType, "Thumbnail")
-                        .And.HaveChild(this.districtType, "City", c2 => c2.Should().BeSameAsEntireSubtree()));
+                        .And.HaveChild(this.districtType, "City", c2 => c2.Should().HaveEntireSubtree()));
         }
 
         [Fact]
@@ -312,10 +312,10 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void CombiningEntireSubtreeWithAnythingShouldReturnEntireSubtree()
         {
-            SelectedPropertiesNode.CombineNodes(EntireSubtreeNode, EntireSubtreeNode).Should().BeSameAsEntireSubtree();
+            SelectedPropertiesNode.CombineNodes(EntireSubtreeNode, EntireSubtreeNode).Should().HaveEntireSubtree();
 
-            this.VerifyCombination(EmptyNode, EntireSubtreeNode, n => n.Should().BeSameAsEntireSubtree());
-            this.VerifyCombination(SelectedPropertiesNode.Create("*"), EntireSubtreeNode, n => n.Should().BeSameAsEntireSubtree());
+            this.VerifyCombination(EmptyNode, EntireSubtreeNode, n => n.Should().HaveEntireSubtree());
+            this.VerifyCombination(SelectedPropertiesNode.Create("*"), EntireSubtreeNode, n => n.Should().HaveEntireSubtree());
         }
 
         [Fact]
@@ -399,9 +399,9 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
-        public void SpecificActionWithParametersShouldBeSelected()
+        public void UnqualifiedUnboundActionWithParametersShouldNotBeSelected()
         {
-            SelectedPropertiesNode.Create("Action(Edm.Int32)").Should().HaveAction(this.cityType, this.action);
+            SelectedPropertiesNode.Create("Action(Edm.Int32)", this.cityType, this.edmModel).Should().NotHaveAction(this.cityType, this.action);
         }
 
         [Fact]
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void UnQualifiedNameWithParametersShouldNotIncludeActionOnOpenType()
         {
-            SelectedPropertiesNode.Create("Action(Edm.Int32)", this.openType).Should().NotHaveAction(this.openType, this.action);
+            SelectedPropertiesNode.Create("Action(Edm.Int32)", this.openType, this.edmModel).Should().NotHaveAction(this.openType, this.action);
         }
 
         [Fact]
@@ -429,28 +429,28 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
-        public void ExpandTokenForNavigationPropertyShouldHaveEntireSubtree()
+        public void ExpandTokenForNavigationPropertyShouldNotHaveEntireSubtree()
         {
-            SelectedPropertiesNode.Create("MetropolisNavigation(Thumbnail)", this.metropolisType).Should().HaveEntireSubtree();
+            SelectedPropertiesNode.Create("MetropolisNavigation(Thumbnail)", this.metropolisType, this.edmModel).Should().HaveEntireSubtree(false);
         }
 
        [Fact]
         public void SelectedPropertyAndExpandTokenShouldHavePartialSubtree()
         {
-            SelectedPropertiesNode.Create("MetropolisStream,MetropolisNavigation(Thumbnail)", this.metropolisType).Should().HaveEntireSubtree(false);
+            SelectedPropertiesNode.Create("MetropolisStream,MetropolisNavigation(Thumbnail)", this.metropolisType, this.edmModel).Should().HaveEntireSubtree(false);
             SelectedPropertiesNode.Create("MetropolisStream,MetropolisNavigation(Thumbnail)").Should().HaveEntireSubtree(false);
         }
 
         [Fact]
         public void ExpandTokenForCollectionOfNavigationPropertyShouldHaveEntireSubtree()
         {
-            SelectedPropertiesNode.Create("Districts()", this.cityType).Should().HaveEntireSubtree();
+            SelectedPropertiesNode.Create("Districts()", this.cityType, this.edmModel).Should().HaveEntireSubtree();
         }
 
         [Fact]
         public void InvalidExpandTokenShouldHavePartialSubtree()
         {
-            SelectedPropertiesNode.Create("FabrikamNavProp()", this.cityType).Should().HaveEntireSubtree(false);
+            SelectedPropertiesNode.Create("FabrikamNavProp()", this.cityType, this.edmModel).Should().HaveEntireSubtree();
         }
 
         [Fact]
@@ -462,7 +462,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void NamespaceAndContainerQualifiedNameWithParametersShouldIncludeAction()
         {
-            SelectedPropertiesNode.Create("TestModel.Action(Edm.Int32)").Should().HaveAction(this.cityType, this.action);
+            SelectedPropertiesNode.Create("TestModel.Action(Edm.Int32)", this.cityType, this.edmModel).Should().HaveAction(this.cityType, this.action);
         }
 
         [Fact]
@@ -534,8 +534,8 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetSelectedPropertiesForNavigationPropertyForNonEmptyNodeShouldAlwaysReturnEntireSubtreeWhenEntityTypeIsNull()
         {
-            EntireSubtreeNode.GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
-            SelectedPropertiesNode.Create("bar").GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().BeSameAs(EntireSubtreeNode);
+            EntireSubtreeNode.GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().HaveEntireSubtree();
+            SelectedPropertiesNode.Create("bar").GetSelectedPropertiesForNavigationProperty(structuredType: null, navigationPropertyName: "foo").Should().HaveEntireSubtree();
         }
 
         [Fact]
@@ -613,12 +613,6 @@ namespace Microsoft.OData.Tests.Evaluation
             return this.HaveNavigations(entityType, streamPropertyNames).And.NotHaveStreams(entityType);
         }
 
-        internal AndConstraint<SelectedPropertiesNodeAssertions> BeSameAsEntireSubtree()
-        {
-            this.Subject.Should().BeSameAs(EntireSubtreeNode);
-            return new AndConstraint<SelectedPropertiesNodeAssertions>(this);
-        }
-
         internal AndConstraint<SelectedPropertiesNodeAssertions> BeSameAsEmpty()
         {
             this.Subject.Should().BeSameAs(EmptyNode);
@@ -632,7 +626,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
             foreach (var navigation in entityType.NavigationProperties())
             {
-                this.Subject.As<SelectedPropertiesNode>().GetSelectedPropertiesForNavigationProperty(entityType, navigation.Name).Should().BeSameAsEntireSubtree();
+                this.Subject.As<SelectedPropertiesNode>().GetSelectedPropertiesForNavigationProperty(entityType, navigation.Name).Should().HaveEntireSubtree();
             }
 
             return new AndConstraint<SelectedPropertiesNodeAssertions>(this);

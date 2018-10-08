@@ -403,6 +403,8 @@ namespace Microsoft.OData
         /// <returns>The generated expand string.</returns>
         private static string ProcessSubExpand(string expandNode, string subExpand, ODataVersion version)
         {
+
+            // TODO: cleanup the version parameter.
             return expandNode + ODataConstants.ContextUriProjectionStart + subExpand + ODataConstants.ContextUriProjectionEnd;
         }
 
@@ -416,15 +418,6 @@ namespace Microsoft.OData
 
             if (selectList.Any())
             {
-                // https://github.com/OData/odata.net/issues/1104
-                // If the user explicitly selects and expands a nav prop, we should include both forms in contextUrl
-                // We can't, though, because SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary adds all of
-                // the expanded items to the select before it gets here, so we can't tell what is explicitly selected by the user.
-                foreach (var item in expandList)
-                {
-                    string expandNode = item.Substring(0, item.IndexOf(ODataConstants.ContextUriProjectionStart));
-                    selectList.Remove(expandNode);
-                }
 
                 currentExpandClause += String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
             }
