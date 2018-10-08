@@ -12,7 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.JsonLight;
 using Microsoft.OData.Metadata;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -538,7 +537,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // The "index + 1" is to move past the '(' and the '-2' accounts for the two paren characters.
-            string alias = segmentText.Substring(index + 1, segmentText.Length - UriQueryConstants.FilterSegment.Length - 2);
+            string filterExpression = segmentText.Substring(index + 1, segmentText.Length - UriQueryConstants.FilterSegment.Length - 2);
 
             // If the previous segment is a type segment, then the entity set has been casted and the filter expression should reflect the cast.
             TypeSegment typeSegment = this.parsedSegments.Last() as TypeSegment;
@@ -547,15 +546,10 @@ namespace Microsoft.OData.UriParser
             FilterClause filterClause = GenerateFilterClause(
                 lastNavigationSource,
                 typeSegment == null ? lastNavigationSource.EntityType() : typeSegment.TargetEdmType,
-                alias);
-            ParameterAliasNode aliasNode = filterClause.Expression as ParameterAliasNode;
-            if (aliasNode == null)
-            {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
-            }
+                filterExpression);
 
             // 4) Create filter segment with the validated expression and add it to parsed segments.
-            FilterSegment filterSegment = new FilterSegment(aliasNode, filterClause.RangeVariable, lastNavigationSource);
+            FilterSegment filterSegment = new FilterSegment(filterClause.Expression, filterClause.RangeVariable, lastNavigationSource);
             this.parsedSegments.Add(filterSegment);
 
             return true;

@@ -16,9 +16,9 @@ namespace Microsoft.OData.UriParser
     public sealed class FilterSegment : ODataPathSegment
     {
         /// <summary>
-        /// The filter path segment's alias.
+        /// The filter expression - this should evaluate to a single boolean value.
         /// </summary>
-        private readonly ParameterAliasNode parameterAlias;
+        private readonly SingleValueNode expression;
 
         /// <summary>
         /// The parameter for the alias which represents a single value from the collection.
@@ -31,21 +31,16 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmType bindingType;
 
         /// <summary>
-        /// String representing "$filter(expression)".
-        /// </summary>
-        private readonly string fullSegment;
-
-        /// <summary>
         /// Build a segment representing $filter.
         /// </summary>
-        /// <param name="parameterAlias">Corresponding parameter alias for the $filter path segment.</param>
+        /// <param name="expression">The filter expression - this should evaluate to a single boolean value.</param>
         /// <param name="rangeVariable">An expression that represents a single value from the collection.</param>
         /// <param name="navigationSource">The navigation source that this filter applies to.</param>
         /// <exception cref="System.ArgumentNullException">Throws if any input parameter is null.</exception>
         /// <remarks>$filter should not be applied on singletons or single entities.</remarks>
-        public FilterSegment(ParameterAliasNode parameterAlias, RangeVariable rangeVariable, IEdmNavigationSource navigationSource)
+        public FilterSegment(SingleValueNode expression, RangeVariable rangeVariable, IEdmNavigationSource navigationSource)
         {
-            ExceptionUtils.CheckArgumentNotNull(parameterAlias, "parameterAlias");
+            ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
             ExceptionUtils.CheckArgumentNotNull(navigationSource, "navigationSource");
 
@@ -55,27 +50,17 @@ namespace Microsoft.OData.UriParser
             this.TargetKind = RequestTargetKind.Resource;
             this.TargetEdmType = rangeVariable.TypeReference.Definition;
 
-            this.parameterAlias = parameterAlias;
+            this.expression = expression;
             this.rangeVariable = rangeVariable;
             this.bindingType = navigationSource.Type;
-            this.fullSegment = UriQueryConstants.FilterSegment + ExpressionConstants.SymbolOpenParen + parameterAlias.Alias
-                + ExpressionConstants.SymbolClosedParen;
         }
 
         /// <summary>
-        /// Gets the filter path segment's alias.
+        /// Gets the filter expression - this should evaluate to a single boolean value.
         /// </summary>
-        public ParameterAliasNode ParameterAlias
+        public SingleValueNode Expression
         {
-            get { return this.parameterAlias; }
-        }
-
-        /// <summary>
-        /// Gets the string representing "$filter(expression)".
-        /// </summary>
-        public string FullSegment
-        {
-            get { return this.fullSegment; }
+            get { return this.expression; }
         }
 
         /// <summary>
@@ -139,7 +124,7 @@ namespace Microsoft.OData.UriParser
 
             return otherSegment != null &&
                 otherSegment.TargetEdmNavigationSource == this.TargetEdmNavigationSource &&
-                otherSegment.ParameterAlias == this.ParameterAlias &&
+                otherSegment.Expression == this.Expression &&
                 otherSegment.ItemType == this.ItemType &&
                 otherSegment.RangeVariable == this.RangeVariable;
         }

@@ -99,7 +99,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
                     filterSegments.Count.Should().Be(1);
 
-                    filterSegments[0].ParameterAlias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
                     filterSegments.Count.Should().Be(1);
 
-                    filterSegments[0].ParameterAlias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
@@ -164,7 +164,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
                     filterSegments.Count.Should().Be(1);
-                    filterSegments[0].ParameterAlias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
+                    filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetEmployeeType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
                     filterSegments.Count.Should().Be(1);
-                    filterSegments[0].ParameterAlias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
+                    filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetEmployeeType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
                     filterSegments.Count.Should().Be(1);
-                    filterSegments[0].ParameterAlias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 
@@ -305,7 +305,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     List<FilterSegment> filterSegments = oDataPath.OfType<FilterSegment>().ToList();
                     filterSegments.Count.Should().Be(1);
-                    filterSegments[0].ParameterAlias.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    filterSegments[0].Expression.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
                     filterSegments[0].TargetEdmType.ToString().ShouldBeEquivalentTo(HardCodedTestModel.GetPersonType().ToString());
                     filterSegments[0].SingleResult.Should().BeFalse();
 

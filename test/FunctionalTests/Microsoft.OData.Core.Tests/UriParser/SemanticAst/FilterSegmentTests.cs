@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             FilterClause filterClause = CreateFilterClause(filterExpression);
 
             Action create = () => new FilterSegment(null, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: parameterAlias");
+            create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: expression");
         }
 
         [Fact]
@@ -33,9 +33,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             const string filterExpression = "@a1";
 
             FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
+            ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
 
-            Action create = () => new FilterSegment(alias, null, HardCodedTestModel.GetPet1Set());
+            Action create = () => new FilterSegment(expression, null, HardCodedTestModel.GetPet1Set());
             create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: rangeVariable");
         }
 
@@ -45,22 +45,35 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             const string filterExpression = "@a1";
 
             FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
+            ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
 
-            Action create = () => new FilterSegment(alias, filterClause.RangeVariable, null);
+            Action create = () => new FilterSegment(expression, filterClause.RangeVariable, null);
             create.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: navigationSource");
         }
 
         [Fact]
-        public void FilterSegmentWithAllParametersSuccessfully()
+        public void FilterSegmentWithAllParametersShouldConstructSuccessfully()
         {
             const string filterExpression = "@a1";
 
             FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
+            ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
+            FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
-            filterSegment.ParameterAlias.Equals(alias).Should().BeTrue();
+            filterSegment.Expression.Equals(expression).Should().BeTrue();
+            filterSegment.RangeVariable.Equals(filterClause.RangeVariable).Should().BeTrue();
+        }
+
+        [Fact]
+        public void FilterSegmentWithExpressionShouldConstructSuccessfully()
+        {
+            const string filterExpression = "ID eq 1";
+
+            FilterClause filterClause = CreateFilterClause(filterExpression);
+            BinaryOperatorNode expression = filterClause.Expression as BinaryOperatorNode;
+            FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
+
+            filterSegment.Expression.Equals(expression).Should().BeTrue();
             filterSegment.RangeVariable.Equals(filterClause.RangeVariable).Should().BeTrue();
         }
 
@@ -70,8 +83,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             const string filterExpression = "@a1";
 
             FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
+            ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
+            FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
             filterSegment.SingleResult.Should().BeFalse();
         }
@@ -82,8 +95,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             const string filterExpression = "@a1";
 
             FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
+            ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
+            FilterSegment filterSegment = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
             filterSegment.EdmType.Equals(filterClause.RangeVariable.TypeReference.Definition).Should().BeFalse();
         }
@@ -94,9 +107,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             const string filterExpression = "@a1";
 
             FilterClause filterClause = CreateFilterClause(filterExpression);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment1 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-            FilterSegment filterSegment2 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
+            ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
+            FilterSegment filterSegment1 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
+            FilterSegment filterSegment2 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
 
             filterSegment1.Equals(filterSegment2).Should().BeTrue();
             filterSegment2.Equals(filterSegment1).Should().BeTrue();
@@ -110,10 +123,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
 
             FilterClause filterClause1 = CreateFilterClause(filterExpression1);
             FilterClause filterClause2 = CreateFilterClause(filterExpression2);
-            ParameterAliasNode alias1 = filterClause1.Expression as ParameterAliasNode;
-            ParameterAliasNode alias2 = filterClause2.Expression as ParameterAliasNode;
-            FilterSegment filterSegment1 = new FilterSegment(alias1, filterClause1.RangeVariable, HardCodedTestModel.GetPet1Set());
-            FilterSegment filterSegment2 = new FilterSegment(alias2, filterClause2.RangeVariable, HardCodedTestModel.GetPet1Set());
+            ParameterAliasNode expression1 = filterClause1.Expression as ParameterAliasNode;
+            ParameterAliasNode expression2 = filterClause2.Expression as ParameterAliasNode;
+            FilterSegment filterSegment1 = new FilterSegment(expression1, filterClause1.RangeVariable, HardCodedTestModel.GetPet1Set());
+            FilterSegment filterSegment2 = new FilterSegment(expression2, filterClause2.RangeVariable, HardCodedTestModel.GetPet1Set());
 
             filterSegment1.Equals(filterSegment2).Should().BeFalse();
             filterSegment2.Equals(filterSegment1).Should().BeFalse();
@@ -125,9 +138,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             const string filterExpression1 = "@a1";
 
             FilterClause filterClause = CreateFilterClause(filterExpression1);
-            ParameterAliasNode alias = filterClause.Expression as ParameterAliasNode;
-            FilterSegment filterSegment1 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
-            FilterSegment filterSegment2 = new FilterSegment(alias, filterClause.RangeVariable, HardCodedTestModel.GetPeopleSet());
+            ParameterAliasNode expression = filterClause.Expression as ParameterAliasNode;
+            FilterSegment filterSegment1 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPet1Set());
+            FilterSegment filterSegment2 = new FilterSegment(expression, filterClause.RangeVariable, HardCodedTestModel.GetPeopleSet());
 
             filterSegment1.Equals(filterSegment2).Should().BeFalse();
             filterSegment2.Equals(filterSegment1).Should().BeFalse();
