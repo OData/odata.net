@@ -6346,12 +6346,12 @@ public sealed class Microsoft.OData.UriParser.FilterClause {
 }
 
 public sealed class Microsoft.OData.UriParser.FilterSegment : Microsoft.OData.UriParser.ODataPathSegment {
-	public FilterSegment (Microsoft.OData.UriParser.ParameterAliasNode parameterAlias, Microsoft.OData.UriParser.RangeVariable rangeVariable, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public FilterSegment (Microsoft.OData.UriParser.SingleValueNode expression, Microsoft.OData.UriParser.RangeVariable rangeVariable, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
+	Microsoft.OData.UriParser.SingleValueNode Expression  { public get; }
 	string FullSegment  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
-	Microsoft.OData.UriParser.ParameterAliasNode ParameterAlias  { public get; }
 	Microsoft.OData.UriParser.RangeVariable RangeVariable  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
