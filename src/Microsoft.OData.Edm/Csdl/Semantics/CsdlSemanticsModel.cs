@@ -151,6 +151,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.schemata.Select(s => s.Namespace); }
         }
 
+        public IDictionary<string, List<CsdlSemanticsAnnotations>> OutOfLineAnnotations
+        {
+            get
+            {
+                return outOfLineAnnotations;
+            }
+        }
+
         public override IEnumerable<IEdmVocabularyAnnotation> VocabularyAnnotations
         {
             get
