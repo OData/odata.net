@@ -41,6 +41,9 @@ namespace Microsoft.OData
         /// <summary>The type of the current node.</summary>
         private readonly SelectionType selectionType;
 
+        /// <summary>The Edm structured type of the current node.</summary>
+        private readonly IEdmStructuredType structuredType;
+
         /// <summary>The separator character used to separate property names in a path.</summary>
         private const char PathSeparator = '/';
 
@@ -68,10 +71,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="selectClause">The string representation of the selected property hierarchy using
         /// the same format as in the $select query option.</param>
-        internal SelectedPropertiesNode(string selectClause)
+        /// <param name="structuredType">The Edm structural type of the node.</param>
+        internal SelectedPropertiesNode(string selectClause, IEdmStructuredType structuredType)
             : this(SelectionType.PartialSubtree)
         {
             Debug.Assert(!string.IsNullOrEmpty(selectClause), "!string.IsNullOrEmpty(selectClause)");
+
+            this.structuredType = structuredType;
 
             // NOTE: The select clause is a list of paths separated by comma (',').
             string[] paths = selectClause.Split(ItemSeparator);
@@ -80,6 +86,14 @@ namespace Microsoft.OData
             {
                 string[] segments = t.Split(PathSeparator);
                 this.ParsePathSegment(segments, 0);
+            }
+
+            if (this.selectedProperties != null
+                && this.selectedProperties.Count > 0
+                && this.selectedProperties.All(IsValidExpandToken))
+            {
+                // select list is not empty and only contains expand tokens
+                this.selectionType = SelectionType.EntireSubtree;
             }
         }
 
@@ -115,11 +129,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Creates a node from the given raw $select query option value.
+        /// Creates a node from the given raw $select query option value and structural type information.
         /// </summary>
         /// <param name="selectQueryOption">The value of the $select query option.</param>
+        /// <param name="structuredType">The structural type of this node.</param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
-        internal static SelectedPropertiesNode Create(string selectQueryOption)
+        internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType)
         {
             if (selectQueryOption == null)
             {
@@ -134,7 +149,17 @@ namespace Microsoft.OData
                 return Empty;
             }
 
-            return new SelectedPropertiesNode(selectQueryOption);
+            return new SelectedPropertiesNode(selectQueryOption, structuredType);
+        }
+
+        /// <summary>
+        /// Creates a node from the given raw $select query option value without structural type information.
+        /// </summary>
+        /// <param name="selectQueryOption">The value of the $select query option.</param>
+        /// <returns>A tree representation of the selected properties specified in the query option.</returns>
+        internal static SelectedPropertiesNode Create(string selectQueryOption)
+        {
+            return Create(selectQueryOption, /*structuredType*/ null);
         }
 
         /// <summary>
@@ -402,6 +427,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Returns whether the selection type of this node is <code>SelectionType.EntireSubtree</code>.
+        /// </summary>
+        /// <return><c>true</c> if entire subtree is selected; otherwise <c>false</c>.</return>
+        internal bool IsEntireSubtree()
+        {
+            return this.selectionType == SelectionType.EntireSubtree;
+        }
+
+        /// <summary>
         /// Gets an enumerable containing the given type and all of its base/ancestor types.
         /// </summary>
         /// <param name="structuredType">The starting resource type. Will be included in the returned enumeration.</param>
@@ -467,6 +501,44 @@ namespace Microsoft.OData
             yield return qualifiedContainerName + StarSegment;
             yield return qualifiedContainerName + operationName;
             yield return qualifiedContainerName + operationNameWithParameters;
+        }
+
+        private bool IsValidExpandToken(string item)
+        {
+            // Check #1: Expand token must contain '(', must be related to navigation property.
+            int idxRP = item.IndexOf('(');
+            if (idxRP == -1
+                || (this.structuredType != null &&
+                    !(this.structuredType.FindProperty(item.Substring(0, idxRP)) is IEdmNavigationProperty)
+                    )
+                )
+            {
+                // selected item does not contain '(',
+                // or is not navigation property (for example when an Action is selected).
+                return false;
+            }
+
+            // Check #2: paretheses must be balanced.
+            int count = 0;
+            foreach (char c in item)
+            {
+                if (c == '(')
+                {
+                    ++count;
+                }
+                else if (c == ')')
+                {
+                    --count;
+                }
+
+                if (count < 0)
+                {
+                    // Malformed parentheses detected ==> not expand token.
+                    return false;
+                }
+            }
+
+            return count == 0;
         }
 
         /// <summary>
