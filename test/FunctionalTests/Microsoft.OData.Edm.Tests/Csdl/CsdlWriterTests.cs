@@ -462,7 +462,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         #region Optional Parameters
 
         [Fact]
-        public void ShouldWriteOptionalParameters()
+        public void ShouldWriteInLineOptionalParameters()
         {
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
@@ -501,6 +501,112 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             function.AddParameter(optionalParamWithDefault);
             model.AddElement(function);
             model.AddEntityContainer("test", "Default").AddFunctionImport("TestFunction", function);
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
+        public void ShouldWriteOutofLineOptionalParameters()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<Function Name=\"TestFunction\">" +
+                    "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                  "</Function>" +
+                  "<Annotations Target=\"NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParam\">" +
+                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                     "<Record />" +
+                  "</Annotation>" +
+                 "</Annotations>" +
+                 "<Annotations Target=\"NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParamWithDefault\">" +
+                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                     "<Record Type=\"Org.OData.Core.V1.OptionalParameterType\">" +
+                       "<PropertyValue Property=\"DefaultValue\" String=\"Smith\" />" +
+                     "</Record>" +
+                  "</Annotation>" +
+                 "</Annotations>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            var model = new EdmModel();
+            var function = new EdmFunction("NS", "TestFunction", stringTypeReference);
+            var requiredParam = new EdmOperationParameter(function, "requiredParam", stringTypeReference);
+            var optionalParam = new EdmOptionalParameter(function, "optionalParam", stringTypeReference, null);
+            var optionalParamWithDefault = new EdmOptionalParameter(function, "optionalParamWithDefault", stringTypeReference, "Smith");
+            function.AddParameter(requiredParam);
+            function.AddParameter(optionalParam);
+            function.AddParameter(optionalParamWithDefault);
+            model.AddElement(function);
+
+            // parameter without default value
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(optionalParam, CoreVocabularyModel.OptionalParameterTerm, new EdmRecordExpression());
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
+            // parameter with default value
+            IEdmComplexType optionalParameterType = CoreVocabularyModel.Instance.FindDeclaredType("Org.OData.Core.V1.OptionalParameterType") as IEdmComplexType;
+            Assert.NotNull(optionalParameterType);
+
+            IEdmRecordExpression optionalParameterRecord = new EdmRecordExpression(
+                    new EdmComplexTypeReference(optionalParameterType, false),
+                    new EdmPropertyConstructor("DefaultValue", new EdmStringConstant("Smith")));
+            annotation = new EdmVocabularyAnnotation(optionalParamWithDefault, CoreVocabularyModel.OptionalParameterTerm, optionalParameterRecord);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
+            string csdlStr = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(expected, csdlStr);
+        }
+
+        [Fact]
+        public void ShouldWriteOutOfLineOptionalParametersOverwriteInLineOptionalParameter()
+        {
+            string expected =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<Function Name=\"TestFunction\">" +
+                    "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                  "</Function>" +
+                  "<Annotations Target=\"NS.TestFunction(Edm.String)/optionalParamWithDefault\">" +
+                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                     "<Record Type=\"Org.OData.Core.V1.OptionalParameterType\">" +
+                       "<PropertyValue Property=\"DefaultValue\" String=\"OutofLineValue\" />" +
+                     "</Record>" +
+                  "</Annotation>" +
+                 "</Annotations>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            var model = new EdmModel();
+            var function = new EdmFunction("NS", "TestFunction", stringTypeReference);
+            var optionalParamWithDefault = new EdmOptionalParameter(function, "optionalParamWithDefault", stringTypeReference, "InlineDefaultValue");
+            function.AddParameter(optionalParamWithDefault);
+            model.AddElement(function);
+
+            // parameter with default value
+            IEdmComplexType optionalParameterType = CoreVocabularyModel.Instance.FindDeclaredType("Org.OData.Core.V1.OptionalParameterType") as IEdmComplexType;
+            Assert.NotNull(optionalParameterType);
+
+            IEdmRecordExpression optionalParameterRecord = new EdmRecordExpression(
+                    new EdmComplexTypeReference(optionalParameterType, false),
+                    new EdmPropertyConstructor("DefaultValue", new EdmStringConstant("OutofLineValue")));
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(optionalParamWithDefault, CoreVocabularyModel.OptionalParameterTerm, optionalParameterRecord);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
             string csdlStr = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(expected, csdlStr);
         }
