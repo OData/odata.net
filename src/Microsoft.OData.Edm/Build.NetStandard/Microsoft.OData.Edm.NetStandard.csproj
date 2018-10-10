@@ -1249,6 +1249,9 @@
     <Compile Include="..\Vocabularies\CoreVocabularyModel.cs">
       <Link>Vocabularies\CoreVocabularyModel.cs</Link>
     </Compile>
+    <Compile Include="..\Vocabularies\ValidationVocabularyModel.cs">
+      <Link>Vocabularies\ValidationVocabularyModel.cs</Link>
+    </Compile>
     <Compile Include="..\Vocabularies\EdmExpressionEvaluator.cs">
       <Link>Vocabularies\EdmExpressionEvaluator.cs</Link>
     </Compile>
@@ -1533,6 +1536,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\Vocabularies\CoreVocabularies.xml">
       <Link>Vocabularies\CoreVocabularies.xml</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Vocabularies\ValidationVocabularies.xml">
+      <Link>Vocabularies\ValidationVocabularies.xml</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />
