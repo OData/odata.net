@@ -346,6 +346,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\CoreVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\CoreVocabularyModel.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\ValidationVocabularyModel.cs">
+      <Link>Microsoft\OData\Edm\Vocabularies\ValidationVocabularyModel.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AlternateKeysVocabularyModel.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\AlternateKeysVocabularyModel.cs</Link>
     </Compile>
@@ -1499,6 +1502,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\AuthorizationVocabularies.xml">
       <LogicalName>AuthorizationVocabularies.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(EdmLibCrossTargettingSourcePath)\Vocabularies\ValidationVocabularies.xml">
+      <LogicalName>ValidationVocabularies.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

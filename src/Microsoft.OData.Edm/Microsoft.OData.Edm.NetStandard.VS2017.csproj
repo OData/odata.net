@@ -36,6 +36,7 @@
     <None Remove="Vocabularies\AuthorizationVocabularies.xml" />
     <None Remove="Vocabularies\CapabilitiesVocabularies.xml" />
     <None Remove="Vocabularies\CoreVocabularies.xml" />
+    <None Remove="Vocabularies\ValidationVocabularies.xml" />
     <Compile Remove="Csdl\Parsing\CsdlDocumentParser.cs" />
     <Compile Remove="Microsoft.OData.Edm.cs" />
     <Compile Remove="Parameterized.Microsoft.OData.Edm.cs" />
@@ -108,6 +109,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Vocabularies\AuthorizationVocabularies.xml">
       <LogicalName>AuthorizationVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\ValidationVocabularies.xml">
+      <LogicalName>ValidationVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
