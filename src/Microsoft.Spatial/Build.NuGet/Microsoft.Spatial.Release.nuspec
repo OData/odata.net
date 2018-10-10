@@ -10,9 +10,9 @@
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <summary>Contains classes and methods that facilitate geography and geometry spatial operations. Supports OData v4 only.</summary>
-    <description>Contains classes and methods that facilitate geography and geometry spatial operations. Support OData v4 only. Targets .NET Platform Standard 1.1.
-OData .NET library is open source at http://github.com/OData/odata.net</description>
+    <summary>Contains classes and methods that facilitate geography and geometry spatial operations.</summary>
+    <description>Contains classes and methods that facilitate geography and geometry spatial operations. Targets .NET Platform Standard 1.1.
+OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://odata.github.io/odata.net.</description>
     <releaseNotes>http://odata.github.io/odata.net/v7/#ODL-$VersionFullSemantic$</releaseNotes>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
   </metadata>
