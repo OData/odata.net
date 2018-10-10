@@ -60,6 +60,11 @@ namespace Microsoft.OData.Edm
                 this.referencedEdmModels.Add(AuthorizationVocabularyModel.Instance);
             }
 
+            if (ValidationVocabularyModel.Instance != null)
+            {
+                this.referencedEdmModels.Add(ValidationVocabularyModel.Instance);
+            }
+
             this.annotationsManager = annotationsManager;
         }
 
