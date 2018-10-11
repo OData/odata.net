@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests.Evaluation
 {
     public class SelectedPropertiesNodeTests
     {
-        private static readonly SelectedPropertiesNode EntireSubtreeNode = SelectedPropertiesNode.Create(null);
+        private static readonly SelectedPropertiesNode EntireSubtreeNode = SelectedPropertiesNode.Create((string)null);
         private static readonly SelectedPropertiesNode EmptyNode = SelectedPropertiesNode.Create(string.Empty);
 
         private EdmModel edmModel;

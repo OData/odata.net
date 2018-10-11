@@ -1019,12 +1019,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void MixOfSelectionTypesShouldWork()
         {
             const string select = "Name,Birthdate,MyAddress,Fully.Qualified.Namespace.*,MyLions";
-            const string expectedSelect = "Name,Birthdate,MyAddress,Fully.Qualified.Namespace.*,MyLions";
             const string expand = "MyDog";
             var results = RunParseSelectExpandAndAssertPaths(
                 select,
                 expand,
-                expectedSelect,
+                select,
                 expand,
                 HardCodedTestModel.GetPersonType(),
                 null);
@@ -1171,11 +1170,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string expandClauseText = "MyDog($select=Color;$expand=MyPeople)";
             const string selectClauseText = "";
-            const string expectedExpandClauseText = "MyDog($select=Color;$expand=MyPeople)";
-            const string expectedSelectClause = "";
             var results = RunParseSelectExpand(selectClauseText, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            AssertSelectString(expectedSelectClause, results);
-            AssertExpandString(expectedExpandClauseText, results);
+            AssertSelectString(selectClauseText, results);
+            AssertExpandString(expandClauseText, results);
         }
 
         [Fact]

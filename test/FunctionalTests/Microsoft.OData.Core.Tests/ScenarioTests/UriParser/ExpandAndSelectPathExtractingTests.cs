@@ -228,16 +228,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string selectClauseText = "Navigation2";
             const string expandClauseText = "Navigation1";
-            const string expectedSelectClause = "Navigation2";
-            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: expectedSelectClause, expectedExpandClauseFromOM: "Navigation1");
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: selectClauseText, expectedExpandClauseFromOM: "Navigation1");
         }
 
         [Fact]
         public void ExpandNavigationThatIsNotSelectedInNonTopLevelAutomaticallySelectsLink()
         {
             const string expandClauseText = "Navigation1($select=Navigation1;$expand=Navigation2)";
-            const string expectedExpandClauseText = "Navigation1($select=Navigation1;$expand=Navigation2)";
-            this.ParseAndExtract(selectClauseText: null, expandClauseText: expandClauseText, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: expectedExpandClauseText);
+            this.ParseAndExtract(selectClauseText: null, expandClauseText: expandClauseText, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: expandClauseText);
         }
 
         [Fact]

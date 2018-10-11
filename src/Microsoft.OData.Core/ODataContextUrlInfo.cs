@@ -287,7 +287,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand, version);
+                    return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
                 }
             }
 
@@ -379,14 +379,13 @@ namespace Microsoft.OData
         /// Build the expand clause for a given level in the selectExpandClause
         /// </summary>
         /// <param name="selectExpandClause">the current level select expand clause</param>
-        /// <param name="version">OData Version of the response</param>
         /// <returns>the select and expand segment for context url in this level.</returns>
-        private static string CreateSelectExpandContextUriSegment(SelectExpandClause selectExpandClause, ODataVersion version)
+        private static string CreateSelectExpandContextUriSegment(SelectExpandClause selectExpandClause)
         {
             if (selectExpandClause != null)
             {
                 string contextUri;
-                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, version, out contextUri);
+                selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out contextUri);
                 if (!string.IsNullOrEmpty(contextUri))
                 {
                     return ODataConstants.ContextUriProjectionStart + contextUri + ODataConstants.ContextUriProjectionEnd;
@@ -399,12 +398,10 @@ namespace Microsoft.OData
         /// <summary>Process sub expand node, contact with subexpand result</summary>
         /// <param name="expandNode">The current expanded node.</param>
         /// <param name="subExpand">Generated sub expand node.</param>
-        /// <param name="version">OData Version of the generated response.</param>
         /// <returns>The generated expand string.</returns>
-        private static string ProcessSubExpand(string expandNode, string subExpand, ODataVersion version)
+        private static string ProcessSubExpand(string expandNode, string subExpand)
         {
 
-            // TODO: cleanup the version parameter.
             return expandNode + ODataConstants.ContextUriProjectionStart + subExpand + ODataConstants.ContextUriProjectionEnd;
         }
 

@@ -205,9 +205,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Creates a node from the given raw $select query option value and structural type information.
+        /// Creates a node from the given raw $select query option value, structural type information and service model.
         /// </summary>
         /// <param name="selectQueryOption">The value of the $select query option.</param>
+        /// <param name="structuredType">The structured type of this node.</param>
         /// <param name="edmModel">The Edm model.</param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
         internal static SelectedPropertiesNode Create(string selectQueryOption, IEdmStructuredType structuredType, IEdmModel edmModel)
@@ -242,16 +243,17 @@ namespace Microsoft.OData
         /// Creates a node from the given SelectExpandClause.
         /// </summary>
         /// <param name="selectExpandClause">The value of the $select query option.</param>
-        /// <param name="version">OData version</param>
         /// <returns>A tree representation of the selected properties specified in the query option.</returns>
-        internal static SelectedPropertiesNode Create(SelectExpandClause selectExpandClause, ODataVersion version)
+        internal static SelectedPropertiesNode Create(SelectExpandClause selectExpandClause)
         {
-            if (selectExpandClause.AllSelected)
+            if (selectExpandClause.AllSelected 
+            && selectExpandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().All(_ => _.SelectAndExpand.AllSelected))
             {
+                // All items are selected and all expanded entities are all-selected.
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
 
-            return CreateFromSelectExpandClause(selectExpandClause, version);
+            return CreateFromSelectExpandClause(selectExpandClause);
         }
 
         /// <summary>
@@ -635,6 +637,9 @@ namespace Microsoft.OData
             if (idx == -1)
             {
                 // Token is in unqualified form, try matching the unqualified name of the bound operation.
+                // N.B.: Operation name should be always name space qualified per current OData spec. The older
+                // version of the library returns unqualified. We should fix the library such that it no longer
+                // returns unqualified names in context url.
                 found = this.edmModel.FindDeclaredBoundOperations(this.structuredType)
                         .Any(op => op.Name.Equals(token, StringComparison.Ordinal));
             }
@@ -643,7 +648,6 @@ namespace Microsoft.OData
                 // Qualified name: try to match bound and unbound operations
                 found = this.edmModel.FindBoundOperations(token, this.structuredType).Count() != 0
                     || this.edmModel.FindDeclaredOperations(token).Count() != 0;
-
             }
 
             return found;
@@ -713,15 +717,7 @@ namespace Microsoft.OData
                         if (navProp?.Type != null)
                         {
                             // navigation property could be structural type or collection of structural type.
-                            IEdmStructuredType navPropStructuredType = navProp.Type.Definition as IEdmStructuredType;
-
-                            if (navPropStructuredType == null)
-                            {
-                                IEdmCollectionType collectionType = navProp.Type.Definition as IEdmCollectionType;
-                                navPropStructuredType = collectionType?.ElementType.Definition as IEdmStructuredType;
-                            }
-
-                            childNode.structuredType = navPropStructuredType;
+                            childNode.structuredType = navProp.Type.Definition.AsElementType() as IEdmStructuredType;
                         }
 
                         childNode.Parse(clause);
@@ -807,21 +803,19 @@ namespace Microsoft.OData
 
         /// <summary>Create SelectedPropertiesNode from SelectExpandClause.</summary>
         /// <param name="selectExpandClause">The SelectExpandClause representing $select and $expand clauses.</param>
-        /// <param name="version">OData version</param>
         /// <returns>SelectedPropertiesNode generated using <paramref name="selectExpandClause"/></returns>
-        private static SelectedPropertiesNode CreateFromSelectExpandClause(SelectExpandClause selectExpandClause, ODataVersion version)
+        private static SelectedPropertiesNode CreateFromSelectExpandClause(SelectExpandClause selectExpandClause)
         {
             SelectedPropertiesNode node;
-            selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, version, out node);
+            selectExpandClause.Traverse(ProcessSubExpand, CombineSelectAndExpandResult, out node);
             return node;
         }
 
         /// <summary>Process sub expand node, set name for the node.</summary>
         /// <param name="nodeName">Node name for the subexpandnode.</param>
         /// <param name="subExpandNode">Generated sub expand node.</param>
-        /// <param name="version">OData version.</param>
         /// <returns>The sub expanded node passed in.</returns>
-        private static SelectedPropertiesNode ProcessSubExpand(string nodeName, SelectedPropertiesNode subExpandNode, ODataVersion version)
+        private static SelectedPropertiesNode ProcessSubExpand(string nodeName, SelectedPropertiesNode subExpandNode)
         {
             if (subExpandNode != null)
             {

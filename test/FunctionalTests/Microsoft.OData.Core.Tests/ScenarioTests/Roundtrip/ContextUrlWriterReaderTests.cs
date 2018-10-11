@@ -62,6 +62,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
     public class ContextUrlWriterReaderTests
     {
+        private static readonly ODataVersion[] Versions = new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 };
+
         private const string TestNameSpace = "Microsoft.OData.Tests.ScenarioTests.Roundtrip";
         private const string TestContainerName = "InMemoryEntities";
         private const string TestBaseUri = "http://www.example.com/";
@@ -736,40 +738,43 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         // V4 Protocol Spec Chapter 10.9: Collection of Projected Expanded Entities (not contain select)
         // Sample Request: http://host/service/Employees?$expand=Company
         // Context Url in Response: http://host/service/$metadata#Employees(Company())
-        [Theory]
-        [InlineData(ODataVersion.V4, "\"{0}$metadata#Employees(AssociatedCompany())\"")]
-        [InlineData(ODataVersion.V401, "\"{0}$metadata#Employees(AssociatedCompany())\"")]
-        public void CollectionOfExpandedEntities(ODataVersion version, string contextString)
+        [Fact]
+        public void CollectionOfExpandedEntities()
         {
-            foreach (ODataFormat mimeType in mimeTypes)
+            string contextString = "\"{0}$metadata#Employees(AssociatedCompany())\"";
+            foreach (ODataVersion version in Versions)
             {
-                string payload, contentType;
-                this.WriteAndValidateContextUri(mimeType, model, omWriter =>
+                foreach (ODataFormat mimeType in mimeTypes)
                 {
-                    var selectExpandClause = new ODataQueryOptionParser(this.model, this.employeeType, this.employeeSet, new Dictionary<string, string> { { "$expand", "AssociatedCompany" }, { "$select", null } }).ParseSelectAndExpand();
-
-                    omWriter.Settings.ODataUri = new ODataUri()
+                    string payload, contentType;
+                    this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                     {
-                        ServiceRoot = this.testServiceRootUri,
-                        SelectAndExpand = selectExpandClause
-                    };
+                        var selectExpandClause = new ODataQueryOptionParser(this.model, this.employeeType, this.employeeSet, new Dictionary<string, string> { { "$expand", "AssociatedCompany" }, { "$select", null } }).ParseSelectAndExpand();
 
-                    omWriter.Settings.Version = version;
+                        omWriter.Settings.ODataUri = new ODataUri()
+                        {
+                            ServiceRoot = this.testServiceRootUri,
+                            SelectAndExpand = selectExpandClause
+                        };
 
-                    var writer = omWriter.CreateODataResourceSetWriter(this.employeeSet, this.employeeType);
-                    var feed = new ODataResourceSet();
-                    feed.Id = new Uri("urn:test");
-                    writer.WriteStart(feed);
-                    writer.WriteEnd();
-                }, string.Format(contextString, TestBaseUri), out payload, out contentType);
+                        omWriter.Settings.Version = version;
 
-                this.ReadPayload(payload, contentType, model, omReader =>
-                {
-                    var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
-                    while (reader.Read()) { }
-                    Assert.Equal(ODataReaderState.Completed, reader.State);
-                }, version: version);
+                        var writer = omWriter.CreateODataResourceSetWriter(this.employeeSet, this.employeeType);
+                        var feed = new ODataResourceSet();
+                        feed.Id = new Uri("urn:test");
+                        writer.WriteStart(feed);
+                        writer.WriteEnd();
+                    }, string.Format(contextString, TestBaseUri), out payload, out contentType);
+
+                    this.ReadPayload(payload, contentType, model, omReader =>
+                    {
+                        var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
+                        while (reader.Read()) { }
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
+                    }, version: version);
+                }
             }
+
         }
 
         // V4 Protocol Spec Chapter 10.9: Collection of Projected Expanded Entities (not contain select)
