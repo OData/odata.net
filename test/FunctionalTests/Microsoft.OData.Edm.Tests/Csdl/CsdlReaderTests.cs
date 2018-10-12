@@ -672,14 +672,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 @"<EnumType Name=""Color"" >
   <Member Name=""Red"" Value=""1"" >
     <Annotation String=""Inline Description"" Term=""Org.OData.Core.V1.LongDescription""/>
-    <Annotation String=""Inline FooBar"" Term=""NS.FooBar""/>
+    <Annotation String=""Inline MyTerm Value"" Term=""NS.MyTerm""/>
   </Member>
   <Member Name=""Blue"" Value=""2"" />
 </EnumType>
-<Term Name=""FooBar"" Type=""Edm.String""/>
+<Term Name=""MyTerm"" Type=""Edm.String""/>
 <Annotations Target=""NS.Color/Blue"" >
   <Annotation String=""OutOfLine Description"" Term=""Org.OData.Core.V1.LongDescription""/>
-  <Annotation String=""OutOfLine FooBar"" Term=""NS.FooBar""/>
+  <Annotation String=""OutOfLine MyTerm Value"" Term=""NS.MyTerm""/>
 </Annotations>";
 
             IEdmModel model = GetEdmModel(types: types);
@@ -688,7 +688,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var color = model.SchemaElements.OfType<IEdmEnumType>().FirstOrDefault(c => c.Name == "Color");
             Assert.NotNull(color);
 
-            IEdmTerm fooBarTerm = model.FindDeclaredTerm("NS.FooBar");
+            IEdmTerm fooBarTerm = model.FindDeclaredTerm("NS.MyTerm");
             Assert.NotNull(fooBarTerm);
 
             // Red
@@ -698,7 +698,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("Inline Description", redAnnotation);
 
             redAnnotation = GetStringAnnotation(model, red, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.Inline);
-            Assert.Equal("Inline FooBar", redAnnotation);
+            Assert.Equal("Inline MyTerm Value", redAnnotation);
 
             // Blue
             var blue = color.Members.FirstOrDefault(c => c.Name == "Blue");
@@ -707,10 +707,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("OutOfLine Description", blueAnnotation);
 
             blueAnnotation = GetStringAnnotation(model, blue, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
-            Assert.Equal("OutOfLine FooBar", blueAnnotation);
-
-            blueAnnotation = GetStringAnnotation(model, blue, fooBarTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
-            Assert.Equal("OutOfLine FooBar", blueAnnotation);
+            Assert.Equal("OutOfLine MyTerm Value", blueAnnotation);
         }
 
         private string GetStringAnnotation(IEdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, EdmVocabularyAnnotationSerializationLocation location)
