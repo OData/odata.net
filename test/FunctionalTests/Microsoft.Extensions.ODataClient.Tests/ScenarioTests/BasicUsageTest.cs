@@ -14,13 +14,13 @@ namespace Microsoft.Extensions.ODataClient.Tests.Netcore.ScenarioTests
     public class BasicUsageTest
     {
         [Fact]
-        public async Task TestHappyCase()
+        public void TestHappyCase()
         {
             ServiceCollection sc = new ServiceCollection();
             var startup = new Startup();
             var sp = startup.ConfigureServices(sc);
             var controller = sp.GetRequiredService<VerificationController>();
-            await controller.TestHappyCase();
+            controller.TestHappyCase();
         }
     }
 }

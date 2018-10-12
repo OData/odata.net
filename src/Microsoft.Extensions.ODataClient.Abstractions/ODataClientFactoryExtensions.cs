@@ -32,9 +32,9 @@ namespace Microsoft.Extensions.ODataClient
         /// as desired.
         /// </para>
         /// </remarks>
-        public static T CreateClient<T>(this IODataClientFactory<T> factory, Uri serviceRoot) where T : DataServiceContext
+        public static T CreateClient<T>(this IODataClientFactory factory, Uri serviceRoot) where T : DataServiceContext
         {
-            return factory.CreateClient(serviceRoot, ODataClientOptions.DefaultName);
+            return factory.CreateClient<T>(serviceRoot, ODataClientOptions.DefaultName);
         }
     }
 }

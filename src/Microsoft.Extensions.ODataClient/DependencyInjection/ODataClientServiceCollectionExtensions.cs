@@ -67,7 +67,7 @@ namespace Microsoft.Extensions.ODataClient
             services.AddLogging();
             services.AddOptions();
 
-            services.TryAddSingleton(typeof(IODataClientFactory<>), typeof(DefaultODataClientFactory<>));
+            services.TryAddSingleton(typeof(IODataClientFactory), typeof(DefaultODataClientFactory));
             services.TryAddSingleton(typeof(IODataClientActivator), typeof(DefaultODataClientActivator));
 
             var builder = new DefaultODataClientBuilder(services, name);

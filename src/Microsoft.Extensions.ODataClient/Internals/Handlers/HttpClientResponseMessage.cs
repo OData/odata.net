@@ -19,15 +19,6 @@ namespace Microsoft.Extensions.ODataClient
                   (int)httpResponse.StatusCode,
                   () => { var task = httpResponse.Content.ReadAsStreamAsync(); task.Wait(); return task.Result; })
         {
-            // merge properties back if populated
-            var properties = httpResponse.RequestMessage?.Properties;
-            if (properties != null)
-            {
-                foreach (var item in properties)
-                {
-                    config.Properties[item.Key] = item.Value;
-                }
-            }
         }
     }
 }

@@ -28,9 +28,9 @@ namespace Microsoft.Extensions.ODataClient.Tests.UnitTests
             builder.Name.Should().Be(clientName);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
 
-            var client = factory.CreateClient(new Uri("http://localhost"), clientName);
+            var client = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), clientName);
             client.Should().NotBeNull();
         }
 
@@ -45,9 +45,9 @@ namespace Microsoft.Extensions.ODataClient.Tests.UnitTests
             builder.Name.Should().Be(clientName);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
 
-            var client = factory.CreateClient(new Uri("http://localhost"), clientName);
+            var client = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), clientName);
             client.Should().NotBeNull();
             client.BaseUri.Should().Be(new Uri("http://localhost2"));
             count.Should().Be(1);
@@ -75,10 +75,10 @@ namespace Microsoft.Extensions.ODataClient.Tests.UnitTests
             builder.Name.Should().Be(clientName);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DefaultContainer>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
             var counter = sp.GetRequiredService<VerificationCounter>();
 
-            var client = factory.CreateClient(new Uri("http://InvalidHost"), clientName);
+            var client = factory.CreateClient<DefaultContainer>(new Uri("http://InvalidHost"), clientName);
             client.Should().NotBeNull();
 
             client.AddToPerson(new Person());
@@ -103,9 +103,9 @@ namespace Microsoft.Extensions.ODataClient.Tests.UnitTests
             builder.Name.Should().Be(registerName);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
 
-            var client = factory.CreateClient(new Uri("http://localhost"), createName);
+            var client = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), createName);
             client.Should().NotBeNull();
             client.BaseUri.Should().Be(new Uri("http://localhost"));
         }
@@ -125,13 +125,13 @@ namespace Microsoft.Extensions.ODataClient.Tests.UnitTests
             builder2.Name.Should().Be(clientName2);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
 
-            var client1 = factory.CreateClient(new Uri("http://localhost"), clientName1);
+            var client1 = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), clientName1);
             client1.Should().NotBeNull();
             client1.BaseUri.Should().Be(new Uri("http://localhost1"));
 
-            var client2 = factory.CreateClient(new Uri("http://localhost"), clientName2);
+            var client2 = factory.CreateClient<DefaultContainer>(new Uri("http://localhost"), clientName2);
             client2.Should().NotBeNull();
             client2.BaseUri.Should().Be(new Uri("http://localhost2"));
 
@@ -173,17 +173,17 @@ namespace Microsoft.Extensions.ODataClient.Tests.UnitTests
             count.Should().Be(0);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
             var counter = sp.GetRequiredService<VerificationCounter>();
             counter.ODataInvokeCount.Should().Be(0);
 
-            var client1 = factory.CreateClient(new Uri("http://localhost"), clientName1);
+            var client1 = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), clientName1);
             client1.Should().NotBeNull();
             client1.BaseUri.Should().Be(new Uri("http://localhost1"));
             counter.ODataInvokeCount.Should().Be(1);
             counter.HttpInvokeCount.Should().Be(0);
 
-            var client2 = factory.CreateClient(new Uri("http://localhost"), clientName2);
+            var client2 = factory.CreateClient<DefaultContainer>(new Uri("http://localhost"), clientName2);
             client2.Should().NotBeNull();
             client2.BaseUri.Should().Be(new Uri("http://localhost2"));
             counter.ODataInvokeCount.Should().Be(2);

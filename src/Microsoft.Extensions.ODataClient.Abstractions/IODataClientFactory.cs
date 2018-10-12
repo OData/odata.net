@@ -15,11 +15,11 @@ namespace Microsoft.Extensions.ODataClient
     /// configuration for a given logical name.
     /// </summary>
     /// <remarks>
-    /// A default <see cref="IODataClientFactory<typeparamref name="T"/>"/> can be registered in an <see cref="IServiceCollection"/>
+    /// A default <see cref="IODataClientFactory"/> can be registered in an <see cref="IServiceCollection"/>
     /// by calling <see cref="ODataClientFactoryExtensions.AddODataClient(IServiceCollection)"/>.
-    /// The default <see cref="IODataClientFactory<typeparamref name="T"/>"/> will be registered in the service collection as a singleton.
+    /// The default <see cref="IODataClientFactory"/> will be registered in the service collection as a singleton.
     /// </remarks>
-    public interface IODataClientFactory<T> where T : DataServiceContext
+    public interface IODataClientFactory
     {
         /// <summary>
         /// Creates and configures an <see cref="DataServiceContext"/> instance using the configuration that corresponds
@@ -41,6 +41,6 @@ namespace Microsoft.Extensions.ODataClient
         /// as desired.
         /// </para>
         /// </remarks>
-        T CreateClient(Uri serviceRoot, string name);
+        T CreateClient<T>(Uri serviceRoot, string name) where T : DataServiceContext;
     }
 }

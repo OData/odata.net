@@ -20,16 +20,16 @@ namespace Microsoft.Extensions.ODataClient
     /// For containers to ODATA v3 services, a separate factory will be used. The interfaces will be similar
     /// but it will rely on basic types from the ODATA v3 client package instead of the v4 package.
     /// </remarks>
-    internal sealed class DefaultODataClientFactory<T> : IODataClientFactory<T> where T : DataServiceContext
+    internal sealed class DefaultODataClientFactory: IODataClientFactory
     {
         private readonly IOptionsMonitor<ODataClientOptions> options;
-        private readonly ILogger<DefaultODataClientFactory<T>> logger;
+        private readonly ILogger<DefaultODataClientFactory> logger;
         private readonly IODataClientActivator activator;
 
         /// <summary>
         /// constructor for default client factory.
         /// </summary>
-        public DefaultODataClientFactory(IODataClientActivator activator, ILogger<DefaultODataClientFactory<T>> logger, IOptionsMonitor<ODataClientOptions> options)
+        public DefaultODataClientFactory(IODataClientActivator activator, ILogger<DefaultODataClientFactory> logger, IOptionsMonitor<ODataClientOptions> options)
         {
             this.options = options ?? throw new ArgumentNullException(nameof(options));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -42,7 +42,7 @@ namespace Microsoft.Extensions.ODataClient
         /// <param name="name">the logic name of the client to use, including both HttpClient and ODataClient.</param>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         /// <returns></returns>
-        public T CreateClient(Uri serviceRoot, string name)
+        public T CreateClient<T>(Uri serviceRoot, string name) where T : DataServiceContext
         {
             // default to higest protocol version client support.
             var odataVersion = ODataProtocolVersion.V401;

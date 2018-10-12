@@ -7,6 +7,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client;
+using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
 using System;
 using Xunit;
 
@@ -24,10 +25,10 @@ namespace Microsoft.Extensions.ODataClient.Tests.Netcore.UnitTests
             builder.Name.Should().Be(clientName);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
-            factory.Should().BeOfType<DefaultODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
+            factory.Should().BeOfType<DefaultODataClientFactory>();
 
-            var client = factory.CreateClient(new Uri("http://localhost"), clientName);
+            var client = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), clientName);
             client.Should().NotBeNull();
         }
 
@@ -50,9 +51,9 @@ namespace Microsoft.Extensions.ODataClient.Tests.Netcore.UnitTests
             builder.Name.Should().Be(registerName);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
 
-            var client = factory.CreateClient(new Uri("http://localhost"), createName);
+            var client = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), createName);
             client.Should().NotBeNull();
         }
 
@@ -70,12 +71,12 @@ namespace Microsoft.Extensions.ODataClient.Tests.Netcore.UnitTests
             builder2.Name.Should().Be(clientName2);
 
             var sp = sc.BuildServiceProvider();
-            var factory = sp.GetRequiredService<IODataClientFactory<DataServiceContext>>();
+            var factory = sp.GetRequiredService<IODataClientFactory>();
 
-            var client1 = factory.CreateClient(new Uri("http://localhost"), clientName1);
+            var client1 = factory.CreateClient<DataServiceContext>(new Uri("http://localhost"), clientName1);
             client1.Should().NotBeNull();
 
-            var client2 = factory.CreateClient(new Uri("http://localhost"), clientName2);
+            var client2 = factory.CreateClient<DefaultContainer>(new Uri("http://localhost"), clientName2);
             client2.Should().NotBeNull();
 
             clientName2.Should().NotBeSameAs(clientName1);
