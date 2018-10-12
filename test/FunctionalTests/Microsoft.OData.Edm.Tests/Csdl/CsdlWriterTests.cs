@@ -915,12 +915,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                       "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Stove Inline LongDescription\" />" +
                     "</Member>" +
                     "<Member Name=\"Washer\" Value=\"2\">" +
-                      "<Annotation Term=\"NS.FooBar\" String=\"Washer Inline FooBar\" />" +
+                      "<Annotation Term=\"NS.MyTerm\" String=\"Washer Inline MyTerm Value\" />" +
                     "</Member>" +
                   "</EnumType>" +
-                  "<Term Name=\"FooBar\" Type=\"Edm.String\" />" +
+                  "<Term Name=\"MyTerm\" Type=\"Edm.String\" />" +
                   "<Annotations Target=\"NS.Appliance/Stove\">" +
-                    "<Annotation Term=\"NS.FooBar\" String=\"Stove OutOfLine FooBar\" />" +
+                    "<Annotation Term=\"NS.MyTerm\" String=\"Stove OutOfLine MyTerm Value\" />" +
                   "</Annotations>" +
                   "<Annotations Target=\"NS.Appliance/Washer\">" +
                     "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Washer OutOfLine LongDescription\" />" +
@@ -947,13 +947,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            EdmTerm term = new EdmTerm("NS", "FooBar", EdmCoreModel.Instance.GetString(true));
+            EdmTerm term = new EdmTerm("NS", "MyTerm", EdmCoreModel.Instance.GetString(true));
             model.AddElement(term);
-            annotation = new EdmVocabularyAnnotation(stove, term, new EdmStringConstant("Stove OutOfLine FooBar"));
+            annotation = new EdmVocabularyAnnotation(stove, term, new EdmStringConstant("Stove OutOfLine MyTerm Value"));
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            annotation = new EdmVocabularyAnnotation(washer, term, new EdmStringConstant("Washer Inline FooBar"));
+            annotation = new EdmVocabularyAnnotation(washer, term, new EdmStringConstant("Washer Inline MyTerm Value"));
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 
