@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the string representing "$filter(expression)".
         /// </summary>
-        internal string LiteralText
+        public string LiteralText
         {
             get { return this.literalText; }
         }

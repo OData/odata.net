@@ -6351,6 +6351,7 @@ public sealed class Microsoft.OData.UriParser.FilterSegment : Microsoft.OData.Ur
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
 	Microsoft.OData.UriParser.SingleValueNode Expression  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public get; }
+	string LiteralText  { public get; }
 	Microsoft.OData.UriParser.RangeVariable RangeVariable  { public get; }
 
 	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
